@@ -1,8 +1,10 @@
+import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { LINKS } from 'constants/links';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -19,22 +21,9 @@ export const EarnSection = styled.section<{
     color: white;
     grid-column: span 5;
     grid-row: span 3;
-    margin-bottom: 15px;
-    border: solid 1px transparent;
+    border: 1px solid rgba(100, 217, 254, 0.6);
     padding: 10px;
     max-width: 100%;
-    &:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: -1;
-        margin: -3px;
-        border-radius: inherit;
-        background: linear-gradient(rgba(202, 145, 220, 0.6), rgba(106, 193, 213, 0.6));
-    }
     @media screen and (max-width: 1024px) {
         grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;
         order: ${(props) => props.orderOnTablet ?? 10};
@@ -55,8 +44,11 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     padding: 0px 20px 0 20px;
     @media (max-width: 767px) {
         font-size: 16px;
-        padding: 0px 5px 0 5px;
+        padding: 0px 5px;
         min-height: 25px;
+        margin-bottom: 10px;
+        flex-direction: column;
+        align-items: start;
     }
 `;
 
@@ -177,20 +169,22 @@ export const LearnMore = styled.span<{ top: string }>`
 export const StyledMaterialTooltip = withStyles(() => ({
     arrow: {
         '&:before': {
-            border: '1px solid #00D1FF',
+            border: '1px solid #64D9FE',
         },
-        color: '#04045A',
+        color: '#0d1069',
+        marginLeft: '0px!important',
     },
     tooltip: {
         background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
-        borderRadius: '23px',
-        border: '1px solid #00D1FF',
+        borderRadius: '15px',
+        border: '1px solid #64D9FE',
         padding: '20px',
         fontSize: '16px',
         lineHeight: '24px',
         letterSpacing: '0.4px',
         color: '#F6F6FE',
-        maxWidth: window.innerWidth < 768 ? 350 : 700,
+        maxWidth: window.innerWidth < 768 ? 350 : 400,
+        boxShadow: '-2px -2px 10px rgba(100, 217, 254, 0.25), 2px 2px 10px rgba(100, 217, 254, 0.25)',
     },
 }))(MaterialTooltip);
 
@@ -229,7 +223,20 @@ export const StyledInfoIcon = styled(InfoIcon)`
     min-height: 20px;
     margin-left: 10px;
     margin-bottom: -2px;
-    @media (max-width: 1024px) {
-        display: none;
-    }
 `;
+
+export const Tip20Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP20}>
+            TIP-20
+        </TooltipLink>
+    );
+};
+
+export const Tip17Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP17}>
+            TIP-17
+        </TooltipLink>
+    );
+};

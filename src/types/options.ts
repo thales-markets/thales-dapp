@@ -1,6 +1,5 @@
 import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers';
-import { Signature } from '@0x/protocol-utils';
 import { OrderPeriod } from 'constants/options';
 
 export type Phase = 'trading' | 'maturity' | 'expiry';
@@ -133,7 +132,7 @@ export type Orders = OrderItem[];
 
 export type OrderItem = {
     rawOrder: any;
-    signature: Signature;
+    signature: any;
     displayOrder: DisplayOrder;
     orderData: any;
 };

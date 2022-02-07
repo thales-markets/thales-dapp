@@ -32,7 +32,7 @@ const Governance: React.FC = () => {
                     <H1>{t('articles.governance.title')}</H1>
                     <ListWrapper>
                         <List>
-                            <ListItem>Governance</ListItem>
+                            <ListItem>{t('articles.governance.list.0')}</ListItem>
                             <NestedList>
                                 <ListItem>
                                     <a href="#section1">{t('articles.governance.list.1')}</a>

@@ -54,8 +54,8 @@ export const refetchRetroAirdrop = (walletAddress: string, networkId: NetworkId)
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.RetroAirdrop(walletAddress, networkId));
 };
 
-export const refetchOngoingAirdrop = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.OngoingAirdrop(walletAddress, networkId));
+export const refetchMigratedRewards = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.MigratedRewards(walletAddress, networkId));
 };
 
 export const refetchVestingBalance = (walletAddress: string, networkId: NetworkId) => {
@@ -80,6 +80,17 @@ export const refetchAmmData = (walletAddress: string, marketAddress: string, net
     );
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Synths(walletAddress, networkId));
+};
+
+export const refetchTokenQueries = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Staking.Thales(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Staking.Escrow(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Thales(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.StakingRewards(walletAddress, networkId));
+};
+
+export const refetchLPStakingQuery = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.LPStaking(walletAddress, networkId));
 };
 
 export default queryConnector;

@@ -80,6 +80,15 @@
     }
 }
 
+.bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div img[alt='Tally'] {
+    max-width: 46px;
+    max-height: 46px;
+    @media (max-width: 500px) {
+        max-width: 34px;
+        max-height: 34px;
+    }
+}
+
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets,
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets {
     margin-bottom: 0px;
@@ -103,4 +112,9 @@
     background: none !important;
     box-shadow: none !important;
     color: var(--color);
+}
+
+.light-theme .bn-onboard-selected-wallet,
+.dark-theme .bn-onboard-selected-wallet {
+    background: none !important;
 }

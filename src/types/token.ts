@@ -29,7 +29,10 @@ export type TokenTransactionType =
     | 'startUnstaking'
     | 'unstake'
     | 'addToEscrow'
-    | 'vest';
+    | 'vest'
+    | 'lpStake'
+    | 'lpUnstake'
+    | 'lpClaimStakingRewards';
 
 export type TokenTransaction = {
     hash: string;
@@ -37,6 +40,7 @@ export type TokenTransaction = {
     account: string;
     timestamp: number;
     amount: number | string;
+    blockNumber: number;
 };
 
 export enum TransactionFilterEnum {
@@ -50,6 +54,10 @@ export enum TransactionFilterEnum {
     UNSTAKE = 'unstake',
     ADD_TO_ESCROW = 'addToEscrow',
     VEST = 'vest',
+    CLAIM_MIGRATED_REWARDS = 'claimMigratedRewards',
+    LP_STAKE = 'lpStake',
+    LP_UNSTAKE = 'lpUnstake',
+    LP_CLAIM_STAKING_REWARDS = 'lpClaimStakingRewards',
 }
 
 export type TokenTransactions = TokenTransaction[];
@@ -61,6 +69,35 @@ export type VestingScheduleItem = {
 
 export type VestingSchedule = VestingScheduleItem[];
 
+export type StakingReward = {
+    closingDate: number;
+    period: number;
+    isClaimPaused: boolean;
+    hasClaimRights: boolean;
+    claimed: boolean;
+    canClosePeriod: boolean;
+    baseRewardsPool: number;
+    bonusRewardsPool: number;
+    bonusRewardsPoolPercentage: number;
+    rewards: number;
+    baseRewards: number;
+    totalBonus: number;
+    snxBonus: number;
+    ammBonus: number;
+    thalesRoyaleBonus: number;
+    maxSnxBonusPercentage: number;
+    maxAmmBonusPercentage: number;
+    maxThalesRoyaleBonusPercentage: number;
+    maxSnxBonus: number;
+    maxAmmBonus: number;
+    maxThalesRoyaleBonus: number;
+    ammVolumeRewardsMultiplier: number;
+    snxVolumeRewardsMultiplier: number;
+    snxStaked: number;
+    ammVolume: number;
+    hasParticipatedInCurrentOrLastRoyale: boolean;
+};
+
 type Reward = {
     balance: number;
     rawBalance: string;
@@ -71,9 +108,7 @@ type Reward = {
     proof: string[];
 };
 
-export type StakingReward = {
-    closingDate: number;
-    period: number;
+export type MigratedReward = {
     isClaimPaused: boolean;
     hasClaimRights: boolean;
     claimed: boolean;

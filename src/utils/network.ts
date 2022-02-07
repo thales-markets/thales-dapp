@@ -1,6 +1,6 @@
 import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER, DEFAULT_GAS_BUFFER } from 'constants/defaults';
+import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
 import { ethers } from 'ethers';
 import { serializeTransaction, UnsignedTransaction } from 'ethers/lib/utils';
@@ -19,6 +19,14 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISTIC',
     69: 'KOVAN-OPTIMISTIC',
+};
+
+export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
+    1: 'MAINNET',
+    3: 'ROPSTEN',
+    42: 'KOVAN',
+    10: 'OPTIMISM-MAINNET',
+    69: 'OPTIMISM-KOVAN',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
@@ -70,12 +78,10 @@ export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BU
 
 export const normalizeL2GasLimit = (gasLimit: number) => Math.trunc(gasLimit * 1.2);
 
-export const normalize0xGasLimit = (gasLimit: number) => Math.trunc(gasLimit * DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER);
-
 export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
 
 export const getInfuraRpcURL = (networkId: NetworkId) => {
-    const network = SUPPORTED_NETWORKS[networkId];
+    const network = INFURA_SUPPORTED_NETWORKS[networkId];
     return `https://${network?.toLowerCase()}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
 };
 

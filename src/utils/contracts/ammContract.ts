@@ -9,7 +9,7 @@ export const ammContract = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0x5ae7454827D83526261F3871C1029792644Ef1B1',
-        [NetworkId['Kovan-Ovm']]: '0xB0437C95551738FC48e2656017B70344d269f337',
+        [NetworkId['Kovan-Ovm']]: '0xfaDAa3E704acB3f82DC769C34518d4f306C55FAf',
     },
     abi: [
         {

@@ -46,7 +46,7 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                     </ButtonWrapper>
                     <ButtonWrapper>
                         <ButtonContainer>
-                            <DAPPLink href={ROUTES.Options.Home}>
+                            <DAPPLink target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
                                 <i className="icon-home icon-home--thales" /> DAPP
                             </DAPPLink>
                         </ButtonContainer>
@@ -69,8 +69,7 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                     <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
                         <FooterIcon className="icon-home icon-home--twitter" />
                     </IconLink>
-
-                    <IconLink target="_blank" rel="noreferrer" href="https://docs.thales.market/">
+                    <IconLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                         <FooterIcon className="icon-home icon-home--docs" />
                     </IconLink>
                 </FooterIconsWrapper>
@@ -114,12 +113,8 @@ const Lines = styled.img`
     right: 0%;
     margin: auto;
     @media (max-width: 1500px) {
-        width: 200%;
-        left: -50%;
-    }
-    @media (max-width: 600px) {
-        width: 200%;
-        left: -50%;
+        width: 150%;
+        left: -25%;
     }
 `;
 
@@ -236,6 +231,13 @@ const FooterContainer = styled(FlexDiv)`
 `;
 
 const FooterIcon = styled.i`
+    transition: 0.2s;
+    &:hover {
+        transform: scale(1.2);
+    }
+    &:before {
+        pointer-events: none;
+    }
     font-size: 3em;
     color: var(--color);
 `;
@@ -288,7 +290,7 @@ const ToggleContainer = styled.div`
 `;
 
 const ToggleIcon = styled.i`
-    font-size: 5.95em;
+    font-size: 3.4em;
     line-height: 26px;
     z-index: 2;
     color: var(--color);
@@ -328,7 +330,7 @@ const Label = styled.span`
     font-style: normal;
     font-weight: 300;
     font-size: 15px;
-    line-height: 36px;
+    line-height: 26px;
 `;
 
 export default Footer;

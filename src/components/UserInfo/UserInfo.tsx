@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { useSelector } from 'react-redux';
@@ -6,10 +6,9 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetwork, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumnCentered, Image } from 'theme/common';
+import { FlexDiv, FlexDivColumnCentered } from 'theme/common';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { truncateAddress } from 'utils/formatters/string';
-import avatar from 'assets/images/avatar.svg';
 import UserInfoModal from './UserInfoModal';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { ReactComponent as InfoIcon } from '../../assets/images/info.svg';
@@ -17,15 +16,19 @@ import ThalesBalanceTooltip from './ThalesBalanceTooltip';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { getIsOVM } from 'utils/network';
+import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
+import useStakingThalesQuery from '../../queries/staking/useStakingThalesQuery';
+import useEscrowThalesQuery from '../../queries/staking/useEscrowThalesQuery';
+import makeBlockie from 'ethereum-blockies-base64';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
-    const isL2 = getIsOVM(network.networkId);
     const [open, setOpen] = useState(false);
     const [thalesTotalBalance, setThalesTotalBalance] = useState(0);
+    const isL2 = getIsOVM(network.networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -39,6 +42,44 @@ const UserInfo: React.FC = () => {
     const iconSize = thalesTotalBalance ? '20' : '15';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const hideAddress = window.innerWidth < 320;
+
+    const [thalesStaked, setThalesStaked] = useState(0);
+    const [escrowedBalance, setEscrowedBalance] = useState(0);
+    const [thalesBalance, setThalesBalance] = useState(0);
+
+    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected && isL2,
+    });
+
+    const stakingThalesQuery = useStakingThalesQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected && isL2,
+    });
+
+    const escrowThalesQuery = useEscrowThalesQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    useEffect(() => {
+        if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
+            const { thalesStaked } = stakingThalesQuery.data;
+            setThalesStaked(Number(thalesStaked));
+        }
+        if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
+            setEscrowedBalance(escrowThalesQuery.data.escrowedBalance);
+        }
+    }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess, stakingThalesQuery.data, escrowThalesQuery.data]);
+
+    useEffect(() => {
+        if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
+            setThalesBalance(Number(thalesBalanceQuery.data.balance));
+        }
+    }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
+
+    useEffect(() => {
+        setThalesTotalBalance(
+            Number(thalesBalance.toFixed(2)) + Number(escrowedBalance.toFixed(2)) + Number(thalesStaked.toFixed(2))
+        );
+    }, [thalesBalance, escrowedBalance, thalesStaked]);
 
     return (
         <>
@@ -57,22 +98,26 @@ const UserInfo: React.FC = () => {
                             <p>{network.networkName}</p>
                         </AddressWrapper>
                     )}
-                    <Image
-                        style={{ width: '18px', height: '18px', marginRight: hideAddress ? '0' : '20px' }}
-                        src={avatar}
-                    />
+                    <Blockie marginRight={hideAddress ? 0 : 20} src={makeBlockie(walletAddress)} />
                 </NetworkWrapper>
-                {!isL2 && (
-                    <ThalesBalance>
+                <ThalesBalance>
+                    {isL2 && (
                         <StyledMaterialTooltip
-                            PopperProps={{ keepMounted: true }}
-                            title={<ThalesBalanceTooltip setThalesTotalBalance={setThalesTotalBalance} />}
+                            title={
+                                <ThalesBalanceTooltip
+                                    thalesBalance={thalesBalance}
+                                    thalesStaked={thalesStaked}
+                                    escrowedBalance={escrowedBalance}
+                                />
+                            }
                         >
                             <StyledInfoIcon width={iconSize} height={iconSize} />
                         </StyledMaterialTooltip>
-                        {formatCurrencyWithKey(THALES_CURRENCY, thalesTotalBalance)}
-                    </ThalesBalance>
-                )}
+                    )}
+                    <span style={{ marginLeft: 10 }}>
+                        {formatCurrencyWithKey(THALES_CURRENCY, isL2 ? thalesTotalBalance : thalesBalance)}
+                    </span>
+                </ThalesBalance>
             </UserInfoWrapper>
             <UserInfoModal
                 walletAddress={walletAddress}
@@ -163,7 +208,6 @@ const AddressWrapper = styled(FlexDivColumnCentered)`
 
 const StyledInfoIcon = styled(InfoIcon)`
     margin-left: 10px;
-    margin-right: 5px;
     @media (max-width: 767px) {
         display: none;
     }
@@ -188,5 +232,12 @@ const StyledMaterialTooltip = withStyles(() => ({
         maxWidth: 700,
     },
 }))(MaterialTooltip);
+
+export const Blockie = styled.img<{ marginRight: number }>`
+    width: 18px;
+    height: 18px;
+    border-radius: 12px;
+    margin-right: ${(props) => props.marginRight}px;
+`;
 
 export default UserInfo;

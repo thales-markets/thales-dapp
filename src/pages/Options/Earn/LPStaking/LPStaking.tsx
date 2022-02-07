@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { Button, FlexDivCentered } from '../../../../theme/common';
@@ -6,10 +6,6 @@ import { LINKS } from 'constants/links';
 
 const LPStaking: React.FC = () => {
     const { t } = useTranslation();
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
 
     return (
         <LPStakingSection style={{ gridColumn: 'span 10' }}>

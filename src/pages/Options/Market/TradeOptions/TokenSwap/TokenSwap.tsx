@@ -1,8 +1,7 @@
-import { Web3Wrapper } from '@0x/web3-wrapper';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { AMOUNT_PERCENTAGE, OneInchErrorReason, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import { ethers } from 'ethers';
@@ -46,7 +45,7 @@ import { get1InchBaseURL, ONE_INCH_SWAP_CONTRACTS, ONE_INCH_SWAP_QUOTE_URL, ONE_
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { formatCurrencyWithKey, formatPercentageWithSign, toBigNumber, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrencyWithKey, formatPercentageWithSign, truncToDecimals } from 'utils/formatters/number';
 import { formatGasLimit } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
@@ -234,7 +233,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 setTxErrorMessage(null);
                 setIsSubmitting(true);
                 window.web3 = new Web3(Web3.givenProvider);
-                const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(amount), DEFAULT_TOKEN_DECIMALS);
+                const tokenAmount = ethers.utils.parseEther(amount.toString());
                 const swapUrl = `${baseUrl}${ONE_INCH_SWAP_URL}?fromTokenAddress=${sellToken}&toTokenAddress=${buyToken}&amount=${tokenAmount}&fromAddress=${walletAddress}&slippage=${
                     isSlippageValid && slippage ? slippage : 1
                 }`;
@@ -253,7 +252,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 );
                 resetForm();
             }
-        } catch (e) {
+        } catch (e: any) {
             console.log(e);
             setTxErrorMessage(
                 e.code === 4001 ? t('common.errors.user-rejected-tx') : t('common.errors.unknown-error-try-again')
@@ -278,7 +277,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     useDebouncedEffect(() => {
         const get1InchPrice = async () => {
             if (isAmountEntered && isSlippageValid) {
-                const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(amount), DEFAULT_TOKEN_DECIMALS);
+                const tokenAmount = ethers.utils.parseEther(amount.toString());
                 try {
                     const quoteUrl = `${baseUrl}${ONE_INCH_SWAP_QUOTE_URL}?fromTokenAddress=${sellToken}&toTokenAddress=${buyToken}&amount=${tokenAmount}`;
 
@@ -286,9 +285,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     if (response.status == 200) {
                         const quote = await response.json();
                         console.log(quote);
-                        const quoteAmount = Number(
-                            Web3Wrapper.toUnitAmount(toBigNumber(quote.toTokenAmount), DEFAULT_TOKEN_DECIMALS)
-                        );
+                        const quoteAmount = bigNumberFormatter(quote.toTokenAmount);
                         setGasLimit(formatGasLimit(quote.estimatedGas, networkId));
                         setPrice(quoteAmount / Number(amount));
                         setTotal(quoteAmount);

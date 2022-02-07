@@ -38,7 +38,14 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                     {t('header.links.learn.whitepaper')}
                 </Link>
 
-                <Link href="#faq-section">{t('header.links.faq')}</Link>
+                <Link
+                    href="../#faq-section"
+                    onClick={() => {
+                        setBurgerState(!burgerState);
+                    }}
+                >
+                    {t('header.links.faq')}
+                </Link>
             </DropDownContainer>
 
             <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">

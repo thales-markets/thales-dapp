@@ -13,6 +13,7 @@ import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransaction
 import { EarnSection, SectionHeader } from '../../components';
 import checkmark from '../../../../../assets/images/checkmark.svg';
 import arrowDown from '../../../../../assets/images/filters/arrow-down.svg';
+import { orderBy } from 'lodash';
 
 type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];
@@ -33,8 +34,12 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const userTokenTransactions = useMemo(
         () =>
             userTokenTransactionsQuery.isSuccess && userTokenTransactionsQuery.data
-                ? userTokenTransactionsQuery.data.filter((tx: TokenTransaction) =>
-                      filters.includes(tx.type as TransactionFilterEnum)
+                ? orderBy(
+                      userTokenTransactionsQuery.data.filter((tx: TokenTransaction) =>
+                          filters.includes(tx.type as TransactionFilterEnum)
+                      ),
+                      ['timestamp', 'blockNumber'],
+                      ['desc', 'desc']
                   )
                 : [],
         [userTokenTransactionsQuery.data, walletAddress]

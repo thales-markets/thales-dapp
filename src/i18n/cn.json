@@ -164,7 +164,8 @@
             "insufficient-balance-wallet": "请确保您的钱包有足够的{{currencyKey}}",
             "invalid-slippage": "无效滑点",
             "max-limit-exceeded": "金额超过 AMM 上的可用金额",
-            "user-rejected-tx": "用户拒绝交易"
+            "user-rejected-tx": "用户拒绝交易",
+            "insufficient-staking-balance": "质押余额不足"
         },
         "search": "搜索",
         "buy": "买",
@@ -341,7 +342,8 @@
                     "complete-quiz-to-claim": "认领此空投完整测验。",
                     "completed-quiz": "测验已完成！您现在可以申请空投。",
                     "claim-end-label": "可领取至2022年9月12日。",
-                    "info-tooltip": "<0>自SNX质押开始至2021年9月6日上午10:00 UTC之前，137Thales币被空投</0><0>-SNX质押L1</0><0>-SNX质押L2</0><0>-xSNX</0><0>质押和领取奖励的人。</0><1>您可以检查自己是否有资格参加此项活动 </1><2 />。"
+                    "info-tooltip": "<0>自SNX质押开始至2021年9月6日上午10:00 UTC之前，137Thales币被空投</0><0>-SNX质押L1</0><0>-SNX质押L2</0><0>-xSNX</0><0>质押和领取奖励的人。</0><1>您可以检查自己是否有资格参加此项活动 </1><2 />。",
+                    "paused-message": "复古空投暂停。"
                 },
                 "retro-rewards": {
                     "title": "追溯解锁",
@@ -372,7 +374,9 @@
                     "staking": "质押",
                     "available-to-stake": "可质押",
                     "amount-to-stake": "持股金额",
-                    "confirmation-message": "代币已成功质押"
+                    "confirmation-message": "代币已成功质押",
+                    "paused-message": "质押暂停。",
+                    "info-tooltip": "可用的质押奖励将作为质押交易的一部分索取。"
                 },
                 "my-stake": {
                     "my-stake": "我的质押",
@@ -384,13 +388,17 @@
                     "global-staking-stats": "全局质押量",
                     "total-thales-staked": "THALES质押总量",
                     "my-staked-share": "我的质押",
-                    "estimated-rewards": "本期预计奖励"
+                    "estimated-rewards": "本期预计奖励",
+                    "bonus-apy-tooltip": "<0>每 </0><1 /> 的最高 APY 奖金为 {{max}}%。",
+                    "bonus-apr-tooltip": "<0>每 </0><1 /> 的最高 APR 为 {{max}}%。",
+                    "bonus-estimated-rewards-tooltip": "<0>每 </0><1 /> 的最高奖励奖励为 {{max}}%。"
                 },
                 "unstake": {
                     "unstake": "取消质押",
                     "unlock-cooldown-text": "开始解锁冷却，在此期间未锁定的金额不计入您的质押余额",
                     "cooldown-started-text": "您可以取消{{amount}}的质押",
                     "cooldown-ended-text": "您现在可以领取{{amount}}",
+                    "cooldown-label": "冷却",
                     "start-unstaking": "开始取消质押",
                     "cooldown-confirmation-message": "取消质押成功启动",
                     "unstake-confirmation-message": "代币成功取消质押",
@@ -401,26 +409,63 @@
                     "canceling": "取消抵押",
                     "cancel-confirmation-message": "取消抵押成功取消",
                     "network-fee-cancel": "取消",
-                    "network-fee-unstake": "取消质押"
+                    "network-fee-unstake": "取消质押",
+                    "paused-message": "取消质押已暂停。",
+                    "info-tooltip": "可用的质押奖励将作为开始解除质押交易的一部分索取。"
                 },
                 "staking-rewards": {
                     "title": "质押奖励",
-                    "amount-to-claim-snx": "作为snx质押用户",
-                    "amount-to-claim-thales": "作为",
                     "period": "期间",
-                    "weekly-rewards": "每周奖励",
                     "total": "总计",
-                    "previous-period": "来自上期",
                     "claim": "领取",
                     "claiming": "领取",
                     "claimed-message": "您已经声明了本周的奖励，请下周再来。",
                     "not-eligible-message": "您没有资格获得这些奖励。",
                     "paused-message": "已暂停，请稍后再试。",
                     "confirmation-message": "代币成功认领",
-                    "learn-more-text": "奖励每周发放。如果您在给定的一周内没有申领，您的奖励将结转并在下周提供给您。申领的奖励将有10周的解锁期。在解锁期内，您的托管金额将包含在您的质押金额中，从而有效地为您赢得更多的投票权和奖励。",
-                    "learn-more": "了解更多",
                     "button-tooltip": "奖励有10周的解锁期.",
-                    "snx-rewards-paused-tooltip": "<0>暂时停止向 SNX 质押者进行的 THALES 分发。更多详情 </0><1 />."
+                    "bonus-info": {
+                        "thales-royale-participation-yes": "是的",
+                        "thales-royale-participation-no": "不",
+                        "current-amm-label": "当前 AMM 交易量",
+                        "current-thales-royale-label": "目前参与",
+                        "additional-amm-label": "额外的 AMM 交易量以获得最大红利",
+                        "current-snx-staking-label": "当前 SNX 质押",
+                        "max-bonus-notice": "你有最高奖金",
+                        "additional-snx-staking-label": "额外 SNX 质押以获得最大红利"
+                    },
+                    "bonus-button": {
+                        "thales-royale-label": "加入泰雷兹皇家并获得泰雷兹奖金",
+                        "amm-label": "交易更多以获得更多 THALES 奖金",
+                        "snx-staking-label": "质押更多 SNX 以获得更多 THALES 奖金"
+                    },
+                    "bonus-tooltip": {
+                        "thales-royale-description": "如果质押者参与了上一届或正在进行的泰雷兹 Royale，THALES 质押者将在基本奖励之上获得 {{max}}% 的最大值。该值可以是 0 或最大值。",
+                        "amm-description": "如果 THALES 质押者在每个作为基本奖励的 THALES 获得的最后 4 个时期内至少有 {{ammVolumeRewardsMultiplier}} sUSD AMM 交易量，则 THALES 质押者将在基本奖励之上获得 {{max}}% 的最大值。如果他做得少，他会根据以下公式计算出金额：",
+                        "amm-title": "AMM红利",
+                        "snx-staking-title": "SNX 罢工奖金",
+                        "snx-staking-description": "如果每个 THALES 的质押者作为基础奖励至少有 {{snxVolumeRewardsMultiplier}} SNX 质押，THALES 质押者将在基础奖励之上获得 {{max}}% 的最大值。如果他质押的 SNX 较少，他将获得根据以下公式计算的金额：",
+                        "thales-royale-title": "泰雷兹皇家奖金"
+                    },
+                    "close-period": {
+                        "label": "关闭期间",
+                        "progress-label": "截止期...",
+                        "confirmation-message": "期间成功关闭"
+                    },
+                    "migrated-rewards": {
+                        "info-tooltip": "<0>每 </0><1 /> 将 L1 中无人认领的质押奖励迁移到 L2。",
+                        "rewards-label": "迁移奖励",
+                        "claimed-message": "您已领取迁移奖励。",
+                        "title": "迁移奖励"
+                    },
+                    "weekly-base-rewards": "每周基础奖励池",
+                    "thales-staking-label": "泰雷兹 staking",
+                    "max-reward-label": "最大奖励：{{max}}",
+                    "info-tooltip": "无人认领的每周奖励将被没收。",
+                    "weekly-bonus-rewards": "在基本奖励之上的最高奖励奖励",
+                    "amm-label": "ADM",
+                    "snx-staking-label": "SNX 罢工",
+                    "thales-royale-label": "皇家泰雷兹"
                 }
             },
             "vesting": {
@@ -449,7 +494,31 @@
                 }
             },
             "lp-staking": {
-                "tab-title": "LP"
+                "tab-title": "LP",
+                "rewards": {
+                    "claim": "宣称",
+                    "title": "奖励",
+                    "lp-staking": "LP 质押",
+                    "claimed": "成功申领",
+                    "claiming": "声称"
+                },
+                "my-stake": {
+                    "total-staked": "总质押",
+                    "title": "我的质押代币",
+                    "lp-tokens": "LP 代币"
+                },
+                "info": {
+                    "apr": "年利率",
+                    "tvl": "锁定总值 (TVL)"
+                },
+                "provide-liquidity": {
+                    "here": "这里",
+                    "description": "通过向 THALES/WETH 池增加流动性来获得 G-UNI LP 代币进行质押。",
+                    "button-text": "增加流动性的链接",
+                    "wrap-your-eth": "1. 包裹你的 ETH",
+                    "stake-here": "3. 在此页面质押LP代币",
+                    "deposit": "2. 将THALES和WETH存入G-UNI矿池"
+                }
             },
             "table": {
                 "title": "您的活动",
@@ -467,7 +536,11 @@
                     "cancelUnstake": "没有取消与此钱包相关的取消抵押交易。",
                     "unstake": "没有与此钱包相关的取消质押交易。",
                     "addToEscrow": "不添加与此钱包相关的托管交易。",
-                    "vest": "没有与此钱包相关的vest交易。"
+                    "vest": "没有与此钱包相关的vest交易。",
+                    "claimMigratedRewards": "没有与此钱包相关的迁移奖励交易。",
+                    "lpStake": "没有与此钱包相关的 LP 股权交易。",
+                    "lpClaimStakingRewards": "没有 LP 质押奖励与此钱包相关的交易。",
+                    "lpUnstake": "没有与此钱包相关的 LP 取消质押交易。"
                 },
                 "types": {
                     "claimRetroAirdrop": "领取追溯空投",
@@ -478,7 +551,11 @@
                     "cancelUnstake": "取消抵押",
                     "unstake": "取消质押",
                     "addToEscrow": "添加托管",
-                    "vest": "解锁期"
+                    "vest": "解锁期",
+                    "lpUnstake": "LP 解除质押",
+                    "lpClaimStakingRewards": "领取 LP 质押奖励",
+                    "claimMigratedRewards": "领取迁移奖励",
+                    "lpStake": "LP股权"
                 },
                 "filter": {
                     "all": "全部",
@@ -490,13 +567,18 @@
                     "cancelUnstake": "取消抵押",
                     "unstake": "取消质押",
                     "addToEscrow": "添加托管",
-                    "vest": "解锁期"
+                    "vest": "解锁期",
+                    "lpClaimStakingRewards": "LP质押奖励",
+                    "claimMigratedRewards": "迁移奖励",
+                    "lpUnstake": "LP 解除质押",
+                    "lpStake": "LP股权"
                 }
             },
             "overview": {
                 "token-tooltip": "查看泰雷兹合同",
                 "price-label": "价格",
                 "price-tooltip": "查看DODO池",
+                "price-tooltip-l2": "在CoinGecko上查看",
                 "market-cap-label": "市值",
                 "earn-label": "赢取LP奖励",
                 "earn-tooltip": "为泰雷兹/ETH对提供流动性，赚取泰雷兹+DODO双倍奖励",
@@ -1286,6 +1368,7 @@
         },
         "governance": {
             "list": {
+                "0": "Thales DAO Governance",
                 "1": "THALES DAO",
                 "2": "THALES 理事会（又名“大脑”）",
                 "3": "财政部 DAO（又名“口袋”）",
@@ -1415,6 +1498,39 @@
             },
             "opt-out-text": "<0>所有质押、托管和无人认领的 THALES 计划按照 </0><1 /> 自动迁移到 L2 Optimism 主网。<0>如果您想退出此迁移，并将您的 THALES 保留在 L1 主网上，您可以使用您的钱包在以下消息上签名。</0>",
             "cancel-opt-out-text": "<0>所有质押、托管和无人认领的 THALES 计划按 </0><1 /> 自动迁移到 L2 Optimism 主网。<0>您已选择退出此迁移，并将您的 THALES 保留在 L1 主网上。如果您确实希望参与迁移，则可以取消选择退出。</0>"
-        }
+        },
+        "migrate-button": {
+            "label": "迁移",
+            "confirmation-message": "令牌成功迁移到 L2",
+            "progress-label": "正在迁移..."
+        },
+        "swap-button": {
+            "label": "交换",
+            "confirmation-message": "代币兑换成功",
+            "progress-label": "交换进行中..."
+        },
+        "migration-messages": {
+            "retro-airdrop": "<0>复古空投已根据</0><1 />迁移到L2。",
+            "staking": "<0>THALES Staking 已根据 </0><1 /> 迁移到 L2。",
+            "vesting": "<0>托管的 THALES 已根据 </0><1 /> 迁移到 L2。",
+            "retro-unlock": "<0>每个 </0><1 /> 都可以在 L1 上使用此发行版。"
+        },
+        "migration-notice": {
+            "button-label": "迁移泰雷兹",
+            "text": "您可以将 THALES 迁移到 L2 Optimistic 主网"
+        },
+        "tabs": {
+            "withdraw": "提取",
+            "swap": "交换",
+            "migrate": "迁移"
+        },
+        "from-label": "从",
+        "to-label": "到",
+        "title": "移民",
+        "migration-delay-info": "存款需要大约 20 分钟才能在 Optimistic 主网上被认为是最终的。",
+        "migration-multisig-contact-warning": "多重签名或合约不应直接迁移，否则您将失去资金。",
+        "migration-amount-label": "迁移金额",
+        "migrated-rewards-title": "迁移奖励",
+        "info-tooltip": "<0>迁移过程中，THALES首先交换到L1主网上的OpTHALES，然后根据</0><1 />桥接到L2 Optimistic主网进入L2 THALES。"
     }
 }

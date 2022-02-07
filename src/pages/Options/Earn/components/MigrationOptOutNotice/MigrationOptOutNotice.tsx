@@ -11,8 +11,7 @@ import useStakingMigrationOptOutQuery from 'queries/token/useStakingMigrationOpt
 import axios from 'axios';
 import onboardConnector from 'utils/onboardConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { LINKS } from 'constants/links';
-import { TooltipLink } from '../../components';
+import { Tip20Link } from '../../components';
 
 const MigrationOptOutNotice: React.FC = () => {
     const { t } = useTranslation();
@@ -81,7 +80,7 @@ const MigrationOptOutNotice: React.FC = () => {
                         i18nKey={`migration.migration-opt-out-notice.${
                             optOut ? 'cancel-opt-out-text' : 'opt-out-text'
                         }`}
-                        components={[<span key="1" />, <TipLink key="2" />]}
+                        components={[<span key="1" />, <Tip20Link key="2" />]}
                     />
                 </Notice>
                 <MigrateButtonContainer>{getSubmitButton()}</MigrateButtonContainer>
@@ -134,13 +133,5 @@ const MigrateButton = styled(DefaultSubmitButton)`
         cursor: default;
     }
 `;
-
-const TipLink: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP20}>
-            TIP-20
-        </TooltipLink>
-    );
-};
 
 export default MigrationOptOutNotice;

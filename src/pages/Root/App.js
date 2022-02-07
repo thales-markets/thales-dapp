@@ -172,7 +172,9 @@ const App = () => {
     // load previously saved wallet
     useEffect(() => {
         if (onboardConnector.onboard && selectedWallet) {
-            onboardConnector.onboard.walletSelect(selectedWallet);
+            // backward compatible for old wallet selection logic;
+            const sWallet = selectedWallet === 'MetaMask' ? 'Browser Wallet' : selectedWallet;
+            onboardConnector.onboard.walletSelect(sWallet);
         }
     }, [isAppReady, onboardConnector.onboard, selectedWallet]);
 
@@ -265,13 +267,12 @@ const App = () => {
                                 <GamePage />
                             </MainLayout>
                         </Route>
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.Token}>
-                                <MainLayout>
-                                    <EarnPage />
-                                </MainLayout>
-                            </Route>
-                        )}
+
+                        <Route exact path={ROUTES.Options.Token}>
+                            <MainLayout>
+                                <EarnPage />
+                            </MainLayout>
+                        </Route>
 
                         <Route
                             exact

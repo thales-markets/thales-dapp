@@ -158,11 +158,17 @@ const Thales = styled(IconAbs)`
     @media (max-width: 600px) {
         font-size: 10em;
     }
+    @media (max-width: 450px) {
+        padding: 0 10px;
+    }
 `;
 const ThalesRoyale = styled(IconAbs)`
     font-size: 12em;
     @media (max-width: 600px) {
         font-size: 7em;
+    }
+    @media (max-width: 450px) {
+        padding: 0 10px;
     }
 `;
 const ThalesGame = styled(IconAbs)`
@@ -172,9 +178,8 @@ const ThalesGame = styled(IconAbs)`
         line-height: 0.2em;
     }
     @media (max-width: 450px) {
-        font-size: 10em;
-        line-height: 0.2em;
         margin-bottom: 90px;
+        padding: 0 10px;
     }
 `;
 

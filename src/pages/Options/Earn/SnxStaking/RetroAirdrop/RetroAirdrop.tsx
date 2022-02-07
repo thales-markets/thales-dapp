@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Button, GradientText } from 'theme/common';
+import { GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -20,7 +20,7 @@ import {
     TooltipLink,
     StyledInfoIcon,
 } from '../../components';
-import { formatGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM } from 'utils/network';
 import { refetchRetroAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import { Airdrop } from 'types/token';
@@ -33,6 +33,9 @@ import { airdropClaimQuizQuestions } from 'i18n/quizQuestions';
 import { dispatchMarketNotification } from 'utils/options';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
+import MigrationInfo from '../../components/MigrationInfo';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -46,12 +49,18 @@ const RetroAirdrop: React.FC = () => {
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [openQuiz, setOpenQuiz] = useState(false);
     const quizData: QuizQuestion[] = airdropClaimQuizQuestions;
+    const { retroAirdropContract } = snxJSConnector as any;
+    const isL2 = getIsOVM(networkId);
 
     const isClaimAvailable =
-        retroAirdrop && retroAirdrop.accountInfo && retroAirdrop.hasClaimRights && !retroAirdrop.claimed;
+        retroAirdrop &&
+        retroAirdrop.accountInfo &&
+        retroAirdrop.hasClaimRights &&
+        !retroAirdrop.claimed &&
+        !retroAirdrop.isClaimPaused;
 
     const airdropQuery = useRetroAirdropQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !!retroAirdropContract,
     });
 
     useEffect(() => {
@@ -94,9 +103,7 @@ const RetroAirdrop: React.FC = () => {
                     retroAirdrop.accountInfo.index,
                     retroAirdrop.accountInfo.rawBalance,
                     retroAirdrop.accountInfo.proof,
-                    {
-                        gasLimit,
-                    }
+                    { gasLimit: MAX_L2_GAS_LIMIT }
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
@@ -127,11 +134,7 @@ const RetroAirdrop: React.FC = () => {
     const getClaimButton = () => {
         if (quizCompleted || !isClaimAvailable) {
             return (
-                <Button
-                    onClick={handleClaimRetroAirdrop}
-                    disabled={!isClaimAvailable || isClaiming}
-                    className="primary"
-                >
+                <DefaultSubmitButton onClick={handleClaimRetroAirdrop} disabled={!isClaimAvailable || isClaiming}>
                     {isClaiming
                         ? t('options.earn.snx-stakers.claiming')
                         : t('options.earn.snx-stakers.claim') +
@@ -141,13 +144,13 @@ const RetroAirdrop: React.FC = () => {
                               0,
                               true
                           )}`}
-                </Button>
+                </DefaultSubmitButton>
             );
         } else {
             return (
-                <Button onClick={startQuiz} disabled={!isClaimAvailable || isClaiming} className="primary">
+                <DefaultSubmitButton onClick={startQuiz} disabled={!isClaimAvailable || isClaiming} className="primary">
                     {t('options.earn.snx-stakers.start-quiz')}
-                </Button>
+                </DefaultSubmitButton>
             );
         }
     };
@@ -171,46 +174,61 @@ const RetroAirdrop: React.FC = () => {
                     </StyledMaterialTooltip>
                 </div>
             </SectionHeader>
-            <SectionContentContainer>
-                <ClaimItem style={{ marginBottom: 0, marginTop: 30 }}>
-                    <ClaimTitle>{t('options.earn.snx-stakers.airdropped-amount')}:</ClaimTitle>
-                    <GradientText
-                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                        fontSize={31}
-                        fontWeight={600}
-                    >
-                        {formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop?.accountInfo?.balance || 0, 0, true)}
-                    </GradientText>
-                </ClaimItem>
-                <ClaimableUntilTitle style={{ marginBottom: 0 }}>
-                    <ClaimTitle style={{ paddingBottom: 0 }}>
-                        {t('options.earn.snx-stakers.retro-airdrop.claim-end-label')}
-                    </ClaimTitle>
-                </ClaimableUntilTitle>
-                {isClaimAvailable && <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
-                <ButtonContainerBottom>
-                    {getClaimButton()}
-                    {retroAirdrop && !retroAirdrop.hasClaimRights && (
-                        <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}</ClaimMessage>
-                    )}
-                    {retroAirdrop && retroAirdrop.hasClaimRights && (
-                        <ClaimMessage>
-                            {quizCompleted && isClaimAvailable
-                                ? t('options.earn.snx-stakers.retro-airdrop.completed-quiz')
-                                : !quizCompleted && isClaimAvailable
-                                ? t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')
-                                : quizCompleted && !isClaimAvailable
-                                ? t('options.earn.snx-stakers.retro-airdrop.claimed-message')
-                                : t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}
-                        </ClaimMessage>
-                    )}
-                </ButtonContainerBottom>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
-            </SectionContentContainer>
+            {isL2 && (
+                <SectionContentContainer>
+                    <ClaimItem style={{ marginBottom: 0, marginTop: 30 }}>
+                        <ClaimTitle>{t('options.earn.snx-stakers.airdropped-amount')}:</ClaimTitle>
+                        <GradientText
+                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                            fontSize={31}
+                            fontWeight={600}
+                        >
+                            {formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop?.accountInfo?.balance || 0, 0, true)}
+                        </GradientText>
+                    </ClaimItem>
+                    <ClaimableUntilTitle style={{ marginBottom: 0 }}>
+                        <ClaimTitle style={{ paddingBottom: 0 }}>
+                            {t('options.earn.snx-stakers.retro-airdrop.claim-end-label')}
+                        </ClaimTitle>
+                    </ClaimableUntilTitle>
+                    {isClaimAvailable && <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
+                    <ButtonContainerBottom>
+                        {getClaimButton()}
+                        {retroAirdrop && retroAirdrop.isClaimPaused && (
+                            <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.paused-message')}</ClaimMessage>
+                        )}
+                        {retroAirdrop && !retroAirdrop.isClaimPaused && !retroAirdrop.hasClaimRights && (
+                            <ClaimMessage>
+                                {t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}
+                            </ClaimMessage>
+                        )}
+                        {retroAirdrop &&
+                            !retroAirdrop.isClaimPaused &&
+                            retroAirdrop.hasClaimRights &&
+                            retroAirdrop.claimed && (
+                                <ClaimMessage>
+                                    {t('options.earn.snx-stakers.retro-airdrop.claimed-message')}
+                                </ClaimMessage>
+                            )}
+                        {retroAirdrop &&
+                            !retroAirdrop.isClaimPaused &&
+                            retroAirdrop.hasClaimRights &&
+                            !retroAirdrop.claimed && (
+                                <ClaimMessage>
+                                    {quizCompleted
+                                        ? t('options.earn.snx-stakers.retro-airdrop.completed-quiz')
+                                        : t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')}
+                                </ClaimMessage>
+                            )}
+                    </ButtonContainerBottom>
+                    <ValidationMessage
+                        showValidation={txErrorMessage !== null}
+                        message={txErrorMessage}
+                        onDismiss={() => setTxErrorMessage(null)}
+                    />
+                </SectionContentContainer>
+            )}
+            {!isL2 && <MigrationInfo messageKey="retro-airdrop" />}
             <Quiz quizData={quizData} openQuiz={openQuiz} setOpenQuiz={setOpenQuiz}></Quiz>
         </EarnSection>
     );

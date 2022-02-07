@@ -11,4 +11,3 @@ export const DEFAULT_OPTIONS_DECIMALS = 3;
 export const DEFAULT_GAS_SPEED = 'fast';
 export const DEFAULT_GAS_BUFFER = 15000;
 export const DEFAULT_GAS_LIMIT = 500000;
-export const DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER = 1.2;

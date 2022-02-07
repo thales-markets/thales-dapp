@@ -180,7 +180,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                             : undefined,
                 };
             }
-        } catch (e) {
+        } catch (e: any) {
             setLoading(false);
             setTxErrorMessage(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'));
             console.log('failed: ', e);
