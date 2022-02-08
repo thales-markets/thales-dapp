@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import mediumPostsQuery from '../mediumPostsQuery';
+import mediumPostsQuery from '../queries/mediumPostsQuery';
 
 // import nextArrow from 'assets/images/arrow-next.svg';
 // import backArrow from 'assets/images/arrow-previous.svg';

@@ -31,13 +31,13 @@ import TradeHistory from 'pages/Options/TradeHistory';
 import AmmMining from 'pages/Options/AmmMining';
 import AmmReporting from '../Options/AmmReporting';
 import Cookies from 'universal-cookie';
-import Token from '../V2/articles/Token';
-import Governance from '../V2/articles/Governance';
-import Whitepaper from '../V2/articles/Whitepaper';
+import Token from '../LandingPage/articles/Token';
+import Governance from '../LandingPage/articles/Governance';
+import Whitepaper from '../LandingPage/articles/Whitepaper';
 import DappLayout from 'layouts/DappLayout';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../V2/Home'));
+const Home = lazy(() => import('../LandingPage/Home'));
 const OptionsHomeV2 = lazy(() => import('../Options/Home/v2'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {

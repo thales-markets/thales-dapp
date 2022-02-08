@@ -6,7 +6,7 @@ import Header from '../../components/Header/Header';
 import pic from 'assets/images/landing-page/articles/token-white.svg';
 import picBlack from 'assets/images/landing-page/articles/token-black.svg';
 import { Background, Theme } from '../../Home';
-import Footer from 'pages/V2/components/Footer';
+import Footer from '../../components/Footer';
 
 const cookies = new Cookies();
 

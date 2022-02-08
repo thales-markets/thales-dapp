@@ -6,8 +6,8 @@ import Header from '../../components/Header/Header';
 import { ReactComponent as Chart } from 'assets/images/landing-page/articles/governance.svg';
 import { ReactComponent as ChartBlack } from 'assets/images/landing-page/articles/governance-black.svg';
 import { Background, Theme } from '../../Home';
-import Footer from 'pages/V2/components/Footer';
-import { FlexDivCentered } from '../../../../theme/common';
+import Footer from '../../components/Footer';
+import { FlexDivCentered } from 'theme/common';
 
 const cookies = new Cookies();
 

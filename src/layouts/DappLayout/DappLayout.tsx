@@ -31,62 +31,6 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 };
 
 const Background = styled.section`
-    @media (min-width: 1440px) {
-        background-size: cover !important;
-    }
-
-    &#landing-hero {
-        min-height: 900px;
-        @media (max-width: 767px) {
-            min-height: 600px;
-        }
-        position: relative;
-        z-index: 2;
-        &.hide-background {
-            background: transparent;
-        }
-
-        & ~ section {
-            position: relative;
-            z-index: 2;
-            &:not(:last-of-type):after {
-                content: '';
-                display: block;
-                width: min(620px, 30%);
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                margin: auto;
-                height: 2px;
-                filter: blur(2px);
-                background-color: rgb(0, 249, 255);
-            }
-            &#faq:after {
-                width: 100%;
-            }
-            &:last-of-type {
-                backdrop-filter: blur(20px);
-            }
-            &.hide-background {
-                background: transparent;
-            }
-        }
-    }
-
-    &.hero {
-        @media (min-height: 1000px) and (min-width: 1200px) {
-            min-height: 800px;
-        }
-    }
-
-    &:nth-child(even) {
-        @media (max-width: 767px) {
-            & > div {
-                flex-flow: column-reverse;
-            }
-        }
-    }
     &.light {
         background-color: #f7f7f7;
         --background: #f7f7f7;
@@ -127,9 +71,7 @@ const NewWrapper = styled.div`
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    @media (min-width: 1000px) {
-        padding: 40px 100px 40px 100px;
-    }
+    padding: 40px 20px 40px 110px;
     min-height: 100vh;
 `;
 
