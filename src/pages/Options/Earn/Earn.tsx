@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Background, FlexDivCentered, FlexDivColumn, FlexDivRowCentered, Image } from '../../../theme/common';
-import MarketHeader from '../Home/MarketHeader';
-import ROUTES from '../../../constants/routes';
+import { FlexDivCentered, FlexDivColumn, FlexDivRowCentered, Image } from '../../../theme/common';
+
 import ThalesStaking from './ThalesStaking';
 import SnxStaking from './SnxStaking';
 import Vesting from './Vesting';
@@ -27,14 +26,14 @@ import migrationActiveIcon from '../../../assets/images/migration-active.svg';
 import migrationIcon from '../../../assets/images/migration.svg';
 import migratedRewardsActiveIcon from '../../../assets/images/migrated-rewards-active.svg';
 import migratedRewardsIcon from '../../../assets/images/migrated-rewards.svg';
-import Loader from '../../../components/Loader';
-import { useSelector } from 'react-redux';
+
 import { RootState } from '../../../redux/rootReducer';
 import { getNetworkId } from '../../../redux/modules/wallet';
-import { getIsOVM, isNetworkSupported } from '../../../utils/network';
+import { getIsOVM } from '../../../utils/network';
 import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
 import MigratedRewards from './MigratedRewards';
+import { useSelector } from 'react-redux';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -107,166 +106,147 @@ const EarnPage: React.FC = () => {
     }, [location, isL2]);
 
     return (
-        <Background style={{ minHeight: '100vh' }}>
-            {networkId && isNetworkSupported(networkId) ? (
-                <>
-                    <Container>
-                        <FlexDivColumn style={{ width: '100%' }} className="earn">
-                            <MarketHeader route={ROUTES.Options.Token} />
-                        </FlexDivColumn>
-                    </Container>
-                    <Container>
-                        <FlexDivColumn>
-                            <TokenOverview />
-                            {!isL2 && selectedTab !== 'migration' && <MigrationNotice />}
-                            <MainContentContainer>
-                                <OptionsTabContainer>
-                                    {optionsTabContent.map((tab, index) => (
-                                        <OptionsTab
-                                            isActive={tab.id === selectedTab}
-                                            key={index}
-                                            index={index}
-                                            showFourTabs={false}
-                                            onClick={() => {
-                                                if (tab.disabled) return;
-                                                history.push({
-                                                    pathname: location.pathname,
-                                                    search: queryString.stringify({
-                                                        tab: tab.id,
-                                                    }),
-                                                });
-                                                setSelectedTab(tab.id);
-                                            }}
-                                            className={`${tab.id === selectedTab ? 'selected' : ''} ${
-                                                tab.disabled ? 'disabled' : ''
-                                            }`}
-                                        >
-                                            <InnerOptionsTab paddingLeft={tab.disabled ? 40 : 0}>
-                                                {`${tab.name} ${
-                                                    tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''
-                                                }`}
-                                            </InnerOptionsTab>
-                                        </OptionsTab>
-                                    ))}
-                                </OptionsTabContainer>
-                                <WidgetsContainer>
-                                    <InnerWidgetsContainer>
-                                        {selectedTab === 'retro-rewards' && <SnxStaking />}
-                                        {selectedTab === 'staking' && <ThalesStaking />}
-                                        {selectedTab === 'vesting' && <Vesting />}
-                                        {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
-                                        {selectedTab === 'migration' && !isL2 && <Migration />}
-                                        {selectedTab === 'migrated-rewards' && isL2 && <MigratedRewards />}
-                                    </InnerWidgetsContainer>
-                                </WidgetsContainer>
-                            </MainContentContainer>
-                        </FlexDivColumn>
-                    </Container>
-                    <NavFooter>
-                        <Icon
-                            width={50}
-                            height={50}
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'retro-rewards',
-                                    }),
-                                });
-                                setSelectedTab('retro-rewards');
-                            }}
-                            src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
-                        />
-                        <Icon
-                            width={30}
-                            height={30}
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'staking',
-                                    }),
-                                });
-                                setSelectedTab('staking');
-                            }}
-                            src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
-                        />
-                        <Icon
-                            width={30}
-                            height={30}
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'vesting',
-                                    }),
-                                });
-                                setSelectedTab('vesting');
-                            }}
-                            src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
-                        />
-                        <Icon
-                            width={isL2 ? 35 : 50}
-                            height={isL2 ? 35 : 30}
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'lp-staking',
-                                    }),
-                                });
-                                setSelectedTab('lp-staking');
-                            }}
-                            src={
-                                selectedTab === 'lp-staking'
-                                    ? isL2
-                                        ? lpl2ActiveIcon
-                                        : lpActiveIcon
-                                    : isL2
-                                    ? lpl2Icon
-                                    : lpIcon
-                            }
-                        />
-                        {!isL2 && (
-                            <Icon
-                                width={35}
-                                height={30}
-                                onClick={() => {
-                                    history.push({
-                                        pathname: location.pathname,
-                                        search: queryString.stringify({
-                                            tab: 'migration',
-                                        }),
-                                    });
-                                    setSelectedTab('migration');
-                                }}
-                                src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
-                            />
-                        )}
-                        {isL2 && (
-                            <Icon
-                                width={50}
-                                height={40}
-                                onClick={() => {
-                                    history.push({
-                                        pathname: location.pathname,
-                                        search: queryString.stringify({
-                                            tab: 'migrated-rewards',
-                                        }),
-                                    });
-                                    setSelectedTab('migrated-rewards');
-                                }}
-                                src={
-                                    selectedTab === 'migrated-rewards' ? migratedRewardsActiveIcon : migratedRewardsIcon
-                                }
-                            />
-                        )}
-                    </NavFooter>
-                </>
-            ) : (
-                <Loader />
-            )}
-        </Background>
+        <>
+            <Container>
+                <FlexDivColumn>
+                    <TokenOverview />
+                    {!isL2 && selectedTab !== 'migration' && <MigrationNotice />}
+                    <MainContentContainer>
+                        <OptionsTabContainer>
+                            {optionsTabContent.map((tab, index) => (
+                                <OptionsTab
+                                    isActive={tab.id === selectedTab}
+                                    key={index}
+                                    index={index}
+                                    showFourTabs={false}
+                                    onClick={() => {
+                                        if (tab.disabled) return;
+                                        history.push({
+                                            pathname: location.pathname,
+                                            search: queryString.stringify({
+                                                tab: tab.id,
+                                            }),
+                                        });
+                                        setSelectedTab(tab.id);
+                                    }}
+                                    className={`${tab.id === selectedTab ? 'selected' : ''} ${
+                                        tab.disabled ? 'disabled' : ''
+                                    }`}
+                                >
+                                    <InnerOptionsTab paddingLeft={tab.disabled ? 40 : 0}>
+                                        {`${tab.name} ${
+                                            tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''
+                                        }`}
+                                    </InnerOptionsTab>
+                                </OptionsTab>
+                            ))}
+                        </OptionsTabContainer>
+                        <WidgetsContainer>
+                            <InnerWidgetsContainer>
+                                {selectedTab === 'retro-rewards' && <SnxStaking />}
+                                {selectedTab === 'staking' && <ThalesStaking />}
+                                {selectedTab === 'vesting' && <Vesting />}
+                                {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
+                                {selectedTab === 'migration' && !isL2 && <Migration />}
+                                {selectedTab === 'migrated-rewards' && isL2 && <MigratedRewards />}
+                            </InnerWidgetsContainer>
+                        </WidgetsContainer>
+                    </MainContentContainer>
+                </FlexDivColumn>
+            </Container>
+            <NavFooter>
+                <Icon
+                    width={50}
+                    height={50}
+                    onClick={() => {
+                        history.push({
+                            pathname: location.pathname,
+                            search: queryString.stringify({
+                                tab: 'retro-rewards',
+                            }),
+                        });
+                        setSelectedTab('retro-rewards');
+                    }}
+                    src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
+                />
+                <Icon
+                    width={30}
+                    height={30}
+                    onClick={() => {
+                        history.push({
+                            pathname: location.pathname,
+                            search: queryString.stringify({
+                                tab: 'staking',
+                            }),
+                        });
+                        setSelectedTab('staking');
+                    }}
+                    src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
+                />
+                <Icon
+                    width={30}
+                    height={30}
+                    onClick={() => {
+                        history.push({
+                            pathname: location.pathname,
+                            search: queryString.stringify({
+                                tab: 'vesting',
+                            }),
+                        });
+                        setSelectedTab('vesting');
+                    }}
+                    src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
+                />
+                <Icon
+                    width={isL2 ? 35 : 50}
+                    height={isL2 ? 35 : 30}
+                    onClick={() => {
+                        history.push({
+                            pathname: location.pathname,
+                            search: queryString.stringify({
+                                tab: 'lp-staking',
+                            }),
+                        });
+                        setSelectedTab('lp-staking');
+                    }}
+                    src={
+                        selectedTab === 'lp-staking' ? (isL2 ? lpl2ActiveIcon : lpActiveIcon) : isL2 ? lpl2Icon : lpIcon
+                    }
+                />
+                {!isL2 && (
+                    <Icon
+                        width={35}
+                        height={30}
+                        onClick={() => {
+                            history.push({
+                                pathname: location.pathname,
+                                search: queryString.stringify({
+                                    tab: 'migration',
+                                }),
+                            });
+                            setSelectedTab('migration');
+                        }}
+                        src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
+                    />
+                )}
+                {isL2 && (
+                    <Icon
+                        width={50}
+                        height={40}
+                        onClick={() => {
+                            history.push({
+                                pathname: location.pathname,
+                                search: queryString.stringify({
+                                    tab: 'migrated-rewards',
+                                }),
+                            });
+                            setSelectedTab('migrated-rewards');
+                        }}
+                        src={selectedTab === 'migrated-rewards' ? migratedRewardsActiveIcon : migratedRewardsIcon}
+                    />
+                )}
+            </NavFooter>
+        </>
     );
 };
 
@@ -276,8 +256,6 @@ const Container = styled.div`
     align-items: center;
     width: min(100%, 1440px);
     margin: auto;
-    padding-left: 120px;
-    padding-right: 30px;
     @media (max-width: 1024px) {
         flex-direction: column;
         width: 100%;

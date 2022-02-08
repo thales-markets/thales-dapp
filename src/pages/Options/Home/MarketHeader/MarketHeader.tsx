@@ -43,7 +43,7 @@ import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
 import NetworkSwitch from 'components/NetworkSwitch';
 
-import UserCard from 'components/UserInfo/v2/UserCard';
+import UserCard from 'layouts/DappLayout/components/DappHeader/UserCard';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;

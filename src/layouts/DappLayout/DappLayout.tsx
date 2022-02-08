@@ -66,12 +66,15 @@ const Background = styled.section`
 const NewWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
     padding: 40px 20px 40px 110px;
+    @media (max-width: 1024px) {
+        padding: 40px 20px;
+    }
     max-width: 1440px;
     min-height: 100vh;
 `;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import UserCard from 'components/UserInfo/v2/UserCard';
+import UserCard from 'layouts/DappLayout/components/DappHeader/UserCard';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { FlexDiv, FlexDivColumn, Logo } from 'theme/common';
@@ -142,7 +142,7 @@ const ItemsContainer = styled.ul``;
 const BurdgerIcon = styled.img`
     position: absolute;
     right: 30px;
-    top: 32px;
+    top: 52px;
     padding: 10px;
 `;
 

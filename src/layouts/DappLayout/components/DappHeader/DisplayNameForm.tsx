@@ -27,9 +27,7 @@ const DisplayNameForm: React.FC = () => {
     const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: true });
     const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
 
-    console.log('currentDisplayName ', currentDisplayName);
     const [displayName, setDisplayName] = useState(currentDisplayName);
-    console.log('displayName ', displayName);
 
     const dispatchDisplayName = async (walletAddress: string, displayName: string) => {
         if (!ethEnabled()) {

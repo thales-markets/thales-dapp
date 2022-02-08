@@ -268,9 +268,9 @@ const App = () => {
                         </Route>
 
                         <Route exact path={ROUTES.Options.Token}>
-                            <MainLayout>
+                            <DappLayout>
                                 <EarnPage />
-                            </MainLayout>
+                            </DappLayout>
                         </Route>
 
                         <Route

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import styled from 'styled-components';
 
-import UserWallet from 'components/UserInfo/v2/UserWallet';
+import UserWallet from 'layouts/DappLayout/components/DappHeader/UserWallet';
 import PieChartUserBalance from 'components/Charts/PieChartUserBalance';
 import PriceChart from 'components/Charts/PriceChart';
 import LanguageCardSelector from 'components/LanguageSelector/v3/LanguageCardSelector';
