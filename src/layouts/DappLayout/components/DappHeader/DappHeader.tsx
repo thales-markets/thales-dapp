@@ -57,10 +57,10 @@ const DappHeader: React.FC = () => {
             >
                 <ItemsContainer>
                     <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Home)}>
-                        <LogoIcon width="38" height="51" src={logoSmallIcon} />
+                        <LogoIcon width="38" height="42" src={logoSmallIcon} />
                     </SPAAnchor>
                     <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Home)}>
-                        <LogoIcon height="51" src={logoIcon} />
+                        <LogoIcon height="42" src={logoIcon} />
                     </SPAAnchor>
 
                     <DappHeaderItem
