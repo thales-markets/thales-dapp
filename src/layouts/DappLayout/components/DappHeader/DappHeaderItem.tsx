@@ -49,9 +49,8 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({ href, className, iconNa
 const MenuItem = styled.li`
     display: flex;
     align-items: center;
-    height: 70px;
     cursor: pointer;
-    padding: 14px;
+    padding: 20px;
     color: #f6f6fe;
     transition: background 300ms;
     &.selected {

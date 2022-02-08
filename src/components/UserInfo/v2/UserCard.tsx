@@ -29,7 +29,7 @@ export const UserCard: React.FC = () => {
                 walletContainerStyle={{ margin: '0px', border: '1px solid rgba(100, 217, 254, 0.5)' }}
             />
             <MenuCardButton onClick={() => setShowCard(!showCard)}>
-                <MenuIcon className="sidebar-icon icon--card-menu" />
+                <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
             <OutsideClickHandler onOutsideClick={() => (showCard ? setShowCard(!showCard) : '')}>
                 <MenuCard visibility={showCard} className={theme == 0 ? 'light' : 'dark'}>

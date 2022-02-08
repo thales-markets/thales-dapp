@@ -38,7 +38,6 @@ import DappLayout from 'layouts/DappLayout';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../V2/Home'));
-const OptionsHome = lazy(() => import('../Options/Home'));
 const OptionsHomeV2 = lazy(() => import('../Options/Home/v2'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
@@ -285,21 +284,15 @@ const App = () => {
                         />
 
                         <Route exact path={ROUTES.Options.Home}>
-                            <MainLayout>
-                                <OptionsHome />
-                            </MainLayout>
+                            <DappLayout>
+                                <OptionsHomeV2 />
+                            </DappLayout>
                         </Route>
 
                         <Route exact path={ROUTES.Home}>
                             <MainLayout>
                                 <Home />
                             </MainLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Test.Home}>
-                            <DappLayout>
-                                <OptionsHomeV2 />
-                            </DappLayout>
                         </Route>
 
                         <Route exact path={ROUTES.Article.Token}>
@@ -319,9 +312,9 @@ const App = () => {
                         </Route>
                         <Route>
                             <Redirect to={ROUTES.Options.Home} />
-                            <MainLayout>
-                                <OptionsHome />
-                            </MainLayout>
+                            <DappLayout>
+                                <OptionsHomeV2 />
+                            </DappLayout>
                         </Route>
                     </Switch>
                 </Router>

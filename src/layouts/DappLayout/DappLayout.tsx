@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
-import ROUTES from 'constants/routes';
 import { getTheme } from 'redux/modules/ui';
 import styled from 'styled-components';
 import DappHeader from './components/DappHeader/DappHeader';
@@ -20,17 +19,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
             {isAppReady ? (
                 <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
                     <NewWrapper>
-                        <DappHeader
-                            route={
-                                location.search === '?anchor=overview'
-                                    ? ROUTES.Options.Overview
-                                    : location.search === '?userFilter2=custom'
-                                    ? ROUTES.Options.CustomMarkets
-                                    : location.search === '?userFilter2=competition'
-                                    ? ROUTES.Options.CompetitionMarkets
-                                    : ROUTES.Options.Overview
-                            }
-                        />
+                        <DappHeader />
                         {children}
                     </NewWrapper>
                 </Background>

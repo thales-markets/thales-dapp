@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
 import UserCard from 'components/UserInfo/v2/UserCard';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { FlexDiv, FlexDivColumn, Logo } from 'theme/common';
-import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
 
 import { useTranslation } from 'react-i18next';
 
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { getIsOVM } from 'utils/network';
+// import { useSelector } from 'react-redux';
+// import { RootState } from 'redux/rootReducer';
+// import { getNetworkId } from 'redux/modules/wallet';
+// import { getIsOVM } from 'utils/network';
 
 import { buildHref } from 'utils/routes';
 
@@ -21,14 +19,7 @@ import ROUTES from 'constants/routes';
 import logoIcon from 'assets/images/logo-light.svg';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import burger from 'assets/images/burger.svg';
-
-type DappHeaderProps = {
-    showCustomizeLayout?: boolean;
-    phase?: string;
-    isCustomMarket?: boolean;
-    route: string;
-    className?: string;
-};
+import { useLocation } from 'react-router-dom';
 
 enum BurgerState {
     Init,
@@ -36,22 +27,17 @@ enum BurgerState {
     Hide,
 }
 
-const DappHeader: React.FC<DappHeaderProps> = ({ showCustomizeLayout, phase, route, isCustomMarket, className }) => {
+const DappHeader: React.FC = () => {
     const { t } = useTranslation();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const networkId = useSelector((state: RootState) => getNetworkId(state));
+    // const isL2 = getIsOVM(networkId);
+    const location = useLocation();
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
-
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
 
     return (
         <FlexDivColumn style={{ width: '100%', flex: 'unset' }}>
             <UserCard />
-            <DappHeaderWrapper
-                id="dapp-header"
-                className={`dapp-header ${className}`}
-                showCustomizeLayout={showCustomizeLayout}
-            >
+            <DappHeaderWrapper id="dapp-header" className="dapp-header">
                 <FlexDiv className="dapp-header__logoWrapper">
                     <Logo to="" className="dapp-header__logoWrapper__logo" />
                     <BurdgerIcon
@@ -65,51 +51,38 @@ const DappHeader: React.FC<DappHeaderProps> = ({ showCustomizeLayout, phase, rou
                         src={burger}
                     />
                 </FlexDiv>
-                {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
             </DappHeaderWrapper>
             <Sidebar
                 className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
             >
                 <ItemsContainer>
-                    <SPAAnchor href={buildHref(ROUTES.Home)}>
-                        <LogoLocal className="logo" />
+                    <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Home)}>
+                        <LogoIcon width="38" height="51" src={logoSmallIcon} />
                     </SPAAnchor>
-                    {!isL2 && (
-                        <DappHeaderItem
-                            iconName="markets"
-                            label={t('common.sidebar.markets')}
-                            submenuItems={[
-                                {
-                                    className: route === ROUTES.Options.Overview ? 'selected' : '',
-                                    href: buildHref(ROUTES.Options.Overview),
-                                    iconName: 'markets-overview',
-                                    label: t('common.sidebar.overview-label'),
-                                },
-                                {
-                                    className: route === ROUTES.Options.CreateMarket ? 'selected' : '',
-                                    href: buildHref(ROUTES.Options.CreateMarket),
-                                    iconName: 'create-market',
-                                    label: t('common.sidebar.create-market-label'),
-                                },
-                            ]}
-                        />
-                    )}
-                    {!isL2 && (
-                        <DappHeaderItem
-                            className={route === ROUTES.Options.Token ? 'selected' : ''}
-                            href={buildHref(ROUTES.Options.Token)}
-                            iconName="token"
-                            label={t('common.sidebar.earn-label')}
-                        />
-                    )}
-                    {!isL2 && (
-                        <DappHeaderItem
-                            className={route === ROUTES.Options.Royal ? 'selected' : ''}
-                            href={buildHref(ROUTES.Options.Royal)}
-                            iconName="thales-royale"
-                            label={t('common.sidebar.royale-label')}
-                        />
-                    )}
+                    <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Home)}>
+                        <LogoIcon height="51" src={logoIcon} />
+                    </SPAAnchor>
+
+                    <DappHeaderItem
+                        className={location.pathname === ROUTES.Options.Home ? 'selected' : ''}
+                        href={buildHref(ROUTES.Options.Home)}
+                        iconName="markets"
+                        label={t('common.sidebar.markets')}
+                    />
+
+                    <DappHeaderItem
+                        className={location.pathname === ROUTES.Options.Token ? 'selected' : ''}
+                        href={buildHref(ROUTES.Options.Token)}
+                        iconName="token"
+                        label={t('common.sidebar.earn-label')}
+                    />
+
+                    <DappHeaderItem
+                        className={location.pathname === ROUTES.Options.Royal ? 'selected' : ''}
+                        href={buildHref(ROUTES.Options.Royal)}
+                        iconName="thales-royale"
+                        label={t('common.sidebar.royale-label')}
+                    />
                 </ItemsContainer>
             </Sidebar>
         </FlexDivColumn>
@@ -120,13 +93,16 @@ const Sidebar = styled.nav`
     position: fixed;
     top: 0;
     left: 0;
-    width: 58px;
+    width: 89px;
     min-height: 100vh;
     z-index: 100;
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     padding: 35px 0;
     transition: width 0.3s ease;
     overflow: hidden;
+    .sidebar-logoBig {
+        display: none;
+    }
     &:hover {
         width: 300px;
         span {
@@ -135,8 +111,11 @@ const Sidebar = styled.nav`
         i {
             display: block;
         }
-        .logo {
-            background: url(${logoIcon}) center no-repeat;
+        .sidebar-logoSmall {
+            display: none;
+        }
+        .sidebar-logoBig {
+            display: block;
         }
     }
     -webkit-user-select: none;
@@ -144,12 +123,6 @@ const Sidebar = styled.nav`
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
-    .logo {
-        @media screen and (max-width: 1024px) {
-            background: url(${logoIcon}) center no-repeat;
-        }
-        background: url(${logoSmallIcon}) center no-repeat;
-    }
 `;
 
 const ItemsContainer = styled.ul``;
@@ -161,20 +134,30 @@ const BurdgerIcon = styled.img`
     padding: 10px;
 `;
 
-const DappHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
+const DappHeaderWrapper = styled.div`
     width: 100%;
     height: 100px;
     display: flex;
     align-items: center;
-    justify-content: ${(props: any) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
+    justify-content: flex-end;
     @media screen and (max-width: 767px) {
         height: 100%;
     }
 `;
 
-const LogoLocal = styled.div`
+const LogoIcon = styled.img`
+    display: block;
+    object-fit: contain;
     cursor: pointer;
-    height: 50px;
-    margin-bottom: 60px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 100px;
 `;
+
+// const LogoLocal = styled.div`
+//     cursor: pointer;
+//     height: 50px;
+//     margin-bottom: 60px;
+// `;
+
 export default DappHeader;
