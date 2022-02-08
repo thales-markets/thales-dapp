@@ -1,26 +1,32 @@
+import { Modal } from '@material-ui/core';
+import { SYNTHS_MAP } from 'constants/currency';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { ethers } from 'ethers';
+import Swap from 'pages/Options/Home/Swap';
 import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
+import { Positions } from 'pages/Options/Royal/Queries/usePositionsQuery';
+import { FooterData } from 'pages/Options/Royal/Queries/useRoyaleFooterQuery';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
+import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import { getIsOVM } from 'utils/network';
-import snxJSConnector from 'utils/snxJSConnector';
-import UserEditRoyaleDataDialog from './UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
-import { User, UserStatus } from '../queries/useRoyalePlayersQuery';
-import useLatestRoyaleForUserInfo from '../queries/useLastRoyaleForUserInfo';
-import useUserRoyalQuery, { AnonimUser } from '../queries/useUserRoyalQuery';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { dispatchMarketNotification } from 'utils/options';
-import { Positions } from 'pages/Options/Royal/Queries/usePositionsQuery';
-import { FooterData } from 'pages/Options/Royal/Queries/useRoyaleFooterQuery';
+import snxJSConnector from 'utils/snxJSConnector';
+import useLatestRoyaleForUserInfo from '../queries/useLastRoyaleForUserInfo';
+import { User, UserStatus } from '../queries/useRoyalePlayersQuery';
+import useUserRoyalQuery, { AnonimUser } from '../queries/useUserRoyalQuery';
+import UserEditRoyaleDataDialog from './UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
 
 type UserCardProps = {
     ethPrice: string;
@@ -33,6 +39,7 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
     const userQuery = useUserRoyalQuery(walletAddress as any, networkId, selectedSeason, {
@@ -45,8 +52,19 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
+    const [showSwap, setShowSwap] = useState(false);
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
     useEffect(() => {
         if (selectedSeason !== 0) {
@@ -240,6 +258,31 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
                             truncateAddressNumberOfCharacters
                         )}
                     </InputWrapper>
+                </FlexContainer>
+                <FlexContainer>
+                    <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
+                    <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
+                </FlexContainer>
+                <FlexContainer>
+                    {walletAddress && (
+                        <Button
+                            onClick={() => {
+                                setShowSwap(true);
+                            }}
+                        >
+                            {t('options.swap.button-text')}
+                        </Button>
+                    )}
+                    <Modal
+                        open={showSwap}
+                        onClose={(_, reason) => {
+                            if (reason !== 'backdropClick') setShowSwap(false);
+                        }}
+                    >
+                        <div style={{ height: 0 }}>
+                            <Swap royaleTheme={true} handleClose={setShowSwap}></Swap>
+                        </div>
+                    </Modal>
                 </FlexContainer>
                 <InfoSection>
                     <div>
