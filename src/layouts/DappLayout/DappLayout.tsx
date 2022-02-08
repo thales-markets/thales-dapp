@@ -72,6 +72,7 @@ const NewWrapper = styled.div`
     margin-left: auto;
     margin-right: auto;
     padding: 40px 20px 40px 110px;
+    max-width: 1440px;
     min-height: 100vh;
 `;
 

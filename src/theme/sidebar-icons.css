@@ -18,6 +18,10 @@
     content: '\0057';
 }
 
+.icon--governance:before {
+    content: '\0058';
+}
+
 .icon--markets:before {
     content: '\0059';
 }

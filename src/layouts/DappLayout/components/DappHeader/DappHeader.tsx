@@ -83,6 +83,18 @@ const DappHeader: React.FC = () => {
                         iconName="thales-royale"
                         label={t('common.sidebar.royale-label')}
                     />
+                    <DappHeaderItem
+                        className={
+                            [ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal].includes(
+                                location.pathname
+                            )
+                                ? 'selected'
+                                : ''
+                        }
+                        href={buildHref(ROUTES.Governance.Home)}
+                        iconName="governance"
+                        label={t('common.sidebar.governance-label')}
+                    />
                 </ItemsContainer>
             </Sidebar>
         </FlexDivColumn>

@@ -256,9 +256,9 @@ const App = () => {
                             exact
                             path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
                             render={(routeProps) => (
-                                <MainLayout>
+                                <DappLayout>
                                     <GovernancePage {...routeProps} />
-                                </MainLayout>
+                                </DappLayout>
                             )}
                         />
                         <Route exact path={ROUTES.Options.Game}>
