@@ -5,7 +5,7 @@ import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
-import EarnPage from 'pages/Options/Earn/Earn.tsx';
+import TokenPage from 'pages/Token/Token.tsx';
 import GamePage from 'pages/Options/Game/Game.tsx';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
@@ -269,7 +269,7 @@ const App = () => {
 
                         <Route exact path={ROUTES.Options.Token}>
                             <DappLayout>
-                                <EarnPage />
+                                <TokenPage />
                             </DappLayout>
                         </Route>
 

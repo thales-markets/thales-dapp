@@ -3,10 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 
-// import { useSelector } from 'react-redux';
-// import { RootState } from 'redux/rootReducer';
-// import { getNetworkId } from 'redux/modules/wallet';
-
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
@@ -26,7 +22,6 @@ type MarketCardPros = {
 
 const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) => {
     const { t } = useTranslation();
-    // const networkId = useSelector((state: RootState) => getNetworkId(state));
     const currentAssetPrice = exchangeRates?.[optionMarket?.currencyKey] || 0;
     const strikeAndAssetPriceDifference = getPercentageDifference(currentAssetPrice, optionMarket?.strikePrice);
 
