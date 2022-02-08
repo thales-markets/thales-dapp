@@ -12,17 +12,15 @@ import { useTranslation } from 'react-i18next';
 
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-// import { getIsAppReady } from 'redux/modules/app';
-// import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
 
 import Currency from 'components/Currency/v2';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import MarketsGrid from '../../MarketsGrid';
+import MarketsGrid from '../MarketsGrid';
 import { FlexDivRow } from 'theme/common';
-import TableGridSwitch from '../../../components/Input/TableGridSwitch';
-import SearchField from '../../../components/Input/SearchField';
+import TableGridSwitch from '../Input/TableGridSwitch';
+import SearchField from '../Input/SearchField';
 import PriceChart from 'components/Charts/PriceChart';
 import { TablePagination } from '@material-ui/core';
 import SortingMenu from 'components/SortingMenu';

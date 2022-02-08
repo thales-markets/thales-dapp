@@ -4,7 +4,7 @@ import styled from 'styled-components';
 // import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { OptionsMarkets } from 'types/options';
 
-import HotMarketCard, { HotMarket } from '../../MarketCard/v2/HotMarketCard';
+import HotMarketCard, { HotMarket } from '../MarketsCard/HotMarketCard';
 
 import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';

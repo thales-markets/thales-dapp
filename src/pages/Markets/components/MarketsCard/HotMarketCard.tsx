@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useInterval from 'hooks/useInterval';
 
 import { MarketCardContainer } from 'theme/common';
-import { AssetName, CurrencyKey, AssetNameContainer } from '../v2/MarketCard';
+import { AssetName, CurrencyKey, AssetNameContainer } from './MarketCard';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';

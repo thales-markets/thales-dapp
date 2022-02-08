@@ -6,8 +6,8 @@ import { OptionsMarkets, GridFilters } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 import { FlexDiv } from 'theme/common';
-import MarketCard from '../MarketCard/v2/MarketCard';
-import { PaginationWrapper } from '../MarketsTable/v2/MarketsTable';
+import MarketCard from '../MarketsCard/MarketCard';
+import { PaginationWrapper } from '../MarketsTable/MarketsTable';
 
 import { getSynthName } from 'utils/currency';
 
