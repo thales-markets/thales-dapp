@@ -45,12 +45,14 @@ const App = () => {
     const isL2 = getIsOVM(networkId);
 
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
+    const [originalOverflowValue, setOriginalOverflowValue] = useState(null);
 
     queryConnector.setQueryClient();
 
     useEffect(() => {
         const init = async () => {
             const { networkId, name } = await getEthereumNetwork();
+            setOriginalOverflowValue(window.document.body.style.overflow);
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
                 if (!snxJSConnector.initialized) {
@@ -72,6 +74,10 @@ const App = () => {
 
         init();
     }, []);
+
+    function lockScroll() {
+        window.scrollTo(0, 0);
+    }
 
     useEffect(() => {
         if (isAppReady && networkId && isNetworkSupported(networkId)) {
@@ -139,6 +145,10 @@ const App = () => {
                                     networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                                 })
                             );
+                            if (originalOverflowValue !== null) {
+                                window.document.body.style.overflow = originalOverflowValue;
+                            }
+                            window.removeEventListener('scroll', lockScroll);
                             setSelectedWallet(wallet.name);
                         }
 
