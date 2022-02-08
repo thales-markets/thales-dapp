@@ -944,6 +944,7 @@
             "address": "Address",
             "twitter-account": "My twitter account",
             "my-info": "My info",
+            "balance": "sUSD balance",
             "table": {
                 "rank-col": "Rank",
                 "display-name-col": "Display Name",

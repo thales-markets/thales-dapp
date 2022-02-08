@@ -1,21 +1,25 @@
+import { Modal } from '@material-ui/core';
+import { SYNTHS_MAP } from 'constants/currency';
+import Swap from 'pages/Options/Home/Swap';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Text } from 'theme/common';
 import Cookies from 'universal-cookie';
+import { getCurrencyKeyBalance } from 'utils/balances';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import onboardConnector from 'utils/onboardConnector';
-import UserInfoRoyaleDialog from './UserInfoRoyaleDialog/UserInfoRoyaleDialog';
-import useEthBalanceQuery from './queries/useEthBalanceQuery';
-
+import { Theme } from '../../ThalesRoyal';
 import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
-import { Theme } from '../../ThalesRoyal';
-import Swap from 'pages/Options/Home/Swap';
-import { Modal } from '@material-ui/core';
+import useEthBalanceQuery from './queries/useEthBalanceQuery';
+import UserInfoRoyaleDialog from './UserInfoRoyaleDialog/UserInfoRoyaleDialog';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -41,12 +45,25 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     latestSeason,
 }) => {
     const { t } = useTranslation();
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [openUserInfo, setOpenUserInfo] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const balanceQuery = useEthBalanceQuery(walletAddress ?? '', { enabled: walletAddress !== null });
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
     const [showBurgerMenu, setShowBurgerMenu] = useState<BurgerState>(BurgerState.Init);
 
@@ -65,7 +82,10 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                 <InfoWrapper>
                     <UtilWrapper>
                         {walletAddress && (
-                            <Button onClick={() => setShowSwap(true)}>{t('options.swap.button-text')}</Button>
+                            <>
+                                <Button onClick={() => setShowSwap(true)}>{t('options.swap.button-text')}</Button>
+                                <SUSDBalance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</SUSDBalance>
+                            </>
                         )}
                         <Modal
                             open={showSwap}
@@ -316,6 +336,22 @@ const InfoText = styled.p`
     }
 `;
 
+const SUSDBalance = styled(Text)`
+    display: flex;
+    padding: 3px 15px 6px 5px;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 22px;
+    color: var(--color);
+    text-shadow: 0px 0px 30px var(--color);
+    text-align: center;
+    @media (max-width: 1024px) {
+        display: none;
+    }
+`;
+
 const HeaderButton = styled.button`
     display: flex;
     justify-content: space-between;
@@ -421,10 +457,7 @@ const Button = styled.button`
         cursor: not-allowed;
     }
     @media (max-width: 1024px) {
-        position: absolute;
-        right: 40px;
-        top: 15px;
-        z-index: 999;
+        display: none;
     }
 `;
 

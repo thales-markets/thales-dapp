@@ -1040,7 +1040,8 @@
                         "sell": "出售"
                     }
                 }
-            }
+            },
+            "balance": "美元余额"
         },
         "common": {
             "time-remaining": {
