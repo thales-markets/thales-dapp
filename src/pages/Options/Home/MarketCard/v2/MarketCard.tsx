@@ -86,7 +86,7 @@ const MarketCardWrapper = styled.div`
     display: flex;
     flex-direction: column;
     max-width: 390px;
-    border: 2px solid #64d9fe;
+    border: 2px solid rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
     border-radius: 15px;
     padding: 31px;
