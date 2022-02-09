@@ -50,6 +50,10 @@
     content: '\0063';
 }
 
+.icon--game:before {
+    content: '\0061';
+}
+
 .icon--ethereum-icon:before {
     content: '\0050';
 }
