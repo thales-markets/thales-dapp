@@ -141,7 +141,7 @@
         },
         "wallet": {
             "connect-your-wallet": "Connect wallet",
-            "disclaimer-info": "By connecting a wallet you agree to Thales DAO Terms Of Service and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <a target=\"_blank\" href={{link}}>disclaimer</a>"
+            "disclaimer-info": "By connecting a wallet you agree to Thales DAO Terms Of Use and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <a target=\"_blank\" href={{link}}>disclaimer</a>"
         },
         "errors": {
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",

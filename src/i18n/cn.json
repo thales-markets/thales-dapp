@@ -146,7 +146,7 @@
         },
         "wallet": {
             "connect-your-wallet": "连接钱包",
-            "disclaimer-info": "连接钱包即表示您同意 Thales DAO 服务条款和隐私政策，并承认您已阅读并理解 Thales DAO 协议<a target=\"_blank\" href={{link}}>免责声明</a>"
+            "disclaimer-info": "连接钱包即表示您同意 Thales DAO 使用条款和隐私政策，并承认您已阅读并理解 Thales DAO 协议<a target=\"_blank\" href={{link}}>免责声明</a>"
         },
         "errors": {
             "unknown-error-try-again": "提交后出现未知错误。请重试。",

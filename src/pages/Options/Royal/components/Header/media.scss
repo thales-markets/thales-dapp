@@ -73,6 +73,21 @@
     }
 }
 
+.bn-onboard-modal-terms-of-service span a:first-child {
+    visibility: hidden;
+    font-size: 0px;
+}
+
+.bn-onboard-modal-terms-of-service span a:first-child {
+    &:before {
+        content: 'Terms of Use';
+        visibility: visible;
+        color: #f7f7f7;
+        text-decoration: underline;
+        font-size: 14px;
+    }
+}
+
 .bn-onboard-select-description a {
     color: #f7f7f7;
     text-decoration: underline;
