@@ -57,7 +57,7 @@ export const Intro: React.FC = () => {
     useInterval(async () => {
         if (!data) return;
         setTimeLeftForPositioning(getTimeLeft(data.roundInASeasonStartTime, data.roundChoosingLength));
-        setTimeLeftUntilNewSeason(getTimeLeft(data.royaleSeasonCreationTime, data.pauseBetweenSeasonsTime));
+        setTimeLeftUntilNewSeason(getTimeLeft(data.royaleSeasonCreationTime, data.pauseBetweenSeasonsTime, true));
         setTimeLeftInRound(
             getTimeLeft(
                 data.roundInASeasonStartTime,

@@ -31,15 +31,20 @@ type BattleRoyaleProps = {
     selectedSeason: number;
 };
 
-export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
+export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number, betweenSeasons?: boolean) => {
     const beginningOfTime = new Date(0);
     beginningOfTime.setHours(0);
+    const oneDayInSeconds = 86400;
     const roundEndTime = addSeconds(startTime, roundLengthInSeconds);
     const timeDifferenceInSeconds = differenceInSeconds(roundEndTime, new Date());
     if (timeDifferenceInSeconds <= 0) {
         return null;
     }
-    beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds);
+
+    betweenSeasons
+        ? beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds - oneDayInSeconds)
+        : beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds);
+
     return beginningOfTime;
 };
 
