@@ -1,7 +1,16 @@
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
+import { StyledComponent } from 'styled-components';
 
-const Container: any = styled(FlexDivColumn)`
+type Children = {
+    Center: StyledComponent<'div', any>;
+    Wrapper: StyledComponent<'div', any>;
+    Msg: StyledComponent<'div', any>;
+    Btn: StyledComponent<'img', any>;
+};
+
+// @ts-ignore
+const Container: StyledComponent<'div', any> & Children = styled(FlexDivColumn)`
     z-index: 10;
     width: 100%;
 `;
