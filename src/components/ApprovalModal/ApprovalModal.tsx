@@ -51,7 +51,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
     const maxApproveAmount = bigNumberFormatter(ethers.constants.MaxUint256);
     const isAmountEntered = Number(amount) > 0;
-    const isButtonDisabled = !isWalletConnected || !isAmountEntered || !isAmountValid || isAllowing;
+    const isButtonDisabled = !isWalletConnected || isAllowing || (!approveAll && (!isAmountEntered || !isAmountValid));
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
@@ -61,7 +61,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                 </DefaultSubmitButton>
             );
         }
-        if (!isAmountEntered) {
+        if (!approveAll && !isAmountEntered) {
             return <DefaultSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</DefaultSubmitButton>;
         }
         return (
