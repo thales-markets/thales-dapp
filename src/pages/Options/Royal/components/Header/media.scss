@@ -55,6 +55,11 @@
     text-align: center;
 }
 
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service {
+    justify-content: center;
+}
+
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span {
     font-weight: normal;
