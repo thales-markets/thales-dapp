@@ -62,6 +62,14 @@
     }
 }
 
+.bn-onboard-select-description a {
+    color: #f7f7f7;
+    text-decoration: underline;
+    &:visited {
+        color: #f7f7f7;
+    }
+}
+
 .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div {
     min-width: 70px;
     @media (max-width: 500px) {
