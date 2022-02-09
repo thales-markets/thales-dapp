@@ -53,7 +53,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import { BigNumber, ethers } from 'ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { APPROVAL_EVENTS } from 'constants/events';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
@@ -207,23 +207,10 @@ const AMM: React.FC = () => {
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance, sellAmount]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance, sellAmount, isAllowing]);
 
     const fetchL1Fee = async (
         ammContractWithSigner: any,
@@ -338,7 +325,6 @@ const AMM: React.FC = () => {
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setAllowance(true);
                 setIsAllowing(false);
             }
         } catch (e) {

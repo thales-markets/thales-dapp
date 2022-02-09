@@ -8,7 +8,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { BigNumber, ethers } from 'ethers';
 import { APPROVAL_EVENTS } from 'constants/events';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { getAddress } from 'utils/formatters/ethers';
 import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -141,23 +140,10 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove ?? '')) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, hasAllowance, takerAmount]);
+    }, [walletAddress, isWalletConnected, hasAllowance, takerAmount, isAllowing]);
 
     useEffect(() => {
         const fetchL1Fee = async (limitOrderProtocol1inchContractWithSigner: any, fillOrderData: any) => {
@@ -222,7 +208,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setAllowance(true);
                 setIsAllowing(false);
             }
         } catch (e) {
