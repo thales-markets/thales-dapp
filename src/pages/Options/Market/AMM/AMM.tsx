@@ -52,7 +52,6 @@ import onboardConnector from 'utils/onboardConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { BigNumber, ethers } from 'ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';

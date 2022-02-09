@@ -6,7 +6,6 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { AccountMarketInfo, OptionSide, OrderItem, OrderSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { BigNumber, ethers } from 'ethers';
-import { APPROVAL_EVENTS } from 'constants/events';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
