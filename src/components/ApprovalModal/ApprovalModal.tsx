@@ -109,6 +109,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                             />
                         </CheckboxContainer>
                     </FlexDivColumnCentered>
+                    <OrText>{t('common.or')}</OrText>
                     <InputContainer>
                         <NumericInput
                             value={amount}
@@ -138,7 +139,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
 };
 
 export const CheckboxContainer = styled(FlexDivCentered)`
-    margin: 40px 0 10px 0;
+    margin: 40px 0 5px 0;
     label {
         font-size: 16px;
     }
@@ -154,6 +155,17 @@ export const CheckboxContainer = styled(FlexDivCentered)`
         width: 18px;
         margin-top: 2px;
     }
+`;
+
+const OrText = styled(FlexDivCentered)`
+    text-align: center;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.4px;
+    color: #f6f6fe;
+    margin-bottom: 20px;
 `;
 
 export default ApprovalModal;
