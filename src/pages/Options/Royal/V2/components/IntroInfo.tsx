@@ -57,7 +57,7 @@ export const Intro: React.FC = () => {
     useInterval(async () => {
         if (!data) return;
         setTimeLeftForPositioning(getTimeLeft(data.roundInASeasonStartTime, data.roundChoosingLength));
-        setTimeLeftUntilNewSeason(getTimeLeft(data.roundInASeasonStartTime, data.pauseBetweenSeasonsTime));
+        setTimeLeftUntilNewSeason(getTimeLeft(data.royaleSeasonCreationTime, data.pauseBetweenSeasonsTime));
         setTimeLeftInRound(
             getTimeLeft(
                 data.roundInASeasonStartTime,
@@ -90,7 +90,7 @@ export const Intro: React.FC = () => {
                         <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                             {timeLeftUntilNewSeason
-                                ? format(timeLeftUntilNewSeason, 'HH:mm:ss')
+                                ? format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
                                 : t('options.royale.battle.ended')}
                         </SubTitle>
                     </>
