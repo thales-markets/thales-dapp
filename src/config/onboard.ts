@@ -2,6 +2,8 @@ import onboard from 'bnc-onboard';
 import { Subscriptions } from 'bnc-onboard/dist/src/interfaces';
 import { getInfuraRpcURL, NetworkId as LocalNetworkId } from 'utils/network';
 import browserWalletIcon from 'assets/images/browser-wallet.svg';
+import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
+import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import { NetworkId } from '@synthetixio/contracts-interface';
 
 const ledgerIcon =
@@ -30,6 +32,9 @@ export const initOnboard = (networkId: LocalNetworkId, subscriptions: Subscripti
         subscriptions,
         darkMode: true,
         walletSelect: {
+            description:
+                'By connecting a wallet you agree to Thales DAO Terms Of Service and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol disclaimer',
+            agreement: { version: '1.0', termsUrl: termsOfUse, privacyUrl: privacyPolicy },
             wallets: [
                 {
                     name: 'Browser Wallet',

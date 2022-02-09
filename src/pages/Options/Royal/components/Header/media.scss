@@ -54,6 +54,13 @@
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span {
     font-weight: normal;
 }
+.bn-onboard-modal-terms-of-service a {
+    color: #f7f7f7;
+    text-decoration: underline;
+    &:visited {
+        color: #f7f7f7;
+    }
+}
 
 .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div {
     min-width: 70px;
