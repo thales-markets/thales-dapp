@@ -2,9 +2,8 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-import { APPROVAL_EVENTS } from 'constants/events';
 import { AMOUNT_PERCENTAGE, OneInchErrorReason, SLIPPAGE_PERCENTAGE } from 'constants/options';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import { maxBy } from 'lodash';
 // import { maxBy } from 'lodash';
@@ -44,15 +43,16 @@ import { AccountMarketInfo, OneInchErrorResponse, OptionSide, OrderItem, Orders,
 import { get1InchBaseURL, ONE_INCH_SWAP_CONTRACTS, ONE_INCH_SWAP_QUOTE_URL, ONE_INCH_SWAP_URL } from 'utils/1inch';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey, formatPercentageWithSign, truncToDecimals } from 'utils/formatters/number';
-import { formatGasLimit } from 'utils/network';
+import { checkAllowance, formatGasLimit } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import Web3 from 'web3';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import NumericInput from '../../components/NumericInput';
+import ApprovalModal from 'components/ApprovalModal';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -83,6 +83,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [priceImpactPercentage, setPriceImpactPercentage] = useState<number | string>('0');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isSlippageValid, setIsSlippageValid] = useState<boolean>(true);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
 
     const orderSideOptions = [
         {
@@ -134,12 +135,17 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         : tokenBalance < Number(amount) || !tokenBalance;
 
     const isButtonDisabled =
-        !isPriceEntered || !isAmountEntered || isSubmitting || !isWalletConnected || insufficientBalance;
+        !isPriceEntered ||
+        !isAmountEntered ||
+        isSubmitting ||
+        !isWalletConnected ||
+        insufficientBalance ||
+        !hasAllowance;
 
     const buyToken = isBuy ? baseToken : SynthsUSD.address;
     const sellToken = isBuy ? SynthsUSD.address : baseToken;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
-    const addressToApprove = ONE_INCH_SWAP_CONTRACTS[networkId];
+    const addressToApprove = ONE_INCH_SWAP_CONTRACTS[networkId] || '';
 
     const baseUrl = get1InchBaseURL(networkId);
 
@@ -184,42 +190,29 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             try {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setAllowance(!!bigNumberFormatter(allowance));
+                const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+                const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
+                setAllowance(allowance);
             } catch (e) {
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove ? addressToApprove : '')) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance, amount, isAllowing]);
 
-    const handleAllowance = async () => {
+    const handleAllowance = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
         try {
             setIsAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
-            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
-
+            setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setAllowance(true);
                 setIsAllowing(false);
             }
         } catch (e) {
@@ -401,7 +394,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         }
         if (!hasAllowance) {
             return (
-                <SubmitButton disabled={isAllowing} onClick={handleAllowance} isBuy={isBuy}>
+                <SubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)} isBuy={isBuy}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -578,6 +571,15 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 message={txErrorMessage}
                 onDismiss={() => setTxErrorMessage(null)}
             />
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={amount}
+                    tokenSymbol={sellTokenCurrencyKey}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
         </Container>
     );
 };
