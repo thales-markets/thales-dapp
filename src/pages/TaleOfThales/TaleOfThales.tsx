@@ -6,7 +6,7 @@ import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import Container from './StyledComponents/GameContainer';
+import Container from './styled-components/GameContainer';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-game/build.loader.js',
