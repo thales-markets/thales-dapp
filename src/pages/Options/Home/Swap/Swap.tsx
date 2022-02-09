@@ -441,9 +441,9 @@ const SectionWrapper = styled(FlexDivColumn)<{ royaleTheme?: boolean }>`
     padding-bottom: 0;
     border-radius: ${(props) => (props.royaleTheme ? '5px' : '20px')};
     max-height: ${(props) => (props.royaleTheme ? '102px' : '92px')};
+    margin: 20px 0;
+    position: relative;
     &:last-of-type {
-        position: relative;
-        margin: 20px 0;
         .react-select__indicators {
             display: none !important;
         }
@@ -535,7 +535,7 @@ const GradientBorderContent = styled.div<{ royaleTheme?: boolean }>`
         height: 115px;
     }
     &.error {
-        height: 395px;
+        height: 425px;
     }
     @media screen and (max-width: 500px) {
         width: 340px;
