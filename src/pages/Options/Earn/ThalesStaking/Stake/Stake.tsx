@@ -20,8 +20,6 @@ import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import snxJSConnector from '../../../../../utils/snxJSConnector';
 import { BigNumber, ethers } from 'ethers';
-import { getAddress } from '../../../../../utils/formatters/ethers';
-import { APPROVAL_EVENTS } from '../../../../../constants/events';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import NetworkFees from '../../../components/NetworkFees';
 import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from '../../../../../utils/network';
@@ -98,24 +96,11 @@ const Stake: React.FC = () => {
                     console.log(e);
                 }
             };
-
-            const registerAllowanceListener = () => {
-                thalesTokenContractWithSigner.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                        setStakeAllowance(true);
-                        setIsAllowingStake(false);
-                    }
-                });
-            };
             if (isWalletConnected) {
                 getAllowance();
-                registerAllowanceListener();
             }
-            return () => {
-                thalesTokenContractWithSigner.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-            };
         }
-    }, [walletAddress, isWalletConnected, hasStakeAllowance, stakingThalesContract, amountToStake]);
+    }, [walletAddress, isWalletConnected, hasStakeAllowance, stakingThalesContract, amountToStake, isAllowingStake]);
 
     useEffect(() => {
         const fetchL1Fee = async (stakingThalesContractWithSigner: any, amount: any) => {
@@ -186,7 +171,6 @@ const Stake: React.FC = () => {
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setStakeAllowance(true);
                 setIsAllowingStake(false);
             }
         } catch (e) {
