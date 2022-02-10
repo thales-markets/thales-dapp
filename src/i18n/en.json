@@ -921,6 +921,7 @@
             "address": "Address",
             "twitter-account": "My twitter account",
             "my-info": "My info",
+            "balance": "sUSD balance",
             "table": {
                 "rank-col": "Rank",
                 "display-name-col": "Display Name",
@@ -1138,6 +1139,7 @@
                 "season-finished": "Season finished",
                 "approve-susd": "Approve sUSD",
                 "buy-in": "Buy-in: {{buyInAmount}} sUSD",
+                "insufficient-balance": "Insufficient sUSD balance",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
@@ -1183,7 +1185,9 @@
                 "avatar": "Avatar image",
                 "avatar-tip": "Please enter valid URL ending with either .jpg, .jpeg, .png, .svg or .gif",
                 "change-display-name": "Apply changes",
-                "enter-display-name": "Enter Display Name"
+                "enter-display-name": "Enter Display Name",
+                "name-validation-msg": "Please enter Display Name without special characters",
+                "avatar-validation-msg": "Please enter valid Avatar URL"
             }
         },
         "amm-mining": {
