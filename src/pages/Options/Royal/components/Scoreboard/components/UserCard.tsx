@@ -34,6 +34,11 @@ type UserCardProps = {
     royaleFooterData: FooterData | undefined;
     selectedSeason: number;
 };
+export enum PositionsEnum {
+    NONE = 'None',
+    DOWN = 'Down',
+    UP = 'Up',
+}
 
 const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
@@ -53,6 +58,8 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
+    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+    const [defaultPosition, setDefaultPosition] = useState(PositionsEnum.NONE);
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
@@ -132,7 +139,11 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
                                 <Button
                                     className={buyInAmount > Number(balance) ? 'disabled' : ''}
                                     disabled={buyInAmount > Number(balance)}
-                                    onClick={signUp}
+                                    onClick={() => {
+                                        defaultPosition !== PositionsEnum.NONE
+                                            ? signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2)
+                                            : signUp();
+                                    }}
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
                                 </Button>
@@ -259,6 +270,28 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
                         )}
                     </InputWrapper>
                 </FlexContainer>
+                <FlexContainer style={{ position: 'relative' }}>
+                    <UserLabel>Set default position:</UserLabel>
+                    <PositionSelector isOpen={showSelectDropdown}>
+                        <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                            {defaultPosition.toUpperCase()}
+                            <Arrow className="icon icon--arrow-down" />
+                        </Text>
+                        {showSelectDropdown &&
+                            Object.keys(PositionsEnum).map((position: any, key: number) => (
+                                <Text
+                                    onClick={() => {
+                                        setDefaultPosition(PositionsEnum[position as keyof typeof PositionsEnum]);
+                                        setShowSelectDropdown(false);
+                                    }}
+                                    key={key}
+                                >
+                                    {position}
+                                </Text>
+                            ))}
+                    </PositionSelector>
+                    {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
+                </FlexContainer>
                 <FlexContainer>
                     <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
                     <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
@@ -309,6 +342,20 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
             {getFooter(user, royaleData)}
         </UserWrapper>
     );
+};
+
+export const signUpWithPosition = async (position: number) => {
+    const { thalesRoyaleContract } = snxJSConnector;
+    if (thalesRoyaleContract) {
+        const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
+        try {
+            const tx = await RoyalContract.signUpWithPosition(position);
+            await tx.wait();
+            dispatchMarketNotification('Successfully Signed Up With Position');
+        } catch (e) {
+            console.log(e);
+        }
+    }
 };
 
 const signUp = async () => {
@@ -433,6 +480,32 @@ const InputWrapper = styled.div`
     }
 `;
 
+const PositionSelector = styled.div<{ isOpen: boolean }>`
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 220px;
+    height: ${(props) => (props.isOpen ? '100px' : '28px')};
+    border: 1.30233px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 19.5349px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    cursor: pointer;
+    z-index: 5;
+    background: var(--color-wrapper);
+    @media (max-width: 1024px) {
+        width: 150px;
+    }
+`;
+
 const FlexContainer = styled(FlexDivCentered)`
     justify-content: space-between;
     margin: 7px 0;
@@ -477,3 +550,20 @@ const InfoSection = styled.div`
 `;
 
 export default UserCard;
+
+const Arrow = styled.i`
+    font-size: 12px;
+    line-height: 8px;
+    display: inline-block;
+    padding-bottom: 3px;
+    margin-left: 20px;
+`;
+
+const Overlay = styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+`;
