@@ -43,7 +43,7 @@ const ThalesRoyal: React.FC = () => {
 
     const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
 
-    const royaleFooterQuery = useRoyaleFooterQuery({ enabled: isAppReady });
+    const royaleFooterQuery = useRoyaleFooterQuery(networkId, { enabled: isAppReady });
     const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
     const positionsQuery = usePositionsQuery(0, networkId, {
         enabled: networkId !== undefined && isAppReady,

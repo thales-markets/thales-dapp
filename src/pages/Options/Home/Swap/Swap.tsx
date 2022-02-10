@@ -475,7 +475,6 @@ const Select = styled(ReactSelect)<{ royaleTheme?: boolean }>`
         background: ${(props) => (props.royaleTheme ? 'var(--color-wrapper) !important' : '')};
         border: ${(props) => (props.royaleTheme ? 'none !important' : '')};
     }
-
     .react-select__single-value,
     .react-select__single-value > div {
         padding: 0 !important;
@@ -483,7 +482,6 @@ const Select = styled(ReactSelect)<{ royaleTheme?: boolean }>`
     .react-select__control--is-focused {
         border: none !important;
     }
-
     .react-select__option {
         font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : '')};
         color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : '')};
@@ -555,7 +553,6 @@ const SceletonWrapper = styled.div<{ royaleTheme?: boolean }>`
         display: block;
         width: 100%;
     }
-
     @keyframes shimmer {
         100% {
             -webkit-mask-position: left;

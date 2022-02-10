@@ -145,7 +145,8 @@
             "failed": "失败"
         },
         "wallet": {
-            "connect-your-wallet": "连接钱包"
+            "connect-your-wallet": "连接钱包",
+            "disclaimer-info": "连接钱包即表示您同意 Thales DAO 使用条款和隐私政策，并承认您已阅读并理解 Thales DAO 协议<a target=\"_blank\" href={{link}}>免责声明</a>"
         },
         "errors": {
             "unknown-error-try-again": "提交后出现未知错误。请重试。",
@@ -1125,7 +1126,9 @@
                 "royale": "Royale",
                 "scoreboard": "积分榜",
                 "stats": "数据",
-                "price-source": "来源：链接ETH"
+                "price-source": "来源：链接ETH",
+                "current-reward-per-winner": "每位获胜者的奖励",
+                "season-finished": "第 {{season}} 季结束"
             },
             "battle": {
                 "round": "回合",
@@ -1148,11 +1151,11 @@
                 "start-royale": "开始泰雷兹 Royale",
                 "ends": "泰雷兹Royale结束于",
                 "question": "您是否具备击败竞争对手并进入决赛的条件?",
-                "info2": "泰雷兹Royale是一款连续的赢家通吃预测游戏，</bold>分6轮进行",
+                "info2": "泰雷兹Royale是<bold>一款连续的赢家通吃预测游戏</bold>，分6轮进行",
                 "info3": "注册期结束后，参与者将收到未来执行日期资产的目标价格。他们必须<bold>预测资产的实际价格是否会更高(△) 或更低(◯) 高于上述执行日期的目标价格。</bold>“",
                 "info4": "猜对的人进入下一轮。猜错的人被淘汰。到达并击败最后一轮的玩家将分享整个奖金池。",
-                "info5": "所有信息、规则以及详细的回合和奖金结构都可以在这里找到",
-                "info6": "<italic>祝你好运，让战斗开始吧！</italic>",
+                "info5": "游戏的注册费用为<bold>30 sUSD</bold>. 胜者将会分享总奖池（包括所有参赛者的报名费用以及额外的保底奖金 <bold>1000 sUSD</bold>和 <bold>1000 THALES</bold>。",
+                "info6": "所有信息、规则以及详细的回合和奖金结构都可以在这里找到: ",
                 "blog": "[Thales Royale博客帖子]",
                 "player-no": "玩家  <sans>№<sans>: ",
                 "eliminated": "你被淘汰了",

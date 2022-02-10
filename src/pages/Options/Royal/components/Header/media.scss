@@ -32,8 +32,6 @@
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-icon,
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
-.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description,
-.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description,
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-info,
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-info,
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-definition,
@@ -45,14 +43,57 @@
 
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description,
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
-.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span {
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service a,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service a,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description a,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description a {
     font-family: Sansation !important;
+    text-align: center;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service {
+    justify-content: center;
 }
 
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span {
     font-weight: normal;
+}
+
+.bn-onboard-modal-terms-of-service a {
+    color: #f7f7f7;
+    text-decoration: underline;
+    &:visited {
+        color: #f7f7f7;
+    }
+}
+
+.bn-onboard-modal-terms-of-service span a:first-child {
+    visibility: hidden;
+    font-size: 0px;
+}
+
+.bn-onboard-modal-terms-of-service span a:first-child {
+    &:before {
+        content: 'Terms of Use';
+        visibility: visible;
+        color: #f7f7f7;
+        text-decoration: underline;
+        font-size: 14px;
+    }
+}
+
+.bn-onboard-select-description a {
+    color: #f7f7f7;
+    text-decoration: underline;
+    &:visited {
+        color: #f7f7f7;
+    }
 }
 
 .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div {

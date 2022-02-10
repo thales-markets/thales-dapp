@@ -288,7 +288,6 @@ const InputWrapper = styled.input<{ isInputValid?: boolean }>`
     color: var(--color-wrapper);
     text-overflow: ellipsis;
     outline: none !important;
-
     @media (max-width: 1024px) {
         width: 150px;
     }

@@ -15,8 +15,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
-import addSeconds from 'date-fns/addSeconds';
-import differenceInSeconds from 'date-fns/differenceInSeconds';
+import { getTimeLeft } from '../../Arena/RoyaleArena';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 
@@ -58,7 +57,7 @@ const Intro: React.FC = () => {
     useInterval(async () => {
         if (!data) return;
         setTimeLeftForPositioning(getTimeLeft(data.roundInASeasonStartTime, data.roundChoosingLength));
-        setTimeLeftUntilNewSeason(getTimeLeft(data.roundInASeasonStartTime, data.pauseBetweenSeasonsTime));
+        setTimeLeftUntilNewSeason(getTimeLeft(data.royaleSeasonCreationTime, data.pauseBetweenSeasonsTime, true));
         setTimeLeftInRound(
             getTimeLeft(
                 data.roundInASeasonStartTime,
@@ -91,7 +90,7 @@ const Intro: React.FC = () => {
                         <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                             {timeLeftUntilNewSeason
-                                ? format(timeLeftUntilNewSeason, 'HH:mm:ss')
+                                ? format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
                                 : t('options.royale.battle.ended')}
                         </SubTitle>
                     </>
@@ -255,18 +254,6 @@ const Intro: React.FC = () => {
     );
 };
 
-const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
-    const beginningOfTime = new Date(0);
-    beginningOfTime.setHours(0);
-    const roundEndTime = addSeconds(startTime, roundLengthInSeconds);
-    const timeDifferenceInSeconds = differenceInSeconds(roundEndTime, new Date());
-    if (timeDifferenceInSeconds <= 0) {
-        return null;
-    }
-    beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds);
-    return beginningOfTime;
-};
-
 const startRoyale = async () => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
@@ -373,23 +360,19 @@ const InfoText = styled(Text)`
     &,
     strong {
         font-style: normal;
-
         font-size: 20px;
         line-height: 24px;
         text-align: justify;
         letter-spacing: -0.4px;
         color: var(--color);
     }
-
     strong {
         font-weight: bold;
         font-family: SansationBold !important;
     }
-
     i {
         font-style: italic;
     }
-
     img {
         vertical-align: bottom;
     }
