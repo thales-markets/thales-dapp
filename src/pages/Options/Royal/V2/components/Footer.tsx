@@ -175,31 +175,45 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                 >
                     ✖
                 </CloseStats>
-                <div>
-                    <span>{t('options.royale.footer.current-positions')}:</span>
-                    <span>{t('options.royale.footer.up')}</span>
-                    <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
-                    <span>{t('options.royale.footer.down')}</span>
-                </div>
-                <div>
-                    <span>
-                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
-                    </span>
-                    <span>${Number(ethPrice).toFixed(2)}</span>
-                    <InfoIconContainer>
-                        <RoyaleTooltip title={t('options.royale.footer.price-source')}>
-                            <StyledInfoIcon />
-                        </RoyaleTooltip>
-                    </InfoIconContainer>
-                </div>
-                <div>
-                    <span>{t('options.royale.footer.current-reward-per-player')}:</span>
-                    <span>{royaleData?.reward.toFixed(2)} sUSD</span>
-                </div>
-                <div>
-                    <span>{t('options.royale.footer.players-alive')}:</span>
-                    <span>{royaleData?.playersAlive}</span>
-                </div>
+                {royaleData?.seasonFinished ? (
+                    <>
+                        <div style={{ textAlign: 'center' }}>
+                            <span>{t('options.royale.footer.season-finished', { season: royaleData.season })}</span>
+                        </div>
+                        <div>
+                            <span>{t('options.royale.footer.current-reward-per-player')}:</span>
+                            <span>{(royaleData?.reward / royaleData.winners).toFixed(2)} sUSD</span>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div>
+                            <span>{t('options.royale.footer.current-positions')}:</span>
+                            <span>{t('options.royale.footer.up')}</span>
+                            <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
+                            <span>{t('options.royale.footer.down')}</span>
+                        </div>
+                        <div>
+                            <span>
+                                {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                            </span>
+                            <span>${Number(ethPrice).toFixed(2)}</span>
+                            <InfoIconContainer>
+                                <RoyaleTooltip title={t('options.royale.footer.price-source')}>
+                                    <StyledInfoIcon />
+                                </RoyaleTooltip>
+                            </InfoIconContainer>
+                        </div>
+                        <div>
+                            <span>{t('options.royale.footer.current-reward-per-player')}:</span>
+                            <span>{royaleData?.reward.toFixed(2)} sUSD</span>
+                        </div>
+                        <div>
+                            <span>{t('options.royale.footer.players-alive')}:</span>
+                            <span>{royaleData?.playersAlive}</span>
+                        </div>
+                    </>
+                )}
             </InfoSection>
             {showSelectDropdown && (
                 <Overlay

@@ -1100,7 +1100,9 @@
                 "royale": "Royale",
                 "scoreboard": "积分榜",
                 "stats": "数据",
-                "price-source": "来源：链接ETH"
+                "price-source": "来源：链接ETH",
+                "current-reward-per-winner": "每位获胜者的奖励",
+                "season-finished": "第 {{season}} 季结束"
             },
             "battle": {
                 "round": "回合",

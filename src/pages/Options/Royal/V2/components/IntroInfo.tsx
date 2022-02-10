@@ -5,6 +5,8 @@ import triangle from 'assets/images/royale/triangle.svg';
 import format from 'date-fns/format';
 import useInterval from 'hooks/useInterval';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import differenceInSeconds from 'date-fns/differenceInSeconds';
+import addSeconds from 'date-fns/addSeconds';
 import { Trans, useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
@@ -81,6 +83,15 @@ export const Intro: React.FC = () => {
             : 'Thales: Binary options trading powered by Synthetix.';
     }, [timeLeftInRound, timeLeftForPositioning]);
 
+    const lessThanADayBeforeSeason = () => {
+        if (!data) return false;
+        const oneDayInSeconds = 86400;
+        const roundEndTime = addSeconds(data.royaleSeasonCreationTime, data.pauseBetweenSeasonsTime);
+        const timeDifferenceInSeconds = differenceInSeconds(roundEndTime, new Date());
+
+        return timeDifferenceInSeconds < oneDayInSeconds;
+    };
+
     const getTitle = () => {
         if (!data) return;
         if (data.seasonFinished || (!data.seasonStarted && !data.canStartNewSeason)) {
@@ -90,7 +101,9 @@ export const Intro: React.FC = () => {
                         <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                             {timeLeftUntilNewSeason
-                                ? format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
+                                ? lessThanADayBeforeSeason()
+                                    ? format(timeLeftUntilNewSeason, '00:HH:mm:ss')
+                                    : format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
                                 : t('options.royale.battle.ended')}
                         </SubTitle>
                     </>

@@ -1100,7 +1100,9 @@
                 "price": "Цена",
                 "vs": "против",
                 "current-positions": "Текущие должности",
-                "scoreboard": "Табло"
+                "scoreboard": "Табло",
+                "current-reward-per-winner": "Награда за победителя",
+                "season-finished": "Сезон {{сезон}} завершен"
             },
             "battle": {
                 "ended": "Закончился",
