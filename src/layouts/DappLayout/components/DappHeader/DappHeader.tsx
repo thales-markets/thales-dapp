@@ -95,6 +95,12 @@ const DappHeader: React.FC = () => {
                         iconName="governance"
                         label={t('common.sidebar.governance-label')}
                     />
+                    <DappHeaderItem
+                        className={location.pathname === ROUTES.Options.Game ? 'selected' : ''}
+                        href={buildHref(ROUTES.Options.Game)}
+                        iconName="game"
+                        label={t('common.sidebar.game-label')}
+                    />
                 </ItemsContainer>
             </Sidebar>
         </FlexDivColumn>

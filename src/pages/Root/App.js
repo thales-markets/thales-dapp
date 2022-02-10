@@ -6,7 +6,7 @@ import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
 import TokenPage from 'pages/Token/Token.tsx';
-import GamePage from 'pages/Options/Game/Game.tsx';
+import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
@@ -263,9 +263,9 @@ const App = () => {
                             )}
                         />
                         <Route exact path={ROUTES.Options.Game}>
-                            <MainLayout>
-                                <GamePage />
-                            </MainLayout>
+                            <DappLayout>
+                                <TaleOfThales />
+                            </DappLayout>
                         </Route>
 
                         <Route exact path={ROUTES.Options.Token}>
