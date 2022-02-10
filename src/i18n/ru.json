@@ -197,7 +197,8 @@
             "trade-history-label": "Торговая история",
             "amm-mining-label": "Награды AMM",
             "amm-reporting-label": "Отчетность AMM",
-            "markets": "Рынки"
+            "markets": "Рынки",
+            "profile-label": "Профиль"
         },
         "coming-soon": "Скоро...",
         "of": "из",

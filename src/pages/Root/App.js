@@ -7,6 +7,7 @@ import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
 import TokenPage from 'pages/Token/Token.tsx';
 import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
+import Profile from 'pages/Profile/Profile.tsx';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
@@ -267,7 +268,11 @@ const App = () => {
                                 <TaleOfThales />
                             </DappLayout>
                         </Route>
-
+                        <Route exact path={ROUTES.Options.Profile}>
+                            <DappLayout>
+                                <Profile />
+                            </DappLayout>
+                        </Route>
                         <Route exact path={ROUTES.Options.Token}>
                             <DappLayout>
                                 <TokenPage />

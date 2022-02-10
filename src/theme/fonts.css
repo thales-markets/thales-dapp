@@ -77,3 +77,8 @@
     font-family: 'Titillium Regular';
     src: local('TitilliumRegular'), url(../assets/fonts/TitilliumWeb/TitilliumWeb-Regular.ttf) format('truetype');
 }
+
+@font-face {
+    font-family: 'Titillium Light';
+    src: local('TitilliumLight'), url(../assets/fonts/TitilliumWeb/TitilliumWeb-Light.ttf) format('truetype');
+}

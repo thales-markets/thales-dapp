@@ -54,6 +54,10 @@
     content: '\0061';
 }
 
+.icon--profile:before {
+    content: '\0054';
+}
+
 .icon--ethereum-icon:before {
     content: '\0050';
 }

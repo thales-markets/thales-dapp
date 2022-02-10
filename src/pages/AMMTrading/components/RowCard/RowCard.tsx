@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { CardContainer } from 'theme/common';
-import AssetInfo from '../AssetInfo/AssetInfo';
+import AssetInfo from '../../../../components/AssetInfo/AssetInfo';
 import PriceChart from 'components/Charts/PriceChart';
 
 const RowCard: React.FC = () => {

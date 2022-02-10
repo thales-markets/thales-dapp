@@ -5,7 +5,7 @@ import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { getSynthName } from 'utils/currency';
 
-type AssetInfoProps = {
+export type AssetInfoProps = {
     currencyKey: string;
     logoSize?: string;
     assetNameFontSize?: string;
@@ -45,7 +45,7 @@ export const AssetName = styled.span<{ fontSize?: string }>`
     font-weight: 300;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
     text-transform: uppercase;
-    line-height: 110%;
+    line-height: 120%;
 `;
 
 export const CurrencyKey = styled.span<{ fontSize?: string }>`
