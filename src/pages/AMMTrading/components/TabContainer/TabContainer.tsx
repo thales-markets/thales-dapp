@@ -33,12 +33,14 @@ const MenuContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: stretch;
-    align-items: center;
+    align-items: stretch;
     border-bottom: 4px solid var(--table-border-color);
     border-radius: 3px;
+    margin-bottom: 50px;
 `;
 
 const Tab = styled.div`
+    margin: 0 20px;
     width: 100%;
     display: flex;
 `;
