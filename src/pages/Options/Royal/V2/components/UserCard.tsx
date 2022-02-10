@@ -1,5 +1,10 @@
+import { Modal } from '@material-ui/core';
+import { SYNTHS_MAP } from 'constants/currency';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { ethers } from 'ethers';
+import Swap from 'pages/Options/Home/Swap';
 import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -8,25 +13,20 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
+import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import { getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
-import { signUp } from '../../getThalesRoyalData';
+import { signUp, signUpWithPosition } from '../../getThalesRoyalData';
+import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
-import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
-import { Positions } from '../../Queries/usePositionsQuery';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
-import { Modal } from '@material-ui/core';
-import { SYNTHS_MAP } from 'constants/currency';
-import Swap from 'pages/Options/Home/Swap';
-import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 
 type UserCardProps = {
     ethPrice: string;
@@ -34,6 +34,11 @@ type UserCardProps = {
     royaleFooterData: FooterData | undefined;
     selectedSeason: number;
 };
+export enum PositionsEnum {
+    NONE = 'None',
+    DOWN = 'Down',
+    UP = 'Up',
+}
 
 export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
@@ -53,6 +58,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
+    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+    const [defaultPosition, setDefaultPosition] = useState(PositionsEnum.NONE);
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
@@ -132,7 +139,11 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 <Button
                                     className={buyInAmount > Number(balance) ? 'disabled' : ''}
                                     disabled={buyInAmount > Number(balance)}
-                                    onClick={signUp}
+                                    onClick={() => {
+                                        defaultPosition !== PositionsEnum.NONE
+                                            ? signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2)
+                                            : signUp();
+                                    }}
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
                                 </Button>
@@ -258,6 +269,28 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             truncateAddressNumberOfCharacters
                         )}
                     </InputWrapper>
+                </FlexContainer>
+                <FlexContainer style={{ position: 'relative' }}>
+                    <UserLabel>Set default position:</UserLabel>
+                    <PositionSelector isOpen={showSelectDropdown}>
+                        <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                            {defaultPosition.toUpperCase()}
+                            <Arrow className="icon icon--arrow-down" />
+                        </Text>
+                        {showSelectDropdown &&
+                            Object.keys(PositionsEnum).map((position: any, key: number) => (
+                                <Text
+                                    onClick={() => {
+                                        setDefaultPosition(PositionsEnum[position as keyof typeof PositionsEnum]);
+                                        setShowSelectDropdown(false);
+                                    }}
+                                    key={key}
+                                >
+                                    {position}
+                                </Text>
+                            ))}
+                    </PositionSelector>
+                    {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
                 </FlexContainer>
                 <FlexContainer>
                     <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
@@ -419,6 +452,32 @@ const InputWrapper = styled.div`
     }
 `;
 
+const PositionSelector = styled.div<{ isOpen: boolean }>`
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 220px;
+    height: ${(props) => (props.isOpen ? '100px' : '28px')};
+    border: 1.30233px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 19.5349px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    cursor: pointer;
+    z-index: 5;
+    background: var(--color-wrapper);
+    @media (max-width: 1024px) {
+        width: 150px;
+    }
+`;
+
 const FlexContainer = styled(FlexDivCentered)`
     justify-content: space-between;
     margin: 7px 0;
@@ -460,4 +519,21 @@ const InfoSection = styled.div`
     @media (min-width: 1025px) {
         display: none;
     }
+`;
+
+const Arrow = styled.i`
+    font-size: 12px;
+    line-height: 8px;
+    display: inline-block;
+    padding-bottom: 3px;
+    margin-left: 20px;
+`;
+
+const Overlay = styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
 `;
