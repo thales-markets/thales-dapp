@@ -35,6 +35,8 @@ import MigrationNotice from './components/MigrationNotice';
 import MigratedRewards from './MigratedRewards';
 import { useSelector } from 'react-redux';
 
+const DEFAULT_TAB = 'staking';
+
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -42,13 +44,13 @@ const TokenPage: React.FC = () => {
 
     const tabs = [
         {
-            id: 'retro-rewards',
-            name: t('options.earn.snx-stakers.tab-title'),
+            id: 'staking',
+            name: t('options.earn.thales-staking.tab-title'),
             disabled: false,
         },
         {
-            id: 'staking',
-            name: t('options.earn.thales-staking.tab-title'),
+            id: 'retro-rewards',
+            name: t('options.earn.snx-stakers.tab-title'),
             disabled: false,
         },
         {
@@ -91,7 +93,7 @@ const TokenPage: React.FC = () => {
     const location = useLocation();
     const paramTab = queryString.parse(location.search).tab;
     const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
-    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : 'retro-rewards');
+    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : DEFAULT_TAB);
 
     const optionsTabContent: Array<{
         id: string;
@@ -102,7 +104,7 @@ const TokenPage: React.FC = () => {
     useEffect(() => {
         const paramTab = queryString.parse(location.search).tab;
         const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
-        setSelectedTab(isTabAvailable ? paramTab : 'retro-rewards');
+        setSelectedTab(isTabAvailable ? paramTab : DEFAULT_TAB);
     }, [location, isL2]);
 
     return (
@@ -143,8 +145,8 @@ const TokenPage: React.FC = () => {
                         </OptionsTabContainer>
                         <WidgetsContainer>
                             <InnerWidgetsContainer>
-                                {selectedTab === 'retro-rewards' && <SnxStaking />}
                                 {selectedTab === 'staking' && <ThalesStaking />}
+                                {selectedTab === 'retro-rewards' && <SnxStaking />}
                                 {selectedTab === 'vesting' && <Vesting />}
                                 {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
                                 {selectedTab === 'migration' && !isL2 && <Migration />}
@@ -155,20 +157,6 @@ const TokenPage: React.FC = () => {
                 </FlexDivColumn>
             </Container>
             <NavFooter>
-                <Icon
-                    width={50}
-                    height={50}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'retro-rewards',
-                            }),
-                        });
-                        setSelectedTab('retro-rewards');
-                    }}
-                    src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
-                />
                 <Icon
                     width={30}
                     height={30}
@@ -182,6 +170,20 @@ const TokenPage: React.FC = () => {
                         setSelectedTab('staking');
                     }}
                     src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
+                />
+                <Icon
+                    width={50}
+                    height={50}
+                    onClick={() => {
+                        history.push({
+                            pathname: location.pathname,
+                            search: queryString.stringify({
+                                tab: 'retro-rewards',
+                            }),
+                        });
+                        setSelectedTab('retro-rewards');
+                    }}
+                    src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
                 />
                 <Icon
                     width={30}
