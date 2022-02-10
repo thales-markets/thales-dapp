@@ -24,6 +24,7 @@ type PriceChartProps = {
     showPercentageChangeOnSide?: boolean;
     containerStyle?: CSSProperties;
     footerStyle?: CSSProperties;
+    footerFontSize?: string;
 };
 
 const PriceChart: React.FC<PriceChartProps> = ({
@@ -37,6 +38,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     showPercentageChangeOnSide,
     containerStyle,
     footerStyle,
+    footerFontSize,
 }) => {
     const { t } = useTranslation();
 
@@ -113,10 +115,14 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     </ResponsiveContainer>
                     {showFooter !== false && showPercentageChangeOnSide !== true && (
                         <ChartFooter style={{ ...footerStyle }}>
-                            <TimerangeChange style={{ ...footerStyle }}>
+                            <TimerangeChange style={{ ...footerStyle }} fontSize={footerFontSize}>
                                 {formatPriceChangeInterval(days, t('common.user-info-card.change'))}
                             </TimerangeChange>
-                            <PriceChange uptrend={percentagePriceChange > 0 ? true : false} style={{ ...footerStyle }}>
+                            <PriceChange
+                                uptrend={percentagePriceChange > 0 ? true : false}
+                                style={{ ...footerStyle }}
+                                fontSize={footerFontSize}
+                            >
                                 {formatPricePercentageGrowth(percentagePriceChange)}
                             </PriceChange>
                         </ChartFooter>
@@ -184,15 +190,17 @@ const FooterInfo = styled.p`
     margin-top: 5px;
 `;
 
-const TimerangeChange = styled(FooterInfo)`
+const TimerangeChange = styled(FooterInfo)<{ fontSize?: string }>`
     color: var(--icon-color);
     text-align: left;
+    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
 `;
 
-const PriceChange = styled(FooterInfo)<{ uptrend?: boolean }>`
+const PriceChange = styled(FooterInfo)<{ uptrend?: boolean; fontSize?: string }>`
     color: ${(props: any) => (props.uptrend ? '#50CE99' : '#C04119')};
     font-weight: bold;
     text-align: right;
+    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
 `;
 
 const SidePercentageChange = styled.div<{ uptrend?: boolean }>`

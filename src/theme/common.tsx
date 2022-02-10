@@ -442,3 +442,8 @@ export const UserCardSectionHeader = styled.span`
 export const MarketCardContainer = styled.div`
     border: 2px solid #64d9fe;
 `;
+
+export const CardContainer = styled.div`
+    border: 2px solid var(--input-border-color);
+    border-radius: 15px;
+`;

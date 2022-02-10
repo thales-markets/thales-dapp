@@ -39,6 +39,7 @@ import DappLayout from 'layouts/DappLayout';
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../LandingPage/Home'));
 const Markets = lazy(() => import('../Markets'));
+const AMMTrading = lazy(() => import('../AMMTrading'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
     const dispatch = useDispatch();
@@ -286,6 +287,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.Home}>
                             <DappLayout>
                                 <Markets />
+                            </DappLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Test.AmmTrading}>
+                            <DappLayout>
+                                <AMMTrading />
                             </DappLayout>
                         </Route>
 

@@ -31,6 +31,7 @@ export const ROUTES = {
     },
     Test: {
         Home: '/test/markets',
+        AmmTrading: '/test/amm-trading',
     },
 };
 export default ROUTES;
