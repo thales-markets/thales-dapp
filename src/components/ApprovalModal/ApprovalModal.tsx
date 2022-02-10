@@ -33,6 +33,7 @@ type ApprovalModalProps = {
     isAllowing: boolean;
     onSubmit: (approveAmount: BigNumber) => void;
     onClose: () => void;
+    isRoyale?: boolean;
 };
 
 export const ApprovalModal: React.FC<ApprovalModalProps> = ({
@@ -41,6 +42,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
     isAllowing,
     onSubmit,
     onClose,
+    isRoyale,
 }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -56,16 +58,21 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <DefaultSubmitButton onClick={() => onboardConnector.connectWallet()}>
+                <ApprovalSubmitButton isRoyale={isRoyale} onClick={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
-                </DefaultSubmitButton>
+                </ApprovalSubmitButton>
             );
         }
         if (!approveAll && !isAmountEntered) {
-            return <DefaultSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</DefaultSubmitButton>;
+            return (
+                <ApprovalSubmitButton isRoyale={isRoyale} disabled={true}>
+                    {t(`common.errors.enter-amount`)}
+                </ApprovalSubmitButton>
+            );
         }
         return (
-            <DefaultSubmitButton
+            <ApprovalSubmitButton
+                isRoyale={isRoyale}
                 disabled={isButtonDisabled}
                 onClick={() =>
                     onSubmit(
@@ -78,7 +85,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                     : t('common.enable-wallet-access.approve-progress-label', {
                           currencyKey: tokenSymbol,
                       })}
-            </DefaultSubmitButton>
+            </ApprovalSubmitButton>
         );
     };
 
@@ -88,18 +95,18 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
     return (
         <StyledModal open disableBackdropClick onClose={onClose}>
-            <ModalContainer>
+            <ApprovalModalContainer isRoyale={isRoyale}>
                 <ModalHeader>
-                    <ModalTitle>
+                    <ApprovalModalTitle isRoyale={isRoyale}>
                         {t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })}
-                    </ModalTitle>
+                    </ApprovalModalTitle>
                     <FlexDivRow>
                         <CloseIconContainer onClick={onClose} />
                     </FlexDivRow>
                 </ModalHeader>
                 <FlexDivColumnCentered>
                     <FlexDivColumnCentered>
-                        <CheckboxContainer>
+                        <CheckboxContainer isRoyale={isRoyale}>
                             <Checkbox
                                 disabled={isAllowing}
                                 checked={approveAll}
@@ -109,18 +116,24 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                             />
                         </CheckboxContainer>
                     </FlexDivColumnCentered>
-                    <OrText>{t('common.or')}</OrText>
+                    <OrText isRoyale={isRoyale}>{t('common.or')}</OrText>
                     <InputContainer>
-                        <NumericInput
+                        <ApprovalNumericInput
+                            isRoyale={isRoyale}
                             value={amount}
                             onChange={(_, value) => setAmount(value)}
                             className={approveAll || isAmountValid ? '' : 'error'}
                             disabled={approveAll || isAllowing}
                         />
-                        <InputLabel>{t('common.enable-wallet-access.custom-amount-label')}</InputLabel>
-                        <CurrencyLabel className={approveAll || isAllowing ? 'disabled' : ''}>
+                        <ApprovalInputLabel isRoyale={isRoyale} className={approveAll || isAllowing ? 'disabled' : ''}>
+                            {t('common.enable-wallet-access.custom-amount-label')}
+                        </ApprovalInputLabel>
+                        <ApprovalCurrencyLabel
+                            isRoyale={isRoyale}
+                            className={approveAll || isAllowing ? 'disabled' : ''}
+                        >
                             {tokenSymbol}
-                        </CurrencyLabel>
+                        </ApprovalCurrencyLabel>
                         <FieldValidationMessage
                             showValidation={!approveAll && !isAmountValid}
                             message={t('common.errors.invalid-amount-max', { max: maxApproveAmount })}
@@ -133,16 +146,67 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                     message={txErrorMessage}
                     onDismiss={() => setTxErrorMessage(null)}
                 />
-            </ModalContainer>
+            </ApprovalModalContainer>
         </StyledModal>
     );
 };
+const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean }>`
+    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
+    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+`;
 
-export const CheckboxContainer = styled(FlexDivCentered)`
+const ApprovalModalContainer = styled(ModalContainer)<{ isRoyale?: boolean }>`
+    background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '#04045a')};
+`;
+
+const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
+    background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
+    border: ${(props) => (props.isRoyale ? '5px solid var(--color)' : '')};
+    color: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
+    border-radius: ${(props) => (props.isRoyale ? '5px' : '')};
+    &:focus {
+        border: ${(props) => (props.isRoyale ? '5px solid var(--color)' : '')};
+    }
+`;
+
+const ApprovalInputLabel = styled(InputLabel)<{ isRoyale?: boolean }>`
+    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
+    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    &.disabled {
+        opacity: ${(props) => (props.isRoyale ? '0.4' : '')};
+        cursor: ${(props) => (props.isRoyale ? 'default' : '')};
+    }
+`;
+
+const ApprovalCurrencyLabel = styled(CurrencyLabel)<{ isRoyale?: boolean }>`
+    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
+    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+`;
+
+const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>`
+    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
+    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    background: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+    border-radius: ${(props) => (props.isRoyale ? '20px' : '')};
+    box-shadow: ${(props) => (props.isRoyale ? '0px 0px 30px var(--color)' : '')};
+    &:hover:not(:disabled) {
+        background: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+    }
+`;
+
+const CheckboxContainer = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
     margin: 40px 0 5px 0;
     label {
+        color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
+        font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
         font-size: 16px;
+        input:checked ~ .checkmark {
+            background-color: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+        }
     }
+    border: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
     span {
         :after {
             height: 12px;
@@ -150,21 +214,25 @@ export const CheckboxContainer = styled(FlexDivCentered)`
             left: 4px;
             top: -1px;
             border-width: 0 3px 3px 0;
+            border: ${(props) => (props.isRoyale ? 'solid var(--color-wrapper)' : '')};
+            border-width: 0 2px 2px 0;
         }
         height: 18px;
         width: 18px;
         margin-top: 2px;
+        border: ${(props) => (props.isRoyale ? '1px solid var(--color)' : '')};
     }
 `;
 
-const OrText = styled(FlexDivCentered)`
+const OrText = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
     text-align: center;
     font-style: normal;
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.4px;
-    color: #f6f6fe;
+    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '#f6f6fe')};
+    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     margin-bottom: 20px;
 `;
 

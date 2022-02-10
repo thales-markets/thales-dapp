@@ -202,7 +202,11 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
 
             if (fromToken && !allowance)
                 return (
-                    <RoyaleStyledButton disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
+                    <RoyaleStyledButton
+                        disabled={!fromToken || isAllowing}
+                        className="primary"
+                        onClick={() => setOpenApprovalModal(true)}
+                    >
                         {t('options.swap.approve', { currency: (fromToken as any).symbol })}
                     </RoyaleStyledButton>
                 );
@@ -443,6 +447,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                             isAllowing={isAllowing}
                             onSubmit={approve}
                             onClose={() => setOpenApprovalModal(false)}
+                            isRoyale={royaleTheme}
                         />
                     )}
                 </GradientBorderWrapper>

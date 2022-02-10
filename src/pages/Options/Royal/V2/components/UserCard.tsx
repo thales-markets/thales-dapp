@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -9,9 +9,8 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { truncateAddress } from 'utils/formatters/string';
-import { getIsOVM } from 'utils/network';
+import { checkAllowance, getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
 import { signUp } from '../../getThalesRoyalData';
@@ -27,6 +26,7 @@ import Swap from 'pages/Options/Home/Swap';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import ApprovalModal from 'components/ApprovalModal';
 
 type UserCardProps = {
     ethPrice: string;
@@ -39,7 +39,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
     const userQuery = useUserRoyalQuery(walletAddress as any, networkId, selectedSeason, {
@@ -50,6 +50,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
     const [allowance, setAllowance] = useState(false);
+    const [isAllowing, setIsAllowing] = useState<boolean>(false);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
@@ -79,8 +81,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
                 try {
-                    const allowance = await erc20Instance.allowance(walletAddress, thalesRoyaleContract.address);
-                    setAllowance(!!bigNumberFormatter(allowance));
+                    const parsedBuyInAmount = ethers.utils.parseEther(
+                        Number((royaleData as any).buyInAmount).toString()
+                    );
+                    const allowance = await checkAllowance(
+                        parsedBuyInAmount,
+                        erc20Instance,
+                        walletAddress,
+                        thalesRoyaleContract.address
+                    );
+                    setAllowance(allowance);
                 } catch (e) {
                     console.log(e);
                 }
@@ -95,29 +105,32 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     };
 
-    const approve = async () => {
+    const approve = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(
             (buyInToken as any).address,
             erc20Contract.abi,
             snxJSConnector.signer
         );
         try {
+            setIsAllowing(true);
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
-                const tx = await erc20Instance.approve(thalesRoyaleContract.address, ethers.constants.MaxUint256, {
+                const tx = await erc20Instance.approve(thalesRoyaleContract.address, approveAmount, {
                     gasLimit: MAX_L2_GAS_LIMIT,
                 });
+                setOpenApprovalModal(false);
                 await tx.wait();
-                setAllowance(true);
             }
+            setIsAllowing(false);
         } catch (e) {
             console.log('failed: ', e);
+            setIsAllowing(false);
         }
     };
 
     useEffect(() => {
         if (buyInToken && snxJSConnector.signer) updateBalanceAndAllowance(buyInToken).then();
-    }, [buyInToken, snxJSConnector.signer]);
+    }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing]);
 
     const getFooter = (user: User | undefined, royaleData: any) => {
         if (!royaleData) return;
@@ -146,8 +159,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     } else {
                         return (
                             <Button
+                                className={isAllowing ? 'disabled' : ''}
+                                disabled={isAllowing}
                                 onClick={async () => {
-                                    await approve();
+                                    setOpenApprovalModal(true);
                                     updateBalanceAndAllowance(buyInToken);
                                 }}
                             >
@@ -307,6 +322,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 </InfoSection>
             </FlexDivColumn>
             {getFooter(user, royaleData)}
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={(royaleData as any).buyInAmount}
+                    tokenSymbol={SYNTHS_MAP.sUSD}
+                    isAllowing={isAllowing}
+                    onSubmit={approve}
+                    onClose={() => setOpenApprovalModal(false)}
+                    isRoyale={true}
+                />
+            )}
         </UserWrapper>
     );
 };
