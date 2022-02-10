@@ -4,6 +4,8 @@ import footer from 'assets/images/landing-page/footer.png';
 import footerW from 'assets/images/landing-page/footer-white.png';
 import footer2 from 'assets/images/landing-page/footer_black.svg';
 import footerW2 from 'assets/images/landing-page/footer_white.svg';
+import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
+import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import { IconLink } from 'theme/common';
 import LanguageSelector from 'components/LanguageSelector/V2';
 import { Theme } from '../Home';
@@ -75,17 +77,21 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                 </FooterIconsWrapper>
                 <FooterLegalWrapper>
                     <FooterLinkWrapper>
-                        <FooterLink>{t('landing-page.footer.privacy-policy').toUpperCase()}</FooterLink>
+                        <FooterLink target="_blank" rel="noreferrer" href={privacyPolicy}>
+                            {t('landing-page.footer.privacy-policy').toUpperCase()}
+                        </FooterLink>
                     </FooterLinkWrapper>
                     <FooterLinkWrapper>
-                        <FooterLink>{t('landing-page.footer.terms-of-use').toUpperCase()}</FooterLink>
+                        <FooterLink target="_blank" rel="noreferrer" href={termsOfUse}>
+                            {t('landing-page.footer.terms-of-use').toUpperCase()}
+                        </FooterLink>
                     </FooterLinkWrapper>
-                    <FooterLinkWrapper>
+                    {/* <FooterLinkWrapper>
                         <FooterLink>{t('landing-page.footer.brand-assets').toUpperCase()}</FooterLink>
                     </FooterLinkWrapper>
                     <FooterLinkWrapper>
                         <FooterLink>{t('landing-page.footer.etherscan').toUpperCase()}</FooterLink>
-                    </FooterLinkWrapper>
+                    </FooterLinkWrapper> */}
                 </FooterLegalWrapper>
 
                 <FooterIconsWrapper>
@@ -199,7 +205,7 @@ const FooterIconsWrapper = styled(FlexDiv)`
 
 const FooterLegalWrapper = styled(FlexDiv)`
     position: relative;
-    display: none;
+    display: flex;
     justify-content: center;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -248,6 +254,10 @@ const FooterLink = styled.a`
     font-weight: 300;
     font-size: 15px;
     line-height: 36px;
+    color: var(--color);
+    &:visited {
+        color: var(--color);
+    }
 `;
 
 const FooterLinkWrapper = styled.div`

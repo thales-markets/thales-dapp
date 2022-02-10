@@ -145,7 +145,8 @@
             "failed": "неудача"
         },
         "wallet": {
-            "connect-your-wallet": "Подключить кошелек"
+            "connect-your-wallet": "Подключить кошелек",
+            "disclaimer-info": "Подключая кошелек, вы соглашаетесь с Условиями использования и Политикой конфиденциальности Thales DAO и подтверждаете, что прочитали и поняли протокол Thales DAO <a target=\"_blank\" href={{link}}>отказ от ответственности</a>"
         },
         "errors": {
             "unknown-error-try-again": "После отправки произошла неизвестная ошибка. Пожалуйста, повторите попытку.",
@@ -1018,7 +1019,8 @@
                         "sell": "Продать"
                     }
                 }
-            }
+            },
+            "balance": "Баланс долларов США"
         },
         "common": {
             "time-remaining": {
@@ -1101,7 +1103,9 @@
                 "price": "Цена",
                 "vs": "против",
                 "current-positions": "Текущие должности",
-                "scoreboard": "Табло"
+                "scoreboard": "Табло",
+                "current-reward-per-winner": "Награда за победителя",
+                "season-finished": "Сезон {{сезон}} завершен"
             },
             "battle": {
                 "ended": "Закончился",
@@ -1162,7 +1166,8 @@
                 "season-finished": "Сезон завершен",
                 "loading-season": "Загрузка",
                 "no-users": "Нет пользователей",
-                "info7": "<italic>Удачи и пусть битва начнется!</italic>"
+                "info7": "<italic>Удачи и пусть битва начнется!</italic>",
+                "insufficient-balance": "Недостаточный баланс sUSD"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",
@@ -1187,7 +1192,9 @@
                 "change-display-name": "Изменить отображаемое имя",
                 "enter-display-name": "Введите отображаемое имя",
                 "change-avatar": "Введите URL-адрес аватара",
-                "avatar-tip": "Введите действительный URL, оканчивающийся на .jpg, .jpeg, .png, .svg или .gif."
+                "avatar-tip": "Введите действительный URL, оканчивающийся на .jpg, .jpeg, .png, .svg или .gif.",
+                "avatar-validation-msg": "Пожалуйста, введите действительный URL аватара",
+                "name-validation-msg": "Пожалуйста, введите отображаемое имя без специальных символов"
             }
         },
         "amm-mining": {

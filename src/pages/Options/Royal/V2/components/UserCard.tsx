@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
@@ -21,6 +21,12 @@ import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { Modal } from '@material-ui/core';
+import { SYNTHS_MAP } from 'constants/currency';
+import Swap from 'pages/Options/Home/Swap';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
+import { getCurrencyKeyBalance } from 'utils/balances';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 type UserCardProps = {
     ethPrice: string;
@@ -32,6 +38,7 @@ type UserCardProps = {
 export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
@@ -45,8 +52,19 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
+    const [showSwap, setShowSwap] = useState(false);
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
     useEffect(() => {
         if (selectedSeason !== 0) {
@@ -69,7 +87,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
 
                 try {
                     const balance = await erc20Instance.balanceOf(walletAddress);
-                    setBalance(ethers.utils.formatUnits(balance, (token as any).decimals));
+                    setBalance(ethers.utils.formatUnits(balance));
                 } catch (e) {
                     console.log(e);
                 }
@@ -110,13 +128,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     if (allowance) {
                         const buyInAmount = royaleData.buyInAmount;
                         return (
-                            <Button
-                                className={buyInAmount > Number(balance) ? 'disabled' : ''}
-                                disabled={buyInAmount > Number(balance)}
-                                onClick={signUp}
-                            >
-                                {t('options.royale.scoreboard.buy-in', { buyInAmount })}
-                            </Button>
+                            <>
+                                <Button
+                                    className={buyInAmount > Number(balance) ? 'disabled' : ''}
+                                    disabled={buyInAmount > Number(balance)}
+                                    onClick={signUp}
+                                >
+                                    {t('options.royale.scoreboard.buy-in', { buyInAmount })}
+                                </Button>
+                                {buyInAmount > Number(balance) && (
+                                    <DeadText style={{ marginTop: 10 }}>
+                                        {t('options.royale.scoreboard.insufficient-balance')}
+                                    </DeadText>
+                                )}
+                            </>
                         );
                     } else {
                         return (
@@ -233,6 +258,31 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             truncateAddressNumberOfCharacters
                         )}
                     </InputWrapper>
+                </FlexContainer>
+                <FlexContainer>
+                    <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
+                    <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
+                </FlexContainer>
+                <FlexContainer>
+                    {walletAddress && (
+                        <Button
+                            onClick={() => {
+                                setShowSwap(true);
+                            }}
+                        >
+                            {t('options.swap.button-text')}
+                        </Button>
+                    )}
+                    <Modal
+                        open={showSwap}
+                        onClose={(_, reason) => {
+                            if (reason !== 'backdropClick') setShowSwap(false);
+                        }}
+                    >
+                        <div style={{ height: 0 }}>
+                            <Swap royaleTheme={true} handleClose={setShowSwap}></Swap>
+                        </div>
+                    </Modal>
                 </FlexContainer>
                 <InfoSection>
                     <div>
