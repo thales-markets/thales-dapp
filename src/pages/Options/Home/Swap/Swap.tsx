@@ -27,17 +27,18 @@ import {
 } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { getIsOVM, getTransactionPrice } from 'utils/network';
+import { checkAllowance, getIsOVM, getTransactionPrice } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchUserBalance } from 'utils/queryConnector';
 import { ETH_Dai, ETH_Eth, ETH_sUSD, ETH_USDC, ETH_USDT, OP_Dai, OP_Eth, OP_sUSD, OP_USDC, OP_USDT } from './tokens';
 import useApproveSpender from './useApproveSpender';
 import useQuoteTokensQuery from './useQuoteTokensQuery';
 import useSwapTokenQuery from './useSwapTokenQuery';
+import ApprovalModal from 'components/ApprovalModal';
 
 const Swap: React.FC<any> = ({ handleClose }) => {
     const { t } = useTranslation();
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [preLoadTokens, setPreLoadTokens] = useState([] as any);
@@ -53,6 +54,8 @@ const Swap: React.FC<any> = ({ handleClose }) => {
     const [isLoading, setLoading] = useState(false);
     const [showSceleton, setShowSceleton] = useState(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
+    const [isAllowing, setIsAllowing] = useState<boolean>(false);
 
     const ethGasPriceEip1559Query = useEthGasPriceEip1559Query(networkId, { enabled: isAppReady });
     const gasPrice = ethGasPriceEip1559Query.isSuccess ? ethGasPriceEip1559Query.data.proposeGasPrice ?? null : null;
@@ -106,9 +109,9 @@ const Swap: React.FC<any> = ({ handleClose }) => {
 
     useEffect(() => {
         updateBalanceAndAllowance(fromToken);
-    }, [fromToken]);
+    }, [fromToken, amount, isAllowing]);
 
-    const updateBalanceAndAllowance = (token: any) => {
+    const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
             if (token === ETH_Eth || token === OP_Eth) {
                 setAllowance(true);
@@ -118,15 +121,13 @@ const Swap: React.FC<any> = ({ handleClose }) => {
             } else {
                 const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, signer);
 
-                const spender = approveSpenderQuery.refetch().then((resp: any) => {
+                const spender = await approveSpenderQuery.refetch().then((resp: any) => {
                     return resp.data.address;
                 });
 
-                erc20Instance
-                    .allowance(walletAddress, spender)
-                    .then((data: any) =>
-                        setAllowance(Number(ethers.utils.formatUnits(data, (token as any).decimals)) > 0)
-                    );
+                const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+                const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, spender as string);
+                setAllowance(allowance);
 
                 erc20Instance
                     .balanceOf(walletAddress)
@@ -135,21 +136,24 @@ const Swap: React.FC<any> = ({ handleClose }) => {
         }
     };
 
-    const approve = async () => {
+    const approve = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
         try {
+            setIsAllowing(true);
             setLoading(true);
             const req = await approveSpenderQuery.refetch();
-            const tx = await erc20Instance.approve(req.data?.address, ethers.constants.MaxUint256);
+            const tx = await erc20Instance.approve(req.data?.address, approveAmount);
+            setOpenApprovalModal(false);
             await tx.wait();
             setLoading(false);
-            setAllowance(true);
+            setIsAllowing(false);
             return {
                 data: (req.data as any).data,
                 to: (req.data as any).to,
             };
         } catch (e) {
             console.log('failed: ', e);
+            setIsAllowing(false);
         }
     };
 
@@ -197,7 +201,11 @@ const Swap: React.FC<any> = ({ handleClose }) => {
 
         if (fromToken && !allowance)
             return (
-                <Button disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
+                <Button
+                    disabled={!fromToken || isAllowing}
+                    className="primary"
+                    onClick={() => setOpenApprovalModal(true)}
+                >
                     {t('options.swap.approve', { currency: (fromToken as any).symbol })}
                 </Button>
             );
@@ -377,6 +385,15 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                             onDismiss={() => setTxErrorMessage(null)}
                         />
                     </GradientBorderContent>
+                    {openApprovalModal && (
+                        <ApprovalModal
+                            defaultAmount={amount}
+                            tokenSymbol={fromToken.symbol}
+                            isAllowing={isAllowing}
+                            onSubmit={approve}
+                            onClose={() => setOpenApprovalModal(false)}
+                        />
+                    )}
                 </GradientBorderWrapper>
             )}
         </>
