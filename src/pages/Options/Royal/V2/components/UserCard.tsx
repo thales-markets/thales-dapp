@@ -319,7 +319,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                         }}
                                         key={key}
                                     >
-                                        {t('options.royale.scoreboard.default-position-' + position)}
+                                        {t('options.royale.scoreboard.default-position-' + position.toLowerCase())}
                                     </Text>
                                 ))}
                     </PositionSelector>
