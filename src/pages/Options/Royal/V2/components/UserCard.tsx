@@ -29,7 +29,7 @@ import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import usePlayerPositionsQuery, { GraphPosition } from './queries/usePlayerPositionsQuery';
+// import usePlayerPositionsQuery, { GraphPosition } from './queries/usePlayerPositionsQuery';
 
 type UserCardProps = {
     ethPrice: string;
@@ -57,14 +57,15 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
-    const positionsQuery = usePlayerPositionsQuery(0, networkId, walletAddress ?? '', {
-        enabled: networkId !== undefined && isAppReady,
-    });
-    const userPositionInFirstRound = positionsQuery.isSuccess
-        ? positionsQuery.data.filter((position: GraphPosition) => {
-              return position.round === 1;
-          })
-        : [];
+    // const positionsQuery = usePlayerPositionsQuery(0, networkId, walletAddress ?? '', {
+    //     enabled: networkId !== undefined && isL2 && isAppReady,
+    // });
+
+    // const userPositionInFirstRound = positionsQuery.isSuccess
+    //     ? positionsQuery.data?.filter((position: GraphPosition) => {
+    //           return position.round === 1;
+    //       })
+    //     : [];
 
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
@@ -92,11 +93,11 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     }, [selectedSeason]);
 
-    useEffect(() => {
-        if (userPositionInFirstRound.length > 0) {
-            setDefaultPosition(userPositionInFirstRound[0].position === 1 ? PositionsEnum.DOWN : PositionsEnum.UP);
-        }
-    }, [userPositionInFirstRound]);
+    // useEffect(() => {
+    //     if (userPositionInFirstRound.length > 0) {
+    //         setDefaultPosition(userPositionInFirstRound[0].position === 1 ? PositionsEnum.DOWN : PositionsEnum.UP);
+    //     }
+    // }, [userPositionInFirstRound]);
 
     const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
@@ -295,7 +296,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <StyledInfoIcon />
                         </RoyaleTooltip>
                     </UserLabel>
-                    <PositionSelector isOpen={showSelectDropdown}>
+                    <PositionSelector className={UserStatus.NOTSIGNED ? 'disabled' : ''} isOpen={showSelectDropdown}>
                         <Text
                             onClick={
                                 user.status === UserStatus.NOTSIGNED
@@ -502,6 +503,10 @@ const PositionSelector = styled.div<{ isOpen: boolean }>`
     cursor: pointer;
     z-index: 5;
     background: var(--color-wrapper);
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
     @media (max-width: 1024px) {
         width: 150px;
     }
