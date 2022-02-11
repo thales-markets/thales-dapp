@@ -143,14 +143,14 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                     disabled={buyInAmount > Number(balance)}
                                     onClick={() => {
                                         defaultPosition !== PositionsEnum.NONE
-                                            ? signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2)
+                                            ? (localStorage.setItem(
+                                                  'defaultPosition' +
+                                                      truncateAddress(walletAddress as any, 2, 2) +
+                                                      selectedSeason,
+                                                  defaultPosition
+                                              ),
+                                              signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2))
                                             : signUp();
-                                        localStorage.setItem(
-                                            'defaultPosition' +
-                                                truncateAddress(walletAddress as any, 2, 2) +
-                                                selectedSeason,
-                                            defaultPosition
-                                        );
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
@@ -300,7 +300,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     >
                         {localStorage.getItem(
                             'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
-                        ) ? (
+                        ) && user.status === UserStatus.RDY ? (
                             <Text>
                                 {t(
                                     'options.royale.scoreboard.default-position-' +
