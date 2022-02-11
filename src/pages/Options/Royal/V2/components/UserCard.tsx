@@ -145,7 +145,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                         defaultPosition !== PositionsEnum.NONE
                                             ? signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2)
                                             : signUp();
-                                        localStorage.setItem('defaultPosition' + user.name, defaultPosition);
+                                        localStorage.setItem(
+                                            'defaultPosition' +
+                                                truncateAddress(walletAddress as any, 2, 2) +
+                                                selectedSeason,
+                                            defaultPosition
+                                        );
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
@@ -293,20 +298,29 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         className={user.status === UserStatus.RDY ? 'disabled' : ''}
                         isOpen={showSelectDropdown}
                     >
-                        <Text
-                            onClick={
-                                user.status !== UserStatus.RDY ? setShowSelectDropdown.bind(this, true) : undefined
-                            }
-                        >
-                            {localStorage.getItem('defaultPosition' + user.name) &&
-                            (royaleData as any).signUpPeriod < new Date()
-                                ? t(
-                                      'options.royale.scoreboard.default-position-' +
-                                          localStorage.getItem('defaultPosition' + user.name)
-                                  )
-                                : t('options.royale.scoreboard.default-position-' + defaultPosition)}
-                            <Arrow className="icon icon--arrow-down" />
-                        </Text>
+                        {localStorage.getItem(
+                            'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
+                        ) ? (
+                            <Text>
+                                {t(
+                                    'options.royale.scoreboard.default-position-' +
+                                        localStorage.getItem(
+                                            'defaultPosition' +
+                                                truncateAddress(walletAddress as any, 2, 2) +
+                                                selectedSeason
+                                        )
+                                )}
+                            </Text>
+                        ) : (
+                            <Text
+                                onClick={
+                                    user.status !== UserStatus.RDY ? setShowSelectDropdown.bind(this, true) : undefined
+                                }
+                            >
+                                {t('options.royale.scoreboard.default-position-' + defaultPosition)}
+                                <Arrow className="icon icon--arrow-down" />
+                            </Text>
+                        )}
 
                         {showSelectDropdown &&
                             Object.keys(PositionsEnum)
@@ -490,7 +504,7 @@ const PositionSelector = styled.div<{ isOpen: boolean }>`
     right: 0;
     top: -4px;
     width: 220px;
-    height: ${(props) => (props.isOpen ? '100px' : '28px')};
+    height: ${(props) => (props.isOpen ? '75px' : '28px')};
     border: 1.30233px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;
