@@ -37,9 +37,9 @@ type UserCardProps = {
     selectedSeason: number;
 };
 export enum PositionsEnum {
-    NONE = 'None',
-    DOWN = 'Down',
-    UP = 'Up',
+    NONE = 'none',
+    DOWN = 'down',
+    UP = 'up',
 }
 
 export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
@@ -81,12 +81,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             userQuery.remove();
         }
     }, [selectedSeason]);
-
-    // useEffect(() => {
-    //     if (userPositionInFirstRound.length > 0) {
-    //         setDefaultPosition(userPositionInFirstRound[0].position === 1 ? PositionsEnum.DOWN : PositionsEnum.UP);
-    //     }
-    // }, [userPositionInFirstRound]);
 
     const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
@@ -151,6 +145,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                         defaultPosition !== PositionsEnum.NONE
                                             ? signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2)
                                             : signUp();
+                                        localStorage.setItem('defaultPosition' + user.name, defaultPosition);
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
@@ -282,7 +277,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 <FlexContainer
                     style={{
                         position: 'relative',
-                        display: user.status === UserStatus.RDY ? 'none' : '',
+                        display:
+                            user.status === UserStatus.NOTSIGNED && (royaleData as any).signUpPeriod < new Date()
+                                ? 'none'
+                                : '',
                     }}
                 >
                     <UserLabel>
@@ -291,23 +289,39 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <StyledInfoIcon />
                         </RoyaleTooltip>
                     </UserLabel>
-                    <PositionSelector isOpen={showSelectDropdown}>
-                        <Text onClick={setShowSelectDropdown.bind(this, true)}>
-                            {defaultPosition.toUpperCase()}
+                    <PositionSelector
+                        className={user.status === UserStatus.RDY ? 'disabled' : ''}
+                        isOpen={showSelectDropdown}
+                    >
+                        <Text
+                            onClick={
+                                user.status !== UserStatus.RDY ? setShowSelectDropdown.bind(this, true) : undefined
+                            }
+                        >
+                            {localStorage.getItem('defaultPosition' + user.name) &&
+                            (royaleData as any).signUpPeriod < new Date()
+                                ? t(
+                                      'options.royale.scoreboard.default-position-' +
+                                          localStorage.getItem('defaultPosition' + user.name)
+                                  )
+                                : t('options.royale.scoreboard.default-position-' + defaultPosition)}
                             <Arrow className="icon icon--arrow-down" />
                         </Text>
+
                         {showSelectDropdown &&
-                            Object.keys(PositionsEnum).map((position: any, key: number) => (
-                                <Text
-                                    onClick={() => {
-                                        setDefaultPosition(PositionsEnum[position as keyof typeof PositionsEnum]);
-                                        setShowSelectDropdown(false);
-                                    }}
-                                    key={key}
-                                >
-                                    {position}
-                                </Text>
-                            ))}
+                            Object.keys(PositionsEnum)
+                                .filter((position) => position.toLowerCase() !== defaultPosition.toLowerCase())
+                                .map((position: any, key: number) => (
+                                    <Text
+                                        onClick={() => {
+                                            setDefaultPosition(PositionsEnum[position as keyof typeof PositionsEnum]);
+                                            setShowSelectDropdown(false);
+                                        }}
+                                        key={key}
+                                    >
+                                        {t('options.royale.scoreboard.default-position-' + position)}
+                                    </Text>
+                                ))}
                     </PositionSelector>
                     {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
                 </FlexContainer>
@@ -316,7 +330,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
                 </FlexContainer>
                 <FlexContainer>
-                    {walletAddress && (
+                    {walletAddress && sUSDBalance < (royaleData as any).buyInAmount && (
                         <Button
                             onClick={() => {
                                 setShowSwap(true);
@@ -549,7 +563,9 @@ const Arrow = styled.i`
     line-height: 8px;
     display: inline-block;
     padding-bottom: 3px;
-    margin-left: 20px;
+    position: absolute;
+    top: 9px;
+    left: 67%;
 `;
 
 const Overlay = styled.div`
