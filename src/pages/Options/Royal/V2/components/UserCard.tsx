@@ -94,7 +94,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
 
     useEffect(() => {
         if (userPositionInFirstRound.length > 0) {
-            setDefaultPosition(userPositionInFirstRound[0].round === 1 ? PositionsEnum.DOWN : PositionsEnum.UP);
+            setDefaultPosition(userPositionInFirstRound[0].position === 1 ? PositionsEnum.DOWN : PositionsEnum.UP);
         }
     }, [userPositionInFirstRound]);
 
