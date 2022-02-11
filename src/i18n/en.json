@@ -1140,6 +1140,8 @@
                 "approve-susd": "Approve sUSD",
                 "buy-in": "Buy-in: {{buyInAmount}} sUSD",
                 "insufficient-balance": "Insufficient sUSD balance",
+                "default-position": "Default position",
+                "default-position-info": "Setting default position applies only to the first round of the season and is selected before the buy-in. Afterwards, changing position will be possible only once the positioning period starts.",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",

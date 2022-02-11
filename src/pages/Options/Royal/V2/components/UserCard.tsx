@@ -4,6 +4,7 @@ import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { ethers } from 'ethers';
 import Swap from 'pages/Options/Home/Swap';
 import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -27,6 +28,8 @@ import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import usePlayerPositionsQuery, { GraphPosition } from './queries/usePlayerPositionsQuery';
 
 type UserCardProps = {
     ethPrice: string;
@@ -54,6 +57,15 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
+    const positionsQuery = usePlayerPositionsQuery(0, networkId, walletAddress ?? '', {
+        enabled: networkId !== undefined && isAppReady,
+    });
+    const userPositionInFirstRound = positionsQuery.isSuccess
+        ? positionsQuery.data.filter((position: GraphPosition) => {
+              return position.round === 1;
+          })
+        : [];
+
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -79,6 +91,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             userQuery.remove();
         }
     }, [selectedSeason]);
+
+    useEffect(() => {
+        if (userPositionInFirstRound.length > 0) {
+            setDefaultPosition(userPositionInFirstRound[0].round === 1 ? PositionsEnum.DOWN : PositionsEnum.UP);
+        }
+    }, [userPositionInFirstRound]);
 
     const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
@@ -271,9 +289,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     </InputWrapper>
                 </FlexContainer>
                 <FlexContainer style={{ position: 'relative' }}>
-                    <UserLabel>Set default position:</UserLabel>
+                    <UserLabel>
+                        {t('options.royale.scoreboard.default-position')}:
+                        <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
+                            <StyledInfoIcon />
+                        </RoyaleTooltip>
+                    </UserLabel>
                     <PositionSelector isOpen={showSelectDropdown}>
-                        <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                        <Text
+                            onClick={
+                                user.status === UserStatus.NOTSIGNED
+                                    ? setShowSelectDropdown.bind(this, true)
+                                    : undefined
+                            }
+                        >
                             {defaultPosition.toUpperCase()}
                             <Arrow className="icon icon--arrow-down" />
                         </Text>
@@ -536,4 +565,21 @@ const Overlay = styled.div`
     left: 0;
     right: 0;
     z-index: 4;
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    display: inline-block;
+    position: absolute;
+    margin-left: 15px;
+    width: 15px;
+    height: 15px;
+    transform: translateX(-50%);
+    path {
+        fill: var(--color);
+    }
+    opacity: 1;
+    cursor: auto;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;

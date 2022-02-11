@@ -1165,7 +1165,9 @@
                 "loading-season": "正在加载",
                 "no-users": "没有用户",
                 "info7": "<italic>祝你好运，让战斗开始吧！</italic>",
-                "insufficient-balance": "sUSD 余额不足"
+                "insufficient-balance": "sUSD 余额不足",
+                "default-position-info": "设置默认位置仅适用于赛季第一轮，并在买入前选择。之后，只有在定位周期开始后才能更改位置。",
+                "default-position": "默认位置"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",
