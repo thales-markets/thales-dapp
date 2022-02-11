@@ -278,7 +278,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         )}
                     </InputWrapper>
                 </FlexContainer>
-                <FlexContainer style={{ position: 'relative', display: UserStatus.RDY ? 'none' : '' }}>
+                {console.log()}
+                <FlexContainer
+                    style={{
+                        position: 'relative',
+                        display: user.status === UserStatus.RDY ? 'none' : '',
+                    }}
+                >
                     <UserLabel>
                         {t('options.royale.scoreboard.default-position')}:
                         <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
