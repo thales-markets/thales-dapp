@@ -289,14 +289,14 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         )}
                     </InputWrapper>
                 </FlexContainer>
-                <FlexContainer style={{ position: 'relative' }}>
+                <FlexContainer style={{ position: 'relative', display: UserStatus.RDY ? 'none' : '' }}>
                     <UserLabel>
                         {t('options.royale.scoreboard.default-position')}:
                         <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
                             <StyledInfoIcon />
                         </RoyaleTooltip>
                     </UserLabel>
-                    <PositionSelector className={UserStatus.NOTSIGNED ? 'disabled' : ''} isOpen={showSelectDropdown}>
+                    <PositionSelector className={UserStatus.RDY ? 'disabled' : ''} isOpen={showSelectDropdown}>
                         <Text
                             onClick={
                                 user.status === UserStatus.NOTSIGNED
