@@ -61,7 +61,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
-    const [defaultPosition, setDefaultPosition] = useState(PositionsEnum.NONE);
+    const previouslySelectedDefaultPosition = localStorage.getItem(
+        'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
+    );
+    const [defaultPosition, setDefaultPosition] = useState(
+        previouslySelectedDefaultPosition ? previouslySelectedDefaultPosition : PositionsEnum.NONE
+    );
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
