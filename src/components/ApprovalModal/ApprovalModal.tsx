@@ -26,6 +26,7 @@ import NumericInput from 'pages/Options/Market/components/NumericInput';
 import styled from 'styled-components';
 import Checkbox from 'components/Checkbox';
 import FieldValidationMessage from 'components/FieldValidationMessage';
+import { Dialog, withStyles } from '@material-ui/core';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
@@ -93,79 +94,102 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
         setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= maxApproveAmount));
     }, [amount]);
 
-    return (
-        <StyledModal open disableBackdropClick onClose={onClose}>
-            <ApprovalModalContainer isRoyale={isRoyale}>
-                <ModalHeader>
-                    <ApprovalModalTitle isRoyale={isRoyale}>
-                        {t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })}
-                    </ApprovalModalTitle>
-                    <FlexDivRow>
-                        <CloseIconContainer onClick={onClose} />
-                    </FlexDivRow>
-                </ModalHeader>
+    const getModalContent = () => (
+        <ApprovalModalContainer isRoyale={isRoyale}>
+            <ModalHeader>
+                <ApprovalModalTitle isRoyale={isRoyale}>
+                    {t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })}
+                </ApprovalModalTitle>
+                <FlexDivRow>
+                    <CloseIconContainer onClick={onClose} />
+                </FlexDivRow>
+            </ModalHeader>
+            <FlexDivColumnCentered>
                 <FlexDivColumnCentered>
-                    <FlexDivColumnCentered>
-                        <CheckboxContainer isRoyale={isRoyale}>
-                            <Checkbox
-                                disabled={isAllowing}
-                                checked={approveAll}
-                                value={approveAll.toString()}
-                                onChange={(e: any) => setApproveAll(e.target.checked || false)}
-                                label={t('common.enable-wallet-access.approve-all-label')}
-                            />
-                        </CheckboxContainer>
-                    </FlexDivColumnCentered>
-                    <OrText isRoyale={isRoyale}>{t('common.or')}</OrText>
-                    <InputContainer>
-                        <ApprovalNumericInput
-                            isRoyale={isRoyale}
-                            value={amount}
-                            onChange={(_, value) => setAmount(value)}
-                            className={approveAll || isAmountValid ? '' : 'error'}
-                            disabled={approveAll || isAllowing}
+                    <CheckboxContainer isRoyale={isRoyale}>
+                        <Checkbox
+                            disabled={isAllowing}
+                            checked={approveAll}
+                            value={approveAll.toString()}
+                            onChange={(e: any) => setApproveAll(e.target.checked || false)}
+                            label={t('common.enable-wallet-access.approve-all-label')}
                         />
-                        <ApprovalInputLabel isRoyale={isRoyale} className={approveAll || isAllowing ? 'disabled' : ''}>
-                            {t('common.enable-wallet-access.custom-amount-label')}
-                        </ApprovalInputLabel>
-                        <ApprovalCurrencyLabel
-                            isRoyale={isRoyale}
-                            className={approveAll || isAllowing ? 'disabled' : ''}
-                        >
-                            {tokenSymbol}
-                        </ApprovalCurrencyLabel>
-                        <FieldValidationMessage
-                            showValidation={!approveAll && !isAmountValid}
-                            message={t('common.errors.invalid-amount-max', { max: maxApproveAmount })}
-                        />
-                    </InputContainer>
+                    </CheckboxContainer>
                 </FlexDivColumnCentered>
-                <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
-            </ApprovalModalContainer>
-        </StyledModal>
+                <OrText isRoyale={isRoyale}>{t('common.or')}</OrText>
+                <InputContainer>
+                    <ApprovalNumericInput
+                        isRoyale={isRoyale}
+                        value={amount}
+                        onChange={(_, value) => setAmount(value)}
+                        className={approveAll || isAmountValid ? '' : 'error'}
+                        disabled={approveAll || isAllowing}
+                    />
+                    <ApprovalInputLabel isRoyale={isRoyale} className={approveAll || isAllowing ? 'disabled' : ''}>
+                        {t('common.enable-wallet-access.custom-amount-label')}
+                    </ApprovalInputLabel>
+                    <ApprovalCurrencyLabel isRoyale={isRoyale} className={approveAll || isAllowing ? 'disabled' : ''}>
+                        {tokenSymbol}
+                    </ApprovalCurrencyLabel>
+                    <FieldValidationMessage
+                        showValidation={!approveAll && !isAmountValid}
+                        message={t('common.errors.invalid-amount-max', { max: maxApproveAmount })}
+                    />
+                </InputContainer>
+            </FlexDivColumnCentered>
+            <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+            <ValidationMessage
+                showValidation={txErrorMessage !== null}
+                message={txErrorMessage}
+                onDismiss={() => setTxErrorMessage(null)}
+            />
+        </ApprovalModalContainer>
+    );
+
+    return (
+        <>
+            {isRoyale ? (
+                <StyledRoyaleModal open disableBackdropClick onClose={onClose}>
+                    {getModalContent()}
+                </StyledRoyaleModal>
+            ) : (
+                <StyledModal open disableBackdropClick onClose={onClose}>
+                    {getModalContent()}
+                </StyledModal>
+            )}
+        </>
     );
 };
+
+const StyledRoyaleModal = withStyles(() => ({
+    paper: {
+        borderRadius: '5px',
+        width: '500px',
+        background: 'var(--color)',
+        padding: '1px',
+        overflow: 'hidden',
+    },
+}))(Dialog);
+
 const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean }>`
     color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
 `;
 
 const ApprovalModalContainer = styled(ModalContainer)<{ isRoyale?: boolean }>`
-    background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '#04045a')};
+    background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
+    border-radius: ${(props) => (props.isRoyale ? '5px' : '')};
 `;
 
 const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
+    font-size: ${(props) => (props.isRoyale ? '20px' : '')};
     background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     border: ${(props) => (props.isRoyale ? '5px solid var(--color)' : '')};
     color: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
     border-radius: ${(props) => (props.isRoyale ? '5px' : '')};
+    height: ${(props) => (props.isRoyale ? '80px' : '')};
     &:focus {
         border: ${(props) => (props.isRoyale ? '5px solid var(--color)' : '')};
     }
@@ -174,6 +198,7 @@ const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
 const ApprovalInputLabel = styled(InputLabel)<{ isRoyale?: boolean }>`
     color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    padding: ${(props) => (props.isRoyale ? '12px 0 0 24px' : '')};
     &.disabled {
         opacity: ${(props) => (props.isRoyale ? '0.4' : '')};
         cursor: ${(props) => (props.isRoyale ? 'default' : '')};
@@ -183,6 +208,7 @@ const ApprovalInputLabel = styled(InputLabel)<{ isRoyale?: boolean }>`
 const ApprovalCurrencyLabel = styled(CurrencyLabel)<{ isRoyale?: boolean }>`
     color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    padding: ${(props) => (props.isRoyale ? '41px 16px 17px 0' : '')};
 `;
 
 const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>`
