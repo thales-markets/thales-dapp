@@ -29,7 +29,6 @@ import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-// import usePlayerPositionsQuery, { GraphPosition } from './queries/usePlayerPositionsQuery';
 
 type UserCardProps = {
     ethPrice: string;
@@ -56,16 +55,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
-
-    // const positionsQuery = usePlayerPositionsQuery(0, networkId, walletAddress ?? '', {
-    //     enabled: networkId !== undefined && isL2 && isAppReady,
-    // });
-
-    // const userPositionInFirstRound = positionsQuery.isSuccess
-    //     ? positionsQuery.data?.filter((position: GraphPosition) => {
-    //           return position.round === 1;
-    //       })
-    //     : [];
 
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
@@ -296,14 +285,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <StyledInfoIcon />
                         </RoyaleTooltip>
                     </UserLabel>
-                    <PositionSelector className={UserStatus.RDY ? 'disabled' : ''} isOpen={showSelectDropdown}>
-                        <Text
-                            onClick={
-                                user.status === UserStatus.NOTSIGNED
-                                    ? setShowSelectDropdown.bind(this, true)
-                                    : undefined
-                            }
-                        >
+                    <PositionSelector isOpen={showSelectDropdown}>
+                        <Text onClick={setShowSelectDropdown.bind(this, true)}>
                             {defaultPosition.toUpperCase()}
                             <Arrow className="icon icon--arrow-down" />
                         </Text>
