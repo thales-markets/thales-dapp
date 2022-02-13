@@ -13,6 +13,11 @@ type Properties = {
     selectedSeason: number;
     setSelectedSeason: (season: number) => void;
     latestSeason: number;
+    sUSDBalance: number;
+    allowance: boolean;
+    buyInToken: any;
+    approve: () => void;
+    updateBalanceAndAllowance: (token: any) => void;
 };
 
 export const ScoreboardPage: React.FC<Properties> = ({
@@ -22,6 +27,11 @@ export const ScoreboardPage: React.FC<Properties> = ({
     latestSeason,
     setSelectedSeason,
     selectedSeason,
+    sUSDBalance,
+    allowance,
+    buyInToken,
+    approve,
+    updateBalanceAndAllowance,
 }) => {
     return (
         <Wrapper className="scoreboard">
@@ -33,6 +43,11 @@ export const ScoreboardPage: React.FC<Properties> = ({
                     positions={positions}
                     royaleFooterData={royaleFooterData}
                     selectedSeason={selectedSeason === 0 ? latestSeason : selectedSeason}
+                    sUSDBalance={sUSDBalance}
+                    allowance={allowance}
+                    buyInToken={buyInToken}
+                    approve={approve}
+                    updateBalanceAndAllowance={updateBalanceAndAllowance}
                 />
                 <ScoreboardV2
                     selectedSeason={selectedSeason === 0 ? latestSeason : selectedSeason}

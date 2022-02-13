@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import { useSelector } from 'react-redux';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Wrapper } from 'theme/common';
@@ -19,6 +19,15 @@ import { getIsAppReady } from '../../../redux/modules/app';
 import useRoyaleFooterQuery, { FooterData } from './V2/components/queries/useRoyaleFooterQuery';
 import useEthPriceQuery from './Queries/useEthPriceQuery';
 import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
+import { SYNTHS_MAP } from 'constants/currency';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
+import { getCurrencyKeyBalance } from 'utils/balances';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { ethers } from 'ethers';
+import erc20Contract from 'utils/contracts/erc20Contract';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
+import snxJSConnector from 'utils/snxJSConnector';
+import { OP_sUSD, OP_KOVAN_SUSD } from '../Home/Swap/tokens';
 
 export enum Theme {
     Light,
@@ -30,6 +39,7 @@ const cookies = new Cookies();
 const ThalesRoyal: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isL2 = getIsOVM(networkId);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
@@ -40,6 +50,8 @@ const ThalesRoyal: React.FC = () => {
     const [royaleFooterData, setRoyaleStatsData] = useState<FooterData>();
     const [ethPrice, setEthPrice] = useState<string>('');
     const [positions, setPositions] = useState<Positions>({ up: 0, down: 0 });
+    const [allowance, setAllowance] = useState(false);
+    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
     const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
 
@@ -53,6 +65,62 @@ const ThalesRoyal: React.FC = () => {
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const [sUSDBalance, setSUSDBalance] = useState(getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0);
+
+    const updateBalanceAndAllowance = async (token: any) => {
+        if (token) {
+            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
+            const { thalesRoyaleContract } = snxJSConnector;
+            if (thalesRoyaleContract) {
+                try {
+                    const allowance = await erc20Instance.allowance(walletAddress, thalesRoyaleContract.address);
+                    setAllowance(!!bigNumberFormatter(allowance));
+                } catch (e) {
+                    console.log(e);
+                }
+
+                try {
+                    const balance = await erc20Instance.balanceOf(walletAddress);
+                    setSUSDBalance(ethers.utils.formatUnits(balance));
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+    };
+
+    const approve = async () => {
+        const erc20Instance = new ethers.Contract(
+            (buyInToken as any).address,
+            erc20Contract.abi,
+            snxJSConnector.signer
+        );
+        try {
+            const { thalesRoyaleContract } = snxJSConnector;
+            if (thalesRoyaleContract) {
+                const tx = await erc20Instance.approve(thalesRoyaleContract.address, ethers.constants.MaxUint256, {
+                    gasLimit: MAX_L2_GAS_LIMIT,
+                });
+                await tx.wait();
+                setAllowance(true);
+            }
+        } catch (e) {
+            console.log('failed: ', e);
+        }
+    };
+
+    useEffect(() => {
+        if (buyInToken && snxJSConnector.signer) updateBalanceAndAllowance(buyInToken);
+    }, [buyInToken, snxJSConnector.signer, walletAddress]);
 
     useEffect(() => {
         if (positionsQuery.isSuccess) {
@@ -73,9 +141,7 @@ const ThalesRoyal: React.FC = () => {
     }, [royaleFooterQuery.isSuccess, royaleFooterQuery.data]);
 
     useEffect(() => {
-        console.log(selectedSeason);
         royaleFooterQuery.refetch().then((resp) => {
-            console.log(resp.data);
             setRoyaleStatsData(resp.data);
         });
     }, [selectedSeason]);
@@ -139,6 +205,9 @@ const ThalesRoyal: React.FC = () => {
                     setSelectedSeason={setSelectedSeason}
                     theme={theme}
                     setTheme={setTheme}
+                    sUSDBalance={sUSDBalance}
+                    buyInToken={buyInToken}
+                    updateBalanceAndAllowance={updateBalanceAndAllowance}
                 />
                 <ScoreboardPage
                     ethPrice={ethPrice}
@@ -147,6 +216,11 @@ const ThalesRoyal: React.FC = () => {
                     selectedSeason={selectedSeason}
                     setSelectedSeason={setSelectedSeason}
                     latestSeason={latestSeason}
+                    sUSDBalance={sUSDBalance}
+                    allowance={allowance}
+                    buyInToken={buyInToken}
+                    approve={approve}
+                    updateBalanceAndAllowance={updateBalanceAndAllowance}
                 />
                 <RoyaleArena
                     ethPrice={ethPrice}
@@ -155,6 +229,8 @@ const ThalesRoyal: React.FC = () => {
                     latestSeason={latestSeason}
                     selectedSeason={selectedSeason}
                     showBattle={selectedPage === 'royale'}
+                    buyInToken={buyInToken}
+                    updateBalanceAndAllowance={updateBalanceAndAllowance}
                 />
                 <FooterV2
                     ethPrice={ethPrice}

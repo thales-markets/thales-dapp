@@ -31,6 +31,8 @@ type RoyaleArenaProps = {
     latestSeason: number;
     selectedSeason: number;
     showBattle: boolean;
+    buyInToken: any;
+    updateBalanceAndAllowance: (token: any) => void;
 };
 
 const renderRounds = (
@@ -220,6 +222,8 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     ethPrice,
     positions,
     royaleFooterData,
+    buyInToken,
+    updateBalanceAndAllowance,
 }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -310,6 +314,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
 
             if (txResult && txResult.events) {
                 dispatchMarketNotification('Reward claimed');
+                updateBalanceAndAllowance(buyInToken);
             }
         }
     };
