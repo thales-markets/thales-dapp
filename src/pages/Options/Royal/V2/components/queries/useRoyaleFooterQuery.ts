@@ -14,12 +14,12 @@ export type FooterData = {
     winners: number;
 };
 
-const useRoyaleFooterQuery = (networkId: NetworkId, options?: UseQueryOptions<FooterData>) => {
+const useRoyaleFooterQuery = (selectedSeason: number, networkId: NetworkId, options?: UseQueryOptions<FooterData>) => {
     return useQuery<FooterData>(
         QUERY_KEYS.Royale.FooterData(),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
-            return getFromContract(thalesRoyaleContract, networkId);
+            return getFromContract(thalesRoyaleContract, selectedSeason, networkId);
         },
         {
             refetchInterval: 5000,
@@ -28,8 +28,13 @@ const useRoyaleFooterQuery = (networkId: NetworkId, options?: UseQueryOptions<Fo
     );
 };
 
-const getFromContract = async (RoyaleContract: any, networkId: NetworkId): Promise<FooterData> => {
-    const season = Number(await RoyaleContract.season());
+const getFromContract = async (
+    RoyaleContract: any,
+    selectedSeason: number,
+    networkId: NetworkId
+): Promise<FooterData> => {
+    const seasonContract = Number(await RoyaleContract.season());
+    const season = selectedSeason === seasonContract ? seasonContract : selectedSeason;
     const [round, reward, seasonFinished] = await Promise.all([
         RoyaleContract.roundInASeason(season),
         RoyaleContract.rewardPerSeason(season === 0 ? 1 : season),

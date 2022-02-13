@@ -154,8 +154,14 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                                       selectedSeason,
                                                   defaultPosition
                                               ),
-                                              signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2))
-                                            : signUp();
+                                              signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2).then(
+                                                  () => {
+                                                      updateBalanceAndAllowance(buyInToken);
+                                                  }
+                                              ))
+                                            : signUp().then(() => {
+                                                  updateBalanceAndAllowance(buyInToken);
+                                              });
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
