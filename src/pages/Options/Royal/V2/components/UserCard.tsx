@@ -1,5 +1,11 @@
+import { Modal } from '@material-ui/core';
+import { SYNTHS_MAP } from 'constants/currency';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
+import Swap from 'pages/Options/Home/Swap';
 import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -8,24 +14,20 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
+import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import { checkAllowance, getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
-import { signUp } from '../../getThalesRoyalData';
+import { signUp, signUpWithPosition } from '../../getThalesRoyalData';
+import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
-import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
-import { Positions } from '../../Queries/usePositionsQuery';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
-import { Modal } from '@material-ui/core';
-import { SYNTHS_MAP } from 'constants/currency';
-import Swap from 'pages/Options/Home/Swap';
-import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import ApprovalModal from 'components/ApprovalModal';
 
 type UserCardProps = {
@@ -34,6 +36,11 @@ type UserCardProps = {
     royaleFooterData: FooterData | undefined;
     selectedSeason: number;
 };
+export enum PositionsEnum {
+    NONE = 'none',
+    DOWN = 'down',
+    UP = 'up',
+}
 
 export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
@@ -55,6 +62,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
+    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+    const previouslySelectedDefaultPosition = localStorage.getItem(
+        'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
+    );
+    const [defaultPosition, setDefaultPosition] = useState(
+        previouslySelectedDefaultPosition ? previouslySelectedDefaultPosition : PositionsEnum.NONE
+    );
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
@@ -145,7 +159,23 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 <Button
                                     className={buyInAmount > Number(balance) ? 'disabled' : ''}
                                     disabled={buyInAmount > Number(balance)}
-                                    onClick={signUp}
+                                    onClick={() => {
+                                        defaultPosition !== PositionsEnum.NONE
+                                            ? (localStorage.setItem(
+                                                  'defaultPosition' +
+                                                      truncateAddress(walletAddress as any, 2, 2) +
+                                                      selectedSeason,
+                                                  defaultPosition
+                                              ),
+                                              signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2).then(
+                                                  () => {
+                                                      updateBalanceAndAllowance(buyInToken);
+                                                  }
+                                              ))
+                                            : signUp().then(() => {
+                                                  updateBalanceAndAllowance(buyInToken);
+                                              });
+                                    }}
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
                                 </Button>
@@ -274,12 +304,72 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         )}
                     </InputWrapper>
                 </FlexContainer>
+                <FlexContainer
+                    style={{
+                        position: 'relative',
+                        display:
+                            user.status === UserStatus.NOTSIGNED && (royaleData as any).signUpPeriod < new Date()
+                                ? 'none'
+                                : '',
+                    }}
+                >
+                    <UserLabel>
+                        {t('options.royale.scoreboard.default-position')}:
+                        <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
+                            <StyledInfoIcon />
+                        </RoyaleTooltip>
+                    </UserLabel>
+                    <PositionSelector
+                        className={user.status === UserStatus.RDY ? 'disabled' : ''}
+                        isOpen={showSelectDropdown}
+                    >
+                        {localStorage.getItem(
+                            'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
+                        ) && user.status === UserStatus.RDY ? (
+                            <Text>
+                                {t(
+                                    'options.royale.scoreboard.default-position-' +
+                                        localStorage.getItem(
+                                            'defaultPosition' +
+                                                truncateAddress(walletAddress as any, 2, 2) +
+                                                selectedSeason
+                                        )
+                                )}
+                            </Text>
+                        ) : (
+                            <Text
+                                onClick={
+                                    user.status !== UserStatus.RDY ? setShowSelectDropdown.bind(this, true) : undefined
+                                }
+                            >
+                                {t('options.royale.scoreboard.default-position-' + defaultPosition)}
+                                <Arrow className="icon icon--arrow-down" />
+                            </Text>
+                        )}
+
+                        {showSelectDropdown &&
+                            Object.keys(PositionsEnum)
+                                .filter((position) => position.toLowerCase() !== defaultPosition.toLowerCase())
+                                .map((position: any, key: number) => (
+                                    <Text
+                                        onClick={() => {
+                                            setDefaultPosition(PositionsEnum[position as keyof typeof PositionsEnum]);
+                                            setShowSelectDropdown(false);
+                                        }}
+                                        key={key}
+                                    >
+                                        {t('options.royale.scoreboard.default-position-' + position.toLowerCase())}
+                                    </Text>
+                                ))}
+                    </PositionSelector>
+                    {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
+                </FlexContainer>
                 <FlexContainer>
                     <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
                     <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
                 </FlexContainer>
                 <FlexContainer>
-                    {walletAddress && (
+                    {walletAddress && sUSDBalance < (royaleData as any).buyInAmount && (
                         <Button
                             onClick={() => {
                                 setShowSwap(true);
@@ -444,6 +534,36 @@ const InputWrapper = styled.div`
     }
 `;
 
+const PositionSelector = styled.div<{ isOpen: boolean }>`
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 220px;
+    height: ${(props) => (props.isOpen ? '75px' : '28px')};
+    border: 1.30233px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 19.5349px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    cursor: pointer;
+    z-index: 5;
+    background: var(--color-wrapper);
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    @media (max-width: 1024px) {
+        width: 150px;
+    }
+`;
+
 const FlexContainer = styled(FlexDivCentered)`
     justify-content: space-between;
     margin: 7px 0;
@@ -483,6 +603,42 @@ const InfoSection = styled.div`
         }
     }
     @media (min-width: 1025px) {
+        display: none;
+    }
+`;
+
+const Arrow = styled.i`
+    font-size: 12px;
+    line-height: 8px;
+    display: inline-block;
+    padding-bottom: 3px;
+    position: absolute;
+    top: 9px;
+    left: 67%;
+`;
+
+const Overlay = styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    display: inline-block;
+    position: absolute;
+    margin-left: 15px;
+    width: 15px;
+    height: 15px;
+    transform: translateX(-50%);
+    path {
+        fill: var(--color);
+    }
+    opacity: 1;
+    cursor: auto;
+    @media (max-width: 1024px) {
         display: none;
     }
 `;

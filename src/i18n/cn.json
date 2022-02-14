@@ -1167,7 +1167,12 @@
                 "loading-season": "正在加载",
                 "no-users": "没有用户",
                 "info7": "<italic>祝你好运，让战斗开始吧！</italic>",
-                "insufficient-balance": "sUSD 余额不足"
+                "insufficient-balance": "sUSD 余额不足",
+                "default-position": "默认位置",
+                "default-position-none": "没有任何",
+                "default-position-up": "向上",
+                "default-position-down": "向下",
+                "default-position-info": "比赛开始前，您可以选择一个仅适用于第一轮的默认位置。仓位期开始后，您可以再次更改仓位。对于所有其他回合，必须在定位期间选择位置。"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

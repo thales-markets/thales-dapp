@@ -29,6 +29,20 @@ export const signUp = async () => {
     }
 };
 
+export const signUpWithPosition = async (position: number) => {
+    const { thalesRoyaleContract } = snxJSConnector;
+    if (thalesRoyaleContract) {
+        const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
+        try {
+            const tx = await RoyalContract.signUpWithPosition(position);
+            await tx.wait();
+            dispatchMarketNotification('Successfully Signed Up With Position');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
 export const startRoyale = async () => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
