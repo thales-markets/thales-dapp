@@ -9,10 +9,12 @@ type Cell = {
 
 type Children = {
     Cell: StyledComponent<'div', any, { direction?: string; color?: string }> & Cell;
+    Title: StyledComponent<'div', any>;
 };
 
 // @ts-ignore
 const Tile: StyledComponent<'div', any> & Children = styled(FlexDiv)<{ color?: string }>`
+    position: relative;
     background: ${(props) => props.color || 'transparent'};
     border: 2px solid ${(props) => (props.color ? 'transparent' : 'rgba(100, 217, 254, 0.5)')};
     box-sizing: border-box;
@@ -21,6 +23,24 @@ const Tile: StyledComponent<'div', any> & Children = styled(FlexDiv)<{ color?: s
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
+    height: 50px;
+    &:before {
+        background: ${(props) => props.color || '#64d9fe'} !important;
+        box-shadow: 0 0 0 3px ${(props) => props.color || '#64d9fe'} !important;
+        opacity: ${(props) => (props.color ? '1' : '0.5')} !important;
+    }
+`;
+
+const Title: StyledComponent<'div', any> = styled(FlexDiv)`
+    color: var(--primary-color) !important;
+    font-family: Titillium Regular !important;
+    font-weight: bold;
+    height: 50px;
+    position: relative;
+    border: 2px solid transparent;
+    margin-bottom: 15px;
+    width: 100%;
+    align-items: center;
 `;
 
 // @ts-ignore
@@ -53,5 +73,6 @@ const CellValue = styled.div<{ fontSize?: number }>`
 Cell.Title = CellTitle;
 Cell.Value = CellValue;
 Tile.Cell = Cell;
+Tile.Title = Title;
 
 export default Tile;

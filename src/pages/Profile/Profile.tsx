@@ -2,8 +2,9 @@ import React from 'react';
 import TileTable from '../../components/TileTable';
 
 const rows = [
+    'December 18, 2021',
     {
-        color: 'linear-gradient(90deg, #50CE99 0%, #00C2C2 100%)',
+        color: '#50CE99',
         asset: { currencyKey: 'BTC', assetNameFontSize: '12px', currencyKeyFontSize: '12px' },
         cells: [
             { title: 'buy', value: '7.24 pm', flexDirection: 'row' },
@@ -15,6 +16,7 @@ const rows = [
             { title: 'market', value: 'down' },
         ],
     },
+    'December 19, 2021',
     {
         asset: { currencyKey: 'BTC', assetNameFontSize: '12px', currencyKeyFontSize: '12px' },
         cells: [
@@ -28,6 +30,7 @@ const rows = [
         ],
     },
     {
+        color: '#C3244A',
         asset: { currencyKey: 'BTC', assetNameFontSize: '12px', currencyKeyFontSize: '12px' },
         cells: [
             { title: 'test', value: 'test' },
