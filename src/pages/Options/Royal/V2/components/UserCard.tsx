@@ -1,19 +1,26 @@
 import { Modal } from '@material-ui/core';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { SYNTHS_MAP } from 'constants/currency';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { ethers } from 'ethers';
 import Swap from 'pages/Options/Home/Swap';
+import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
+import { getCurrencyKeyBalance } from 'utils/balances';
+import erc20Contract from 'utils/contracts/erc20Contract';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import { getIsOVM } from 'utils/network';
+import snxJSConnector from 'utils/snxJSConnector';
 import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
 import { signUp, signUpWithPosition } from '../../getThalesRoyalData';
 import { Positions } from '../../Queries/usePositionsQuery';
@@ -21,17 +28,13 @@ import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 type UserCardProps = {
     ethPrice: string;
     positions: Positions;
     royaleFooterData: FooterData | undefined;
     selectedSeason: number;
-    sUSDBalance: number;
-    allowance: boolean;
-    buyInToken: any;
-    approve: () => void;
-    updateBalanceAndAllowance: (token: any) => void;
 };
 export enum PositionsEnum {
     NONE = 'none',
@@ -39,19 +42,10 @@ export enum PositionsEnum {
     UP = 'up',
 }
 
-export const UserCard: React.FC<UserCardProps> = ({
-    selectedSeason,
-    royaleFooterData,
-    ethPrice,
-    positions,
-    sUSDBalance,
-    allowance,
-    buyInToken,
-    approve,
-    updateBalanceAndAllowance,
-}) => {
+export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
@@ -62,6 +56,8 @@ export const UserCard: React.FC<UserCardProps> = ({
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
+    const [allowance, setAllowance] = useState(false);
+    const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
@@ -71,8 +67,18 @@ export const UserCard: React.FC<UserCardProps> = ({
     const [defaultPosition, setDefaultPosition] = useState(
         previouslySelectedDefaultPosition ? previouslySelectedDefaultPosition : PositionsEnum.NONE
     );
-
+    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
     useEffect(() => {
         if (selectedSeason !== 0) {
@@ -80,6 +86,52 @@ export const UserCard: React.FC<UserCardProps> = ({
             userQuery.remove();
         }
     }, [selectedSeason]);
+
+    const updateBalanceAndAllowance = async (token: any) => {
+        if (token) {
+            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
+            const { thalesRoyaleContract } = snxJSConnector;
+            if (thalesRoyaleContract) {
+                try {
+                    const allowance = await erc20Instance.allowance(walletAddress, thalesRoyaleContract.address);
+                    setAllowance(!!bigNumberFormatter(allowance));
+                } catch (e) {
+                    console.log(e);
+                }
+
+                try {
+                    const balance = await erc20Instance.balanceOf(walletAddress);
+                    setBalance(ethers.utils.formatUnits(balance));
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+    };
+
+    const approve = async () => {
+        const erc20Instance = new ethers.Contract(
+            (buyInToken as any).address,
+            erc20Contract.abi,
+            snxJSConnector.signer
+        );
+        try {
+            const { thalesRoyaleContract } = snxJSConnector;
+            if (thalesRoyaleContract) {
+                const tx = await erc20Instance.approve(thalesRoyaleContract.address, ethers.constants.MaxUint256, {
+                    gasLimit: MAX_L2_GAS_LIMIT,
+                });
+                await tx.wait();
+                setAllowance(true);
+            }
+        } catch (e) {
+            console.log('failed: ', e);
+        }
+    };
+
+    useEffect(() => {
+        if (buyInToken && snxJSConnector.signer) updateBalanceAndAllowance(buyInToken).then();
+    }, [buyInToken, snxJSConnector.signer]);
 
     const getFooter = (user: User | undefined, royaleData: any) => {
         if (!royaleData) return;
@@ -92,8 +144,8 @@ export const UserCard: React.FC<UserCardProps> = ({
                         return (
                             <>
                                 <Button
-                                    className={buyInAmount > Number(sUSDBalance) ? 'disabled' : ''}
-                                    disabled={buyInAmount > Number(sUSDBalance)}
+                                    className={buyInAmount > Number(balance) ? 'disabled' : ''}
+                                    disabled={buyInAmount > Number(balance)}
                                     onClick={() => {
                                         defaultPosition !== PositionsEnum.NONE
                                             ? (localStorage.setItem(
@@ -114,7 +166,7 @@ export const UserCard: React.FC<UserCardProps> = ({
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
                                 </Button>
-                                {buyInAmount > Number(sUSDBalance) && (
+                                {buyInAmount > Number(balance) && (
                                     <DeadText style={{ marginTop: 10 }}>
                                         {t('options.royale.scoreboard.insufficient-balance')}
                                     </DeadText>
@@ -316,7 +368,6 @@ export const UserCard: React.FC<UserCardProps> = ({
                         open={showSwap}
                         onClose={(_, reason) => {
                             if (reason !== 'backdropClick') setShowSwap(false);
-                            updateBalanceAndAllowance(buyInToken);
                         }}
                     >
                         <div style={{ height: 0 }}>

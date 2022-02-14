@@ -1,22 +1,25 @@
-import { Modal } from '@material-ui/core';
-import { SYNTHS_MAP } from 'constants/currency';
-import Swap from 'pages/Options/Home/Swap';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import onboardConnector from 'utils/onboardConnector';
-import { Text } from '../../../../../theme/common';
 import useEthBalanceQuery from '../../Queries/useEthBalanceQuery';
 import { Theme } from '../../ThalesRoyal';
 import UserInfoRoyaleDialog from '../UserInfoRoyaleDialog/UserInfoRoyaleDialog';
 import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
+import { Text } from '../../../../../theme/common';
+import Swap from 'pages/Options/Home/Swap';
+import { Modal } from '@material-ui/core';
+import { SYNTHS_MAP } from 'constants/currency';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
+import { getIsAppReady } from 'redux/modules/app';
+import { getCurrencyKeyBalance } from 'utils/balances';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -24,9 +27,6 @@ type RoyaleHeaderInput = {
     setSelectedSeason: (season: number) => void;
     theme: Theme;
     setTheme: (data: any) => void;
-    sUSDBalance: number;
-    buyInToken: any;
-    updateBalanceAndAllowance: (token: any) => void;
 };
 
 enum BurgerState {
@@ -43,18 +43,27 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     selectedSeason,
     setSelectedSeason,
     latestSeason,
-    sUSDBalance,
-    buyInToken,
-    updateBalanceAndAllowance,
 }) => {
     const { t } = useTranslation();
-
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [openUserInfo, setOpenUserInfo] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
     const balanceQuery = useEthBalanceQuery(walletAddress ?? '', { enabled: walletAddress !== null });
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
     const [showBurgerMenu, setShowBurgerMenu] = useState<BurgerState>(BurgerState.Init);
 
@@ -65,10 +74,6 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
         }
         return seasons;
     }, [latestSeason]);
-
-    useEffect(() => {
-        updateBalanceAndAllowance(buyInToken);
-    }, [showSwap]);
 
     return (
         <>
