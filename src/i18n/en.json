@@ -172,7 +172,9 @@
         "or": "or",
         "enable-wallet-access": {
             "approve-label": "Approve {{currencyKey}}",
-            "approve-progress-label": "Approving {{currencyKey}}..."
+            "approve-progress-label": "Approving {{currencyKey}}...",
+            "approve-all-label": "Approve all",
+            "custom-amount-label": "Custom amount"
         },
         "sidebar": {
             "markets": "Markets",

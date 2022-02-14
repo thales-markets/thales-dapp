@@ -5,11 +5,9 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { AccountMarketInfo, OptionSide, OrderItem, OrderSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { ethers } from 'ethers';
-import { APPROVAL_EVENTS } from 'constants/events';
+import { BigNumber, ethers } from 'ethers';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { getCurrencyKeyBalance } from 'utils/balances';
@@ -53,6 +51,7 @@ import NumericInput from 'pages/Options/Market/components/NumericInput';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import styled from 'styled-components';
 import { fillLimitOrder, getFillOrderData, ONE_INCH_CONTRACTS } from 'utils/1inch';
+import ApprovalModal from 'components/ApprovalModal';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -79,6 +78,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [insufficientOrderAmount, setInsufficientOrderAmount] = useState<boolean>(false);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
 
@@ -115,39 +115,34 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         ? tokenBalance < Number(amount) || !tokenBalance
         : sUSDBalance < Number(order.displayOrder.price) * Number(amount) || !sUSDBalance;
 
-    const isButtonDisabled = !isAmountEntered || isFilling || !isWalletConnected || insufficientBalance;
+    const isButtonDisabled =
+        !isAmountEntered || isFilling || !isWalletConnected || insufficientBalance || !hasAllowance;
 
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const takeTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
-    const addressToApprove = ONE_INCH_CONTRACTS[networkId];
+    const takerAmount = isBuy ? amount : Number(order.displayOrder.price) * Number(amount);
+    const takerTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
+    const addressToApprove = ONE_INCH_CONTRACTS[networkId] || '';
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             try {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setAllowance(!!bigNumberFormatter(allowance));
+                const parsedTakerAmount = ethers.utils.parseEther(Number(takerAmount).toString());
+                const allowance = await checkAllowance(
+                    parsedTakerAmount,
+                    erc20Instance,
+                    walletAddress,
+                    addressToApprove
+                );
+                setAllowance(allowance);
             } catch (e) {
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove ?? '')) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, hasAllowance]);
+    }, [walletAddress, isWalletConnected, hasAllowance, takerAmount, isAllowing]);
 
     useEffect(() => {
         const fetchL1Fee = async (limitOrderProtocol1inchContractWithSigner: any, fillOrderData: any) => {
@@ -201,18 +196,17 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         fetchGasLimit();
     }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
-    const handleAllowance = async () => {
+    const handleAllowance = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
         try {
             setIsAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
-            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
-
+            setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setAllowance(true);
                 setIsAllowing(false);
             }
         } catch (e) {
@@ -280,11 +274,11 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         }
         if (!hasAllowance) {
             return (
-                <DefaultSubmitButton disabled={isAllowing} onClick={handleAllowance}>
+                <DefaultSubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: takeTokenCurrencyKey })
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: takerTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: takeTokenCurrencyKey,
+                              currencyKey: takerTokenCurrencyKey,
                           })}
                 </DefaultSubmitButton>
             );
@@ -381,6 +375,15 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     onDismiss={() => setTxErrorMessage(null)}
                 />
             </ModalContainer>
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={takerAmount}
+                    tokenSymbol={takerTokenCurrencyKey}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
         </StyledModal>
     );
 };
