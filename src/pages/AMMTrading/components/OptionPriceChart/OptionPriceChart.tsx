@@ -41,7 +41,13 @@ const OptionPriceChart: React.FC = () => {
         <ResponsiveContainer width={'100%'} height={'100%'}>
             <LineChart data={data} margin={{ top: 10, bottom: 10 }}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <YAxis type={'number'} tickLine={false} axisLine={false} orientation={'right'} />
+                <YAxis
+                    type={'number'}
+                    tickLine={false}
+                    axisLine={false}
+                    orientation={'right'}
+                    tick={{ fill: 'var(--primary-color)' }}
+                />
                 <Line type="linear" dataKey="short" strokeWidth={5} stroke="#C3244A" dot={{ strokeWidth: 13 }} />
                 <Line type="linear" dataKey="long" strokeWidth={5} stroke="#50CE99" dot={{ strokeWidth: 13 }} />
             </LineChart>
