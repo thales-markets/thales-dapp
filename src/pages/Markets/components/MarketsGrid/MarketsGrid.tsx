@@ -10,6 +10,8 @@ import MarketCard from '../MarketsCard/MarketCard';
 import { PaginationWrapper } from '../MarketsTable/MarketsTable';
 
 import { getSynthName } from 'utils/currency';
+import SPAAnchor from 'components/SPAAnchor';
+import { buildOptionsMarketLink } from 'utils/routes';
 
 type MarketsGridProps = {
     optionsMarkets: OptionsMarkets;
@@ -43,7 +45,6 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
         if (filters?.sort?.length) {
             filters.sort.forEach((sort) => {
                 if (sort?.column && typeof (data as any)[0][sort.column] == 'number') {
-                    console.log('number');
                     if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
                     if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
                 }
@@ -69,7 +70,11 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
         <Wrapper>
             {options &&
                 options.map((optionMarket, index) => {
-                    return <MarketCard key={index} optionMarket={optionMarket} exchangeRates={exchangeRates} />;
+                    return (
+                        <SPAAnchor key={index} href={buildOptionsMarketLink(optionMarket.address)}>
+                            <MarketCard optionMarket={optionMarket} exchangeRates={exchangeRates} />{' '}
+                        </SPAAnchor>
+                    );
                 })}
             <PaginationWrapper
                 rowsPerPageOptions={[9, 12, 15, 18]}

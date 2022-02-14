@@ -24,9 +24,11 @@ import SearchField from '../Input/SearchField';
 import PriceChart from 'components/Charts/PriceChart';
 import { TablePagination } from '@material-ui/core';
 import SortingMenu from 'components/SortingMenu';
+import SPAAnchor from 'components/SPAAnchor';
 
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
+import { buildOptionsMarketLink } from 'utils/routes';
 
 import { getSynthName } from 'utils/currency';
 
@@ -219,6 +221,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const data = useMemo(() => {
         const processedMarkets = optionsMarkets.map((market) => {
             return {
+                address: market.address,
                 asset: market.asset,
                 currencyKey: market.currencyKey,
                 assetFullName: getSynthName(market.currencyKey),
@@ -361,11 +364,13 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                             {page.map((row: any, index: number) => {
                                 prepareRow(row);
                                 return (
-                                    <tr key={index} {...row.getRowProps()}>
-                                        {row.cells.map((cell: any) => {
-                                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                                        })}
-                                    </tr>
+                                    <SPAAnchor href={buildOptionsMarketLink(row.original.address)}>
+                                        <tr key={index} {...row.getRowProps()}>
+                                            {row.cells.map((cell: any) => {
+                                                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                                            })}
+                                        </tr>
+                                    </SPAAnchor>
                                 );
                             })}
                         </tbody>
