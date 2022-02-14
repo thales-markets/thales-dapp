@@ -178,11 +178,11 @@ const Footer: React.FC<ScoreboardProps> = ({
                 {royaleData?.seasonFinished ? (
                     <>
                         <div style={{ textAlign: 'center' }}>
-                            <span>{t('options.royale.footer.season-finished', { season: royaleData.season })}</span>
+                            <span>{t('options.royale.footer.season-finished', { season: selectedSeason })}</span>
                         </div>
                         <div>
                             <span>{t('options.royale.footer.current-reward-per-winner')}:</span>
-                            <span>{(royaleData?.reward / royaleData.winners).toFixed(2)} sUSD</span>
+                            <span>{(royaleData?.rewardPerWinnerPerSeason).toFixed(2)} sUSD</span>
                         </div>
                     </>
                 ) : (

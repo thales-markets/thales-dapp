@@ -4,6 +4,7 @@ import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { ethers } from 'ethers';
 import Swap from 'pages/Options/Home/Swap';
 import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { Positions } from 'pages/Options/Royal/Queries/usePositionsQuery';
 import { FooterData } from 'pages/Options/Royal/Queries/useRoyaleFooterQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
@@ -27,6 +28,7 @@ import useLatestRoyaleForUserInfo from '../queries/useLastRoyaleForUserInfo';
 import { User, UserStatus } from '../queries/useRoyalePlayersQuery';
 import useUserRoyalQuery, { AnonimUser } from '../queries/useUserRoyalQuery';
 import UserEditRoyaleDataDialog from './UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 type UserCardProps = {
     ethPrice: string;
@@ -35,9 +37,9 @@ type UserCardProps = {
     selectedSeason: number;
 };
 export enum PositionsEnum {
-    NONE = 'None',
-    DOWN = 'Down',
-    UP = 'Up',
+    NONE = 'none',
+    DOWN = 'down',
+    UP = 'up',
 }
 
 const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
@@ -59,7 +61,12 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
-    const [defaultPosition, setDefaultPosition] = useState(PositionsEnum.NONE);
+    const previouslySelectedDefaultPosition = localStorage.getItem(
+        'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
+    );
+    const [defaultPosition, setDefaultPosition] = useState(
+        previouslySelectedDefaultPosition ? previouslySelectedDefaultPosition : PositionsEnum.NONE
+    );
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
@@ -141,8 +148,20 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
                                     disabled={buyInAmount > Number(balance)}
                                     onClick={() => {
                                         defaultPosition !== PositionsEnum.NONE
-                                            ? signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2)
-                                            : signUp();
+                                            ? (localStorage.setItem(
+                                                  'defaultPosition' +
+                                                      truncateAddress(walletAddress as any, 2, 2) +
+                                                      selectedSeason,
+                                                  defaultPosition
+                                              ),
+                                              signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2).then(
+                                                  () => {
+                                                      updateBalanceAndAllowance(buyInToken);
+                                                  }
+                                              ))
+                                            : signUp().then(() => {
+                                                  updateBalanceAndAllowance(buyInToken);
+                                              });
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
@@ -270,25 +289,63 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
                         )}
                     </InputWrapper>
                 </FlexContainer>
-                <FlexContainer style={{ position: 'relative' }}>
-                    <UserLabel>Set default position:</UserLabel>
-                    <PositionSelector isOpen={showSelectDropdown}>
-                        <Text onClick={setShowSelectDropdown.bind(this, true)}>
-                            {defaultPosition.toUpperCase()}
-                            <Arrow className="icon icon--arrow-down" />
-                        </Text>
+                <FlexContainer
+                    style={{
+                        position: 'relative',
+                        display:
+                            user.status === UserStatus.NOTSIGNED && (royaleData as any).signUpPeriod < new Date()
+                                ? 'none'
+                                : '',
+                    }}
+                >
+                    <UserLabel>
+                        {t('options.royale.scoreboard.default-position')}:
+                        <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
+                            <StyledInfoIcon />
+                        </RoyaleTooltip>
+                    </UserLabel>
+                    <PositionSelector
+                        className={user.status === UserStatus.RDY ? 'disabled' : ''}
+                        isOpen={showSelectDropdown}
+                    >
+                        {localStorage.getItem(
+                            'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
+                        ) && user.status === UserStatus.RDY ? (
+                            <Text>
+                                {t(
+                                    'options.royale.scoreboard.default-position-' +
+                                        localStorage.getItem(
+                                            'defaultPosition' +
+                                                truncateAddress(walletAddress as any, 2, 2) +
+                                                selectedSeason
+                                        )
+                                )}
+                            </Text>
+                        ) : (
+                            <Text
+                                onClick={
+                                    user.status !== UserStatus.RDY ? setShowSelectDropdown.bind(this, true) : undefined
+                                }
+                            >
+                                {t('options.royale.scoreboard.default-position-' + defaultPosition)}
+                                <Arrow className="icon icon--arrow-down" />
+                            </Text>
+                        )}
+
                         {showSelectDropdown &&
-                            Object.keys(PositionsEnum).map((position: any, key: number) => (
-                                <Text
-                                    onClick={() => {
-                                        setDefaultPosition(PositionsEnum[position as keyof typeof PositionsEnum]);
-                                        setShowSelectDropdown(false);
-                                    }}
-                                    key={key}
-                                >
-                                    {position}
-                                </Text>
-                            ))}
+                            Object.keys(PositionsEnum)
+                                .filter((position) => position.toLowerCase() !== defaultPosition.toLowerCase())
+                                .map((position: any, key: number) => (
+                                    <Text
+                                        onClick={() => {
+                                            setDefaultPosition(PositionsEnum[position as keyof typeof PositionsEnum]);
+                                            setShowSelectDropdown(false);
+                                        }}
+                                        key={key}
+                                    >
+                                        {t('options.royale.scoreboard.default-position-' + position.toLowerCase())}
+                                    </Text>
+                                ))}
                     </PositionSelector>
                     {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
                 </FlexContainer>
@@ -297,7 +354,7 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
                     <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
                 </FlexContainer>
                 <FlexContainer>
-                    {walletAddress && (
+                    {walletAddress && sUSDBalance < (royaleData as any).buyInAmount && (
                         <Button
                             onClick={() => {
                                 setShowSwap(true);
@@ -485,7 +542,7 @@ const PositionSelector = styled.div<{ isOpen: boolean }>`
     right: 0;
     top: -4px;
     width: 220px;
-    height: ${(props) => (props.isOpen ? '100px' : '28px')};
+    height: ${(props) => (props.isOpen ? '75px' : '28px')};
     border: 1.30233px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;
@@ -501,6 +558,10 @@ const PositionSelector = styled.div<{ isOpen: boolean }>`
     cursor: pointer;
     z-index: 5;
     background: var(--color-wrapper);
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
     @media (max-width: 1024px) {
         width: 150px;
     }
@@ -556,7 +617,9 @@ const Arrow = styled.i`
     line-height: 8px;
     display: inline-block;
     padding-bottom: 3px;
-    margin-left: 20px;
+    position: absolute;
+    top: 9px;
+    left: 67%;
 `;
 
 const Overlay = styled.div`
@@ -566,4 +629,21 @@ const Overlay = styled.div`
     left: 0;
     right: 0;
     z-index: 4;
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    display: inline-block;
+    position: absolute;
+    margin-left: 15px;
+    width: 15px;
+    height: 15px;
+    transform: translateX(-50%);
+    path {
+        fill: var(--color);
+    }
+    opacity: 1;
+    cursor: auto;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;

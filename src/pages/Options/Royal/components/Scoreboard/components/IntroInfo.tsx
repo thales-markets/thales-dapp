@@ -18,6 +18,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getTimeLeft } from '../../Arena/RoyaleArena';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
+import { addSeconds, differenceInSeconds } from 'date-fns';
 
 const Intro: React.FC = () => {
     const { t } = useTranslation();
@@ -81,6 +82,15 @@ const Intro: React.FC = () => {
             : 'Thales: Binary options trading powered by Synthetix.';
     }, [timeLeftInRound, timeLeftForPositioning]);
 
+    const lessThanADayBeforeSeason = () => {
+        if (!data) return false;
+        const oneDayInSeconds = 86400;
+        const roundEndTime = addSeconds(data.royaleSeasonCreationTime, data.pauseBetweenSeasonsTime);
+        const timeDifferenceInSeconds = differenceInSeconds(roundEndTime, new Date());
+
+        return timeDifferenceInSeconds < oneDayInSeconds;
+    };
+
     const getTitle = () => {
         if (!data) return;
         if (data.seasonFinished || (!data.seasonStarted && !data.canStartNewSeason)) {
@@ -90,7 +100,9 @@ const Intro: React.FC = () => {
                         <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                             {timeLeftUntilNewSeason
-                                ? format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
+                                ? lessThanADayBeforeSeason()
+                                    ? format(timeLeftUntilNewSeason, '00:HH:mm:ss')
+                                    : format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
                                 : t('options.royale.battle.ended')}
                         </SubTitle>
                     </>
