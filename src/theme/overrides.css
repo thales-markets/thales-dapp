@@ -31,6 +31,10 @@
     background: #0e107b !important;
 }
 
+.bn-onboard-selected-wallet {
+    background: #0e1069 !important;
+}
+
 .higher-z-index {
     z-index: 3 !important;
 }

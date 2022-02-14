@@ -145,7 +145,8 @@
             "failed": "失败"
         },
         "wallet": {
-            "connect-your-wallet": "连接钱包"
+            "connect-your-wallet": "连接钱包",
+            "disclaimer-info": "连接钱包即表示您同意 Thales DAO 使用条款和隐私政策，并承认您已阅读并理解 Thales DAO 协议<a target=\"_blank\" href={{link}}>免责声明</a>"
         },
         "errors": {
             "unknown-error-try-again": "提交后出现未知错误。请重试。",
@@ -1016,7 +1017,8 @@
                         "sell": "出售"
                     }
                 }
-            }
+            },
+            "balance": "美元余额"
         },
         "common": {
             "time-remaining": {
@@ -1099,7 +1101,9 @@
                 "royale": "鱿鱼游戏",
                 "scoreboard": "积分榜",
                 "stats": "数据",
-                "price-source": "来源：Optimism Chainlink的ETH报价"
+                "price-source": "来源：Optimism Chainlink的ETH报价",
+                "current-reward-per-winner": "每位获胜者的奖励",
+                "season-finished": "第 {{season}} 季结束"
             },
             "battle": {
                 "round": "轮次",
@@ -1160,7 +1164,14 @@
                 "season": "赛季",
                 "season-finished": "赛季结束",
                 "loading-season": "正在加载",
-                "no-users": "没有参赛者"
+                "no-users": "没有参赛者",
+                "info7": "<italic>祝你好运，让战斗开始吧！</italic>",
+                "insufficient-balance": "sUSD 余额不足",
+                "default-position": "默认位置",
+                "default-position-none": "没有任何",
+                "default-position-up": "向上",
+                "default-position-down": "向下",
+                "default-position-info": "比赛开始前，您可以选择一个仅适用于第一轮的默认位置。仓位期开始后，您可以再次更改仓位。对于所有其他回合，必须在定位期间选择位置。"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",
@@ -1185,7 +1196,9 @@
                 "change-display-name": "更改显示名称",
                 "change-avatar": "输入头像网址",
                 "avatar": "头像图片",
-                "avatar-tip": "请输入以 .jpg、.jpeg、.png、.svg 或 .gif 结尾的有效 URL"
+                "avatar-tip": "请输入以 .jpg、.jpeg、.png、.svg 或 .gif 结尾的有效 URL",
+                "avatar-validation-msg": "请输入有效的头像网址",
+                "name-validation-msg": "请输入不带特殊字符的显示名称"
             }
         },
         "amm-mining": {
@@ -1341,6 +1354,7 @@
         },
         "governance": {
             "list": {
+                "0": "泰勒斯 DAO",
                 "1": "泰勒斯 DAO",
                 "2": "泰勒斯理事会（又名“大脑”）",
                 "3": "财政部 DAO（又名“口袋”）",

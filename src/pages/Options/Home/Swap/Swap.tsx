@@ -35,7 +35,7 @@ import useApproveSpender from './useApproveSpender';
 import useQuoteTokensQuery from './useQuoteTokensQuery';
 import useSwapTokenQuery from './useSwapTokenQuery';
 
-const Swap: React.FC<any> = ({ handleClose }) => {
+const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -180,14 +180,52 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                             : undefined,
                 };
             }
-        } catch (e) {
+        } catch (e: any) {
             setLoading(false);
             setTxErrorMessage(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'));
             console.log('failed: ', e);
         }
     };
 
-    const getButton = () => {
+    const getButton = (royaleTheme: boolean) => {
+        if (royaleTheme) {
+            if (!fromToken)
+                return (
+                    <RoyaleStyledButton disabled={true} className="primary">
+                        {t('options.swap.select-token')}
+                    </RoyaleStyledButton>
+                );
+
+            if (fromToken && !allowance)
+                return (
+                    <RoyaleStyledButton disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
+                        {t('options.swap.approve', { currency: (fromToken as any).symbol })}
+                    </RoyaleStyledButton>
+                );
+
+            if (fromToken && allowance && Number(amount) <= 0)
+                return (
+                    <RoyaleStyledButton className="primary" disabled={true}>
+                        {t('options.swap.enter-amount')}
+                    </RoyaleStyledButton>
+                );
+
+            if (fromToken && allowance && Number(amount) > 0)
+                return (
+                    <RoyaleStyledButton
+                        className="primary"
+                        onClick={async () => {
+                            await swapTx();
+                            updateBalanceAndAllowance(fromToken);
+                        }}
+                        disabled={Number(amount) > Number(balance)}
+                    >
+                        {Number(amount) > Number(balance)
+                            ? t('options.swap.insufficient-balance')
+                            : t('options.swap.swap')}
+                    </RoyaleStyledButton>
+                );
+        }
         if (!fromToken)
             return (
                 <Button disabled={true} className="primary">
@@ -227,7 +265,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
     return (
         <>
             {networkId !== 1 && networkId !== 10 ? (
-                <GradientBorderWrapper>
+                <GradientBorderWrapper royaleTheme={royaleTheme}>
                     <GradientBorderContent className="unsupported">
                         <CloseButton onClick={handleClose.bind(this, false)} />{' '}
                         <Text style={{ fontSize: 18, display: 'flex', alignSelf: 'center' }}>
@@ -236,16 +274,20 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                     </GradientBorderContent>
                 </GradientBorderWrapper>
             ) : (
-                <GradientBorderWrapper>
+                <GradientBorderWrapper royaleTheme={royaleTheme}>
                     <GradientBorderContent
+                        royaleTheme={royaleTheme}
                         className={` ${isLoading ? 'loading' : ''} ${txErrorMessage !== null ? 'error' : ''}`}
                     >
                         <CloseButton onClick={handleClose.bind(this, false)} />
-                        <SectionWrapper style={{ paddingTop: 14 }}>
+                        <SectionWrapper royaleTheme={royaleTheme} style={{ paddingTop: 14 }}>
                             <FlexDivRowCentered>
-                                <Text className="text-xxs white">{t('options.swap.from')}:</Text>
+                                <StyledText royaleTheme={royaleTheme} className="text-xxs white">
+                                    {t('options.swap.from')}:
+                                </StyledText>
                                 <FlexDivRow>
-                                    <Text
+                                    <StyledText
+                                        royaleTheme={royaleTheme}
                                         className="text-xxs white"
                                         style={{ alignSelf: 'center', marginRight: 5, cursor: 'pointer' }}
                                         onClick={() => {
@@ -253,8 +295,9 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                         }}
                                     >
                                         {t('options.swap.balance')}: {Number(balance).toFixed(4)}
-                                    </Text>
+                                    </StyledText>
                                     <MaxButton
+                                        royaleTheme={royaleTheme}
                                         className="text-xxs"
                                         onClick={() => {
                                             setAmount(Number(Number(balance).toFixed(4)).toString());
@@ -266,6 +309,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                             </FlexDivRowCentered>
                             <FlexDivRowCentered>
                                 <Select
+                                    royaleTheme={royaleTheme}
                                     options={preLoadTokens}
                                     formatOptionLabel={(option: any) => {
                                         return (
@@ -274,12 +318,13 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                                     src={option.logoURI}
                                                     style={{ width: 32, height: 32, marginRight: 6 }}
                                                 ></Image>
-                                                <Text
+                                                <StyledText
+                                                    royaleTheme={royaleTheme}
                                                     className="text-xs white"
                                                     style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
                                                 >
                                                     {option.name}
-                                                </Text>
+                                                </StyledText>
                                             </FlexDivRowCentered>
                                         );
                                     }}
@@ -290,6 +335,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                 ></Select>
 
                                 <NumInput
+                                    royaleTheme={royaleTheme}
                                     style={{
                                         padding: 10,
                                         width: window.innerWidth <= 500 ? 130 : 150,
@@ -303,23 +349,25 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                 ></NumInput>
                             </FlexDivRowCentered>
                         </SectionWrapper>
-                        <SceletonWrapper className={showSceleton ? 'visible' : ''}>
+                        <SceletonWrapper royaleTheme={royaleTheme} className={showSceleton ? 'visible' : ''}>
                             <FlexDivRowCentered>
-                                <TextSceleton className="small" />
-                                <TextSceleton className="large" />
+                                <TextSceleton royaleTheme={royaleTheme} className="small" />
+                                <TextSceleton royaleTheme={royaleTheme} className="large" />
                             </FlexDivRowCentered>
                             <FlexDivRowCentered style={{ height: 64 }}>
                                 <FlexDivCentered>
-                                    <ImageSceleton />
-                                    <TextSceleton className="medium" />
+                                    <ImageSceleton royaleTheme={royaleTheme} />
+                                    <TextSceleton royaleTheme={royaleTheme} className="medium" />
                                 </FlexDivCentered>
-                                <TextSceleton className="medium" />
+                                <TextSceleton royaleTheme={royaleTheme} className="medium" />
                             </FlexDivRowCentered>
                         </SceletonWrapper>
-                        <SectionWrapper className={showSceleton ? 'hide' : ''}>
+                        <SectionWrapper royaleTheme={royaleTheme} className={showSceleton ? 'hide' : ''}>
                             <FlexDivRowCentered>
-                                <Text className="text-xxs white">{t('options.swap.to')}:</Text>
-                                <Text className="text-xxs white">
+                                <StyledText royaleTheme={royaleTheme} className="text-xxs white">
+                                    {t('options.swap.to')}:
+                                </StyledText>
+                                <StyledText royaleTheme={royaleTheme} className="text-xxs white">
                                     {t('options.swap.estimated-gas')}:{' '}
                                     {previewData
                                         ? formatCurrencyWithSign(
@@ -331,10 +379,11 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                               )
                                           )
                                         : 'n/a'}
-                                </Text>
+                                </StyledText>
                             </FlexDivRowCentered>
                             <FlexDivRowCentered>
                                 <Select
+                                    royaleTheme={royaleTheme}
                                     options={preLoadTokens}
                                     formatOptionLabel={(option: any) => {
                                         return (
@@ -343,7 +392,9 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                                     src={option.logoURI}
                                                     style={{ width: 32, height: 32, marginRight: 6 }}
                                                 ></Image>
-                                                <Text className="text-xs white">{option.name}</Text>
+                                                <StyledText royaleTheme={royaleTheme} className="text-xs white">
+                                                    {option.name}
+                                                </StyledText>
                                             </FlexDivRowCentered>
                                         );
                                     }}
@@ -353,7 +404,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                         _setToToken(option);
                                     }}
                                 ></Select>
-                                <Text className="text-m white blur">
+                                <StyledText royaleTheme={royaleTheme} className="text-m white blur">
                                     {previewData
                                         ? Number(
                                               ethers.utils.formatUnits(
@@ -362,10 +413,10 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                               )
                                           ).toFixed(4)
                                         : 'n/a'}
-                                </Text>
+                                </StyledText>
                             </FlexDivRowCentered>
                         </SectionWrapper>
-                        {getButton()}
+                        {getButton(royaleTheme)}
                         {isLoading && (
                             <LoaderContainer>
                                 <SimpleLoader />
@@ -383,15 +434,16 @@ const Swap: React.FC<any> = ({ handleClose }) => {
     );
 };
 
-const SectionWrapper = styled(FlexDivColumn)`
-    background: #0a2e66;
+const SectionWrapper = styled(FlexDivColumn)<{ royaleTheme?: boolean }>`
+    background: ${(props) => (props.royaleTheme ? 'var(--color-wrapper)' : '#0a2e66')};
+    border: ${(props) => (props.royaleTheme ? '5px solid var(--color)' : '')};
     padding: 16px;
     padding-bottom: 0;
-    border-radius: 20px;
-    max-height: 92px;
+    border-radius: ${(props) => (props.royaleTheme ? '5px' : '20px')};
+    max-height: ${(props) => (props.royaleTheme ? '102px' : '92px')};
+    margin: 20px 0;
+    position: relative;
     &:last-of-type {
-        position: relative;
-        margin: 20px 0;
         .react-select__indicators {
             display: none !important;
         }
@@ -401,17 +453,28 @@ const SectionWrapper = styled(FlexDivColumn)`
     }
 `;
 
-const NumInput = styled(NumericInput)`
+const NumInput = styled(NumericInput)<{ royaleTheme?: boolean }>`
     font-size: 20px;
+    background: ${(props) => (props.royaleTheme ? 'var(--color-wrapper)' : '')};
+    border: ${(props) => (props.royaleTheme ? '1px solid var(--color-wrapper)' : '')};
+    color: ${(props) => (props.royaleTheme ? 'var(--color)' : '')};
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : '')};
+    margin-bottom: ${(props) => (props.royaleTheme ? '4px' : '')};
     &:focus {
         border: none !important;
     }
 `;
 
-const Select = styled(ReactSelect)`
+const Select = styled(ReactSelect)<{ royaleTheme?: boolean }>`
     flex: 1;
     max-width: 200px;
     margin-left: -10px;
+    margin-bottom: ${(props) => (props.royaleTheme ? '4px' : '')};
+    & > div {
+        font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : '')};
+        background: ${(props) => (props.royaleTheme ? 'var(--color-wrapper) !important' : '')};
+        border: ${(props) => (props.royaleTheme ? 'none !important' : '')};
+    }
     .react-select__single-value,
     .react-select__single-value > div {
         padding: 0 !important;
@@ -419,11 +482,24 @@ const Select = styled(ReactSelect)`
     .react-select__control--is-focused {
         border: none !important;
     }
+    .react-select__option {
+        font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : '')};
+        color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : '')};
+        background: ${(props) => (props.royaleTheme ? 'var(--color-wrapper) !important' : '')};
+        border: ${(props) => (props.royaleTheme ? 'none !important' : '')};
+        &:hover {
+            background: ${(props) => (props.royaleTheme ? 'var(--color) !important' : '')};
+            & > div > p {
+                color: ${(props) => (props.royaleTheme ? 'var(--color-wrapper) !important' : '')};
+            }
+        }
+    }
 `;
 
-const GradientBorderWrapper = styled.div`
-    border-radius: 18px;
-    background: linear-gradient(to right, #3936c7, #2d83d2, #23a5dd, #35dadb);
+const GradientBorderWrapper = styled.div<{ royaleTheme?: boolean }>`
+    border-radius: ${(props) => (props.royaleTheme ? '5px' : '18px')};
+    background: ${(props) =>
+        props.royaleTheme ? 'var(--color)' : 'linear-gradient(to right, #3936c7, #2d83d2, #23a5dd, #35dadb)'};
     margin: auto;
     position: relative;
     top: 200px;
@@ -435,13 +511,13 @@ const GradientBorderWrapper = styled.div`
     }
 `;
 
-const GradientBorderContent = styled.div`
+const GradientBorderContent = styled.div<{ royaleTheme?: boolean }>`
     font-weight: bold;
     font-size: 12px;
     line-height: 24px;
-    border-radius: 20px;
+    border-radius: ${(props) => (props.royaleTheme ? '5px' : '20px')};
     min-width: 70px;
-    background-color: #04045a;
+    background-color: ${(props) => (props.royaleTheme ? 'var(--color-wrapper)' : '#04045a')};
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -449,7 +525,7 @@ const GradientBorderContent = styled.div`
     justify-content: space-between;
     width: 420px;
     padding-top: 50px;
-    height: 334px;
+    height: border-radius: ${(props) => (props.royaleTheme ? '350px' : '334px')};
     &.loading {
         opacity: 0.85;
     }
@@ -457,25 +533,26 @@ const GradientBorderContent = styled.div`
         height: 115px;
     }
     &.error {
-        height: 395px;
+        height: 425px;
     }
     @media screen and (max-width: 500px) {
         width: 340px;
     }
 `;
 
-const SceletonWrapper = styled.div`
+const SceletonWrapper = styled.div<{ royaleTheme?: boolean }>`
     display: none;
     width: 380px;
-    height: 92px;
-    background: #0a2e66;
+    max-height: ${(props) => (props.royaleTheme ? '102px' : '92px')};
+    background: ${(props) => (props.royaleTheme ? 'var(--color-background)' : '#6984ad')};
+    border-radius: ${(props) => (props.royaleTheme ? '5px' : '20px')};
+    border: ${(props) => (props.royaleTheme ? '5px solid var(--color)' : '')};
     padding: 16px;
-    border-radius: 20px;
+    margin: ${(props) => (props.royaleTheme ? '20px 0px' : '')};
     &.visible {
         display: block;
         width: 100%;
     }
-
     @keyframes shimmer {
         100% {
             -webkit-mask-position: left;
@@ -486,7 +563,7 @@ const SceletonWrapper = styled.div`
     animation: shimmer 2.5s infinite;
 `;
 
-const TextSceleton = styled.div`
+const TextSceleton = styled.div<{ royaleTheme?: boolean }>`
     height: 13px;
     border-radius: 12px;
     &.small {
@@ -498,23 +575,24 @@ const TextSceleton = styled.div`
     &.large {
         width: 120px;
     }
-    background: #6984ad;
+    background: ${(props) => (props.royaleTheme ? 'var(--color)' : '#6984ad')};
 `;
 
-const ImageSceleton = styled.div`
+const ImageSceleton = styled.div<{ royaleTheme?: boolean }>`
     height: 32px;
     width: 32px;
     border-radius: 50%;
-    background: #6984ad;
+    background: ${(props) => (props.royaleTheme ? 'var(--color)' : '#6984ad')};
     margin-right: 6px;
 `;
 
-const MaxButton = styled.button`
+const MaxButton = styled.button<{ royaleTheme?: boolean }>`
     cursor: pointer;
-    background-color: #04045a;
-    color: white;
+    background-color: ${(props) => (props.royaleTheme ? 'var(--color)' : '#04045a')};
+    color: ${(props) => (props.royaleTheme ? 'var(--color-wrapper)' : 'white')};
     border: transparent;
     border-radius: 20px;
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : '')};
     font-size: 12px;
     line-height: 12px;
     letter-spacing: 0.4px;
@@ -525,6 +603,34 @@ const CloseButton = styled(XButton)`
     position: absolute;
     top: 20px;
     right: 20px;
+`;
+
+const RoyaleStyledButton = styled.button`
+    padding: 8px 35px;
+    cursor: pointer;
+    align-items: center;
+    cursor: pointer;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 22px;
+    background: var(--color);
+    border: 1px solid var(--color);
+    box-sizing: border-box;
+    box-shadow: 0px 0px 30px var(--color);
+    border-radius: 20px;
+    padding: 6px 15px 6px 20px;
+    color: var(--color-wrapper);
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+`;
+
+const StyledText = styled(Text)<{ royaleTheme?: boolean }>`
+    color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : '')};
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : '')};
 `;
 
 export default Swap;

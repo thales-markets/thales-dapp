@@ -171,7 +171,7 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
         RoyaleDataForScoreboard: (season: number) => ['royale', 'royaleDataForScoreboad', season],
-        FooterData: () => ['royale', 'footerData'],
+        FooterData: (season: number) => ['royale', 'footerData', season],
     },
     Governance: {
         Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],

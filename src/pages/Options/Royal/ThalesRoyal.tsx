@@ -43,7 +43,7 @@ const ThalesRoyal: React.FC = () => {
 
     const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
 
-    const royaleFooterQuery = useRoyaleFooterQuery({ enabled: isAppReady });
+    const royaleFooterQuery = useRoyaleFooterQuery(selectedSeason, { enabled: isAppReady });
     const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
     const positionsQuery = usePositionsQuery(0, networkId, {
         enabled: networkId !== undefined && isAppReady,
@@ -71,6 +71,12 @@ const ThalesRoyal: React.FC = () => {
             setRoyaleStatsData(royaleFooterQuery.data);
         }
     }, [royaleFooterQuery.isSuccess, royaleFooterQuery.data]);
+
+    useEffect(() => {
+        royaleFooterQuery.refetch().then((resp) => {
+            setRoyaleStatsData(resp.data);
+        });
+    }, [selectedSeason]);
 
     useEffect(() => {
         setSelectedSeason(latestSeasonQuery.data || 0);

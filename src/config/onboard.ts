@@ -1,7 +1,13 @@
 import onboard from 'bnc-onboard';
 import { Subscriptions } from 'bnc-onboard/dist/src/interfaces';
-import { getInfuraRpcURL, NetworkId } from 'utils/network';
-import metamaskIcon from 'assets/images/metamask-wallet-icon.svg';
+import { getInfuraRpcURL, NetworkId as LocalNetworkId } from 'utils/network';
+import browserWalletIcon from 'assets/images/browser-wallet.svg';
+import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
+import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
+import disclaimer from 'assets/docs/thales-protocol-disclaimer.pdf';
+import { NetworkId } from '@synthetixio/contracts-interface';
+import { initReactI18next } from 'react-i18next';
+import i18n from 'i18next';
 
 const ledgerIcon =
     '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#FFFFFF" d="M399,341.522c0,31.535-25.609,57.1-57.201,57.1H170.2c-31.592,0-57.2-25.564-57.2-57.1V170.222c0-31.533,25.608-57.1,57.2-57.1h171.599c31.592,0,57.201,25.566,57.201,57.1V341.522z"/><g><path fill="#152633" d="M343.266,127.313H224.914v159.661h159.791V168.626c0-22.671-18.652-41.313-41.313-41.313C343.355,127.313,343.303,127.313,343.266,127.313z"/><path fill="#152633" d="M188.018,127.313h-20.396c-22.656,0-41.309,18.656-41.309,41.313v20.396h61.705V127.313z"/><path fill="#152633" d="M126.313,225.919h61.705v61.708h-61.705V225.919z"/><path fill="#152633" d="M323.518,385.706h20.396c22.673,0,41.313-18.653,41.313-41.309c0-0.037,0-0.09,0-0.129v-19.75h-61.709V385.706z"/><path fill="#152633" d="M224.914,324.519h61.707v61.71h-61.707V324.519z"/><path fill="#152633" d="M126.313,324.519v20.4c0,22.651,18.652,41.31,41.309,41.31h20.396v-61.71H126.313z"/></g></svg>';
@@ -20,8 +26,9 @@ const latticeIcon =
 const torusIcon =
     '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"> <path fill="#FFFFFF" d="M364.55,100.266H159.723c-37.708,0-68.275,30.5-68.275,68.126v204.374c0,37.627,30.567,68.127,68.275,68.127 H364.55c37.707,0,68.275-30.5,68.275-68.127V168.392C432.825,130.766,402.257,100.266,364.55,100.266z"/> <g> <path fill="#3D5BA9" d="M358.342,111.736H165.93c-35.422,0-64.136,28.715-64.136,64.137v192.412 c0,35.422,28.714,64.136,64.136,64.136h192.412c35.422,0,64.136-28.714,64.136-64.136V175.873 C422.478,140.451,393.764,111.736,358.342,111.736z M281.195,373.589c-0.022,12.083-9.836,21.854-21.918,21.828h-24.209 c-12.16,0.132-22.125-9.614-22.268-21.772V231.712h-39.404c-12.158,0.131-22.125-9.614-22.268-21.773v-25.914 c0.025-12.082,9.842-21.855,21.924-21.83h86.225c12.082-0.025,21.896,9.748,21.918,21.83V373.589z M333.426,231.208 c-19.078,0.035-34.574-15.399-34.61-34.479c0-18.989,15.35-34.404,34.341-34.479c19.044-0.074,34.543,15.302,34.614,34.343 C367.846,215.637,352.469,231.133,333.426,231.208z"/> <path fill="#FFFFFF" d="M259.277,162.194h-86.225c-12.082-0.025-21.898,9.748-21.924,21.83v25.914 c0.143,12.159,10.109,21.904,22.268,21.773h39.404v141.933c0.143,12.158,10.107,21.904,22.268,21.772h24.209 c12.082,0.025,21.896-9.745,21.918-21.828V184.024C281.173,171.942,271.359,162.169,259.277,162.194z"/> <path fill="#FFFFFF" d="M333.156,162.25c-18.991,0.074-34.341,15.489-34.341,34.479c0.036,19.08,15.532,34.515,34.61,34.479 c19.043-0.075,34.42-15.571,34.345-34.615C367.699,177.552,352.2,162.176,333.156,162.25z"/> </g> </svg>';
 
-export const initOnboard = (networkId: NetworkId, subscriptions: Subscriptions) => {
+export const initOnboard = (networkId: LocalNetworkId, subscriptions: Subscriptions) => {
     const infuraRpc = getInfuraRpcURL(networkId);
+    const description = i18n.use(initReactI18next).t('common.wallet.disclaimer-info', { link: disclaimer });
 
     return onboard({
         hideBranding: true,
@@ -29,8 +36,27 @@ export const initOnboard = (networkId: NetworkId, subscriptions: Subscriptions) 
         subscriptions,
         darkMode: true,
         walletSelect: {
+            description: description,
+            agreement: { version: '1.0', termsUrl: termsOfUse, privacyUrl: privacyPolicy },
             wallets: [
-                { walletName: 'metamask', preferred: true, iconSrc: metamaskIcon },
+                {
+                    name: 'Browser Wallet',
+                    iconSrc: browserWalletIcon,
+                    type: 'injected',
+                    link: 'https://metamask.io',
+                    wallet: async (helpers) => {
+                        const { createModernProviderInterface } = helpers;
+                        const provider = window.ethereum;
+                        return {
+                            provider,
+                            interface: provider ? createModernProviderInterface(provider) : null,
+                        };
+                    },
+                    preferred: true,
+                    desktop: true,
+                    mobile: true,
+                },
+                { walletName: 'tally', preferred: true },
                 {
                     walletName: 'ledger',
                     rpcUrl: infuraRpc,
@@ -54,7 +80,12 @@ export const initOnboard = (networkId: NetworkId, subscriptions: Subscriptions) 
                 },
                 {
                     walletName: 'walletConnect',
-                    rpc: { [networkId]: infuraRpc },
+                    rpc: {
+                        [NetworkId.Mainnet]: getInfuraRpcURL(NetworkId.Mainnet),
+                        [NetworkId['Mainnet-Ovm']]: getInfuraRpcURL(NetworkId['Mainnet-Ovm']),
+                        [NetworkId.Kovan]: getInfuraRpcURL(NetworkId.Kovan),
+                        [NetworkId['Kovan-Ovm']]: getInfuraRpcURL(NetworkId['Kovan-Ovm']),
+                    },
                     preferred: true,
                     svg: walletConnectIcon,
                 },

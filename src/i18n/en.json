@@ -140,7 +140,8 @@
             "failed": "failed"
         },
         "wallet": {
-            "connect-your-wallet": "Connect wallet"
+            "connect-your-wallet": "Connect wallet",
+            "disclaimer-info": "By connecting a wallet you agree to Thales DAO Terms Of Use and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <a target=\"_blank\" href={{link}}>disclaimer</a>"
         },
         "errors": {
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
@@ -920,6 +921,7 @@
             "address": "Address",
             "twitter-account": "My twitter account",
             "my-info": "My info",
+            "balance": "sUSD balance",
             "table": {
                 "rank-col": "Rank",
                 "display-name-col": "Display Name",
@@ -1084,6 +1086,8 @@
                 "price": "Price",
                 "current-positions": "Current positions",
                 "current-reward-per-player": "Current reward per player",
+                "current-reward-per-winner": "Reward per winner",
+                "season-finished": "Season {{season}} finished",
                 "reward-per-player": "Reward per player",
                 "players-alive": "Players alive",
                 "up": "UP",
@@ -1135,6 +1139,12 @@
                 "season-finished": "Season finished",
                 "approve-susd": "Approve sUSD",
                 "buy-in": "Buy-in: {{buyInAmount}} sUSD",
+                "insufficient-balance": "Insufficient sUSD balance",
+                "default-position": "Default position",
+                "default-position-none": "NONE",
+                "default-position-down": "DOWN",
+                "default-position-up": "UP",
+                "default-position-info": "Before the game starts, you can choose a default position applied only to the first round. You can change your position again once the positioning period starts. For all other rounds position must be chosen during the positioning period.",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
@@ -1180,7 +1190,9 @@
                 "avatar": "Avatar image",
                 "avatar-tip": "Please enter valid URL ending with either .jpg, .jpeg, .png, .svg or .gif",
                 "change-display-name": "Apply changes",
-                "enter-display-name": "Enter Display Name"
+                "enter-display-name": "Enter Display Name",
+                "name-validation-msg": "Please enter Display Name without special characters",
+                "avatar-validation-msg": "Please enter valid Avatar URL"
             }
         },
         "amm-mining": {
@@ -1336,6 +1348,7 @@
         },
         "governance": {
             "list": {
+                "0": "Thales DAO Governance",
                 "1": "THALES DAOs",
                 "2": "THALES Council (Aka “the Brain”)",
                 "3": "Treasury DAO (Aka “the Pocket”)",

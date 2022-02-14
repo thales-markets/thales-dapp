@@ -5,17 +5,19 @@ import snxJSConnector from 'utils/snxJSConnector';
 
 export type FooterData = {
     reward: number;
+    rewardPerWinnerPerSeason: number;
     round: number;
     playersAlive: string;
     season: number;
+    seasonFinished: boolean;
 };
 
-const useRoyaleFooterQuery = (options?: UseQueryOptions<FooterData>) => {
+const useRoyaleFooterQuery = (selectedSeason: number, options?: UseQueryOptions<FooterData>) => {
     return useQuery<FooterData>(
-        QUERY_KEYS.Royale.FooterData(),
+        QUERY_KEYS.Royale.FooterData(selectedSeason),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
-            return getFromContract(thalesRoyaleContract);
+            return getFromContract(thalesRoyaleContract, selectedSeason);
         },
         {
             refetchInterval: 5000,
@@ -24,11 +26,13 @@ const useRoyaleFooterQuery = (options?: UseQueryOptions<FooterData>) => {
     );
 };
 
-const getFromContract = async (RoyaleContract: any): Promise<FooterData> => {
-    const season = Number(await RoyaleContract.season());
-    const [round, reward] = await Promise.all([
+const getFromContract = async (RoyaleContract: any, selectedSeason: number): Promise<FooterData> => {
+    const seasonContract = Number(await RoyaleContract.season());
+    const season = selectedSeason === seasonContract ? seasonContract : selectedSeason;
+    const [round, reward, rewardPerWinnerPerSeason, seasonFinished] = await Promise.all([
         RoyaleContract.roundInASeason(season),
         RoyaleContract.rewardPerSeason(season === 0 ? 1 : season),
+        RoyaleContract.rewardPerWinnerPerSeason(season === 0 ? 1 : season),
         RoyaleContract.seasonFinished(season),
     ]);
 
@@ -47,8 +51,10 @@ const getFromContract = async (RoyaleContract: any): Promise<FooterData> => {
             season === 0
                 ? Number(ethers.utils.formatEther(reward))
                 : Number(ethers.utils.formatEther(reward)) / numberOfPlayers,
+        rewardPerWinnerPerSeason: Number(ethers.utils.formatEther(rewardPerWinnerPerSeason)),
         playersAlive,
         season,
+        seasonFinished,
     };
 };
 

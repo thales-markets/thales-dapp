@@ -133,7 +133,7 @@ const FlexDiv = styled.div`
     color: var(--color);
     flex-wrap: wrap;
     &.initiatives {
-        & > i {
+        & > a > i {
             @media (max-width: 600px) {
                 flex: 1 40%;
                 text-align: center;
@@ -158,21 +158,33 @@ const Thales = styled(IconAbs)`
     @media (max-width: 600px) {
         font-size: 10em;
     }
+    @media (max-width: 450px) {
+        padding: 0 10px;
+    }
 `;
 const ThalesRoyale = styled(IconAbs)`
     font-size: 12em;
     @media (max-width: 600px) {
         font-size: 7em;
     }
+    @media (max-width: 450px) {
+        padding: 0 10px;
+    }
 `;
 const ThalesGame = styled(IconAbs)`
     font-size: 16em;
+    @media (max-width: 650px) {
+        line-height: 0.6em;
+        margin-bottom: 90px;
+    }
     @media (max-width: 600px) {
         font-size: 10em;
         line-height: 0.2em;
+        margin-bottom: 0px;
     }
     @media (max-width: 450px) {
         margin-bottom: 90px;
+        padding: 0 10px;
     }
 `;
 
