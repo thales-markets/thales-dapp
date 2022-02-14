@@ -50,13 +50,12 @@ import { BuySlider, SellSlider } from '../../CreateMarket/components';
 import ValidationMessage from 'components/ValidationMessage';
 import onboardConnector from 'utils/onboardConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { APPROVAL_EVENTS } from 'constants/events';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import FieldValidationMessage from 'components/FieldValidationMessage';
@@ -73,6 +72,7 @@ import useInterval from 'hooks/useInterval';
 import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import WarningMessage from 'components/WarningMessage';
 import { LINKS } from 'constants/links';
+import ApprovalModal from 'components/ApprovalModal';
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -117,6 +117,7 @@ const AMM: React.FC = () => {
     const [insufficientLiquidity, setInsufficientLiquidity] = useState<boolean>(false);
     const [maxLimit, setMaxLimit] = useState<number>(0);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
@@ -170,9 +171,11 @@ const AMM: React.FC = () => {
         insufficientBalance ||
         maxLimitExceeded ||
         isGettingQuote ||
-        isAmmTradingDisabled;
+        isAmmTradingDisabled ||
+        !hasAllowance;
 
     const sellToken = isBuy ? SynthsUSD.address : isLong ? optionsMarket.longAddress : optionsMarket.shortAddress;
+    const sellAmount = isBuy ? total : amount;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
 
     const formatBuySellArguments = () => {
@@ -191,29 +194,22 @@ const AMM: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setAllowance(!!bigNumberFormatter(allowance));
+                const parsedSellAmount = ethers.utils.parseEther(Number(sellAmount).toString());
+                const allowance = await checkAllowance(
+                    parsedSellAmount,
+                    erc20Instance,
+                    walletAddress,
+                    addressToApprove
+                );
+                setAllowance(allowance);
             } catch (e) {
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance, sellAmount, isAllowing]);
 
     const fetchL1Fee = async (
         ammContractWithSigner: any,
@@ -314,20 +310,20 @@ const AMM: React.FC = () => {
         fetchGasLimit(marketAddress, side, parsedAmount, parsedTotal, parsedSlippage);
     }, [isWalletConnected, hasAllowance, slippage]);
 
-    const handleAllowance = async () => {
+    const handleAllowance = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
         const { ammContract } = snxJSConnector;
         const addressToApprove = ammContract ? ammContract.address : '';
 
         try {
             setIsAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
-            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
+            setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setAllowance(true);
                 setIsAllowing(false);
             }
         } catch (e) {
@@ -384,7 +380,13 @@ const AMM: React.FC = () => {
                         parsedSlippage
                     );
                 } else {
-                    if (ammPrice > 0 && bigNumberFormatter(ammQuote) > 0 && isSlippageValid && isQuoteChanged) {
+                    if (
+                        ammPrice > 0 &&
+                        bigNumberFormatter(ammQuote) > 0 &&
+                        isSlippageValid &&
+                        isQuoteChanged &&
+                        hasAllowance
+                    ) {
                         fetchGasLimit(optionsMarket.address, SIDE[optionSide], parsedAmount, ammQuote, parsedSlippage);
                     }
                 }
@@ -580,7 +582,7 @@ const AMM: React.FC = () => {
         }
         if (!hasAllowance) {
             return (
-                <SubmitButton disabled={isAllowing} onClick={handleAllowance} isBuy={isBuy}>
+                <SubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)} isBuy={isBuy}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -916,6 +918,15 @@ const AMM: React.FC = () => {
                     <Trans i18nKey="amm.explanation-text" components={[<p key="0" />, <TipLink key="1" />]} />
                 </Container>
             </Info>
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={sellAmount}
+                    tokenSymbol={sellTokenCurrencyKey}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
         </AMMWrapper>
     );
 };

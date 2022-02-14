@@ -177,7 +177,9 @@
         "or": "或",
         "enable-wallet-access": {
             "approve-label": "批准{{currencyKey}}",
-            "approve-progress-label": "批准{{currencyKey}}…"
+            "approve-progress-label": "批准{{currencyKey}}…",
+            "approve-all-label": "全部批准",
+            "custom-amount-label": "自定义金额"
         },
         "sidebar": {
             "trending-label": "趋势市场",

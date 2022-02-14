@@ -1,5 +1,5 @@
 import ValidationMessage from 'components/ValidationMessage';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import {
     CurrencyLabel,
     DefaultSubmitButton,
@@ -14,11 +14,9 @@ import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useTranslation } from 'react-i18next';
 import { getIsWalletConnected, getNetwork, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { APPROVAL_EVENTS } from 'constants/events';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { formatGasLimit, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { checkAllowance, formatGasLimit, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -41,6 +39,7 @@ import InfoMessage from 'components/InfoMessage';
 import InfoWarningMessage from 'components/InfoWarningMessage';
 import { FlexDiv } from 'theme/common';
 import styled from 'styled-components';
+import ApprovalModal from 'components/ApprovalModal';
 
 const Migrate: React.FC = () => {
     const { t } = useTranslation();
@@ -57,11 +56,13 @@ const Migrate: React.FC = () => {
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
 
     const isAmountEntered = Number(amount) > 0;
     const insufficientBalance = Number(thalesBalance) < Number(amount) || Number(thalesBalance) === 0;
 
-    const isButtonDisabled = isSubmitting || !isWalletConnected || !isAmountEntered || insufficientBalance;
+    const isButtonDisabled =
+        isSubmitting || !isWalletConnected || !isAmountEntered || insufficientBalance || !hasAllowance;
 
     const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -82,30 +83,23 @@ const Migrate: React.FC = () => {
 
             const getAllowance = async () => {
                 try {
-                    const allowance = await thalesTokenContractWithSigner.allowance(walletAddress, addressToApprove);
-                    setAllowance(!!bigNumberFormatter(allowance));
+                    const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+                    const allowance = await checkAllowance(
+                        parsedAmount,
+                        thalesTokenContractWithSigner,
+                        walletAddress,
+                        addressToApprove
+                    );
+                    setAllowance(allowance);
                 } catch (e) {
                     console.log(e);
                 }
             };
-
-            const registerAllowanceListener = () => {
-                thalesTokenContractWithSigner.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                        setAllowance(true);
-                        setIsAllowing(false);
-                    }
-                });
-            };
             if (isWalletConnected) {
                 getAllowance();
-                registerAllowanceListener();
             }
-            return () => {
-                thalesTokenContractWithSigner.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-            };
         }
-    }, [walletAddress, isWalletConnected, hasAllowance, networkId]);
+    }, [walletAddress, isWalletConnected, hasAllowance, networkId, amount, isAllowing]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
@@ -131,7 +125,7 @@ const Migrate: React.FC = () => {
         fetchGasLimit();
     }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
-    const handleAllowance = async () => {
+    const handleAllowance = async (approveAmount: BigNumber) => {
         const { thalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
 
         if (thalesTokenContract && thalesExchangerContract) {
@@ -142,15 +136,14 @@ const Migrate: React.FC = () => {
                 setIsAllowing(true);
                 const gasEstimate = await thalesTokenContractWithSigner.estimateGas.approve(
                     addressToApprove,
-                    ethers.constants.MaxUint256
+                    approveAmount
                 );
-                const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, approveAmount, {
                     gasLimit: formatGasLimit(gasEstimate, networkId),
                 })) as ethers.ContractTransaction;
-
+                setOpenApprovalModal(false);
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {
-                    setAllowance(true);
                     setIsAllowing(false);
                 }
             } catch (e) {
@@ -201,7 +194,7 @@ const Migrate: React.FC = () => {
         }
         if (!hasAllowance) {
             return (
-                <DefaultSubmitButton disabled={isAllowing} onClick={handleAllowance}>
+                <DefaultSubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: THALES_CURRENCY })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -285,6 +278,15 @@ const Migrate: React.FC = () => {
                 message={txErrorMessage}
                 onDismiss={() => setTxErrorMessage(null)}
             />
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={amount}
+                    tokenSymbol={THALES_CURRENCY}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
         </>
     );
 };

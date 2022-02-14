@@ -177,7 +177,9 @@
         "or": "или",
         "enable-wallet-access": {
             "approve-label": "Разрешить использование {{currencyKey}}",
-            "approve-progress-label": "Процесс подтверждения {{currencyKey}}..."
+            "approve-progress-label": "Процесс подтверждения {{currencyKey}}...",
+            "approve-all-label": "Одобрить все",
+            "custom-amount-label": "Пользовательская сумма"
         },
         "sidebar": {
             "trending-label": "Рынки в тренде",

@@ -8,10 +8,8 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
-import { ethers } from 'ethers';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { APPROVAL_EVENTS /*BINARY_OPTIONS_EVENTS */ } from 'constants/events';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import { BigNumber, ethers } from 'ethers';
+import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import {
@@ -41,7 +39,6 @@ import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-// import { SIDE } from 'constants/options';
 import { COLORS } from 'constants/ui';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
@@ -50,6 +47,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
+import ApprovalModal from 'components/ApprovalModal';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -85,6 +83,9 @@ const MintOptions: React.FC = () => {
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
     const [mintedAmount, setMintedAmount] = useState<number | string>('');
     const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
+    const [openLongApprovalModal, setOpenLongApprovalModal] = useState<boolean>(false);
+    const [openShortApprovalModal, setOpenShortApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const marketFees = optionsMarket.fees;
 
@@ -108,7 +109,8 @@ const MintOptions: React.FC = () => {
         !isLongAmountValid ||
         !isShortAmountValid ||
         !isLongPriceValid ||
-        !isShortPriceValid;
+        !isShortPriceValid ||
+        !hasAllowance;
 
     const addressToApprove = ONE_INCH_CONTRACTS[networkId] ?? '';
 
@@ -120,55 +122,22 @@ const MintOptions: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const allowance = await SynthsUSD.allowance(walletAddress, binaryOptionsMarketManagerContract.address);
-                setAllowance(!!bigNumberFormatter(allowance));
+                const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+                const allowance = await checkAllowance(
+                    parsedAmount,
+                    SynthsUSD,
+                    walletAddress,
+                    binaryOptionsMarketManagerContract.address
+                );
+                setAllowance(allowance);
             } catch (e) {
                 console.log(e);
             }
         };
-        const registerAllowanceListener = () => {
-            if (walletAddress) {
-                SynthsUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                    if (owner === walletAddress && spender === binaryOptionsMarketManagerContract.address) {
-                        setAllowance(true);
-                        setIsAllowing(false);
-                    }
-                });
-            }
-        };
-
         if (isWalletConnected) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            if (walletAddress) {
-                SynthsUSD.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-            }
-        };
-    }, [walletAddress, hasAllowance]);
-
-    // useEffect(() => {
-    //     if (walletAddress) {
-    //         BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, async (side: number, account: string) => {
-    //             if (walletAddress === account) {
-    //                 if (SIDE[side] === 'long' && sellLong) {
-    //                     await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
-    //                 }
-    //                 if (SIDE[side] === 'short' && sellShort) {
-    //                     await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
-    //                 }
-    //                 setIsMinting(false);
-    //             }
-    //             refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
-    //         });
-    //     }
-    //     return () => {
-    //         if (walletAddress) {
-    //             BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED);
-    //         }
-    //     };
-    // }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
+    }, [walletAddress, hasAllowance, amount, isAllowing]);
 
     useEffect(() => {
         const fetchL1Fee = async (BOMContractWithSigner: any, mintAmount: any) => {
@@ -201,7 +170,7 @@ const MintOptions: React.FC = () => {
         fetchGasLimit();
     }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
-    const handleAllowance = async () => {
+    const handleAllowance = async (approveAmount: BigNumber) => {
         const {
             contracts: { SynthsUSD },
         } = snxJSConnector.snxJS as any;
@@ -210,19 +179,14 @@ const MintOptions: React.FC = () => {
             setIsAllowing(true);
             const gasEstimate = await SynthsUSD.estimateGas.approve(
                 binaryOptionsMarketManagerContract.address,
-                ethers.constants.MaxUint256
+                approveAmount
             );
-            const tx = (await SynthsUSD.approve(
-                binaryOptionsMarketManagerContract.address,
-                ethers.constants.MaxUint256,
-                {
-                    gasLimit: formatGasLimit(gasEstimate, networkId),
-                }
-            )) as ethers.ContractTransaction;
-
+            const tx = (await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, approveAmount, {
+                gasLimit: formatGasLimit(gasEstimate, networkId),
+            })) as ethers.ContractTransaction;
+            setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setAllowance(true);
                 setIsAllowing(false);
             }
         } catch (e) {
@@ -303,7 +267,7 @@ const MintOptions: React.FC = () => {
         }
         if (!hasAllowance) {
             return (
-                <DefaultSubmitButton disabled={isAllowing} onClick={handleAllowance}>
+                <DefaultSubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sUSD })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -314,7 +278,7 @@ const MintOptions: React.FC = () => {
         }
         if (!hasLongAllowance && sellLong) {
             return (
-                <DefaultSubmitButton disabled={isLongAllowing} onClick={handleLongAllowance}>
+                <DefaultSubmitButton disabled={isLongAllowing} onClick={() => setOpenLongApprovalModal(true)}>
                     {!isLongAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sLONG })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -325,7 +289,7 @@ const MintOptions: React.FC = () => {
         }
         if (!hasShortAllowance && sellShort) {
             return (
-                <DefaultSubmitButton disabled={isShortAllowing} onClick={handleShortAllowance}>
+                <DefaultSubmitButton disabled={isShortAllowing} onClick={() => setOpenShortApprovalModal(true)}>
                     {!isShortAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sSHORT })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -361,42 +325,34 @@ const MintOptions: React.FC = () => {
         const erc20Instance = new ethers.Contract(optionsMarket.longAddress, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             try {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setLongAllowance(!!bigNumberFormatter(allowance));
+                const parsedLongAmount = ethers.utils.parseEther(Number(longAmount).toString());
+                const allowance = await checkAllowance(
+                    parsedLongAmount,
+                    erc20Instance,
+                    walletAddress,
+                    addressToApprove
+                );
+                setLongAllowance(allowance);
             } catch (e) {
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                    setLongAllowance(true);
-                    setIsLongAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected && sellLong) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, sellLong, hasLongAllowance]);
+    }, [walletAddress, isWalletConnected, sellLong, hasLongAllowance, longAmount, isLongAllowing]);
 
-    const handleLongAllowance = async () => {
+    const handleLongAllowance = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(optionsMarket.longAddress, erc20Contract.abi, snxJSConnector.signer);
         try {
             setIsLongAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
-            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
-
+            setOpenLongApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setLongAllowance(true);
                 setIsLongAllowing(false);
             }
         } catch (e) {
@@ -409,41 +365,34 @@ const MintOptions: React.FC = () => {
         const erc20Instance = new ethers.Contract(optionsMarket.shortAddress, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             try {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setShortAllowance(!!bigNumberFormatter(allowance));
+                const parsedShortAmount = ethers.utils.parseEther(Number(shortAmount).toString());
+                const allowance = await checkAllowance(
+                    parsedShortAmount,
+                    erc20Instance,
+                    walletAddress,
+                    addressToApprove
+                );
+                setShortAllowance(allowance);
             } catch (e) {
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                    setShortAllowance(true);
-                    setIsShortAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected && sellShort) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, sellShort, hasShortAllowance]);
+    }, [walletAddress, isWalletConnected, sellShort, hasShortAllowance, shortAmount, isShortAllowing]);
 
-    const handleShortAllowance = async () => {
+    const handleShortAllowance = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(optionsMarket.shortAddress, erc20Contract.abi, snxJSConnector.signer);
         try {
             setIsShortAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
-            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
+            setOpenShortApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setShortAllowance(true);
                 setIsShortAllowing(false);
             }
         } catch (e) {
@@ -771,6 +720,33 @@ const MintOptions: React.FC = () => {
                 message={txErrorMessage}
                 onDismiss={() => setTxErrorMessage(null)}
             />
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={amount}
+                    tokenSymbol={SYNTHS_MAP.sUSD}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
+            {openLongApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={longAmount}
+                    tokenSymbol={SYNTHS_MAP.sLONG}
+                    isAllowing={isLongAllowing}
+                    onSubmit={handleLongAllowance}
+                    onClose={() => setOpenLongApprovalModal(false)}
+                />
+            )}
+            {openShortApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={shortAmount}
+                    tokenSymbol={SYNTHS_MAP.sSHORT}
+                    isAllowing={isShortAllowing}
+                    onSubmit={handleShortAllowance}
+                    onClose={() => setOpenShortApprovalModal(false)}
+                />
+            )}
         </Container>
     );
 };

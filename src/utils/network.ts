@@ -2,7 +2,7 @@ import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { serializeTransaction, UnsignedTransaction } from 'ethers/lib/utils';
 import snxJSConnector from './snxJSConnector';
 
@@ -130,4 +130,14 @@ export const getL1FeeInWei = async (txRequest: any) => {
         return l1FeeInWei.toNumber();
     }
     return null;
+};
+
+export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {
+    try {
+        const approved = await token.allowance(walletAddress, spender);
+        return approved.gte(amount);
+    } catch (err: any) {
+        console.log(err);
+        return false;
+    }
 };
