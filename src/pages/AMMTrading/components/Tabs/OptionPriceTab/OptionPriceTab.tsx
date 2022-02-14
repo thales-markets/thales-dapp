@@ -1,9 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import XAxisContainer from './styled-components/XAxisContainer';
 
 import OptionPriceChart from '../../OptionPriceChart';
+import ChartContainer from './styled-components/ChartContainer';
+import Container from './styled-components/Container';
 
 const OptionPriceTab: React.FC = () => {
     return (
@@ -56,17 +57,5 @@ const OptionPriceTab: React.FC = () => {
         </Container>
     );
 };
-
-const ChartContainer = styled.div`
-    display: block;
-    height: 230px;
-    margin-top: 5px;
-`;
-
-const Container = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-`;
 
 export default OptionPriceTab;
