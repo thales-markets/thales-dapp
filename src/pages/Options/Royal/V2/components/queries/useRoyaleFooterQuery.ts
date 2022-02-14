@@ -2,24 +2,22 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import snxJSConnector from 'utils/snxJSConnector';
-import thalesData from 'thales-data';
-import { NetworkId } from '@synthetixio/contracts-interface';
 
 export type FooterData = {
     reward: number;
+    rewardPerWinnerPerSeason: number;
     round: number;
     playersAlive: string;
     season: number;
     seasonFinished: boolean;
-    winners: number;
 };
 
-const useRoyaleFooterQuery = (selectedSeason: number, networkId: NetworkId, options?: UseQueryOptions<FooterData>) => {
+const useRoyaleFooterQuery = (selectedSeason: number, options?: UseQueryOptions<FooterData>) => {
     return useQuery<FooterData>(
-        QUERY_KEYS.Royale.FooterData(),
+        QUERY_KEYS.Royale.FooterData(selectedSeason),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
-            return getFromContract(thalesRoyaleContract, selectedSeason, networkId);
+            return getFromContract(thalesRoyaleContract, selectedSeason);
         },
         {
             refetchInterval: 5000,
@@ -28,16 +26,13 @@ const useRoyaleFooterQuery = (selectedSeason: number, networkId: NetworkId, opti
     );
 };
 
-const getFromContract = async (
-    RoyaleContract: any,
-    selectedSeason: number,
-    networkId: NetworkId
-): Promise<FooterData> => {
+const getFromContract = async (RoyaleContract: any, selectedSeason: number): Promise<FooterData> => {
     const seasonContract = Number(await RoyaleContract.season());
     const season = selectedSeason === seasonContract ? seasonContract : selectedSeason;
-    const [round, reward, seasonFinished] = await Promise.all([
+    const [round, reward, rewardPerWinnerPerSeason, seasonFinished] = await Promise.all([
         RoyaleContract.roundInASeason(season),
         RoyaleContract.rewardPerSeason(season === 0 ? 1 : season),
+        RoyaleContract.rewardPerWinnerPerSeason(season === 0 ? 1 : season),
         RoyaleContract.seasonFinished(season),
     ]);
 
@@ -50,29 +45,16 @@ const getFromContract = async (
     playersAlive = totalPlayersPerRoundPerSeason + '/' + totalPlayers;
     const numberOfPlayers = Number(totalPlayersPerRoundPerSeason) > 0 ? Number(totalPlayersPerRoundPerSeason) : 1;
 
-    const data = await thalesData.binaryOptions.thalesRoyalePlayers({
-        season,
-        network: networkId,
-    });
-
-    let winners = 0;
-
-    data.map((player: any) => {
-        const isAlive = player.isAlive;
-        const deathRound = player.deathRound;
-        (isAlive && seasonFinished) || (Number(deathRound) === Number(round) && seasonFinished) ? winners++ : '';
-    });
-
     return {
         round: Number(round),
         reward:
             season === 0
                 ? Number(ethers.utils.formatEther(reward))
                 : Number(ethers.utils.formatEther(reward)) / numberOfPlayers,
+        rewardPerWinnerPerSeason: Number(ethers.utils.formatEther(rewardPerWinnerPerSeason)),
         playersAlive,
         season,
         seasonFinished,
-        winners,
     };
 };
 

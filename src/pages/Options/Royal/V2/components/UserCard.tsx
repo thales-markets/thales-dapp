@@ -289,7 +289,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         )}
                     </InputWrapper>
                 </FlexContainer>
-                {console.log()}
                 <FlexContainer
                     style={{
                         position: 'relative',
