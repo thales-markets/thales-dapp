@@ -12,8 +12,7 @@ import { Theme } from '../Home';
 import Cookies from 'universal-cookie';
 import ROUTES from 'constants/routes';
 import { useTranslation } from 'react-i18next';
-import { buildHref } from 'utils/routes';
-import SPAAnchor from 'components/SPAAnchor';
+import { navigateTo } from 'utils/routes';
 
 type HeaderInput = {
     theme: Theme;
@@ -50,7 +49,10 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                     </ButtonWrapper>
                     <ButtonWrapper>
                         <ButtonContainer>
-                            <DAPPLink rel="noreferrer" href={buildHref(ROUTES.Options.Home)}>
+                            <DAPPLink
+                                rel="noreferrer"
+                                onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
+                            >
                                 <i className="icon-home icon-home--thales" /> DAPP
                             </DAPPLink>
                         </ButtonContainer>
@@ -317,7 +319,7 @@ const ButtonContainer = styled.div`
     justify-content: center;
 `;
 
-const DAPPLink = styled(SPAAnchor)`
+const DAPPLink = styled.a`
     font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
@@ -326,6 +328,7 @@ const DAPPLink = styled(SPAAnchor)`
     width: 100%;
     text-align: center;
     color: var(--color);
+    cursor: pointer;
     &:visited {
         color: var(--color);
     }

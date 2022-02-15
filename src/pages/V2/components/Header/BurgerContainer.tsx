@@ -2,10 +2,9 @@ import ROUTES from 'constants/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { buildHref, navigateTo } from 'utils/routes';
+import { navigateTo } from 'utils/routes';
 import LanguageSelector from 'components/LanguageSelector/V2';
 import { HashLink } from 'react-router-hash-link';
-import SPAAnchor from 'components/SPAAnchor';
 
 type BurgerInput = {
     burgerState: boolean;
@@ -36,7 +35,7 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/using-thales/why-use-thales">
                     {t('header.links.learn.guides')}
                 </Link>
-                <Link rel="noreferrer" href={buildHref(ROUTES.Article.Whitepaper)}>
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}>
                     {t('header.links.learn.whitepaper')}
                 </Link>
                 <HashLink
@@ -55,10 +54,10 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
             <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                 {t('header.links.blog')}
             </Link>
-            <Link rel="noreferrer" href={buildHref(ROUTES.Article.Governance)}>
+            <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
                 {t('header.links.governance')}
             </Link>
-            <Link rel="noreferrer" href={buildHref(ROUTES.Article.Token)}>
+            <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
                 {t('header.links.token')}
             </Link>
 
@@ -170,7 +169,7 @@ const DropdownLink = styled.a`
     }
 `;
 
-const Link = styled(SPAAnchor)`
+const Link = styled.a`
     position: relative;
     font-family: Nunito !important;
     font-style: normal;
