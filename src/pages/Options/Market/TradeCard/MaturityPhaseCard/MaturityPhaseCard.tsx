@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import snxJSConnector from 'utils/snxJSConnector';
-import { normalizeGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { SYNTHS_MAP } from 'constants/currency';
 import { ethers } from 'ethers';
 import { TradeCardPhaseProps } from 'types/options';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
-import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
+import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
 import { RootState } from 'redux/rootReducer';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -31,6 +31,7 @@ import {
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
 import { dispatchMarketNotification } from '../../../../../utils/options';
+import { L2_EXERCISE_GAS_LIMIT } from 'constants/options';
 
 type MaturityPhaseCardProps = TradeCardPhaseProps;
 
@@ -40,9 +41,12 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
     const BOMContract = useBOMContractContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isExercising, setIsExercising] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
     const { result } = optionsMarket;
     const longAmount = accountMarketInfo.long;
@@ -68,11 +72,26 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
     }, [walletAddress]);
 
     useEffect(() => {
+        const fetchL1Fee = async (BOMContractWithSigner: any) => {
+            const txRequest = await BOMContractWithSigner.populateTransaction.exerciseOptions();
+            return getL1FeeInWei(txRequest);
+        };
         const fetchGasLimit = async () => {
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-                const gasEstimate = await BOMContractWithSigner.estimateGas.exerciseOptions();
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+
+                if (isL2) {
+                    // const [gasEstimate, l1FeeInWei] = await Promise.all([
+                    //     BOMContractWithSigner.estimateGas.exerciseOptions(),
+                    //     fetchL1Fee(BOMContractWithSigner),
+                    // ]);
+                    const l1FeeInWei = await fetchL1Fee(BOMContractWithSigner);
+                    setGasLimit(L2_EXERCISE_GAS_LIMIT);
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await BOMContractWithSigner.estimateGas.exerciseOptions();
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -87,7 +106,9 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
             setTxErrorMessage(null);
             setIsExercising(true);
             const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-            const tx = (await BOMContractWithSigner.exerciseOptions()) as ethers.ContractTransaction;
+            const tx = (await BOMContractWithSigner.exerciseOptions({
+                gasLimit,
+            })) as ethers.ContractTransaction;
 
             dispatch(
                 addOptionsPendingTransaction({
@@ -99,6 +120,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                         type: 'exercise',
                         amount: isLongResult ? longAmount : shortAmount,
                         side: isLongResult ? 'long' : 'short',
+                        blockNumber: tx.blockNumber || 0,
                     },
                 })
             );
@@ -110,6 +132,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                     updateOptionsPendingTransactionStatus({
                         hash: txResult.transactionHash,
                         status: 'confirmed',
+                        blockNumber: txResult.blockNumber,
                     })
                 );
                 refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
@@ -165,7 +188,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                             </SummaryItem>
                         </MaturitySummaryContainer>
                         <Divider />
-                        <NetworkFees gasLimit={gasLimit} />
+                        <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                         <SubmitButtonContainer>
                             <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleExercise}>
                                 {nothingToExercise

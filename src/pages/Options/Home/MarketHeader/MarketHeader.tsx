@@ -1,19 +1,19 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
-import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
+import gameDefaultIcon from 'assets/images/sidebar/game-default.svg';
+import gameSelectedIcon from 'assets/images/sidebar/game-selected.svg';
+
 import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
-import trendingMarketsDefaultIcon from 'assets/images/sidebar/trending-default.svg';
-import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
+
 import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
-import trendingMarketsSelectedIcon from 'assets/images/sidebar/trending-selected.svg';
 import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
@@ -21,16 +21,27 @@ import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.
 import burger from 'assets/images/burger.svg';
 import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
 import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
+import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-default.svg';
+import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 
+import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
+import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
+
+import governanceDefaultIcon from 'assets/images/sidebar/governance-default.svg';
+import governanceSelectedIcon from 'assets/images/sidebar/governance-selected.svg';
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
-import { DisplayContentsAnchor } from '../MarketsTable/components';
 import { useState } from 'react';
 import './media.scss';
-import { buildHref, history } from 'utils/routes';
 import { Overlay } from 'components/Header/Header';
-import queryString from 'query-string';
+import LanguageSelector from 'components/LanguageSelector';
+import SPAAnchor from '../../../../components/SPAAnchor';
+import { buildHref } from '../../../../utils/routes';
+import { Modal } from '@material-ui/core';
+import Swap from '../Swap';
+import { getIsOVM } from 'utils/network';
+import NetworkSwitch from 'components/NetworkSwitch';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -55,18 +66,18 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
 }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const [showSwap, setShowSwap] = useState(false);
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
 
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
 
     useMemo(() => {
-        if (showBurgerMenu !== BurgerState.Init) {
-            // const hero = document.getElementById('landing-hero');
-            // if (hero && showBurgerMenu === BurgerState.Show) {
-            //     hero.className += ' higher-z-index';
-            // }
-            // if (hero && showBurgerMenu === BurgerState.Hide) {
-            //     hero.className.replace(' higher-z-index', '');
-            // }
+        const htmlEl = document.getElementsByTagName('html')[0];
+        if (showBurgerMenu === BurgerState.Show) {
+            htmlEl.style.overflow = 'hidden';
+        } else {
+            htmlEl.style.overflow = 'visible';
         }
     }, [showBurgerMenu]);
 
@@ -78,7 +89,10 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 showCustomizeLayout={showCustomizeLayout}
             >
                 <FlexDiv className="dapp-header__logoWrapper">
-                    <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
+                    <Logo to="" className="dapp-header__logoWrapper__logo" />
+                    <MobileLanguageSelectorContainer>
+                        <LanguageSelector />
+                    </MobileLanguageSelectorContainer>
                     <BurdgerIcon
                         className="dapp-header__logoWrapper__burger"
                         onClick={() =>
@@ -90,62 +104,76 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         src={burger}
                     />
                 </FlexDiv>
-
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
-                {!isWalletConnected ? (
-                    <Button
-                        className="primary dapp-header__connectWallet"
-                        style={{ fontSize: '16px', alignSelf: 'center' }}
-                        onClick={() => onboardConnector.connectWallet()}
+                <FlexDiv className="dapp-header__buttonsWrapper">
+                    {isWalletConnected && (
+                        <Button className="tertiary" style={{ padding: '6px 24px' }} onClick={() => setShowSwap(true)}>
+                            {t('options.swap.button-text')}
+                        </Button>
+                    )}
+                    <Modal
+                        open={showSwap}
+                        onClose={(_, reason) => {
+                            if (reason !== 'backdropClick') setShowSwap(false);
+                        }}
                     >
-                        {t('common.wallet.connect-your-wallet')}
-                    </Button>
-                ) : (
-                    <UserInfo />
-                )}
+                        <div style={{ height: 0 }}>
+                            <Swap handleClose={setShowSwap}></Swap>
+                        </div>
+                    </Modal>
+                    <DesktopLanguageSelectorContainer>
+                        <LanguageSelector />
+                    </DesktopLanguageSelectorContainer>
+                    {isWalletConnected && (
+                        <div>
+                            <NetworkSwitch />
+                        </div>
+                    )}
+                    {!isWalletConnected ? (
+                        <Button
+                            className="primary dapp-header__connectWallet"
+                            style={{ fontSize: '16px', alignSelf: 'center' }}
+                            onClick={() => onboardConnector.connectWallet()}
+                        >
+                            {t('common.wallet.connect-your-wallet')}
+                        </Button>
+                    ) : (
+                        <UserInfo />
+                    )}
+                </FlexDiv>
             </MarketHeaderWrapper>
             <Sidebar
                 className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
             >
                 <ItemsContainer>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Home)}>
+                    <SPAAnchor href={buildHref(ROUTES.Home)}>
                         <LogoLocal className="logo" />
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        href={buildHref(ROUTES.Options.HotMarkets)}
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ anchor: ['hot-markets'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                    >
-                        <SidebarItem
-                            imgSrc={trendingMarketsDefaultIcon}
-                            imgSrcHoverSelected={trendingMarketsSelectedIcon}
-                            className={route === ROUTES.Options.Home ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.trending-label')}</SidebarText>
-                        </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ anchor: ['overview'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                        href={buildHref(ROUTES.Options.Overview)}
-                    >
+                    </SPAAnchor>
+                    {/* {!isL2 && (
+                        <SPAAnchor href={buildHref(ROUTES.Options.CompetitionMarkets)}>
+                            <SidebarItem
+                                imgSrc={competitionMarketsDefaultIcon}
+                                imgSrcHoverSelected={competitionMarketsSelectedIcon}
+                                className={route === ROUTES.Options.CompetitionMarkets ? 'selected' : ''}
+                            >
+                                <SidebarIcon />
+                                <SidebarText>{t('common.sidebar.competition-markets-label')}</SidebarText>
+                            </SidebarItem>
+                        </SPAAnchor>
+                    )}
+                    {!isL2 && (
+                        <SPAAnchor href={buildHref(ROUTES.Options.QuickTradingCompetition)}>
+                            <SidebarItem
+                                imgSrc={competitionMarketsDefaultIcon}
+                                imgSrcHoverSelected={competitionMarketsSelectedIcon}
+                                className={route === ROUTES.Options.QuickTradingCompetition ? 'selected' : ''}
+                            >
+                                <SidebarIcon />
+                                <SidebarText>{t('common.sidebar.quick-trading-label-competition')}</SidebarText>
+                            </SidebarItem>
+                        </SPAAnchor>
+                    )} */}
+                    <SPAAnchor href={buildHref(ROUTES.Options.Overview)}>
                         <SidebarItem
                             imgSrc={marketOverviewDefaultIcon}
                             imgSrcHoverSelected={marketOverviewSelectedIcon}
@@ -154,8 +182,20 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
+                    </SPAAnchor>
+                    {/* {!isL2 && (
+                        <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>
+                            <SidebarItem
+                                imgSrc={customMarketsDefaultIcon}
+                                imgSrcHoverSelected={customMarketsSelectedIcon}
+                                className={route === ROUTES.Options.CustomMarkets ? 'selected' : ''}
+                            >
+                                <SidebarIcon />
+                                <SidebarText>{t('common.sidebar.custom-markets-label')}</SidebarText>
+                            </SidebarItem>
+                        </SPAAnchor>
+                    )} */}
+                    {/* <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
                         <SidebarItem
                             imgSrc={createMarketDefaultIcon}
                             imgSrcHoverSelected={createMarketSelectedIcon}
@@ -164,18 +204,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
-                        <SidebarItem
-                            imgSrc={leaderboardDefaultIcon}
-                            imgSrcHoverSelected={leaderboardSelectedIcon}
-                            className={route === ROUTES.Options.Leaderboard ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
-                        </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
+                    </SPAAnchor> */}
+                    <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
                             imgSrcHoverSelected={tradeExerciseSelectedIcon}
@@ -184,7 +214,41 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.TradeHistory)}>
+                        <SidebarItem
+                            imgSrc={customMarketsDefaultIcon}
+                            imgSrcHoverSelected={customMarketsSelectedIcon}
+                            className={route === ROUTES.Options.TradeHistory ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.trade-history-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
+                    {isL2 && (
+                        <SPAAnchor href={buildHref(ROUTES.Options.AmmMining)}>
+                            <SidebarItem
+                                imgSrc={customMarketsDefaultIcon}
+                                imgSrcHoverSelected={customMarketsSelectedIcon}
+                                className={route === ROUTES.Options.AmmMining ? 'selected' : ''}
+                            >
+                                <SidebarIcon />
+                                <SidebarText>{t('common.sidebar.amm-mining-label')}</SidebarText>
+                            </SidebarItem>
+                        </SPAAnchor>
+                    )}
+                    {!isL2 && (
+                        <SPAAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
+                            <SidebarItem
+                                imgSrc={leaderboardDefaultIcon}
+                                imgSrcHoverSelected={leaderboardSelectedIcon}
+                                className={route === ROUTES.Options.Leaderboard ? 'selected' : ''}
+                            >
+                                <SidebarIcon />
+                                <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
+                            </SidebarItem>
+                        </SPAAnchor>
+                    )}
                     {phase === 'trading' && (
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
@@ -207,7 +271,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Token)}>
+                    <Divider />
+                    <SPAAnchor href={buildHref(ROUTES.Options.Token)}>
                         <SidebarItem
                             imgSrc={earnDefaultIcon}
                             imgSrcHoverSelected={earnSelectedIcon}
@@ -216,7 +281,39 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Governance.Home)}>
+                        <SidebarItem
+                            imgSrc={governanceDefaultIcon}
+                            imgSrcHoverSelected={governanceSelectedIcon}
+                            className={route === ROUTES.Governance.Home ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.governance-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
+
+                    <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
+                        <SidebarItem
+                            imgSrc={royaleDefaultIcon}
+                            imgSrcHoverSelected={royaleSelectedIcon}
+                            className={route === ROUTES.Options.Royal ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.royale-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
+
+                    <SPAAnchor href={buildHref(ROUTES.Options.Game)}>
+                        <SidebarItem
+                            imgSrc={gameDefaultIcon}
+                            imgSrcHoverSelected={gameSelectedIcon}
+                            className={route === ROUTES.Options.Game ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.game-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
                 </ItemsContainer>
             </Sidebar>
             <Overlay
@@ -224,10 +321,24 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     setShowBurdgerMenu(BurgerState.Hide);
                 }}
                 className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}
-            ></Overlay>
+            />
         </FlexDivColumn>
     );
 };
+
+const DesktopLanguageSelectorContainer = styled.div`
+    display: block;
+    @media screen and (max-width: 767px) {
+        display: none;
+    }
+`;
+
+const MobileLanguageSelectorContainer = styled.div`
+    display: none;
+    @media screen and (max-width: 767px) {
+        display: block;
+    }
+`;
 
 const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     width: 100%;
@@ -235,6 +346,9 @@ const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
+    @media screen and (max-width: 767px) {
+        height: 100%;
+    }
 `;
 
 const Sidebar = styled.nav`
@@ -249,7 +363,7 @@ const Sidebar = styled.nav`
     transition: width 0.3s ease;
     overflow: hidden;
     &:hover {
-        width: 256px;
+        width: 300px;
         span {
             display: block;
         }
@@ -281,7 +395,7 @@ const ItemsContainer = styled.ul``;
 const SidebarItem = styled.li<{ imgSrc: string; imgSrcHoverSelected: string }>`
     cursor: pointer;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     height: 50px;
     padding: 14px;
     color: #04045a;
@@ -311,6 +425,7 @@ const SidebarIcon = styled.div`
     position: relative;
     width: 22px;
     height: 22px;
+    background-size: contain !important;
 `;
 
 const SidebarText = styled.span`
@@ -333,6 +448,12 @@ const BurdgerIcon = styled.img`
     right: 30px;
     top: 32px;
     padding: 10px;
+`;
+
+const Divider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 2px solid #04045a;
 `;
 
 export default MarketHeader;

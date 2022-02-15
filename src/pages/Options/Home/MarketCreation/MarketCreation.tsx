@@ -1,18 +1,11 @@
 import React from 'react';
-import { Button, FlexDivCentered, FlexDivColumn, Side, Text } from 'theme/common';
+import { Button, FlexDivCentered, FlexDivColumn, Side } from 'theme/common';
 import { useTranslation } from 'react-i18next';
-import ROUTES from 'constants/routes';
-import { useSelector } from 'react-redux';
-import { getIsWalletConnected } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { DisplayContentsAnchor } from '../MarketsTable/components';
 import './media.scss';
-import { buildHref } from 'utils/routes';
 
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     return (
         <FlexDivColumn id="market-creation">
@@ -27,23 +20,6 @@ const MarketCreation: React.FC = () => {
                     >
                         {t('options.home.market-creation.explore-markets-button-label')}
                     </Button>
-                    {isWalletConnected && (
-                        <>
-                            <Text className="text-m pale-grey  market-creation__orTxt" style={{ margin: '0 135px' }}>
-                                {t(`common.or`)}
-                            </Text>
-                            {
-                                <DisplayContentsAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
-                                    <Button
-                                        className="primary market-creation__createBtn"
-                                        style={{ padding: '13px 24px', fontSize: 20 }}
-                                    >
-                                        {t('options.home.market-creation.create-market-button-label')}
-                                    </Button>
-                                </DisplayContentsAnchor>
-                            }
-                        </>
-                    )}
                 </FlexDivCentered>
             </SideWrapper>
         </FlexDivColumn>

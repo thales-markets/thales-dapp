@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import OrderbookSide from './OrderbookSide';
 import { OptionSide, OrderItem, Orders } from 'types/options';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
@@ -8,7 +8,7 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { useTranslation } from 'react-i18next';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { formatShortDate } from 'utils/formatters/date';
 import styled from 'styled-components';
@@ -24,9 +24,6 @@ import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader
 import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
 import { FilterButton, LightTooltip } from '../../components';
-import snxJSConnector from 'utils/snxJSConnector';
-import { refetchOrderbook } from 'utils/queryConnector';
-import { get0xWebSocketBaseURL } from 'utils/0x';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 
 type OrderbookProps = {
@@ -52,10 +49,16 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const orderbookSign = optionsMarket.customMarket
         ? optionSide === 'long'
-            ? optionsMarket.eventName === 'XYZ airdrop claims'
+            ? optionsMarket.eventName === 'XYZ airdrop claims' ||
+              optionsMarket.eventName === 'ETH burned count' ||
+              optionsMarket.eventName === 'Flippening Markets' ||
+              optionsMarket.eventName === 'ETH/BTC market cap ratio'
                 ? '>='
                 : '=='
-            : optionsMarket.eventName === 'XYZ airdrop claims'
+            : optionsMarket.eventName === 'XYZ airdrop claims' ||
+              optionsMarket.eventName === 'ETH burned count' ||
+              optionsMarket.eventName === 'Flippening Markets' ||
+              optionsMarket.eventName === 'ETH/BTC market cap ratio'
             ? '<'
             : '!='
         : optionSide === 'long'
@@ -93,9 +96,13 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
 
     const marketHeading = optionsMarket
         ? optionsMarket.customMarket
-            ? `${optionsMarket.country} ${orderbookSign} ${optionsMarket.outcome} @ ${formatShortDate(
-                  optionsMarket.maturityDate
-              )}`
+            ? `${optionsMarket.country} ${orderbookSign} ${formatCurrency(
+                  optionsMarket.outcome || 0,
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                      ? 2
+                      : 0
+              )} @ ${formatShortDate(optionsMarket.maturityDate)}`
             : `${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
                   USD_SIGN,
                   optionsMarket.strikePrice
@@ -120,35 +127,6 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
 
         return '';
     }, [sellOrders, buyOrders]);
-
-    const getWebSocketRequest = (makerToken: string, takerToken: string) => ({
-        type: 'subscribe',
-        channel: 'orders',
-        requestId: `${makerToken}-${takerToken}`,
-        payload: {
-            makerToken: makerToken,
-            takerToken: takerToken,
-        },
-    });
-
-    useEffect(() => {
-        const {
-            contracts: { SynthsUSD },
-        } = snxJSConnector.snxJS as any;
-        const ws = new WebSocket(get0xWebSocketBaseURL(networkId));
-
-        ws.onopen = () => {
-            const sellsRequest = getWebSocketRequest(optionsTokenAddress, SynthsUSD.address);
-            ws.send(JSON.stringify(sellsRequest));
-
-            const buysRequest = getWebSocketRequest(SynthsUSD.address, optionsTokenAddress);
-            ws.send(JSON.stringify(buysRequest));
-        };
-
-        ws.onmessage = () => {
-            refetchOrderbook(optionsTokenAddress);
-        };
-    }, [networkId, optionsTokenAddress]);
 
     return (
         <>

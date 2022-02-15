@@ -5,15 +5,16 @@ import { FlexDiv, FlexDivRow } from 'theme/common';
 
 type WarningMessageProps = {
     message: string | null;
+    hideIcon?: boolean;
 };
 
-export const WarningMessage: React.FC<WarningMessageProps> = ({ message }) => {
+export const WarningMessage: React.FC<WarningMessageProps> = ({ message, hideIcon }) => {
     return (
         <>
             <Container>
                 <Message>
                     <FlexDiv>
-                        <StyledWarningIcon /> {message}
+                        {!hideIcon && <StyledWarningIcon />} {message}
                     </FlexDiv>
                 </Message>
             </Container>

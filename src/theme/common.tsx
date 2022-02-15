@@ -23,6 +23,10 @@ export const FlexDivEnd = styled(FlexDiv)`
     justify-content: end;
 `;
 
+export const FlexDivStart = styled(FlexDiv)`
+    justify-content: start;
+`;
+
 export const FlexDivRow = styled(FlexDiv)`
     justify-content: space-between;
 `;
@@ -139,13 +143,13 @@ export const MainWrapper = styled.div`
 
 export const Wrapper = styled(FlexDivColumn)`
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
+    margin: auto;
     max-width: 1440px;
     min-height: 100vh;
-    flex-direction: column;
-    margin: auto;
     padding-left: 120px;
     padding-right: 30px;
     padding-bottom: 50px;
@@ -179,6 +183,14 @@ export const Side = styled(FlexDivColumnCentered)`
     }
 `;
 
+export const LoaderContainer = styled(GridDivCenteredRow)`
+    grid-gap: 10px;
+    position: absolute;
+    left: 45%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+`;
+
 export const Button = styled.button`
     padding: 8px 35px;
     border-radius: 40px;
@@ -192,7 +204,7 @@ export const Button = styled.button`
     text-transform: none !important;
     color: #f6f6fe;
     cursor: pointer;
-    white-space: pre;
+    white-space: break-spaces;
     &.primary {
         background: #3936c7;
         &:hover {

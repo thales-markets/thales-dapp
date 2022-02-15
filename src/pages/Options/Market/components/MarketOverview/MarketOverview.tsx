@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { OptionsMarketInfo } from 'types/options';
+import { ETHBurned, Flippening, OptionsMarketInfo } from 'types/options';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/common';
 import styled from 'styled-components';
-import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { COLORS } from 'constants/ui';
 import { LightTooltip } from '../../components';
-import { getSynthName } from 'utils/snxJSConnector';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -20,6 +19,12 @@ import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import ReactCountryFlag from 'react-country-flag';
+import { getIsAppReady } from 'redux/modules/app';
+import useFlippeningQuery from 'queries/options/useFlippeningQuery';
+import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
+import { getSynthName } from 'utils/currency';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { getIsOVM } from 'utils/network';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -28,13 +33,42 @@ type MarketOverviewProps = {
 export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const [flippening, setFlippening] = useState<Flippening | undefined>(undefined);
+    const [ethBurned, setEthBurned] = useState<ETHBurned | undefined>(undefined);
+
+    const flippeningQuery = useFlippeningQuery({
+        enabled: isAppReady,
+    });
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
+            return openOrdersQuery.data;
+        }
+    }, [openOrdersQuery]);
+
+    useEffect(() => {
+        if (flippeningQuery.isSuccess && flippeningQuery.data) {
+            setFlippening(flippeningQuery.data);
+        }
+    }, [flippeningQuery.isSuccess, flippeningQuery.data]);
+
+    const ethBurnedQuery = useETHBurnedCountQuery({
+        enabled: isAppReady,
+    });
+
+    useEffect(() => {
+        if (ethBurnedQuery.isSuccess && ethBurnedQuery.data) {
+            setEthBurned(ethBurnedQuery.data);
+        }
+    }, [ethBurnedQuery.isSuccess, ethBurnedQuery.data]);
 
     return (
         <>
             {optionsMarket.customMarket ? (
                 <Container>
                     <ItemContainer className="market__overview__cell">
-                        <FlexDivCentered>
+                        <FlexDivCentered style={{ paddingLeft: 2, paddingRight: 2 }}>
                             <ReactCountryFlag
                                 countryCode={countryToCountryCode(optionsMarket.country as any)}
                                 style={{ width: 40, height: 40, marginRight: 10 }}
@@ -58,14 +92,51 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </FlexDivCentered>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
-                        <Title>{t('options.market.overview.event-name-label')}</Title>
+                        <Title>
+                            {optionsMarket.eventName === 'ETH burned count'
+                                ? optionsMarket.isResolved
+                                    ? t('options.market.overview.final-burn-label')
+                                    : t('options.market.overview.current-burn-label')
+                                : optionsMarket.eventName === 'Flippening Markets' ||
+                                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                ? optionsMarket.isResolved
+                                    ? t('options.market.overview.final-ratio-label')
+                                    : t('options.market.overview.current-ratio-label')
+                                : t('options.market.overview.event-name-label')}
+                        </Title>
                         <Content fontSize={16}>
-                            <FlexDivCentered>{optionsMarket.eventName}</FlexDivCentered>
+                            {optionsMarket.eventName === 'Flippening Markets' ||
+                            optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                ? flippening
+                                    ? formatCurrency(flippening.ratio)
+                                    : '-'
+                                : optionsMarket.eventName === 'ETH burned count'
+                                ? ethBurned
+                                    ? formatCurrency(ethBurned.total)
+                                    : '-'
+                                : optionsMarket.eventName}
                         </Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
-                        <Title>{optionsMarket.eventName === 'XYZ airdrop claims' ? 'Strike price' : 'Rank'}</Title>
-                        <Content fontSize={16}>{optionsMarket.outcome}</Content>
+                        <Title>
+                            {optionsMarket.eventName === 'XYZ airdrop claims'
+                                ? t('options.market.overview.strike-price-label')
+                                : optionsMarket.eventName === 'ETH burned count'
+                                ? t('options.market.overview.strike-burn-label')
+                                : optionsMarket.eventName === 'Flippening Markets' ||
+                                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                ? t('options.market.overview.strike-ratio-label')
+                                : t('options.market.overview.rank-label')}
+                        </Title>
+                        <Content fontSize={16}>
+                            {formatCurrency(
+                                optionsMarket.outcome || 0,
+                                optionsMarket.eventName === 'Flippening Markets' ||
+                                    optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                    ? 2
+                                    : 0
+                            )}
+                        </Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
                         <Title>
@@ -91,17 +162,24 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                 ? t('options.market.overview.final-result-label')
                                 : t('options.market.overview.current-result-label')}
                         </Title>
-                        <StyledLink
-                            target="_blank"
-                            rel="noreferrer"
-                            href={
-                                optionsMarket.eventName?.toLowerCase().indexOf('us open') !== -1
-                                    ? 'http://www.espn.com/tennis/dailyResults'
-                                    : 'https://www.espn.com/olympics/summer/2020/medals/_/view/overall'
-                            }
-                        >
-                            ESPN
-                        </StyledLink>
+                        {optionsMarket.eventName === 'XYZ airdrop claims' ||
+                        optionsMarket.eventName === 'ETH burned count' ||
+                        optionsMarket.eventName === 'Flippening Markets' ||
+                        optionsMarket.eventName === 'ETH/BTC market cap ratio' ? (
+                            <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
+                        ) : (
+                            <StyledLink
+                                target="_blank"
+                                rel="noreferrer"
+                                href={
+                                    optionsMarket.eventName?.toLowerCase().indexOf('us open') !== -1
+                                        ? 'http://www.espn.com/tennis/dailyResults'
+                                        : 'https://www.espn.com/olympics/summer/2020/medals/_/view/overall'
+                                }
+                            >
+                                ESPN
+                            </StyledLink>
+                        )}
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
                         <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
@@ -186,12 +264,36 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
-                        <Title>
-                            {t('options.market.overview.deposited-currency-label', {
-                                currencyKey: SYNTHS_MAP.sUSD,
-                            })}
-                        </Title>
-                        <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                        {getIsOVM(networkId) ? (
+                            <>
+                                <Title>{t('options.market.overview.amm-liquidity')}</Title>
+
+                                <Content>
+                                    <span className="green">
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())
+                                                  ?.availableLongs
+                                            : '0'}
+                                    </span>{' '}
+                                    /{' '}
+                                    <span className="red">
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())
+                                                  ?.availableShorts
+                                            : '0'}
+                                    </span>
+                                </Content>
+                            </>
+                        ) : (
+                            <>
+                                <Title>
+                                    {t('options.market.overview.deposited-currency-label', {
+                                        currencyKey: SYNTHS_MAP.sUSD,
+                                    })}
+                                </Title>
+                                <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                            </>
+                        )}
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
                         <Title>{t('options.market.overview.time-remaining-label')}</Title>

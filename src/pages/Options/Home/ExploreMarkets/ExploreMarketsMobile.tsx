@@ -1,26 +1,25 @@
+import { Overlay } from 'components/Header/Header';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import queryString from 'query-string';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { OptionsMarkets } from 'types/options';
-import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected } from 'redux/modules/wallet';
+import { useLocation } from 'react-router-dom';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
+import { OptionsMarkets } from 'types/options';
+import { getSynthName } from 'utils/currency';
+import { getIsOVM } from 'utils/network';
+import { history } from 'utils/routes';
 import SearchMarket from '../SearchMarket';
-import { PhaseFilters } from './Mobile/PhaseFilters';
+import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
 import { CategoryFilters, DropDown, DropDownWrapper } from './Mobile/CategoryFilters';
 import { MarketCardMobile } from './Mobile/MarketCardMobile';
+import { PhaseFilters } from './Mobile/PhaseFilters';
 import { SortyByMobile } from './Mobile/SortByMobile';
-import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import onboardConnector from 'utils/onboardConnector';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes';
-import { Overlay } from 'components/Header/Header';
-import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import { history, navigateTo } from 'utils/routes';
-import { SYNTHS_MAP } from 'constants/currency';
-import { getSynthName } from 'utils/snxJSConnector';
 
 type ExploreMarketsMobileProps = {
     exchangeRates: Rates | null;
@@ -43,6 +42,7 @@ export enum SortByEnum {
     Asset_Price = 'asset-price-col',
     Strike_Price = 'strike-price-col',
     Pool_Size = 'pool-size-col',
+    Amm_Size = 'amm-size-col',
     Time_Remaining = 'time-remaining-col',
     Open_Orders = 'open-orders-col',
 }
@@ -63,6 +63,8 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
     setOrderBy,
 }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
     const { t } = useTranslation();
     const [showDropdownPhase, setShowDropwodnPhase] = useState(false);
     const [showDropdownUserFilters, setShowDropwodnUserFilters] = useState(false);
@@ -194,18 +196,33 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                         SecondaryFilters[key as keyof typeof SecondaryFilters] !== SecondaryFilters.all
                                 )
                                 .map((key) => {
+                                    if (
+                                        isL2 &&
+                                        (SecondaryFilters[key as keyof typeof SecondaryFilters] ===
+                                            SecondaryFilters.CustomMarkets ||
+                                            SecondaryFilters[key as keyof typeof SecondaryFilters] ===
+                                                SecondaryFilters.Competition)
+                                    )
+                                        return null;
                                     const isCustomMarketsEmpty =
                                         allMarkets.filter(({ customMarket }) => customMarket).length === 0;
                                     const isBtcMarketsEmpty =
-                                        allMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
-                                            .length === 0;
+                                        allMarkets.filter(
+                                            ({ currencyKey }) =>
+                                                currencyKey === SYNTHS_MAP.sBTC ||
+                                                currencyKey === CRYPTO_CURRENCY_MAP.BTC
+                                        ).length === 0;
                                     const isEthMarketsEmpty =
-                                        allMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
-                                            .length === 0;
+                                        allMarkets.filter(
+                                            ({ currencyKey }) =>
+                                                currencyKey === SYNTHS_MAP.sETH ||
+                                                currencyKey === CRYPTO_CURRENCY_MAP.ETH
+                                        ).length === 0;
                                     const assetSearchNoBtc =
                                         allMarkets.filter(({ asset, currencyKey }) => {
                                             return (
-                                                currencyKey === SYNTHS_MAP.sBTC &&
+                                                (currencyKey === SYNTHS_MAP.sBTC ||
+                                                    currencyKey === CRYPTO_CURRENCY_MAP.BTC) &&
                                                 (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                                     getSynthName(currencyKey)
                                                         ?.toLowerCase()
@@ -217,7 +234,8 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                     const assetSearchNoEth =
                                         allMarkets.filter(({ asset, currencyKey }) => {
                                             return (
-                                                currencyKey === SYNTHS_MAP.sETH &&
+                                                (currencyKey === SYNTHS_MAP.sETH ||
+                                                    currencyKey === CRYPTO_CURRENCY_MAP.ETH) &&
                                                 (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                                     getSynthName(currencyKey)
                                                         ?.toLowerCase()
@@ -235,7 +253,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                         case SecondaryFilters.Ethereum:
                                             isEthMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                             break;
-                                        case SecondaryFilters.Olympics:
+                                        case SecondaryFilters.CustomMarkets:
                                             isCustomMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                             break;
                                     }
@@ -293,25 +311,42 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
 
             <SortyByMobile
                 onClick={setShowDropwodnSort.bind(this, !showDropdownSort)}
-                filter={t(`options.home.markets-table.${mapOrderByToEnum(orderBy)}`)}
+                filter={t(`options.home.markets-table.${mapOrderByToEnum(orderBy, networkId)}`)}
             >
                 <DropDownWrapper className="markets-mobile__sorting-dropdown" hidden={!showDropdownSort}>
                     <DropDown>
                         {Object.keys(SortByEnum)
                             .filter((key) => isNaN(Number(SortByEnum[key as keyof typeof SortByEnum])))
-                            .map((key, index) => (
-                                <Text
-                                    className={`${
-                                        mapOrderByToEnum(orderBy) === SortByEnum[key as keyof typeof SortByEnum]
-                                            ? 'selected'
-                                            : ''
-                                    } text-s lh32 pale-grey capitalize`}
-                                    onClick={() => setOrderBy(index + 2)}
-                                    key={key}
-                                >
-                                    {t(`options.home.markets-table.${SortByEnum[key as keyof typeof SortByEnum]}`)}
-                                </Text>
-                            ))}
+                            .map((key) => {
+                                if (
+                                    getIsOVM(networkId) &&
+                                    SortByEnum[key as keyof typeof SortByEnum] === SortByEnum.Pool_Size
+                                )
+                                    return <></>;
+                                if (
+                                    !getIsOVM(networkId) &&
+                                    SortByEnum[key as keyof typeof SortByEnum] === SortByEnum.Amm_Size
+                                )
+                                    return <></>;
+                                return (
+                                    <Text
+                                        className={`${
+                                            mapOrderByToEnum(orderBy, networkId) ===
+                                            SortByEnum[key as keyof typeof SortByEnum]
+                                                ? 'selected'
+                                                : ''
+                                        } text-s lh32 pale-grey capitalize`}
+                                        onClick={() =>
+                                            setOrderBy(
+                                                revertOrderToEnum(SortByEnum[key as keyof typeof SortByEnum], networkId)
+                                            )
+                                        }
+                                        key={key}
+                                    >
+                                        {t(`options.home.markets-table.${SortByEnum[key as keyof typeof SortByEnum]}`)}
+                                    </Text>
+                                );
+                            })}
                     </DropDown>
                 </DropDownWrapper>
             </SortyByMobile>
@@ -321,54 +356,12 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
             ) : (
                 <NoMarkets>
                     <Container>
-                        {userFilter !== PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-m bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-found')}
-                                </Text>
-                                <Button className="primary" onClick={resetFilters}>
-                                    {t('options.home.explore-markets.table.view-all-markets')}
-                                </Button>
-                            </>
-                        )}
-                        {userFilter === PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-m bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-created')}
-                                </Text>
-                                <FlexDiv
-                                    style={{
-                                        justifyContent: 'space-around',
-                                        alignItems: 'center',
-                                        flexDirection: 'column',
-                                    }}
-                                >
-                                    <Button
-                                        className="primary"
-                                        onClick={() =>
-                                            isWalletConnected
-                                                ? navigateTo(ROUTES.Options.CreateMarket)
-                                                : onboardConnector.connectWallet()
-                                        }
-                                    >
-                                        {isWalletConnected
-                                            ? t('options.home.market-creation.create-market-button-label')
-                                            : t('common.wallet.connect-your-wallet')}
-                                    </Button>
-                                    <Text
-                                        className="text-m bold pale-grey"
-                                        style={{
-                                            margin: '24px',
-                                        }}
-                                    >
-                                        {t('common.wallet.or')}
-                                    </Text>
-                                    <Button className="primary" onClick={resetFilters}>
-                                        {t('options.home.explore-markets.table.view-all-markets')}
-                                    </Button>
-                                </FlexDiv>
-                            </>
-                        )}
+                        <Text className="text-m bold pale-grey">
+                            {t('options.home.explore-markets.table.no-markets-found')}
+                        </Text>
+                        <Button className="primary" onClick={resetFilters}>
+                            {t('options.home.explore-markets.table.view-all-markets')}
+                        </Button>
                     </Container>
                 </NoMarkets>
             )}
@@ -384,7 +377,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
     );
 };
 
-const mapOrderByToEnum = (data: number) => {
+const mapOrderByToEnum = (data: number, networkId: number) => {
     switch (data) {
         case 1:
         case 2:
@@ -394,11 +387,30 @@ const mapOrderByToEnum = (data: number) => {
         case 4:
             return SortByEnum.Strike_Price;
         case 5:
-            return SortByEnum.Pool_Size;
+            return getIsOVM(networkId) ? SortByEnum.Amm_Size : SortByEnum.Pool_Size;
         case 6:
             return SortByEnum.Time_Remaining;
         case 7:
             return SortByEnum.Open_Orders;
+        default:
+            return SortByEnum.Time_Remaining;
+    }
+};
+
+const revertOrderToEnum = (data: SortByEnum, networkId: number) => {
+    switch (data) {
+        case SortByEnum.Asset:
+            return 2;
+        case SortByEnum.Asset_Price:
+            return 3;
+        case SortByEnum.Strike_Price:
+            return 4;
+        case getIsOVM(networkId) ? SortByEnum.Amm_Size : SortByEnum.Pool_Size:
+            return 5;
+        case SortByEnum.Time_Remaining:
+            return 6;
+        case SortByEnum.Open_Orders:
+            return 7;
         default:
             return SortByEnum.Time_Remaining;
     }

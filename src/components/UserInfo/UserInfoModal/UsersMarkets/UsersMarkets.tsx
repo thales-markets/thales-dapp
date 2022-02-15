@@ -8,6 +8,10 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow, Row } from '../UserInfoModal';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
+import { getIsOVM } from 'utils/network';
 
 type UsersMarketsProps = {
     usersMarkets: OptionsMarkets;
@@ -15,6 +19,7 @@ type UsersMarketsProps = {
 };
 
 const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const { t } = useTranslation();
     return (
         <>
@@ -29,7 +34,7 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) =>
                     {t(`user-info.table.maturity-date-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 1 }}>
-                    {t(`user-info.table.pool-size-col`)}
+                    {getIsOVM(networkId) ? t(`user-info.table.amm-size-col`) : t(`user-info.table.pool-size-col`)}
                 </Text>
             </Row>
             {usersMarkets?.map((market, index) => (
@@ -53,7 +58,16 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) =>
                     </div>
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
                     <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
-                    <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
+                    <Text style={{ flex: 1 }}>
+                        {getIsOVM(networkId) ? (
+                            <>
+                                <span className="green">{market.availableLongs}</span> /{' '}
+                                <span className="red">{market.availableShorts}</span>
+                            </>
+                        ) : (
+                            <>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</>
+                        )}
+                    </Text>
                 </MarketRow>
             ))}
         </>

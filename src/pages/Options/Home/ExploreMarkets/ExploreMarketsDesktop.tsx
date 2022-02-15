@@ -1,18 +1,16 @@
 import bitcoin from 'assets/images/filters/bitcoin.svg';
+import competitionImg from 'assets/images/filters/competition.svg';
+import customMarketsImg from 'assets/images/filters/custom-markets.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import myAssets from 'assets/images/filters/my-assets.svg';
-import myMarkets from 'assets/images/filters/my-markets.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
-import olympicsImg from 'assets/images/filters/olympics.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
-import ROUTES from 'constants/routes';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
 import queryString from 'query-string';
-import React, { useMemo, useState } from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -21,11 +19,12 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
-import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
-import onboardConnector from 'utils/onboardConnector';
-import { history, navigateTo } from 'utils/routes';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
-import { SYNTHS_MAP } from '../../../../constants/currency';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, OrderData } from 'types/options';
+import { getSynthName } from 'utils/currency';
+import { getIsOVM } from 'utils/network';
+import { history } from 'utils/routes';
+import snxJSConnector from 'utils/snxJSConnector';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
@@ -55,7 +54,6 @@ export enum PhaseFilterEnum {
 
 export enum PrimaryFilters {
     all = 'all',
-    MyMarkets = 'my-markets',
     MyOrders = 'my-orders',
     MyAssets = 'my-assets',
     MyWatchlist = 'watchlist',
@@ -66,21 +64,22 @@ export enum SecondaryFilters {
     all = 'all',
     Bitcoin = 'bitcoin',
     Ethereum = 'ethereum',
-    Olympics = 'olympics',
+    CustomMarkets = 'custom',
+    Competition = 'competition',
 }
 
-const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
+const isOrderInMarket = (orderData: OrderData, market: HistoricalOptionsMarketInfo): boolean => {
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const isBuy: boolean = order.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
+    const isBuy: boolean = orderData.makerAsset.toLowerCase() === SynthsUSD.address.toLowerCase();
     return (
         (isBuy &&
-            (market.longAddress.toLowerCase() === order.takerToken.toLowerCase() ||
-                market.shortAddress.toLowerCase() === order.takerToken.toLowerCase())) ||
+            (market.longAddress.toLowerCase() === orderData.takerAsset.toLowerCase() ||
+                market.shortAddress.toLowerCase() === orderData.takerAsset.toLowerCase())) ||
         (!isBuy &&
-            (market.longAddress.toLowerCase() === order.makerToken.toLowerCase() ||
-                market.shortAddress.toLowerCase() === order.makerToken.toLowerCase()))
+            (market.longAddress.toLowerCase() === orderData.makerAsset.toLowerCase() ||
+                market.shortAddress.toLowerCase() === orderData.makerAsset.toLowerCase()))
     );
 };
 
@@ -99,6 +98,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const searchFilter = useLocation();
+    const isL2 = getIsOVM(networkId);
 
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -111,11 +111,14 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     });
 
     const userAssets = userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : [];
-    const userOrders =
-        userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records) ? userOrdersQuery.data.records : [];
+    const userOrders = userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data) ? userOrdersQuery.data : [];
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
     useEffect(() => {
+        const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
+        if (assetSearchValue && !assetSearch) {
+            setAssetSearch(assetSearchValue);
+        }
         const tradingMarkets = filteredOptionsMarkets.filter((market) => {
             return market.phase === PhaseFilterEnum.trading;
         });
@@ -135,14 +138,33 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         }
     }, [secondLevelUserFilter]);
 
+    useEffect(() => {
+        const userFilterValue = queryString.parse(searchFilter.search).userFilter;
+        const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
+
+        if (assetSearch) {
+            history.push({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                    userFilter2: [secondLevelFilterValue],
+                    assetSearch: [assetSearch],
+                }),
+            });
+        } else {
+            history.push({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                    userFilter2: [secondLevelFilterValue],
+                }),
+            });
+        }
+    }, [assetSearch]);
+
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
         switch (userFilter) {
-            case PrimaryFilters.MyMarkets:
-                filteredMarkets = filteredMarkets.filter(
-                    ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
-                );
-                break;
             case PrimaryFilters.MyWatchlist:
                 filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
                 break;
@@ -156,7 +178,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 break;
             case PrimaryFilters.MyOrders:
                 filteredMarkets = filteredMarkets.filter((market) =>
-                    userOrders.find((order) => isOrderInMarket(order.order, market))
+                    userOrders.find((order) => isOrderInMarket(order.data, market))
                 );
                 break;
             case PrimaryFilters.Recent:
@@ -184,10 +206,11 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
         if (!secondLevelUserFilterParamValue && secondLevelUserFilter !== SecondaryFilters.all) {
             setSecondLevelUserFilter(SecondaryFilters.all);
-        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.all) {
+        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter !== secondLevelUserFilterParamValue) {
             Object.keys(SecondaryFilters).forEach((key) => {
-                if (SecondaryFilters[key as keyof typeof SecondaryFilters] === secondLevelUserFilterParamValue)
+                if (SecondaryFilters[key as keyof typeof SecondaryFilters] === secondLevelUserFilterParamValue) {
                     setSecondLevelUserFilter(secondLevelUserFilterParamValue);
+                }
             });
         }
 
@@ -201,7 +224,12 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 case 4:
                     return sortByField(a, b, orderDirection, 'strikePrice');
                 case 5:
-                    return sortByField(a, b, orderDirection, 'poolSize');
+                    return !getIsOVM(networkId)
+                        ? sortByField(a, b, orderDirection, 'poolSize')
+                        : orderDirection === OrderDirection.ASC
+                        ? a.availableLongs - b.availableLongs
+                        : b.availableLongs - a.availableLongs;
+
                 case 6:
                     return sortByTime(a, b, orderDirection);
                 case 7:
@@ -229,16 +257,27 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         switch (secondLevelUserFilter) {
             case SecondaryFilters.Bitcoin:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(
-                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC
+                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC
                 );
                 break;
             case SecondaryFilters.Ethereum:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(
-                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH
+                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH
                 );
                 break;
-            case SecondaryFilters.Olympics:
+            case SecondaryFilters.CustomMarkets:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ customMarket }) => customMarket);
+                break;
+            case SecondaryFilters.Competition:
+                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ timestamp, maturityDate }) => {
+                    const marketCreationCompetition = new Date('Oct 10 2021 10:00:00 UTC');
+                    const marketEndingCompetition = new Date('Nov 01 2021 11:00:00 UTC');
+                    const marketCreationDate = new Date(timestamp);
+                    const marketMaturityDate = new Date(maturityDate);
+                    return (
+                        marketCreationDate >= marketCreationCompetition && marketMaturityDate <= marketEndingCompetition
+                    );
+                });
                 break;
         }
 
@@ -303,16 +342,16 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
     const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
-
+        const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
         if (!isDisabled && userFilterValue !== filter) {
             history.push({
                 pathname: searchFilter.pathname,
-                search: queryString.stringify({ userFilter: [filter] }),
+                search: queryString.stringify({ userFilter: [filter], assetSearch: [assetSearchValue] }),
             });
         } else if (userFilterValue === filter && userFilter !== PrimaryFilters.all) {
             history.push({
                 pathname: searchFilter.pathname,
-                search: '',
+                search: queryString.stringify({ assetSearch: [assetSearchValue] }),
             });
         }
 
@@ -332,13 +371,14 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const onClickSecondLevelUserFilter = (filter: SecondaryFilters, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
         const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
-
+        const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
         if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
             history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter: [userFilterValue],
                     userFilter2: [filter],
+                    assetSearch: [assetSearchValue],
                 }),
             });
         } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.all) {
@@ -346,6 +386,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter: [userFilterValue],
+                    assetSearch: [assetSearchValue],
                 }),
             });
         } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
@@ -353,6 +394,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter2: [filter],
+                    assetSearch: [assetSearchValue],
                 }),
             });
         }
@@ -367,8 +409,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
     const getImage = (filter: PrimaryFilters | SecondaryFilters) => {
         switch (filter) {
-            case PrimaryFilters.MyMarkets:
-                return myMarkets;
             case PrimaryFilters.MyWatchlist:
                 return myWatchlist;
             case PrimaryFilters.Recent:
@@ -381,8 +421,10 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 return bitcoin;
             case SecondaryFilters.Ethereum:
                 return ethereum;
-            case SecondaryFilters.Olympics:
-                return olympicsImg;
+            case SecondaryFilters.CustomMarkets:
+                return customMarketsImg;
+            case SecondaryFilters.Competition:
+                return competitionImg;
         }
     };
 
@@ -443,18 +485,30 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                 key !== SecondaryFilters.all
                         )
                         .map((key) => {
+                            if (
+                                isL2 &&
+                                (SecondaryFilters[key as keyof typeof SecondaryFilters] ===
+                                    SecondaryFilters.CustomMarkets ||
+                                    SecondaryFilters[key as keyof typeof SecondaryFilters] ===
+                                        SecondaryFilters.Competition)
+                            )
+                                return null;
                             const isCustomMarketsEmpty =
                                 filteredOptionsMarkets.filter(({ customMarket }) => customMarket).length === 0;
                             const isBtcMarketsEmpty =
-                                filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
-                                    .length === 0;
+                                filteredOptionsMarkets.filter(
+                                    ({ currencyKey }) =>
+                                        currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC
+                                ).length === 0;
                             const isEthMarketsEmpty =
-                                filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
-                                    .length === 0;
+                                filteredOptionsMarkets.filter(
+                                    ({ currencyKey }) =>
+                                        currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH
+                                ).length === 0;
                             const assetSearchNoBtc =
                                 filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
                                     return (
-                                        currencyKey === SYNTHS_MAP.sBTC &&
+                                        (currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC) &&
                                         (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                             getSynthName(currencyKey)
                                                 ?.toLowerCase()
@@ -466,7 +520,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                             const assetSearchNoEth =
                                 filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
                                     return (
-                                        currencyKey === SYNTHS_MAP.sETH &&
+                                        (currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH) &&
                                         (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                             getSynthName(currencyKey)
                                                 ?.toLowerCase()
@@ -483,7 +537,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                 case SecondaryFilters.Ethereum:
                                     isEthMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                     break;
-                                case SecondaryFilters.Olympics:
+                                case SecondaryFilters.CustomMarkets:
                                     isCustomMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                     break;
                             }
@@ -558,48 +612,12 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                     setOrderDirection={setOrderDirection}
                 >
                     <NoMarkets>
-                        {userFilter !== PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-l bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-found')}
-                                </Text>
-                                <Button className="primary" onClick={resetFilters}>
-                                    {t('options.home.explore-markets.table.view-all-markets')}
-                                </Button>
-                            </>
-                        )}
-                        {userFilter === PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-l bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-created')}
-                                </Text>
-                                <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                    <Button
-                                        className="secondary"
-                                        onClick={() =>
-                                            isWalletConnected
-                                                ? navigateTo(ROUTES.Options.CreateMarket)
-                                                : onboardConnector.connectWallet()
-                                        }
-                                    >
-                                        {isWalletConnected
-                                            ? t('options.home.market-creation.create-market-button-label')
-                                            : t('common.wallet.connect-your-wallet')}
-                                    </Button>
-                                    <Text
-                                        className="text-l bold pale-grey"
-                                        style={{
-                                            margin: 'auto 60px',
-                                        }}
-                                    >
-                                        {t('common.wallet.or')}
-                                    </Text>
-                                    <Button className="primary" onClick={resetFilters}>
-                                        {t('options.home.explore-markets.table.view-all-markets')}
-                                    </Button>
-                                </FlexDiv>
-                            </>
-                        )}
+                        <Text className="text-l bold pale-grey">
+                            {t('options.home.explore-markets.table.no-markets-found')}
+                        </Text>
+                        <Button className="primary" onClick={resetFilters}>
+                            {t('options.home.explore-markets.table.view-all-markets')}
+                        </Button>
                     </NoMarkets>
                 </MarketsTable>
             </div>

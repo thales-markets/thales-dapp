@@ -21,7 +21,6 @@ import { USD_SIGN } from 'constants/currency';
 import { ExtendedOrderItem, ExtendedOrders, HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { formatShortDateWithTime } from 'utils/formatters/date';
-import { getSynthName } from 'utils/snxJSConnector';
 import { DefaultSubmitButton, LightTooltip, SubmitButton } from '../../Market/components';
 import FillOrderModal from '../../Market/TradeOptions/Orderbook/FillOrderModal';
 import PlaceOrderModal from '../PlaceOrderModal';
@@ -40,13 +39,15 @@ import { useTranslation } from 'react-i18next';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { Button, FlexDiv, FlexDivColumn, Image } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
-import { CoinFilterEnum, OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
+import { OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import arrowDown from 'assets/images/arrow-down.svg';
 import arrowUp from 'assets/images/arrow-up.svg';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import SPAAnchor from '../../../../components/SPAAnchor';
+import { getSynthName } from 'utils/currency';
 
 interface HeadCell {
     id: keyof ExtendedOrderItem[];
@@ -67,7 +68,7 @@ type QuickTradingTableProps = {
     isLoading?: boolean;
     tradingModeFilter: TradingModeFilterEnum;
     orderFilter: OrderFilterEnum;
-    coinFilter: CoinFilterEnum;
+    coinFilter: any;
     optionFilter: OptionFilterEnum;
     isSingleMode: boolean;
     resetFilters: any;
@@ -167,10 +168,16 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     const marketHeading = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) => {
         const orderbookSign = optionsMarket.customMarket
             ? optionSide === 'long'
-                ? optionsMarket.eventName === 'XYZ airdrop claims'
+                ? optionsMarket.eventName === 'XYZ airdrop claims' ||
+                  optionsMarket.eventName === 'ETH burned count' ||
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
                     ? '>='
                     : '=='
-                : optionsMarket.eventName === 'XYZ airdrop claims'
+                : optionsMarket.eventName === 'XYZ airdrop claims' ||
+                  optionsMarket.eventName === 'ETH burned count' ||
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
                 ? '<'
                 : '!='
             : optionSide === 'long'
@@ -178,7 +185,13 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
             : '<';
 
         return optionsMarket.customMarket
-            ? `${optionsMarket.country} ${orderbookSign} ${optionsMarket.outcome}`
+            ? `${optionsMarket.country} ${orderbookSign} ${formatCurrency(
+                  optionsMarket.outcome || 0,
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                      ? 2
+                      : 0
+              )}`
             : `${getSynthName(optionsMarket.currencyKey)} ${orderbookSign} ${formatCurrencyWithSign(
                   USD_SIGN,
                   optionsMarket.strikePrice
@@ -381,6 +394,11 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                                             onClick={() => {
                                                                 openFillOrderModal(order);
                                                             }}
+                                                            className={
+                                                                window.innerWidth >= 1025 && window.innerWidth <= 1100
+                                                                    ? 'tablet-view'
+                                                                    : ''
+                                                            }
                                                             isBuy={isBuyMode}
                                                             disabled={order.walletBalance === 0}
                                                         >
@@ -519,7 +537,7 @@ const YellowDot = styled.span`
 
 const CryptoName = styled.span``;
 
-export const StyledLink = styled.a`
+export const StyledLink = styled(SPAAnchor)`
     color: #f6f6fe;
     &:hover {
         color: #00f9ff;
@@ -533,6 +551,10 @@ const BuySellButton = styled(SubmitButton)`
     padding: 4px 20px;
     margin-right: 10px;
     text-transform: capitalize;
+    &.tablet-view {
+        margin-right: 0px;
+        margin-bottom: 5px;
+    }
 `;
 
 const CounterOfferButton = styled(DefaultSubmitButton)`

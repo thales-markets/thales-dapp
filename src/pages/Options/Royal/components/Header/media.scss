@@ -1,0 +1,161 @@
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode {
+    background: var(--color-wrapper) !important;
+    border: 3.26154px solid var(--color);
+    border-radius: 5px;
+    padding: 35px 21px;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode {
+    box-shadow: 0px 3.26154px 57.0769px rgba(100, 217, 254, 0.7);
+}
+
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode {
+    @media (max-width: 500px) {
+        margin: 10px;
+    }
+    box-shadow: 0px 2.6188px 45.8291px rgba(161, 225, 180, 0.5);
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header {
+    &::after {
+        content: 'Select a Wallet to connect to Thales Royale';
+        font-size: 20px;
+        font-family: Sansation !important;
+        text-align: center;
+        width: 100%;
+    }
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-icon,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-icon,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-info,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-info,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-definition,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-definition,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-close,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-close {
+    display: none;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service a,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service a,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description a,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description a {
+    font-family: Sansation !important;
+    text-align: center;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-terms-of-service {
+    justify-content: center;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span {
+    font-weight: normal;
+}
+
+.bn-onboard-modal-terms-of-service a {
+    color: #f7f7f7;
+    text-decoration: underline;
+    &:visited {
+        color: #f7f7f7;
+    }
+}
+
+.bn-onboard-modal-terms-of-service span a:first-child {
+    visibility: hidden;
+    font-size: 0px;
+}
+
+.bn-onboard-modal-terms-of-service span a:first-child {
+    &:before {
+        content: 'Terms of Use';
+        visibility: visible;
+        color: #f7f7f7;
+        text-decoration: underline;
+        font-size: 14px;
+    }
+}
+
+.bn-onboard-select-description a {
+    color: #f7f7f7;
+    text-decoration: underline;
+    &:visited {
+        color: #f7f7f7;
+    }
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div {
+    min-width: 70px;
+    @media (max-width: 500px) {
+        min-width: 50px;
+    }
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div img {
+    max-width: 70px;
+    max-height: 70px;
+    @media (max-width: 500px) {
+        max-width: 50px;
+        max-height: 50px;
+    }
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div svg {
+    max-width: 70px;
+    max-height: 70px;
+    @media (max-width: 500px) {
+        max-width: 50px;
+        max-height: 50px;
+    }
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div img[alt='Tally'] {
+    max-width: 46px;
+    max-height: 46px;
+    @media (max-width: 500px) {
+        max-width: 34px;
+        max-height: 34px;
+    }
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets {
+    margin-bottom: 0px;
+    display: grid;
+    grid: 2;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets .bn-onboard-icon-button,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets .bn-onboard-icon-button {
+    width: 100%;
+    @media (max-width: 500px) {
+        padding-left: 0;
+    }
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode-background.bn-onboard-custom,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode-background.bn-onboard-custom,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover {
+    background: none !important;
+    box-shadow: none !important;
+    color: var(--color);
+}
+
+.light-theme .bn-onboard-selected-wallet,
+.dark-theme .bn-onboard-selected-wallet {
+    background: none !important;
+}

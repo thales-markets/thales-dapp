@@ -1,38 +1,25 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { AccountMarketInfo, OptionSide, OrderItem, OrderSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import { ethers } from 'ethers';
-import { APPROVAL_EVENTS } from 'constants/events';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+import { BigNumber, ethers } from 'ethers';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import { getIs0xReady, getIsAppReady } from 'redux/modules/app';
+import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { formatCurrency, formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { IZeroExEvents } from '@0x/contract-wrappers';
-import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { refetchOrderbook, refetchOrders, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
-import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import {
     CloseIconContainer,
     ModalContainer,
@@ -63,6 +50,8 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet-light.svg';
 import NumericInput from 'pages/Options/Market/components/NumericInput';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import styled from 'styled-components';
+import { fillLimitOrder, getFillOrderData, ONE_INCH_CONTRACTS } from 'utils/1inch';
+import ApprovalModal from 'components/ApprovalModal';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -78,8 +67,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [amount, setAmount] = useState<number | string>(
         truncToDecimals(order.displayOrder.fillableAmount, DEFAULT_OPTIONS_DECIMALS)
     );
@@ -89,10 +76,11 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
-    const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [insufficientOrderAmount, setInsufficientOrderAmount] = useState<boolean>(false);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -116,21 +104,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const tokenBalance = optionSide === 'long' ? optBalances.long : optBalances.short;
     const baseToken = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
-
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const { exchangeProxy } = contractWrappers0xConnector;
 
     const isBuy = orderSide === 'buy';
 
@@ -139,137 +115,121 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         ? tokenBalance < Number(amount) || !tokenBalance
         : sUSDBalance < Number(order.displayOrder.price) * Number(amount) || !sUSDBalance;
 
-    const isButtonDisabled = !isAmountEntered || isFilling || !isWalletConnected || insufficientBalance || !is0xReady;
+    const isButtonDisabled =
+        !isAmountEntered || isFilling || !isWalletConnected || insufficientBalance || !hasAllowance;
 
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const takeTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
-    const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    const takerAmount = isBuy ? amount : Number(order.displayOrder.price) * Number(amount);
+    const takerTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
+    const addressToApprove = ONE_INCH_CONTRACTS[networkId] || '';
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             try {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setAllowance(!!bigNumberFormatter(allowance));
+                const parsedTakerAmount = ethers.utils.parseEther(Number(takerAmount).toString());
+                const allowance = await checkAllowance(
+                    parsedTakerAmount,
+                    erc20Instance,
+                    walletAddress,
+                    addressToApprove
+                );
+                setAllowance(allowance);
             } catch (e) {
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, hasAllowance]);
+    }, [walletAddress, isWalletConnected, hasAllowance, takerAmount, isAllowing]);
 
     useEffect(() => {
-        if (is0xReady) {
-            const subscriptionToken = exchangeProxy.subscribe(
-                IZeroExEvents.LimitOrderFilled,
-                { orderHash: order.displayOrder.orderHash },
-                (_, log) => {
-                    if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
-                        refetchOrderbook(baseToken);
-                        refetchTrades(optionsMarket.address);
-                        refetchUserTrades(optionsMarket.address, walletAddress);
-                        refetchOrders(networkId);
-                        onClose();
-                    }
-                }
+        const fetchL1Fee = async (limitOrderProtocol1inchContractWithSigner: any, fillOrderData: any) => {
+            const txRequest = await limitOrderProtocol1inchContractWithSigner.populateTransaction.fillOrder(
+                fillOrderData.limitOrder,
+                fillOrderData.signature,
+                fillOrderData.makerAmount,
+                fillOrderData.takerAmount,
+                fillOrderData.threshold
             );
-            return () => {
-                exchangeProxy.unsubscribe(subscriptionToken);
-            };
-        }
-    }, [is0xReady]);
+            return getL1FeeInWei(txRequest);
+        };
 
-    useEffect(() => {
         const fetchGasLimit = async () => {
-            if (gasPrice !== null) {
-                const targetOrder = order.rawOrder;
-                const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
+            try {
+                const { limitOrderProtocol1inchContract } = snxJSConnector as any;
+                const limitOrderProtocol1inchContractWithSigner = limitOrderProtocol1inchContract.connect(
+                    (snxJSConnector as any).signer
+                );
+                const fillOrderData = getFillOrderData(order, amount, isBuy);
 
-                try {
-                    const gasEstimate = await exchangeProxy
-                        .fillLimitOrder(
-                            targetOrder,
-                            order.signature,
-                            Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
-                        )
-                        .estimateGasAsync({ from: walletAddress });
-                    setGasLimit(normalizeGasLimit(Number(gasEstimate)));
-                } catch (e) {
-                    console.log(e);
-                    setGasLimit(null);
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        limitOrderProtocol1inchContractWithSigner.estimateGas.fillOrder(
+                            fillOrderData.limitOrder,
+                            fillOrderData.signature,
+                            fillOrderData.makerAmount,
+                            fillOrderData.takerAmount,
+                            fillOrderData.threshold
+                        ),
+                        fetchL1Fee(limitOrderProtocol1inchContractWithSigner, fillOrderData),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.fillOrder(
+                        fillOrderData.limitOrder,
+                        fillOrderData.signature,
+                        fillOrderData.makerAmount,
+                        fillOrderData.takerAmount,
+                        fillOrderData.threshold
+                    );
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
                 }
+            } catch (e) {
+                console.log(e);
+                setGasLimit(null);
             }
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isButtonDisabled, gasPrice, amount, hasAllowance, walletAddress]);
+    }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
-    const handleAllowance = async () => {
-        if (gasPrice !== null) {
-            const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
-            try {
-                setIsAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                })) as ethers.ContractTransaction;
-
-                const txResult = await tx.wait();
-                if (txResult && txResult.transactionHash) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            } catch (e) {
-                console.log(e);
+    const handleAllowance = async (approveAmount: BigNumber) => {
+        const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
+        try {
+            setIsAllowing(true);
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
+                gasLimit: formatGasLimit(gasEstimate, networkId),
+            })) as ethers.ContractTransaction;
+            setOpenApprovalModal(false);
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
                 setIsAllowing(false);
             }
+        } catch (e) {
+            console.log(e);
+            setIsAllowing(false);
         }
     };
 
     const handleFillOrder = async () => {
-        if (gasPrice !== null) {
-            setTxErrorMessage(null);
-            setIsFilling(true);
+        setTxErrorMessage(null);
+        setIsFilling(true);
 
-            const targetOrder = order.rawOrder;
-            const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
-
-            try {
-                await exchangeProxy
-                    .fillLimitOrder(
-                        targetOrder,
-                        order.signature,
-                        Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
-                    )
-                    .sendTransactionAsync({
-                        from: walletAddress,
-                        gas: gasLimit !== null ? gasLimit : undefined,
-                        gasPrice: gasPriceInWei(gasPrice),
-                    });
-            } catch (e) {
-                console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsFilling(false);
-            }
+        try {
+            await fillLimitOrder(networkId, walletAddress, order, amount, gasLimit, isBuy);
+            refetchOrderbook(baseToken);
+            refetchTrades(optionsMarket.address);
+            refetchUserTrades(optionsMarket.address, walletAddress);
+            refetchOrders(networkId);
+            onClose();
+        } catch (e) {
+            console.log(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsFilling(false);
         }
     };
 
@@ -314,11 +274,11 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         }
         if (!hasAllowance) {
             return (
-                <DefaultSubmitButton disabled={isAllowing} onClick={handleAllowance}>
+                <DefaultSubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: takeTokenCurrencyKey })
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: takerTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: takeTokenCurrencyKey,
+                              currencyKey: takerTokenCurrencyKey,
                           })}
                 </DefaultSubmitButton>
             );
@@ -398,11 +358,15 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     <SummaryItem>
                         <SummaryLabel>{t('options.market.trade-options.fill-order.total-label')}</SummaryLabel>
                         <SummaryContent>
-                            {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(order.displayOrder.price) * Number(amount))}
+                            {formatCurrencyWithKey(
+                                SYNTHS_MAP.sUSD,
+                                Number(order.displayOrder.price) * Number(amount),
+                                DEFAULT_OPTIONS_DECIMALS
+                            )}
                         </SummaryContent>
                     </SummaryItem>
                     <Divider />
-                    <NetworkFees gasLimit={gasLimit} disabled={isFilling} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isFilling} l1Fee={l1Fee} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage
@@ -411,6 +375,15 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     onDismiss={() => setTxErrorMessage(null)}
                 />
             </ModalContainer>
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={takerAmount}
+                    tokenSymbol={takerTokenCurrencyKey}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
         </StyledModal>
     );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { FlexDivRowCentered, Image } from 'theme/common';
 import { OptionSide, OptionsMarketInfo } from 'types/options';
@@ -10,7 +10,7 @@ import chartIcon from 'assets/images/footer-nav/chart.svg';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import TradeOptions from '../TradeOptions';
 import YourTransactions from '../TransactionsCard/YourTransactions';
 import RecentTransactions from '../TransactionsCard/RecentTransactions';
@@ -21,6 +21,10 @@ import orderbookActiveIcon from 'assets/images/footer-nav/orderbook-active.svg';
 import transactionsActiveIcon from 'assets/images/footer-nav/transactions-active.svg';
 import TradingView from '../TradingView';
 import MaturityPhaseCard from '../TradeCard/MaturityPhaseCard';
+import CustomMarketResults from '../CustomMarketResults';
+import { getAmmSelected } from 'redux/modules/marketWidgets';
+import AMM from '../AMM';
+import { getIsOVM } from 'utils/network';
 
 type MarketMobileProps = {
     side: OptionSide;
@@ -38,6 +42,13 @@ enum Widgets {
 const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [widget, setWidget] = useState(Widgets.Trade);
+    const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [widget]);
 
     const renderWidget = () => {
         switch (widget) {
@@ -46,12 +57,14 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
                     <WidgetWrapper
                         className={market.phase === 'maturity' ? 'market__maturity' : ''}
                         background={
-                            market.phase === 'maturity'
+                            market.phase === 'maturity' || (ammSelected && isL2)
                                 ? ''
                                 : 'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)'
                         }
                     >
-                        {market.phase === 'maturity' ? (
+                        {ammSelected && isL2 && market.phase !== 'maturity' ? (
+                            <AMM />
+                        ) : market.phase === 'maturity' ? (
                             <MaturityPhaseCard optionsMarket={market} accountMarketInfo={accountInfo} />
                         ) : (
                             <TradeOptions optionSide={side} />
@@ -81,9 +94,15 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
                         <WidgetWrapper className="market__priceChart">
                             <OptionsPriceChart />
                         </WidgetWrapper>
-                        <WidgetWrapper className="market__tradingView">
-                            <TradingView />
-                        </WidgetWrapper>
+                        {market.customMarket ? (
+                            <WidgetWrapper className="market__customMarketResults">
+                                <CustomMarketResults />
+                            </WidgetWrapper>
+                        ) : (
+                            <WidgetWrapper className="market__tradingView">
+                                <TradingView />
+                            </WidgetWrapper>
+                        )}
                     </>
                 );
         }
@@ -97,7 +116,7 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
                     onClick={setWidget.bind(this, Widgets.Trade)}
                     src={widget === Widgets.Trade ? tradeActiveIcon : tradeIcon}
                 />
-                {market.phase !== 'maturity' && (
+                {market.phase !== 'maturity' && (!ammSelected || !isL2) && (
                     <Icon
                         onClick={setWidget.bind(this, Widgets.Orderbook)}
                         src={widget === Widgets.Orderbook ? orderbookActiveIcon : orderbookIcon}

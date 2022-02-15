@@ -56,7 +56,7 @@ const YourTransactions: React.FC<YourTransactionsProps> = ({ marketAddress, wall
 
     return (
         <>
-            <MarketWidgetHeader widgetKey={MarketWidgetKey.YOUR_TRANSACTIONS}></MarketWidgetHeader>
+            <MarketWidgetHeader hideBorderOnMobile={true} widgetKey={MarketWidgetKey.YOUR_TRANSACTIONS} />
             <MarketWidgetContent>
                 <TransactionsWithFilters
                     marketTransactions={marketTransactions}

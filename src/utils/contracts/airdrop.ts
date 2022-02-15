@@ -2,14 +2,14 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const airdrop = {
     addresses: {
-        [NetworkId.Mainnet]: '0x0f33af99f3C124189B8dA7C7BE6Dc08C77a9ddc7',
-        [NetworkId.Ropsten]: '0xfa4dc7179f27a545C954aC40f2Ea610D11C9C88D',
+        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x2DDd1328824f0920fEfC9e9cD8ee07A35A3a89B9',
+        [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
-        [NetworkId['Kovan-Ovm']]: '', // TODO: kovan-ovm remove or implement
+        [NetworkId['Mainnet-Ovm']]: '0x42B6e9b5Bb96a02E02e651d3104Fc3546E1313F2',
+        [NetworkId['Kovan-Ovm']]: '0xA84062253E6FBC0c03Ab100A7953Ebe88BE86415',
     },
     abi: [
         {
@@ -193,6 +193,32 @@ export const airdrop = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'index',
+                    type: 'uint256',
+                },
+            ],
+            name: 'claimed',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'claimedBlock',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'claimedMask',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {

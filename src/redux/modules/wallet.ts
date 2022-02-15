@@ -1,6 +1,6 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { getAddress } from 'utils/formatters/ethers';
-import { defaultNetwork, NetworkId, normalizeGasLimit } from 'utils/network';
+import { defaultNetwork, NetworkId, formatGasLimit } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_SPEED } from 'constants/defaults';
 import { GasSpeed } from 'queries/network/useEthGasPriceQuery';
@@ -61,7 +61,7 @@ export const walletDetailsSlice = createSlice({
             state.customGasPrice = action.payload;
         },
         setGasLimit: (state, action: PayloadAction<number>) => {
-            state.gasLimit = normalizeGasLimit(action.payload);
+            state.gasLimit = formatGasLimit(action.payload, state.networkId);
         },
     },
 });

@@ -13,7 +13,6 @@ import {
     getPercentageDifference,
     truncToDecimals,
 } from 'utils/formatters/number';
-import { getSynthName } from 'utils/snxJSConnector';
 import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
@@ -32,6 +31,7 @@ import FillOrderModal from 'pages/Options/Market/TradeOptions/Orderbook/FillOrde
 import CancelOrderModal from 'pages/Options/Market/TradeOptions/Orderbook/CancelOrderModal';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
+import { getSynthName } from 'utils/currency';
 
 type OrderCardMobileProps = {
     orders: ExtendedOrders;
@@ -65,10 +65,16 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
     const orderbookSign = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) =>
         optionsMarket.customMarket
             ? optionSide === 'long'
-                ? optionsMarket.eventName === 'XYZ airdrop claims'
+                ? optionsMarket.eventName === 'XYZ airdrop claims' ||
+                  optionsMarket.eventName === 'ETH burned count' ||
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
                     ? '>='
                     : '=='
-                : optionsMarket.eventName === 'XYZ airdrop claims'
+                : optionsMarket.eventName === 'XYZ airdrop claims' ||
+                  optionsMarket.eventName === 'ETH burned count' ||
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
                 ? '<'
                 : '!='
             : optionSide === 'long'
@@ -113,7 +119,13 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                                         {`${order.market.country} ${orderbookSign(
                                                             order.market,
                                                             order.optionSide
-                                                        )} ${order.market.outcome}`}
+                                                        )} ${formatCurrency(
+                                                            order.market.outcome || 0,
+                                                            order.market.eventName === 'Flippening Markets' ||
+                                                                order.market.eventName === 'ETH/BTC market cap ratio'
+                                                                ? 2
+                                                                : 0
+                                                        )}`}
                                                     </Text>
                                                 </FlexDivRow>
                                             </FlexDivColumnCentered>

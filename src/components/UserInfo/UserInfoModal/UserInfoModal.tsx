@@ -1,25 +1,24 @@
 import React, { useMemo, useState } from 'react';
 import { Modal } from '@material-ui/core';
-import { Button, FlexDiv, FlexDivColumn, FlexDivCentered, Image, Text, XButton } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, FlexDivCentered, Text, XButton } from 'theme/common';
 import styled from 'styled-components';
-import metamask from 'assets/images/metamask.svg';
 import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import snxJSConnector from 'utils/snxJSConnector';
 import { sortOptionsMarkets } from 'utils/options';
 import { RootState } from 'redux/rootReducer';
 import { truncateAddress } from 'utils/formatters/string';
 import UsersAssets from './UsersAssets';
 import UsersOrders from './UsersOrders';
-import UsersMarkets from './UsersMarkets';
 import Web3 from 'web3';
 import { FilterButton, Input, InputLabel, ShortInputContainer } from 'pages/Options/Market/components';
 import axios from 'axios';
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import makeBlockie from 'ethereum-blockies-base64';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -29,7 +28,6 @@ type UserInfoModalProps = {
 };
 
 enum Filters {
-    MARKETS = 'Markets',
     ORDERS = 'Orders',
     ASSETS = 'Assets',
 }
@@ -47,9 +45,28 @@ const DISPLAY_NAME_REGEX = /^[a-zA-Z0-9 ]+$/;
 const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, walletAddress, network }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
-        enabled: open,
-    });
+    const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
+            return openOrdersQuery.data;
+        }
+    }, [openOrdersQuery]);
+
+    const optionsMarkets = useMemo(() => {
+        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
+            const markets = openOrdersMap
+                ? marketsQuery.data.map((m) => ({
+                      ...m,
+                      openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
+                      availableLongs: (openOrdersMap as any).get(m.address.toLowerCase())?.availableLongs ?? '0',
+                      availableShorts: (openOrdersMap as any).get(m.address.toLowerCase())?.availableShorts ?? '0',
+                  }))
+                : marketsQuery.data;
+            return sortOptionsMarkets(markets);
+        }
+        return [];
+    }, [marketsQuery, openOrdersMap]);
 
     const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: open });
 
@@ -63,25 +80,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
 
     const [displayName, setName] = useState(currentDisplayName);
 
-    const [filter, setFilter] = useState(Filters.MARKETS);
-    const { synthsMap } = snxJSConnector;
-
-    const optionsMarkets = useMemo(
-        () =>
-            marketsQuery.isSuccess && Array.isArray(marketsQuery.data)
-                ? sortOptionsMarkets(marketsQuery.data, synthsMap)
-                : [],
-        [marketsQuery, synthsMap]
-    );
-
-    const usersMarkets = useMemo(
-        () =>
-            optionsMarkets.filter((market) => {
-                return market.creator.toLowerCase() === walletAddress.toLowerCase();
-            }),
-
-        [optionsMarkets, filter]
-    );
+    const [filter, setFilter] = useState(Filters.ASSETS);
 
     const isNameValid = useMemo(() => {
         return DISPLAY_NAME_REGEX.test(displayName);
@@ -119,7 +118,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     <XButton onClick={() => handleClose(false)} />
                 </Header>
                 <WalletWrapper>
-                    <Image src={metamask} style={{ width: 55, height: 49 }}></Image>
+                    <Blockie src={makeBlockie(walletAddress)} />
                     <FlexDivColumn style={{ alignItems: 'center', flex: 2 }}>
                         <Text className="text-m bold pale-grey">{truncateAddress(walletAddress, 13, 4)}</Text>
                         <Text className="text-xs bold pale-grey capitalize">{network}</Text>
@@ -128,7 +127,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                         <Button
                             className="primary text-xs"
                             style={{
-                                width: 150,
+                                width: 180,
                                 height: 40,
                                 marginBottom: 10,
                                 padding: '4px 24px',
@@ -142,7 +141,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                         </Button>
                         <Button
                             className="primary text-xs"
-                            style={{ width: 150, height: 40, padding: '4px 24px', alignSelf: 'flex-end' }}
+                            style={{ width: 180, height: 40, padding: '4px 24px', alignSelf: 'flex-end' }}
                             onClick={() => {
                                 onboardConnector.disconnectWallet();
                                 handleClose(false);
@@ -153,14 +152,14 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     </FlexDivColumn>
                 </WalletWrapper>
                 <FlexDivCentered style={{ justifyContent: 'space-between', margin: 25 }}>
-                    <ShortInputContainer style={{ margin: 0 }}>
+                    <ShortInputContainer style={{ margin: 0, width: '45%' }}>
                         <InputLabel>{t(`user-info.wallet.display-name`)}</InputLabel>
                         <Input
                             onChange={(event) => {
                                 setName(event.target.value);
                             }}
                             value={displayName}
-                        ></Input>
+                        />
                     </ShortInputContainer>
                     <Button
                         onClick={() => {
@@ -176,10 +175,10 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                 <FilterWrapper>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                        className={filter === Filters.MARKETS ? 'selected' : ''}
-                        onClick={() => setFilter(Filters.MARKETS)}
+                        className={filter === Filters.ASSETS ? 'selected' : ''}
+                        onClick={() => setFilter(Filters.ASSETS)}
                     >
-                        {t(`user-info.tabs.my-markets`)}
+                        {t(`user-info.tabs.my-assets`)}
                     </FilterButton>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
@@ -188,30 +187,20 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     >
                         {t(`user-info.tabs.my-open-orders`)}
                     </FilterButton>
-                    <FilterButton
-                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                        className={filter === Filters.ASSETS ? 'selected' : ''}
-                        onClick={() => setFilter(Filters.ASSETS)}
-                    >
-                        {t(`user-info.tabs.my-assets`)}
-                    </FilterButton>
                 </FilterWrapper>
                 <DataWrapper>
-                    {filter === Filters.MARKETS && (
-                        <UsersMarkets usersMarkets={usersMarkets} onClose={() => handleClose(false)} />
+                    {filter === Filters.ASSETS && (
+                        <UsersAssets
+                            optionsMarkets={optionsMarkets}
+                            walletAddress={walletAddress}
+                            onClose={() => handleClose(false)}
+                        />
                     )}
                     {filter === Filters.ORDERS && (
                         <UsersOrders
                             optionsMarkets={optionsMarkets}
                             walletAddress={walletAddress}
                             networkId={networkId}
-                            onClose={() => handleClose(false)}
-                        />
-                    )}
-                    {filter === Filters.ASSETS && (
-                        <UsersAssets
-                            optionsMarkets={optionsMarkets}
-                            walletAddress={walletAddress}
                             onClose={() => handleClose(false)}
                         />
                     )}
@@ -275,6 +264,7 @@ export const Row = styled(FlexDiv)`
     justify-content: space-between;
     align-items: center;
     background: #24273133;
+    text-align: center;
 `;
 
 export const MarketRow = styled(Row)`
@@ -283,6 +273,12 @@ export const MarketRow = styled(Row)`
         border: 1px solid #44e1e2;
         padding: 19px;
     }
+`;
+
+export const Blockie = styled.img`
+    width: 45px;
+    height: 45px;
+    border-radius: 50px;
 `;
 
 export default UserInfoModal;

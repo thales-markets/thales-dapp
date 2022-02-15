@@ -4,7 +4,7 @@ export const airdropClaimQuizQuestions = [
         answers: [
             {
                 index: 1,
-                answerText: 'Binary options protocol',
+                answerText: 'Parimutuel markets protocol',
             },
             {
                 index: 2,
@@ -18,7 +18,7 @@ export const airdropClaimQuizQuestions = [
         correctAnswer: 1,
     },
     {
-        questionText: 'How many outcomes can a Binary Market have',
+        questionText: 'How many outcomes can a Positional Market have',
         answers: [
             {
                 index: 1,
@@ -36,7 +36,7 @@ export const airdropClaimQuizQuestions = [
         correctAnswer: 2,
     },
     {
-        questionText: 'Which items define a Thales Binary Market',
+        questionText: 'Which items define a Thales Positional Market',
         answers: [
             {
                 index: 1,
@@ -76,7 +76,7 @@ export const airdropClaimQuizQuestions = [
         correctAnswer: 1,
     },
     {
-        questionText: 'How many assets to speculate on does Thales support',
+        questionText: 'How many assets to speculate on does Thales support at the moment',
         answers: [
             {
                 index: 1,
@@ -88,7 +88,7 @@ export const airdropClaimQuizQuestions = [
             },
             {
                 index: 3,
-                answerText: 'More than 50 assets including crypto assets, equities, forex',
+                answerText: 'BTC, ETH, LINK, SNX, AAVE, UNI and SOL',
             },
         ],
         correctAnswer: 3,
@@ -117,15 +117,15 @@ export const airdropClaimQuizQuestions = [
     },
     {
         questionText:
-            'The names of the binary options tokens that represent the binary choice on Thales Binary markets are',
+            'The names of the positional tokens that represent the position choice on Thales Positional markets are',
         answers: [
             {
                 index: 1,
-                answerText: 'sLONG and sSHORT tokens',
+                answerText: 'UP and DOWN tokens',
             },
             {
                 index: 2,
-                answerText: 'UP and DOWN tokens',
+                answerText: 'LEFT and RIGHT tokens',
             },
             {
                 index: 3,
@@ -135,11 +135,11 @@ export const airdropClaimQuizQuestions = [
         correctAnswer: 1,
     },
     {
-        questionText: 'A single pair of sLONG and sSHORT options are backed by',
+        questionText: 'A single pair of UP and DOWN options are backed by',
         answers: [
             {
                 index: 1,
-                answerText: 'Exactly 1 sUSD collateral, as either sLONG or sSHORT will be redeemable at maturity',
+                answerText: 'Exactly 1 sUSD collateral, as either UP or DOWN will be redeemable at maturity',
             },
             {
                 index: 2,
@@ -154,21 +154,21 @@ export const airdropClaimQuizQuestions = [
     },
     {
         questionText:
-            'For a given binary market, “will Bitcoin price be greater than 50,000 at 1st of January 2022?”, if you want to speculate as a Bitcoin bull you buy an',
+            'For a given positional market, “will Bitcoin price be greater than 50,000 at 1st of January 2022?”, if you want to speculate as a Bitcoin bull you buy an',
         answers: [
             {
                 index: 1,
-                answerText: 'sLONG option',
+                answerText: 'UP token',
             },
             {
                 index: 2,
-                answerText: 'sSHORT option',
+                answerText: 'DOWN option',
             },
         ],
         correctAnswer: 1,
     },
     {
-        questionText: 'If you buy an sLONG option at 10c and your option wins, you can redeem',
+        questionText: 'If you buy an UP token at 10c and your option wins, you can redeem',
         answers: [
             {
                 index: 1,
@@ -208,7 +208,7 @@ export const airdropClaimQuizQuestions = [
         correctAnswer: 4,
     },
     {
-        questionText: 'Binary options are traded on Thales using',
+        questionText: 'Positional tokens are traded on Thales using',
         answers: [
             {
                 index: 1,
@@ -217,7 +217,7 @@ export const airdropClaimQuizQuestions = [
             },
             {
                 index: 2,
-                answerText: 'Permissionless 0x orderbook API',
+                answerText: 'Permissionless 1Inch orderbook API and a novel AMM contract',
             },
         ],
         correctAnswer: 2,

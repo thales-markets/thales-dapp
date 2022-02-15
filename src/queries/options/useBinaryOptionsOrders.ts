@@ -4,13 +4,15 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { OptionSide, OptionsMarkets, OrderItem, ExtendedOrders, ExtendedOrderItem } from 'types/options';
 import { NetworkId } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
-import { get0xBaseURL } from 'utils/0x';
 import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
 import { keyBy } from 'lodash';
 import { ethers } from 'ethers';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { sortOptionsMarkets } from 'utils/options';
 import { ORDERBOOK_AMOUNT_THRESHOLD } from 'constants/options';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { getAllBuyOrdersForToken, getAllSellOrdersForToken } from 'utils/1inch';
 
 const filterAndPrepareOrders = (
     optionSide: OptionSide,
@@ -21,11 +23,11 @@ const filterAndPrepareOrders = (
 ) => {
     let preparedOrders = [];
 
-    if (responseJ.records && responseJ.records.length > 0) {
-        const filteredOrders = responseJ.records.filter((record: any) =>
+    if (responseJ.length > 0) {
+        const filteredOrders = responseJ.filter((record: any) =>
             isBuyOrder
-                ? optionsAddresses.includes(record.order.takerToken.toLowerCase())
-                : optionsAddresses.includes(record.order.makerToken.toLowerCase())
+                ? optionsAddresses.includes(record.data.takerAsset.toLowerCase())
+                : optionsAddresses.includes(record.data.makerAsset.toLowerCase())
         );
 
         preparedOrders = filteredOrders
@@ -36,9 +38,7 @@ const filterAndPrepareOrders = (
                         ...preparedOrder,
                         market:
                             marketsAddressMap[
-                                isBuyOrder
-                                    ? record.order.takerToken.toLowerCase()
-                                    : record.order.makerToken.toLowerCase()
+                                isBuyOrder ? record.data.takerAsset.toLowerCase() : record.data.makerAsset.toLowerCase()
                             ],
                         optionSide,
                     };
@@ -47,7 +47,8 @@ const filterAndPrepareOrders = (
             .filter(
                 (order: ExtendedOrderItem) =>
                     order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD &&
-                    order.displayOrder.potentialReturnAmount >= ORDERBOOK_AMOUNT_THRESHOLD
+                    order.displayOrder.potentialReturnAmount >= ORDERBOOK_AMOUNT_THRESHOLD &&
+                    order.displayOrder.timeRemaining >= Date.now()
             );
     }
 
@@ -64,7 +65,6 @@ const useBinaryOptionsOrders = (
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const baseUrl = `${get0xBaseURL(networkId)}sra/v4/`;
 
     return useQuery<ExtendedOrders>(
         QUERY_KEYS.BinaryOptions.Orders(orderType, networkId),
@@ -76,38 +76,58 @@ const useBinaryOptionsOrders = (
             const optionsMarkets = await Promise.all(
                 rawOptionsMarkets.map(async (currentMarket) => {
                     if (currentMarket.customMarket) {
-                        const sportFeedContract = new ethers.Contract(
-                            currentMarket.customOracle,
-                            sportFeedOracleContract.abi,
-                            (snxJSConnector as any).provider
-                        );
-                        const data: any = await Promise.all([
-                            sportFeedContract.targetName(),
-                            sportFeedContract.eventName(),
-                            sportFeedContract.targetOutcome(),
-                        ]);
-                        currentMarket.country = data[0];
-                        currentMarket.eventName = data[1];
-                        currentMarket.outcome = data[2];
-                        return currentMarket;
+                        try {
+                            const sportFeedContract = new ethers.Contract(
+                                currentMarket.customOracle,
+                                sportFeedOracleContract.abi,
+                                (snxJSConnector as any).provider
+                            );
+                            const data: any = await Promise.all([
+                                sportFeedContract.targetName(),
+                                sportFeedContract.eventName(),
+                                sportFeedContract.targetOutcome(),
+                            ]);
+                            currentMarket.country =
+                                data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0];
+                            currentMarket.eventName = data[1];
+                            currentMarket.outcome = data[2];
+                            return currentMarket;
+                        } catch (e) {
+                            const sportFeedContract = new ethers.Contract(
+                                currentMarket.customOracle,
+                                ethBurnedOracleInstance.abi,
+                                (snxJSConnector as any).provider
+                            );
+                            const data: any = await Promise.all([
+                                sportFeedContract.targetName(),
+                                sportFeedContract.eventName(),
+                                sportFeedContract.targetOutcome(),
+                            ]);
+                            currentMarket.country =
+                                data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0];
+                            currentMarket.eventName = data[1];
+                            currentMarket.outcome =
+                                currentMarket.eventName === 'Flippening Markets' ||
+                                currentMarket.eventName === 'ETH/BTC market cap ratio'
+                                    ? bigNumberFormatter(data[2]).toString()
+                                    : Number(data[2]).toString();
+                            return currentMarket;
+                        }
                     } else {
                         return currentMarket;
                     }
                 })
             );
 
-            const sortedOptionsMarkets = sortOptionsMarkets(optionsMarkets, snxJSConnector.synthsMap).filter(
+            const sortedOptionsMarkets = sortOptionsMarkets(optionsMarkets).filter(
                 (market) => market.phase === 'trading'
             );
 
             const isBuyOrder = orderType === 'buys';
 
-            const orders = isBuyOrder
-                ? `${baseUrl}orders?makerToken=${SynthsUSD.address}&perPage=1000`
-                : `${baseUrl}orders?takerToken=${SynthsUSD.address}&perPage=1000`;
-
-            const response = await fetch(orders);
-            const responseJ = await response.json();
+            const responseJ = isBuyOrder
+                ? await getAllSellOrdersForToken(networkId, SynthsUSD.address)
+                : await getAllBuyOrdersForToken(networkId, SynthsUSD.address);
 
             const marketsLongAddressMap = keyBy(sortedOptionsMarkets, 'longAddress');
             const marketsShortAddressMap = keyBy(sortedOptionsMarkets, 'shortAddress');
@@ -122,8 +142,10 @@ const useBinaryOptionsOrders = (
             ];
         },
         {
-            refetchInterval: 5000,
             ...options,
+            refetchInterval: 5000,
+            // enable only for Optimism Mainnet
+            enabled: options?.enabled && networkId === 10,
         }
     );
 };

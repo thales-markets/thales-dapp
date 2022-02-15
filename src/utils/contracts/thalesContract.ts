@@ -8,8 +8,8 @@ export const thalesContract = {
         [NetworkId.Kovan]: '0x9e7769409E3e5A6821eeDcF33371FCA929fE6A48',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
-        [NetworkId['Kovan-Ovm']]: '', // TODO: kovan-ovm remove or implement
+        [NetworkId['Mainnet-Ovm']]: '0x217D47011b23BB961eB6D93cA9945B7501a5BB11',
+        [NetworkId['Kovan-Ovm']]: '0xf584fF99F97B5ABB1872af1AA7924Fedf3e1b53d',
     },
     abi: [
         {

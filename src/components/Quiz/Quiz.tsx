@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import close from 'assets/images/close.svg';
-import { ButtonContainer } from 'pages/Options/Earn/components';
 import { LightTooltip } from 'pages/Options/Market/components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import { QuizQuestion } from './QuizQuestion';
 import { QuizQuestionForm } from './QuizQuestionForm';
 import discord from 'assets/images/discord.svg';
 import styled from 'styled-components';
+import { ButtonContainer } from 'pages/Options/Earn/components';
 
 type QuizProps = {
     quizData: QuizQuestion[];
@@ -110,7 +110,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     className="quiz__modal-dialog__title__link"
                                     target="_blank"
                                     rel="noreferrer"
-                                    href="https://discord.gg/cFGv5zyVEj"
+                                    href="https://discord.com/invite/rB3AWKwACM"
                                     style={{ marginRight: '30px' }}
                                 >
                                     {t('options.quiz.discord-link')}
@@ -121,7 +121,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     className="quiz__modal-dialog__title__link"
                                     target="_blank"
                                     rel="noreferrer"
-                                    href="https://docs.thales.market/"
+                                    href="https://docs.thalesmarket.io/"
                                     style={{ marginRight: '10px' }}
                                 >
                                     {t('options.quiz.docs-link')}
@@ -185,7 +185,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                 <LinkImage
                                     target="_blank"
                                     rel="noreferrer"
-                                    href="https://discord.gg/cFGv5zyVEj"
+                                    href="https://discord.com/invite/rB3AWKwACM"
                                     style={{ color: 'white', verticalAlign: 'top' }}
                                 >
                                     {window.innerWidth > 767 ? t('options.quiz.discord-button') : 'Discord'}

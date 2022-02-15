@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { sortOptionsMarkets } from '../../../utils/options';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import snxJSConnector from 'utils/snxJSConnector';
 import HotMarkets from './HotMarkets';
 import MarketCreation from './MarketCreation/MarketCreation';
 import ExploreMarkets from './ExploreMarkets';
@@ -15,10 +14,11 @@ import { PHASE } from 'constants/options';
 import ROUTES from 'constants/routes';
 import useExchangeRatesMarketDataQuery from '../../../queries/rates/useExchangeRatesMarketDataQuery';
 import { getIsAppReady } from '../../../redux/modules/app';
-import { fetchOrders, openOrdersMapCache } from '../../../queries/options/fetchMarketOrders';
 import { useLocation } from 'react-router-dom';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { RedirectDialog } from '../Royal/components/RedirectDialog/RedirectDialog';
+import WalletNotConnectedDialog from '../Royal/components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 
-let fetchOrdersInterval: NodeJS.Timeout;
 const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
@@ -26,17 +26,28 @@ export const Home: React.FC = () => {
     const location = useLocation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
-    const { synthsMap } = snxJSConnector;
-    const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
+            return openOrdersQuery.data;
+        }
+    }, [openOrdersQuery]);
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
-                ? marketsQuery.data.map((m) => ({ ...m, openOrders: openOrdersMap[m.address] }))
+                ? marketsQuery.data.map((m) => ({
+                      ...m,
+                      openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
+                      availableLongs: (openOrdersMap as any).get(m.address.toLowerCase())?.availableLongs ?? '0',
+                      availableShorts: (openOrdersMap as any).get(m.address.toLowerCase())?.availableShorts ?? '0',
+                  }))
                 : marketsQuery.data;
-            return sortOptionsMarkets(markets, synthsMap);
+            return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery, synthsMap, openOrdersMap]);
+    }, [marketsQuery, openOrdersMap]);
+    const [openRedirectDialog, setOpenRedirectDialog] = useState(false);
+    const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
@@ -53,21 +64,12 @@ export const Home: React.FC = () => {
     );
 
     useEffect(() => {
-        if (!openOrdersMap && !fetchOrdersInterval && networkId && optionsMarkets.length) {
-            fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
-            fetchOrdersInterval = setInterval(() => {
-                fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
-            }, 10000);
-        }
-    }, [networkId, optionsMarkets]);
-
-    useEffect(() => {
         if (location.search === '?anchor=overview') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
-        } else if (location.search === '?userFilter2=Olympics') {
+        } else if (location.search === '?userFilter2=custom') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
-        } else if (location.search === '?anchor=hot-markets') {
-            document.getElementById('hot-markets')?.scrollIntoView({ behavior: 'smooth' });
+        } else if (location.search === '?userFilter2=competition') {
+            document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
         } else {
         }
     }, [location]);
@@ -81,19 +83,26 @@ export const Home: React.FC = () => {
                             route={
                                 location.search === '?anchor=overview'
                                     ? ROUTES.Options.Overview
-                                    : location.search === '?anchor=hot-markets'
-                                    ? ROUTES.Options.Home
-                                    : location.search === '?userFilter2=Olympics'
-                                    ? ROUTES.Options.Olympics
+                                    : location.search === '?userFilter2=custom'
+                                    ? ROUTES.Options.CustomMarkets
+                                    : location.search === '?userFilter2=competition'
+                                    ? ROUTES.Options.CompetitionMarkets
                                     : ROUTES.Options.Overview
                             }
                         />
 
-                        {hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />}
+                        {hotMarkets.length > 0 && (
+                            <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />
+                        )}
 
                         <MarketCreation />
 
                         <ExploreMarkets optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
+                        <RedirectDialog open={openRedirectDialog} setOpen={setOpenRedirectDialog}></RedirectDialog>
+                        <WalletNotConnectedDialog
+                            open={openWalletNotConnectedDialog}
+                            setOpen={setOpenWalletNotConnectedDialog}
+                        ></WalletNotConnectedDialog>
                     </Wrapper>
                 </Background>
             ) : (

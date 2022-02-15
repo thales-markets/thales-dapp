@@ -7,9 +7,9 @@ import {
     SectionContentContainer,
     SectionHeader,
 } from '../../components';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, GradientText } from '../../../../../theme/common';
+import { GradientText } from '../../../../../theme/common';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import NetworkFees from '../../../components/NetworkFees';
@@ -18,19 +18,14 @@ import useEscrowThalesQuery from '../../../../../queries/staking/useEscrowThales
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/rootReducer';
 import { getIsAppReady } from '../../../../../redux/modules/app';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from '../../../../../redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import snxJSConnector from '../../../../../utils/snxJSConnector';
-import { gasPriceInWei, normalizeGasLimit } from '../../../../../utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from '../../../../../utils/network';
 import { ethers } from 'ethers';
-import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQuery';
 import { dispatchMarketNotification } from 'utils/options';
 import styled from 'styled-components';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 const Vest: React.FC = () => {
     const { t } = useTranslation();
@@ -39,42 +34,47 @@ const Vest: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const [isClaiming, setIsClaiming] = useState(false);
-    const [claimable, setClaimable] = useState('0');
+    const [claimable, setClaimable] = useState<number | string>('0');
+    const [rawClaimable, setRawClaimable] = useState<string>('0');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
     const { escrowThalesContract } = snxJSConnector as any;
 
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!escrowThalesContract,
     });
 
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
-
     useEffect(() => {
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
             setClaimable(escrowThalesQuery.data.claimable);
+            setRawClaimable(escrowThalesQuery.data.rawClaimable);
         }
     }, [escrowThalesQuery.isSuccess, escrowThalesQuery.data]);
 
     useEffect(() => {
+        const fetchL1Fee = async (escrowThalesContractWithSigner: any, toVest: any) => {
+            const txRequest = await escrowThalesContractWithSigner.populateTransaction.vest(toVest);
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             try {
                 const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
-                const toVest = ethers.utils.parseEther(claimable.toString());
-                const gasEstimate = await escrowThalesContractWithSigner.estimateGas.vest(toVest);
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        escrowThalesContractWithSigner.estimateGas.vest(rawClaimable),
+                        fetchL1Fee(escrowThalesContractWithSigner, rawClaimable),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await escrowThalesContractWithSigner.estimateGas.vest(rawClaimable);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -85,40 +85,36 @@ const Vest: React.FC = () => {
     }, [isWalletConnected, walletAddress, claimable, escrowThalesContract]);
 
     const handleVest = async () => {
-        if (gasPrice !== null) {
-            try {
-                setTxErrorMessage(null);
-                setIsClaiming(true);
-                const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
-                const toVest = ethers.utils.parseEther(claimable.toString());
+        try {
+            setTxErrorMessage(null);
+            setIsClaiming(true);
+            const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
 
-                const tx = (await escrowThalesContractWithSigner.vest(toVest, {
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit,
-                })) as ethers.ContractTransaction;
-                const txResult = await tx.wait();
+            const tx = (await escrowThalesContractWithSigner.vest(rawClaimable, {
+                gasLimit: MAX_L2_GAS_LIMIT,
+            })) as ethers.ContractTransaction;
+            const txResult = await tx.wait();
 
-                if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.vesting.vest.confirmation-message'));
-                    setClaimable('0');
-                    setIsClaiming(false);
-                }
-            } catch (e) {
-                console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            if (txResult && txResult.transactionHash) {
+                dispatchMarketNotification(t('options.earn.vesting.vest.confirmation-message'));
+                setClaimable('0');
                 setIsClaiming(false);
             }
+        } catch (e) {
+            console.log(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsClaiming(false);
         }
     };
 
     const getVestButton = () => {
         return (
-            <Button onClick={handleVest} disabled={isClaiming || !+claimable} className="primary">
+            <DefaultSubmitButton onClick={handleVest} disabled={isClaiming || !+claimable}>
                 {!isClaiming
                     ? t('options.earn.vesting.vest.vest') + ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}`
                     : t('options.earn.vesting.vest.vesting') +
                       ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}...`}
-            </Button>
+            </DefaultSubmitButton>
         );
     };
 
@@ -136,7 +132,7 @@ const Vest: React.FC = () => {
                         {formatCurrencyWithKey(THALES_CURRENCY, claimable, 0, true)}
                     </GradientText>
                 </StyledClaimItem>
-                {<NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
+                {<NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />}
                 <ButtonContainer>{getVestButton()}</ButtonContainer>
                 <ValidationMessage
                     showValidation={txErrorMessage !== null}

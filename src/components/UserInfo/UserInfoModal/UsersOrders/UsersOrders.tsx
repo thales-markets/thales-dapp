@@ -2,9 +2,9 @@ import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import useUserOrdersQuery from 'queries/user/useUserOrdersQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { FlexDivCentered, Image, Text } from 'theme/common';
-import { OptionsMarkets, Trade } from 'types/options';
+import { OptionsMarkets, OrderData } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
@@ -19,12 +19,9 @@ import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-import { fetchOrders, openOrdersMapCache } from '../../../../queries/options/fetchMarketOrders';
 import ReactCountryFlag from 'react-country-flag';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import { useTranslation } from 'react-i18next';
-
-let fetchOrdersInterval: NodeJS.Timeout;
 
 type UsersOrdersProps = {
     optionsMarkets: OptionsMarkets;
@@ -44,47 +41,38 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
     const ordersQuery = useUserOrdersQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
-    const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
-
-    useEffect(() => {
-        if (!openOrdersMap && !fetchOrdersInterval && networkId && optionsMarkets.length) {
-            fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
-            fetchOrdersInterval = setInterval(() => {
-                fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
-            }, 10000);
-        }
-    }, [networkId, optionsMarkets]);
 
     const filteredOrders = useMemo(() => {
         if (ordersQuery.isSuccess) {
             return optionsMarkets.reduce((acc, market: any) => {
-                const openOrders = openOrdersMapCache?.[market.address] || 0;
-                if (openOrders > 0) {
-                    const userOrdersForMarket: [] = ordersQuery.data.records.reduce((temp: any, data: any) => {
-                        const rawOrder: Trade = data.order;
-                        const isBuy: boolean = rawOrder.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
+                if (market.phase === 'trading') {
+                    const userOrdersForMarket: [] = ordersQuery.data.reduce((temp: any, order: any) => {
+                        const odrerData: OrderData = order.data;
+                        const isBuy: boolean = odrerData.makerAsset.toLowerCase() === SynthsUSD.address.toLowerCase();
                         let isLong = false;
                         if (
-                            (isBuy && market.longAddress.toLowerCase() === rawOrder.takerToken.toLowerCase()) ||
-                            (!isBuy && market.longAddress.toLowerCase() === rawOrder.makerToken.toLowerCase())
+                            (isBuy && market.longAddress.toLowerCase() === odrerData.takerAsset.toLowerCase()) ||
+                            (!isBuy && market.longAddress.toLowerCase() === odrerData.makerAsset.toLowerCase())
                         ) {
                             isLong = true;
                         } else if (
-                            (isBuy && market.shortAddress.toLowerCase() === rawOrder.takerToken.toLowerCase()) ||
-                            (!isBuy && market.shortAddress.toLowerCase() === rawOrder.makerToken.toLowerCase())
+                            (isBuy && market.shortAddress.toLowerCase() === odrerData.takerAsset.toLowerCase()) ||
+                            (!isBuy && market.shortAddress.toLowerCase() === odrerData.makerAsset.toLowerCase())
                         ) {
                             isLong = false;
                         } else {
                             return temp;
                         }
-                        const displayOrder = isBuy ? prepBuyOrder(data) : prepSellOrder(data);
+                        const displayOrder = isBuy ? prepBuyOrder(order) : prepSellOrder(order);
 
-                        temp.push({
-                            ...displayOrder,
-                            market,
-                            isBuy,
-                            isLong,
-                        });
+                        if (displayOrder.displayOrder.timeRemaining >= Date.now()) {
+                            temp.push({
+                                ...displayOrder,
+                                market,
+                                isBuy,
+                                isLong,
+                            });
+                        }
                         return temp;
                     }, []);
                     acc.push(...userOrdersForMarket);
@@ -153,10 +141,7 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                     </FlexDivCentered>
                     <Text className="text-xxs" style={{ flex: 2 }}>
                         {order.market.customMarket ? (
-                            <Image
-                                style={{ width: 32, height: 32 }}
-                                src={eventToIcon(order.market.eventName as any)}
-                            ></Image>
+                            <Image style={{ width: 32, height: 32 }} src={eventToIcon(order.market.eventName as any)} />
                         ) : (
                             formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)
                         )}

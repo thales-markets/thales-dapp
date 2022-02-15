@@ -2,33 +2,16 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const escrowThales = {
     addresses: {
-        [NetworkId.Mainnet]: '0x8d3703d4dED77473E632dEf20002DAdC86bf4AAD',
-        [NetworkId.Ropsten]: '0x9b960789E6C56192D70a0167bDc7027fFC7F2E58',
+        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0xcE9c1aAb41b18b24355138776186484B260B9cf0',
+        [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
-        [NetworkId['Kovan-Ovm']]: '', // TODO: kovan-ovm remove or implement
+        [NetworkId['Mainnet-Ovm']]: '0xa25816b9605009aa446d4d597F0AA46FD828f056',
+        [NetworkId['Kovan-Ovm']]: '0xcCD32f7EB77574bb6929e2dA9CE6c608E45BA54F',
     },
     abi: [
-        {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_vestingToken',
-                    type: 'address',
-                },
-            ],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'constructor',
-        },
         {
             anonymous: false,
             inputs: [
@@ -125,6 +108,19 @@ export const escrowThales = {
                 {
                     indexed: false,
                     internalType: 'address',
+                    name: 'thalesStakingRewardsPool',
+                    type: 'address',
+                },
+            ],
+            name: 'ThalesStakingRewardsPoolChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
                     name: 'account',
                     type: 'address',
                 },
@@ -147,6 +143,21 @@ export const escrowThales = {
                     internalType: 'uint256',
                     name: '',
                     type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'ThalesStakingRewardsPool',
+            outputs: [
+                {
+                    internalType: 'contract IThalesStakingRewardsPool',
+                    name: '',
+                    type: 'address',
                 },
             ],
             payable: false,
@@ -346,6 +357,35 @@ export const escrowThales = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [],
+            name: 'initNonReentrant',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+                {
+                    internalType: 'address',
+                    name: '_vestingToken',
+                    type: 'address',
+                },
+            ],
+            name: 'initialize',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
             name: 'lastPauseTime',
@@ -445,12 +485,12 @@ export const escrowThales = {
             constant: false,
             inputs: [
                 {
-                    internalType: 'address payable',
-                    name: 'account',
+                    internalType: 'address',
+                    name: 'AirdropContract',
                     type: 'address',
                 },
             ],
-            name: 'selfDestruct',
+            name: 'setAirdropContract',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -461,11 +501,11 @@ export const escrowThales = {
             inputs: [
                 {
                     internalType: 'address',
-                    name: 'AirdropContract',
+                    name: '_owner',
                     type: 'address',
                 },
             ],
-            name: 'setAirdropContract',
+            name: 'setOwner',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -496,6 +536,21 @@ export const escrowThales = {
                 },
             ],
             name: 'setStakingThalesContract',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_thalesStakingRewardsPool',
+                    type: 'address',
+                },
+            ],
+            name: 'setThalesStakingRewardsPool',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -565,6 +620,21 @@ export const escrowThales = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'proxyAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'transferOwnershipAtInit',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {

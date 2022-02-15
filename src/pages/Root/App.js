@@ -1,40 +1,50 @@
-import React, { useEffect, lazy, Suspense, useState } from 'react';
-import { Router, Switch, Route, Redirect } from 'react-router-dom';
-import ROUTES from '../../constants/routes';
-import MainLayout from '../../components/MainLayout';
-import { QueryClientProvider } from 'react-query';
-import { getEthereumNetwork, isNetworkSupported, SUPPORTED_NETWORKS } from 'utils/network';
-import snxJSConnector from 'utils/snxJSConnector';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateNetworkSettings, updateWallet, getNetworkId } from 'redux/modules/wallet';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { getIsAppReady, setAppReady } from 'redux/modules/app';
-import queryConnector from 'utils/queryConnector';
-import Loader from 'components/Loader';
-import { initOnboard } from 'config/onboard';
-import { ethers } from 'ethers';
-import useLocalStorage from 'hooks/useLocalStorage';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import onboardConnector from 'utils/onboardConnector';
-import { history } from 'utils/routes';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import { loadProvider } from '@synthetixio/providers';
+import Loader from 'components/Loader';
+import { initOnboard } from 'config/onboard';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import useLocalStorage from 'hooks/useLocalStorage';
+import EarnPage from 'pages/Options/Earn/Earn.tsx';
+import GamePage from 'pages/Options/Game/Game.tsx';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
-import EarnPage from 'pages/Options/Earn/Earn.tsx';
+import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
+import ThalesRoyal from 'pages/Options/Royal/ThalesRoyal';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, Route, Router, Switch } from 'react-router-dom';
+import { getIsAppReady, setAppReady } from 'redux/modules/app';
+import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
+import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import onboardConnector from 'utils/onboardConnector';
+import queryConnector from 'utils/queryConnector';
+import { history } from 'utils/routes';
+import snxJSConnector from 'utils/snxJSConnector';
+import MainLayout from '../../components/MainLayout';
+import ROUTES from '../../constants/routes';
+import GovernancePage from 'pages/Governance';
+import TradeHistory from 'pages/Options/TradeHistory';
+import AmmMining from 'pages/Options/AmmMining';
+import AmmReporting from '../Options/AmmReporting';
+import Token from '../V2/articles/Token';
+import Governance from '../V2/articles/Governance';
+import Whitepaper from '../V2/articles/Whitepaper';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../Home'));
+const Home = lazy(() => import('../V2/Home'));
 const OptionsHome = lazy(() => import('../Options/Home'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
-
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
 
-    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false });
+    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
     queryConnector.setQueryClient();
 
@@ -44,11 +54,14 @@ const App = () => {
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
                 if (!snxJSConnector.initialized) {
-                    const provider = new ethers.providers.InfuraProvider(
+                    const provider = loadProvider({
                         networkId,
-                        process.env.REACT_APP_INFURA_PROJECT_ID
-                    );
-                    snxJSConnector.setContractSettings({ networkId, provider });
+                        infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
+                        provider: window.ethereum,
+                    });
+                    const useOvm = getIsOVM(networkId);
+
+                    snxJSConnector.setContractSettings({ networkId, provider, useOvm });
                 }
                 dispatch(setAppReady());
             } catch (e) {
@@ -67,65 +80,58 @@ const App = () => {
                     dispatch(updateWallet({ walletAddress: walletAddress }));
                 },
                 network: (networkId) => {
-                    if (networkId && isNetworkSupported(networkId)) {
-                        if (onboardConnector.onboard.getState().wallet.provider) {
-                            const provider = new ethers.providers.Web3Provider(
-                                onboardConnector.onboard.getState().wallet.provider
-                            );
-                            const signer = provider.getSigner();
+                    if (networkId) {
+                        if (isNetworkSupported(networkId)) {
+                            if (onboardConnector.onboard.getState().wallet.provider) {
+                                const provider = loadProvider({
+                                    provider: onboardConnector.onboard.getState().wallet.provider,
+                                });
+                                const signer = provider.getSigner();
+                                const useOvm = getIsOVM(networkId);
 
-                            snxJSConnector.setContractSettings({
-                                networkId,
-                                provider,
-                                signer,
-                            });
-                        } else {
-                            snxJSConnector.setContractSettings({ networkId });
+                                snxJSConnector.setContractSettings({
+                                    networkId,
+                                    provider,
+                                    signer,
+                                    useOvm,
+                                });
+                            } else {
+                                const useOvm = getIsOVM(networkId);
+                                snxJSConnector.setContractSettings({ networkId, useOvm });
+                            }
+
+                            onboardConnector.onboard.config({ networkId });
                         }
-
-                        onboardConnector.onboard.config({ networkId });
-
                         dispatch(
                             updateNetworkSettings({
                                 networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
-                            })
-                        );
-                    } else {
-                        dispatch(
-                            updateNetworkSettings({
-                                networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                             })
                         );
                     }
                 },
                 wallet: async (wallet) => {
                     if (wallet.provider) {
-                        const provider = new ethers.providers.Web3Provider(wallet.provider);
+                        const provider = loadProvider({
+                            provider: wallet.provider,
+                        });
                         const signer = provider.getSigner();
                         const network = await provider.getNetwork();
                         const networkId = network.chainId;
+                        const useOvm = getIsOVM(networkId);
                         if (networkId && isNetworkSupported(networkId)) {
                             snxJSConnector.setContractSettings({
                                 networkId,
                                 provider,
                                 signer,
+                                useOvm,
                             });
-
-                            dispatch(
-                                updateNetworkSettings({
-                                    networkId,
-                                    networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
-                                })
-                            );
                             setSelectedWallet(wallet.name);
                         }
-
                         dispatch(
                             updateNetworkSettings({
                                 networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                             })
                         );
                     } else {
@@ -140,7 +146,9 @@ const App = () => {
     // load previously saved wallet
     useEffect(() => {
         if (onboardConnector.onboard && selectedWallet) {
-            onboardConnector.onboard.walletSelect(selectedWallet);
+            // backward compatible for old wallet selection logic;
+            const sWallet = selectedWallet === 'MetaMask' ? 'Browser Wallet' : selectedWallet;
+            onboardConnector.onboard.walletSelect(sWallet);
         }
     }, [isAppReady, onboardConnector.onboard, selectedWallet]);
 
@@ -148,12 +156,12 @@ const App = () => {
         if (e) {
             return;
         }
-        setSnackbarDetails({ ...snackbarDetails, isOpen: false });
+        setSnackbarDetails({ ...snackbarDetails, type: 'success', isOpen: false });
     };
 
     useEffect(() => {
         const handler = (e) => {
-            setSnackbarDetails({ message: e.detail.text, isOpen: true });
+            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
         };
         document.addEventListener('market-notification', handler);
         return () => {
@@ -166,21 +174,71 @@ const App = () => {
             <Suspense fallback={<Loader />}>
                 <Router history={history}>
                     <Switch>
+                        <Route exact path={ROUTES.Options.Royal}>
+                            <MainLayout>
+                                <ThalesRoyal />
+                            </MainLayout>
+                        </Route>
+
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <MainLayout>
                                 <OptionsCreateMarket />
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.Leaderboard}>
-                            <MainLayout>
-                                <LeaderboardPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.Leaderboard}>
+                                <MainLayout>
+                                    <LeaderboardPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
                                 <QuickTradingPage />
+                            </MainLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.TradeHistory}>
+                            <MainLayout>
+                                <TradeHistory />
+                            </MainLayout>
+                        </Route>
+
+                        {isL2 && (
+                            <Route exact path={ROUTES.Options.AmmMining}>
+                                <MainLayout>
+                                    <AmmMining />
+                                </MainLayout>
+                            </Route>
+                        )}
+
+                        <Route exact path={ROUTES.Options.AmmReporting}>
+                            <MainLayout>
+                                <AmmReporting />
+                            </MainLayout>
+                        </Route>
+
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.QuickTradingCompetition}>
+                                <MainLayout>
+                                    <QuickTradingCompetitionPage />
+                                </MainLayout>
+                            </Route>
+                        )}
+                        <Route
+                            exact
+                            path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
+                            render={(routeProps) => (
+                                <MainLayout>
+                                    <GovernancePage {...routeProps} />
+                                </MainLayout>
+                            )}
+                        />
+                        <Route exact path={ROUTES.Options.Game}>
+                            <MainLayout>
+                                <GamePage />
                             </MainLayout>
                         </Route>
 
@@ -211,7 +269,21 @@ const App = () => {
                                 <Home />
                             </MainLayout>
                         </Route>
-
+                        <Route exact path={ROUTES.Article.Token}>
+                            <MainLayout>
+                                <Token />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Governance}>
+                            <MainLayout>
+                                <Governance />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Whitepaper}>
+                            <MainLayout>
+                                <Whitepaper />
+                            </MainLayout>
+                        </Route>
                         <Route>
                             <Redirect to={ROUTES.Options.Home} />
                             <MainLayout>
@@ -230,7 +302,7 @@ const App = () => {
                     }}
                     autoHideDuration={5000}
                 >
-                    <Alert elevation={6} variant="filled" severity="success">
+                    <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
                         {snackbarDetails.message}
                     </Alert>
                 </Snackbar>

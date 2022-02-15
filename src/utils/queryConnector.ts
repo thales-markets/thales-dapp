@@ -1,3 +1,4 @@
+import { SpaceKey } from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import { QueryClient } from 'react-query';
 import { NetworkId } from 'utils/network';
@@ -53,8 +54,8 @@ export const refetchRetroAirdrop = (walletAddress: string, networkId: NetworkId)
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.RetroAirdrop(walletAddress, networkId));
 };
 
-export const refetchOngoingAirdrop = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.OngoingAirdrop(walletAddress, networkId));
+export const refetchMigratedRewards = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.MigratedRewards(walletAddress, networkId));
 };
 
 export const refetchVestingBalance = (walletAddress: string, networkId: NetworkId) => {
@@ -63,6 +64,33 @@ export const refetchVestingBalance = (walletAddress: string, networkId: NetworkI
 
 export const refetchUserTokenTransactions = (walletAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Transactions(walletAddress, networkId));
+};
+
+export const refetchUserBalance = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Synths(walletAddress, networkId));
+};
+
+export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress: string) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Governance.Proposal(spaceKey, hash, walletAddress));
+};
+
+export const refetchAmmData = (walletAddress: string, marketAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.BinaryOptions.AccountMarketInfo(marketAddress, walletAddress)
+    );
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Synths(walletAddress, networkId));
+};
+
+export const refetchTokenQueries = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Staking.Thales(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Staking.Escrow(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Thales(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.StakingRewards(walletAddress, networkId));
+};
+
+export const refetchLPStakingQuery = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.LPStaking(walletAddress, networkId));
 };
 
 export default queryConnector;

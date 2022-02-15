@@ -104,6 +104,7 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
                             {tabContent.map((tab) => (
                                 <TradeFilterButton
                                     key={tab.id}
+                                    // disabled={tab.id === 'market'}
                                     onClick={() => setActiveTab(tab)}
                                     className={tab.id === activeTab.id ? 'selected' : ''}
                                     name={tab.id}

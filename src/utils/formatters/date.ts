@@ -6,7 +6,7 @@ export const formatTxTimestamp = (timestamp: number | Date) => format(timestamp,
 export const toJSTimestamp = (timestamp: number) => timestamp * 1000;
 
 export const formatShortDate = (date: Date | number) => format(date, 'MMM d, yyyy');
-export const formatShortDateWithTime = (date: Date | number) => format(date, 'MMM d, yyyy H:mm a');
+export const formatShortDateWithTime = (date: Date | number) => format(date, 'MMM d, yyyy | HH:mm');
 
 export const secondsToTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -20,6 +20,7 @@ export const secondsToTime = (seconds: number) => {
 export const formattedDuration = (
     duration: Duration,
     dateTimeTranslationMap: any,
+    showSeconds = true,
     delimiter = ' ',
     firstTwo = false
 ) => {
@@ -35,7 +36,19 @@ export const formattedDuration = (
         }`;
     }
     if (duration.days) {
-        return `${duration.days} ${duration.days > 1 ? dateTimeTranslationMap['days'] : dateTimeTranslationMap['day']}`;
+        if (duration.days === 1 && duration.hours === 0) {
+            return `24 ${dateTimeTranslationMap['hours']}`;
+        }
+
+        return `${duration.days} ${
+            duration.days > 1 ? dateTimeTranslationMap['days'] : dateTimeTranslationMap['day']
+        } ${
+            duration.hours
+                ? `${duration.hours} ${
+                      duration.hours > 1 ? dateTimeTranslationMap['hours'] : dateTimeTranslationMap['hour']
+                  }`
+                : ''
+        }`;
     }
     if (duration.hours) {
         return `${duration.hours} ${
@@ -43,14 +56,29 @@ export const formattedDuration = (
         }`;
     }
     if (duration.minutes) {
-        if (duration.minutes > 9) {
-            return `${duration.minutes} ${dateTimeTranslationMap['minutes']}`;
+        if (duration.minutes > 9 || !showSeconds) {
+            return `${duration.minutes} ${
+                duration.minutes > 1 ? dateTimeTranslationMap['minutes'] : dateTimeTranslationMap['minute']
+            }`;
         }
         formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
     }
     if (duration.seconds != null) {
         formatted.push(`${duration.seconds}${dateTimeTranslationMap['seconds-short']}`);
     }
+    return (firstTwo ? formatted.slice(0, 2) : formatted).join(delimiter);
+};
+
+export const formattedDurationFull = (
+    duration: Duration,
+    dateTimeTranslationMap: any,
+    delimiter = ' ',
+    firstTwo = false
+) => {
+    const formatted = [];
+    formatted.push(`${duration.days}${dateTimeTranslationMap['days-short']}`);
+    formatted.push(`${duration.hours}${dateTimeTranslationMap['hours-short']}`);
+    formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
     return (firstTwo ? formatted.slice(0, 2) : formatted).join(delimiter);
 };
 
@@ -67,3 +95,5 @@ export const convertUTCToLocalDate = (date: Date) => {
 export const convertLocalToUTCDate = (date: Date) => {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()));
 };
+
+export const getCurrentTimestampSeconds = () => Date.now() / 1000;

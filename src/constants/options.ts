@@ -72,8 +72,8 @@ export enum OrderbookFilterEnum {
     BUY = 'buy',
     SELL = 'sell',
 }
-export enum Zero0xErrorCode {
-    VALIDATION_FAILED = 100,
+export enum OneInchErrorReason {
+    INSUFFICIENT_LIQUIDITY = 'insufficient liquidity',
     TRANSACTION_INVALID = 105,
 }
 
@@ -84,3 +84,8 @@ export enum Zero0xErrorReason {
 }
 
 export const ORDERBOOK_AMOUNT_THRESHOLD = 0.01;
+
+export const MINIMUM_AMM_LIQUIDITY = 2;
+export const MAX_L2_GAS_LIMIT = 15000000;
+export const L2_EXERCISE_GAS_LIMIT = 1000000;
+export const MIN_SCEW_IMPACT = 0.02;

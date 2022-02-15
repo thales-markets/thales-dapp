@@ -2,6 +2,14 @@
     &__logoWrapper {
         display: none !important;
     }
+    &__nav {
+        overflow: auto !important;
+        height: 100%;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            width: 0;
+        }
+    }
 }
 
 @media screen and (max-width: 1024px) {
@@ -16,7 +24,14 @@
                 display: block;
                 right: 0;
                 left: unset !important;
-                width: 256px !important;
+                width: 290px !important;
+                height: 100%;
+                overflow: auto !important;
+                z-index: 1001 !important;
+                scrollbar-width: none;
+                &::-webkit-scrollbar {
+                    width: 0px;
+                }
                 span {
                     display: block !important;
                 }
@@ -24,8 +39,13 @@
         }
         &__logoWrapper {
             display: flex !important;
+            &__burger {
+                right: 10px !important;
+            }
             &__logo {
                 height: 32px !important;
+                width: 134px !important;
+                margin-right: 6px !important;
             }
         }
     }
@@ -33,18 +53,23 @@
 
 @media screen and (max-width: 767px) {
     .dapp-header {
-        height: 120px !important;
         padding-right: 0 !important;
         flex-direction: column;
-        .dapp-header__logoWrapper__burger {
-            right: 10px;
-        }
 
         margin-top: 40px !important;
         &__logoWrapper {
             align-self: flex-start;
             &__burger {
-                top: 40px !important;
+                top: 44px !important;
+            }
+        }
+        &__buttonsWrapper {
+            flex-direction: column-reverse;
+            .dapp-header__userInfo {
+                margin: 20px 0;
+            }
+            button {
+                margin: auto;
             }
         }
     }

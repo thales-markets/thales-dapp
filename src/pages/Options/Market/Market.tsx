@@ -5,7 +5,7 @@ import Loader from 'components/Loader';
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import OptionsPriceChart from './OptionsPriceChart';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
-import { getIsAppReady, set0xReady } from 'redux/modules/app';
+import { getIsAppReady } from 'redux/modules/app';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
@@ -17,14 +17,20 @@ import 'react-resizable/css/styles.css';
 import './temp.css';
 import YourTransactions from './TransactionsCard/YourTransactions';
 import RecentTransactions from './TransactionsCard/RecentTransactions';
-import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import TradeOptions from './TradeOptions';
 import Orderbook from './TradeOptions/Orderbook';
 import MarketWidget from './components/MarketWidget';
 import { MarketWidgetKey } from 'constants/ui';
-import { getVisibilityMap, setMarketWidgetLayout, getCurrentLayout, getFullLayout } from 'redux/modules/marketWidgets';
+import {
+    getVisibilityMap,
+    setMarketWidgetLayout,
+    getCurrentLayout,
+    getFullLayout,
+    getAmmSelected,
+    setAmmSelected,
+} from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
-import { FlexDivCentered, FlexDivColumn, Wrapper } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered, Wrapper } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketOverview from './components/MarketOverview';
 import styled from 'styled-components';
@@ -34,12 +40,18 @@ import TradingView from './TradingView';
 import ROUTES from 'constants/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { ethers } from 'ethers';
 import CustomMarketResults from './CustomMarketResults';
 import { useLocation } from 'react-router-dom';
 import './media.scss';
 import { MarketOverviewMobile } from './components/MarketOverview/MarketOverviewMobile';
 import MarketMobile from './MarketMobile';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
+import AMM from './AMM';
+import { getIsOVM, NetworkId } from 'utils/network';
+import { BetaBadge } from './components';
+import { buildHref, navigateTo } from '../../../utils/routes';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -53,38 +65,79 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const dispatch = useDispatch();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const visibilityMap = useSelector((state: RootState) => getVisibilityMap(state));
     const currentLayout = useSelector((state: RootState) => getCurrentLayout(state));
     const fullLayout = useSelector((state: RootState) => getFullLayout(state));
     const [isMobileView, setIsMobileView] = useState(false);
     const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
-
     const [layout, setLayout] = useState(currentLayout);
+    const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
+    const [currentNetwork, setCurrentNetwork] = useState<null | NetworkId>(null);
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
     });
 
     useEffect(() => {
-        if (marketQuery.isSuccess && marketQuery.data) {
-            if (marketQuery.data.customMarket) {
-                const sportFeedContract = new ethers.Contract(
-                    marketQuery.data.oracleAdress,
-                    sportFeedOracleContract.abi,
-                    (snxJSConnector as any).provider
-                );
-                Promise.all([
-                    sportFeedContract.targetName(),
-                    sportFeedContract.eventName(),
-                    sportFeedContract.targetOutcome(),
-                ]).then((data) => {
-                    setOptionsMarket({ ...marketQuery.data, country: data[0], eventName: data[1], outcome: data[2] });
-                });
-            } else {
-                setOptionsMarket(marketQuery.data);
-            }
+        if (!currentNetwork) {
+            setCurrentNetwork(networkId);
+        } else {
+            navigateTo(buildHref(ROUTES.Options.Home));
         }
+    }, [networkId]);
+
+    useEffect(() => {
+        const fetchMarketData = async () => {
+            if (marketQuery.isSuccess && marketQuery.data) {
+                if (marketQuery.data.customMarket) {
+                    try {
+                        const sportFeedContract = new ethers.Contract(
+                            marketQuery.data.oracleAdress,
+                            sportFeedOracleContract.abi,
+                            (snxJSConnector as any).provider
+                        );
+                        const data: any = await Promise.all([
+                            sportFeedContract.targetName(),
+                            sportFeedContract.eventName(),
+                            sportFeedContract.targetOutcome(),
+                        ]);
+                        setOptionsMarket({
+                            ...marketQuery.data,
+                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
+                            eventName: data[1],
+                            outcome: data[2],
+                        });
+                    } catch (e) {
+                        const sportFeedContract = new ethers.Contract(
+                            marketQuery.data.oracleAdress,
+                            ethBurnedOracleInstance.abi,
+                            (snxJSConnector as any).provider
+                        );
+                        const data: any = await Promise.all([
+                            sportFeedContract.targetName(),
+                            sportFeedContract.eventName(),
+                            sportFeedContract.targetOutcome(),
+                        ]);
+                        setOptionsMarket({
+                            ...marketQuery.data,
+                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
+                            eventName: data[1],
+                            outcome:
+                                data[1] === 'Flippening Markets' || data[1] === 'ETH/BTC market cap ratio'
+                                    ? bigNumberFormatter(data[2]).toString()
+                                    : Number(data[2]).toString(),
+                        });
+                    }
+                } else {
+                    setOptionsMarket(marketQuery.data);
+                }
+            } else if (marketQuery.data === null) {
+                navigateTo(buildHref(ROUTES.Options.Home));
+            }
+        };
+        fetchMarketData();
     }, [marketQuery.isSuccess]);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketAddress, walletAddress, {
@@ -144,7 +197,18 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         widget: ReactElement,
         background?: string
     ) => {
-        if (isMarketWidgetVisible(widgetKey, visibilityMap, phase, isCustomMarket, isWalletConnected, false)) {
+        if (
+            isMarketWidgetVisible(
+                widgetKey,
+                visibilityMap,
+                phase,
+                isCustomMarket,
+                isWalletConnected,
+                false,
+                ammSelected,
+                isL2
+            )
+        ) {
             widgets.push(
                 <div key={widgetKey} data-grid={fullLayout.find((item: Layout) => item.i === widgetKey)}>
                     <MarketWidget background={background}>{widget}</MarketWidget>
@@ -155,6 +219,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     const renderWidgets = (optionsMarket: OptionsMarketInfo) => {
         const widgets: ReactElement[] = [];
+        wrapWidget(optionsMarket.phase, optionsMarket.customMarket, widgets, MarketWidgetKey.AMM, <AMM />, '#0A2E66');
         wrapWidget(
             optionsMarket.phase,
             optionsMarket.customMarket,
@@ -215,18 +280,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         return widgets;
     };
 
-    useEffect(() => {
-        if (optionsMarket && optionsMarket.phase === 'trading') {
-            // For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering.
-            // Timeout added to delay initialization and not block page rendering.
-            setTimeout(() => {
-                dispatch(set0xReady(false));
-                contractWrappers0xConnector.setExchangeProxy(isWalletConnected, networkId);
-                dispatch(set0xReady(true));
-            }, 500);
-        }
-    }, [networkId, isWalletConnected, marketQuery.isSuccess, optionsMarket]);
-
     const handleResize = () => {
         if (window.innerWidth <= 900) {
             setIsMobileView(true);
@@ -271,9 +324,35 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         ) : (
                             <MarketOverview optionsMarket={optionsMarket} />
                         )}
-
+                        {optionsMarket.phase === 'trading' && isL2 && (
+                            <SwitchWrapper>
+                                <SwitchOption
+                                    onClick={() => {
+                                        dispatch(setAmmSelected(true));
+                                    }}
+                                >
+                                    {t('options.market.header.amm')}
+                                    <BetaBadge>{t('amm.beta')}</BetaBadge>
+                                </SwitchOption>
+                                <BorderedWrapper
+                                    ammSelected={ammSelected}
+                                    onClick={() => {
+                                        dispatch(setAmmSelected(!ammSelected));
+                                    }}
+                                >
+                                    <SwitchDot />
+                                </BorderedWrapper>
+                                <SwitchOption
+                                    onClick={() => {
+                                        dispatch(setAmmSelected(false));
+                                    }}
+                                >
+                                    {t('options.market.header.orderbook')}
+                                </SwitchOption>
+                            </SwitchWrapper>
+                        )}
                         <MainContentContainer className="market__container">
-                            {optionsMarket.phase === 'trading' && (
+                            {optionsMarket.phase === 'trading' && (!ammSelected || !isL2) && (
                                 <OptionsTabContainer className="market__container__tabs">
                                     {optionsTabContent.map((tab) => (
                                         <OptionsTab
@@ -299,6 +378,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                 className="market__gridWrapper"
                                 phase={optionsMarket.phase}
                                 optionsActiveTab={optionsActiveTab.id}
+                                ammSelected={ammSelected}
                             >
                                 {isMobileView ? (
                                     <MarketMobile
@@ -380,7 +460,7 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; isLong: boolean 
 
 const OptionsIcon = styled.img``;
 
-const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string }>`
+const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string; ammSelected: boolean }>`
     background-color: #0a2e66;
     border-radius: ${(props) =>
         props.phase === 'trading'
@@ -391,6 +471,50 @@ const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string 
     position: relative;
     top: ${(props) => (props.phase === 'trading' ? '-15px' : '0')};
     z-index: 3;
+    padding-top: ${(props) => (props.ammSelected ? 15 : 0)}px;
+`;
+
+const SwitchWrapper = styled(FlexDiv)`
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 13px;
+    text-align: center;
+    letter-spacing: 0.4px;
+    color: #ffffff;
+    margin-bottom: 20px;
+`;
+
+const BorderedWrapper = styled(FlexDivRow)<{ ammSelected: boolean }>`
+    flex-direction: ${(props) => (props.ammSelected ? 'row' : 'row-reverse')};
+    height: 32px;
+    width: 64px;
+    border: 2px solid #00f9ff;
+    border-radius: 16px;
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-left: 6px;
+    margin-right: 6px;
+    align-items: center;
+    &:hover {
+        cursor: pointer;
+    }
+`;
+
+const SwitchDot = styled.span`
+    height: 20px;
+    width: 20px;
+    background: #f6f6fe;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0px 4px 7px rgba(17, 20, 45, 0.402414);
+`;
+
+const SwitchOption = styled(FlexDivRowCentered)`
+    &:hover {
+        cursor: pointer;
+    }
 `;
 
 export default Market;

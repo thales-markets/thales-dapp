@@ -22,8 +22,8 @@ const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, opt
             > = {};
 
             const [balanceResults, totalBalanceResults] = await Promise.all([
-                (snxJSConnector as any).synthSummaryUtilContract.synthsBalances(walletAddress),
-                (snxJSConnector as any).synthSummaryUtilContract.totalSynthsInKey(
+                (snxJSConnector as any).snxJS?.contracts.SynthUtil.synthsBalances(walletAddress),
+                (snxJSConnector as any).snxJS?.contracts.SynthUtil.totalSynthsInKey(
                     walletAddress,
                     bytesFormatter(SYNTHS_MAP.sUSD)
                 ),

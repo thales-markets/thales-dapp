@@ -36,7 +36,7 @@ const FiltersWrapper = styled.div`
     &.disabled:hover {
         background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
     }
-    margin: 24px;
+    margin: 24px 20px;
 `;
 
 const BackgroundWrapper = styled.div`

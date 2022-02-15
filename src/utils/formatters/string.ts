@@ -9,3 +9,6 @@ export const formatCurrencyPair = (baseCurrencyKey: CurrencyKey, quoteCurrencyKe
 export const strPadLeft = (string: string | number, pad: string, length: number) => {
     return (new Array(length + 1).join(pad) + string).slice(-length);
 };
+
+export const truncateText = (text: string, maxLength: number) =>
+    text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;

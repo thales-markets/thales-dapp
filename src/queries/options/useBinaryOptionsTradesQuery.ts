@@ -22,6 +22,7 @@ const mapToOptionTransactions = (
                 amount: orderSide === 'buy' ? trade.takerAmount : trade.makerAmount,
                 price:
                     orderSide === 'buy' ? trade.makerAmount / trade.takerAmount : trade.takerAmount / trade.makerAmount,
+                blockNumber: trade.blockNumber,
             };
         }
     );

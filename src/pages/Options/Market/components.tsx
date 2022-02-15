@@ -50,7 +50,7 @@ export const Input = styled.input`
 
 export const InputLabel = styled.label`
     font-weight: bold;
-    font-size: 10px;
+    font-size: 9px;
     line-height: 16px;
     letter-spacing: 1px;
     color: #748bc6;
@@ -316,10 +316,13 @@ export const FilterButton = styled.button`
         border: 2px solid #00f9ff;
         color: #00f9ff;
     }
-    &.selected:hover {
+    &.selected:hover:not(:disabled) {
         background: rgba(1, 38, 81, 0.8);
         border: 2px solid #00f9ff;
         color: #b8c6e5;
+    }
+    @media (max-width: 767px) {
+        font-size: 12px;
     }
 `;
 
@@ -364,22 +367,31 @@ export const Divider = styled.hr`
 `;
 
 type TooltipIconProps = {
+    disableHoverListener?: boolean;
     title: React.ReactNode;
     children: any;
 };
 
-const StyledDarkTooltip = withStyles(() => ({
+const StyledRoyaleTooltip = withStyles(() => ({
     arrow: {
-        color: '#0A2E66',
+        color: 'var(--color-wrapper)',
+        width: '20px !important',
+        height: '16px !important',
+        marginLeft: '0 !important',
+        marginBottom: '-14px !important',
+        '&::before': {
+            border: '2px solid var(--color)',
+        },
     },
     tooltip: {
-        background: '#0A2E66',
+        background: 'var(--color-wrapper)',
         borderRadius: '10px',
+        border: '2px solid var(--color)',
         padding: '10px',
-        fontSize: '10px',
+        fontSize: '12px',
         lineHeight: '16px',
         letterSpacing: '0.4px',
-        color: '#F6F6FE',
+        color: 'var(--color)',
     },
 }))(MaterialTooltip);
 
@@ -399,16 +411,67 @@ const StyledLightTooltip = withStyles(() => ({
     },
 }))(MaterialTooltip);
 
-export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
-    <StyledLightTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+const StyledLightMediumTooltip = withStyles(() => ({
+    tooltip: {
+        padding: '8px 12px',
+        fontSize: '12px',
+    },
+}))(StyledLightTooltip);
+
+const StyledLandingPageTooltip = withStyles(() => ({
+    arrow: {
+        color: '#052040',
+    },
+    tooltip: {
+        background: '#6A7FB6',
+        borderRadius: '6px',
+        padding: '4px 10px',
+        fontSize: '10px',
+        fontWeight: 600,
+        lineHeight: '16px',
+        letterSpacing: '0.4px',
+        color: '#f7f7f7',
+        backgroundColor: '#052040',
+    },
+}))(MaterialTooltip);
+
+export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
+    <StyledLightTooltip
+        disableHoverListener={disableHoverListener}
+        title={<span>{title}</span>}
+        placement="top"
+        arrow={true}
+    >
         {children}
     </StyledLightTooltip>
 );
 
-export const DarkTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
-    <StyledDarkTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+export const RoyaleTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
+    <StyledRoyaleTooltip title={<span>{title}</span>} placement="top" arrow={true}>
         {children}
-    </StyledDarkTooltip>
+    </StyledRoyaleTooltip>
+);
+
+export const LightMediumTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
+    <StyledLightMediumTooltip
+        disableHoverListener={disableHoverListener}
+        title={<span>{title}</span>}
+        placement="top"
+        arrow={true}
+    >
+        {children}
+    </StyledLightMediumTooltip>
+);
+
+export const LandingPageTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
+    <StyledLandingPageTooltip
+        disableHoverListener={disableHoverListener}
+        title={<span>{title}</span>}
+        placement="top"
+        arrow={true}
+    >
+        {children}
+    </StyledLandingPageTooltip>
 );
 
 export const ProtocolFeeContainer = styled(FlexDivRow)`
@@ -436,4 +499,16 @@ export const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
 export const StyledInfoIcon = styled(InfoIcon)`
     cursor: pointer;
     margin-left: 10px;
+`;
+
+export const BetaBadge = styled.div`
+    background-color: #3cb55b;
+    border-radius: 5px;
+    color: #f6f6fe;
+    display: inline-block;
+    font-size: 10px;
+    line-height: 10px;
+    padding: 2px 4px;
+    margin-bottom: 15px;
+    margin-left: 2px;
 `;

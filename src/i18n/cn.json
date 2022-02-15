@@ -1,0 +1,1524 @@
+{
+    "header": {
+        "links": {
+            "faq": "常见问题",
+            "partners": "合作伙伴",
+            "community": "社区",
+            "blog": "博客",
+            "docs": "文档",
+            "tokenomics": "代币经济学",
+            "test": "测试",
+            "learn": {
+                "docs": "文档",
+                "title": "学习",
+                "guides": "指南",
+                "whitepaper": "白皮书"
+            },
+            "token": "代币",
+            "governance": "治理"
+        }
+    },
+    "user-info": {
+        "tabs": {
+            "my-markets": "参与的市场",
+            "my-open-orders": "我的未结订单",
+            "my-assets": "我的资产"
+        },
+        "table": {
+            "asset-col": "资产",
+            "strike-price-col": "执行价",
+            "maturity-date-col": "到期日",
+            "long-col": "sLONG",
+            "short-col": "sSHORT",
+            "pool-size-col": "交易池容量",
+            "amount-col": "数量",
+            "price-col": "价格",
+            "filled-col": "已成交",
+            "expires-col": "过期于",
+            "amm-size-col": "AMM流动性"
+        },
+        "wallet": {
+            "switch-wallet": "更换钱包",
+            "disconnect-wallet": "断开钱包链接",
+            "display-name": "显示名称",
+            "change-display-name": "变更显示名称",
+            "in-wallet": "钱包内",
+            "total-staked": "所有质押",
+            "total-escrowed": "所有锁仓"
+        }
+    },
+    "landing-page": {
+        "title": "参与交易收获乐趣",
+        "description": "在以太坊上创建、交易和行使二元期权",
+        "use-app": "dApp",
+        "launch": "发布应用程序",
+        "who-is-thales": "谁是泰勒斯？",
+        "thales-is1": "泰勒斯是一位出生于古希腊的思想家，他喜欢收集数据和研究自然现象，但由于贫穷而被其他人嘲笑哲学无用。",
+        "thales-is2": "有一年，泰勒斯通过对天体的研究，发现下一季橄榄收获将是丰收的。凭借他的知识，他为米利都的所有橄榄压榨机使用权支付押金，因为没有其他人出价，他以非常低的价格租用了这些压榨机。",
+        "thales-is3": "当橄榄收获后，橄榄压榨机的需求增长，他以更高的定价出租压榨机，赚了一大笔钱，成为<strong>第一个行使期权合同的人。</strong>",
+        "markets": {
+            "title": "二元期权市场",
+            "option1": "世界上任何人都可以不受任何限制地参与泰勒斯二元期权市场。",
+            "option2": "探索具有上限的简单直观的衍生品。",
+            "option3": "无许可、自托管和不受限。",
+            "view-markets": "查看市场"
+        },
+        "options": {
+            "title": "交易二元期权",
+            "option1": "二元期权使用户能够根据价格反馈对特定结果进行看涨或看跌操作。",
+            "option2": "了解你的赔率，抓住机会从趋势中获利或对冲波动性资产的风险。",
+            "option3": "交易、铸造和行使创新的二元期权！",
+            "view-markets": "开始交易"
+        },
+        "partners": {
+            "seed": "种子轮投资者",
+            "technical": "技术"
+        },
+        "get-started": {
+            "title": "要开始，您需要",
+            "first": "Web3钱包，比如说Metamask",
+            "second": "以太支付网络费用（也称为gas）",
+            "third": "Synth USD（sUSD），可直接从我们的 dApp 或使用"
+        },
+        "faq": {
+            "title": "常见问题",
+            "firstQ": "什么是二元期权？",
+            "firstA": "二元期权是一种简单直观的衍生品工具，在有限的风险环境中为多种市场提供收益，使风险管理更加精确。",
+            "secondQ": "THALES 代币的用途是什么？",
+            "secondA": "Thales DAO 治理代币（THALES）是用于治理 Thales 协议的标准 ERC-20 代币。 这些代币授予各自的利益相关者参与泰勒斯治理的权利。 通过这种方式，THALES 质押者代表了与协议开发相关的每一个关键决策的基础。 任何可能与协议相关的代币的其他效用，都可以由协议的社区治理结构决定和投票。",
+            "thirdQ": "用户需要在泰勒斯上创造或购买哪些资产？",
+            "thirdA": "合成美元，或sUSD，是泰勒斯目前唯一支持铸造或交换期权的资产。"
+        },
+        "discord": "加入Discord",
+        "q2": "它是如何工作的？",
+        "q4": "为什么这有关系？",
+        "q3": "它的结构如何？",
+        "language": "语言",
+        "integrations": "合作伙伴",
+        "learn-more": "了解更多",
+        "initiatives": "产品",
+        "newest-blog-posts": "最新的博客文章",
+        "a1": "泰勒斯（Thales）是一种以太坊协议，允许创建任何人都可以加入的点对点 <bold>同注分彩市场</bold>。项目作为全新链上博彩市场的基石，从<bold>基于订单簿的位置市场平台</bold>到<bold>生存博彩游戏。</bold>",
+        "q1": "什么是泰勒斯？",
+        "subtitle": "全新的链上、无需许可和非托管的同注分彩市场。",
+        "a2": "构成泰勒斯的智能合约集利用不可审查的 <bold>sUSD 作为抵押品</bold>、来自 <bold>Chainlink</bold> 数据馈送的市场结算的不可改变的事实来源，以及所有优势（速度、成本和安全性）以汇总为中心的网络，如 <bold>Optimism.</bold>",
+        "a3": "<bold>去中心化</bold> 是项目成长的关键。\n\n 这就是为什么 <bold>ThalesDAO</bold> 作为一个集体是协议的所有者，它通过由THALES代币持有者选举产生的 <bold>泰勒斯委员会<bold> 进行 <bold>治理</bold>。",
+        "a4": "因为建立在正确的基础上会吸引志同道合的人，他们非常关心开放金融的愿景。\n\n 在来自泰勒斯社区的聪明才智、才华横溢的灵魂和热情的人们的支持下，该协议每天都在不断迭代、经过实战考验并且更具弹性。\n\n 我们正朝着<bold>不可阻挡的方向前进。</bold>",
+        "footer": {
+            "privacy-policy": "隐私政策",
+            "terms-of-use": "使用条款",
+            "theme": "主题",
+            "language": "语言",
+            "etherscan": "以太扫描",
+            "brand-assets": "品牌资产",
+            "all-rights-reserved": "© {{year}} THALES DAO 保留所有权利。"
+        }
+    },
+    "maintenance-page": {
+        "title": "敬请关注，马上就来…",
+        "powered-by": "支持"
+    },
+    "common": {
+        "max": "最大",
+        "save": "保存",
+        "network-fee-gas": "网络gas费",
+        "gas-price-gwei": "gas（gwei）",
+        "gas-fee-info": "基于最新gas费和中等优先级的估计gas费。",
+        "gwei": "gwei",
+        "transaction": {
+            "view": "查看"
+        },
+        "contracts": {
+            "view": "查看合约"
+        },
+        "tx-status": {
+            "waiting": "等待",
+            "open": "打开",
+            "closed": "已关闭",
+            "closing": "结束",
+            "in": "转入",
+            "out": "转出",
+            "complete": "完成",
+            "pending": "待定",
+            "confirmed": "已确认",
+            "cancelled": "已取消",
+            "failed": "失败"
+        },
+        "wallet": {
+            "connect-your-wallet": "连接钱包",
+            "disclaimer-info": "连接钱包即表示您同意 Thales DAO 使用条款和隐私政策，并承认您已阅读并理解 Thales DAO 协议<a target=\"_blank\" href={{link}}>免责声明</a>"
+        },
+        "errors": {
+            "unknown-error-try-again": "提交后出现未知错误。请重试。",
+            "unknown-error-try-again-general": "出现未知错误。请重试。",
+            "insufficient-balance": "余额不足",
+            "insufficient-liquidity": "流动性不足",
+            "insufficient-liquidity-for-trade": "本次交易流动性不足",
+            "insufficient-order-amount": "订单金额不足",
+            "invalid-order-amount-max": "订单金额必须小于或等于{{max}}",
+            "enter-amount": "输入金额",
+            "enter-price": "输入价格",
+            "enter-valid-slippage": "输入有效滑点值",
+            "invalid-price": "无效价格",
+            "invalid-price-max": "价格不能高于${{max}}",
+            "invalid-amount-max": "金额不能高于{{max}}",
+            "insufficient-balance-wallet": "请确保您的钱包有足够的{{currencyKey}}",
+            "invalid-slippage": "无效滑点",
+            "max-limit-exceeded": "金额超过 AMM 上的可用金额",
+            "user-rejected-tx": "用户拒绝交易",
+            "insufficient-staking-balance": "质押余额不足"
+        },
+        "search": "搜索",
+        "buy": "买",
+        "sell": "出售",
+        "eg-val": "例如{{val}}",
+        "select-date": "选择日期",
+        "select": "选择",
+        "or": "或",
+        "enable-wallet-access": {
+            "approve-label": "批准{{currencyKey}}",
+            "approve-progress-label": "批准{{currencyKey}}…",
+            "approve-all-label": "全部批准",
+            "custom-amount-label": "自定义金额"
+        },
+        "sidebar": {
+            "trending-label": "趋势市场",
+            "overview-label": "市场概述",
+            "olympics-label": "奥运市场",
+            "custom-markets-label": "自定义市场",
+            "competition-markets-label": "竞赛市场",
+            "create-market-label": "创建市场",
+            "trade-label": "交易期权",
+            "maturity-label": "期权到期",
+            "leaderboard-label": "排行榜",
+            "quick-trading-label": "快速交易",
+            "quick-trading-label-competition": "竞赛订单",
+            "earn-label": "泰勒斯",
+            "royale-label": "泰勒斯鱿鱼游戏",
+            "governance-label": "治理",
+            "game-label": "米利都",
+            "trade-history-label": "交易历史",
+            "amm-mining-label": "AMM奖励",
+            "amm-reporting-label": "AMM报告",
+            "markets": "市场"
+        },
+        "coming-soon": "即将到来…",
+        "of": "之",
+        "here": "这里",
+        "sheet": "表",
+        "pagination": {
+            "page": "页",
+            "rows-per-page": "每页行数:"
+        },
+        "unsupported-network": {
+            "title": "哎呀！你在错的网络上！",
+            "description": "您在钱包中选择了错误的网络。 要继续，请切换到以太坊主网或乐观网络。",
+            "button": {
+                "mainnet": "切换到主网",
+                "optimism": "转为乐观"
+            }
+        }
+    },
+    "modals": {
+        "gwei": {
+            "placeholder": "自定义",
+            "table": {
+                "slow": "慢",
+                "safe": "安全",
+                "standard": "标准",
+                "average": "平均值",
+                "fast": "快",
+                "fastest": "最快"
+            }
+        }
+    },
+    "options": {
+        "phases": {
+            "all": "全部",
+            "trading": "交易",
+            "maturity": "到期日",
+            "expiry": "到期"
+        },
+        "trading-mode": {
+            "buy": "买",
+            "sell": "出售"
+        },
+        "filters-labels": {
+            "category": "类别",
+            "discover": "发现",
+            "sort-by": "排序 (最近)",
+            "option": "期权",
+            "show": "显示",
+            "search-placeholder": "试试 ETH",
+            "all": "全部",
+            "trading": "交易",
+            "maturity": "到期",
+            "expiry": "到期",
+            "my-markets": "我参与的市场",
+            "my-orders": "我的订单",
+            "my-assets": "我的资产",
+            "watchlist": "观察名单",
+            "recently-added": "最近添加",
+            "bitcoin": "Bitcoin",
+            "ethereum": "Ethereum",
+            "synthetix": "Synthetix",
+            "olympics": "奧運會",
+            "competition": "交易竞赛",
+            "custom": "自定义市场",
+            "long": "多头",
+            "short": "空头",
+            "my-trades": "我的交易",
+            "amm": "AMM",
+            "orderbook": "订单簿",
+            "trade-type": "交易类型",
+            "search-placeholder-for-mining": "试试地址",
+            "search-placeholder-for-reporting": "尝试市场"
+        },
+        "home": {
+            "market-card": {
+                "current-asset-price": "流动资产价格",
+                "pool-size": "池大小",
+                "amm-liquidity": "AMM流动性",
+                "end-date": "结束日期",
+                "strike-price": "执行价格",
+                "open-orders": "未结订单",
+                "difference-text": "当前价格与执行价格之间的差异",
+                "time-remaining": "剩余时间",
+                "result": "当前结果",
+                "view-market": "查看市场"
+            },
+            "market-creation": {
+                "explore-markets-button-label": "探索市场"
+            },
+            "explore-markets": {
+                "trending": "趋势市场",
+                "table": {
+                    "view-all-markets": "查看所有市场",
+                    "no-markets-created": "你还没有创造任何市场。",
+                    "no-markets-found": "未找到市场。",
+                    "trading-comp": "目前没有竞赛市场。\n交易竞赛将于10月11日星期一UTC上午10:00开始。\n有关更多信息，请单击此处："
+                }
+            },
+            "markets-table": {
+                "asset-col": "资产",
+                "strike-price-col": "执行价",
+                "asset-price-col": "资产价格",
+                "open-orders-col": "未结订单",
+                "phase-col": "阶段",
+                "pool-size-col": "市场大小",
+                "amm-size-col": "AMM流动性",
+                "time-remaining-col": "剩余时间",
+                "competition-tooltip": "该市场参与交易竞赛"
+            }
+        },
+        "earn": {
+            "snx-stakers": {
+                "tab-title": "追溯奖励",
+                "retro-airdrop": {
+                    "title": "追溯空投",
+                    "claimed-message": "您已经声明空投。",
+                    "not-eligible-message": "您不符合此次空投的条件。",
+                    "complete-quiz-to-claim": "认领此空投完整测验。",
+                    "completed-quiz": "测验已完成！您现在可以申请空投。",
+                    "claim-end-label": "可领取至2022年9月12日。",
+                    "info-tooltip": "<0>自SNX质押开始至2021年9月6日上午10:00 UTC之前，137Thales币被空投</0><0>-SNX质押L1</0><0>-SNX质押L2</0><0>-xSNX</0><0>质押和领取奖励的人。</0><1>您可以检查自己是否有资格参加此项活动 </1><2 />。",
+                    "paused-message": "复古空投暂停。"
+                },
+                "retro-rewards": {
+                    "title": "追溯解锁",
+                    "not-eligible-message": "您不符合此分发的条件。",
+                    "learn-more-text": "奖励在2年内线性解锁。申请当前解锁的奖励不会受到处罚。",
+                    "learn-more": "了解更多",
+                    "info-tooltip": "<0>自质押开始至2021年9月6日10:00 UTC，已按比例向所有SNX质押者分配了1500万泰勒斯。</0><0>通过此算法分配的泰勒斯Thales至少有24个符合条件。</0><1>您可以检查是否满足阈值要求 </1><2 />。"
+                },
+                "airdropped-amount": "空投金额",
+                "claim": "领取",
+                "claiming": "领取…",
+                "claimed": "领取",
+                "claim-unlocked": "可领取已解锁代币",
+                "claiming-unlocked": "领取已解锁代币",
+                "unlocked": "已解锁",
+                "locked": "锁定",
+                "total": "总计",
+                "start-time": "开始时间",
+                "end-time": "结束时间",
+                "initial-locked": "初始锁定",
+                "start-quiz": "开始测验",
+                "confirmation-message": "代币已成功认领"
+            },
+            "thales-staking": {
+                "tab-title": "质押",
+                "stake": {
+                    "stake": "押",
+                    "staking": "质押",
+                    "available-to-stake": "可质押",
+                    "amount-to-stake": "持股金额",
+                    "confirmation-message": "代币已成功质押",
+                    "paused-message": "质押暂停。",
+                    "info-tooltip": "可用的质押奖励将作为质押交易的一部分索取。"
+                },
+                "my-stake": {
+                    "my-stake": "我的质押",
+                    "staked-in-contract": "直接质押",
+                    "locked-in-escrow": "托管余额",
+                    "total-staked": "总质押",
+                    "not-eligible-message": "除非您的直接质押余额大于0，否则您没有资格获得质押奖励",
+                    "eligible-message": "您质押的{{amount}}有资格获得质押奖励",
+                    "global-staking-stats": "全局质押量",
+                    "total-thales-staked": "THALES质押总量",
+                    "my-staked-share": "我的质押",
+                    "estimated-rewards": "本期预计奖励",
+                    "bonus-apy-tooltip": "<0>每 </0><1 /> 的最高 APY 奖金为 {{max}}%。",
+                    "bonus-apr-tooltip": "<0>每 </0><1 /> 的最高 APR 为 {{max}}%。",
+                    "bonus-estimated-rewards-tooltip": "<0>每 </0><1 /> 的最高奖励奖励为 {{max}}%。"
+                },
+                "unstake": {
+                    "unstake": "取消质押",
+                    "unlock-cooldown-text": "开始解锁冷却，在此期间未锁定的金额不计入您的质押余额",
+                    "cooldown-started-text": "您可以取消{{amount}}的质押",
+                    "cooldown-ended-text": "您现在可以领取{{amount}}",
+                    "cooldown-label": "冷却",
+                    "start-unstaking": "开始取消质押",
+                    "cooldown-confirmation-message": "取消质押成功启动",
+                    "unstake-confirmation-message": "代币成功取消质押",
+                    "unstaking": "取消质押",
+                    "amount-to-unstake": "未兑现金额",
+                    "start-unstaking-tooltip": "在7天解锁冷却时间内，您将无法锁定或质押更多泰勒斯。",
+                    "cancel": "取消抵押",
+                    "canceling": "取消抵押",
+                    "cancel-confirmation-message": "取消抵押成功取消",
+                    "network-fee-cancel": "取消",
+                    "network-fee-unstake": "取消质押",
+                    "paused-message": "取消质押已暂停。",
+                    "info-tooltip": "可用的质押奖励将作为开始解除质押交易的一部分索取。"
+                },
+                "staking-rewards": {
+                    "title": "质押奖励",
+                    "period": "期间",
+                    "total": "总计",
+                    "claim": "领取",
+                    "claiming": "领取",
+                    "claimed-message": "您已经声明了本周的奖励，请下周再来。",
+                    "not-eligible-message": "您没有资格获得这些奖励。",
+                    "paused-message": "已暂停，请稍后再试。",
+                    "confirmation-message": "代币成功认领",
+                    "button-tooltip": "奖励有10周的解锁期.",
+                    "bonus-info": {
+                        "thales-royale-participation-yes": "是的",
+                        "thales-royale-participation-no": "不",
+                        "current-amm-label": "当前 AMM 交易量",
+                        "current-thales-royale-label": "目前参与",
+                        "additional-amm-label": "额外的 AMM 交易量以获得最大红利",
+                        "current-snx-staking-label": "当前 SNX 质押",
+                        "max-bonus-notice": "你有最高奖金",
+                        "additional-snx-staking-label": "额外 SNX 质押以获得最大红利"
+                    },
+                    "bonus-button": {
+                        "thales-royale-label": "加入泰勒斯鱿鱼游戏并获得泰勒斯奖金",
+                        "amm-label": "交易更多以获得更多 THALES 奖金",
+                        "snx-staking-label": "质押更多 SNX 以获得更多 THALES 奖金"
+                    },
+                    "bonus-tooltip": {
+                        "thales-royale-description": "如果质押者参与了上一届或正在进行的泰勒斯鱿鱼游戏，THALES 质押者将在基本奖励之上获得 {{max}}% 的最大值。该值可以是 0 或最大值。",
+                        "amm-description": "如果 THALES 质押者在每个作为基本奖励的 THALES 获得的最后 4 个时期内至少有 {{ammVolumeRewardsMultiplier}} sUSD AMM 交易量，则 THALES 质押者将在基本奖励之上获得 {{max}}% 的最大值。如果他做得少，他会根据以下公式计算出金额：",
+                        "amm-title": "AMM红利",
+                        "snx-staking-title": "SNX质押奖金",
+                        "snx-staking-description": "如果每个 THALES 的质押者作为基础奖励至少有 {{snxVolumeRewardsMultiplier}} SNX 质押，THALES 质押者将在基础奖励之上获得 {{max}}% 的最大值。如果他质押的 SNX 较少，他将获得根据以下公式计算的金额：",
+                        "thales-royale-title": "泰勒斯鱿鱼游戏奖金"
+                    },
+                    "close-period": {
+                        "label": "关闭期间",
+                        "progress-label": "截止期...",
+                        "confirmation-message": "期间成功关闭"
+                    },
+                    "migrated-rewards": {
+                        "info-tooltip": "<0>每 </0><1 /> 将 L1 中无人认领的质押奖励迁移到 L2。",
+                        "rewards-label": "迁移奖励",
+                        "claimed-message": "您已领取迁移奖励。",
+                        "title": "迁移奖励"
+                    },
+                    "weekly-base-rewards": "每周基础奖励池",
+                    "thales-staking-label": "泰勒斯 staking",
+                    "max-reward-label": "最大奖励：{{max}}",
+                    "info-tooltip": "无人认领的每周奖励将被没收。",
+                    "weekly-bonus-rewards": "在基本奖励之上的最高奖励奖励",
+                    "amm-label": "AMM",
+                    "snx-staking-label": "SNX质押",
+                    "thales-royale-label": "泰勒斯鱿鱼游戏"
+                }
+            },
+            "vesting": {
+                "tab-title": "归属",
+                "schedule": {
+                    "title": "时间表",
+                    "table": {
+                        "date-time-col": "解锁日期-时间",
+                        "amount-col": "金额",
+                        "no-results": "未找到。"
+                    }
+                },
+                "vest": {
+                    "available-to-vest": "可解锁",
+                    "vest": "解锁期",
+                    "vesting": "正在解锁",
+                    "confirmation-message": "代币已成功解锁"
+                },
+                "info": {
+                    "title": "将您的泰勒斯奖励托管",
+                    "text": "泰勒斯持续奖励以10周解锁为准。托管泰勒斯在您的泰勒斯余额中计算。"
+                },
+                "lp-staking": {
+                    "title": "您可以为泰勒斯Thales/ETH配对提供流动性，并获得泰勒斯Thales+DODO双倍奖励",
+                    "button-text": "单击此处可获得双重奖励"
+                }
+            },
+            "lp-staking": {
+                "tab-title": "LP",
+                "rewards": {
+                    "claim": "宣称",
+                    "title": "奖励",
+                    "lp-staking": "LP 质押",
+                    "claimed": "成功申领",
+                    "claiming": "声称"
+                },
+                "my-stake": {
+                    "total-staked": "总质押",
+                    "title": "我的质押代币",
+                    "lp-tokens": "LP 代币"
+                },
+                "info": {
+                    "apr": "年利率",
+                    "tvl": "锁定总值 (TVL)"
+                },
+                "provide-liquidity": {
+                    "here": "这里",
+                    "description": "通过向 THALES/WETH 池增加流动性来获得 G-UNI LP 代币进行质押。",
+                    "button-text": "增加流动性的链接",
+                    "wrap-your-eth": "1. 包裹你的 ETH",
+                    "stake-here": "3. 在此页面质押LP代币",
+                    "deposit": "2. 将THALES和WETH存入G-UNI矿池"
+                }
+            },
+            "table": {
+                "title": "您的活动",
+                "date-time-col": "日期-时间",
+                "type-col": "类型",
+                "amount-col": "金额",
+                "tx-status-col": "发送状态",
+                "no-results": {
+                    "all": "没有与此钱包相关的交易。",
+                    "claimRetroAirdrop": "没有与此钱包相关的追溯空投交易。",
+                    "claimRetroUnlocked": "没有与此钱包相关的追溯解锁交易。",
+                    "claimStakingRewards": "没有与此钱包相关的质押奖励交易。",
+                    "stake": "没有与此钱包相关的质押交易。",
+                    "startUnstake": "没有与此钱包相关的开始取消交易。",
+                    "cancelUnstake": "没有取消与此钱包相关的取消抵押交易。",
+                    "unstake": "没有与此钱包相关的取消质押交易。",
+                    "addToEscrow": "不添加与此钱包相关的托管交易。",
+                    "vest": "没有与此钱包相关的vest交易。",
+                    "claimMigratedRewards": "没有与此钱包相关的迁移奖励交易。",
+                    "lpStake": "没有与此钱包相关的 LP 股权交易。",
+                    "lpClaimStakingRewards": "没有 LP 质押奖励与此钱包相关的交易。",
+                    "lpUnstake": "没有与此钱包相关的 LP 取消质押交易。"
+                },
+                "types": {
+                    "claimRetroAirdrop": "领取追溯空投",
+                    "claimRetroUnlocked": "领取追溯解锁",
+                    "claimStakingRewards": "领取质押奖励",
+                    "stake": "桩",
+                    "startUnstake": "开始分离",
+                    "cancelUnstake": "取消抵押",
+                    "unstake": "取消质押",
+                    "addToEscrow": "添加托管",
+                    "vest": "解锁期",
+                    "lpUnstake": "LP 解除质押",
+                    "lpClaimStakingRewards": "领取 LP 质押奖励",
+                    "claimMigratedRewards": "领取迁移奖励",
+                    "lpStake": "LP股权"
+                },
+                "filter": {
+                    "all": "全部",
+                    "claimRetroAirdrop": "追溯空投",
+                    "claimRetroUnlocked": "复古解锁",
+                    "claimStakingRewards": "质押奖励",
+                    "stake": "桩",
+                    "startUnstake": "开始分离",
+                    "cancelUnstake": "取消抵押",
+                    "unstake": "取消质押",
+                    "addToEscrow": "添加托管",
+                    "vest": "解锁期",
+                    "lpClaimStakingRewards": "LP质押奖励",
+                    "claimMigratedRewards": "迁移奖励",
+                    "lpUnstake": "LP 解除质押",
+                    "lpStake": "LP股权"
+                }
+            },
+            "overview": {
+                "token-tooltip": "查看泰勒斯合同",
+                "price-label": "价格",
+                "price-tooltip": "查看DODO池",
+                "price-tooltip-l2": "在CoinGecko上查看",
+                "market-cap-label": "市值",
+                "earn-label": "赢取LP奖励",
+                "earn-tooltip": "为泰勒斯/ETH对提供流动性，赚取泰勒斯+DODO双倍奖励",
+                "earn-info-tooltip": "如何提供流动性的查看指南",
+                "circulating-supply-label": "市场供应",
+                "total-supply-label": "总供应"
+            }
+        },
+        "quiz": {
+            "title": "测验",
+            "discord-link": "Discord",
+            "discord-tip": "向我们的Discord社区寻求帮助",
+            "docs-link": "文档",
+            "docs-tip": "在我们的文档中查找答案",
+            "discord-button": "询问我们的Discord",
+            "submit-answers": "提交答案",
+            "next-page": "下一页",
+            "question": {
+                "correct-answer": "你的答案是正确的！",
+                "wrong-answer": "哎呀！答错了！"
+            }
+        },
+        "create-market": {
+            "title": "创建新的二元期权市场",
+            "subtitle": "要创建新的二元期权市场，请选择资产、执行价格和市场到期日。您还必须选择您将铸造多少期权代币",
+            "note": "*注：sUSD的存款金额将决定将铸造多少多头和空头期权代币。例如，为该市场存入1000枚sUSD代币、1000枚sLONG代币和1000枚sSHORT期权代币。",
+            "details": {
+                "select-asset-label": "选择资产：",
+                "strike-price-label": "执行价格：",
+                "market-maturity-date-label": "市场到期日：",
+                "market-maturity-time-label": "时间（UTC）：",
+                "funding-amount": {
+                    "label": "市场融资金额：",
+                    "desc": "注意：您的sUSD将被锁定在本合同中，直至市场到期日"
+                }
+            },
+            "min-amount": "请输入资金金额。需要最低{{minimum}}sUSD。",
+            "insufficient-amount": "请确保您的钱包有足够的sUSD。",
+            "sellOptions": "卖出做多/做空期权",
+            "summary": {
+                "title": "市场总结",
+                "strikePrice": "执行价格",
+                "current": "当前市场价格",
+                "difference": "执行价与当前价格的差价",
+                "dates": {
+                    "maturity-date": "到期日",
+                    "maturity-date-mobile": "到期日",
+                    "time-to-exercise": "行权时间"
+                },
+                "fees": {
+                    "minting": "铸造费",
+                    "creator": "您将获得",
+                    "pool": "费用池收入"
+                },
+                "create-market-button-label": "创建市场",
+                "creating-market-button-label": "创建市场…",
+                "approve-manager-button-label": "批准",
+                "waiting-for-approval-button-label": "批准…",
+                "note": "*创建市场时，您将：",
+                "note1": "在到期日以sUSD赚取总市场规模的0.5%，减去您的初始存款金额。",
+                "note2": "为铸造期权代币支付零泰勒斯协议费。",
+                "note3": "批准市场创建时，支付以太坊网络费（gas）。"
+            },
+            "select-asset": "请选择资产.",
+            "enter-strike-price": "请输入履约价格",
+            "difference-warning": "差异大于100倍",
+            "progress-tracker": {
+                "approving": "批准 {{currencyKey}}",
+                "submitting": "提交 {{currencyKey}}",
+                "creating-market": "创建市场",
+                "finished": "已完成"
+            },
+            "go-to-market": "进入市场"
+        },
+        "market": {
+            "overview": {
+                "view-market-contract-tooltip": "查看市场合同",
+                "strike-price-label": "执行价格",
+                "difference-text-tooltip": "当前价格与执行价格之间的差异",
+                "current-price-label": "当前{{currencyKey}}价格",
+                "final-price-label": "最终价格",
+                "maturity-label": "到期日",
+                "time-remaining-label": "剩余时间",
+                "expiry-label": "到期",
+                "current-result-label": "当前结果",
+                "final-result-label": "最终结果",
+                "deposited-currency-label": "存款{{currencyKey}}",
+                "amm-liquidity": "AMM流动性",
+                "event-name-label": "事件名称",
+                "current-ratio-label": "现比率",
+                "final-ratio-label": "最终比率",
+                "strike-ratio-label": "执行比率",
+                "current-burn-label": "当前比率",
+                "final-burn-label": "最终销毁量",
+                "strike-burn-label": "执行销毁量",
+                "rank-label": "排名",
+                "total-burned": "总销毁量",
+                "burned-last-hour": "上一小时销毁量"
+            },
+            "widgets": {
+                "trading-phase-widget": "领取选项",
+                "maturity-phase-widget": "行权选项",
+                "orderbook-widget": "订单簿",
+                "trade-widget": "交易",
+                "chart-trading-view-widget": "交易视图",
+                "chart-options-price-widget": "选项价格",
+                "recent-transactions-widget": "最近的市场活动",
+                "your-transactions-widget": "您的活动",
+                "custom-market-results-widget": "结果",
+                "custom-market-results-odds-widget": "赔率",
+                "button": {
+                    "customize-layout": "自定义视图",
+                    "reset-layout": "重置布局"
+                },
+                "amm-widget": "AMM"
+            },
+            "chart-card": {
+                "no-chart-data": "无图表数据"
+            },
+            "transactions-card": {
+                "table": {
+                    "date-time-col": "日期-时间",
+                    "type-col": "类型",
+                    "position-col": "位置",
+                    "amount-col": "金额",
+                    "price-col": "价格",
+                    "tx-status-col": "发送状态",
+                    "no-results": {
+                        "recent-activity": {
+                            "all": "没有与该市场相关的交易。",
+                            "mint": "没有与该市场相关的铸造交易。",
+                            "trade": "没有与该市场相关的交易",
+                            "exercise": "没有与该市场相关的行权交易。"
+                        },
+                        "your-activity": {
+                            "all": "没有与此钱包相关的交易。",
+                            "mint": "没有与此钱包相关的铸造厂交易。",
+                            "trade": "没有与此钱包相关的交易。",
+                            "exercise": "没有与此钱包关联的行使交易。"
+                        }
+                    },
+                    "types": {
+                        "exercise": "行权",
+                        "buy": "买",
+                        "sell": "出售",
+                        "mint": "铸造"
+                    }
+                },
+                "filter": {
+                    "all": "全部",
+                    "mint": "铸造",
+                    "trade": "交易",
+                    "exercise": "行权",
+                    "filter": "分流"
+                }
+            },
+            "trade-card": {
+                "maturity": {
+                    "card-title": "市场已关闭",
+                    "card-subtitle": "可用选项：",
+                    "payout-amount-label": "支出金额",
+                    "end-label": "剩下的行权时间",
+                    "confirm-button": {
+                        "label": "行权选项",
+                        "progress-label": "正在进行的…",
+                        "success-label": "无需行权",
+                        "confirmation-message": "已成功执行选项"
+                    }
+                }
+            },
+            "trade-options": {
+                "trade-long-options-tab-title": "交易多头期权",
+                "trade-short-options-tab-title": "交易卖空期权",
+                "trade-long-options-tab-title-mobile": "多头期权",
+                "trade-short-options-tab-title-mobile": "空头选项",
+                "market-tab-title": "市场",
+                "limit-tab-title": "限额",
+                "mint-tab-title": "铸造",
+                "orderbook": {
+                    "title": "订单簿",
+                    "buy": {
+                        "no-results": "未找到购买订单。"
+                    },
+                    "sell": {
+                        "no-results": "未找到出售订单。"
+                    },
+                    "filter": {
+                        "my-orders": {
+                            "tooltip-connected": "您已创建的订单。连接钱包即可启动。",
+                            "tooltip-not-connected": "您已创建订单。单击该行可输入或取消订单。",
+                            "buy": {
+                                "no-results": "您尚未创建任何购买订单。"
+                            },
+                            "sell": {
+                                "no-results": "您尚未创建任何出售订单。"
+                            }
+                        },
+                        "tooltips": {
+                            "all": "查看所有订单。单击该行以填写订单",
+                            "buy": "查看购买订单。单击该行填写订单",
+                            "sell": "查看销售订单。单击该行以填写订单"
+                        }
+                    },
+                    "table": {
+                        "type-col": "类型",
+                        "price-col": "价格（sUSD）",
+                        "amount-col": "金额（{{currencyKey}}）",
+                        "filled-col": "填充（%）",
+                        "return-col": "返回",
+                        "return-col-tooltip": "如果此选项获胜，则可能返回",
+                        "total-col": "总计（sUSD）",
+                        "time-remaining-col": "剩余时间",
+                        "cancel-col-tooltip": "单击以取消订单"
+                    }
+                },
+                "place-order": {
+                    "modal": {
+                        "buy": {
+                            "title": "下购买订单"
+                        },
+                        "sell": {
+                            "title": "下出售订单"
+                        }
+                    },
+                    "order-type-label": "订单类型",
+                    "amount-label": "金额至{{orderSide}}",
+                    "amount-label-mobile": "金额：",
+                    "price-label": "每{{currencyKey}}的价格",
+                    "price-label-mobile": "价格：",
+                    "expiration-label": "到期时间",
+                    "total-label-susd": "总量（sUSD）",
+                    "total-label-option": "总量 {{option}}",
+                    "total-max-label": "最大发送量（sUSD）",
+                    "total-min-label": "最小接收（sUSD）",
+                    "slippage-label": "滑动公差",
+                    "slippage-tooltip": "如果价格的不利变化超过此百分比，您的交易将恢复",
+                    "protocol-fee-label": "0x协议费",
+                    "protocol-fee-tooltip": "这是0x与0x协议的订单簿交互时收取的基本费用",
+                    "confirm-button": {
+                        "label": "提交订单",
+                        "long": "提交sLong",
+                        "short": "提交sShort",
+                        "progress-label": "正在提交订单…",
+                        "confirmation-message": "订单已成功提交"
+                    },
+                    "swap-confirm-button": {
+                        "buy": {
+                            "label": "购买",
+                            "progress-label": "正在购买…",
+                            "confirmation-message": "已成功购买"
+                        },
+                        "sell": {
+                            "label": "出售",
+                            "progress-label": "正在出售…",
+                            "confirmation-message": "已成功售出"
+                        }
+                    },
+                    "price-for-label": "每个 {{currencyKey}} 的金额",
+                    "errors": {
+                        "order-after-maturity": "订单到期不能在市场到期后，默认为交易期到期"
+                    }
+                },
+                "mint": {
+                    "amount-label": "金额",
+                    "minting-label": "你要铸造",
+                    "long-label": "多选项",
+                    "short-label": "空选项",
+                    "sell-options-title": "卖出做多/做空期权",
+                    "fees": {
+                        "minting": "铸造费",
+                        "creator": "创造者收益",
+                        "pool": "费用池收入"
+                    },
+                    "confirm-button": {
+                        "label": "铸造",
+                        "progress-label": "正在铸造…",
+                        "submit-long-progress-label": "正在提交做多订单…",
+                        "submit-short-progress-label": "正在提交做空订单…",
+                        "confirmation-message": "已成功生成选项"
+                    }
+                },
+                "fill-order": {
+                    "buy": {
+                        "title": "出售{{currencyKey}}"
+                    },
+                    "sell": {
+                        "title": "购买{{currencyKey}}"
+                    },
+                    "max-button-tooltip": "根据剩余订单金额和钱包余额设置最大可用金额",
+                    "amount-label": "金额至{{orderSide}}",
+                    "total-label": "总量（sUSD）",
+                    "protocol-fee-label": "0x协议费",
+                    "protocol-fee-tooltip": "这是0x与0x协议的订单簿交互时收取的基本费用",
+                    "confirm-button": {
+                        "label": "填写订单",
+                        "progress-label": "正在填写订单…"
+                    }
+                },
+                "cancel-order": {
+                    "title": "取消订单？",
+                    "confirm-button": {
+                        "label": "取消订单",
+                        "progress-label": "正在取消订单…"
+                    }
+                },
+                "order-details": {
+                    "title": "订单详情",
+                    "price-label": "每{{currencyKey}}（sUSD）的价格",
+                    "amount-label": "金额（{{currencyKey}}）",
+                    "total-label": "总量（sUSD）",
+                    "filled-label": "填充（%）",
+                    "return-label": "返回",
+                    "return-col-tooltip": "如果此选项获胜，则可能返回",
+                    "inital-amount-label": "初始金额（{{currencyKey}}）",
+                    "inital-total-label": "初始总计（{{currencyKey}}）"
+                }
+            },
+            "header": {
+                "orderbook": "订单簿",
+                "amm": "AMM"
+            }
+        },
+        "quick-trading": {
+            "title": "快速交易",
+            "mode-label": "我想要",
+            "cancel-tooltip": "单击以取消订单",
+            "counter-offer-button-label": "柜台",
+            "cancel-button-label": "取消",
+            "counter-offer-button-tooltip": "还盘",
+            "view-market-tooltip": "查看市场",
+            "no-orders-found": "未找到订单",
+            "view-all-orders": "查看所有订单",
+            "difference-text-tooltip": "当前价格与执行价格之间的差额",
+            "table": {
+                "condition-col": "条件",
+                "when-col": "When",
+                "deposit-amount-col": "存款金额",
+                "return-col": "赢了就返回",
+                "receive-amount-col": "接收金额",
+                "options-to-sell-col": "出售期权",
+                "options-in-wallet-col": "已有期权",
+                "actions-col": "操作"
+            },
+            "subtitle-3": "AMM激励计划",
+            "subtitle-2": "快速交易产生的交易量将不受当前",
+            "subtitle-1": "通过订单簿的快速交易路线，不包括 AMM。"
+        },
+        "competition-quick-trading": {
+            "title": "竞赛订单"
+        },
+        "leaderboard": {
+            "leaderboard-title": "排行榜",
+            "leaderboard-subtitle": "这是泰勒斯的整体排行榜.",
+            "leaderboard-subtitle-2": "它考虑了泰勒斯平台内的所有交易",
+            "trading-comp-title": "交易竞赛",
+            "trading-comp-subtitle": "这是泰勒斯第一次交易竞赛的排行榜.",
+            "trading-comp-subtitle-2": "比赛于2021年10月11日正式开始| UTC 时间上午 10 点，并于 2021 年 11 月 1 日结束 | 世界标准时间上午 11 点",
+            "trading-comp-subtitle-3": "单击此处查看符合交易竞赛条件的市场",
+            "trading-comp-subtitle-4": "有关如何参与的更多信息和指南，请访问： ",
+            "profile-subtitle": "选项卡显示您的所有交易以及其他用户的交易",
+            "trading-comp-countdown": "竞赛结束前的倒计时：",
+            "profile-title": "个人资料",
+            "trades-subtitle": "该选项卡显示按最新时间戳排序的所有交易。",
+            "trades-title": "交易",
+            "verify-twitter-account": "验证帐户",
+            "verify": "验证",
+            "display-name": "显示名称",
+            "address": "地址",
+            "twitter-account": "我的推特账号",
+            "my-info": "我的信息",
+            "table": {
+                "rank-col": "等次",
+                "display-name-col": "显示名称",
+                "trades-col": "交易",
+                "volume-col": "量",
+                "netprofit-col": "净利润",
+                "netprofit-col-tooltip": "利润仅在成熟市场上计算",
+                "investment-col": "投资",
+                "gain-col": "增益",
+                "twitter-col": "推特",
+                "rewards-col": "奖励"
+            },
+            "trading-competition": {
+                "tab-title": "交易竞赛",
+                "competition-period": "选定时间",
+                "disqualified": "不合格",
+                "current-rank": "您当前的等级",
+                "unverified": "未验证"
+            },
+            "board": {
+                "tab-title": "排行榜"
+            },
+            "trades": {
+                "tab-title": "交易",
+                "only-trading-competition-checkbox": "仅显示交易竞赛交易",
+                "number-of-trades": "交易数量",
+                "volume": "量级",
+                "view-all-trades": "查看所有交易",
+                "no-trades-found": "未找到交易",
+                "table": {
+                    "date-time-col": "日期-时间",
+                    "market-col": "市场",
+                    "asset-col": "资产",
+                    "type-col": "类别",
+                    "tx-type-col": "交易类别",
+                    "amount-col": "金额",
+                    "price-col": "价格",
+                    "tx-status-col": "交易状态"
+                },
+                "unique-traders": "独特的交易者"
+            },
+            "profile": {
+                "tab-title": "账户信息",
+                "search-placeholder": "输入名称来搜索其他账户信息",
+                "transaction-details": "用户的交易明细：",
+                "no-transactions": "无任何交易",
+                "go-to-redeem": "点击兑换",
+                "filters": {
+                    "all": "全部",
+                    "mints": "铸造",
+                    "trades": "交易",
+                    "exercises": "行权",
+                    "redeemable": "可赎回"
+                },
+                "markets": {
+                    "strike-price": "执行价格",
+                    "pool-size": "池大小",
+                    "maturity-date": "到期日",
+                    "result": "结果"
+                },
+                "common": {
+                    "amount": "金额",
+                    "timestamp": "日期-时间",
+                    "view-less": "简略视图",
+                    "view-more": "详细视图",
+                    "long": "多",
+                    "short": "空",
+                    "buy": "买",
+                    "sell": "卖",
+                    "tx-status": "交易状态"
+                },
+                "exercises": {
+                    "side": "方向"
+                },
+                "trades": {
+                    "price": "价格",
+                    "type": "类型"
+                },
+                "unclaimed": {
+                    "redeem": "赎回"
+                },
+                "table": {
+                    "types": {
+                        "mint": "铸造",
+                        "trade": "交易",
+                        "exercise": "行权",
+                        "redeemable": "可赎回",
+                        "buy": "买",
+                        "sell": "出售"
+                    }
+                }
+            },
+            "balance": "美元余额"
+        },
+        "common": {
+            "time-remaining": {
+                "ended": "结束",
+                "years": "年",
+                "year": "年",
+                "months": "月",
+                "month": "月",
+                "weeks": "周",
+                "week": "周",
+                "days": "日",
+                "day": "日",
+                "hours": "小时",
+                "hour": "小时",
+                "minutes": "分钟",
+                "minute": "分钟",
+                "seconds": "秒钟",
+                "second": "秒钟",
+                "days-short": "d",
+                "hours-short": "h",
+                "minutes-short": "m",
+                "seconds-short": "s"
+            },
+            "long": "多",
+            "short": "空",
+            "amount-long": "{{amount}}多",
+            "amount-short": "{{amount}}空",
+            "long-price": "多头价格",
+            "short-price": "空头价格",
+            "new-to-binary-options": "Synthetix上的二进制选项新手？请确保先阅读它的工作原理！",
+            "order-periods": {
+                "10M": "10分钟",
+                "1H": "1小时",
+                "1D": "1天",
+                "1W": "1周",
+                "trading-end": "交易期到期时"
+            },
+            "warning": {
+                "gas-price-change": "提交tx后，请不要更改gas价格"
+            },
+            "legacy-signing": {
+                "label": "使用传统签名",
+                "tooltip": "如果下单时遇到问题，请选中此选项以尝试旧版签名。某些钱包（如Trezor）在签名时遇到问题，选择此选项可以解决此问题。"
+            },
+            "ratio": "比率"
+        },
+        "swap": {
+            "button-text": "获取 sUSD",
+            "select-token": "选取代币",
+            "enter-amount": "输入数量",
+            "approve": "授予交易{{currency}}的权限}",
+            "swap": "交易",
+            "insufficient-balance": "余额不足",
+            "not-supported": " 测试网络不支持交换",
+            "tx-failed": "交易失败",
+            "tx-success": "成功买入sUSD",
+            "tx-user-rejected": "用户拒绝交易",
+            "balance": "平衡",
+            "to": "到",
+            "max": "最大限度",
+            "from": "从",
+            "estimated-gas": "估计气体"
+        },
+        "royale": {
+            "header": {
+                "theme": "主题"
+            },
+            "footer": {
+                "current": "当前",
+                "price": "价格",
+                "current-positions": "当前投注情况",
+                "current-reward-per-player": "每位玩家当前奖励",
+                "reward-per-player": "每位玩家奖励",
+                "players-alive": "晋级的玩家",
+                "up": "向上",
+                "down": "向下",
+                "vs": "vs",
+                "you-were-eliminated-in": "你已被淘汰",
+                "rd": "轮次",
+                "royale": "鱿鱼游戏",
+                "scoreboard": "积分榜",
+                "stats": "数据",
+                "price-source": "来源：Optimism Chainlink的ETH报价",
+                "current-reward-per-winner": "每位获胜者的奖励",
+                "season-finished": "第 {{season}} 季结束"
+            },
+            "battle": {
+                "round": "轮次",
+                "will-be": "将{{token}}超过",
+                "in": "in",
+                "time-left-for-positioning": "剩余时间",
+                "time-left-in-round": "本轮剩余时间",
+                "close-round": "本轮结束",
+                "was": "是",
+                "eliminated": "淘汰",
+                "players": "玩家",
+                "ended": "结束",
+                "optimism-timestamp-message": "由于Optimism上L1的最大汇总时间为5分钟，因此本轮结束时间最多会延迟5分钟。"
+            },
+            "scoreboard": {
+                "starts": "泰勒斯鱿鱼游戏将开始于:",
+                "round-starts": "下一轮开始于:",
+                "position-period": "本轮剩余可投注时间",
+                "round-period": "第{{round}}轮剩余时间",
+                "start-royale": "开始泰勒斯鱿鱼游戏",
+                "ends": "泰勒斯鱿鱼游戏剩余时间：",
+                "question": "您是否已经做好准备去击败竞争对手，获得最终的奖励?",
+                "info2": "泰勒斯鱿鱼游戏是一款<bold>预测标的价格涨跌的游戏</bold>，分6轮进行。",
+                "info3": "报名结束后，参与者将收到标的资产的目标价格。他们需要预测本轮结束时<bold>标的资产的市场价格会高于(△)还是低于(◯)目标价格</bold>。",
+                "info4": "预测正确的玩家晋级，预测错误的玩家被淘汰，连续6轮预测正确的玩家将成为最后的赢家。",
+                "info5": "游戏的报名费用为<bold>30 sUSD</bold>。最终获胜的玩家将会分享总奖池，包括所有参赛者的报名费用以及额外的保底奖金 <bold>1000 sUSD</bold>和 <bold>1000 THALES</bold>。",
+                "info6": "如果想了解游戏的更多细节，请阅读: ",
+                "info7": "<italic>祝你好运，让战斗开始吧！</italic>",
+                "blog": "《泰勒斯鱿鱼游戏指南》",
+                "player-no": "玩家编号: ",
+                "eliminated": "你被淘汰了",
+                "period-expired": "报名期限已过",
+                "season-not-started": "赛季还没有开始",
+                "approve-susd": "批准 sUSD",
+                "buy-in": "买入: {{buyInAmount}}sUSD",
+                "table-header": {
+                    "status": "状态",
+                    "avatar": "头像",
+                    "name": "名称",
+                    "number": "玩家编号"
+                },
+                "search": "搜索玩家/号码",
+                "verification": "完成验证",
+                "go-to": "转到泰勒斯Discord服务器",
+                "verify": "#thales-royale-verify并输入: ",
+                "placeholder": "！验证<您的钱包地址>",
+                "sign-up": "注册",
+                "round-positioning": "直到投注结束",
+                "round-ending": " 直到第{round}}轮结束",
+                "thales-suffix": " | 泰勒斯",
+                "thales-default": "泰勒斯：基于Synthetix生态的预测市场",
+                "dead": "淘汰",
+                "alive": "晋级",
+                "winner": "获胜者",
+                "users-per-page": "用户数/页",
+                "season-ready-in": "下个赛季将开始于：",
+                "start-season": "开始赛季",
+                "season": "赛季",
+                "season-finished": "赛季结束",
+                "loading-season": "正在加载",
+                "no-users": "没有参赛者",
+                "info7": "<italic>祝你好运，让战斗开始吧！</italic>",
+                "insufficient-balance": "sUSD 余额不足",
+                "default-position": "默认位置",
+                "default-position-none": "没有任何",
+                "default-position-up": "向上",
+                "default-position-down": "向下",
+                "default-position-info": "比赛开始前，您可以选择一个仅适用于第一轮的默认位置。仓位期开始后，您可以再次更改仓位。对于所有其他回合，必须在定位期间选择位置。"
+            },
+            "redirect-dialog": {
+                "title": "你在 Optimism Kovan 网络",
+                "message": "回到泰勒斯鱿鱼游戏",
+                "or": "或",
+                "switch-to-mainnet": "切换到以太坊mainnet"
+            },
+            "wrong-network-dialog": {
+                "title": "错误的网络！",
+                "message": "请切换到Optimistic Ethereum 继续",
+                "return-to-dapp": "返回泰勒斯dApp",
+                "button": "切换到Optimistic Ethereum",
+                "parameters": "OP Ethereum参数"
+            },
+            "wallet-not-connected-dialog": {
+                "title": "钱包未连接",
+                "message": "请连接您的钱包继续",
+                "button": "连接钱包"
+            },
+            "edit-user-data-dialog": {
+                "enter-display-name": "输入显示名称",
+                "change-display-name": "更改显示名称",
+                "change-avatar": "输入头像网址",
+                "avatar": "头像图片",
+                "avatar-tip": "请输入以 .jpg、.jpeg、.png、.svg 或 .gif 结尾的有效 URL",
+                "avatar-validation-msg": "请输入有效的头像网址",
+                "name-validation-msg": "请输入不带特殊字符的显示名称"
+            }
+        },
+        "amm-mining": {
+            "share": "分享",
+            "volume": "体积",
+            "address": "地址",
+            "title": "AMM奖励",
+            "rewards": "奖励",
+            "subtitle4": "所提供的结果是临时性的，最终将由泰勒斯 CCs 和泰勒斯委员会进行更正",
+            "subtitle3": "您可以在下表中查看预期的泰勒斯奖励金额。",
+            "subtitle2": "此奖励将持续到 UTC 时间 1 月 7 日上午 8 点。一旦代币在 Optimism L2 上可用，THALES 代币奖励将立即分发。有关更多信息，请<b>阅读我们的博客文章</b>",
+            "round": "圆形的",
+            "subtitle1": "第一批泰勒斯乐观市场获得20,000泰勒斯激励。",
+            "subtitle1a": "第二批也将获得 20,000 THALES（空头交易 10,000 THALES，多头交易 10,000 THALES）的激励。该奖励将根据交易量按比例分配给所有<b>AMM 买家。</b>"
+        },
+        "amm-reporting": {
+            "market": "市场",
+            "volume": "体积",
+            "long-price": "看涨",
+            "spent-on-market": "在市场上花费",
+            "available-to-buy-short": "可以买短线",
+            "short-price": "看跌",
+            "sell-volume": "总销量",
+            "longs-held": "持有多头",
+            "total-volume": "总购买量",
+            "shorts-held": "举行的短裤",
+            "available-to-sell-short": "可卖空",
+            "longs-volume": "多头买入量",
+            "available-to-buy-long": "可长期购买",
+            "shorts-volume": "短裤购买量",
+            "available-to-sell-long": "可长期出售",
+            "shorts-sell-volume": "短裤卖出量",
+            "longs-sell-volume": "多头卖出量"
+        }
+    },
+    "governance": {
+        "title": "治理",
+        "you": "你",
+        "tabs": {
+            "thalesgov": {
+                "eth": "提示"
+            },
+            "thalescouncil": {
+                "eth": "选举"
+            },
+            "thales-stakers": "Thales质押者"
+        },
+        "back-to-proposals": "返回提案概述",
+        "status": {
+            "all": "全部",
+            "pending": "草稿",
+            "active": "投票",
+            "closed": "结束"
+        },
+        "sidebar": {
+            "title": {
+                "results": "结果",
+                "history": "投票",
+                "council-members": "现任理事会成员"
+            }
+        },
+        "proposal": {
+            "status-label": "状态",
+            "author-label": "作者",
+            "proposal-label": "提案",
+            "voting-system-label": "投票系统",
+            "start-date-label": "开始日期",
+            "end-date-label": "结束日期",
+            "snapshot-label": "快照",
+            "details-label": "细节",
+            "starts-in-label": "从。。开始",
+            "ends-in-label": "到。。结束",
+            "final-result-label": "最后结果t",
+            "no-proposals-found": "未找到提案",
+            "view-all-proposals": "“查看所有提案",
+            "vote-label": "投票",
+            "submit-vote-label": "投票",
+            "vote-note": "{{approvalVotes}} 的 {{totalVotes}} 票需要批准",
+            "voting-power-label": "您的投票权",
+            "vote-progress-label": "正在投票",
+            "vote-confirmation-message": "投票成功",
+            "type": {
+                "single-choice": "单选投票",
+                "weighted": "加权投票"
+            },
+            "voted-in-label": "投票",
+            "votes": "{{votes}} 投票",
+            "voting-approval-status": {
+                "in-progress": "进行中",
+                "not-passed": "没过",
+                "passed": "通过"
+            },
+            "pitch-by": "投球",
+            "see-pitch": "看到这个音高",
+            "vote-confirmation": "您确定要投票"
+        },
+        "no-votes": "对本提案无票",
+        "view-more": "查看更多",
+        "stakers": {
+            "staker-col": "质押者",
+            "total-staked-col": "全部质押",
+            "tooltip-staked-directly": "直接质押",
+            "tooltip-escrowed-amount": "托管数量",
+            "no-stakers-found": "未发现质押",
+            "view-all-stakers": "查看所有质押",
+            "number-of-stakers": "质押者总量",
+            "search-placeholder": "查找质押人"
+        }
+    },
+    "optimism": {
+        "learn-more": "了解更多",
+        "optimistic-gateway": "Optimism Gateway",
+        "optimistic-etherscan": "Optimism Etherscan",
+        "switch-to-l2": "切换到 L2",
+        "optimistic-l2": "Optimism L2",
+        "switch-to-l1": "切换到 L1",
+        "info": "由于 Optimism 上 L1 的最长汇总时间为 15 分钟，因此依赖于时间戳的操作最多可延迟 15 分钟。"
+    },
+    "amm": {
+        "type-label": "类型",
+        "return-label": "潜在利润",
+        "amm-disabled-warning": "此市场禁用 AMM 交易",
+        "amm-disabled": "AMM 交易禁用",
+        "return-tooltip": "如果此选项获胜，则潜在利润",
+        "max-limit-buy-tooltip": "从 AMM 购买的 {{currencyKey}} 选项的最大数量",
+        "price-changed-warning": "价格已更改，请查看",
+        "max-limit-sell-tooltip": "出售给 AMM 的最大 {{currencyKey}} 期权数量",
+        "skew-tooltip": "AMM 将在它更容易受到影响的方面增加价格影响",
+        "total-sell-label": "接收总数",
+        "skew-label": "倾斜冲击",
+        "beta": "测试版",
+        "total-buy-label": "支付总额",
+        "explanation-text": "<0>Thales AMM 是旨在为 Thales Binary Markets 提供流动性的智能合约。</0><0>AMM 使用 BlackScholes 算法来确定二元期权的实际价格。根据该价格和偏差（代表 AMM 对当前市场的敞口），AMM 将向交易者提供买入或卖出报价。</0><0>Thales 的 AMM 始终旨在重新平衡其敞口，因此如果从 AMM 购买的多头期权多于空头，这将对多头期权定价产生偏斜的价格影响，同时以基本价格提供空头期权。</0><0>由于 AMM 处于测试阶段，因此有一个上限(limit) 每个市场，可以随时买卖的期权数量是有限的。然而，即使一侧的所有期权都从 AMM 购买，一旦交易者购买相反头寸的期权，就会有更多的流动性可用。</0><0>Thales 的 AMM 仅支持在具有在市场成熟前 24 小时内通过 BlackScholes 计算出 10% 以上和 90% 以下的赔率，以避免边缘情况和最后一分钟的领先。</0><0>可以在此处找到有关 AMM 的更多信息：</0> <1 />"
+    },
+    "articles": {
+        "token": {
+            "list": {
+                "1": "THALES 代币是什么？",
+                "2": "它是如何分布的？",
+                "3": "如何获得THALES代币？",
+                "4": "如何质押 THALES 代币？",
+                "5": "为什么这个协议需要一个代币？"
+            },
+            "paragraphs": {
+                "1": "在技术方面，THALES 是以太坊网络上的<bold>固定供应标准 ERC-20 代币</bold>。\n\n 它的唯一目的是<bold>管理 Thales 协议</bold>，将 DAO 选举的投票权授予持有该协议的人。\n\n 这种对质押者的投票权显示在<bold>治理网站</bold>上，目前可用于参与泰勒斯理事会选举。\n\n 任何可能与协议相关的代币的进一步用途也可以由 ThalesDAO 治理结构决定和投票，更具体地说是 Thales 委员会。",
+                "2": "有关不同分配的更详细细分和解释，我们强烈建议您喝杯您最喜欢的热饮，然后深入了解 <bold>THALES 代币经济学博文。</bold>",
+                "3": "您可以在以太坊主网上的<bold>DODO exchange</bold>和<bold2>Uniswap</bold2>中获取THALES代币。也可以通过 1inch 和 Matcha 等聚合器来实现。\n\n THALES 代币将很快在 Optimism 网络（以太坊第 2 层）上可用。",
+                "4": "质押您的 THALES 代币意味着您<bold>将它们锁定在智能合约中以获得投票权</bold>，只要这些代币仍然质押，就有效地使这些代币“不可转让”。为了解除他们的质押，有一个 7 天的冷静期，之后可以再次转移 THALES 代币。\n\n 按照<bold>此详细指南</bold>的分步说明和屏幕截图来质押您的 THALES 代币。",
+                "5": "THALES 代币是治理结构的核心，它是实现<bold>Parimutuel 市场利基市场的有效发展和创新步伐的关键组成部分，同时仍保持分散的组织结构。</bold>",
+                "6": "THALES 代币是治理结构的核心，它是实现<bold>Parimutuel 市场利基市场的有效发展和创新步伐的关键组成部分，同时仍保持分散的组织结构。</bold>"
+            },
+            "title": "泰勒斯通证"
+        },
+        "governance": {
+            "list": {
+                "0": "泰勒斯 DAO",
+                "1": "泰勒斯 DAO",
+                "2": "泰勒斯理事会（又名“大脑”）",
+                "3": "财政部 DAO（又名“口袋”）",
+                "4": "协议 DAO（又名“The Hearth”）",
+                "5": "如何开始参与"
+            },
+            "paragraphs": {
+                "1": "这些组织中的每一个都有自己的<bold>一系列职责</bold>，它们都共同肩负着相同的使命，即为泰勒斯社区提供最优化、最高效和抗审查的方式，成为该项目。",
+                "2": "泰勒斯理事会可以被视为<bold>泰勒斯治理体系的首席咨询机构。</bold>\n\n Thales 委员会的主要职责是进行 <bold>Thales 改进提案 (“TIP”) 审查，</bold> 与 TIP 提案者互动，同时<bold>就拟议变更的影响进行辩论，并与 ProtocolDAO</bold> 协调技术影响和实施。\n\n 但是……什么是小费？\n\n Thales 改进提案 (TIP) 是用于<bold>描述对核心 Thales 协议的拟议更改的工件。</bold>\n\n 它们可以<bold>由任何人创作</bold>，并包含与提议的想法相关的设计决策背后的动机、技术规范和基本原理。它基本上是一个<bold>设计文档</bold>，向泰勒斯社区提供有关系统提议更改的信息。\n\n 作者负责在<bold>社区</bold>内建立共识并记录不同意见。\n\n 您可以在 <bold>治理网站</bold> 上找到所有以前的 TIP 以及包含所有 TIP 创建指南的草稿<bold>这里</bold>。\n\n 泰勒斯理事会成员由社区选举产生，在泰勒斯理事会选举期间，社区利用他们质押的泰勒斯代币作为投票权。这些选举是在预先定义的时间间隔组织的，其中公开征集被提名人（及其宣传）。欢迎大家自荐，参与泰勒斯治理。",
+                "3": "Treasury DAO 的主要目的是管理 Thales 协议的金库，并负责适当地激励其他管理机构，优先考虑资产管理策略，并支持协议的进一步发展。 Thales 治理结构的所有 DAO 角色都由财政部 DAO 支付一定的津贴。\n\n 在这个早期阶段，这个 DAO 没有定期选举，但如果泰勒斯委员会在时间到期时决定这样做的话，可能会有。",
+                "4": "Protocol DAO 是 Thales 协议核心智能合约的所有者，其主要职责是<bold>升级和发布新合约</bold>（代表 Thales 委员会）、<bold>实施已批准的 TIP</bold>、和<bold>操作安全性。</bold>\n\n Protocol DAO 由其成员以 m-of-n 多重签名钱包（“Multisig”）容量进行管理，这些钱包的选择是通过平衡填充该组的需要与符合长期利益的合格和有能力的成员来选择的。该项目。\n\n 这个 DAO 在这个早期阶段没有定期选举，因为它需要让成员在技术层面上深入熟悉协议架构、依赖关系和路线图。",
+                "5": "如果您对做出贡献感到感动或只是对 Thales 正在做的事情感到好奇，那么到目前为止，开始您的旅程的最佳方式是<bold>加入 Thales Discord</bold>，介绍自己，然后看看有趣的讨论在哪里发生。\n\n 我们会等你的。让我们一起建造吧！",
+                "intro2": "这种治理框架的目标是促进<bold>抗审查</bold>和<bold>去中心化</bold>，同时保持<bold>低摩擦</bold>以进行决策和新功能部署。",
+                "intro1": "Thales 治理 Thales 协议治理系统由各种<bold>去中心化自治组织</bold> (DAO) 组成，负责监督协议运营和开发的不同部分。\n\n 该治理结构的核心是 <bold>THALES 代币质押者</bold>，他们负责通过在不同的选举中<bold>投票</bold>来监督和选举 DAO 成员。"
+            },
+            "title": "泰勒斯治理"
+        },
+        "whitepaper": {
+            "paragraphs": {
+                "1": {
+                    "section1": "去中心化衍生品提供了一个新的机会，可以消除划分全球市场的障碍，降低净效率并使细分市场容易受到不透明的影响。比特币和以太坊衍生品经历了巨大的增长，特别是在中心化平台上以永久掉期和普通期权的形式出现。由于中心化解决方案的交易对手风险较高，因此对去信任、自我托管、去中心化的加密资产衍生产品的需求是显而易见的。泰勒斯的目标是通过为参与者提供一种新颖的链上、无需许可、通用且非托管的衍生协议，为缓解这一需求做出贡献。",
+                    "title": "1 简介",
+                    "section2": "泰勒斯使参与者能够参与价格变动或围绕可用链上数据馈送的受支持资产的某些链上结果。泰勒斯通过利用自己的派息市场机制来实现这一目标。这些 parimutuel 市场可由任何用户部署，并由 Synthetix 的旗舰产品不可审查和去中心化的稳定币 sUSD 作抵押。这些市场部署了自定义罢工阈值和到期日期，允许前所未有的多功能性\n瓷砖。 Thales parimutuel 市场使用的大多数链上数据源都来自 Chainlink，并被用作市场结算的不可变事实来源。",
+                    "section3": "结合上述所有内容，可以推断出以下陈述：没有办法阻止一个人用 sUSD 为 Thales parimutuel 市场铸造头寸代币，也没有办法阻止一个人为 sUSD 行使他获胜的头寸代币。如果前端由于某种原因无法正常工作，用户始终可以直接与泰勒斯智能合约进行交互。"
+                },
+                "2": {
+                    "section1": "泰勒斯协议 Parimutuel 市场架构由简单、安全和有效的智能合约组成，它们共同管理市场创造、做市和市场决议。",
+                    "title": "2 Parimutuel 市场架构",
+                    "section2": "泰勒斯架构的核心是 ParimutuelMarketManager.sol 智能合约。该合约管理平台上的每个单独的 parimutuel makret。每个市场创建、协议内 sUSD 转移和市场决议都通过 Parimutuel Market Manager 智能合约进行管理。合同中的特定读取方法还可以实现 Thales Parimutuel Markets 的外部集成。在部署新市场经理的情况下，可以调用旧市场经理将所有市场的所有权转移给新的市场经理智能合约。",
+                    "section4": "该合约描述了每个创建的派利互惠货币市场。它为其描述的市场存储 sUSD 抵押品，然后为市场创建者和做市商铸造位置代币。位置代币的铸造过程是通过最小代理工厂完成的，以显着降低气体成本。该合约还管理市场的解决方案，它描述了将获胜的位置代币兑换为 sUSD 抵押品的位置。",
+                    "section5": "这是一个 ERC-20 代币合约，代表由 ParimutuelMarket.sol 合约描述的市场铸造的位置代币。这些代币用于在各自的市场成熟度上行使 sUSD。",
+                    "section3": "该合约的目的是在经理合约 (ParimutuelMarketManager.sol) 调用时创建一个新的 Parimutuel 市场，并由市场创建者设置自定义参数。市场工厂合约使用最小代理模式（在以太坊改进提案 1167 中描述）来创建新的市场。这种模式大大降低了创建市场的 gas 成本（从 5,000,000 Gas Limit Units 到 1,000,000 Gas Limit Units）。"
+                },
+                "3": {
+                    "title": "3 泰勒斯治理结构",
+                    "listitem3": "财政部DAO",
+                    "listitem1": "泰勒斯委员会",
+                    "listitem2": "Protocol Dao",
+                    "section2": "泰勒斯治理结构由三个核心 DAO 组成：",
+                    "section1": "泰勒斯协议治理系统由各种去中心化自治组织 (DAO) 组成，负责监督协议运营和发展的不同部分。这种治理结构的基础是负责监督和选举 DAO 官员的 ThalesDAO 治理代币持有者。这种治理框架的目标是促进审查阻力和去中心化，同时保持决策和新功能部署的低摩擦。",
+                    "section3": " 每个 DAO 都有自己的一套职责，它们共同肩负着相同的使命，即为泰勒斯社区提供最优化、最高效和抗审查的方式，成为项目的主要驱动力。"
+                },
+                "4": {
+                    "section3": "参与协议 DAO 和财政部 DAO 的候选人还必须持有大部分代币才有资格。质押代币不可转让。如果质押代币的持有人决定要转移其质押代币，则必须在持续约 7 天的冷静期内解除质押，在此期间不得转让或用于治理目的。",
+                    "section2": "为了获得投票权，THALES 代币持有者需要质押 THALES 治理代币。 Thales 质押合约是用户锁定其 THALES 以获得协议投票权的合约。 THALES 质押余额将用于确定治理投票的投票权数量。在质押并获得投票权后，代币持有者可以参与新一届泰勒斯理事会的选举。",
+                    "section1": "泰勒斯 DAO (THALES) 治理代币是用于治理泰勒斯协议的标准 ERC-20 代币。这些代币授予各自持有人参与泰勒斯治理职能的权利，并使泰勒斯代币持有人成为进一步开发协议的每一个关键决策的基础。任何可能与协议相关的代币的进一步用途也可以由上述治理功能决定和投票。",
+                    "title": "4 THALES 治理代币"
+                },
+                "abstract": {
+                    "section1": "Thales 是一种协议，允许在以太坊网络上形成和参与点对点派利互惠货币市场。泰勒斯诞生于 Synthetix 生态系统，利用 ChainLink 提供的价格馈送、0x 限价订单簿和 sUSD 稳定币，为参与者提供一种新颖的链上、无需许可和非托管方式来参与加密资产和某些特定的价格变动。非加密资产。",
+                    "title": "抽象的"
+                },
+                "1-1": {
+                    "section4": "Thales 上的 Parimutuel 市场由市场创造者组成，他们根据自己的意愿设置市场参数。对于市场创建，他们会获得一份支持资产的列表以供选择，并且可以自由手动输入这个新市场的行权价和到期日（包括特定时间）。 Market Creator 还需要为这个新市场存入初始抵押品，并为此获得相应的位置代币。",
+                    "section1": "泰勒斯的主要创新是一种新的派利互惠市场形成和参与方法。 Parimutuel 市场的定义是一个市场，其中抵押品被放置在一个池中，并且在市场结算事件最终确定之前不会确定对参与者的最终支付。通过利用以太坊智能合约的安全、无许可和非托管性质，每个参与者都能够围绕具有自定义参数的受支持资产形成泰勒斯派利货币市场，并且每个参与者都能够参与任何已形成的泰勒斯派利基金市场。除了多功能性和开放性之外，与其他交易平台相比，泰勒斯派利基金市场还具有风险环境有限的优势。限制下行和限制上行，从一开始就可以计算，参与者接触到一种易于理解和熟悉的方式来利用各种资产的价格变动（或缺乏价格变动）。",
+                    "section3": "虽然泰勒斯非常适合为与加密资产价格变动相关的事件创建 Parimutuel Markets，但该协议不仅限于此类用途，理论上，Parimutuel Markets 可以用于任何类型的链下事件。此外，一些未被以太坊区块链本地跟踪的加密资产（例如 BTC）也可能构成 Parimutuel 市场事件的基础。这是通过利用可在区块链上读取和处理的信息的网络认证参考数据提供者（称为“预言机”）来实现的。鉴于泰勒斯的目标是一个没有特定、离散和单方面故障点的系统，该协议依赖于 ChainLink 去中心化预言机解决方案项目来提供此信息。",
+                    "title": "1.1 泰勒斯 Parimutuel 市场",
+                    "section5": "做市商汇集到市场池中的资产被用作保护铸造的位置代币的抵押品。每个抵押品单位都会铸造相同数量的每个位置代币，这些代币代表特定 parimutuel 市场中的头寸。有两种不同类型的头寸代币：在市场决定性事件积极发生的情况下，参与者的头寸得到保障，在相同事件消极发生的情况下，参与者的头寸得到保障。只有其中一种位置代币的持有者才能根据他们的要求获得保险。",
+                    "section2": "Thales Parimutuel Markets 代表了一种新颖的金融机制，其中参与者的抵押品被放在一个基于以太坊智能合约的池中，并且该 Parimutuel Market 池中的参与者共同确保一些参与者的抵押品受到保护（甚至获得意外之财）结果不确定的未来事件。根据该市场的特定事件在现实中的表现方式，Parimutuel 市场基础的智能合约将根据相关市场参与者的聚合活动建立的规则和条款自主和独立地执行。"
+                },
+                "1-2": {
+                    "title": "1.2 不可审查和去中心化的抵押品",
+                    "section1": "泰勒斯智能合约专门支持 sUSD，一种不可审查的去中心化稳定币作为抵押品。这个稳定币是 Synthetix 的旗舰产品。 Synthetix 是一个开源项目，提供加密资产（即 Synths），其价值跟踪参考资产的价值，无需中央机构或中介。将 sUSD 作为合成器在功能上等同于针对 ERC-20 抵押品的流动市场价值发行以法币计价的负债，该抵押品以 Synthetix 原生的加密资产“SNX”计价。对于希望避免审查风险、与传统银行或金融服务相关的挫折、与临时地理位置相关的用户以及许多其他加密资产固有的波动性，持有 sUSD 会更安全。 sUSD 多次超额抵押，这意味着每个 sUSD 的法定价值都有 4-7 倍的 SNX 抵押品支持。这种方法旨在在上述风险出现之前先发制人地减轻风险，并使 Synthetix 实现其稳定 sUSD 价值的使命。此外，围绕 sUSD 设计的充分开发的用例使该协议在可预见的未来能够顺利运行。没有办法阻止一个人向另一个人发送 sUSD。同样，无法阻止参与者使用 sUSD 在 Thales 上铸造位置代币，也无法阻止参与者使用其获胜的 sUSD 位置代币。如果前端由于某种原因无法正常工作，用户始终可以通过区块链浏览器直接与泰勒斯智能合约进行交互。"
+                },
+                "1-3": {
+                    "section1": "参与者对某个泰勒斯市场的敞口由位置代币决定。目前有两种不同类型的位置代币：一种是在某个市场事件正面解决的情况下确保头寸，另一种是在市场事件消极解决的情况下确保头寸。这些位置代币由市场创造者和做市商铸造。在形成市场时，Market Creator 需要存入足够的抵押品来覆盖市场的两端。该抵押品被锁定在该特定市场的智能合约中，该合约按比例铸造两种类型的位置代币。铸造的位置代币数量对应于所存抵押品的数量，因此只有代币的一方（获胜方）能够以 1:1 的比例赎回抵押品，而另一方将被视为一文不值。市场创造者并不是唯一提供抵押品的参与者。其他参与者，即做市商，也可以提供额外的 sUSD 抵押品以增加池规模，并随后为该特定 Parimutuel 市场铸造位置代币。做市商和市场创建者之间唯一的技术区别是市场创建者发起了相关池的创建。当做市商在特定市场创建者发起的市场上铸造位置代币时，该市场创建者将获得对这些交易评估的部分费用，而其余费用则分配给 ThalesDAO 费用池。",
+                    "title": "1.3 位置代币"
+                },
+                "2-1": {
+                    "title": "2.1 市场创造架构",
+                    "section1": "任何以太坊网络用户都可以在泰勒斯上创建 Parimutuel 市场，不受任何限制。用于创建市场的支持资产是范围广泛的 Chainlink 支持的加密货币、股票、商品、指数、外汇货币和其他奇异的链上数据馈送的价格馈送。\n市场创建者需要的输入是：",
+                    "listitem4": "初始抵押品 (sUSD)",
+                    "listitem1": "资产",
+                    "section2": "在 <bold>ParimutuelMarketFactory.sol</bold> 合约部署自定义 ParimutuelMarket.sol 后，市场合约从初始抵押品中铸造出与 sUSD 成比例的位置代币并将它们转移给市场创建者。",
+                    "chartlabel": "图 1：市场创建工作流程",
+                    "listitem3": "市场到期时间和日期",
+                    "listitem2": "行使价/价值/金额"
+                },
+                "2-2": {
+                    "section1": "对于流动性提供和做市，泰勒斯协议使用铸币模型。与创建市场一样，任何以太坊网络用户都可以通过存入 sUSD 作为抵押品来为任何创建的市场铸造位置代币。对于每个存入的 sUSD，都会铸造相同数量的两种类型的位置代币。这些类型中只有一种能够兑换 sUSD 作为获胜头寸，这取决于市场创建者选择作为市场结算的事件。",
+                    "section2": "<bold>为特定市场铸造的每种位置代币的总量始终与在市场合约中为其提供保险的 sUSD 抵押品数量相关。</bold>",
+                    "title": "2.2 做市架构",
+                    "chartlabel": "图 2：做市工作流程"
+                },
+                "2-3": {
+                    "chartlabel": "图 3：市场结算和位置代币行使",
+                    "section1": "在特定市场达到市场创建者在市场创建期间选择和设置的市场成熟时间和日期后，该市场开始成熟阶段。在此阶段，Winning Positional Token 持有者可以从市场抵押品池中以 1:1 的比例赎回 sUSD，以获得其 Winning Positional Token。",
+                    "title": "2.3 市场结算和位置代币行使架构",
+                    "section2": "第一个在某个市场行使其中奖代币的中奖持仓代币持有者也会在行权前触发该市场的市场结算。人们在泰勒斯协议上行使其获胜位置代币的默认时间限制是自所述市场到期日起 6 个月。 6 个月后，市场从协议中删除。"
+                },
+                "3-1": {
+                    "listitem7": "测试用例 - 测试用例可以在实施阶段添加，但在实施之前是必需的。",
+                    "listitem1": "序言 - 包含有关 TIP 的元数据的标题，包括 TIP 编号、简短的描述性标题和作者详细信息。",
+                    "listitem8": "版权弃权 - 所有提示必须在公共领域。",
+                    "listitem4": "动机（*可选）- 动机对于想要改变泰勒斯的 TIP 至关重要。它应该清楚地解释为什么现有规范不足以解决 TIP 解决的问题。没有足够动机的 TIP 提交可能会被彻底拒绝。",
+                    "listitem6": "基本原理——基本原理通过描述设计的动机以及做出特定设计决策的原因来充实规范。它应该描述被考虑的替代设计和相关工作，例如。其他语言如何支持该功能。理由还可以提供社区内达成共识的证据，并且应该讨论在讨论期间提出的重要反对意见或担忧。",
+                    "section3": " 每个<bold>TIP</bold>都需要有以下部分：",
+                    "listitem3": "摘要 - 对正在解决的技术问题的简短（200 字）描述。",
+                    "section2": "泰勒斯改进建议 (TIP) 是用于描述对核心泰勒斯协议的拟议更改的工件。它们可以由任何人创作，并具有与提议的想法相关的设计决策背后的动机、技术规范和基本原理。它是一份设计文档，向泰勒斯社区提供有关系统拟议变更的信息。作者负责在社区内建立共识并记录不同意见。",
+                    "listitem5": "规范——技术规范应该描述任何新特性的语法和语义。",
+                    "section1": "泰勒斯理事会可以被认为是泰勒斯治理体系的首席咨询机构。泰勒斯委员会成员由质押代币持有者社区按照协议定义的时间间隔选举产生，而这些代币仍被质押。 Thales 委员会的主要职责是进行 <bold>Thales 改进提案（“TIP(s)”）</bold> 审查，与 TIP 提案者互动，辩论提议的变更的影响，并就技术影响和协议与 DAO 进行协调。实施。",
+                    "title": "3.1 泰勒斯理事会",
+                    "listitem2": "简单总结——“如果你不能简单地解释它，你就理解得不够好。” TIP 的简化且通俗易懂的解释。"
+                },
+                "3-2": {
+                    "title": "3.2 Protocol DAO",
+                    "section1": "协议 DAO 是协议核心智能合约的所有者。 Protocol DAO 的主要职责是升级和发布新合同（代表 Thales 委员会）、实施已批准的 TIP 和运营安全。 Protocol DAO 由其成员以 m-of-n 多重签名钱包（“Multisig”）容量进行管理，这些成员通过平衡填充该组的需要与符合长期利益的合格、有能力的成员来选择。项目。"
+                },
+                "3-3": {
+                    "title": "3.3 国库 DAO",
+                    "section1": "Treasury DAO 的主要目的是管理 Protocol 的金库。财政部 DAO 负责适当地激励其他管理机构并支持协议的进一步发展。 Thales 治理结构的所有 DAO 角色都由财政部 DAO 支付一定的津贴。"
+                }
+            },
+            "date": "2021 年 11 月 2 日",
+            "title": "泰勒斯白皮书"
+        }
+    },
+    "game": {
+        "connect-wallet-warning": "为了启用进度跟踪，请在开始游戏前连接您的以太坊钱包。"
+    },
+    "migration": {
+        "migration-opt-out-notice": {
+            "button": {
+                "opt-out-label": "选择退出",
+                "cancel-opt-out-label": "取消退出",
+                "progress-label": "提交中..."
+            },
+            "opt-out-text": "<0>所有质押、托管和无人认领的 THALES 计划按照 </0><1 /> 自动迁移到 L2 Optimism 主网。<0>如果您想退出此迁移，并将您的 THALES 保留在 L1 主网上，您可以使用您的钱包在以下消息上签名。</0>",
+            "cancel-opt-out-text": "<0>所有质押、托管和无人认领的 THALES 计划按 </0><1 /> 自动迁移到 L2 Optimism 主网。<0>您已选择退出此迁移，并将您的 THALES 保留在 L1 主网上。如果您确实希望参与迁移，则可以取消选择退出。</0>"
+        },
+        "migrate-button": {
+            "label": "迁移",
+            "confirmation-message": "代币成功迁移到 L2",
+            "progress-label": "正在迁移..."
+        },
+        "swap-button": {
+            "label": "交换",
+            "confirmation-message": "代币兑换成功",
+            "progress-label": "交换进行中..."
+        },
+        "migration-messages": {
+            "retro-airdrop": "<0>复古空投已根据</0><1 />迁移到L2。",
+            "staking": "<0>THALES Staking 已根据 </0><1 /> 迁移到 L2。",
+            "vesting": "<0>托管的 THALES 已根据 </0><1 /> 迁移到 L2。",
+            "retro-unlock": "<0>每个 </0><1 /> 都可以在 L1 上使用此发行版。"
+        },
+        "migration-notice": {
+            "button-label": "迁移泰勒斯",
+            "text": "您可以将 THALES 迁移到 L2 Optimistic 主网"
+        },
+        "tabs": {
+            "withdraw": "提取",
+            "swap": "交换",
+            "migrate": "迁移"
+        },
+        "from-label": "从",
+        "to-label": "到",
+        "title": "移民",
+        "migration-delay-info": "存款需要大约 20 分钟才能在 Optimistic 主网上被认为是最终的。",
+        "migration-multisig-contact-warning": "多重签名或合约不应直接迁移，否则您将失去资金。",
+        "migration-amount-label": "迁移金额",
+        "migrated-rewards-title": "迁移奖励",
+        "info-tooltip": "<0>迁移过程中，THALES首先交换到L1主网上的OpTHALES，然后根据</0><1 />桥接到L2 Optimistic主网进入L2 THALES。"
+    }
+}

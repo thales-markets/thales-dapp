@@ -1,56 +1,56 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
-import { OptionsMarkets } from 'types/options';
-import dotenv from 'dotenv';
 import {
     Paper,
     Table,
-    TableContainer,
-    TableHead,
     TableBody,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TablePagination,
     TableRow,
     withStyles,
-    TablePagination,
-    TableFooter,
 } from '@material-ui/core';
-import Currency from 'components/Currency';
-import { useTranslation } from 'react-i18next';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { buildOptionsMarketLink } from 'utils/routes';
-import {
-    Arrow,
-    ArrowsWrapper,
-    PhaseLabel,
-    StyledTableCell,
-    TableHeaderLabel,
-    Star,
-    DisplayContentsAnchor,
-} from './components';
-import Pagination from './Pagination';
-import styled from 'styled-components';
-import { OrderDirection, PhaseFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
-import down from 'assets/images/down.svg';
-import up from 'assets/images/up.svg';
-import star from 'assets/images/star.svg';
-import fullStar from 'assets/images/full-star.svg';
-import downSelected from 'assets/images/down-selected.svg';
-import upSelected from 'assets/images/up-selected.svg';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import axios from 'axios';
-import { USD_SIGN } from 'constants/currency';
-import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
-import { FlexDivCentered, Image } from '../../../../theme/common';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import arrowDown from 'assets/images/arrow-down.svg';
-import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
 import arrowUp from 'assets/images/arrow-up.svg';
 import basketball from 'assets/images/basketball.svg';
-import volleyball from 'assets/images/volleyball.svg';
+import burn from 'assets/images/burn.png';
+import downSelected from 'assets/images/down-selected.svg';
+import down from 'assets/images/down.svg';
+import flippening from 'assets/images/flippening.png';
+import fullStar from 'assets/images/full-star.svg';
 import medals from 'assets/images/medals.png';
+import star from 'assets/images/star.svg';
 import tennis from 'assets/images/tennis.svg';
+import upSelected from 'assets/images/up-selected.svg';
+import up from 'assets/images/up.svg';
+import volleyball from 'assets/images/volleyball.svg';
 import xyz from 'assets/images/xyz.png';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import axios from 'axios';
+import Currency from 'components/Currency';
+import { USD_SIGN } from 'constants/currency';
+import dotenv from 'dotenv';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import { TooltipDollarIcon } from 'pages/Options/CreateMarket/components';
+import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
+import useFlippeningQuery from 'queries/options/useFlippeningQuery';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { ETHBurned, Flippening, OptionsMarkets } from 'types/options';
+import { buildOptionsMarketLink } from 'utils/routes';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
+import { FlexDivCentered, Image } from '../../../../theme/common';
+import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
+import { OrderDirection, PhaseFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
+import { Arrow, ArrowsWrapper, PhaseLabel, Star, StyledTableCell, TableHeaderLabel } from './components';
+import Pagination from './Pagination';
+import SPAAnchor from '../../../../components/SPAAnchor';
+import { getIsOVM } from 'utils/network';
 
 dotenv.config();
 
@@ -91,12 +91,35 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
         const networkId = useSelector((state: RootState) => getNetworkId(state));
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+        const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+        const [flippening, setFlippening] = useState<Flippening | undefined>(undefined);
+        const [ethBurned, setEthBurned] = useState<ETHBurned | undefined>(undefined);
+
+        const flippeningQuery = useFlippeningQuery({
+            enabled: isAppReady,
+        });
+
+        useEffect(() => {
+            if (flippeningQuery.isSuccess && flippeningQuery.data) {
+                setFlippening(flippeningQuery.data);
+            }
+        }, [flippeningQuery.isSuccess, flippeningQuery.data]);
+
+        const ethBurnedQuery = useETHBurnedCountQuery({
+            enabled: isAppReady,
+        });
+
+        useEffect(() => {
+            if (ethBurnedQuery.isSuccess && ethBurnedQuery.data) {
+                setEthBurned(ethBurnedQuery.data);
+            }
+        }, [ethBurnedQuery.isSuccess, ethBurnedQuery.data]);
 
         const [page, setPage] = useState(0);
         const handleChangePage = (_event: unknown, newPage: number) => {
             setPage(newPage);
         };
-        const [rowsPerPage, setRowsPerPage] = React.useState(10);
+        const [rowsPerPage, setRowsPerPage] = React.useState(15);
         const numberOfPages = Math.ceil(optionsMarkets.length / rowsPerPage) || 1;
 
         const calcDirection = (cell: HeadCell) => {
@@ -157,7 +180,13 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
             { id: 2, label: t(`options.home.markets-table.asset-col`), sortable: true },
             { id: 3, label: t(`options.home.markets-table.asset-price-col`), sortable: true },
             { id: 4, label: t(`options.home.markets-table.strike-price-col`), sortable: true },
-            { id: 5, label: t(`options.home.markets-table.pool-size-col`), sortable: true },
+            {
+                id: 5,
+                label: getIsOVM(networkId)
+                    ? t(`options.home.markets-table.amm-size-col`)
+                    : t(`options.home.markets-table.pool-size-col`),
+                sortable: true,
+            },
             { id: 6, label: t(`options.home.markets-table.time-remaining-col`), sortable: true },
             { id: 7, label: t(`options.home.markets-table.open-orders-col`), sortable: true },
             { id: 8, label: t(`options.home.markets-table.phase-col`), sortable: false },
@@ -215,6 +244,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                     currentAssetPrice,
                                     market.strikePrice
                                 );
+                                const isMarketInTradingCompetition =
+                                    new Date(market.timestamp) >= new Date('Oct 10 2021 10:00:00 UTC') &&
+                                    new Date(market.maturityDate) <= new Date('Nov 01 2021 11:00:00 UTC');
                                 return (
                                     <StyledTableRow
                                         className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
@@ -232,14 +264,20 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
                                             />
                                         </StyledTableCell>
-                                        <DisplayContentsAnchor
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             {market.customMarket ? (
-                                                <StyledAnchoredTableCell style={{ textAlign: 'left' }}>
+                                                <StyledAnchoredTableCell
+                                                    style={{
+                                                        textAlign: 'left',
+                                                    }}
+                                                    className={`
+                                                ${isMarketInTradingCompetition ? 'tooltip-icon' : ''}`}
+                                                >
                                                     <ReactCountryFlag
                                                         countryCode={countryToCountryCode(market.country as any)}
                                                         style={{ width: 32, height: 32, marginRight: 10 }}
@@ -251,31 +289,61 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         ></CustomIcon>
                                                     )}
                                                     {market.country}
+                                                    {isMarketInTradingCompetition && (
+                                                        <TooltipDollarIcon
+                                                            title={t(`options.home.markets-table.competition-tooltip`)}
+                                                        ></TooltipDollarIcon>
+                                                    )}
                                                 </StyledAnchoredTableCell>
                                             ) : (
-                                                <StyledAnchoredTableCell>
+                                                <StyledAnchoredTableCell
+                                                    className={`
+                                                ${isMarketInTradingCompetition ? 'tooltip-icon' : ''}`}
+                                                >
                                                     <Currency.Name
                                                         currencyKey={market.currencyKey}
                                                         showIcon={true}
                                                         iconProps={{ type: 'asset' }}
                                                         synthIconStyle={{ width: 32, height: 32 }}
+                                                        spanStyle={{ float: 'left' }}
                                                     />
+                                                    {isMarketInTradingCompetition && (
+                                                        <TooltipDollarIcon
+                                                            iconProps={{
+                                                                display: 'flex',
+                                                                marginTop: 3,
+                                                                position: 'inherit',
+                                                            }}
+                                                            title={t(`options.home.markets-table.competition-tooltip`)}
+                                                        ></TooltipDollarIcon>
+                                                    )}
                                                 </StyledAnchoredTableCell>
                                             )}
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
-                                                {currentAssetPrice
+                                                {market.customMarket
+                                                    ? market.eventName === 'Flippening Markets' ||
+                                                      market.eventName === 'ETH/BTC market cap ratio'
+                                                        ? flippening
+                                                            ? formatCurrency(flippening.ratio)
+                                                            : '-'
+                                                        : market.eventName === 'ETH burned count'
+                                                        ? ethBurned
+                                                            ? formatCurrency(ethBurned.total)
+                                                            : '-'
+                                                        : 'N/A'
+                                                    : currentAssetPrice
                                                     ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
                                                     : 'N/A'}
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -283,8 +351,17 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                         >
                                             <StyledAnchoredTableCell>
                                                 {market.customMarket ? (
-                                                    market.eventName === 'XYZ airdrop claims' ? (
-                                                        formatCurrency(market.outcome || 0, 0)
+                                                    market.eventName === 'XYZ airdrop claims' ||
+                                                    market.eventName === 'ETH burned count' ||
+                                                    market.eventName === 'Flippening Markets' ||
+                                                    market.eventName === 'ETH/BTC market cap ratio' ? (
+                                                        formatCurrency(
+                                                            market.outcome || 0,
+                                                            market.eventName === 'Flippening Markets' ||
+                                                                market.eventName === 'ETH/BTC market cap ratio'
+                                                                ? 2
+                                                                : 0
+                                                        )
                                                     ) : (
                                                         market.eventName
                                                     )
@@ -323,18 +400,25 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     </FlexDivCentered>
                                                 )}
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
-                                                {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                                {getIsOVM(networkId) ? (
+                                                    <>
+                                                        <span className="green">{market.availableLongs}</span> /{' '}
+                                                        <span className="red">{market.availableShorts}</span>
+                                                    </>
+                                                ) : (
+                                                    <>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</>
+                                                )}
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -343,8 +427,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             <StyledAnchoredTableCell>
                                                 <TimeRemaining end={market.timeRemaining} fontSize={14} />
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -353,8 +437,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             <StyledAnchoredTableCell>
                                                 {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -365,7 +449,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     {t(`options.phases.${market.phase}`)}
                                                 </PhaseLabel>
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
+                                        </SPAAnchor>
                                     </StyledTableRow>
                                 );
                             })}
@@ -418,6 +502,10 @@ export const StyledTableRow = withStyles(() => ({
         '&:last-child a:last-child td': {
             borderBottomRightRadius: '23px',
         },
+
+        '&:last-child td:last-child': {
+            borderBottomRightRadius: '23px',
+        },
         '&.clickable': {
             cursor: 'pointer',
             '&:hover': {
@@ -429,6 +517,15 @@ export const StyledTableRow = withStyles(() => ({
 
 const StyledAnchoredTableCell = styled(StyledTableCell)`
     vertical-align: middle !important;
+    .tooltip-icon {
+        border-radius: 50%;
+        width: 26px;
+        height: 26px;
+        position: absolute;
+        display: inline;
+        align-self: center;
+        padding: 0px !important;
+    }
 `;
 
 export const PaginationWrapper = styled(TablePagination)`
@@ -448,6 +545,12 @@ export const PaginationWrapper = styled(TablePagination)`
     }
     .MuiTablePagination-toolbar > .MuiTablePagination-caption:last-of-type {
         display: none;
+    }
+    .MuiTablePagination-selectRoot {
+        @media (max-width: 767px) {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
     }
 `;
 
@@ -513,6 +616,15 @@ export const eventToIcon = (event: string) => {
         }
         if (event.toLowerCase().indexOf('xyz') !== -1) {
             return xyz;
+        }
+        if (
+            event.toLowerCase().indexOf('flippening markets') !== -1 ||
+            event.toLowerCase().indexOf('market cap ratio') !== -1
+        ) {
+            return flippening;
+        }
+        if (event.toLowerCase().indexOf('eth burned count') !== -1) {
+            return burn;
         }
     }
 };

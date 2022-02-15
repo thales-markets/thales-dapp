@@ -39,28 +39,8 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
         <>
             <div style={{ flex: '1 1 100%' }}></div>
             <FlexDivCentered>
-                <p
-                    style={{
-                        margin: 0,
-                        width: '64px',
-                        fontSize: '13px',
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        color: '#F6F6FE',
-                        marginRight: 4,
-                    }}
-                >
-                    {t(`common.pagination.page`)}
-                </p>
-                <FlexDivCentered
-                    style={{
-                        border: '1px solid #0a2e66',
-                        borderRadius: '32px',
-                        width: '110px',
-                        justifyContent: 'space-around',
-                        height: '40px',
-                    }}
-                >
+                <PageLabel>{t(`common.pagination.page`)}</PageLabel>
+                <PageSelector>
                     <Arrow src={backArrow} className={page === 0 ? 'disabled' : ''} onClick={PreviousPage} />
                     <p
                         style={{
@@ -78,7 +58,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                         className={page === numberOfPages - 1 ? 'disabled' : ''}
                         onClick={NextPage}
                     />
-                </FlexDivCentered>
+                </PageSelector>
                 <p
                     style={{
                         margin: 0,
@@ -96,5 +76,30 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
         </>
     );
 };
+
+const PageSelector = styled(FlexDivCentered)`
+    border: 1px solid #0a2e66;
+    border-radius: 32px;
+    width: 110px;
+    justify-content: space-around;
+    height: 40px;
+    @media (max-width: 767px) {
+        height: 30px;
+        width: 80px;
+    }
+`;
+
+const PageLabel = styled.p`
+    margin: 0;
+    width: 64px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    color: #f6f6fe;
+    marginright: 4px;
+    @media (max-width: 767px) {
+        width: 44px;
+    }
+`;
 
 export default Pagination;
