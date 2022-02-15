@@ -12,6 +12,7 @@ import { Theme } from '../Home';
 import Cookies from 'universal-cookie';
 import ROUTES from 'constants/routes';
 import { useTranslation } from 'react-i18next';
+import { buildHref } from 'utils/routes';
 
 type HeaderInput = {
     theme: Theme;
@@ -48,7 +49,7 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                     </ButtonWrapper>
                     <ButtonWrapper>
                         <ButtonContainer>
-                            <DAPPLink target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
+                            <DAPPLink rel="noreferrer" href={buildHref(ROUTES.Options.Home)}>
                                 <i className="icon-home icon-home--thales" /> DAPP
                             </DAPPLink>
                         </ButtonContainer>

@@ -2,8 +2,9 @@ import ROUTES from 'constants/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { navigateTo } from 'utils/routes';
+import { buildHref, navigateTo } from 'utils/routes';
 import LanguageSelector from 'components/LanguageSelector/V2';
+import { HashLink } from 'react-router-hash-link';
 
 type BurgerInput = {
     burgerState: boolean;
@@ -34,18 +35,17 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/using-thales/why-use-thales">
                     {t('header.links.learn.guides')}
                 </Link>
-                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}>
+                <Link rel="noreferrer" href={buildHref(ROUTES.Article.Whitepaper)}>
                     {t('header.links.learn.whitepaper')}
                 </Link>
-
-                <Link
-                    href="../#faq-section"
+                <HashLink
+                    to="/#faq-section"
                     onClick={() => {
                         setBurgerState(!burgerState);
                     }}
                 >
                     {t('header.links.faq')}
-                </Link>
+                </HashLink>
             </DropDownContainer>
 
             <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
@@ -54,10 +54,10 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
             <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                 {t('header.links.blog')}
             </Link>
-            <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
+            <Link rel="noreferrer" href={buildHref(ROUTES.Article.Governance)}>
                 {t('header.links.governance')}
             </Link>
-            <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
+            <Link rel="noreferrer" href={buildHref(ROUTES.Article.Token)}>
                 {t('header.links.token')}
             </Link>
 

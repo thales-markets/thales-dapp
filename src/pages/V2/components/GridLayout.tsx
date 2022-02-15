@@ -15,6 +15,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Theme } from '../Home';
 // import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
+import { buildHref } from 'utils/routes';
 
 type GridLayoutProps = {
     theme: Theme;
@@ -38,7 +39,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
             </TitleContainer>
             <ButtonContainer>
                 <ThalesButton>
-                    <Link target="_blank" rel="noreferrer" href={ROUTES.Options.Home}></Link>
+                    <Link rel="noreferrer" href={buildHref(ROUTES.Options.Home)}></Link>
                     <Logo className="icon icon--logo" />
                 </ThalesButton>
                 <LearnButton>

@@ -9,21 +9,29 @@ type FieldValidationMessageProps = {
     href: string;
 };
 
+const ifIpfsDeployment = process.env.REACT_APP_IPFS_DEPLOYMENT === 'true';
+
 const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, href, style, className }) => {
     return (
         <>
-            <Anchor
-                className={className}
-                style={style}
-                href={href}
-                onClick={(event) => {
-                    event.preventDefault();
-                    onClick && onClick(event);
-                    navigateTo(href);
-                }}
-            >
-                {children}
-            </Anchor>
+            {ifIpfsDeployment ? (
+                <Anchor className={className} style={style} href={href}>
+                    {children}
+                </Anchor>
+            ) : (
+                <Anchor
+                    className={className}
+                    style={style}
+                    href={href}
+                    onClick={(event) => {
+                        event.preventDefault();
+                        onClick && onClick(event);
+                        navigateTo(href);
+                    }}
+                >
+                    {children}
+                </Anchor>
+            )}
         </>
     );
 };

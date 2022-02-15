@@ -4,9 +4,10 @@ import LanguageSelector from 'components/LanguageSelector/V2';
 import styled from 'styled-components';
 import { Theme } from '../../Home';
 import Cookies from 'universal-cookie';
-import { navigateTo } from 'utils/routes';
+import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import BurgerContainer from './BurgerContainer';
+import { HashLink } from 'react-router-hash-link';
 
 type HeaderInput = {
     theme: Theme;
@@ -41,14 +42,11 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                         >
                             {t('header.links.learn.guides')}
                         </Link>
-                        <Link
-                            rel="noreferrer"
-                            onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}
-                        >
+                        <Link rel="noreferrer" href={buildHref(ROUTES.Article.Whitepaper)}>
                             {t('header.links.learn.whitepaper')}
                         </Link>
 
-                        <Link href="../#faq-section">{t('header.links.faq')}</Link>
+                        <HashLink to="/#faq-section">{t('header.links.faq')}</HashLink>
                     </DropDownContainer>
                 </PositionedContainer>
                 <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
@@ -57,10 +55,10 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                     {t('header.links.blog')}
                 </Link>
-                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
+                <Link rel="noreferrer" href={buildHref(ROUTES.Article.Governance)}>
                     {t('header.links.governance')}
                 </Link>
-                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
+                <Link rel="noreferrer" href={buildHref(ROUTES.Article.Token)}>
                     {t('header.links.token')}
                 </Link>
             </Links>
@@ -87,7 +85,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <LanguageSelector />
             </LanguageContainer>
             <ButtonContainer>
-                <Link target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
+                <Link rel="noreferrer" href={buildHref(ROUTES.Options.Home)}>
                     {t('landing-page.use-app')}
                 </Link>
                 <i className="icon-home icon-home--right" />
