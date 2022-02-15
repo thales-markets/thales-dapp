@@ -16,6 +16,7 @@ import { Theme } from '../Home';
 // import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
+import SPAAnchor from 'components/SPAAnchor';
 
 type GridLayoutProps = {
     theme: Theme;
@@ -461,7 +462,7 @@ const ContSubTitle = styled.p`
     }
 `;
 
-const Link = styled.a`
+const Link = styled(SPAAnchor)`
     font-family: Nunito !important;
     font-style: normal;
     font-weight: bold;

@@ -8,6 +8,7 @@ import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import BurgerContainer from './BurgerContainer';
 import { HashLink } from 'react-router-hash-link';
+import SPAAnchor from 'components/SPAAnchor';
 
 type HeaderInput = {
     theme: Theme;
@@ -244,7 +245,7 @@ const ButtonContainer = styled(CenteredDiv)`
     }
 `;
 
-const Link = styled.a`
+const Link = styled(SPAAnchor)`
     position: relative;
     font-family: Nunito !important;
     font-style: normal;

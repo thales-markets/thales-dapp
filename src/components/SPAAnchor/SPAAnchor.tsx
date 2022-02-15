@@ -7,15 +7,25 @@ type FieldValidationMessageProps = {
     onClick?: MouseEventHandler<HTMLAnchorElement> | undefined;
     style?: CSSProperties;
     href: string;
+    target?: string;
+    rel?: string;
 };
 
 const ifIpfsDeployment = process.env.REACT_APP_IPFS_DEPLOYMENT === 'true';
 
-const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, href, style, className }) => {
+const SPAAnchor: React.FC<FieldValidationMessageProps> = ({
+    onClick,
+    children,
+    href,
+    style,
+    className,
+    target,
+    rel,
+}) => {
     return (
         <>
             {ifIpfsDeployment ? (
-                <Anchor className={className} style={style} href={href}>
+                <Anchor className={className} style={style} href={href} target={target ?? ''} rel={rel ?? ''}>
                     {children}
                 </Anchor>
             ) : (
@@ -23,6 +33,8 @@ const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, h
                     className={className}
                     style={style}
                     href={href}
+                    target={target ?? ''}
+                    rel={rel ?? ''}
                     onClick={(event) => {
                         event.preventDefault();
                         onClick && onClick(event);
@@ -36,8 +48,6 @@ const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, h
     );
 };
 
-const Anchor = styled.a`
-    display: contents;
-`;
+const Anchor = styled.a``;
 
 export default SPAAnchor;

@@ -13,6 +13,7 @@ import Cookies from 'universal-cookie';
 import ROUTES from 'constants/routes';
 import { useTranslation } from 'react-i18next';
 import { buildHref } from 'utils/routes';
+import SPAAnchor from 'components/SPAAnchor';
 
 type HeaderInput = {
     theme: Theme;
@@ -316,7 +317,7 @@ const ButtonContainer = styled.div`
     justify-content: center;
 `;
 
-const DAPPLink = styled.a`
+const DAPPLink = styled(SPAAnchor)`
     font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
