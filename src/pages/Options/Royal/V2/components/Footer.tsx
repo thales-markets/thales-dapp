@@ -9,6 +9,7 @@ import { navigateTo, history } from 'utils/routes';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import queryString from 'query-string';
+import { useLocation } from 'react-router-dom';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -34,7 +35,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
     latestSeason,
 }) => {
     const { t } = useTranslation();
-
+    const location = useLocation();
     const [showStats, setShowStats] = useState(true);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
 
