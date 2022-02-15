@@ -2,7 +2,7 @@ import ROUTES from 'constants/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { buildHref, navigateTo } from 'utils/routes';
+import { navigateTo } from 'utils/routes';
 import LanguageSelector from 'components/LanguageSelector/V2';
 import { HashLink } from 'react-router-hash-link';
 
@@ -17,7 +17,7 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
 
     return (
         <Wrapper className={burgerState ? '' : 'hide'}>
-            <Link
+            <DropdownLink
                 className={`dropdown-icon ${openLinksLearn ? 'open' : ''}`}
                 onClick={(e) => {
                     e.preventDefault();
@@ -27,7 +27,7 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                 rel="noreferrer"
             >
                 {t('header.links.learn.title')}
-            </Link>
+            </DropdownLink>
             <DropDownContainer className={`dropdown-icon ${openLinksLearn ? 'open' : ''}`}>
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                     {t('header.links.learn.docs')}
@@ -35,7 +35,7 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/using-thales/why-use-thales">
                     {t('header.links.learn.guides')}
                 </Link>
-                <Link rel="noreferrer" href={buildHref(ROUTES.Article.Whitepaper)}>
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}>
                     {t('header.links.learn.whitepaper')}
                 </Link>
                 <HashLink
@@ -54,10 +54,10 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
             <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                 {t('header.links.blog')}
             </Link>
-            <Link rel="noreferrer" href={buildHref(ROUTES.Article.Governance)}>
+            <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
                 {t('header.links.governance')}
             </Link>
-            <Link rel="noreferrer" href={buildHref(ROUTES.Article.Token)}>
+            <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
                 {t('header.links.token')}
             </Link>
 
@@ -134,7 +134,7 @@ const DropDownContainer = styled.div`
     }
 `;
 
-const Link = styled.a`
+const DropdownLink = styled.a`
     position: relative;
     font-family: Nunito !important;
     font-style: normal;
@@ -166,6 +166,23 @@ const Link = styled.a`
             top: 2px;
             transform: rotate(-45deg);
         }
+    }
+`;
+
+const Link = styled.a`
+    position: relative;
+    font-family: Nunito !important;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 1.15em;
+    line-height: 91.91%;
+    z-index: 2;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--color);
+    @media (max-width: 1024px) {
+        margin-bottom: 60px;
     }
 `;
 

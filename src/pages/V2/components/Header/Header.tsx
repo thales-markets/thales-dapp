@@ -4,7 +4,7 @@ import LanguageSelector from 'components/LanguageSelector/V2';
 import styled from 'styled-components';
 import { Theme } from '../../Home';
 import Cookies from 'universal-cookie';
-import { buildHref, navigateTo } from 'utils/routes';
+import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import BurgerContainer from './BurgerContainer';
 import { HashLink } from 'react-router-hash-link';
@@ -42,7 +42,10 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                         >
                             {t('header.links.learn.guides')}
                         </Link>
-                        <Link rel="noreferrer" href={buildHref(ROUTES.Article.Whitepaper)}>
+                        <Link
+                            rel="noreferrer"
+                            onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}
+                        >
                             {t('header.links.learn.whitepaper')}
                         </Link>
 
@@ -55,10 +58,10 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                     {t('header.links.blog')}
                 </Link>
-                <Link rel="noreferrer" href={buildHref(ROUTES.Article.Governance)}>
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
                     {t('header.links.governance')}
                 </Link>
-                <Link rel="noreferrer" href={buildHref(ROUTES.Article.Token)}>
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
                     {t('header.links.token')}
                 </Link>
             </Links>
@@ -85,7 +88,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <LanguageSelector />
             </LanguageContainer>
             <ButtonContainer>
-                <Link rel="noreferrer" href={buildHref(ROUTES.Options.Home)}>
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}>
                     {t('landing-page.use-app')}
                 </Link>
                 <i className="icon-home icon-home--right" />

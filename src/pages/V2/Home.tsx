@@ -7,6 +7,7 @@ import BlogPosts from './components/BlogPosts';
 import Footer from './components/Footer';
 import ROUTES from 'constants/routes';
 import { buildHref } from 'utils/routes';
+import SPAAnchor from 'components/SPAAnchor';
 
 export enum Theme {
     Light,
@@ -34,15 +35,15 @@ const Home: React.FC = () => {
             <FlexWrapper>
                 <Title> {t('landing-page.initiatives')}</Title>
                 <FlexDiv className="initiatives">
-                    <a rel="noreferrer" href={buildHref(ROUTES.Options.Home)}>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Home)}>
                         <Thales className="icon-home icon-home--thales" />
-                    </a>
-                    <a rel="noreferrer" href={buildHref(ROUTES.Options.Royal)}>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
                         <ThalesRoyale className="icon-home icon-home--royale" />
-                    </a>
-                    <a rel="noreferrer" href={buildHref(ROUTES.Options.Game)}>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Game)}>
                         <ThalesGame className="icon-home icon-home--game" />
-                    </a>
+                    </SPAAnchor>
                 </FlexDiv>
                 <Title style={{ marginBottom: '1em' }}> {t('landing-page.integrations')}</Title>
                 <FlexDiv>
