@@ -17,7 +17,7 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
 
     return (
         <Wrapper className={burgerState ? '' : 'hide'}>
-            <DropdownLink
+            <Link
                 className={`dropdown-icon ${openLinksLearn ? 'open' : ''}`}
                 onClick={(e) => {
                     e.preventDefault();
@@ -27,7 +27,7 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                 rel="noreferrer"
             >
                 {t('header.links.learn.title')}
-            </DropdownLink>
+            </Link>
             <DropDownContainer className={`dropdown-icon ${openLinksLearn ? 'open' : ''}`}>
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                     {t('header.links.learn.docs')}
@@ -134,7 +134,7 @@ const DropDownContainer = styled.div`
     }
 `;
 
-const DropdownLink = styled.a`
+const Link = styled.a`
     position: relative;
     font-family: Nunito !important;
     font-style: normal;
@@ -166,23 +166,6 @@ const DropdownLink = styled.a`
             top: 2px;
             transform: rotate(-45deg);
         }
-    }
-`;
-
-const Link = styled.a`
-    position: relative;
-    font-family: Nunito !important;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 1.15em;
-    line-height: 91.91%;
-    z-index: 2;
-    text-align: center;
-    text-transform: uppercase;
-    cursor: pointer;
-    color: var(--color);
-    @media (max-width: 1024px) {
-        margin-bottom: 60px;
     }
 `;
 
