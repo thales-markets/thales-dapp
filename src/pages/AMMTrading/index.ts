@@ -1,1 +1,1 @@
-export { default } from './AMMTrading';
+export { default } from './MarketContainer';
