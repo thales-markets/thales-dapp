@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
 import LanguageSelector from 'components/LanguageSelector/V2';
+import { HashLink } from 'react-router-hash-link';
 
 type BurgerInput = {
     burgerState: boolean;
@@ -37,15 +38,14 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}>
                     {t('header.links.learn.whitepaper')}
                 </Link>
-
-                <Link
-                    href="../#faq-section"
+                <HashLink
+                    to="/#faq-section"
                     onClick={() => {
                         setBurgerState(!burgerState);
                     }}
                 >
                     {t('header.links.faq')}
-                </Link>
+                </HashLink>
             </DropDownContainer>
 
             <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">

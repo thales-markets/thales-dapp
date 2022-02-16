@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import BurgerContainer from './BurgerContainer';
+import { HashLink } from 'react-router-hash-link';
 
 type HeaderInput = {
     theme: Theme;
@@ -48,7 +49,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                             {t('header.links.learn.whitepaper')}
                         </Link>
 
-                        <Link href="../#faq-section">{t('header.links.faq')}</Link>
+                        <HashLink to="/#faq-section">{t('header.links.faq')}</HashLink>
                     </DropDownContainer>
                 </PositionedContainer>
                 <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
@@ -87,7 +88,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <LanguageSelector />
             </LanguageContainer>
             <ButtonContainer>
-                <Link target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}>
                     {t('landing-page.use-app')}
                 </Link>
                 <i className="icon-home icon-home--right" />

@@ -7,6 +7,7 @@ import pic from 'assets/images/landing-page/articles/token-white.svg';
 import picBlack from 'assets/images/landing-page/articles/token-black.svg';
 import { Background, Theme } from '../../Home';
 import Footer from '../../components/Footer';
+import { HashLink } from 'react-router-hash-link';
 
 const cookies = new Cookies();
 
@@ -34,19 +35,19 @@ const Token: React.FC = () => {
                             <ListItem>THALES Token</ListItem>
                             <NestedList>
                                 <ListItem>
-                                    <a href="#section1">{t('articles.token.list.1')}</a>
+                                    <HashLink to="#section1">{t('articles.token.list.1')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <a href="#section2">{t('articles.token.list.2')}</a>
+                                    <HashLink to="#section2">{t('articles.token.list.2')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <a href="#section3">{t('articles.token.list.3')}</a>
+                                    <HashLink to="#section3">{t('articles.token.list.3')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <a href="#section4">{t('articles.token.list.4')}</a>
+                                    <HashLink to="#section4">{t('articles.token.list.4')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <a href="#section5">{t('articles.token.list.5')}</a>
+                                    <HashLink to="#section5">{t('articles.token.list.5')}</HashLink>
                                 </ListItem>
                             </NestedList>
                         </List>
