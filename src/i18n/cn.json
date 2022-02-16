@@ -680,7 +680,8 @@
                 "strike-burn-label": "执行销毁量",
                 "rank-label": "排名",
                 "total-burned": "总销毁量",
-                "burned-last-hour": "上一小时销毁量"
+                "burned-last-hour": "上一小时销毁量",
+                "maturity-date": "成人礼"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",

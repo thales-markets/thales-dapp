@@ -1,90 +1,93 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useMemo } from 'react';
 
-import { CardContainer } from 'theme/common';
 import AssetInfo from '../../../../components/AssetInfo/AssetInfo';
 import PriceChart from 'components/Charts/PriceChart';
+import Container from './styled-components/Container';
+
+import { useMarketContext } from '../../contexts/MarketContext';
+
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatShortDate } from 'utils/formatters/date';
+import { USD_SIGN } from 'constants/currency';
+import { useTranslation } from 'react-i18next';
+
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
+
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 
 const RowCard: React.FC = () => {
+    const marketInfo = useMarketContext();
+    const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
+            return openOrdersQuery.data;
+        }
+    }, [openOrdersQuery]);
+
+    console.log('MarketInfo ', marketInfo);
+
     return (
-        <Container>
-            <AssetInfo currencyKey="BTC" logoSize="50px" />
-            <ChartContainer>
-                <PriceChart currencyKey="BTC" footerFontSize={'10px'} />
-            </ChartContainer>
-            <ValueContainer>
-                <Header>Current Asset Price</Header>
-                <Value>$72,254.70</Value>
-            </ValueContainer>
-            <Divider />
-            <ValueContainer>
-                <Header>Strike Price</Header>
-                <Value>$88,254.70</Value>
-            </ValueContainer>
-            <Divider />
-            <ValueContainer>
-                <Header>Maturity Date</Header>
-                <Value>@ Oct 22, 2021</Value>
-            </ValueContainer>
-            <Divider />
-            <ValueContainer>
-                <Header>Maturity Date</Header>
-                <Value>
-                    <Liquidity shortLiqFlag={true}>1157500</Liquidity>
-                    {' / '}
-                    <Liquidity>450900</Liquidity>
-                </Value>
-            </ValueContainer>
-        </Container>
+        <>
+            {marketInfo && (
+                <Container>
+                    <AssetInfo currencyKey={marketInfo.currencyKey} logoSize="50px" />
+                    <Container.ChartContainer>
+                        <PriceChart currencyKey={marketInfo.currencyKey} footerFontSize={'10px'} />
+                    </Container.ChartContainer>
+                    <Container.SubContainer>
+                        <Container.SubContainer.Header>
+                            {t('options.home.market-card.current-asset-price')}
+                        </Container.SubContainer.Header>
+                        <Container.SubContainer.Value>
+                            {formatCurrencyWithKey(USD_SIGN, marketInfo.currentPrice, 2)}
+                        </Container.SubContainer.Value>
+                    </Container.SubContainer>
+                    <Container.Divider />
+                    <Container.SubContainer>
+                        <Container.SubContainer.Header>
+                            {t('options.home.market-card.strike-price')}
+                        </Container.SubContainer.Header>
+                        <Container.SubContainer.Value>
+                            {formatCurrencyWithKey(USD_SIGN, marketInfo.strikePrice, 2)}
+                        </Container.SubContainer.Value>
+                    </Container.SubContainer>
+                    <Container.Divider />
+                    <Container.SubContainer>
+                        <Container.SubContainer.Header>
+                            {t('options.market.overview.maturity-date')}
+                        </Container.SubContainer.Header>
+                        <Container.SubContainer.Value>{`@ ${
+                            marketInfo.maturityDate ? formatShortDate(marketInfo.maturityDate) : 'N/A'
+                        }`}</Container.SubContainer.Value>
+                    </Container.SubContainer>
+                    <Container.Divider />
+                    <Container.SubContainer>
+                        <Container.SubContainer.Header>
+                            {t('options.market.overview.amm-liquidity')}
+                        </Container.SubContainer.Header>
+                        <Container.SubContainer.Value>
+                            <Container.SubContainer.Value.Liquidity>
+                                {openOrdersMap
+                                    ? (openOrdersMap as any).get(marketInfo.address.toLowerCase())?.availableLongs
+                                    : '0'}
+                            </Container.SubContainer.Value.Liquidity>
+                            {' / '}
+                            <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
+                                {openOrdersMap
+                                    ? (openOrdersMap as any).get(marketInfo.address.toLowerCase())?.availableShorts
+                                    : '0'}
+                            </Container.SubContainer.Value.Liquidity>
+                        </Container.SubContainer.Value>
+                    </Container.SubContainer>
+                </Container>
+            )}
+        </>
     );
 };
-
-const Container = styled(CardContainer)`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: row;
-    padding: 20px 25px;
-    width: 100%;
-`;
-
-const ChartContainer = styled.div`
-    width: 130px;
-    margin-left: 22px;
-`;
-
-const ValueContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    margin: 0px 25px;
-`;
-
-const Divider = styled.div`
-    border-left: 2px solid var(--input-border-color);
-    border-radius: 30px;
-    height: 51px;
-`;
-
-const Header = styled.span`
-    font-family: Titillium Regular !important;
-    font-style: normal;
-    color: var(--primary-color);
-    font-weight: 400;
-    font-size: 15px;
-    margin-bottom: 8px;
-`;
-
-const Value = styled.span`
-    font-family: Titillium Regular !important;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 25px;
-    color: var(--primary-color);
-`;
-
-const Liquidity = styled.span<{ shortLiqFlag?: boolean }>`
-    color: ${(_props) => (_props?.shortLiqFlag ? '#C3244A' : '#50CE99')};
-`;
 
 export default RowCard;

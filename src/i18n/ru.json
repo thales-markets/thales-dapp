@@ -680,7 +680,8 @@
                 "strike-burn-label": "Ожог удара",
                 "rank-label": "Ранг",
                 "total-burned": "Общий ожог",
-                "burned-last-hour": "Ожог за последний час"
+                "burned-last-hour": "Ожог за последний час",
+                "maturity-date": "Дата погашения"
             },
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",
