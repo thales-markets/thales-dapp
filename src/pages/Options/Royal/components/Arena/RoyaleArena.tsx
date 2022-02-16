@@ -214,9 +214,14 @@ export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number, betwe
         return null;
     }
 
-    betweenSeasons
-        ? beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds - oneDayInSeconds)
-        : beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds);
+    if (betweenSeasons) {
+        timeDifferenceInSeconds > oneDayInSeconds
+            ? beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds - oneDayInSeconds)
+            : beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds);
+        return beginningOfTime;
+    }
+
+    beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds);
 
     return beginningOfTime;
 };

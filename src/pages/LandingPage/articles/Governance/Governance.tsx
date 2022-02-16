@@ -8,6 +8,7 @@ import { ReactComponent as ChartBlack } from 'assets/images/landing-page/article
 import { Background, Theme } from '../../Home';
 import Footer from '../../components/Footer';
 import { FlexDivCentered } from 'theme/common';
+import { HashLink } from 'react-router-hash-link';
 
 const cookies = new Cookies();
 
@@ -35,19 +36,19 @@ const Governance: React.FC = () => {
                             <ListItem>{t('articles.governance.list.0')}</ListItem>
                             <NestedList>
                                 <ListItem>
-                                    <a href="#section1">{t('articles.governance.list.1')}</a>
+                                    <HashLink to="#section1">{t('articles.governance.list.1')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <a href="#section2">{t('articles.governance.list.2')}</a>
+                                    <HashLink to="#section2">{t('articles.governance.list.2')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <a href="#section3">{t('articles.governance.list.3')}</a>
+                                    <HashLink to="#section2">{t('articles.governance.list.3')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <a href="#section4">{t('articles.governance.list.4')}</a>
+                                    <HashLink to="#section4">{t('articles.governance.list.4')}</HashLink>
                                 </ListItem>
                                 <ListItem>
-                                    <a href="#section5">{t('articles.governance.list.5')}</a>
+                                    <HashLink to="#section5">{t('articles.governance.list.5')}</HashLink>
                                 </ListItem>
                             </NestedList>
                         </List>

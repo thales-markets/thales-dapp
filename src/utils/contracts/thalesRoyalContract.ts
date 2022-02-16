@@ -9,7 +9,7 @@ export const thalesRoyaleContract = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0x3198ab211CdF3E4d13a698E1Fb819507BcA2e579',
-        [NetworkId['Kovan-Ovm']]: '0x1B3Dd18F0A31926A8cc24dF87C69B0ba303A04a1',
+        [NetworkId['Kovan-Ovm']]: '0xB28c1B32c2449aB360d019f81cce5771Da3B2C16',
     },
     abi: [
         {
@@ -628,10 +628,24 @@ export const thalesRoyaleContract = {
         },
         { inputs: [], name: 'signUp', outputs: [], stateMutability: 'nonpayable', type: 'function' },
         {
+            inputs: [{ internalType: 'address', name: 'player', type: 'address' }],
+            name: 'signUpOnBehalf',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [],
             name: 'signUpPeriod',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'uint256', name: 'position', type: 'uint256' }],
+            name: 'signUpWithPosition',
+            outputs: [],
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {

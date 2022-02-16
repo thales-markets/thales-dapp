@@ -10,34 +10,41 @@ type Cell = {
     titleFontSize?: number;
     value: string;
     valueFontSize?: number;
+    test?: number;
 };
 
-type Row = {
+type TileRow = {
     asset: AssetInfoProps;
     color?: string;
     cells: Cell[];
 };
 
 type Properties = {
-    rows: Row[];
+    rows: (TileRow | string)[];
 };
 
 const TileTable: React.FC<Properties> = ({ rows }) => {
     return (
         <Container>
-            {rows.map((row, index) => (
-                <Tile color={row.color} key={index}>
-                    <AssetInfo {...row.asset} />
-                    {row.cells.map((cell, index) => (
-                        <Tile.Cell direction={cell.flexDirection} key={index}>
-                            {cell.title && (
-                                <Tile.Cell.Title fontSize={cell.titleFontSize}>{cell.title}</Tile.Cell.Title>
-                            )}
-                            <Tile.Cell.Value fontSize={cell.valueFontSize}>{cell.value}</Tile.Cell.Value>
-                        </Tile.Cell>
-                    ))}
-                </Tile>
-            ))}
+            {rows.map((row, index) => {
+                if (typeof row !== 'string') {
+                    return (
+                        <Tile color={row.color} key={index}>
+                            <AssetInfo {...row.asset} />
+                            {row.cells.map((cell, index) => (
+                                <Tile.Cell direction={cell.flexDirection} key={index}>
+                                    {cell.title && (
+                                        <Tile.Cell.Title fontSize={cell.titleFontSize}>{cell.title}</Tile.Cell.Title>
+                                    )}
+                                    <Tile.Cell.Value fontSize={cell.valueFontSize}>{cell.value}</Tile.Cell.Value>
+                                </Tile.Cell>
+                            ))}
+                        </Tile>
+                    );
+                } else {
+                    return <Tile.Title>{row}</Tile.Title>;
+                }
+            })}
         </Container>
     );
 };

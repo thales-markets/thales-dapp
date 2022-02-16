@@ -9,6 +9,7 @@ import { navigateTo, history } from 'utils/routes';
 import queryString from 'query-string';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from '../../Queries/useRoyaleFooterQuery';
+import { useLocation } from 'react-router-dom';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -34,7 +35,7 @@ const Footer: React.FC<ScoreboardProps> = ({
     latestSeason,
 }) => {
     const { t } = useTranslation();
-
+    const location = useLocation();
     const [showStats, setShowStats] = useState(true);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
 
@@ -178,11 +179,11 @@ const Footer: React.FC<ScoreboardProps> = ({
                 {royaleData?.seasonFinished ? (
                     <>
                         <div style={{ textAlign: 'center' }}>
-                            <span>{t('options.royale.footer.season-finished', { season: royaleData.season })}</span>
+                            <span>{t('options.royale.footer.season-finished', { season: selectedSeason })}</span>
                         </div>
                         <div>
                             <span>{t('options.royale.footer.current-reward-per-winner')}:</span>
-                            <span>{(royaleData?.reward / royaleData.winners).toFixed(2)} sUSD</span>
+                            <span>{(royaleData?.rewardPerWinnerPerSeason).toFixed(2)} sUSD</span>
                         </div>
                     </>
                 ) : (

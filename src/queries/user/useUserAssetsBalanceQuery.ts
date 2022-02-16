@@ -14,7 +14,7 @@ const useUserAssetsBalanceQuery = (
     return useQuery<UsersAssets[]>(
         QUERY_KEYS.User.Assets(walletAddress, networkId),
         async () => {
-            return Promise.all(
+            const positions = await Promise.all(
                 markets.map((market) =>
                     (snxJSConnector as any).binaryOptionsMarketDataContract
                         .getAccountMarketData(market.address, walletAddress)
@@ -29,6 +29,10 @@ const useUserAssetsBalanceQuery = (
                         })
                 )
             );
+
+            return positions.filter((data) => {
+                return data.balances.long > 0 || data.balances.short > 0;
+            });
         },
         options
     );

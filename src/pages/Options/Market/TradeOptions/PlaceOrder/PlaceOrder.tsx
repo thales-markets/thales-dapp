@@ -11,10 +11,8 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { ethers } from 'ethers';
-import { formatGasLimit } from 'utils/network';
-import { APPROVAL_EVENTS } from 'constants/events';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import { BigNumber, ethers } from 'ethers';
+import { checkAllowance, formatGasLimit } from 'utils/network';
 import {
     AMOUNT_PERCENTAGE,
     ORDER_PERIOD_IN_SECONDS,
@@ -54,6 +52,7 @@ import styled from 'styled-components';
 import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
+import ApprovalModal from 'components/ApprovalModal';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -89,6 +88,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isExpirationAfterMaturity, setIsExpirationAfterMaturity] = useState<boolean>(false);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const orderSideOptions = [
         {
             value: 'buy' as OrderSide,
@@ -132,9 +132,10 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     } = snxJSConnector.snxJS as any;
 
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
+    const makerAmount = isBuy ? Number(price) * Number(amount) : amount;
     const makerTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const addressToApprove = ONE_INCH_CONTRACTS[networkId];
+    const addressToApprove = ONE_INCH_CONTRACTS[networkId] || '';
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
         return {
@@ -160,7 +161,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         isSubmitting ||
         !isWalletConnected ||
         insufficientBalance ||
-        !isPriceValid;
+        !isPriceValid ||
+        !hasAllowance;
 
     const getOrderEndDate = () => {
         let orderEndDate = 0;
@@ -221,42 +223,34 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             try {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setAllowance(!!bigNumberFormatter(allowance));
+                const parsedMakerAmount = ethers.utils.parseEther(Number(makerAmount).toString());
+                const allowance = await checkAllowance(
+                    parsedMakerAmount,
+                    erc20Instance,
+                    walletAddress,
+                    addressToApprove
+                );
+                setAllowance(allowance);
             } catch (e) {
                 console.log(e);
             }
         };
-
-        const registerAllowanceListener = () => {
-            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove ?? '')) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         if (isWalletConnected) {
             getAllowance();
-            registerAllowanceListener();
         }
-        return () => {
-            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance, makerAmount, isAllowing]);
 
-    const handleAllowance = async () => {
+    const handleAllowance = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
         try {
             setIsAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
-            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
+            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
-
+            setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setAllowance(true);
                 setIsAllowing(false);
             }
         } catch (e) {
@@ -349,7 +343,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         }
         if (!hasAllowance) {
             return (
-                <SubmitButton disabled={isAllowing} onClick={handleAllowance} isBuy={isBuy}>
+                <SubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)} isBuy={isBuy}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: makerTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -539,6 +533,15 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                 message={txErrorMessage}
                 onDismiss={() => setTxErrorMessage(null)}
             />
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={makerAmount}
+                    tokenSymbol={makerTokenCurrencyKey}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
         </Container>
     );
 };

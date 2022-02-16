@@ -19,12 +19,10 @@ import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
-import { ethers } from 'ethers';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { APPROVAL_EVENTS } from 'constants/events';
-import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
+import { BigNumber, ethers } from 'ethers';
+import ValidationMessage from 'components/ValidationMessage';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
@@ -35,6 +33,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { FlexDivColumnCentered } from 'theme/common';
+import ApprovalModal from 'components/ApprovalModal';
 
 const Stake: React.FC = () => {
     const { t } = useTranslation();
@@ -50,6 +49,7 @@ const Stake: React.FC = () => {
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const { stakingThalesContract } = snxJSConnector as any;
 
@@ -74,7 +74,8 @@ const Stake: React.FC = () => {
         !isAmountEntered ||
         insufficientBalance ||
         !isWalletConnected ||
-        isStakingPaused;
+        isStakingPaused ||
+        !hasStakeAllowance;
 
     useEffect(() => {
         if (!!stakingThalesContract) {
@@ -83,30 +84,23 @@ const Stake: React.FC = () => {
             const addressToApprove = stakingThalesContract.address;
             const getAllowance = async () => {
                 try {
-                    const allowance = await thalesTokenContractWithSigner.allowance(walletAddress, addressToApprove);
-                    setStakeAllowance(!!bigNumberFormatter(allowance));
+                    const parsedStakeAmount = ethers.utils.parseEther(Number(amountToStake).toString());
+                    const allowance = await checkAllowance(
+                        parsedStakeAmount,
+                        thalesTokenContractWithSigner,
+                        walletAddress,
+                        addressToApprove
+                    );
+                    setStakeAllowance(allowance);
                 } catch (e) {
                     console.log(e);
                 }
             };
-
-            const registerAllowanceListener = () => {
-                thalesTokenContractWithSigner.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                        setStakeAllowance(true);
-                        setIsAllowingStake(false);
-                    }
-                });
-            };
             if (isWalletConnected) {
                 getAllowance();
-                registerAllowanceListener();
             }
-            return () => {
-                thalesTokenContractWithSigner.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-            };
         }
-    }, [walletAddress, isWalletConnected, hasStakeAllowance, stakingThalesContract]);
+    }, [walletAddress, isWalletConnected, hasStakeAllowance, stakingThalesContract, amountToStake, isAllowingStake]);
 
     useEffect(() => {
         const fetchL1Fee = async (stakingThalesContractWithSigner: any, amount: any) => {
@@ -160,7 +154,7 @@ const Stake: React.FC = () => {
         }
     };
 
-    const handleAllowance = async () => {
+    const handleAllowance = async (approveAmount: BigNumber) => {
         const { thalesTokenContract } = snxJSConnector as any;
         const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
 
@@ -169,15 +163,14 @@ const Stake: React.FC = () => {
             setIsAllowingStake(true);
             const gasEstimate = await thalesTokenContractWithSigner.estimateGas.approve(
                 addressToApprove,
-                ethers.constants.MaxUint256
+                approveAmount
             );
-            const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, ethers.constants.MaxUint256, {
+            const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, approveAmount, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
-
+            setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                setStakeAllowance(true);
                 setIsAllowingStake(false);
             }
         } catch (e) {
@@ -203,7 +196,7 @@ const Stake: React.FC = () => {
         }
         if (!hasStakeAllowance) {
             return (
-                <DefaultSubmitButton disabled={isAllowingStake} onClick={handleAllowance}>
+                <DefaultSubmitButton disabled={isAllowingStake} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowingStake
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: THALES_CURRENCY })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -306,6 +299,15 @@ const Stake: React.FC = () => {
                     />
                 </FullRow>
             </SectionContentContainer>
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={amountToStake}
+                    tokenSymbol={THALES_CURRENCY}
+                    isAllowing={isAllowingStake}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
         </EarnSection>
     );
 };
