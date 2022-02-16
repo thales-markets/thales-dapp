@@ -295,11 +295,15 @@ const App = () => {
                             </DappLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Test.AmmTrading}>
-                            <DappLayout>
-                                <AMMTrading />
-                            </DappLayout>
-                        </Route>
+                        <Route
+                            exact
+                            path={ROUTES.Test.Markets}
+                            render={(routeProps) => (
+                                <DappLayout>
+                                    <AMMTrading {...routeProps} />
+                                </DappLayout>
+                            )}
+                        />
 
                         <Route exact path={ROUTES.Home}>
                             <MainLayout>

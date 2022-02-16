@@ -33,6 +33,7 @@ export const ROUTES = {
     Test: {
         Home: '/test/markets',
         AmmTrading: '/test/amm-trading',
+        Markets: '/test/markets/:marketAddress',
     },
 };
 export default ROUTES;
