@@ -40,6 +40,7 @@ const MenuItem = styled.div<{ active?: boolean }>`
     box-shadow: ${(_props) => (_props?.active ? '0px 4px var(--primary-filter-menu-active)' : '')};
     text-transform: uppercase;
     padding: 12px 5px;
+    cursor: pointer;
 `;
 
 MenuContainer.Item = MenuItem;

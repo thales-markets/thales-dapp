@@ -29,8 +29,6 @@ const RowCard: React.FC = () => {
         }
     }, [openOrdersQuery]);
 
-    console.log('MarketInfo ', marketInfo);
-
     return (
         <>
             {marketInfo && (
