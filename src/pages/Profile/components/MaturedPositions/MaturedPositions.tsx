@@ -2,40 +2,22 @@ import PriceChart from 'components/Charts/PriceChart';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-import useMaturedPositions from 'queries/user/useMaturedPositions';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
+
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+
 import styled from 'styled-components';
+import { UsersAssets } from 'types/options';
 import { getSynthName } from 'utils/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import Card from '../styled-components/Card';
 
-const MaturedPositions: React.FC = () => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+type MaturedPositionsProps = {
+    exchangeRates: Rates | null;
+    positions: UsersAssets[];
+};
 
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
-
-    const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
-
-    const userPositionsQuery = useMaturedPositions(networkId, walletAddress as any, {
-        enabled: markets !== undefined && walletAddress !== null,
-    });
-
-    const positions = userPositionsQuery.isSuccess ? userPositionsQuery.data : [];
-
-    const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
-        enabled: isAppReady && markets !== undefined && markets?.length > 0,
-        refetchInterval: false,
-    });
-    const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
-
+const MaturedPositions: React.FC<MaturedPositionsProps> = ({ exchangeRates, positions }) => {
     return (
         <Container>
             {positions.map((data, index) => (
@@ -75,13 +57,11 @@ const MaturedPositions: React.FC = () => {
                             </Card.Column>
                             <Card.Column>
                                 <Card.Row>
-                                    <Card.RowTitle>Time Left</Card.RowTitle>
-                                    <Card.RowSubtitle>
-                                        <TimeRemaining
-                                            end={data.market.maturityDate}
-                                            fontSize={14}
-                                            showFullCounter={true}
-                                        />
+                                    <Card.RowTitle>Status</Card.RowTitle>
+                                    <Card.RowSubtitle
+                                        style={{ color: data.market.result === 'long' ? '#50CE99' : '#C3244A' }}
+                                    >
+                                        {data.market.result === 'long' ? 'Claimable' : 'RIP'}
                                     </Card.RowSubtitle>
                                 </Card.Row>
                                 <Card.Row>

@@ -2,40 +2,23 @@ import PriceChart from 'components/Charts/PriceChart';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-import useLivePositionsQuery from 'queries/user/useLivePositions';
+
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
+
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+
 import styled from 'styled-components';
+import { UsersAssets } from 'types/options';
 import { getSynthName } from 'utils/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import Card from '../styled-components/Card';
 
-const MyPositions: React.FC = () => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+type MyPositionsProps = {
+    exchangeRates: Rates | null;
+    positions: UsersAssets[];
+};
 
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
-
-    const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
-
-    const userPositionsQuery = useLivePositionsQuery(networkId, walletAddress as any, {
-        enabled: markets !== undefined && walletAddress !== null,
-    });
-
-    const positions = userPositionsQuery.isSuccess ? userPositionsQuery.data : [];
-
-    const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
-        enabled: isAppReady && markets !== undefined && markets?.length > 0,
-        refetchInterval: false,
-    });
-    const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
-
+const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions }) => {
     return (
         <Container>
             {positions.map((data, index) => (
