@@ -49,6 +49,7 @@ const Row = styled.div`
 const Header = styled(FlexDiv)`
     ${Cell} {
         font-weight: bold;
+        text-transform: uppercase;
     }
     ${Row} {
         border-bottom: 4px solid var(--table-border-color);
@@ -60,6 +61,18 @@ const Arrow = styled.i`
     margin-left: 5px;
     font-size: 15px;
     text-transform: none;
+`;
+
+export const NoDataContainer = styled.div`
+    display: flex;
+    width: 100%;
+    height: 300px;
+    align-items: center;
+`;
+
+export const NoDataText = styled.div`
+    color: var(--primary-color);
+    font-size: 24px;
 `;
 
 Table.Header = Header;

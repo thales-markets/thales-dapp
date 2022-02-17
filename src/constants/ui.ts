@@ -31,3 +31,8 @@ export enum COLORS {
     SELL = '#FF3E24',
     WHITE = '#F6F6FE',
 }
+
+export enum COLORS_NEW {
+    LONG = '#50CE99',
+    SHORT = '##C3244A',
+}
