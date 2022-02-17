@@ -3,6 +3,7 @@ import TableGridSwitch from 'pages/Markets/components/Input/TableGridSwitch';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import TileTable from '../../components/TileTable';
+import MaturedPositions from './components/MaturedPositions/MaturedPositions';
 import MyPositions from './components/MyPositions/MyPositions';
 
 const rows = [
@@ -74,7 +75,7 @@ const rows = [
 
 enum NavItems {
     MyPositions = 'My Positions',
-    OpenOrders = 'Open Orders',
+    MaturedPositions = 'Matured Positions',
     History = 'History',
 }
 
@@ -103,10 +104,10 @@ const Profile: React.FC = () => {
                         {NavItems.MyPositions}
                     </NavItem>
                     <NavItem
-                        onClick={setView.bind(this, NavItems.OpenOrders)}
-                        className={view === NavItems.OpenOrders ? 'active' : ''}
+                        onClick={setView.bind(this, NavItems.MaturedPositions)}
+                        className={view === NavItems.MaturedPositions ? 'active' : ''}
                     >
-                        {NavItems.OpenOrders}
+                        {NavItems.MaturedPositions}
                     </NavItem>
                     <NavItem
                         onClick={setView.bind(this, NavItems.History)}
@@ -117,6 +118,7 @@ const Profile: React.FC = () => {
                 </Nav>
                 <LineUnderNav />
                 {view === NavItems.MyPositions && <MyPositions />}
+                {view === NavItems.MaturedPositions && <MaturedPositions />}
                 {view === NavItems.History && <TileTable rows={rows} />}
             </ContainerLeft>
             <ContainerRight></ContainerRight>

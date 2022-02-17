@@ -91,6 +91,18 @@ export const QUERY_KEYS = {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
         Orders: (walletAddress: string, networkId: NetworkId) => ['user', 'orders', walletAddress, networkId],
         Assets: (walletAddress: string, networkId: NetworkId) => ['user', 'assets', walletAddress, networkId],
+        LivePositions: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'livePositions',
+            walletAddress,
+            networkId,
+        ],
+        MaturedPositions: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'maturedPositions',
+            walletAddress,
+            networkId,
+        ],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
         DisplayNames: () => ['user', 'displayNames'],
         TwitterAccount: (walletAddress: string) => ['user', 'twitterAccount', walletAddress],

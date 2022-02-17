@@ -4,7 +4,7 @@ import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-import useLivePositionsQuery from 'queries/user/useLivePositions';
+import useMaturedPositions from 'queries/user/useMaturedPositions';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -15,7 +15,7 @@ import { getSynthName } from 'utils/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import Card from '../styled-components/Card';
 
-const MyPositions: React.FC = () => {
+const MaturedPositions: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -24,7 +24,7 @@ const MyPositions: React.FC = () => {
 
     const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
 
-    const userPositionsQuery = useLivePositionsQuery(networkId, walletAddress as any, {
+    const userPositionsQuery = useMaturedPositions(networkId, walletAddress as any, {
         enabled: markets !== undefined && walletAddress !== null,
     });
 
@@ -164,4 +164,4 @@ const Container = styled.div`
     padding-top: 15px;
 `;
 
-export default MyPositions;
+export default MaturedPositions;
