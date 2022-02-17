@@ -64,8 +64,6 @@ const OptionsPriceChartContent: React.FC<OptionsPriceChartContentProps> = ({ opt
         return [];
     }, [tradesQuery.data]);
 
-    console.log('ChartData ', chartData);
-
     const isLoading = tradesQuery.isLoading;
     const noChartData = tradesQuery.isSuccess && chartData.length < 1;
 
