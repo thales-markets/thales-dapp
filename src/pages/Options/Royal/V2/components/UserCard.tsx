@@ -167,13 +167,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                                       selectedSeason,
                                                   defaultPosition
                                               ),
-                                              signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2).then(
-                                                  () => {
-                                                      updateBalanceAndAllowance(buyInToken);
-                                                  }
-                                              ))
-                                            : signUp().then(() => {
-                                                  updateBalanceAndAllowance(buyInToken);
+                                              signUpWithPosition(
+                                                  defaultPosition === PositionsEnum.DOWN ? 1 : 2
+                                              ).finally(() => {
+                                                  synthsWalletBalancesQuery.refetch();
+                                              }))
+                                            : signUp().finally(() => {
+                                                  synthsWalletBalancesQuery.refetch();
                                               });
                                     }}
                                 >
@@ -187,18 +187,19 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             </>
                         );
                     } else {
-                        return (
-                            <Button
-                                className={isAllowing ? 'disabled' : ''}
-                                disabled={isAllowing}
-                                onClick={async () => {
-                                    setOpenApprovalModal(true);
-                                    updateBalanceAndAllowance(buyInToken);
-                                }}
-                            >
-                                {t('options.royale.scoreboard.approve-susd')}
-                            </Button>
-                        );
+                        if (isWalletConnected)
+                            return (
+                                <Button
+                                    className={isAllowing ? 'disabled' : ''}
+                                    disabled={isAllowing}
+                                    onClick={async () => {
+                                        setOpenApprovalModal(true);
+                                        updateBalanceAndAllowance(buyInToken);
+                                    }}
+                                >
+                                    {t('options.royale.scoreboard.approve-susd')}
+                                </Button>
+                            );
                     }
                 }
             } else {

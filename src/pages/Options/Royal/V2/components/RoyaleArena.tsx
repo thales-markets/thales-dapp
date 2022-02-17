@@ -12,7 +12,7 @@ import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
 import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/rootReducer';
-import { getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import useRoundsQuery from '../../Queries/useRoundsQuery';
 import { BigNumber } from 'ethers';
 import winnerCard from '../../../../../assets/images/royale/winner-card.svg';
@@ -23,6 +23,7 @@ import { getIsOVM } from '../../../../../utils/network';
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 
 type RoyaleArenaProps = {
     ethPrice: string;
@@ -224,8 +225,13 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isL2 = getIsOVM(networkId);
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
     const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
@@ -387,7 +393,9 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                     <Button
                         style={{ zIndex: 1000 }}
                         disabled={royaleData.rewardCollectedPerSeason}
-                        onClick={claimReward}
+                        onClick={() => {
+                            claimReward().finally(() => synthsWalletBalancesQuery.refetch());
+                        }}
                     >
                         Claim reward
                     </Button>
