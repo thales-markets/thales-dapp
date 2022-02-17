@@ -1,3 +1,4 @@
+import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated';
 import SearchField from 'pages/Markets/components/Input/SearchField';
 import TableGridSwitch from 'pages/Markets/components/Input/TableGridSwitch';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
@@ -102,7 +103,9 @@ const Profile: React.FC = () => {
         enabled: isAppReady && walletAddress !== null,
     });
 
-    const positions = userPositionsQuery.isSuccess ? userPositionsQuery.data : { claimable: 0, matured: [], live: [] };
+    const positions = userPositionsQuery.isSuccess
+        ? userPositionsQuery.data
+        : { claimable: 0, claimableAmount: 0, allocated: 0, matured: [], live: [] };
 
     const [isSimpeView, setSimpleView] = useState(true);
     const [searchText, setSearchText] = useState('');
@@ -150,7 +153,12 @@ const Profile: React.FC = () => {
                 )}
                 {view === NavItems.History && <TileTable rows={rows} />}
             </ContainerLeft>
-            <ContainerRight></ContainerRight>
+            <ContainerRight>
+                <PieChartOptionsAllocated
+                    claimable={positions.claimableAmount}
+                    allocated={positions.allocated}
+                ></PieChartOptionsAllocated>
+            </ContainerRight>
         </Container>
     );
 };

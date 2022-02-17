@@ -6,7 +6,13 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { NetworkId } from 'utils/network';
 
-type PositionsData = { claimable: number; matured: UsersAssets[]; live: UsersAssets[] };
+type PositionsData = {
+    claimable: number;
+    claimableAmount: number;
+    allocated: number;
+    matured: UsersAssets[];
+    live: UsersAssets[];
+};
 
 const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: UseQueryOptions<PositionsData>) => {
     return useQuery<PositionsData>(
@@ -18,6 +24,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             });
 
             let claimable = 0;
+            let claimableAmount = 0;
 
             const matured = await Promise.all(
                 optionsMarkets
@@ -26,11 +33,13 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         return (snxJSConnector as any).binaryOptionsMarketDataContract
                             .getAccountMarketData(market.address, walletAddress)
                             .then((result: any) => {
-                                if (
-                                    (result.balances.long > 0 && market.result === 'long') ||
-                                    (result.balances.short > 0 && market.result === 'short')
-                                ) {
+                                if (bigNumberFormatter(result.balances.long) > 0 && market.result === 'long') {
                                     claimable++;
+                                    claimableAmount += bigNumberFormatter(result.balances.long);
+                                }
+                                if (bigNumberFormatter(result.balances.short) > 0 && market.result === 'short') {
+                                    claimable++;
+                                    claimableAmount += bigNumberFormatter(result.balances.short);
                                 }
                                 return {
                                     market,
@@ -43,6 +52,8 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                     })
             );
 
+            let allocated = 0;
+
             const live = await Promise.all(
                 optionsMarkets
                     .filter((market) => market.maturityDate > +Date.now())
@@ -50,6 +61,12 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         return (snxJSConnector as any).binaryOptionsMarketDataContract
                             .getAccountMarketData(market.address, walletAddress)
                             .then((result: any) => {
+                                if (bigNumberFormatter(result.balances.long) > 0) {
+                                    allocated += bigNumberFormatter(result.balances.long);
+                                }
+                                if (bigNumberFormatter(result.balances.short) > 0) {
+                                    allocated += bigNumberFormatter(result.balances.short);
+                                }
                                 return {
                                     market,
                                     balances: {
@@ -63,6 +80,8 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
 
             const result = {
                 claimable,
+                claimableAmount,
+                allocated,
                 matured:
                     matured.length > 0
                         ? matured.filter((data) => {
@@ -76,7 +95,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                           })
                         : [],
             };
-
+            console.log(result);
             return result;
         },
         options
