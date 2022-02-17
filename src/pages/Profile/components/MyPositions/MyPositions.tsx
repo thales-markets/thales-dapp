@@ -62,7 +62,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions }) =
                                     <Card.RowSubtitle>
                                         <TimeRemaining
                                             end={data.market.maturityDate}
-                                            fontSize={14}
+                                            fontSize={25}
                                             showFullCounter={true}
                                         />
                                     </Card.RowSubtitle>
