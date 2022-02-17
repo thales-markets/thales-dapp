@@ -2,7 +2,6 @@ import PriceChart from 'components/Charts/PriceChart';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 import React from 'react';
@@ -13,12 +12,12 @@ import { getSynthName } from 'utils/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import Card from '../styled-components/Card';
 
-type MyPositionsProps = {
+type MaturedPositionsProps = {
     exchangeRates: Rates | null;
     positions: UsersAssets[];
 };
 
-const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions }) => {
+const MaturedPositions: React.FC<MaturedPositionsProps> = ({ exchangeRates, positions }) => {
     return (
         <Container>
             {positions.map((data, index) => (
@@ -58,13 +57,11 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions }) =
                             </Card.Column>
                             <Card.Column>
                                 <Card.Row>
-                                    <Card.RowTitle>Time Left</Card.RowTitle>
-                                    <Card.RowSubtitle>
-                                        <TimeRemaining
-                                            end={data.market.maturityDate}
-                                            fontSize={25}
-                                            showFullCounter={true}
-                                        />
+                                    <Card.RowTitle>Status</Card.RowTitle>
+                                    <Card.RowSubtitle
+                                        style={{ color: data.market.result === 'long' ? '#50CE99' : '#C3244A' }}
+                                    >
+                                        {data.market.result === 'long' ? 'Claimable' : 'RIP'}
                                     </Card.RowSubtitle>
                                 </Card.Row>
                                 <Card.Row>
@@ -147,4 +144,4 @@ const Container = styled.div`
     padding-top: 15px;
 `;
 
-export default MyPositions;
+export default MaturedPositions;
