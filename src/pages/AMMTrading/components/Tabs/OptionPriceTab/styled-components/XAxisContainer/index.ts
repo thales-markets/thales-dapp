@@ -20,16 +20,19 @@ const Tick: StyledComponent<'div', any> & TickChildren = styled(FlexDivColumn)`
 `;
 
 // @ts-ignore
-const XAxisContainer: StyledComponent<'div', any> & Children = styled.div`
-    display: flex;
+const XAxisContainer: StyledComponent<'div', any, { numberOfTicks: number }> & Children = styled.div<{
+    numberOfTicks: number;
+}>`
+    display: ${(_props) => (_props?.numberOfTicks > 0 ? 'flex' : 'none')};
     flex-direction: row;
     justify-content: flex-start;
+    width: 100%;
     margin-bottom: 50px;
     ${Tick}:first-child {
         margin-left: -16px;
     }
     ${Tick} {
-        margin-right: calc((95% / 7) - 34px);
+        margin-right: calc((95% / ${(_props) => _props.numberOfTicks}) - 18.5px);
     }
     &:last-child {
         margin-right: 0px !important;
@@ -39,6 +42,8 @@ const XAxisContainer: StyledComponent<'div', any> & Children = styled.div`
 const Day = styled.div`
     color: var(--primary-color);
     font-size: 16px;
+    width: 32px;
+    text-align: center;
 `;
 
 const DayNumerical = styled.div`

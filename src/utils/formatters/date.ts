@@ -140,3 +140,13 @@ export const formatTimeDifference = ({
         seconds ? (seconds < 10 ? `0${seconds}` : seconds) : '00'
     }`;
 };
+
+export const getDayName = (timestamp: number, locale?: string) => {
+    const date = new Date(timestamp);
+    return date ? date.toLocaleDateString(locale ? locale : 'en', { weekday: 'short' }) : 'N/A';
+};
+
+export const getDateOfMonth = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date ? date.getDate() : 'N/A';
+};
