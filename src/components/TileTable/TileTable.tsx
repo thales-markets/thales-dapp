@@ -8,7 +8,7 @@ type Cell = {
     color?: string;
     title?: string;
     titleFontSize?: number;
-    value: string;
+    value: string | number;
     valueFontSize?: number;
     test?: number;
 };
@@ -17,6 +17,7 @@ type TileRow = {
     asset: AssetInfoProps;
     color?: string;
     cells: Cell[];
+    disabled?: boolean;
 };
 
 type Properties = {
@@ -29,7 +30,7 @@ const TileTable: React.FC<Properties> = ({ rows }) => {
             {rows.map((row, index) => {
                 if (typeof row !== 'string') {
                     return (
-                        <Tile color={row.color} key={index}>
+                        <Tile disabled={row.disabled} color={row.color} key={index}>
                             <AssetInfo {...row.asset} />
                             {row.cells.map((cell, index) => (
                                 <Tile.Cell direction={cell.flexDirection} key={index}>

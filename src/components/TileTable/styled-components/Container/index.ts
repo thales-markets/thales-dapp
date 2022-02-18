@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
     width: 100%;
-    margin-left: 40px;
-    padding-right: 40px;
+    padding-left: 40px;
     > * {
         &:before {
             content: '';

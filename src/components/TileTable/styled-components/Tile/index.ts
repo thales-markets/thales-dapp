@@ -13,7 +13,10 @@ type Children = {
 };
 
 // @ts-ignore
-const Tile: StyledComponent<'div', any> & Children = styled(FlexDiv)<{ color?: string }>`
+const Tile: StyledComponent<'div', any, { disabled?: boolean }> & Children = styled(FlexDiv)<{
+    color?: string;
+    disabled?: boolean;
+}>`
     position: relative;
     background: ${(props) => props.color || 'transparent'};
     border: 2px solid ${(props) => (props.color ? 'transparent' : 'rgba(100, 217, 254, 0.5)')};
@@ -24,10 +27,14 @@ const Tile: StyledComponent<'div', any> & Children = styled(FlexDiv)<{ color?: s
     padding: 10px;
     margin-bottom: 15px;
     height: 50px;
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
     &:before {
         background: ${(props) => props.color || '#64d9fe'} !important;
         box-shadow: 0 0 0 3px ${(props) => props.color || '#64d9fe'} !important;
-        opacity: ${(props) => (props.color ? '1' : '0.5')} !important;
+        opacity: ${(props) => (props.color || props.disabled ? '1' : '0.5')} !important;
+    }
+    &:after {
+        opacity: ${(props) => (props.disabled ? '1' : '0.5')} !important;
     }
 `;
 
