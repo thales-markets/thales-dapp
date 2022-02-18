@@ -104,9 +104,10 @@ const ContainerFixed = styled.div`
     height: 130px;
     display: flex;
     flex-direction: column;
+    -webkit-box-pack: justify;
     justify-content: space-between;
-    position: fixed;
-    top: 24px;
+    position: absolute;
+    top: -140px;
 `;
 
 const PageTitle = styled.p`
