@@ -32,12 +32,17 @@ const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRender
         <Container>
             {rows.map((row, index) => {
                 if (typeof row !== 'string') {
+                    const cells = row.cells.slice(
+                        firstColumnRenderer ? 1 : 0,
+                        lastColumnRenderer ? row.cells.length - 1 : row.cells.length
+                    );
+
                     return (
                         <FlexDiv>
                             {firstColumnRenderer && firstColumnRenderer(row)}
                             <Tile lineHidden={index === 0} disabled={row.disabled} color={row.color} key={index}>
                                 <AssetInfo {...row.asset} />
-                                {row.cells.map((cell, index) => (
+                                {cells.map((cell, index) => (
                                     <Tile.Cell direction={cell.flexDirection} key={index}>
                                         {cell.title && (
                                             <Tile.Cell.Title fontSize={cell.titleFontSize}>

@@ -125,9 +125,9 @@ const History: React.FC = () => {
 
     return (
         <TileTable
-            firstColumnRenderer={() => {
-                return <div style={{ width: '31px' }} />;
-            }}
+            // firstColumnRenderer={() => {
+            //     return <div style={{ width: '31px' }} />;
+            // }}
             rows={rows}
         />
     );
