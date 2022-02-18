@@ -96,6 +96,7 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
         width: 2px;
         height: 43px;
         background: #64d9fe;
+        opacity: 0.5;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
     }
 `;
