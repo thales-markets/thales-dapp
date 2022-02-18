@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import OptionPriceTab from '../Tabs/OptionPriceTab';
-// import Table from 'components/TableV2';
-import MarketActivity from '../Tabs/OptionPriceTab/MarketActivity';
+import TradingView from '../Tabs/TradingView';
+import MarketActivity from '../Tabs/MarketActivity';
 
 import Container from './styled-components/Container';
 
@@ -45,7 +45,7 @@ const TabContainer: React.FC = () => {
             <Container.Tab>
                 {currentTab == 0 && <OptionPriceTab />}
                 {currentTab == 1 && <OptionPriceTab />}
-                {currentTab == 2 && <OptionPriceTab />}
+                {currentTab == 2 && <TradingView />}
                 {currentTab == 3 && <MarketActivity />}
             </Container.Tab>
         </Container>
