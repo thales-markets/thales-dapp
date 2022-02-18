@@ -1,5 +1,18 @@
+import { formatCurrency } from '../../../../../utils/formatters/number';
+import { formatShortDate } from '../../../../../utils/formatters/date';
+
 const WIN_COLOR = '#50CE99';
 const LOSE_COLOR = '#C3244A';
+
+const formatAMPM = (date: Date) => {
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const minutesString = minutes < 10 ? '0' + minutes : minutes;
+    return hours + ':' + minutesString + ' ' + ampm;
+};
 
 const generateDateKey = (date: Date) => {
     const dayOfTheWeek = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date.getDay()); //TODO: add different languages
@@ -33,32 +46,40 @@ const generateRows = (data: any[], walletAddress: string | null) => {
         if (typeof d === 'string') {
             return d;
         }
+        const marketExpired = d.marketItem.result;
+        const userWon = d.marketItem.result === d.optionSide;
         return {
-            color: d.marketItem.result ? (d.marketItem.result === d.optionSide ? WIN_COLOR : LOSE_COLOR) : '',
+            color: marketExpired ? (userWon ? WIN_COLOR : LOSE_COLOR) : '',
             asset: {
                 currencyKey: d.marketItem.currencyKey,
                 assetNameFontSize: '12px',
                 currencyKeyFontSize: '12px',
             },
             cells: [
-                { title: d.orderSide, value: new Date(d.timestamp).toDateString() },
-                { title: 'strike', value: d.marketItem.strikePrice },
+                { title: d.orderSide, value: formatAMPM(new Date(d.timestamp)) },
+                { title: 'strike', value: '$' + formatCurrency(d.marketItem.strikePrice) },
                 {
                     title: 'price',
-                    value: (d.orderSide == 'sell'
-                        ? d.takerAmount / d.makerAmount
-                        : d.makerAmount / d.takerAmount
-                    ).toFixed(2),
+                    value:
+                        '$' +
+                        formatCurrency(
+                            d.orderSide == 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount
+                        ),
                 },
                 {
                     title: 'amount',
-                    value: `${d.orderSide == 'sell' ? d.takerAmount : d.makerAmount} ${d.optionSide}`,
+                    value: `${formatCurrency(d.orderSide == 'sell' ? d.takerAmount : d.makerAmount)} ${d.optionSide}`,
                 },
                 {
                     title: 'paid',
-                    value: (d.orderSide == 'sell' ? d.makerAmount : d.takerAmount).toFixed(2),
+                    value: '$' + formatCurrency(d.orderSide == 'sell' ? d.makerAmount : d.takerAmount),
                 },
-                { title: 'expires @', value: new Date(d.marketItem.maturityDate).toDateString() },
+                {
+                    title: marketExpired ? (userWon ? 'profit' : 'loss') : 'expires @',
+                    value: !marketExpired
+                        ? formatShortDate(new Date(d.marketItem.maturityDate))
+                        : '$' + formatCurrency(userWon ? Math.abs(d.takerAmount - d.makerAmount) : d.takerAmount),
+                },
             ],
         };
     });
