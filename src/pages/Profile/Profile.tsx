@@ -10,76 +10,9 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import TileTable from '../../components/TileTable';
 import MaturedPositions from './components/MaturedPositions/MaturedPositions';
 import MyPositions from './components/MyPositions/MyPositions';
-
-const rows = [
-    'December 18, 2021',
-    {
-        color: '#50CE99',
-        asset: { currencyKey: 'BTC', assetNameFontSize: '12px', currencyKeyFontSize: '12px' },
-        cells: [
-            { title: 'buy', value: '7.24 pm', flexDirection: 'row' },
-            { title: 'strike', value: '$ 7,500.00' },
-            { title: 'price', value: '$ 0.35' },
-            { title: 'amount', value: '1352 long' },
-            { title: 'paid', value: '$ 1000.00' },
-            { title: 'expired @', value: '17.50 21.07.2022' },
-            { title: 'market', value: 'down' },
-        ],
-    },
-    'December 19, 2021',
-    {
-        asset: { currencyKey: 'BTC', assetNameFontSize: '12px', currencyKeyFontSize: '12px' },
-        cells: [
-            { title: 'test', value: 'test' },
-            { title: 'test2', value: 'test2' },
-            { title: 'test3', value: 'test3' },
-            { title: 'test4', value: 'test4' },
-            { title: 'test', value: 'test' },
-            { title: 'test2', value: 'test2' },
-            { title: 'test3', value: 'test3' },
-        ],
-    },
-    {
-        color: '#C3244A',
-        asset: { currencyKey: 'BTC', assetNameFontSize: '12px', currencyKeyFontSize: '12px' },
-        cells: [
-            { title: 'test', value: 'test' },
-            { title: 'test2', value: 'test2' },
-            { title: 'test3', value: 'test3' },
-            { title: 'test4', value: 'test4' },
-            { title: 'test', value: 'test' },
-            { title: 'test2', value: 'test2' },
-            { title: 'test3', value: 'test3' },
-        ],
-    },
-    {
-        asset: { currencyKey: 'BTC', assetNameFontSize: '12px', currencyKeyFontSize: '12px' },
-        cells: [
-            { title: 'test', value: 'test' },
-            { title: 'test2', value: 'test2' },
-            { title: 'test3', value: 'test3' },
-            { title: 'test4', value: 'test4' },
-            { title: 'test', value: 'test' },
-            { title: 'test2', value: 'test2' },
-            { title: 'test3', value: 'test3' },
-        ],
-    },
-    {
-        asset: { currencyKey: 'BTC', assetNameFontSize: '12px', currencyKeyFontSize: '12px' },
-        cells: [
-            { title: 'test', value: 'test' },
-            { title: 'test2', value: 'test2' },
-            { title: 'test3', value: 'test3' },
-            { title: 'test4', value: 'test4' },
-            { title: 'test', value: 'test' },
-            { title: 'test2', value: 'test2' },
-            { title: 'test3', value: 'test3' },
-        ],
-    },
-];
+import History from './components/History/History';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -120,7 +53,7 @@ const Profile: React.FC = () => {
                     value={!isSimpeView}
                     clickEventHandler={setSimpleView.bind(this, !isSimpeView)}
                     labels={['Simple View', 'In Depth View']}
-                ></TableGridSwitch>
+                />
             </ContainerFixed>
             <ContainerLeft>
                 <Nav>
@@ -151,13 +84,10 @@ const Profile: React.FC = () => {
                 {view === NavItems.MaturedPositions && (
                     <MaturedPositions exchangeRates={exchangeRates} positions={positions.matured} />
                 )}
-                {view === NavItems.History && <TileTable rows={rows} />}
+                {view === NavItems.History && <History />}
             </ContainerLeft>
             <ContainerRight>
-                <PieChartOptionsAllocated
-                    claimable={positions.claimableAmount}
-                    allocated={positions.allocated}
-                ></PieChartOptionsAllocated>
+                <PieChartOptionsAllocated claimable={positions.claimableAmount} allocated={positions.allocated} />
             </ContainerRight>
         </Container>
     );
