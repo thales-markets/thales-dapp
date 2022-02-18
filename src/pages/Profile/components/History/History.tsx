@@ -102,10 +102,10 @@ const History: React.FC = () => {
                             { title: 'strike', value: d.marketItem.strikePrice },
                             {
                                 title: 'price',
-                                value:
-                                    d.orderSide == 'sell'
-                                        ? d.makerAmount / d.takerAmount
-                                        : d.takerAmount / d.takerAmount,
+                                value: (d.orderSide == 'sell'
+                                    ? d.takerAmount / d.makerAmount
+                                    : d.makerAmount / d.takerAmount
+                                ).toFixed(2),
                             },
                             {
                                 title: 'amount',
@@ -116,7 +116,6 @@ const History: React.FC = () => {
                                 value: (d.orderSide == 'sell' ? d.makerAmount : d.takerAmount).toFixed(2),
                             },
                             { title: 'expired @', value: '17.50 21.07.2022' }, // todo
-                            { title: 'market', value: 'down' }, // todo
                         ],
                     })),
             ];
@@ -124,7 +123,14 @@ const History: React.FC = () => {
         return [];
     }, [query.isSuccess, query.data, walletAddress]);
 
-    return <TileTable rows={rows} />;
+    return (
+        <TileTable
+            firstColumnRenderer={() => {
+                return <div style={{ width: '31px' }} />;
+            }}
+            rows={rows}
+        />
+    );
 };
 
 export default History;

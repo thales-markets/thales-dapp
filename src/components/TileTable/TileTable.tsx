@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import Container from './styled-components/Container';
 import Tile from './styled-components/Tile';
 import AssetInfo, { AssetInfoProps } from '../AssetInfo/AssetInfo';
+import { FlexDiv } from '../../theme/common';
 
 type Cell = {
     flexDirection?: string;
@@ -21,29 +22,45 @@ type TileRow = {
 };
 
 type Properties = {
+    firstColumnRenderer?: (row: TileRow | string) => ReactElement;
+    lastColumnRenderer?: (row: TileRow | string) => ReactElement;
     rows: (TileRow | string)[];
 };
 
-const TileTable: React.FC<Properties> = ({ rows }) => {
+const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRenderer, rows }) => {
     return (
         <Container>
             {rows.map((row, index) => {
                 if (typeof row !== 'string') {
                     return (
-                        <Tile disabled={row.disabled} color={row.color} key={index}>
-                            <AssetInfo {...row.asset} />
-                            {row.cells.map((cell, index) => (
-                                <Tile.Cell direction={cell.flexDirection} key={index}>
-                                    {cell.title && (
-                                        <Tile.Cell.Title fontSize={cell.titleFontSize}>{cell.title}</Tile.Cell.Title>
-                                    )}
-                                    <Tile.Cell.Value fontSize={cell.valueFontSize}>{cell.value}</Tile.Cell.Value>
-                                </Tile.Cell>
-                            ))}
-                        </Tile>
+                        <FlexDiv>
+                            {firstColumnRenderer && firstColumnRenderer(row)}
+                            <Tile lineHidden={index === 0} disabled={row.disabled} color={row.color} key={index}>
+                                <AssetInfo {...row.asset} />
+                                {row.cells.map((cell, index) => (
+                                    <Tile.Cell direction={cell.flexDirection} key={index}>
+                                        {cell.title && (
+                                            <Tile.Cell.Title fontSize={cell.titleFontSize}>
+                                                {cell.title}
+                                            </Tile.Cell.Title>
+                                        )}
+                                        <Tile.Cell.Value fontSize={cell.valueFontSize}>{cell.value}</Tile.Cell.Value>
+                                    </Tile.Cell>
+                                ))}
+                            </Tile>
+                            {lastColumnRenderer && lastColumnRenderer(row)}
+                        </FlexDiv>
                     );
                 } else {
-                    return <Tile.Title>{row}</Tile.Title>;
+                    return (
+                        <FlexDiv>
+                            {firstColumnRenderer && firstColumnRenderer(row)}
+                            <Tile.Title lineHidden={index === 0} key={index}>
+                                {row}
+                            </Tile.Title>
+                            {lastColumnRenderer && lastColumnRenderer(row)}
+                        </FlexDiv>
+                    );
                 }
             })}
         </Container>
