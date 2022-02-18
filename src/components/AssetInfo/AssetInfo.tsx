@@ -10,13 +10,20 @@ export type AssetInfoProps = {
     logoSize?: string;
     assetNameFontSize?: string;
     currencyKeyFontSize?: string;
+    displayInRow?: boolean;
 };
 
-const AssetInfo: React.FC<AssetInfoProps> = ({ currencyKey, logoSize, assetNameFontSize, currencyKeyFontSize }) => {
+const AssetInfo: React.FC<AssetInfoProps> = ({
+    currencyKey,
+    logoSize,
+    assetNameFontSize,
+    currencyKeyFontSize,
+    displayInRow,
+}) => {
     return (
         <AssetContainer>
             <CurrencyIcon currencyKey={currencyKey} width={logoSize} height={logoSize} />
-            <AssetNameContainer>
+            <AssetNameContainer displayInRow={displayInRow}>
                 <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>
                 <CurrencyKey fontSize={currencyKeyFontSize}>{currencyKey}</CurrencyKey>
             </AssetNameContainer>
@@ -31,8 +38,10 @@ const AssetContainer = styled.div`
     align-items: center;
 `;
 
-export const AssetNameContainer = styled.div`
-    display: block;
+export const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
+    display: ${(_props) => (_props?.displayInRow ? 'flex' : 'block')};
+    ${(_props) => (_props?.displayInRow ? 'flex-direction: row;' : '')}
+    ${(_props) => (_props?.displayInRow ? 'align-items: baseline;' : '')}
     text-align: left;
     font-size: 15px;
     color: var(--primary-color) !important;
@@ -46,6 +55,7 @@ export const AssetName = styled.span<{ fontSize?: string }>`
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
     text-transform: uppercase;
     line-height: 120%;
+    margin-right: 2px;
 `;
 
 export const CurrencyKey = styled.span<{ fontSize?: string }>`
