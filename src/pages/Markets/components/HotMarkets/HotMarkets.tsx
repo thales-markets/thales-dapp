@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { OptionsMarkets } from 'types/options';
 
 import HotMarketCard, { HotMarket } from '../MarketsCard/HotMarketCard';
-
+import HotMarketCardSceleton from '../MarketsCard/HotMarketCardSceleton';
 import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
 
@@ -59,7 +59,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     return (
         <>
-            {currentMarkets.length && (
+            {currentMarkets.length > 0 ? (
                 <Wrapper>
                     <Icon
                         onClick={() => setFirstHotIndex(firstHotIndex > 0 ? firstHotIndex - 1 : firstHotIndex)}
@@ -87,6 +87,14 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                         disabled={firstHotIndex + 5 == currentMarkets?.length - 1}
                         className={'icon icon--right'}
                     />
+                </Wrapper>
+            ) : (
+                <Wrapper>
+                    <HotMarketCardSceleton></HotMarketCardSceleton>
+                    <HotMarketCardSceleton></HotMarketCardSceleton>
+                    <HotMarketCardSceleton></HotMarketCardSceleton>
+                    <HotMarketCardSceleton></HotMarketCardSceleton>
+                    <HotMarketCardSceleton></HotMarketCardSceleton>
                 </Wrapper>
             )}
         </>

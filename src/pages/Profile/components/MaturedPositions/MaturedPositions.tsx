@@ -1,7 +1,6 @@
 import PriceChart from 'components/Charts/PriceChart';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 import React from 'react';
@@ -109,13 +108,11 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ exchangeRates, posi
                             </Card.Column>
                             <Card.Column>
                                 <Card.Row>
-                                    <Card.RowTitle>Time Left</Card.RowTitle>
-                                    <Card.RowSubtitle>
-                                        <TimeRemaining
-                                            end={data.market.maturityDate}
-                                            fontSize={14}
-                                            showFullCounter={true}
-                                        />
+                                    <Card.RowTitle>Status</Card.RowTitle>
+                                    <Card.RowSubtitle
+                                        style={{ color: data.market.result === 'short' ? '#50CE99' : '#C3244A' }}
+                                    >
+                                        {data.market.result === 'short' ? 'Claimable' : 'RIP'}
                                     </Card.RowSubtitle>
                                 </Card.Row>
                                 <Card.Row>
