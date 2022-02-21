@@ -48,10 +48,7 @@ const MarketPhase = {
 };
 
 const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
-    // const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    // const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
 
     const { t } = useTranslation();
@@ -495,16 +492,17 @@ const FilterContainer = styled.div`
 `;
 
 const Item = styled.span`
-    font-family: Titillium Regular !important;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 15px;
-    text-transform: uppercase;
     padding: 6px 14px 6px 14px;
-    margin-right: 20px;
+    box-sizing: content-box;
+    width: 40px;
     margin-bottom: -10px;
     color: var(--primary-color);
     cursor: pointer;
+    opacity: 0.5;
+    &.active {
+        opacity: 1;
+        box-shadow: 0px 4px var(--primary-filter-menu-active);
+    }
 `;
 
 const RatioText: React.FC<{ green: string; red: string }> = ({ green, red }) => {
