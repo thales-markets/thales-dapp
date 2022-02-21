@@ -4,22 +4,16 @@ import UserCard from 'layouts/DappLayout/components/DappHeader/UserCard';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { FlexDiv, FlexDivColumn, Logo } from 'theme/common';
-
 import { useTranslation } from 'react-i18next';
-
-// import { useSelector } from 'react-redux';
-// import { RootState } from 'redux/rootReducer';
-// import { getNetworkId } from 'redux/modules/wallet';
-// import { getIsOVM } from 'utils/network';
-
+import { RootState } from 'redux/rootReducer';
 import { buildHref } from 'utils/routes';
-
 import ROUTES from 'constants/routes';
-
 import logoIcon from 'assets/images/logo-light.svg';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import burger from 'assets/images/burger.svg';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { getWalletAddress } from 'redux/modules/wallet';
 
 enum BurgerState {
     Init,
@@ -29,9 +23,8 @@ enum BurgerState {
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
-    // const networkId = useSelector((state: RootState) => getNetworkId(state));
-    // const isL2 = getIsOVM(networkId);
     const location = useLocation();
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
 
     return (
@@ -101,12 +94,14 @@ const DappHeader: React.FC = () => {
                         iconName="game"
                         label={t('common.sidebar.game-label')}
                     />
-                    <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Profile ? 'selected' : ''}
-                        href={buildHref(ROUTES.Options.Profile)}
-                        iconName="profile"
-                        label={t('common.sidebar.profile-label')}
-                    />
+                    {walletAddress && (
+                        <DappHeaderItem
+                            className={location.pathname === ROUTES.Options.Profile ? 'selected' : ''}
+                            href={buildHref(ROUTES.Options.Profile)}
+                            iconName="profile"
+                            label={t('common.sidebar.profile-label')}
+                        />
+                    )}
                 </ItemsContainer>
             </Sidebar>
         </FlexDivColumn>
