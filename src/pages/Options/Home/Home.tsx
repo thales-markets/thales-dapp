@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { sortOptionsMarkets } from '../../../utils/options';
+import { sortOptionsMarkets } from 'utils/options';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import HotMarkets from './HotMarkets';
 import MarketCreation from './MarketCreation/MarketCreation';
 import ExploreMarkets from './ExploreMarkets';
 import Loader from 'components/Loader';
@@ -10,16 +9,13 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { Background, Wrapper } from 'theme/common';
 import MarketHeader from './MarketHeader';
-import { PHASE } from 'constants/options';
 import ROUTES from 'constants/routes';
-import useExchangeRatesMarketDataQuery from '../../../queries/rates/useExchangeRatesMarketDataQuery';
-import { getIsAppReady } from '../../../redux/modules/app';
+import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
+import { getIsAppReady } from 'redux/modules/app';
 import { useLocation } from 'react-router-dom';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import RedirectDialog from '../components/RedirectDialog/RedirectDialog';
 import WalletNotConnectedDialog from '../components/WalletNotConnectedDialog/WalletNotConnectedDialog';
-
-const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -54,15 +50,6 @@ export const Home: React.FC = () => {
     });
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
-    const hotMarkets = useMemo(
-        () =>
-            optionsMarkets
-                .filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
-                .sort((a, b) => a.timeRemaining - b.timeRemaining)
-                .slice(0, MAX_HOT_MARKETS),
-        [optionsMarkets]
-    );
-
     useEffect(() => {
         if (location.search === '?anchor=overview') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
@@ -90,10 +77,6 @@ export const Home: React.FC = () => {
                                     : ROUTES.Options.Overview
                             }
                         />
-
-                        {hotMarkets.length > 0 && (
-                            <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />
-                        )}
 
                         <MarketCreation />
 
