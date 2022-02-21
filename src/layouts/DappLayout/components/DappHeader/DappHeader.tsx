@@ -63,18 +63,12 @@ const DappHeader: React.FC = () => {
                         label={t('common.sidebar.markets')}
                     />
 
+                    <Divider />
                     <DappHeaderItem
                         className={location.pathname === ROUTES.Options.Token ? 'selected' : ''}
                         href={buildHref(ROUTES.Options.Token)}
                         iconName="token"
                         label={t('common.sidebar.earn-label')}
-                    />
-
-                    <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Royal ? 'selected' : ''}
-                        href={buildHref(ROUTES.Options.Royal)}
-                        iconName="thales-royale"
-                        label={t('common.sidebar.royale-label')}
                     />
                     <DappHeaderItem
                         className={
@@ -87,6 +81,14 @@ const DappHeader: React.FC = () => {
                         href={buildHref(ROUTES.Governance.Home)}
                         iconName="governance"
                         label={t('common.sidebar.governance-label')}
+                    />
+
+                    <Divider />
+                    <DappHeaderItem
+                        className={location.pathname === ROUTES.Options.Royal ? 'selected' : ''}
+                        href={buildHref(ROUTES.Options.Royal)}
+                        iconName="thales-royale"
+                        label={t('common.sidebar.royale-label')}
                     />
                     <DappHeaderItem
                         className={location.pathname === ROUTES.Options.Game ? 'selected' : ''}
@@ -173,10 +175,10 @@ const LogoIcon = styled.img`
     margin-bottom: 100px;
 `;
 
-// const LogoLocal = styled.div`
-//     cursor: pointer;
-//     height: 50px;
-//     margin-bottom: 60px;
-// `;
+const Divider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 3px solid rgb(255, 255, 255, 0.5);
+`;
 
 export default DappHeader;
