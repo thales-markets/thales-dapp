@@ -43,6 +43,34 @@ export const signUpWithPosition = async (position: number) => {
     }
 };
 
+export const signUpWithPass = async (royalePassId: number) => {
+    const { thalesRoyaleContract } = snxJSConnector;
+    if (thalesRoyaleContract) {
+        const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
+        try {
+            const tx = await RoyalContract.signUpWithPass(royalePassId);
+            await tx.wait();
+            dispatchMarketNotification('Successfully Signed Up With Royale Pass');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
+export const signUpWithWithPassWithPosition = async (royalePassId: number, position: number) => {
+    const { thalesRoyaleContract } = snxJSConnector;
+    if (thalesRoyaleContract) {
+        const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
+        try {
+            const tx = await RoyalContract.signUpWithWithPassWithPosition(royalePassId, position);
+            await tx.wait();
+            dispatchMarketNotification('Successfully Signed Up With Royale Pass And With Position');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
 export const startRoyale = async () => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {

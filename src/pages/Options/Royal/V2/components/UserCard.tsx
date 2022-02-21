@@ -21,7 +21,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import { checkAllowance, getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
-import { signUp, signUpWithPosition } from '../../getThalesRoyalData';
+import { signUp, signUpWithPass, signUpWithPosition, signUpWithWithPassWithPosition } from '../../getThalesRoyalData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
@@ -29,6 +29,8 @@ import { FooterData } from './queries/useRoyaleFooterQuery';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import ApprovalModal from 'components/ApprovalModal';
+import useRoyalePassQuery from './queries/useRoyalePassQuery';
+import { dispatchMarketNotification } from 'utils/options';
 
 type UserCardProps = {
     ethPrice: string;
@@ -56,12 +58,18 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
+    const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected });
+    const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
+
     const [allowance, setAllowance] = useState(false);
+    const [royalePassAllowance, setRoyalePassAllowance] = useState(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
+    const [openRoyalePassApproveModal, setOpenRoyalePassApproveModal] = useState<boolean>(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
+    const [royalePassId, setRoyalePassId] = useState(0);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const previouslySelectedDefaultPosition = localStorage.getItem(
         'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
@@ -89,7 +97,27 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     }, [selectedSeason]);
 
-    const updateBalanceAndAllowance = async (token: any) => {
+    const getNftIdForWallet = async () => {
+        const { thalesRoyalePassContract } = snxJSConnector;
+        if (thalesRoyalePassContract) {
+            const erc20Instance = new ethers.Contract(
+                thalesRoyalePassContract.address,
+                erc20Contract.abi,
+                snxJSConnector.signer
+            );
+
+            try {
+                const filterTo = await erc20Instance.filters.Transfer(null, walletAddress);
+                await erc20Instance.queryFilter(filterTo).then((resp: any) => {
+                    setRoyalePassId(Number(resp[0].topics[3]));
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    };
+
+    const updateAllowance = async (token: any) => {
         if (token) {
             const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
             const { thalesRoyaleContract } = snxJSConnector;
@@ -108,13 +136,39 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 } catch (e) {
                     console.log(e);
                 }
+            }
+        }
+    };
 
+    const updateRoyalePassAllowance = async (token: any) => {
+        if (token) {
+            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
+            const { thalesRoyalePassContract } = snxJSConnector;
+            if (thalesRoyalePassContract) {
                 try {
-                    const balance = await erc20Instance.balanceOf(walletAddress);
-                    setBalance(ethers.utils.formatUnits(balance));
+                    const price = (royalePassData as any).price;
+                    const allowance = await checkAllowance(
+                        price,
+                        erc20Instance,
+                        walletAddress,
+                        thalesRoyalePassContract.address
+                    );
+                    setRoyalePassAllowance(allowance);
                 } catch (e) {
                     console.log(e);
                 }
+            }
+        }
+    };
+
+    const updateBalance = async (token: any) => {
+        if (token) {
+            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
+            try {
+                const balance = await erc20Instance.balanceOf(walletAddress);
+                setBalance(ethers.utils.formatUnits(balance));
+            } catch (e) {
+                console.log(e);
             }
         }
     };
@@ -142,8 +196,49 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     };
 
+    const approveRoyalePassMinting = async (approveAmount: BigNumber) => {
+        const erc20Instance = new ethers.Contract(
+            (buyInToken as any).address,
+            erc20Contract.abi,
+            snxJSConnector.signer
+        );
+        try {
+            setIsAllowing(true);
+            const { thalesRoyalePassContract } = snxJSConnector;
+            if (thalesRoyalePassContract) {
+                const tx = await erc20Instance.approve(thalesRoyalePassContract.address, approveAmount, {
+                    gasLimit: MAX_L2_GAS_LIMIT,
+                });
+                setOpenApprovalModal(false);
+                await tx.wait();
+            }
+            setIsAllowing(false);
+        } catch (e) {
+            console.log('failed: ', e);
+            setIsAllowing(false);
+        }
+    };
+
+    const mintRoyalePass = async (walletAddress: string) => {
+        const { thalesRoyalePassContract } = snxJSConnector;
+        if (thalesRoyalePassContract) {
+            const RoyalContract = thalesRoyalePassContract.connect((snxJSConnector as any).signer);
+            try {
+                const tx = await RoyalContract.mint(walletAddress);
+                await tx.wait();
+                dispatchMarketNotification('Successfully Minted Royale Pass');
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    };
+
     useEffect(() => {
-        if (buyInToken && snxJSConnector.signer) updateBalanceAndAllowance(buyInToken).then();
+        if (buyInToken && snxJSConnector.signer) {
+            updateAllowance(buyInToken);
+            updateRoyalePassAllowance(buyInToken);
+            updateBalance(buyInToken);
+        }
     }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing]);
 
     const getFooter = (user: User | undefined, royaleData: any) => {
@@ -152,10 +247,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         if (royaleData.season === selectedSeason) {
             if (royaleData.signUpPeriod > new Date()) {
                 if (user.status === UserStatus.NOTSIGNED) {
-                    if (allowance) {
-                        const buyInAmount = royaleData.buyInAmount;
-                        return (
-                            <>
+                    const buyInAmount = royaleData.buyInAmount;
+                    return (
+                        <FlexContainer>
+                            {allowance ? (
                                 <Button
                                     className={buyInAmount > Number(balance) ? 'disabled' : ''}
                                     disabled={buyInAmount > Number(balance)}
@@ -179,28 +274,59 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 >
                                     {t('options.royale.scoreboard.buy-in', { buyInAmount })}
                                 </Button>
-                                {buyInAmount > Number(balance) && (
-                                    <DeadText style={{ marginTop: 10 }}>
-                                        {t('options.royale.scoreboard.insufficient-balance')}
-                                    </DeadText>
-                                )}
-                            </>
-                        );
-                    } else {
-                        if (isWalletConnected)
-                            return (
+                            ) : (
                                 <Button
                                     className={isAllowing ? 'disabled' : ''}
                                     disabled={isAllowing}
                                     onClick={async () => {
                                         setOpenApprovalModal(true);
-                                        updateBalanceAndAllowance(buyInToken);
+                                        updateAllowance(buyInToken);
+                                        updateBalance(buyInToken);
                                     }}
                                 >
                                     {t('options.royale.scoreboard.approve-susd')}
                                 </Button>
-                            );
-                    }
+                            )}
+                            {royalePassAllowance ? (
+                                <Button
+                                    className={(royalePassData as any).balance === 0 ? 'disabled' : ''}
+                                    disabled={(royalePassData as any).balance === 0}
+                                    onClick={() => {
+                                        defaultPosition !== PositionsEnum.NONE
+                                            ? (localStorage.setItem(
+                                                  'defaultPosition' +
+                                                      truncateAddress(walletAddress as any, 2, 2) +
+                                                      selectedSeason,
+                                                  defaultPosition
+                                              ),
+                                              signUpWithWithPassWithPosition(
+                                                  royalePassId,
+                                                  defaultPosition === PositionsEnum.DOWN ? 1 : 2
+                                              ).finally(() => {
+                                                  royalePassQuery.refetch();
+                                                  getNftIdForWallet();
+                                              }))
+                                            : signUpWithPass(royalePassId).finally(() => {
+                                                  royalePassQuery.refetch();
+                                                  getNftIdForWallet();
+                                              });
+                                    }}
+                                >
+                                    Buy in with Pass
+                                </Button>
+                            ) : (
+                                <Button
+                                    className={isAllowing ? 'disabled' : ''}
+                                    disabled={isAllowing}
+                                    onClick={async () => {
+                                        setOpenApprovalModal(true);
+                                        updateRoyalePassAllowance(buyInToken);
+                                        updateBalance(buyInToken);
+                                    }}
+                                ></Button>
+                            )}
+                        </FlexContainer>
+                    );
                 }
             } else {
                 if (user.status === UserStatus.RDY) {
@@ -370,15 +496,39 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
                 </FlexContainer>
                 <FlexContainer>
-                    {walletAddress && sUSDBalance < (royaleData as any).buyInAmount && (
-                        <Button
-                            onClick={() => {
-                                setShowSwap(true);
-                            }}
-                        >
-                            {t('options.swap.button-text')}
-                        </Button>
+                    <UserLabel>Royale Pass:</UserLabel>
+                    <InputWrapper>{(royalePassData as any).balance}</InputWrapper>
+                </FlexContainer>
+                <FlexContainer>
+                    {walletAddress && user.status !== UserStatus.RDY && (
+                        <>
+                            <Button
+                                onClick={() => {
+                                    setShowSwap(true);
+                                }}
+                            >
+                                {t('options.swap.button-text')}
+                            </Button>
+                            {royalePassAllowance ? (
+                                <Button
+                                    onClick={() => {
+                                        mintRoyalePass(walletAddress);
+                                    }}
+                                >
+                                    Mint Royale Pass
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={() => {
+                                        setOpenRoyalePassApproveModal(true);
+                                    }}
+                                >
+                                    Approve sUSD for Royale Pass
+                                </Button>
+                            )}
+                        </>
                     )}
+
                     <Modal
                         open={showSwap}
                         onClose={(_, reason) => {
@@ -415,11 +565,23 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             {getFooter(user, royaleData)}
             {openApprovalModal && (
                 <ApprovalModal
-                    defaultAmount={(royaleData as any).buyInAmount}
+                    defaultAmount={(royalePassData as any).price}
                     tokenSymbol={SYNTHS_MAP.sUSD}
                     isAllowing={isAllowing}
                     onSubmit={approve}
-                    onClose={() => setOpenApprovalModal(false)}
+                    onClose={() => {
+                        setOpenRoyalePassApproveModal(false);
+                    }}
+                    isRoyale={true}
+                />
+            )}
+            {openRoyalePassApproveModal && (
+                <ApprovalModal
+                    defaultAmount={(royalePassData as any).price}
+                    tokenSymbol={SYNTHS_MAP.sUSD}
+                    isAllowing={isAllowing}
+                    onSubmit={approveRoyalePassMinting}
+                    onClose={() => setOpenRoyalePassApproveModal(false)}
                     isRoyale={true}
                 />
             )}
