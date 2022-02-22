@@ -1167,7 +1167,11 @@
                 "alive": "alive",
                 "winner": "winner",
                 "users-per-page": "Users per page",
-                "no-users": "No players."
+                "no-users": "No players.",
+                "royale-pass": "Royale Pass",
+                "mint-royale-pass": "Mint Royale Pass",
+                "approve-royale-pass": "Approve for Royale Pass",
+                "buy-in-royale-pass": "Buy in: 1 Royale Pass"
             },
             "redirect-dialog": {
                 "title": "You are on Optimism Kovan Network",

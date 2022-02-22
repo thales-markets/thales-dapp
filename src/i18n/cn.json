@@ -1172,7 +1172,11 @@
                 "default-position-none": "没有任何",
                 "default-position-up": "向上",
                 "default-position-down": "向下",
-                "default-position-info": "比赛开始前，您可以选择一个仅适用于第一轮的默认位置。仓位期开始后，您可以再次更改仓位。对于所有其他回合，必须在定位期间选择位置。"
+                "default-position-info": "比赛开始前，您可以选择一个仅适用于第一轮的默认位置。仓位期开始后，您可以再次更改仓位。对于所有其他回合，必须在定位期间选择位置。",
+                "royale-pass": "皇家通行证",
+                "mint-royale-pass": "薄荷皇家通行证",
+                "buy-in-royale-pass": "购买：1 皇家通行证",
+                "approve-royale-pass": "批准皇家通行证"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

@@ -93,7 +93,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     }, [latestSeason]);
 
     useEffect(() => {
-        if (buyInToken && snxJSConnector.signer) updateBalanceAndAllowance(buyInToken);
+        if (buyInToken && snxJSConnector.signer && (royalePassData as any).price) updateBalanceAndAllowance(buyInToken);
     }, [buyInToken, snxJSConnector.signer, (royalePassData as any).price, isAllowing]);
 
     const updateBalanceAndAllowance = async (token: any) => {
@@ -171,26 +171,26 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                         {walletAddress && (
                             <>
                                 {allowance ? (
-                                    walletBalance > (royalePassData as any).price ? (
-                                        <Button
-                                            onClick={() => {
-                                                mintRoyalePass(walletAddress);
-                                            }}
-                                        >
-                                            Mint Royale Pass
-                                        </Button>
-                                    ) : (
-                                        <Balances>Inssuficient funds</Balances>
-                                    )
+                                    <Button
+                                        className={walletBalance < (royalePassData as any).price ? 'disabled' : ''}
+                                        disabled={walletBalance < (royalePassData as any).price}
+                                        onClick={() => {
+                                            mintRoyalePass(walletAddress);
+                                        }}
+                                    >
+                                        {t('options.royale.scoreboard.mint-royale-pass')}
+                                    </Button>
                                 ) : (
                                     <Button onClick={() => setOpenApprovalModal(true)}>
-                                        Approve sUSD for Royale Pass
+                                        {t('options.royale.scoreboard.approve-royale-pass')}
                                     </Button>
                                 )}
                                 <Button onClick={() => setShowSwap(true)}>{t('options.swap.button-text')}</Button>
                                 <Balances>
                                     <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</span>{' '}
-                                    <span>{(royalePassData as any).balance} Royale Pass</span>
+                                    <span>
+                                        {(royalePassData as any).balance} {t('options.royale.scoreboard.royale-pass')}
+                                    </span>
                                 </Balances>
                             </>
                         )}

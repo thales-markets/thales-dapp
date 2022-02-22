@@ -1172,7 +1172,11 @@
                 "default-position-down": "ВНИЗ",
                 "default-position-up": "ВВЕРХ",
                 "default-position-info": "Перед началом игры вы можете выбрать позицию по умолчанию, применяемую только к первому раунду. Вы можете снова изменить свою позицию, как только начнется период позиционирования. Для всех остальных раундов позиция должна быть выбрана в течение периода позиционирования.",
-                "default-position-none": "НИКТО"
+                "default-position-none": "НИКТО",
+                "royale-pass": "Королевский пропуск",
+                "mint-royale-pass": "Минт Рояль Пасс",
+                "buy-in-royale-pass": "Бай-ин: 1 Royale Pass",
+                "approve-royale-pass": "Одобрить Royale Pass"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",
