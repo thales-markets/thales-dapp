@@ -3,7 +3,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { OptionsMarkets, PrimaryOptionsFilter } from 'types/options';
+import { OptionsMarkets } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { SortOption } from 'types/options';
 
@@ -33,6 +33,7 @@ import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/currency';
 
 import './main.scss';
+import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 type MarketsTableProps = {
     exchangeRates: Rates | null;
@@ -46,26 +47,11 @@ const MarketPhase = {
     maturity: '#F7B91A',
 };
 
-enum PrimaryFiltersEnum {
-    allMarkets = 'allMarkets',
-    watchlist = 'watchlist',
-    recentlyAdded = 'recentlyAdded',
-}
-
 const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
-    // const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    // const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
 
     const { t } = useTranslation();
-
-    const primaryFiltersTranslation = {
-        allMarkets: t('options.filters-labels.all-markets'),
-        watchlist: t('options.filters-labels.watchlist'),
-        recentlyAdded: t('options.filters-labels.recently-added'),
-    };
 
     const GridSortFilters: Array<SortOption> = [
         {
@@ -99,12 +85,11 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             asc: false,
         },
     ];
-
+    const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
     const [sortOptions, setSortOptions] = useState(GridSortFilters);
     const [tableView, setTableView] = useState<boolean>(false);
-    const [primaryFilter, setPrimaryFilter] = useState<PrimaryOptionsFilter>(
-        PrimaryFiltersEnum.allMarkets as PrimaryOptionsFilter
-    );
+    const [assetFilter, setAssetFilter] = useState<string>('');
+
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
 
     const updateSortOptions = (index: number) => {
@@ -219,7 +204,9 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     }, [optionsMarkets]);
 
     const data = useMemo(() => {
+        const set: Set<string> = new Set();
         const processedMarkets = optionsMarkets.map((market) => {
+            set.add(market.currencyKey);
             return {
                 address: market.address,
                 asset: market.asset,
@@ -235,6 +222,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 phase: market.phase,
             };
         });
+
+        setAllAssets(set);
 
         return processedMarkets;
     }, [optionsMarkets]);
@@ -253,7 +242,12 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     } = useTable(
         {
             columns,
-            data,
+            data: data.filter((market) => {
+                if (assetFilter) {
+                    return market.currencyKey === assetFilter;
+                }
+                return true;
+            }),
             initalState: {
                 pageIndex: 1,
             },
@@ -301,27 +295,32 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     })
                     .filter((item) => item),
             ],
-            primaryFilter: 'allMarkets' as PrimaryOptionsFilter,
+            assetFilter: assetFilter,
         };
-    }, [globalFilter, sortOptions]);
+    }, [globalFilter, sortOptions, assetFilter]);
 
     return (
         <>
             <Wrapper>
                 <FilterContainer>
-                    {Object.keys(primaryFiltersTranslation).map((value: string) => {
-                        return (
-                            <Item
-                                className={primaryFilter == value ? 'active' : ''}
-                                onClick={() => {
-                                    console.log('Test');
-                                    setPrimaryFilter((PrimaryFiltersEnum as any)[value]);
-                                }}
-                            >
-                                {(primaryFiltersTranslation as any)[value]}
-                            </Item>
-                        );
-                    })}
+                    {allAssets.size > 0 &&
+                        [...(allAssets as any)].map((value: string, index: number) => {
+                            return (
+                                <Item
+                                    key={index}
+                                    className={assetFilter == value ? 'active' : ''}
+                                    onClick={() => {
+                                        if (assetFilter === value) {
+                                            setAssetFilter('');
+                                        } else {
+                                            setAssetFilter(value);
+                                        }
+                                    }}
+                                >
+                                    <CurrencyIcon width="40" height="40" currencyKey={value}></CurrencyIcon>
+                                </Item>
+                            );
+                        })}
                 </FilterContainer>
                 <FormContainer>
                     <TableGridSwitch
@@ -477,6 +476,7 @@ const Wrapper = styled(FlexDivRow)`
     width: 100%;
     margin-bottom: 10px;
     max-width: 1200px;
+    align-items: flex-end;
 `;
 
 const FormContainer = styled.div`
@@ -492,16 +492,17 @@ const FilterContainer = styled.div`
 `;
 
 const Item = styled.span`
-    font-family: Titillium Regular !important;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 15px;
-    text-transform: uppercase;
     padding: 6px 14px 6px 14px;
-    margin-right: 20px;
+    box-sizing: content-box;
+    width: 40px;
     margin-bottom: -10px;
     color: var(--primary-color);
     cursor: pointer;
+    opacity: 0.5;
+    &.active {
+        opacity: 1;
+        box-shadow: 0px 4px var(--primary-filter-menu-active);
+    }
 `;
 
 const RatioText: React.FC<{ green: string; red: string }> = ({ green, red }) => {

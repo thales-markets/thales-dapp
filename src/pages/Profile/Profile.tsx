@@ -104,9 +104,10 @@ const ContainerFixed = styled.div`
     height: 130px;
     display: flex;
     flex-direction: column;
+    -webkit-box-pack: justify;
     justify-content: space-between;
-    position: fixed;
-    top: 24px;
+    position: absolute;
+    top: -140px;
 `;
 
 const PageTitle = styled.p`
@@ -159,15 +160,15 @@ const NavItem = styled.p`
 `;
 
 const Notification = styled.span`
-    background: #276d83;
+    background: rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
     box-shadow: 0px 0px 30px rgb(100 217 254 / 30%);
     border-radius: 30px;
     margin-left: 20px;
-    width: 32px;
+    width: 28px;
     text-align: center;
     font-size: 18px;
-    line-height: 26px;
+    line-height: 28px;
     position: relative;
     top: 0px;
     margin-top: 6px;

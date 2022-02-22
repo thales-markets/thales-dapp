@@ -16,11 +16,10 @@ import { buildOptionsMarketLink } from 'utils/routes';
 type MarketsGridProps = {
     optionsMarkets: OptionsMarkets;
     exchangeRates: Rates | null;
-    watchlistedMarkets?: string[];
     filters: GridFilters;
 };
 
-const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates, watchlistedMarkets, filters }) => {
+const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates, filters }) => {
     const [rowsPerPage, setRowsPerPage] = useState<number>(9);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [dataCount, setDataCount] = useState<number>(optionsMarkets?.length || 0);
@@ -28,8 +27,11 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
     const options = useMemo(() => {
         let data = optionsMarkets;
 
-        if (filters?.primaryFilter == 'watchlist') {
-            data = data.filter((market) => watchlistedMarkets?.includes(market.address));
+        if (filters?.assetFilter) {
+            console.log(filters?.assetFilter);
+            data = data.filter((market) => {
+                return market.currencyKey === filters?.assetFilter;
+            });
         }
 
         if (filters?.searchQuery) {
@@ -39,8 +41,6 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
                 if (getSynthName(market.currencyKey).toLowerCase().includes(filters.searchQuery)) return market;
             });
         }
-
-        // if(filters?.primaryFilter == 'recentlyAdded')
 
         if (filters?.sort?.length) {
             filters.sort.forEach((sort) => {

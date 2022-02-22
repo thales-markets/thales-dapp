@@ -14,6 +14,7 @@ const Card: StyledComponent<'div', any> & Children = styled.div`
     box-sizing: border-box;
     border-radius: 15px;
     padding: 24px 50px;
+    padding-right: 24px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
@@ -24,6 +25,15 @@ const CardColumn = styled.div`
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
+    &:first-child {
+        flex: 1;
+    }
+    flex: 2;
+    &:nth-child(2) {
+        flex: 3;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
 `;
 
 const CardText = styled.span`

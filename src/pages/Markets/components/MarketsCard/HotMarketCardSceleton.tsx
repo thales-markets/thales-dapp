@@ -74,7 +74,7 @@ const Header = styled(CardText)`
     width: 120px;
     height: 20px;
     border-radius: 3px;
-    background: #6984ad;
+    background: rgb(100, 217, 254, 0.5);
 `;
 
 const SubHeader = styled(CardText)`
@@ -83,7 +83,7 @@ const SubHeader = styled(CardText)`
     font-weight: 400;
     width: 80px;
     height: 25px;
-    background: #6984ad;
+    background: rgb(100, 217, 254, 0.5);
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 3px;
@@ -97,7 +97,7 @@ const HeaderCard = styled(CardText)`
     width: 80px;
     height: 20px;
     border-radius: 3px;
-    background: #6984ad;
+    background: rgb(100, 217, 254, 0.5);
 `;
 
 const SubHeaderCard = styled(CardText)`
@@ -106,7 +106,7 @@ const SubHeaderCard = styled(CardText)`
     font-weight: 400;
     width: 60px;
     height: 25px;
-    background: #6984ad;
+    background: rgb(100, 217, 254, 0.5);
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 3px;
@@ -115,7 +115,7 @@ const SubHeaderCard = styled(CardText)`
 const Percentage = styled(CardText)`
     font-size: 25px;
     font-weight: 700;
-    background: #6984ad;
+    background: rgb(100, 217, 254, 0.5);
     width: 150px;
     height: 24px;
     margin-top: 10px;
@@ -123,7 +123,7 @@ const Percentage = styled(CardText)`
 `;
 
 const CurrencyIcon = styled.div`
-    background: #6984ad;
+    background: rgb(100, 217, 254, 0.5);
     width: 44px;
     height: 44px;
     border-radius: 50%;

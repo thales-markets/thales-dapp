@@ -4,22 +4,16 @@ import UserCard from 'layouts/DappLayout/components/DappHeader/UserCard';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { FlexDiv, FlexDivColumn, Logo } from 'theme/common';
-
 import { useTranslation } from 'react-i18next';
-
-// import { useSelector } from 'react-redux';
-// import { RootState } from 'redux/rootReducer';
-// import { getNetworkId } from 'redux/modules/wallet';
-// import { getIsOVM } from 'utils/network';
-
+import { RootState } from 'redux/rootReducer';
 import { buildHref } from 'utils/routes';
-
 import ROUTES from 'constants/routes';
-
 import logoIcon from 'assets/images/logo-light.svg';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import burger from 'assets/images/burger.svg';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { getWalletAddress } from 'redux/modules/wallet';
 
 enum BurgerState {
     Init,
@@ -29,9 +23,8 @@ enum BurgerState {
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
-    // const networkId = useSelector((state: RootState) => getNetworkId(state));
-    // const isL2 = getIsOVM(networkId);
     const location = useLocation();
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
 
     return (
@@ -70,18 +63,12 @@ const DappHeader: React.FC = () => {
                         label={t('common.sidebar.markets')}
                     />
 
+                    <Divider />
                     <DappHeaderItem
                         className={location.pathname === ROUTES.Options.Token ? 'selected' : ''}
                         href={buildHref(ROUTES.Options.Token)}
                         iconName="token"
                         label={t('common.sidebar.earn-label')}
-                    />
-
-                    <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Royal ? 'selected' : ''}
-                        href={buildHref(ROUTES.Options.Royal)}
-                        iconName="thales-royale"
-                        label={t('common.sidebar.royale-label')}
                     />
                     <DappHeaderItem
                         className={
@@ -95,18 +82,28 @@ const DappHeader: React.FC = () => {
                         iconName="governance"
                         label={t('common.sidebar.governance-label')}
                     />
+
+                    <Divider />
+                    <DappHeaderItem
+                        className={location.pathname === ROUTES.Options.Royal ? 'selected' : ''}
+                        href={buildHref(ROUTES.Options.Royal)}
+                        iconName="thales-royale"
+                        label={t('common.sidebar.royale-label')}
+                    />
                     <DappHeaderItem
                         className={location.pathname === ROUTES.Options.Game ? 'selected' : ''}
                         href={buildHref(ROUTES.Options.Game)}
                         iconName="game"
                         label={t('common.sidebar.game-label')}
                     />
-                    <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Profile ? 'selected' : ''}
-                        href={buildHref(ROUTES.Options.Profile)}
-                        iconName="profile"
-                        label={t('common.sidebar.profile-label')}
-                    />
+                    {walletAddress && (
+                        <DappHeaderItem
+                            className={location.pathname === ROUTES.Options.Profile ? 'selected' : ''}
+                            href={buildHref(ROUTES.Options.Profile)}
+                            iconName="profile"
+                            label={t('common.sidebar.profile-label')}
+                        />
+                    )}
                 </ItemsContainer>
             </Sidebar>
         </FlexDivColumn>
@@ -178,10 +175,10 @@ const LogoIcon = styled.img`
     margin-bottom: 100px;
 `;
 
-// const LogoLocal = styled.div`
-//     cursor: pointer;
-//     height: 50px;
-//     margin-bottom: 60px;
-// `;
+const Divider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 3px solid rgb(255, 255, 255, 0.5);
+`;
 
 export default DappHeader;

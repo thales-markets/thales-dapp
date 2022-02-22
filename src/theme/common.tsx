@@ -440,7 +440,11 @@ export const UserCardSectionHeader = styled.span`
 `;
 
 export const MarketCardContainer = styled.div`
-    border: 2px solid #64d9fe;
+    border: 2px solid rgb(100, 217, 254, 0.5);
+    :hover {
+        border: 2px solid rgb(100, 217, 254, 1);
+    }
+    cursor: pointer;
 `;
 
 export const CardContainer = styled.div`
