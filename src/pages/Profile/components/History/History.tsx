@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
-import TileTable from '../../../../components/TileTable';
-import useBinaryOptionsAllTradesQuery from '../../../../queries/options/useBinaryOptionsAllTradesQuery';
+import TileTable from 'components/TileTable';
+import useBinaryOptionsAllTradesQuery from 'queries/options/useBinaryOptionsAllTradesQuery';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../redux/rootReducer';
-import { getNetworkId, getWalletAddress } from '../../../../redux/modules/wallet';
-import { getIsAppReady } from '../../../../redux/modules/app';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
 import generateRows from './utils/generateRows';
 
 const History: React.FC = () => {
