@@ -78,13 +78,15 @@ const Profile: React.FC = () => {
                     </NavItem>
                 </Nav>
                 <LineUnderNav />
-                {view === NavItems.MyPositions && (
-                    <MyPositions exchangeRates={exchangeRates} positions={positions.live} />
-                )}
-                {view === NavItems.MaturedPositions && (
-                    <MaturedPositions exchangeRates={exchangeRates} positions={positions.matured} />
-                )}
-                {view === NavItems.History && <History />}
+                <ContentWrapper>
+                    {view === NavItems.MyPositions && (
+                        <MyPositions exchangeRates={exchangeRates} positions={positions.live} />
+                    )}
+                    {view === NavItems.MaturedPositions && (
+                        <MaturedPositions exchangeRates={exchangeRates} positions={positions.matured} />
+                    )}
+                    {view === NavItems.History && <History />}
+                </ContentWrapper>
             </ContainerLeft>
             <ContainerRight>
                 <PieChartOptionsAllocated claimable={positions.claimableAmount} allocated={positions.allocated} />
@@ -123,6 +125,7 @@ const ContainerLeft = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
+    max-width: 50%;
 `;
 
 const LineUnderNav = styled.div`
@@ -174,6 +177,14 @@ const Notification = styled.span`
     margin-top: 6px;
     margin-bottom: 8px;
     display: inline-block;
+`;
+
+const ContentWrapper = styled.div`
+    width: calc(100% + 60px);
+    padding-right: 50px;
+    max-height: calc(100vh - 250px);
+    overflow: hidden;
+    overflow-y: auto;
 `;
 
 export default Profile;
