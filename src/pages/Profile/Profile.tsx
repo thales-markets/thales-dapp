@@ -87,7 +87,7 @@ const Profile: React.FC = () => {
                     {view === NavItems.MaturedPositions && (
                         <MaturedPositions exchangeRates={exchangeRates} positions={positions.matured} />
                     )}
-                    {view === NavItems.History && <History />}
+                    {view === NavItems.History && <History markets={markets} />}
                 </ContentWrapper>
             </ContainerLeft>
             <ContainerRight>

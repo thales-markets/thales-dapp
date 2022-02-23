@@ -21,14 +21,9 @@ const generateDateKey = (date: Date) => {
     return `${dayOfTheWeek} ${dayOfTheMonth}, ${year}`;
 };
 
-const generateRows = (data: any[], walletAddress: string | null) => {
+const generateRows = (data: any[]) => {
     const dateMap: Record<string, any> = {};
-
-    data.filter(
-        (d) =>
-            d.maker.toLowerCase() == walletAddress?.toLowerCase() ||
-            d.taker.toLowerCase() == walletAddress?.toLowerCase()
-    ).forEach((trade) => {
+    data.map((trade) => {
         const tradeDateKey = generateDateKey(new Date(trade.timestamp));
         if (!dateMap[tradeDateKey]) {
             dateMap[tradeDateKey] = [];
@@ -63,7 +58,7 @@ const generateRows = (data: any[], walletAddress: string | null) => {
                     value:
                         '$' +
                         formatCurrency(
-                            d.orderSide == 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount
+                            d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount
                         ),
                 },
                 {

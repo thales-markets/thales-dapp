@@ -95,7 +95,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                           })
                         : [],
             };
-            console.log(result);
+
             return result;
         },
         options
