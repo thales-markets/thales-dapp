@@ -2,34 +2,30 @@ import React, { useMemo } from 'react';
 import TileTable from 'components/TileTable';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
+import { getWalletAddress } from 'redux/modules/wallet';
 import generateRows from './utils/generateRows';
-import useUserTransactionsQuery from 'queries/user/useUserTransactions';
 import { OptionsMarkets } from 'types/options';
 import { keyBy } from 'lodash';
 import { sortOptionsMarkets } from 'utils/options';
 
 type HistoryProps = {
     markets?: OptionsMarkets;
+    trades: [];
 };
 
-const History: React.FC<HistoryProps> = ({ markets }) => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+const History: React.FC<HistoryProps> = ({ markets, trades }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-    const allTx = useUserTransactionsQuery(networkId, walletAddress as any, { enabled: isAppReady });
 
     const rows = useMemo(() => {
-        if (allTx.isSuccess && markets) {
+        if (trades.length > 0 && markets) {
             const optionsMarketsMap = keyBy(sortOptionsMarkets(markets), 'address');
-            allTx.data.trades.map((trade: any) => {
+            trades.map((trade: any) => {
                 trade.marketItem = optionsMarketsMap[trade.market];
             });
-            return generateRows(allTx.data.trades);
+            return generateRows(trades);
         }
         return [];
-    }, [allTx.isSuccess, walletAddress, markets]);
+    }, [trades, walletAddress, markets]);
 
     return <TileTable rows={rows} />;
 };

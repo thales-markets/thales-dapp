@@ -16,7 +16,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 
-const PieChartOptionsAllocated: React.FC<{ claimable?: number; allocated?: number }> = ({ claimable, allocated }) => {
+const PieChartOptionsAllocated: React.FC<{ claimable?: number }> = ({ claimable }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -34,21 +34,18 @@ const PieChartOptionsAllocated: React.FC<{ claimable?: number; allocated?: numbe
 
     const data = [
         { name: 'sUSD', value: sUSDBalance, color: '#8208FC' },
-        { name: 'claimable', value: claimable, color: '#8181ac' },
-        { name: 'maxReturn', value: allocated, color: '#50CE99' },
+        { name: 'claimable', value: claimable, color: '#50CE99' },
     ];
 
     return (
         <>
-            {isWalletConnected && claimable !== undefined && allocated !== undefined && (
+            {isWalletConnected && claimable !== undefined && (
                 <ChartContainer>
                     <BalanceInfoContainer>
                         <Header>sUSD in Wallet:</Header>
                         <SubHeader>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</SubHeader>
                         <Header>Claimable: </Header>
                         <SubHeader>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, claimable)}</SubHeader>
-                        <Header>Max Return: </Header>
-                        <SubHeader>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, allocated)}</SubHeader>
                     </BalanceInfoContainer>
                     <PieChart width={450} height={450}>
                         <Pie
@@ -107,7 +104,7 @@ const Header = styled.p`
 
 const SubHeader = styled.p`
     font-family: Titillium Regular !important;
-    font-size: 40px;
+    font-size: 45px;
     font-style: normal;
     font-weight: 600;
     line-height: 44px;

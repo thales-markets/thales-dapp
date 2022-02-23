@@ -13,6 +13,12 @@ import styled from 'styled-components';
 import MaturedPositions from './components/MaturedPositions/MaturedPositions';
 import MyPositions from './components/MyPositions/MyPositions';
 import History from './components/History/History';
+import Wrapper from './components/styled-components/UserData';
+import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
+import { useTranslation } from 'react-i18next';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { USD_SIGN } from 'constants/currency';
+import PriceChart from 'components/Charts/PriceChart';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -21,6 +27,7 @@ enum NavItems {
 }
 
 const Profile: React.FC = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -38,7 +45,10 @@ const Profile: React.FC = () => {
 
     const positions = userPositionsQuery.isSuccess
         ? userPositionsQuery.data
-        : { claimable: undefined, claimableAmount: undefined, allocated: undefined, matured: [], live: [] };
+        : { claimable: undefined, claimableAmount: undefined, matured: [], live: [] };
+
+    const allTxAndDataQuery = useCalculateDataQuery(networkId, walletAddress as any, { enabled: isAppReady });
+    const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
     const [isSimpeView, setSimpleView] = useState(true);
     const [searchText, setSearchText] = useState('');
@@ -87,11 +97,44 @@ const Profile: React.FC = () => {
                     {view === NavItems.MaturedPositions && (
                         <MaturedPositions exchangeRates={exchangeRates} positions={positions.matured} />
                     )}
-                    {view === NavItems.History && <History markets={markets} />}
+                    {view === NavItems.History && (
+                        <History markets={markets} trades={DataForUi ? DataForUi.trades : []} />
+                    )}
                 </ContentWrapper>
             </ContainerLeft>
             <ContainerRight>
-                <PieChartOptionsAllocated claimable={positions.claimableAmount} allocated={positions.allocated} />
+                <PieChartOptionsAllocated claimable={positions.claimableAmount} />
+                <Wrapper>
+                    <Wrapper.Row>
+                        <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
+                        <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
+                            {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.profit, 2)}
+                        </Wrapper.Value>
+                    </Wrapper.Row>
+                    <Wrapper.Row>
+                        <Wrapper.Label>{t('options.leaderboard.table.gain-col')}: </Wrapper.Label>
+                        <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
+                            {formatCurrencyWithSign('', DataForUi?.userData.gain, 2)}%
+                        </Wrapper.Value>
+                    </Wrapper.Row>
+                    <Wrapper.Row>
+                        <Wrapper.Label>{t('options.leaderboard.table.trades-col')}: </Wrapper.Label>
+                        <Wrapper.Value>{DataForUi?.userData.trades}</Wrapper.Value>
+                    </Wrapper.Row>
+                    <Wrapper.Row>
+                        <Wrapper.Label>{t('options.leaderboard.table.volume-col')}: </Wrapper.Label>
+                        <Wrapper.Value>{formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.volume, 2)}</Wrapper.Value>
+                    </Wrapper.Row>
+                    <Wrapper.Row>
+                        <Wrapper.Label>{t('options.leaderboard.table.investment-col')}: </Wrapper.Label>
+                        <Wrapper.Value>
+                            {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.investment, 2)}
+                        </Wrapper.Value>
+                    </Wrapper.Row>
+                </Wrapper>
+                <PriceContainer>
+                    <PriceChart currencyKey={'THALES'} showHeading={true} />
+                </PriceContainer>
             </ContainerRight>
         </Container>
     );
@@ -141,6 +184,8 @@ const ContainerRight = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
+    padding-left: 80px;
+    max-width: 50%;
 `;
 
 const Nav = styled.div`
@@ -191,6 +236,14 @@ const ContentWrapper = styled.div`
     position: relative;
     left: -50px;
     padding-bottom: 40px;
+`;
+
+const PriceContainer = styled.div`
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 500px;
+    margin: 40px auto;
 `;
 
 export default Profile;
