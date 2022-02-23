@@ -45,6 +45,11 @@ export enum PositionsEnum {
     UP = 'up',
 }
 
+export enum BuyInCollateralEnum {
+    PASS = 'pass',
+    SUSD = 'susd',
+}
+
 export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -74,6 +79,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+    const [isBuyingIn, setIsBuyingIn] = useState(false);
     const previouslySelectedDefaultPosition = localStorage.getItem(
         'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
     );
@@ -81,6 +87,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         previouslySelectedDefaultPosition ? previouslySelectedDefaultPosition : PositionsEnum.NONE
     );
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
+
+    const [selectedBuyInCollateral, setSelectedBuyInCollateral] = useState(BuyInCollateralEnum.PASS);
+    const [showSelectBuyInDropdown, setShowSelectBuyInDropdown] = useState(false);
+
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
@@ -101,16 +111,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [selectedSeason]);
 
     useEffect(() => {
-        if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress) {
-            updateAllowance(buyInToken).then(() => updateBalance(buyInToken));
-        }
+        if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress)
+            updateAllowance(buyInToken).finally(() => updateBalance(buyInToken));
     }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress]);
 
     useEffect(() => {
-        if (buyInToken && snxJSConnector.signer && (royaleData as any).price && walletAddress) {
-            updateRoyalePassAllowance(buyInToken).then(() => () => updateBalance(buyInToken));
+        if (buyInToken && snxJSConnector.signer && (royalePassData as any).price && walletAddress)
+            updateRoyalePassAllowance(buyInToken).finally(() => () => updateBalance(buyInToken));
+    }, [buyInToken, snxJSConnector.signer, royalePassData, isAllowing, walletAddress]);
+
+    useEffect(() => {
+        if (user.status === UserStatus.RDY) {
+            setIsBuyingIn(false);
         }
-    }, [buyInToken, snxJSConnector.signer, (royalePassData as any).price, isAllowing, walletAddress]);
+    }, [user.status]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
@@ -237,49 +251,50 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     const buyInAmount = royaleData.buyInAmount;
                     return (
                         <FlexContainer>
-                            {allowance ? (
+                            {selectedBuyInCollateral === BuyInCollateralEnum.SUSD ? (
+                                allowance ? (
+                                    <Button
+                                        className={buyInAmount > Number(balance) ? 'disabled' : ''}
+                                        disabled={buyInAmount > Number(balance)}
+                                        onClick={() => {
+                                            setIsBuyingIn(true);
+                                            defaultPosition !== PositionsEnum.NONE
+                                                ? (localStorage.setItem(
+                                                      'defaultPosition' +
+                                                          truncateAddress(walletAddress as any, 2, 2) +
+                                                          selectedSeason,
+                                                      defaultPosition
+                                                  ),
+                                                  signUpWithPosition(
+                                                      defaultPosition === PositionsEnum.DOWN ? 1 : 2
+                                                  ).finally(() => {
+                                                      synthsWalletBalancesQuery.refetch();
+                                                  }))
+                                                : signUp().finally(() => {
+                                                      synthsWalletBalancesQuery.refetch();
+                                                  });
+                                        }}
+                                    >
+                                        {t('options.royale.scoreboard.buy-in', { buyInAmount })}
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        className={isAllowing ? 'disabled' : ''}
+                                        disabled={isAllowing}
+                                        onClick={async () => {
+                                            setOpenApprovalModal(true);
+                                            updateAllowance(buyInToken).then(() => updateBalance(buyInToken));
+                                        }}
+                                    >
+                                        {t('options.royale.scoreboard.approve-susd')}
+                                    </Button>
+                                )
+                            ) : royalePassAllowance ? (
                                 <Button
-                                    style={{ marginLeft: 0 }}
-                                    className={buyInAmount > Number(balance) ? 'disabled' : ''}
-                                    disabled={buyInAmount > Number(balance)}
-                                    onClick={() => {
-                                        defaultPosition !== PositionsEnum.NONE
-                                            ? (localStorage.setItem(
-                                                  'defaultPosition' +
-                                                      truncateAddress(walletAddress as any, 2, 2) +
-                                                      selectedSeason,
-                                                  defaultPosition
-                                              ),
-                                              signUpWithPosition(
-                                                  defaultPosition === PositionsEnum.DOWN ? 1 : 2
-                                              ).finally(() => {
-                                                  synthsWalletBalancesQuery.refetch();
-                                              }))
-                                            : signUp().finally(() => {
-                                                  synthsWalletBalancesQuery.refetch();
-                                              });
-                                    }}
-                                >
-                                    {t('options.royale.scoreboard.buy-in', { buyInAmount })}
-                                </Button>
-                            ) : (
-                                <Button
-                                    className={isAllowing ? 'disabled' : ''}
-                                    disabled={isAllowing}
-                                    onClick={async () => {
-                                        setOpenApprovalModal(true);
-                                        updateAllowance(buyInToken).then(() => updateBalance(buyInToken));
-                                    }}
-                                >
-                                    {t('options.royale.scoreboard.approve-susd')}
-                                </Button>
-                            )}
-                            {royalePassAllowance ? (
-                                <Button
-                                    style={{ marginRight: 0 }}
                                     className={(royalePassData as any).balance === 0 ? 'disabled' : ''}
                                     disabled={(royalePassData as any).balance === 0}
                                     onClick={() => {
+                                        setIsBuyingIn(true);
                                         defaultPosition !== PositionsEnum.NONE
                                             ? (localStorage.setItem(
                                                   'defaultPosition' +
@@ -426,10 +441,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <StyledInfoIcon />
                         </RoyaleTooltip>
                     </UserLabel>
-                    <PositionSelector
-                        className={user.status === UserStatus.RDY ? 'disabled' : ''}
-                        isOpen={showSelectDropdown}
-                    >
+                    <Selector className={user.status === UserStatus.RDY ? 'disabled' : ''} isOpen={showSelectDropdown}>
                         {localStorage.getItem(
                             'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
                         ) && user.status === UserStatus.RDY ? (
@@ -468,7 +480,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                         {t('options.royale.scoreboard.default-position-' + position.toLowerCase())}
                                     </Text>
                                 ))}
-                    </PositionSelector>
+                    </Selector>
                     {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
                 </FlexContainer>
                 <FlexContainer>
@@ -479,38 +491,94 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <UserLabel>{t('options.royale.scoreboard.royale-pass')}:</UserLabel>
                     <InputWrapper>{(royalePassData as any).balance}</InputWrapper>
                 </FlexContainer>
+                <FlexContainer
+                    style={{
+                        position: 'relative',
+                        display:
+                            user.status === UserStatus.NOTSIGNED && (royaleData as any).signUpPeriod < new Date()
+                                ? 'none'
+                                : '',
+                    }}
+                >
+                    <UserLabel>Buy in with:</UserLabel>
+                    <Selector
+                        className={user.status === UserStatus.RDY ? 'disabled' : ''}
+                        isOpen={showSelectBuyInDropdown}
+                    >
+                        <Text
+                            onClick={
+                                user.status !== UserStatus.RDY ? setShowSelectBuyInDropdown.bind(this, true) : undefined
+                            }
+                        >
+                            {t('options.royale.scoreboard.buy-in-collateral-' + selectedBuyInCollateral)}
+                            <Arrow style={{ position: 'initial', marginLeft: 9 }} className="icon icon--arrow-down" />
+                        </Text>
+
+                        {setShowSelectBuyInDropdown &&
+                            Object.keys(BuyInCollateralEnum)
+                                .filter((currency) => currency.toLowerCase() !== selectedBuyInCollateral.toLowerCase())
+                                .map((currency: any, key: number) => (
+                                    <Text
+                                        onClick={() => {
+                                            setSelectedBuyInCollateral(
+                                                BuyInCollateralEnum[currency as keyof typeof BuyInCollateralEnum]
+                                            );
+                                            setShowSelectBuyInDropdown(false);
+                                        }}
+                                        key={key}
+                                    >
+                                        {t('options.royale.scoreboard.buy-in-collateral-' + currency.toLowerCase())}
+                                    </Text>
+                                ))}
+                    </Selector>
+                    {showSelectBuyInDropdown && <Overlay onClick={() => setShowSelectBuyInDropdown(false)} />}
+                </FlexContainer>
                 <FlexContainer>
-                    {walletAddress && (royaleData as any).signUpPeriod > new Date() && (
-                        <>
-                            <Button
-                                style={{ marginLeft: 0 }}
-                                onClick={() => {
-                                    setShowSwap(true);
-                                }}
-                            >
-                                {t('options.swap.button-text')}
-                            </Button>
-                            {royalePassAllowance ? (
+                    {walletAddress &&
+                        (royaleData as any).signUpPeriod > new Date() &&
+                        (royaleData as any).buyInAmount > Number(balance) &&
+                        selectedBuyInCollateral === BuyInCollateralEnum.SUSD &&
+                        user.status !== UserStatus.RDY && (
+                            <>
                                 <Button
-                                    style={{ marginRight: 0 }}
                                     onClick={() => {
-                                        mintRoyalePass(walletAddress);
+                                        setShowSwap(true);
                                     }}
                                 >
-                                    {t('options.royale.scoreboard.mint-royale-pass')}
+                                    {t('options.swap.button-text')}
                                 </Button>
-                            ) : (
+                            </>
+                        )}
+                    {walletAddress &&
+                    (royaleData as any).signUpPeriod > new Date() &&
+                    (royalePassData as any).balance === 0 &&
+                    selectedBuyInCollateral === BuyInCollateralEnum.PASS ? (
+                        royalePassAllowance && user.status !== UserStatus.RDY ? (
+                            <Button
+                                disabled={isBuyingIn}
+                                onClick={() => {
+                                    mintRoyalePass(walletAddress);
+                                }}
+                            >
+                                {t('options.royale.scoreboard.mint-royale-pass')}
+                            </Button>
+                        ) : (
+                            <>
                                 <Button
-                                    style={{ marginRight: 0 }}
                                     onClick={() => {
                                         setOpenRoyalePassApproveModal(true);
-                                        updateRoyalePassAllowance(buyInToken).then(() => updateBalance(buyInToken));
+                                        // updateRoyalePassAllowance(buyInToken).then(() => updateBalance(buyInToken));
                                     }}
                                 >
                                     {t('options.royale.scoreboard.approve-royale-pass')}
                                 </Button>
-                            )}
-                        </>
+                                <RoyaleTooltip title="Approve sUSD for Royale Pass minting">
+                                    <StyledInfoIcon />
+                                </RoyaleTooltip>
+                            </>
+                        )
+                    ) : (
+                        ''
                     )}
 
                     <Modal
@@ -679,12 +747,12 @@ const InputWrapper = styled.div`
     }
 `;
 
-const PositionSelector = styled.div<{ isOpen: boolean }>`
+const Selector = styled.div<{ isOpen: boolean }>`
     position: absolute;
     right: 0;
     top: -4px;
     width: 220px;
-    height: ${(props) => (props.isOpen ? '75px' : '28px')};
+    height: ${(props) => (props.isOpen ? 'content' : '28px')};
     border: 1.30233px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;

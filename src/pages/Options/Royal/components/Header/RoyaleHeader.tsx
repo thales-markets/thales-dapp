@@ -29,6 +29,8 @@ import { checkAllowance, getIsOVM } from 'utils/network';
 import ApprovalModal from 'components/ApprovalModal';
 import useRoyalePassQuery from '../../V2/components/queries/useRoyalePassQuery';
 import { dispatchMarketNotification } from 'utils/options';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -154,7 +156,6 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
             const RoyalContract = thalesRoyalePassContract.connect((snxJSConnector as any).signer);
             try {
                 const tx = await RoyalContract.mint(walletAddress);
-                console.log(tx);
                 await tx.wait();
                 dispatchMarketNotification('Successfully Minted Royale Pass');
             } catch (e) {
@@ -182,9 +183,14 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                         {t('options.royale.scoreboard.mint-royale-pass')}
                                     </Button>
                                 ) : (
-                                    <Button onClick={() => setOpenApprovalModal(true)}>
-                                        {t('options.royale.scoreboard.approve-royale-pass')}
-                                    </Button>
+                                    <>
+                                        <Button style={{ marginRight: 30 }} onClick={() => setOpenApprovalModal(true)}>
+                                            {t('options.royale.scoreboard.approve-royale-pass')}
+                                        </Button>
+                                        <RoyaleTooltip title="Approve sUSD for Royale Pass minting">
+                                            <StyledInfoIcon />
+                                        </RoyaleTooltip>
+                                    </>
                                 )}
                                 <Button onClick={() => setShowSwap(true)}>{t('options.swap.button-text')}</Button>
                                 <Balances>
@@ -577,6 +583,23 @@ const Balances = styled.div`
         font-family: Sansation !important;
         line-height: 13px;
     }
+    @media (max-width: 1024px) {
+        display: none;
+    }
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    display: inline-block;
+    position: absolute;
+    margin-right: 103px;
+    width: 15px;
+    height: 15px;
+    transform: translateX(-50%);
+    path {
+        fill: var(--color);
+    }
+    opacity: 1;
+    cursor: auto;
     @media (max-width: 1024px) {
         display: none;
     }

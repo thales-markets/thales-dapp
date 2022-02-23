@@ -1176,7 +1176,9 @@
                 "royale-pass": "Королевский пропуск",
                 "mint-royale-pass": "Минт Рояль Пасс",
                 "buy-in-royale-pass": "Бай-ин: 1 Royale Pass",
-                "approve-royale-pass": "Одобрить Royale Pass"
+                "approve-royale-pass": "Одобрить Royale Pass",
+                "buy-in-collateral-pass": "Королевский пропуск",
+                "buy-in-collateral-susd": "сдолл. США"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",

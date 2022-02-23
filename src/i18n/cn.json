@@ -1176,7 +1176,9 @@
                 "royale-pass": "皇家通行证",
                 "mint-royale-pass": "薄荷皇家通行证",
                 "buy-in-royale-pass": "购买：1 皇家通行证",
-                "approve-royale-pass": "批准皇家通行证"
+                "approve-royale-pass": "批准皇家通行证",
+                "buy-in-collateral-pass": "皇家通行证",
+                "buy-in-collateral-susd": "美元"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

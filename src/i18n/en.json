@@ -1147,6 +1147,8 @@
                 "default-position-down": "DOWN",
                 "default-position-up": "UP",
                 "default-position-info": "Before the game starts, you can choose a default position applied only to the first round. You can change your position again once the positioning period starts. For all other rounds position must be chosen during the positioning period.",
+                "buy-in-collateral-susd": "sUSD",
+                "buy-in-collateral-pass": "Royale Pass",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
