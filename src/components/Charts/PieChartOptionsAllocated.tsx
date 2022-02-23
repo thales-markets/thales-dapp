@@ -32,8 +32,6 @@ const PieChartOptionsAllocated: React.FC<{ claimable?: number; allocated?: numbe
 
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
-    console.log(sUSDBalance, claimable, allocated);
-
     const data = [
         { name: 'sUSD', value: sUSDBalance, color: '#8208FC' },
         { name: 'claimable', value: claimable, color: '#8181ac' },
