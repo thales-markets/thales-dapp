@@ -23,110 +23,124 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ exchangeRates, posi
                 <Content key={index}>
                     {data.balances.long > 0 && (
                         <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>
-                            <Card>
-                                <Card.Column>
-                                    <Card.Row>
-                                        <CurrencyIcon width="40" height="40" currencyKey={data.market.currencyKey} />
-                                        <Card.RowTitle>{getSynthName(data.market.currencyKey)}</Card.RowTitle>
-                                        <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
-                                    </Card.Row>
-                                </Card.Column>
-                                <Card.Column>
-                                    <PriceChart
-                                        containerStyle={{ margin: 'auto' }}
-                                        currencyKey={data.market.currencyKey}
-                                        showFooter
-                                    />
-                                </Card.Column>
-                                <Card.Column>
-                                    <Card.Row>
-                                        <Card.RowTitle>Current Asset Price</Card.RowTitle>
-                                        <Card.RowSubtitle>
-                                            {formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                exchangeRates?.[data.market.currencyKey] || 0
-                                            )}
-                                        </Card.RowSubtitle>
-                                    </Card.Row>
-                                    <Card.Row>
-                                        <Card.RowTitle>Strike Price</Card.RowTitle>
-                                        <Card.RowSubtitle>
-                                            {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
-                                        </Card.RowSubtitle>
-                                    </Card.Row>
-                                </Card.Column>
-                                <Card.Column>
-                                    <Card.Row>
-                                        <Card.RowTitle>Status</Card.RowTitle>
-                                        <Card.RowSubtitle
-                                            style={{ color: data.market.result === 'long' ? '#50CE99' : '#C3244A' }}
-                                        >
-                                            {data.market.result === 'long' ? 'Claimable' : 'RIP'}
-                                        </Card.RowSubtitle>
-                                    </Card.Row>
-                                    <Card.Row>
-                                        <Card.RowTitle>Amount</Card.RowTitle>
-                                        <Card.RowSubtitle>
-                                            {data.balances.long.toFixed(2)}
-                                            <span style={{ color: '#50CE99', marginLeft: 4 }}>UP</span>{' '}
-                                        </Card.RowSubtitle>
-                                    </Card.Row>
-                                </Card.Column>
-                            </Card>
+                            <Card.Wrapper background={data.market.result === 'long'}>
+                                <Card>
+                                    <Card.Column>
+                                        <Card.Row>
+                                            <CurrencyIcon
+                                                width="40px"
+                                                height="40px"
+                                                currencyKey={data.market.currencyKey}
+                                            />
+                                            <Card.RowTitle>{getSynthName(data.market.currencyKey)}</Card.RowTitle>
+                                            <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
+                                        </Card.Row>
+                                    </Card.Column>
+                                    <Card.Column>
+                                        <PriceChart
+                                            containerStyle={{ margin: 'auto' }}
+                                            currencyKey={data.market.currencyKey}
+                                            showFooter
+                                        />
+                                    </Card.Column>
+                                    <Card.Column>
+                                        <Card.Row>
+                                            <Card.RowTitle>Current Asset Price</Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {formatCurrencyWithSign(
+                                                    USD_SIGN,
+                                                    exchangeRates?.[data.market.currencyKey] || 0
+                                                )}
+                                            </Card.RowSubtitle>
+                                        </Card.Row>
+                                        <Card.Row>
+                                            <Card.RowTitle>Strike Price</Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
+                                            </Card.RowSubtitle>
+                                        </Card.Row>
+                                    </Card.Column>
+                                    <Card.Column>
+                                        <Card.Row>
+                                            <Card.RowTitle>Status</Card.RowTitle>
+                                            <Card.RowSubtitle
+                                                style={{ color: data.market.result === 'long' ? '#50CE99' : '#C3244A' }}
+                                            >
+                                                {data.market.result === 'long' ? 'Claimable' : 'RIP'}
+                                            </Card.RowSubtitle>
+                                        </Card.Row>
+                                        <Card.Row>
+                                            <Card.RowTitle>Amount</Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {data.balances.long.toFixed(2)}
+                                                <span style={{ color: '#50CE99', marginLeft: 4 }}>UP</span>{' '}
+                                            </Card.RowSubtitle>
+                                        </Card.Row>
+                                    </Card.Column>
+                                </Card>
+                            </Card.Wrapper>
                         </SPAAnchor>
                     )}
                     {data.balances.short > 0 && (
                         <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>
-                            <Card>
-                                <Card.Column>
-                                    <Card.Row>
-                                        <CurrencyIcon width="40" height="40" currencyKey={data.market.currencyKey} />
-                                        <Card.RowTitle>{getSynthName(data.market.currencyKey)}</Card.RowTitle>
-                                        <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
-                                    </Card.Row>
-                                </Card.Column>
-                                <Card.Column>
-                                    <PriceChart
-                                        containerStyle={{ margin: 'auto' }}
-                                        currencyKey={data.market.currencyKey}
-                                        showFooter
-                                    />
-                                </Card.Column>
-                                <Card.Column>
-                                    <Card.Row>
-                                        <Card.RowTitle>Current Asset Price</Card.RowTitle>
-                                        <Card.RowSubtitle>
-                                            {formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                exchangeRates?.[data.market.currencyKey] || 0
-                                            )}
-                                        </Card.RowSubtitle>
-                                    </Card.Row>
-                                    <Card.Row>
-                                        <Card.RowTitle>Strike Price</Card.RowTitle>
-                                        <Card.RowSubtitle>
-                                            {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
-                                        </Card.RowSubtitle>
-                                    </Card.Row>
-                                </Card.Column>
-                                <Card.Column>
-                                    <Card.Row>
-                                        <Card.RowTitle>Status</Card.RowTitle>
-                                        <Card.RowSubtitle
-                                            style={{ color: data.market.result === 'short' ? '#50CE99' : '#C3244A' }}
-                                        >
-                                            {data.market.result === 'short' ? 'Claimable' : 'RIP'}
-                                        </Card.RowSubtitle>
-                                    </Card.Row>
-                                    <Card.Row>
-                                        <Card.RowTitle>Amount</Card.RowTitle>
-                                        <Card.RowSubtitle>
-                                            {data.balances.short.toFixed(2)}
-                                            <span style={{ color: '#C3244A', marginLeft: 4 }}>DOWN</span>{' '}
-                                        </Card.RowSubtitle>
-                                    </Card.Row>
-                                </Card.Column>
-                            </Card>
+                            <Card.Wrapper background={data.market.result === 'short'}>
+                                <Card>
+                                    <Card.Column>
+                                        <Card.Row>
+                                            <CurrencyIcon
+                                                width="40px"
+                                                height="40px"
+                                                currencyKey={data.market.currencyKey}
+                                            />
+                                            <Card.RowTitle>{getSynthName(data.market.currencyKey)}</Card.RowTitle>
+                                            <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
+                                        </Card.Row>
+                                    </Card.Column>
+                                    <Card.Column>
+                                        <PriceChart
+                                            containerStyle={{ margin: 'auto' }}
+                                            currencyKey={data.market.currencyKey}
+                                            showFooter
+                                        />
+                                    </Card.Column>
+                                    <Card.Column>
+                                        <Card.Row>
+                                            <Card.RowTitle>Current Asset Price</Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {formatCurrencyWithSign(
+                                                    USD_SIGN,
+                                                    exchangeRates?.[data.market.currencyKey] || 0
+                                                )}
+                                            </Card.RowSubtitle>
+                                        </Card.Row>
+                                        <Card.Row>
+                                            <Card.RowTitle>Strike Price</Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
+                                            </Card.RowSubtitle>
+                                        </Card.Row>
+                                    </Card.Column>
+                                    <Card.Column>
+                                        <Card.Row>
+                                            <Card.RowTitle>Status</Card.RowTitle>
+                                            <Card.RowSubtitle
+                                                style={{
+                                                    color: data.market.result === 'short' ? '#50CE99' : '#C3244A',
+                                                }}
+                                            >
+                                                {data.market.result === 'short' ? 'Claimable' : 'RIP'}
+                                            </Card.RowSubtitle>
+                                        </Card.Row>
+                                        <Card.Row>
+                                            <Card.RowTitle>Amount</Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {data.balances.short.toFixed(2)}
+                                                <span style={{ color: '#C3244A', marginLeft: 4 }}>DOWN</span>{' '}
+                                            </Card.RowSubtitle>
+                                        </Card.Row>
+                                    </Card.Column>
+                                </Card>
+                            </Card.Wrapper>
                         </SPAAnchor>
                     )}
                 </Content>
@@ -144,5 +158,9 @@ const Container = styled.div`
     flex-direction: column;
     padding-top: 15px;
 `;
+
+// const GradientWrapper = styled.div`
+//     background: linear-gradient(rgba(81, 106, 255, 1), rgba(130, 8, 252, 1));
+// `;
 
 export default MaturedPositions;

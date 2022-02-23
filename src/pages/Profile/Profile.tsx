@@ -182,11 +182,15 @@ const Notification = styled.span`
 `;
 
 const ContentWrapper = styled.div`
-    width: calc(100% + 60px);
+    width: calc(100% + 100px);
     padding-right: 50px;
     max-height: calc(100vh - 250px);
     overflow: hidden;
     overflow-y: auto;
+    padding-left: 50px;
+    position: relative;
+    left: -50px;
+    padding-bottom: 40px;
 `;
 
 export default Profile;

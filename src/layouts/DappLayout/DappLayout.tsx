@@ -65,6 +65,7 @@ const Background = styled.section`
         --color: #f7f7f7;
         --color-wrapper: #4673bd;
         --scrollbar-width: 12px;
+        --color-scrollbar-hover: #f7f7f7;
     }
 `;
 
