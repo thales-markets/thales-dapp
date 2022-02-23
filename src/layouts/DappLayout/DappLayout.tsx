@@ -56,6 +56,7 @@ const Background = styled.section`
         --primary-color: #f7f7f7;
         --input-border-color: #64d9fe;
         --table-border-color: rgba(100, 217, 254, 0.5);
+        --table-border-hover-color: rgba(100, 217, 254, 1);
         --table-header-text-color: #64d9fe;
         --disabled-item: #8181ac;
         --enabled-item: #f7f7f7;

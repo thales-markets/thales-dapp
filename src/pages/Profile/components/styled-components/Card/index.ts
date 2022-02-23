@@ -20,6 +20,11 @@ const CardWrapper = styled.div<WrapperProps>`
     box-shadow: ${(_props) => (_props.background ? ' 0px 0px 40px 3px rgba(100, 217, 254, 0.3)' : 'none')};
     padding: 2px;
     border: ${(_props) => (_props.background ? 'none' : '2px solid rgba(100, 217, 254, 0.5)')};
+    &:hover {
+        transform: scale(1.02);
+        border: ${(_props) => (_props.background ? 'none' : '2px solid rgba(100, 217, 254, 1)')};
+        box-shadow: ${(_props) => (_props.background ? ' 0px 0px 40px 3px rgba(100, 217, 254, 0.6)' : 'none')};
+    }
 `;
 
 // @ts-ignore

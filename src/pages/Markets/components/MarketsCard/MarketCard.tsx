@@ -87,6 +87,11 @@ const MarketCardWrapper = styled.div`
     padding: 31px;
     margin: 7.5px;
     flex: 1 0 30%;
+    :hover {
+        transform: scale(1.02);
+        border: 2px solid rgb(100, 217, 254, 1);
+    }
+    cursor: pointer;
 `;
 
 const InsideContainer = styled.div`
