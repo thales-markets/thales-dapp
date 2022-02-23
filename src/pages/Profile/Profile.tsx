@@ -133,7 +133,7 @@ const Profile: React.FC = () => {
                     </Wrapper.Row>
                 </Wrapper>
                 <PriceContainer>
-                    <PriceChart currencyKey={'THALES'} showHeading={true} />
+                    <PriceChart showTooltip={true} height={160} currencyKey={'THALES'} showHeading={true} />
                 </PriceContainer>
             </ContainerRight>
         </Container>

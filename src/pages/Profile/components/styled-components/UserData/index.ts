@@ -31,7 +31,6 @@ const Row = styled.div`
     flex: 1;
     max-width: 500px;
     width: 100%;
-    margin-bottom: 10px;
 `;
 
 const Text = styled.span`
@@ -39,6 +38,7 @@ const Text = styled.span`
     font-family: Titillium Light !important;
     color: var(--primary-color);
     font-size: 25px;
+    line-height: 31px;
 `;
 
 const Label = styled(Text)`
