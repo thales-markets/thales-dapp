@@ -160,10 +160,11 @@ table {
     width: var(--scrollbar-width, 10px);
 }
 *::-webkit-scrollbar-track {
+    border-radius: 8px;
     background: var(--color-wrapper, #04045a);
 }
 *::-webkit-scrollbar-thumb {
-    border-radius: 15px;
+    border-radius: 8px;
     background: var(--color, #355dff);
 }
 *::-webkit-scrollbar-thumb:active {

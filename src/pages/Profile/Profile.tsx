@@ -38,7 +38,7 @@ const Profile: React.FC = () => {
 
     const positions = userPositionsQuery.isSuccess
         ? userPositionsQuery.data
-        : { claimable: 0, claimableAmount: 0, allocated: 0, matured: [], live: [] };
+        : { claimable: undefined, claimableAmount: undefined, allocated: undefined, matured: [], live: [] };
 
     const [isSimpeView, setSimpleView] = useState(true);
     const [searchText, setSearchText] = useState('');
@@ -68,7 +68,9 @@ const Profile: React.FC = () => {
                         className={view === NavItems.MaturedPositions ? 'active' : ''}
                     >
                         {NavItems.MaturedPositions}
-                        {positions.claimable > 0 && <Notification> {positions.claimable} </Notification>}
+                        {positions.claimable && positions.claimable > 0 && (
+                            <Notification> {positions.claimable} </Notification>
+                        )}
                     </NavItem>
                     <NavItem
                         onClick={setView.bind(this, NavItems.History)}
