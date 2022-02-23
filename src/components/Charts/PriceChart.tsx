@@ -77,8 +77,6 @@ const PriceChart: React.FC<PriceChartProps> = ({
         return 0;
     }, [processedPriceData]);
 
-    console.log(processedPriceData);
-
     return (
         <>
             {processedPriceData?.length > 0 && (
