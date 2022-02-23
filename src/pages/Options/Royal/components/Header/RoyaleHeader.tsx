@@ -93,10 +93,11 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     }, [latestSeason]);
 
     useEffect(() => {
-        if (buyInToken && snxJSConnector.signer && (royalePassData as any).price) updateBalanceAndAllowance(buyInToken);
-    }, [buyInToken, snxJSConnector.signer, (royalePassData as any).price, isAllowing]);
+        if (buyInToken && snxJSConnector.signer && (royalePassData as any).price && walletAddress)
+            updateRoyalePassBalanceAndAllowance(buyInToken);
+    }, [buyInToken, snxJSConnector.signer, (royalePassData as any).price, isAllowing, walletAddress]);
 
-    const updateBalanceAndAllowance = async (token: any) => {
+    const updateRoyalePassBalanceAndAllowance = async (token: any) => {
         if (token) {
             const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
             const { thalesRoyalePassContract } = snxJSConnector;

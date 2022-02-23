@@ -65,7 +65,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, { enabled: isL2 && isWalletConnected });
     const royalePassId = royalePassIdQuery.isSuccess ? royalePassIdQuery.data : {};
 
-    const [isBuyingIn, setIsBuyingIn] = useState(false);
     const [allowance, setAllowance] = useState(false);
     const [royalePassAllowance, setRoyalePassAllowance] = useState(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
@@ -102,12 +101,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [selectedSeason]);
 
     useEffect(() => {
-        if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount) {
-            updateAllowance(buyInToken).then(() =>
-                updateRoyalePassAllowance(buyInToken).then(() => updateBalance(buyInToken))
-            );
+        if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress) {
+            updateAllowance(buyInToken).then(() => updateBalance(buyInToken));
         }
-    }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing]);
+    }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress]);
+
+    useEffect(() => {
+        if (buyInToken && snxJSConnector.signer && (royaleData as any).price && walletAddress) {
+            updateRoyalePassAllowance(buyInToken).then(() => () => updateBalance(buyInToken));
+        }
+    }, [buyInToken, snxJSConnector.signer, (royalePassData as any).price, isAllowing, walletAddress]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
@@ -201,7 +204,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 const tx = await erc20Instance.approve(thalesRoyalePassContract.address, approveAmount, {
                     gasLimit: MAX_L2_GAS_LIMIT,
                 });
-                setOpenApprovalModal(false);
+                setOpenRoyalePassApproveModal(false);
                 await tx.wait();
             }
             setIsAllowing(false);
@@ -237,10 +240,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             {allowance ? (
                                 <Button
                                     style={{ marginLeft: 0 }}
-                                    className={isBuyingIn || buyInAmount > Number(balance) ? 'disabled' : ''}
-                                    disabled={isBuyingIn || buyInAmount > Number(balance)}
+                                    className={buyInAmount > Number(balance) ? 'disabled' : ''}
+                                    disabled={buyInAmount > Number(balance)}
                                     onClick={() => {
-                                        setIsBuyingIn(true);
                                         defaultPosition !== PositionsEnum.NONE
                                             ? (localStorage.setItem(
                                                   'defaultPosition' +
@@ -252,11 +254,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                                   defaultPosition === PositionsEnum.DOWN ? 1 : 2
                                               ).finally(() => {
                                                   synthsWalletBalancesQuery.refetch();
-                                                  setIsBuyingIn(false);
                                               }))
                                             : signUp().finally(() => {
                                                   synthsWalletBalancesQuery.refetch();
-                                                  setIsBuyingIn(false);
                                               });
                                     }}
                                 >
@@ -264,7 +264,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 </Button>
                             ) : (
                                 <Button
-                                    style={{ marginLeft: 0 }}
                                     className={isAllowing ? 'disabled' : ''}
                                     disabled={isAllowing}
                                     onClick={async () => {
@@ -278,10 +277,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             {royalePassAllowance ? (
                                 <Button
                                     style={{ marginRight: 0 }}
-                                    className={isBuyingIn || (royalePassData as any).balance === 0 ? 'disabled' : ''}
-                                    disabled={isBuyingIn || (royalePassData as any).balance === 0}
+                                    className={(royalePassData as any).balance === 0 ? 'disabled' : ''}
+                                    disabled={(royalePassData as any).balance === 0}
                                     onClick={() => {
-                                        setIsBuyingIn(true);
                                         defaultPosition !== PositionsEnum.NONE
                                             ? (localStorage.setItem(
                                                   'defaultPosition' +
@@ -295,12 +293,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                               ).finally(() => {
                                                   royalePassQuery.refetch();
                                                   royalePassIdQuery.refetch();
-                                                  setIsBuyingIn(false);
                                               }))
                                             : signUpWithPass((royalePassId as any).id).finally(() => {
                                                   royalePassQuery.refetch();
                                                   royalePassIdQuery.refetch();
-                                                  setIsBuyingIn(false);
                                               });
                                     }}
                                 >
@@ -484,7 +480,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <InputWrapper>{(royalePassData as any).balance}</InputWrapper>
                 </FlexContainer>
                 <FlexContainer>
-                    {walletAddress && !(royaleData as any).seasonFinished && user.status !== UserStatus.RDY && (
+                    {walletAddress && (royaleData as any).signUpPeriod > new Date() && (
                         <>
                             <Button
                                 style={{ marginLeft: 0 }}
@@ -557,9 +553,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     tokenSymbol={SYNTHS_MAP.sUSD}
                     isAllowing={isAllowing}
                     onSubmit={approve}
-                    onClose={() => {
-                        setOpenApprovalModal(false);
-                    }}
+                    onClose={() => setOpenApprovalModal(false)}
                     isRoyale={true}
                 />
             )}
