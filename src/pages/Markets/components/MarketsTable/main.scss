@@ -30,9 +30,3 @@ table {
     width: 100%;
     max-width: 1200px;
 }
-
-tr:hover {
-    td {
-        border-bottom: 1px solid var(--table-border-hover-color);
-    }
-}
