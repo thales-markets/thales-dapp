@@ -16,7 +16,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 
-const PieChartOptionsAllocated: React.FC<{ claimable: number; allocated: number }> = ({ claimable, allocated }) => {
+const PieChartOptionsAllocated: React.FC<{ claimable?: number; allocated?: number }> = ({ claimable, allocated }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -32,17 +32,15 @@ const PieChartOptionsAllocated: React.FC<{ claimable: number; allocated: number 
 
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
-    const data = sUSDBalance
-        ? [
-              { name: 'sUSD', value: sUSDBalance ? sUSDBalance : 4000, color: '#50CE99' },
-              { name: 'claimable', value: claimable, color: '#8181ac' },
-              { name: 'maxReturn', value: allocated, color: '#8208FC' },
-          ]
-        : [{ name: 'No data', value: 1, color: '#8181ac' }];
+    const data = [
+        { name: 'sUSD', value: sUSDBalance, color: '#8208FC' },
+        { name: 'claimable', value: claimable, color: '#8181ac' },
+        { name: 'maxReturn', value: allocated, color: '#50CE99' },
+    ];
 
     return (
         <>
-            {isWalletConnected && (
+            {isWalletConnected && claimable !== undefined && allocated !== undefined && (
                 <ChartContainer>
                     <BalanceInfoContainer>
                         <Header>sUSD in Wallet:</Header>
@@ -60,7 +58,6 @@ const PieChartOptionsAllocated: React.FC<{ claimable: number; allocated: number 
                             data={data}
                             innerRadius={'85%'}
                             outerRadius={'100%'}
-                            fill="#82ca9d"
                             paddingAngle={-10}
                             dataKey="value"
                         >
@@ -68,7 +65,6 @@ const PieChartOptionsAllocated: React.FC<{ claimable: number; allocated: number 
                                 <Cell key={`cell-${index}`} fill={entry.color} />
                             ))}
                         </Pie>
-                        <h2>Test</h2>
                     </PieChart>
                 </ChartContainer>
             )}

@@ -38,7 +38,7 @@ const Profile: React.FC = () => {
 
     const positions = userPositionsQuery.isSuccess
         ? userPositionsQuery.data
-        : { claimable: 0, claimableAmount: 0, allocated: 0, matured: [], live: [] };
+        : { claimable: undefined, claimableAmount: undefined, allocated: undefined, matured: [], live: [] };
 
     const [isSimpeView, setSimpleView] = useState(true);
     const [searchText, setSearchText] = useState('');
@@ -68,7 +68,9 @@ const Profile: React.FC = () => {
                         className={view === NavItems.MaturedPositions ? 'active' : ''}
                     >
                         {NavItems.MaturedPositions}
-                        {positions.claimable > 0 && <Notification> {positions.claimable} </Notification>}
+                        {positions.claimable && positions.claimable > 0 && (
+                            <Notification> {positions.claimable} </Notification>
+                        )}
                     </NavItem>
                     <NavItem
                         onClick={setView.bind(this, NavItems.History)}
@@ -78,13 +80,15 @@ const Profile: React.FC = () => {
                     </NavItem>
                 </Nav>
                 <LineUnderNav />
-                {view === NavItems.MyPositions && (
-                    <MyPositions exchangeRates={exchangeRates} positions={positions.live} />
-                )}
-                {view === NavItems.MaturedPositions && (
-                    <MaturedPositions exchangeRates={exchangeRates} positions={positions.matured} />
-                )}
-                {view === NavItems.History && <History />}
+                <ContentWrapper>
+                    {view === NavItems.MyPositions && (
+                        <MyPositions exchangeRates={exchangeRates} positions={positions.live} />
+                    )}
+                    {view === NavItems.MaturedPositions && (
+                        <MaturedPositions exchangeRates={exchangeRates} positions={positions.matured} />
+                    )}
+                    {view === NavItems.History && <History markets={markets} />}
+                </ContentWrapper>
             </ContainerLeft>
             <ContainerRight>
                 <PieChartOptionsAllocated claimable={positions.claimableAmount} allocated={positions.allocated} />
@@ -123,6 +127,7 @@ const ContainerLeft = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
+    max-width: 50%;
 `;
 
 const LineUnderNav = styled.div`
@@ -174,6 +179,14 @@ const Notification = styled.span`
     margin-top: 6px;
     margin-bottom: 8px;
     display: inline-block;
+`;
+
+const ContentWrapper = styled.div`
+    width: calc(100% + 60px);
+    padding-right: 50px;
+    max-height: calc(100vh - 250px);
+    overflow: hidden;
+    overflow-y: auto;
 `;
 
 export default Profile;

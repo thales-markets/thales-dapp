@@ -317,7 +317,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                                         }
                                     }}
                                 >
-                                    <CurrencyIcon width="40" height="40" currencyKey={value}></CurrencyIcon>
+                                    <CurrencyIcon width="40px" height="40px" currencyKey={value}></CurrencyIcon>
                                 </Item>
                             );
                         })}

@@ -45,6 +45,8 @@ const Background = styled.section`
         --primary-filter-menu-active: #04045a;
         --hotmarket-arrow-enabled: #64d9fe;
         --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
+        --color-wrapper: #4673bd;
+        --scrollbar-width: 12px;
     }
     &.dark {
         background-color: #04045a;
@@ -60,6 +62,9 @@ const Background = styled.section`
         --primary-filter-menu-active: #64d9fe;
         --hotmarket-arrow-enabled: #64d9fe;
         --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
+        --color: #f7f7f7;
+        --color-wrapper: #4673bd;
+        --scrollbar-width: 12px;
     }
 `;
 
