@@ -9,13 +9,12 @@ export const thalesRoyaleContract = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: '0x093ddd486d3c9609b192F5371c41f78cfFe27ABe',
+        [NetworkId['Kovan-Ovm']]: '0x79c4E094d5D7B3f4680A8FA188A8C27230DA9E80',
     },
     abi: [
         {
             inputs: [
                 { internalType: 'address', name: '_sUSD', type: 'address' },
-                { internalType: 'uint256', name: '_price', type: 'uint256' },
                 { internalType: 'string', name: '_initURI', type: 'string' },
                 { internalType: 'address', name: '_thalesRoyaleAddress', type: 'address' },
             ],
@@ -40,12 +39,6 @@ export const thalesRoyaleContract = {
                 { indexed: false, internalType: 'bool', name: 'approved', type: 'bool' },
             ],
             name: 'ApprovalForAll',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [{ indexed: false, internalType: 'uint256', name: '_price', type: 'uint256' }],
-            name: 'NewPriceForPass',
             type: 'event',
         },
         {
@@ -117,14 +110,10 @@ export const thalesRoyaleContract = {
             type: 'function',
         },
         {
-            inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
-            name: 'burn',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
+            inputs: [
+                { internalType: 'address', name: 'player', type: 'address' },
+                { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+            ],
             name: 'burnWithTransfer',
             outputs: [],
             stateMutability: 'nonpayable',
@@ -179,13 +168,6 @@ export const thalesRoyaleContract = {
             inputs: [],
             name: 'paused',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'price',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -252,13 +234,6 @@ export const thalesRoyaleContract = {
             type: 'function',
         },
         {
-            inputs: [{ internalType: 'uint256', name: '_price', type: 'uint256' }],
-            name: 'setPriceForPass',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
             inputs: [{ internalType: 'address', name: '_thalesRoyaleAddress', type: 'address' }],
             name: 'setThalesRoyaleAddress',
             outputs: [],
@@ -288,8 +263,8 @@ export const thalesRoyaleContract = {
         },
         {
             inputs: [],
-            name: 'thalesRoyaleAddress',
-            outputs: [{ internalType: 'address', name: '', type: 'address' }],
+            name: 'thalesRoyale',
+            outputs: [{ internalType: 'contract IThalesRoyale', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -305,6 +280,16 @@ export const thalesRoyaleContract = {
             name: 'tokenURI',
             outputs: [{ internalType: 'string', name: '', type: 'string' }],
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+                { internalType: 'uint256', name: 'amount', type: 'uint256' },
+            ],
+            name: 'topUp',
+            outputs: [],
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {

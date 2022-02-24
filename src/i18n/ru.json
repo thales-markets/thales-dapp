@@ -1144,7 +1144,6 @@
                 "period-expired": "Срок регистрации истек",
                 "season-not-started": "Сезон еще не начался",
                 "approve-susd": "Одобрить sUSD",
-                "buy-in": "Бай-ин: {{buyInAmount}}sUSD",
                 "dead": "мертвых",
                 "round-starts": "Следующий раунд начинается через:",
                 "start-royale": "Запустить Thales Royale",
@@ -1175,10 +1174,13 @@
                 "default-position-none": "НИКТО",
                 "royale-pass": "Королевский пропуск",
                 "mint-royale-pass": "Минт Рояль Пасс",
-                "buy-in-royale-pass": "Бай-ин: 1 Royale Pass",
                 "approve-royale-pass": "Одобрить Royale Pass",
                 "buy-in-collateral-pass": "Королевский пропуск",
-                "buy-in-collateral-susd": "сдолл. США"
+                "buy-in-collateral-susd": "сдолл. США",
+                "buy-in-royale-pass": "Купить с помощью Royale Pass",
+                "buy-in-with": "Купить с",
+                "buy-in": "Бай-ин с долларами США",
+                "no-royale-pass-in-wallet": "У вас нет Royale Pass в кошельке, используйте бай-ин с помощью sUSD или mint Pass, чтобы зарегистрироваться."
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",

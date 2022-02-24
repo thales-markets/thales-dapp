@@ -258,6 +258,13 @@ export const thalesRoyaleContract = {
             type: 'function',
         },
         {
+            inputs: [],
+            name: 'getBuyInAmount',
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'uint256', name: '_season', type: 'uint256' }],
             name: 'getPlayersForSeason',
             outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
@@ -284,6 +291,7 @@ export const thalesRoyaleContract = {
                 { internalType: 'uint256', name: '_roundLength', type: 'uint256' },
                 { internalType: 'uint256', name: '_buyInAmount', type: 'uint256' },
                 { internalType: 'uint256', name: '_pauseBetweenSeasonsTime', type: 'uint256' },
+                { internalType: 'bool', name: '_nextSeasonStartsAutomatically', type: 'bool' },
             ],
             name: 'initialize',
             outputs: [],
@@ -627,6 +635,13 @@ export const thalesRoyaleContract = {
         {
             inputs: [{ internalType: 'address', name: '_safeBox', type: 'address' }],
             name: 'setSafeBox',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'uint256', name: '_safeBoxPercentage', type: 'uint256' }],
+            name: 'setSafeBoxPercentage',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',

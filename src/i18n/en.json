@@ -174,7 +174,7 @@
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}...",
             "approve-all-label": "Approve all",
-            "custom-amount-label": "Custom amount"
+            "custom-amount-label": "Approve amount of"
         },
         "sidebar": {
             "markets": "Markets",
@@ -1140,7 +1140,7 @@
                 "start-season": "Start season",
                 "season-finished": "Season finished",
                 "approve-susd": "Approve sUSD",
-                "buy-in": "Buy-in: {{buyInAmount}} sUSD",
+                "buy-in": "Buy-in with sUSD",
                 "insufficient-balance": "Insufficient sUSD balance",
                 "default-position": "Default position",
                 "default-position-none": "NONE",
@@ -1149,6 +1149,8 @@
                 "default-position-info": "Before the game starts, you can choose a default position applied only to the first round. You can change your position again once the positioning period starts. For all other rounds position must be chosen during the positioning period.",
                 "buy-in-collateral-susd": "sUSD",
                 "buy-in-collateral-pass": "Royale Pass",
+                "buy-in-with": "Buy in with",
+                "no-royale-pass-in-wallet": "You don't have any Royale Pass in the wallet, use buy in with sUSD or mint Pass to sign up.",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
@@ -1173,7 +1175,7 @@
                 "royale-pass": "Royale Pass",
                 "mint-royale-pass": "Mint Royale Pass",
                 "approve-royale-pass": "Approve for Royale Pass",
-                "buy-in-royale-pass": "Buy in: 1 Royale Pass"
+                "buy-in-royale-pass": "Buy in with Royale Pass"
             },
             "redirect-dialog": {
                 "title": "You are on Optimism Kovan Network",
