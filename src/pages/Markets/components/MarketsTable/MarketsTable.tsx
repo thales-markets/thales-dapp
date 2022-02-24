@@ -223,7 +223,23 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             };
         });
 
-        setAllAssets(set);
+        const result = new Set(
+            Array.from(set).sort((a, b) => {
+                if (a === 'BTC') return -1;
+                if (b === 'BTC') return 1;
+                if (a === 'ETH') return -1;
+                if (b === 'ETH') return 1;
+
+                if (a === 'SNX') return -1;
+                if (b === 'SNX') return 1;
+                if (a === 'LINK') return -1;
+                if (b === 'LINK') return 1;
+
+                return 0;
+            })
+        );
+
+        setAllAssets(result);
 
         return processedMarkets;
     }, [optionsMarkets]);

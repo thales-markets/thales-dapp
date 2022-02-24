@@ -1,6 +1,6 @@
 import React, { CSSProperties, useMemo } from 'react';
 
-import { ResponsiveContainer, AreaChart, Area, YAxis } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, YAxis, XAxis, Tooltip } from 'recharts';
 import { formatPricePercentageGrowth, calculatePercentageChange } from 'utils/formatters/number';
 
 import usePriceDataQuery from 'queries/price/usePriceDataQuery';
@@ -20,6 +20,7 @@ type PriceChartProps = {
     width?: number;
     height?: number;
     showHeading?: boolean;
+    showTooltip?: boolean;
     showFooter?: boolean;
     showPercentageChangeOnSide?: boolean;
     containerStyle?: CSSProperties;
@@ -35,6 +36,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     height,
     showHeading,
     showFooter,
+    showTooltip,
     showPercentageChangeOnSide,
     containerStyle,
     footerStyle,
@@ -88,7 +90,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                     <ResponsiveContainer height={height ? height : 50} width={width ? width : undefined}>
                         <AreaChart
                             data={processedPriceData ? processedPriceData : []}
-                            margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
+                            margin={{ top: 10, left: 0, right: 0, bottom: 0 }}
                             width={width ? width : undefined}
                             height={height ? height : undefined}
                         >
@@ -103,6 +105,28 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                 </linearGradient>
                             </defs>
                             <YAxis hide={true} domain={['dataMin', 'dataMax']} />
+                            {showTooltip && (
+                                <Tooltip
+                                    cursor={{ strokeDasharray: '3 3' }}
+                                    labelStyle={{ display: 'none' }}
+                                    contentStyle={{
+                                        backgroundColor: 'transparent !important',
+                                        color: 'white',
+                                        border: 'none',
+                                    }}
+                                    itemStyle={{
+                                        fontFamily: 'Titillium Light !imporant',
+                                        fontSize: '20px',
+                                        fontWeight: 600,
+                                        color: 'white',
+                                    }}
+                                    formatter={(value: number) => {
+                                        return ['$' + value.toFixed(2)];
+                                    }}
+                                />
+                            )}
+                            {showTooltip && <XAxis tick={<CustomizedAxisTick />} tickLine={false} axisLine={false} />}
+
                             <Area
                                 type="monotone"
                                 dataKey="price"
@@ -135,6 +159,22 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 </ChartWrapper>
             )}
         </>
+    );
+};
+
+const CustomizedAxisTick: React.FC<any> = (props: any) => {
+    const { x, y, payload } = props;
+
+    return (
+        <g transform={`translate(${x - 20},${y})`}>
+            <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="2" cy="2" r="2" fill="white" fillOpacity="0.6" />
+            </svg>
+
+            <text x={-2} y={10} dy={12} fill="#ffffff">
+                {payload.value}
+            </text>
+        </g>
     );
 };
 
