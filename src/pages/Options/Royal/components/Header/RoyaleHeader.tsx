@@ -31,6 +31,7 @@ import useRoyalePassQuery from '../../V2/components/queries/useRoyalePassQuery';
 import { dispatchMarketNotification } from 'utils/options';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import useLatestRoyaleForUserInfo from '../../V2/components/queries/useLastRoyaleForUserInfo';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -72,6 +73,8 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
     const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected && isAppReady });
     const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
+    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
+    const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
@@ -95,9 +98,9 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     }, [latestSeason]);
 
     useEffect(() => {
-        if (buyInToken && snxJSConnector.signer && (royalePassData as any).price && walletAddress)
+        if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress)
             updateRoyalePassBalanceAndAllowance(buyInToken);
-    }, [buyInToken, snxJSConnector.signer, (royalePassData as any).price, isAllowing, walletAddress]);
+    }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress]);
 
     const updateRoyalePassBalanceAndAllowance = async (token: any) => {
         if (token) {
@@ -105,7 +108,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
             const { thalesRoyalePassContract } = snxJSConnector;
             if (thalesRoyalePassContract) {
                 try {
-                    const price = (royalePassData as any).price;
+                    const price = (royaleData as any).buyInAmount;
                     const allowance = await checkAllowance(
                         price,
                         erc20Instance,
@@ -174,8 +177,8 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                             <>
                                 {allowance ? (
                                     <Button
-                                        className={walletBalance < (royalePassData as any).price ? 'disabled' : ''}
-                                        disabled={walletBalance < (royalePassData as any).price}
+                                        className={walletBalance < (royaleData as any).buyInAmount ? 'disabled' : ''}
+                                        disabled={walletBalance < (royaleData as any).buyInAmount}
                                         onClick={() => {
                                             mintRoyalePass(walletAddress);
                                         }}
@@ -313,7 +316,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
             </Header>
             {openApprovalModal && (
                 <ApprovalModal
-                    defaultAmount={(royalePassData as any).price}
+                    defaultAmount={(royaleData as any).buyInAmount}
                     tokenSymbol={SYNTHS_MAP.sUSD}
                     isAllowing={isAllowing}
                     onSubmit={approveRoyalePassMinting}
