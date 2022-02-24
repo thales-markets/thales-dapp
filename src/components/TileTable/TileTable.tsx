@@ -14,7 +14,7 @@ type Cell = {
     test?: number;
 };
 
-type TileRow = {
+export type TileRow = {
     asset: AssetInfoProps;
     color?: string;
     cells: Cell[];
