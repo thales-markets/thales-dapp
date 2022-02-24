@@ -126,6 +126,7 @@
         "contracts": {
             "view": "View contract"
         },
+        "no-data": "Do not have any data to show",
         "tx-status": {
             "waiting": "Waiting",
             "open": "Open",

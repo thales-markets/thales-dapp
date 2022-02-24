@@ -229,7 +229,8 @@
             "disconnect": "Отключить",
             "display-name": "Показать имя",
             "change-display-name": "Изменить отображаемое имя"
-        }
+        },
+        "no-data": "Нет данных для отображения"
     },
     "modals": {
         "gwei": {
