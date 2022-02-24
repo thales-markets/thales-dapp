@@ -657,6 +657,14 @@
                 "orderbook": "Order book",
                 "amm": "AMM"
             },
+            "your-activity": {
+                "time-date": "Time/Date",
+                "name": "Asset Name",
+                "strike-price": "Strike price",
+                "paid": "Paid",
+                "amount": "Amount",
+                "activity": "Activity"
+            },
             "overview": {
                 "view-market-contract-tooltip": "View market contract",
                 "strike-price-label": "Strike price",

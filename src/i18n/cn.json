@@ -904,6 +904,14 @@
             "header": {
                 "orderbook": "订单簿",
                 "amm": "AMM"
+            },
+            "your-activity": {
+                "activity": "活动",
+                "amount": "数量",
+                "paid": "有薪酬的",
+                "strike-price": "行使价",
+                "time-date": "时间/日期",
+                "name": "资产名称"
             }
         },
         "quick-trading": {

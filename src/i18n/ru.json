@@ -904,6 +904,14 @@
             "header": {
                 "orderbook": "Таблица заказов",
                 "amm": "AMM"
+            },
+            "your-activity": {
+                "activity": "Деятельность",
+                "strike-price": "Цена исполнения",
+                "amount": "Количество",
+                "paid": "Оплаченный",
+                "name": "Имя актива",
+                "time-date": "Время/Дата"
             }
         },
         "quick-trading": {
