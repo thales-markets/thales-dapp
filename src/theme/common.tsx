@@ -457,3 +457,15 @@ export const CardContainer = styled.div`
     }
     cursor: pointer;
 `;
+
+export const NoDataText = styled.span`
+    color: var(--primary-color);
+    font-size: 24px;
+`;
+
+export const NoDataContainer = styled.div`
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+`;
