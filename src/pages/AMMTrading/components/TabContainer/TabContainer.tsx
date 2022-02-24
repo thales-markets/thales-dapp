@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import OptionPriceTab from '../Tabs/OptionPriceTab';
+import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
 import MarketActivity from '../Tabs/MarketActivity';
 
@@ -44,7 +45,7 @@ const TabContainer: React.FC = () => {
             </Container.Main>
             <Container.Tab>
                 {currentTab == 0 && <OptionPriceTab />}
-                {currentTab == 1 && <OptionPriceTab />}
+                {currentTab == 1 && <UserActivity />}
                 {currentTab == 2 && <TradingView />}
                 {currentTab == 3 && <MarketActivity />}
             </Container.Tab>
