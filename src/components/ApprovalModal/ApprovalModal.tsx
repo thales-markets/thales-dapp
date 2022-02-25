@@ -123,7 +123,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                     <ApprovalModalLabel isRoyale={isRoyale}>
                         {t('common.enable-wallet-access.custom-amount-label')}:
                     </ApprovalModalLabel>
-                    <ApprovalInputContainer>
+                    <ApprovalInputContainer isRoyale={isRoyale}>
                         <ApprovalNumericInput
                             isRoyale={isRoyale}
                             value={amount}
@@ -190,46 +190,37 @@ const ApprovalModalContainer = styled(ModalContainer)<{ isRoyale?: boolean }>`
 `;
 
 const ApprovalInputContainer = styled(InputContainer)<{ isRoyale?: boolean }>`
-    width: 220px;
-    height: 43px;
-    margin-bottom: 0px;
+    width: ${(props) => (props.isRoyale ? '165px' : '171px')};
+    height: ${(props) => (props.isRoyale ? '43px' : '60px')};
+    margin-bottom: ${(props) => (props.isRoyale ? '0px' : '0px')};
 `;
 
 const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
-    font-size: ${(props) => (props.isRoyale ? '20px' : '')};
+    font-size: ${(props) => (props.isRoyale ? '20px' : '25px')};
     background: ${(props) => (props.isRoyale ? '#e3f7e9' : '')};
     border: ${(props) => (props.isRoyale ? '2px solid var(--color-wrapper)' : '')};
     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
-    // margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
+    margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
     border-radius: ${(props) => (props.isRoyale ? '30px' : '')};
-    height: ${(props) => (props.isRoyale ? '43px' : '')};
-    padding-top: ${(props) => (props.isRoyale ? '2px' : '')};
+    height: ${(props) => (props.isRoyale ? '43px' : '60px')};
+    padding-top: ${(props) => (props.isRoyale ? '2px' : '0px')};
     &:focus {
         border: ${(props) => (props.isRoyale ? '2px solid var(--color-wrapper)' : '')};
     }
 `;
 
-// const ApprovalInputLabel = styled(InputLabel)<{ isRoyale?: boolean }>`
-//     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
-//     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
-//     padding: ${(props) => (props.isRoyale ? '12px 0 0 24px' : '')};
-//     &.disabled {
-//         opacity: ${(props) => (props.isRoyale ? '0.4' : '')};
-//         cursor: ${(props) => (props.isRoyale ? 'default' : '')};
-//     }
-// `;
-
 const ApprovalCurrencyLabel = styled(CurrencyLabel)<{ isRoyale?: boolean }>`
     color: ${(props) => (props.isRoyale ? 'var(--color--wrapper) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
-    padding: ${(props) => (props.isRoyale ? '11px 16px 17px 0' : '')};
-    font-size: ${(props) => (props.isRoyale ? '20px' : '')};
+    padding: ${(props) => (props.isRoyale ? '9px 16px 17px 0' : '23px 16px 17px 0')};
+    font-size: ${(props) => (props.isRoyale ? '20px' : '15px')};
     line-height: ${(props) => (props.isRoyale ? '22px' : '')};
-    font-style: ${(props) => (props.isRoyale ? 'normal' : '')};
+    font-style: ${(props) => (props.isRoyale ? 'normal' : 'bold')};
 `;
 
 const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>`
+    width: 289px;
     color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
@@ -241,7 +232,7 @@ const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>
 `;
 
 const CheckboxContainer = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
-    margin: -12px 0 0 0;
+    margin: -12px 20px 0 0;
     label {
         color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
         font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
@@ -281,7 +272,7 @@ const OrText = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
 `;
 
 const ApprovalModalLabel = styled.p<{ isRoyale?: boolean }>`
-    font-family: Sansation !important;
+    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     font-style: normal;
     font-size: 20px;
     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '#f6f6fe')};
