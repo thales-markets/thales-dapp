@@ -23,7 +23,6 @@ const useRoyalePassQuery = (walletAddress: string, options?: UseQueryOptions<Roy
 
 const getFromContract = async (royalePassContract: any, walletAddress: string): Promise<RoyalePassData> => {
     const [name, balance] = await Promise.all([royalePassContract.name(), royalePassContract.balanceOf(walletAddress)]);
-
     return {
         name,
         balance: Number(balance),

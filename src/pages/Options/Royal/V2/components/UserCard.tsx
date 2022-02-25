@@ -30,7 +30,6 @@ import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import ApprovalModal from 'components/ApprovalModal';
 import useRoyalePassQuery from './queries/useRoyalePassQuery';
-// import { dispatchMarketNotification } from 'utils/options';
 import useRoyalePassIdQuery from './queries/useRoyalePassIdQuery';
 
 type UserCardProps = {
@@ -71,10 +70,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royalePassId = royalePassIdQuery.isSuccess ? royalePassIdQuery.data : {};
 
     const [allowance, setAllowance] = useState(false);
-    // const [royalePassAllowance, setRoyalePassAllowance] = useState(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
-    // const [openRoyalePassApproveModal, setOpenRoyalePassApproveModal] = useState<boolean>(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
@@ -115,18 +112,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             updateAllowance(buyInToken).finally(() => updateBalance(buyInToken));
     }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress]);
 
-    // useEffect(() => {
-    //     if (buyInToken && snxJSConnector.signer && (royalePassData as any).price && walletAddress)
-    //         updateRoyalePassAllowance(buyInToken).finally(() => () => updateBalance(buyInToken));
-    // }, [buyInToken, snxJSConnector.signer, royalePassData, isAllowing, walletAddress]);
-
     useEffect(() => {
-        if (royalePassData && !isBuyingIn) {
+        if ((royalePassData as any).balance && !isBuyingIn) {
             (royalePassData as any).balance > 0
                 ? setSelectedBuyInCollateral(BuyInCollateralEnum.PASS)
                 : setSelectedBuyInCollateral(BuyInCollateralEnum.SUSD);
         }
-    }, [royalePassData, walletAddress]);
+    }, [(royalePassData as any).balance, walletAddress]);
 
     useEffect(() => {
         setIsBuyingIn(false);
@@ -154,27 +146,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             }
         }
     };
-
-    // const updateRoyalePassAllowance = async (token: any) => {
-    //     if (token) {
-    //         const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
-    //         const { thalesRoyalePassContract } = snxJSConnector;
-    //         if (thalesRoyalePassContract) {
-    //             try {
-    //                 const price = (royalePassData as any).price;
-    //                 const allowance = await checkAllowance(
-    //                     price,
-    //                     erc20Instance,
-    //                     walletAddress,
-    //                     thalesRoyalePassContract.address
-    //                 );
-    //                 setRoyalePassAllowance(allowance);
-    //             } catch (e) {
-    //                 console.log(e);
-    //             }
-    //         }
-    //     }
-    // };
 
     const updateBalance = async (token: any) => {
         if (token) {
@@ -210,43 +181,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             setIsAllowing(false);
         }
     };
-
-    // const approveRoyalePassMinting = async (approveAmount: BigNumber) => {
-    //     const erc20Instance = new ethers.Contract(
-    //         (buyInToken as any).address,
-    //         erc20Contract.abi,
-    //         snxJSConnector.signer
-    //     );
-    //     try {
-    //         setIsAllowing(true);
-    //         const { thalesRoyalePassContract } = snxJSConnector;
-    //         if (thalesRoyalePassContract) {
-    //             const tx = await erc20Instance.approve(thalesRoyalePassContract.address, approveAmount, {
-    //                 gasLimit: MAX_L2_GAS_LIMIT,
-    //             });
-    //             setOpenRoyalePassApproveModal(false);
-    //             await tx.wait();
-    //         }
-    //         setIsAllowing(false);
-    //     } catch (e) {
-    //         console.log('failed: ', e);
-    //         setIsAllowing(false);
-    //     }
-    // };
-
-    // const mintRoyalePass = async (walletAddress: string) => {
-    //     const { thalesRoyalePassContract } = snxJSConnector;
-    //     if (thalesRoyalePassContract) {
-    //         const RoyalContract = thalesRoyalePassContract.connect((snxJSConnector as any).signer);
-    //         try {
-    //             const tx = await RoyalContract.mint(walletAddress);
-    //             await tx.wait();
-    //             dispatchMarketNotification('Successfully Minted Royale Pass');
-    //         } catch (e) {
-    //             console.log(e);
-    //         }
-    //     }
-    // };
 
     const getFooter = (user: User | undefined, royaleData: any) => {
         if (!royaleData) return;

@@ -517,7 +517,9 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     width: 171px;
     border: 2px solid var(--color);
     box-sizing: border-box;
-    border-radius: 18px;
+    max-height: 265px;
+    overflow: auto;
+    border-radius: 5px;
     font-family: Sansation !important;
     font-style: normal;
     font-size: 20px;
@@ -527,7 +529,7 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     cursor: pointer;
     text-align: center;
     background: var(--color-wrapper);
-    z-index: 5;
+    z-index: 9999;
     p:first-child {
         font-weight: bold;
         font-size: 20px;
