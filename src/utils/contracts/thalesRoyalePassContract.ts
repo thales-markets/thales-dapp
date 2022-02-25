@@ -8,7 +8,7 @@ export const thalesRoyaleContract = {
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
+        [NetworkId['Mainnet-Ovm']]: '0x2F71f4a2D8BAB9703fff3fF5794762bF5b6C7E29',
         [NetworkId['Kovan-Ovm']]: '0x288eF27eC4fEaD97F81A6F578152fd00DdFBB448',
     },
     abi: [
