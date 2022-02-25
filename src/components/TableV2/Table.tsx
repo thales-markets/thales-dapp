@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { CSSProperties, useEffect } from 'react';
 import { useTable, useSortBy, useGlobalFilter, usePagination, useFlexLayout } from 'react-table';
 
 import TableView, { NoDataContainer, NoDataText } from './styled-components/Table';
@@ -11,9 +11,17 @@ type TableProps = {
     searchQuery?: string;
     hidePagination?: boolean;
     resultsPerPage?: Array<number>;
+    containerStyle?: CSSProperties;
 };
 
-const Table: React.FC<TableProps> = ({ data, columns, searchQuery, hidePagination, resultsPerPage }) => {
+const Table: React.FC<TableProps> = ({
+    data,
+    columns,
+    searchQuery,
+    hidePagination,
+    resultsPerPage,
+    containerStyle,
+}) => {
     useEffect(() => {
         setGlobalFilter(searchQuery);
     }, [searchQuery]);
@@ -61,7 +69,7 @@ const Table: React.FC<TableProps> = ({ data, columns, searchQuery, hidePaginatio
         <>
             {data?.length && (
                 <FlexDivColumn>
-                    <TableView {...getTableProps()}>
+                    <TableView {...getTableProps()} style={{ ...containerStyle }}>
                         <TableView.Header>
                             {headerGroups.map((headerGroup: any, headerGroupIndex) => (
                                 <TableView.Row key={headerGroupIndex} {...headerGroup.getHeaderGroupProps()}>

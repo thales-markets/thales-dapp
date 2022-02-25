@@ -16,7 +16,12 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 
-const PieChartOptionsAllocated: React.FC<{ claimable?: number }> = ({ claimable }) => {
+type PieChartProps = {
+    claimable?: number;
+    size: number;
+};
+
+const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable, size }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -47,7 +52,7 @@ const PieChartOptionsAllocated: React.FC<{ claimable?: number }> = ({ claimable 
                         <Header>Claimable: </Header>
                         <SubHeader>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, claimable)}</SubHeader>
                     </BalanceInfoContainer>
-                    <PieChart width={450} height={450}>
+                    <PieChart width={size} height={size}>
                         <Pie
                             startAngle={-45}
                             cornerRadius={20}
@@ -70,8 +75,6 @@ const PieChartOptionsAllocated: React.FC<{ claimable?: number }> = ({ claimable 
 };
 
 const ChartContainer = styled.div`
-    width: 450px;
-    height: 450px;
     position: relative;
     margin: 0px auto 15px auto;
 `;
@@ -104,10 +107,10 @@ const Header = styled.p`
 
 const SubHeader = styled.p`
     font-family: Titillium Regular !important;
-    font-size: 45px;
+    font-size: 32px;
     font-style: normal;
     font-weight: 600;
-    line-height: 44px;
+    line-height: 32px;
     letter-spacing: 0.035em;
     text-align: center;
     margin-bottom: 10px;

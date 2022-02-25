@@ -319,6 +319,7 @@
                 "strike-price-col": "Strike price",
                 "asset-price-col": "Asset price",
                 "current-asset-price-col": "Current Asset Price",
+                "final-asset-price-col": "Current Asset Price",
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
                 "pool-size-col": "Pool size",

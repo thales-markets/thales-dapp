@@ -14,6 +14,7 @@ import MaturedPositions from './components/MaturedPositions/MaturedPositions';
 import MyPositions from './components/MyPositions/MyPositions';
 import History from './components/History/History';
 import Wrapper from './components/styled-components/UserData';
+import Container from './components/styled-components/Layout';
 import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
 import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -55,8 +56,8 @@ const Profile: React.FC = () => {
     const [view, setView] = useState(NavItems.MyPositions);
 
     return (
-        <Container>
-            <ContainerFixed>
+        <Container layout={isSimpeView}>
+            <Container.Fixed>
                 <PageTitle>Trading Profile</PageTitle>
                 <SearchField text={searchText} handleChange={(value) => setSearchText(value)} />
                 <TableGridSwitch
@@ -64,8 +65,8 @@ const Profile: React.FC = () => {
                     clickEventHandler={setSimpleView.bind(this, !isSimpeView)}
                     labels={['Simple View', 'In Depth View']}
                 />
-            </ContainerFixed>
-            <ContainerLeft>
+            </Container.Fixed>
+            <Container.Left layout={isSimpeView}>
                 <Nav>
                     <NavItem
                         onClick={setView.bind(this, NavItems.MyPositions)}
@@ -92,18 +93,22 @@ const Profile: React.FC = () => {
                 <LineUnderNav />
                 <ContentWrapper>
                     {view === NavItems.MyPositions && (
-                        <MyPositions exchangeRates={exchangeRates} positions={positions.live} />
+                        <MyPositions
+                            isSimpleView={isSimpeView}
+                            exchangeRates={exchangeRates}
+                            positions={positions.live}
+                        />
                     )}
                     {view === NavItems.MaturedPositions && (
-                        <MaturedPositions exchangeRates={exchangeRates} positions={positions.matured} />
+                        <MaturedPositions isSimpleView={isSimpeView} positions={positions.matured} />
                     )}
                     {view === NavItems.History && (
                         <History markets={markets} trades={DataForUi ? DataForUi.trades : []} />
                     )}
                 </ContentWrapper>
-            </ContainerLeft>
-            <ContainerRight>
-                <PieChartOptionsAllocated claimable={positions.claimableAmount} />
+            </Container.Left>
+            <Container.Right layout={isSimpeView}>
+                <PieChartOptionsAllocated size={isSimpeView ? 400 : 350} claimable={positions.claimableAmount} />
                 <Wrapper>
                     <Wrapper.Row>
                         <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
@@ -132,30 +137,13 @@ const Profile: React.FC = () => {
                         </Wrapper.Value>
                     </Wrapper.Row>
                 </Wrapper>
-                <PriceContainer>
+                <PriceContainer style={{ maxWidth: isSimpeView ? 500 : 400 }}>
                     <PriceChart showTooltip={true} height={160} currencyKey={'THALES'} showHeading={true} />
                 </PriceContainer>
-            </ContainerRight>
+            </Container.Right>
         </Container>
     );
 };
-
-const Container = styled.div`
-    position: relative;
-    display: flex;
-    width: 100%;
-    margin-top: 20px;
-`;
-
-const ContainerFixed = styled.div`
-    height: 130px;
-    display: flex;
-    flex-direction: column;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
-    position: absolute;
-    top: -140px;
-`;
 
 const PageTitle = styled.p`
     font-family: Titillium Web !important;
@@ -166,26 +154,11 @@ const PageTitle = styled.p`
     color: var(--primary-color);
 `;
 
-const ContainerLeft = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    max-width: 50%;
-`;
-
 const LineUnderNav = styled.div`
     height: 4px;
     border-radius: 3px;
     background: rgba(100, 217, 254, 0.5);
     width: 100%;
-`;
-
-const ContainerRight = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding-left: 80px;
-    max-width: 50%;
 `;
 
 const Nav = styled.div`
