@@ -171,7 +171,7 @@ const CustomizedAxisTick: React.FC<any> = (props: any) => {
                 <circle cx="2" cy="2" r="2" fill="white" fillOpacity="0.6" />
             </svg>
 
-            <text x={-2} y={10} dy={12} fill="#ffffff">
+            <text style={{ fontSize: 12, fontWeight: 700 }} x={-2} y={10} dy={12} fill="#ffffff">
                 {payload.value}
             </text>
         </g>
