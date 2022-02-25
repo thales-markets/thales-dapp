@@ -100,7 +100,14 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     useEffect(() => {
         if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress)
             updateRoyalePassBalanceAndAllowance(buyInToken);
-    }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress, walletBalance]);
+    }, [
+        buyInToken,
+        snxJSConnector.signer,
+        (royaleData as any).buyInAmount,
+        isAllowing,
+        walletAddress,
+        (royalePassData as any).balance,
+    ]);
 
     const updateRoyalePassBalanceAndAllowance = async (token: any) => {
         if (token) {
@@ -180,7 +187,9 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                         className={walletBalance < (royaleData as any).buyInAmount ? 'disabled' : ''}
                                         disabled={walletBalance < (royaleData as any).buyInAmount}
                                         onClick={() => {
-                                            mintRoyalePass(walletAddress);
+                                            mintRoyalePass(walletAddress).then(() =>
+                                                synthsWalletBalancesQuery.refetch()
+                                            );
                                         }}
                                     >
                                         {t('options.royale.scoreboard.mint-royale-pass')}
