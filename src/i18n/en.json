@@ -1152,7 +1152,7 @@
                 "buy-in-with": "Buy in with",
                 "royale-passes": "Royale Passes ({{passes}})",
                 "approve-for-minting": "Approve sUSD for Royale Pass minting",
-                "no-royale-pass-in-wallet": "You don't have any Royale Pass in the wallet, use buy in with sUSD or mint Pass to sign up.",
+                "no-royale-pass-in-wallet": "You don't have any Thales Royale Pass in your connected wallet. You can sign-up with sUSD or by minting a Thales Royale Pass.",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
