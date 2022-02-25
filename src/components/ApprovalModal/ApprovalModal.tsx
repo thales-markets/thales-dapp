@@ -6,13 +6,13 @@ import { getIsWalletConnected } from 'redux/modules/wallet';
 import { BigNumber, ethers } from 'ethers';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import {
-    CloseIconContainer,
     ModalContainer,
     ModalTitle,
     StyledModal,
     ModalHeader,
 } from 'pages/Options/Market/TradeOptions/Orderbook/components';
 import ValidationMessage from 'components/ValidationMessage';
+import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
 import {
     DefaultSubmitButton,
     SubmitButtonContainer,
@@ -101,7 +101,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                     {t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })}
                 </ApprovalModalTitle>
                 <FlexDivRow>
-                    <CloseIconContainer onClick={onClose} />
+                    <ApprovalModalCloseIconContainer isRoyale={isRoyale} onClick={onClose} />
                 </FlexDivRow>
             </ModalHeader>
             <FlexDivColumnCentered>
@@ -283,6 +283,20 @@ const ApprovalModalLabel = styled.p<{ isRoyale?: boolean }>`
 const FlexContainer = styled(FlexDivCentered)`
     justify-content: space-between;
     margin: 7px 0;
+`;
+
+export const ApprovalModalCloseIconContainer = styled(CloseIcon)<{ isRoyale?: boolean }>`
+    filter: ${(props) =>
+        props.isRoyale ? 'invert(14%) sepia(42%) saturate(588%) hue-rotate(104deg) brightness(25%) contrast(94%)' : ''};
+    :hover {
+        cursor: pointer;
+    }
+
+    @media (max-width: 512px) {
+        margin-top: 4px;
+        height: 12px;
+        width: 12px;
+    }
 `;
 
 export default ApprovalModal;

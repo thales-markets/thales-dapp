@@ -30,7 +30,6 @@ import ApprovalModal from 'components/ApprovalModal';
 import useRoyalePassQuery from '../../V2/components/queries/useRoyalePassQuery';
 import { dispatchMarketNotification } from 'utils/options';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
-// import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import useLatestRoyaleForUserInfo from '../../V2/components/queries/useLastRoyaleForUserInfo';
 
 type RoyaleHeaderInput = {
