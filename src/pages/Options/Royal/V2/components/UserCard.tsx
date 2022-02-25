@@ -255,6 +255,37 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             if (royaleData.signUpPeriod > new Date()) {
                 if (user.status === UserStatus.NOTSIGNED) {
                     const buyInAmount = royaleData.buyInAmount;
+                    if (buyInAmount > Number(balance) && (royalePassData as any).balance === 0) {
+                        if (selectedBuyInCollateral === BuyInCollateralEnum.PASS) {
+                            return (
+                                <DeadText>
+                                    <span>{t('options.royale.scoreboard.no-royale-pass-in-wallet')}</span>
+                                </DeadText>
+                            );
+                        } else {
+                            return (
+                                <>
+                                    <Button
+                                        onClick={() => {
+                                            setShowSwap(true);
+                                        }}
+                                    >
+                                        {t('options.swap.button-text')}
+                                    </Button>
+                                    <Modal
+                                        open={showSwap}
+                                        onClose={(_, reason) => {
+                                            if (reason !== 'backdropClick') setShowSwap(false);
+                                        }}
+                                    >
+                                        <div style={{ height: 0 }}>
+                                            <Swap royaleTheme={true} handleClose={setShowSwap}></Swap>
+                                        </div>
+                                    </Modal>
+                                </>
+                            );
+                        }
+                    }
                     return (
                         <FlexContainer>
                             {selectedBuyInCollateral === BuyInCollateralEnum.SUSD ? (
@@ -275,9 +306,11 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                                       defaultPosition === PositionsEnum.DOWN ? 1 : 2
                                                   ).finally(() => {
                                                       synthsWalletBalancesQuery.refetch();
+                                                      setIsBuyingIn(false);
                                                   }))
                                                 : signUp().finally(() => {
                                                       synthsWalletBalancesQuery.refetch();
+                                                      setIsBuyingIn(false);
                                                   });
                                         }}
                                     >
@@ -297,8 +330,14 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 )
                             ) : (royalePassData as any).balance > 0 ? (
                                 <Button
-                                    className={isBuyingIn || (royalePassData as any).balance === 0 ? 'disabled' : ''}
-                                    disabled={isBuyingIn || (royalePassData as any).balance === 0}
+                                    className={
+                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
+                                            ? 'disabled'
+                                            : ''
+                                    }
+                                    disabled={
+                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
+                                    }
                                     onClick={() => {
                                         setIsBuyingIn(true);
                                         defaultPosition !== PositionsEnum.NONE
@@ -314,19 +353,23 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                               ).finally(() => {
                                                   royalePassQuery.refetch();
                                                   royalePassIdQuery.refetch();
+                                                  setIsBuyingIn(false);
                                               }))
                                             : signUpWithPass((royalePassId as any).id).finally(() => {
                                                   royalePassQuery.refetch();
                                                   royalePassIdQuery.refetch();
+                                                  setIsBuyingIn(false);
                                               });
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in-royale-pass')}
                                 </Button>
                             ) : (
-                                <DeadText>
-                                    <span>{t('options.royale.scoreboard.no-royale-pass-in-wallet')}</span>
-                                </DeadText>
+                                !isBuyingIn && (
+                                    <DeadText>
+                                        <span>{t('options.royale.scoreboard.no-royale-pass-in-wallet')}</span>
+                                    </DeadText>
+                                )
                             )}
                         </FlexContainer>
                     );
@@ -441,7 +484,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 <RoyalePassContainer>
                     <UserLabel>Royale Passes ({(royalePassData as any).balance}):</UserLabel>
                     <ImageWrapper>
-                        <NftImage src="https://thalesmarket.mypinata.cloud/ipfs/QmTbTf5UYDUo8CXnGTdipBDYhHSK6mFD3KVJJHgjoa19MR" />
+                        <NftImage src="https://thalesmarket.mypinata.cloud/ipfs/QmeVPhCPUYJSwiHmX1NarZEzevRLZAwhj37dCrftALMonW" />
                     </ImageWrapper>
                 </RoyalePassContainer>
                 <FlexContainer
@@ -545,34 +588,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
 
                     {showSelectBuyInDropdown && <Overlay onClick={() => setShowSelectBuyInDropdown(false)} />}
                 </FlexContainer>
-                <FlexContainer>
-                    {walletAddress &&
-                        (royaleData as any).signUpPeriod > new Date() &&
-                        (royaleData as any).buyInAmount > Number(balance) &&
-                        selectedBuyInCollateral === BuyInCollateralEnum.SUSD &&
-                        user.status !== UserStatus.RDY && (
-                            <>
-                                <Button
-                                    onClick={() => {
-                                        setShowSwap(true);
-                                    }}
-                                >
-                                    {t('options.swap.button-text')}
-                                </Button>
-                            </>
-                        )}
 
-                    <Modal
-                        open={showSwap}
-                        onClose={(_, reason) => {
-                            if (reason !== 'backdropClick') setShowSwap(false);
-                        }}
-                    >
-                        <div style={{ height: 0 }}>
-                            <Swap royaleTheme={true} handleClose={setShowSwap}></Swap>
-                        </div>
-                    </Modal>
-                </FlexContainer>
                 <InfoSection>
                     <div>
                         <span>{t('options.royale.footer.up')}</span>

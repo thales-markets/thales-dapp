@@ -16,7 +16,7 @@ const useRoyalePassIdQuery = (walletAddress: string, options?: UseQueryOptions<R
             return getFromContract(thalesRoyalePassContract, walletAddress);
         },
         {
-            refetchInterval: 5000,
+            refetchInterval: 3000,
             ...options,
         }
     );
@@ -53,7 +53,7 @@ const getFromContract = async (royalePassContract: any, walletAddress: string): 
     const id = filteredToIds.filter((id) => !filteredFromIds.includes(id)).sort()[0];
 
     return {
-        id: id,
+        id,
     };
 };
 
