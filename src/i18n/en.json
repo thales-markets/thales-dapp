@@ -1150,6 +1150,8 @@
                 "buy-in-collateral-susd": "sUSD",
                 "buy-in-collateral-pass": "Royale Pass",
                 "buy-in-with": "Buy in with",
+                "royale-passes": "Royale Passes ({{passes}})",
+                "approve-for-minting": "Approve sUSD for Royale Pass minting",
                 "no-royale-pass-in-wallet": "You don't have any Royale Pass in the wallet, use buy in with sUSD or mint Pass to sign up.",
                 "table-header": {
                     "status": "Status",

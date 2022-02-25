@@ -416,8 +416,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
                 </FlexContainer>
                 <RoyalePassContainer>
-                    <UserLabel>Royale Passes ({(royalePassData as any).balance}):</UserLabel>
-                    <ImageWrapper>
+                    <UserLabel style={{ padding: (royalePassData as any).balance === 0 ? '15px 0px' : '' }}>
+                        {t('options.royale.scoreboard.royale-passes', { passes: (royalePassData as any).balance })}:
+                    </UserLabel>
+                    <ImageWrapper style={{ display: (royalePassData as any).balance === 0 ? 'none' : '' }}>
                         <NftImage src="https://thalesmarket.mypinata.cloud/ipfs/QmeVPhCPUYJSwiHmX1NarZEzevRLZAwhj37dCrftALMonW" />
                     </ImageWrapper>
                 </RoyalePassContainer>

@@ -196,7 +196,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                     </Button>
                                 ) : (
                                     <>
-                                        <RoyaleTooltip title="Approve sUSD for Royale Pass minting">
+                                        <RoyaleTooltip title={t('options.royale.scoreboard.approve-for-minting')}>
                                             <Button
                                                 style={{ marginRight: 30 }}
                                                 onClick={() => setOpenApprovalModal(true)}

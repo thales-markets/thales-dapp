@@ -180,6 +180,8 @@ const StyledRoyaleModal = withStyles(() => ({
 }))(Dialog);
 
 const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean }>`
+    flex: 1 0 100%;
+    justify-content: center;
     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
 `;
