@@ -17,7 +17,7 @@ import {
     DefaultSubmitButton,
     SubmitButtonContainer,
     InputContainer,
-    InputLabel,
+    // InputLabel,
     CurrencyLabel,
 } from 'pages/Options/Market/components';
 import onboardConnector from 'utils/onboardConnector';
@@ -105,37 +105,45 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                 </FlexDivRow>
             </ModalHeader>
             <FlexDivColumnCentered>
-                <FlexDivColumnCentered>
+                <FlexContainer>
+                    <ApprovalModalLabel isRoyale={isRoyale}>
+                        {t('common.enable-wallet-access.approve-all-label')}:
+                    </ApprovalModalLabel>
                     <CheckboxContainer isRoyale={isRoyale}>
                         <Checkbox
                             disabled={isAllowing}
                             checked={approveAll}
                             value={approveAll.toString()}
                             onChange={(e: any) => setApproveAll(e.target.checked || false)}
-                            label={t('common.enable-wallet-access.approve-all-label')}
                         />
                     </CheckboxContainer>
-                </FlexDivColumnCentered>
+                </FlexContainer>
                 <OrText isRoyale={isRoyale}>{t('common.or')}</OrText>
-                <InputContainer>
-                    <ApprovalNumericInput
-                        isRoyale={isRoyale}
-                        value={amount}
-                        onChange={(_, value) => setAmount(value)}
-                        className={approveAll || isAmountValid ? '' : 'error'}
-                        disabled={approveAll || isAllowing}
-                    />
-                    <ApprovalInputLabel isRoyale={isRoyale} className={approveAll || isAllowing ? 'disabled' : ''}>
-                        {t('common.enable-wallet-access.custom-amount-label')}
-                    </ApprovalInputLabel>
-                    <ApprovalCurrencyLabel isRoyale={isRoyale} className={approveAll || isAllowing ? 'disabled' : ''}>
-                        {tokenSymbol}
-                    </ApprovalCurrencyLabel>
-                    <FieldValidationMessage
-                        showValidation={!approveAll && !isAmountValid}
-                        message={t('common.errors.invalid-amount-max', { max: maxApproveAmount })}
-                    />
-                </InputContainer>
+                <FlexContainer>
+                    <ApprovalModalLabel isRoyale={isRoyale}>
+                        {t('common.enable-wallet-access.custom-amount-label')}:
+                    </ApprovalModalLabel>
+                    <ApprovalInputContainer>
+                        <ApprovalNumericInput
+                            isRoyale={isRoyale}
+                            value={amount}
+                            onChange={(_, value) => setAmount(value)}
+                            className={approveAll || isAmountValid ? '' : 'error'}
+                            disabled={approveAll || isAllowing}
+                        />
+
+                        <ApprovalCurrencyLabel
+                            isRoyale={isRoyale}
+                            className={approveAll || isAllowing ? 'disabled' : ''}
+                        >
+                            {tokenSymbol}
+                        </ApprovalCurrencyLabel>
+                        <FieldValidationMessage
+                            showValidation={!approveAll && !isAmountValid}
+                            message={t('common.errors.invalid-amount-max', { max: maxApproveAmount })}
+                        />
+                    </ApprovalInputContainer>
+                </FlexContainer>
             </FlexDivColumnCentered>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage
@@ -172,67 +180,77 @@ const StyledRoyaleModal = withStyles(() => ({
 }))(Dialog);
 
 const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean }>`
-    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
+    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
 `;
 
 const ApprovalModalContainer = styled(ModalContainer)<{ isRoyale?: boolean }>`
-    background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
+    background: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
     border-radius: ${(props) => (props.isRoyale ? '5px' : '')};
+`;
+
+const ApprovalInputContainer = styled(InputContainer)<{ isRoyale?: boolean }>`
+    width: 220px;
+    height: 43px;
+    margin-bottom: 0px;
 `;
 
 const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
     font-size: ${(props) => (props.isRoyale ? '20px' : '')};
-    background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
-    border: ${(props) => (props.isRoyale ? '5px solid var(--color)' : '')};
-    color: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+    background: ${(props) => (props.isRoyale ? '#e3f7e9' : '')};
+    border: ${(props) => (props.isRoyale ? '2px solid var(--color-wrapper)' : '')};
+    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
-    margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
-    border-radius: ${(props) => (props.isRoyale ? '5px' : '')};
-    height: ${(props) => (props.isRoyale ? '80px' : '')};
+    // margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
+    border-radius: ${(props) => (props.isRoyale ? '30px' : '')};
+    height: ${(props) => (props.isRoyale ? '43px' : '')};
+    padding-top: ${(props) => (props.isRoyale ? '2px' : '')};
     &:focus {
-        border: ${(props) => (props.isRoyale ? '5px solid var(--color)' : '')};
+        border: ${(props) => (props.isRoyale ? '2px solid var(--color-wrapper)' : '')};
     }
 `;
 
-const ApprovalInputLabel = styled(InputLabel)<{ isRoyale?: boolean }>`
-    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
-    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
-    padding: ${(props) => (props.isRoyale ? '12px 0 0 24px' : '')};
-    &.disabled {
-        opacity: ${(props) => (props.isRoyale ? '0.4' : '')};
-        cursor: ${(props) => (props.isRoyale ? 'default' : '')};
-    }
-`;
+// const ApprovalInputLabel = styled(InputLabel)<{ isRoyale?: boolean }>`
+//     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
+//     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+//     padding: ${(props) => (props.isRoyale ? '12px 0 0 24px' : '')};
+//     &.disabled {
+//         opacity: ${(props) => (props.isRoyale ? '0.4' : '')};
+//         cursor: ${(props) => (props.isRoyale ? 'default' : '')};
+//     }
+// `;
 
 const ApprovalCurrencyLabel = styled(CurrencyLabel)<{ isRoyale?: boolean }>`
-    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
+    color: ${(props) => (props.isRoyale ? 'var(--color--wrapper) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
-    padding: ${(props) => (props.isRoyale ? '41px 16px 17px 0' : '')};
+    padding: ${(props) => (props.isRoyale ? '1px 16px 17px 0' : '')};
+    font-size: ${(props) => (props.isRoyale ? '20px' : '')};
+    line-height: ${(props) => (props.isRoyale ? '22px' : '')};
+    font-style: ${(props) => (props.isRoyale ? 'normal' : '')};
 `;
 
 const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>`
-    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
+    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
-    background: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+    background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     border-radius: ${(props) => (props.isRoyale ? '20px' : '')};
-    box-shadow: ${(props) => (props.isRoyale ? '0px 0px 30px var(--color)' : '')};
+    // box-shadow: ${(props) => (props.isRoyale ? '0px 0px 30px var(--color-wrapper)' : '')};
     &:hover:not(:disabled) {
-        background: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+        background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     }
 `;
 
 const CheckboxContainer = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
-    margin: 40px 0 5px 0;
+    margin: -12px 0 0 0;
     label {
-        color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
+        color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
         font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
         font-size: 16px;
         input:checked ~ .checkmark {
-            background-color: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+            background-color: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
         }
     }
-    border: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+    border: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     span {
         :after {
             height: 12px;
@@ -240,26 +258,38 @@ const CheckboxContainer = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
             left: 4px;
             top: -1px;
             border-width: 0 3px 3px 0;
-            border: ${(props) => (props.isRoyale ? 'solid var(--color-wrapper)' : '')};
+            border: ${(props) => (props.isRoyale ? 'solid var(--color)' : '')};
             border-width: 0 2px 2px 0;
         }
         height: 18px;
         width: 18px;
         margin-top: 2px;
-        border: ${(props) => (props.isRoyale ? '1px solid var(--color)' : '')};
+        border: ${(props) => (props.isRoyale ? '1px solid var(--color-wrapper)' : '')};
     }
 `;
 
 const OrText = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
     text-align: center;
     font-style: normal;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.4px;
-    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '#f6f6fe')};
+    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '#f6f6fe')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     margin-bottom: 20px;
+`;
+
+const ApprovalModalLabel = styled.p<{ isRoyale?: boolean }>`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '#f6f6fe')};
+`;
+
+const FlexContainer = styled(FlexDivCentered)`
+    justify-content: space-between;
+    margin: 7px 0;
 `;
 
 export default ApprovalModal;

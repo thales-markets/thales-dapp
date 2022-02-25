@@ -100,7 +100,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     useEffect(() => {
         if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress)
             updateRoyalePassBalanceAndAllowance(buyInToken);
-    }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress]);
+    }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress, walletBalance]);
 
     const updateRoyalePassBalanceAndAllowance = async (token: any) => {
         if (token) {
