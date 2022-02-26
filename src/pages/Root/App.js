@@ -8,7 +8,6 @@ import useLocalStorage from 'hooks/useLocalStorage';
 import TokenPage from 'pages/Token/Token.tsx';
 import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
 import Profile from 'pages/Profile/Profile.tsx';
-import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
 import ThalesRoyal from 'pages/Options/Royal/ThalesRoyal';
@@ -28,6 +27,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
+import Leaderboard from 'pages/Leaderboard';
 import TradeHistory from 'pages/Options/TradeHistory';
 import AmmMining from 'pages/Options/AmmMining';
 import AmmReporting from '../Options/AmmReporting';
@@ -200,14 +200,6 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.Leaderboard}>
-                                <MainLayout>
-                                    <LeaderboardPage />
-                                </MainLayout>
-                            </Route>
-                        )}
-
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
                                 <QuickTradingPage />
@@ -265,6 +257,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.Token}>
                             <DappLayout>
                                 <TokenPage />
+                            </DappLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.Leaderboard}>
+                            <DappLayout>
+                                <Leaderboard />
                             </DappLayout>
                         </Route>
 

@@ -96,6 +96,12 @@ const DappHeader: React.FC = () => {
                         iconName="game"
                         label={t('common.sidebar.game-label')}
                     />
+                    <DappHeaderItem
+                        className={location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''}
+                        href={buildHref(ROUTES.Options.Leaderboard)}
+                        iconName="leaderboard"
+                        label={t('common.sidebar.leaderboard-label')}
+                    />
                     {walletAddress && (
                         <DappHeaderItem
                             className={location.pathname === ROUTES.Options.Profile ? 'selected' : ''}

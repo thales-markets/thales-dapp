@@ -4,6 +4,7 @@ import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import SPAAnchor from 'components/SPAAnchor';
 import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
+import { orderBy } from 'lodash';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
@@ -41,7 +42,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                 }
             });
         }
-        return newArray;
+        return orderBy(newArray, 'market.maturityDate');
     }, [positions]);
     return (
         <Container>
