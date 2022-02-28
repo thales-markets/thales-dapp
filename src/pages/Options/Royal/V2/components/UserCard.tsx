@@ -1,4 +1,6 @@
 import { Modal } from '@material-ui/core';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import ApprovalModal from 'components/ApprovalModal';
 import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
@@ -26,11 +28,9 @@ import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
 import { FooterData } from './queries/useRoyaleFooterQuery';
-import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import ApprovalModal from 'components/ApprovalModal';
-import useRoyalePassQuery from './queries/useRoyalePassQuery';
 import useRoyalePassIdQuery from './queries/useRoyalePassIdQuery';
+import useRoyalePassQuery from './queries/useRoyalePassQuery';
+import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 
 type UserCardProps = {
     ethPrice: string;
@@ -113,7 +113,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress]);
 
     useEffect(() => {
-        if ((royalePassData as any).balance || !isBuyingIn) {
+        if ((royalePassData as any).balance !== undefined && !isBuyingIn) {
             (royalePassData as any).balance > 0
                 ? setSelectedBuyInCollateral(BuyInCollateralEnum.PASS)
                 : setSelectedBuyInCollateral(BuyInCollateralEnum.SUSD);
@@ -123,6 +123,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     useEffect(() => {
         setIsBuyingIn(false);
     }, [user.status, walletAddress]);
+
+    useEffect(() => {
+        previouslySelectedDefaultPosition
+            ? setDefaultPosition(previouslySelectedDefaultPosition)
+            : setDefaultPosition(PositionsEnum.NONE);
+    }, [walletAddress]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
