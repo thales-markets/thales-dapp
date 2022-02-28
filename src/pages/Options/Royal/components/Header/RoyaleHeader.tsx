@@ -209,7 +209,10 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                 <Balances>
                                     <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</span>{' '}
                                     <span>
-                                        {(royalePassData as any).balance} {t('options.royale.scoreboard.royale-pass')}
+                                        {(royalePassData as any).balance}{' '}
+                                        {(royalePassData as any).balance === 0 || (royalePassData as any).balance > 1
+                                            ? t('options.royale.scoreboard.royale-pass-2')
+                                            : t('options.royale.scoreboard.royale-pass')}
                                     </span>
                                 </Balances>
                             </>
