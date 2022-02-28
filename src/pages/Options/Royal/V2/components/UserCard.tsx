@@ -113,12 +113,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress]);
 
     useEffect(() => {
-        if ((royalePassData as any).balance && !isBuyingIn) {
+        if ((royalePassData as any).balance || !isBuyingIn) {
             (royalePassData as any).balance > 0
                 ? setSelectedBuyInCollateral(BuyInCollateralEnum.PASS)
                 : setSelectedBuyInCollateral(BuyInCollateralEnum.SUSD);
         }
-    }, [(royalePassData as any).balance, walletAddress]);
+    }, [royalePassData, walletAddress]);
 
     useEffect(() => {
         setIsBuyingIn(false);
