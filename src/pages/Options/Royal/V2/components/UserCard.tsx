@@ -426,7 +426,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         {t('options.royale.scoreboard.royale-passes', { passes: (royalePassData as any).balance })}:
                     </UserLabel>
                     <ImageWrapper style={{ display: (royalePassData as any).balance === 0 ? 'none' : '' }}>
-                        <NftImage src="https://thalesmarket.mypinata.cloud/ipfs/QmeVPhCPUYJSwiHmX1NarZEzevRLZAwhj37dCrftALMonW" />
+                        <NftImage src="https://thales-protocol.s3.eu-north-1.amazonaws.com/THALES_ROYALE_PASS.gif" />
                     </ImageWrapper>
                 </RoyalePassContainer>
                 <FlexContainer
