@@ -20,9 +20,10 @@ type MyPositionsProps = {
     exchangeRates: Rates | null;
     positions: UsersAssets[];
     isSimpleView: boolean;
+    searchText: string;
 };
 
-const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isSimpleView }) => {
+const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isSimpleView, searchText }) => {
     const { t } = useTranslation();
     const data = useMemo(() => {
         const newArray: any = [];
@@ -127,6 +128,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                 <Table
                     containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
                     data={data}
+                    searchQuery={searchText}
                     columns={[
                         {
                             Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,

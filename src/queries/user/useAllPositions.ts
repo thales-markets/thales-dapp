@@ -7,6 +7,7 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { NetworkId } from 'utils/network';
 
 type PositionsData = {
+    claimed: any[];
     claimable: number;
     claimableAmount: number;
     matured: UsersAssets[];
@@ -25,10 +26,26 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             let claimable = 0;
             let claimableAmount = 0;
 
+            const marketTx = await thalesData.binaryOptions.optionTransactions({
+                account: walletAddress,
+                network: networkId,
+            });
+
+            const txMap = new Map();
+
+            marketTx.map((tx: any) => {
+                if (tx.type !== 'mint') {
+                    txMap.set(tx.market, tx);
+                }
+            });
+
             const matured = await Promise.all(
                 optionsMarkets
                     .filter((market) => market.maturityDate <= +Date.now())
                     .map((market) => {
+                        if (txMap.has(market.address)) {
+                            txMap.set(market.address, { market, tx: txMap.get(market.address) });
+                        }
                         return (snxJSConnector as any).binaryOptionsMarketDataContract
                             .getAccountMarketData(market.address, walletAddress)
                             .then((result: any) => {
@@ -72,6 +89,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             const result = {
                 claimable,
                 claimableAmount,
+                claimed: Array.from(txMap.values()),
                 matured:
                     matured.length > 0
                         ? matured.filter((data) => {

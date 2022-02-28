@@ -11,6 +11,7 @@ import { sortOptionsMarkets } from 'utils/options';
 type HistoryProps = {
     markets?: OptionsMarkets;
     trades: [];
+    searchText: string;
 };
 
 const History: React.FC<HistoryProps> = ({ markets, trades }) => {

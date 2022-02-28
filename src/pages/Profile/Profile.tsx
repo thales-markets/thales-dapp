@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
 
     const positions = userPositionsQuery.isSuccess
         ? userPositionsQuery.data
-        : { claimable: undefined, claimableAmount: undefined, matured: [], live: [] };
+        : { claimable: undefined, claimableAmount: undefined, matured: [], live: [], claimed: [] };
 
     const allTxAndDataQuery = useCalculateDataQuery(networkId, walletAddress as any, { enabled: isAppReady });
     const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
@@ -97,13 +97,19 @@ const Profile: React.FC = () => {
                             isSimpleView={isSimpeView}
                             exchangeRates={exchangeRates}
                             positions={positions.live}
+                            searchText={searchText}
                         />
                     )}
                     {view === NavItems.MaturedPositions && (
-                        <MaturedPositions isSimpleView={isSimpeView} positions={positions.matured} />
+                        <MaturedPositions
+                            isSimpleView={isSimpeView}
+                            positions={positions.matured}
+                            claimed={positions.claimed}
+                            searchText={searchText}
+                        />
                     )}
                     {view === NavItems.History && (
-                        <History markets={markets} trades={DataForUi ? DataForUi.trades : []} />
+                        <History markets={markets} trades={DataForUi ? DataForUi.trades : []} searchText={searchText} />
                     )}
                 </ContentWrapper>
             </Container.Left>

@@ -10,16 +10,20 @@
     content: '\0043';
 }
 
+.icon--leaderboard:before {
+    content: '\0045';
+}
+
+.icon--governance:before {
+    content: '\0046';
+}
+
 .icon--markets-overview:before {
     content: '\0058';
 }
 
 .icon--create-market:before {
     content: '\0057';
-}
-
-.icon--governance:before {
-    content: '\0058';
 }
 
 .icon--markets:before {

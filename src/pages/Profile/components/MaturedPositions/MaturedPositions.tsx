@@ -14,17 +14,33 @@ import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
 
 type MaturedPositionsProps = {
+    claimed: any[];
     positions: UsersAssets[];
     isSimpleView?: boolean;
+    searchText: string;
 };
 
-const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimpleView }) => {
+const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimpleView, claimed, searchText }) => {
     const { t } = useTranslation();
     const data = useMemo(() => {
         const newArray: any = [];
+
+        if (claimed.length > 0) {
+            claimed.map((value) => {
+                const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.balances = {};
+                modifiedValue.balances.amount = value.tx.amount;
+                modifiedValue.balances.type = value.tx.side === 'short' ? 'DOWN' : 'UP';
+                modifiedValue.claimable = false;
+                modifiedValue.claimed = true;
+                newArray.push(modifiedValue);
+            });
+        }
+
         if (positions.length > 0) {
             positions.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.claimed = false;
                 if (value.balances.long > 0) {
                     modifiedValue.balances.amount = value.balances.long;
                     modifiedValue.balances.type = 'UP';
@@ -40,6 +56,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                 }
             });
         }
+
         return newArray.sort((a: any) => (a.claimable ? -1 : 1));
     }, [positions]);
     return (
@@ -89,10 +106,10 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                                                 <Card.RowTitle>Status</Card.RowTitle>
                                                 <Card.RowSubtitle
                                                     style={{
-                                                        color: data.claimable ? '#50CE99' : '#C3244A',
+                                                        color: data.claimable || data.claimed ? '#50CE99' : '#C3244A',
                                                     }}
                                                 >
-                                                    {data.claimable ? 'Claimable' : 'RIP'}
+                                                    {data.claimable ? 'Claimable' : data.claimed ? 'Claimed' : 'RIP'}
                                                 </Card.RowSubtitle>
                                             </Card.Row>
                                             <Card.Row>
@@ -120,6 +137,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                 <Table
                     containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
                     data={data}
+                    searchQuery={searchText}
                     columns={[
                         {
                             Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
@@ -177,10 +195,10 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                             accessor: (row: any) => (
                                 <TableText
                                     style={{
-                                        color: row.claimable ? '#50CE99' : '#C3244A',
+                                        color: row.claimable || row.claimed ? '#50CE99' : '#C3244A',
                                     }}
                                 >
-                                    {row.claimable ? 'Claimable' : 'RIP'}
+                                    {row.claimable ? 'Claimable' : row.claimed ? 'Claimed' : 'RIP'}
                                 </TableText>
                             ),
                         },
