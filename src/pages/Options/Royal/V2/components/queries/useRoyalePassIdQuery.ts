@@ -33,8 +33,9 @@ const getFromContract = async (royalePassContract: any, walletAddress: string): 
         royaleContractInstance.filters.Transfer(null, walletAddress),
         royaleContractInstance.filters.Transfer(walletAddress, null),
     ]);
+
     const [filteredToIds, filteredFromIds] = await Promise.all([
-        royaleContractInstance.queryFilter(filterToAddress).then((resp: any) => {
+        royaleContractInstance.queryFilter(filterToAddress, -9000).then((resp: any) => {
             const ids = new Array<number>();
             for (const tx of resp) {
                 ids.push(Number(tx.topics[3]));
@@ -42,7 +43,7 @@ const getFromContract = async (royalePassContract: any, walletAddress: string): 
 
             return ids;
         }),
-        royaleContractInstance.queryFilter(filterFromAddress).then((resp: any) => {
+        royaleContractInstance.queryFilter(filterFromAddress, -9000).then((resp: any) => {
             const ids = new Array<number>();
             for (const tx of resp) {
                 ids.push(Number(tx.topics[3]));
@@ -50,8 +51,8 @@ const getFromContract = async (royalePassContract: any, walletAddress: string): 
             return ids;
         }),
     ]);
-    const id = filteredToIds.filter((id) => !filteredFromIds.includes(id)).sort()[0];
 
+    const id = filteredToIds.filter((id) => !filteredFromIds.includes(id)).sort()[0];
     return {
         id,
     };
