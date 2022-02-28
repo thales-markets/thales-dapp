@@ -1182,7 +1182,10 @@
                 "buy-in": "Бай-ин с долларами США",
                 "no-royale-pass-in-wallet": "У вас нет Royale Pass в кошельке, используйте бай-ин с помощью sUSD или mint Pass, чтобы зарегистрироваться.",
                 "royale-passes": "Королевские пропуска ({{passes}})",
-                "approve-for-minting": "Одобрить sUSD для чеканки Royale Pass"
+                "approve-for-minting": "Одобрить sUSD для чеканки Royale Pass",
+                "buy-in-collateral-pass-mobile": "NFT",
+                "choose-colateral": "Выбрать залог для бай-ина",
+                "royale-pass-2": "Королевские пропуска"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",

@@ -1182,7 +1182,10 @@
                 "no-royale-pass-in-wallet": "您的钱包中没有任何 Royale Pass，请使用 Buy in with sUSD 或 mint Pass 进行注册。",
                 "buy-in-royale-pass": "使用 Royale Pass 购买",
                 "royale-passes": "皇家通行证 ({{passes}})",
-                "approve-for-minting": "批准 sUSD 用于 Royale Pass 铸币"
+                "approve-for-minting": "批准 sUSD 用于 Royale Pass 铸币",
+                "buy-in-collateral-pass-mobile": "NFT",
+                "royale-pass-2": "皇家通行证",
+                "choose-colateral": "选择抵押品买入"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

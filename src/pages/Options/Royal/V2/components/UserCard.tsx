@@ -392,7 +392,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             style={{
                                 position: 'relative',
                                 cursor: 'pointer',
-                                top: '3.5px',
+                                top: '3px',
                                 float: 'right',
                                 marginTop: 'auto',
                                 marginBottom: 'auto',
@@ -492,7 +492,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 >
                     <UserLabel>
                         {t('options.royale.scoreboard.buy-in-with')}:
-                        <RoyaleTooltip title="Choose colateral for buy in">
+                        <RoyaleTooltip title={t('options.royale.scoreboard.choose-colateral')}>
                             <StyledInfoIcon />
                         </RoyaleTooltip>
                     </UserLabel>
@@ -512,13 +512,27 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         }}
                     >
                         {selectedBuyInCollateral === BuyInCollateralEnum.PASS ? (
-                            <BuyInToggle className={user.status === UserStatus.RDY ? 'disabled' : ''} left={true}>
-                                {t('options.royale.scoreboard.buy-in-collateral-' + selectedBuyInCollateral)}
-                            </BuyInToggle>
+                            <>
+                                <BuyInToggle className={user.status === UserStatus.RDY ? 'disabled' : ''} left={true}>
+                                    {window.innerWidth < 1024
+                                        ? t('options.royale.scoreboard.buy-in-collateral-pass-mobile')
+                                        : t('options.royale.scoreboard.buy-in-collateral-pass')}
+                                </BuyInToggle>
+                                <BuyInToggle className="disabled" left={false}>
+                                    {t('options.royale.scoreboard.buy-in-collateral-susd')}
+                                </BuyInToggle>
+                            </>
                         ) : (
-                            <BuyInToggle className={user.status === UserStatus.RDY ? 'disabled' : ''} left={false}>
-                                {t('options.royale.scoreboard.buy-in-collateral-' + selectedBuyInCollateral)}
-                            </BuyInToggle>
+                            <>
+                                <BuyInToggle className="disabled" left={true}>
+                                    {window.innerWidth < 1024
+                                        ? t('options.royale.scoreboard.buy-in-collateral-pass-mobile')
+                                        : t('options.royale.scoreboard.buy-in-collateral-pass')}
+                                </BuyInToggle>
+                                <BuyInToggle className={user.status === UserStatus.RDY ? 'disabled' : ''} left={false}>
+                                    {t('options.royale.scoreboard.buy-in-collateral-susd')}
+                                </BuyInToggle>
+                            </>
                         )}
                     </ToggleWrapper>
 
@@ -575,7 +589,7 @@ const UserAvatar = styled(Image)<{ winner?: boolean }>`
 `;
 
 const NftImage = styled(Image)`
-    width: 220px;
+    width: 240px;
     height: 132px;
 `;
 
@@ -652,22 +666,29 @@ const BuyInToggle = styled.div<{ left?: boolean }>`
     cursor: pointer;
     font-family: Sansation !important;
     font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
+    font-weight: normal;
+    font-size: 15px;
     line-height: 18px;
     background: var(--color);
-    border: 1px solid var(--color);
+    border: 1px solid var(--color-wrapper);
     box-sizing: border-box;
-    box-shadow: 0px 0px 30px var(--color);
-    border-radius: 20px;
-    width: 60%;
+    border-top-left-radius: ${(props) => (props.left ? '15px' : '0')};
+    border-bottom-left-radius: ${(props) => (props.left ? '15px' : '0')};
+    border-top-right-radius: ${(props) => (props.left ? '0' : '15px')};
+    border-bottom-right-radius: ${(props) => (props.left ? '0' : '15px')};
+    margin: ${(props) => (props.left ? '1px 0px 1px 1px' : '1px 0px 1px 0px')};
+    border-left: ${(props) => (props.left ? '' : '0px')};
+    border-right: ${(props) => (props.left ? '0px' : '')};
+    width: 49.5%;
     float: ${(props) => (props.left ? 'left' : 'right')};
     text-align: center;
-    padding: 3px 10px 3px 10px;
+    padding: 2px 9px 2px 9px;
     color: var(--color-wrapper);
     &.disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
+        background: linear-gradient(180deg, var(--color-wrapper) 0%, #18241d 97.85%);
+        border: 1px solid var(--color);
+        color: var(--color);
+        opacity: 0.4;
     }
 `;
 
@@ -681,8 +702,8 @@ const SearchIcon = styled.i`
 `;
 
 const InputWrapper = styled.div`
-    width: 220px;
-    border: 1.30233px solid var(--color);
+    width: 240px;
+    border: 2px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;
     height: 28px;
@@ -709,7 +730,7 @@ const ImageWrapper = styled(InputWrapper)`
     margin: 14px 0px;
     height: 135px;
     @media (max-width: 1024px) {
-        width: 220px;
+        width: 240px;
     }
 `;
 
@@ -717,9 +738,9 @@ const Selector = styled.div<{ isOpen: boolean }>`
     position: absolute;
     right: 0;
     top: -4px;
-    width: 220px;
+    width: 240px;
     height: ${(props) => (props.isOpen ? 'content' : '28px')};
-    border: 1.30233px solid var(--color);
+    border: 2px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;
     white-space: nowrap;
@@ -744,7 +765,7 @@ const Selector = styled.div<{ isOpen: boolean }>`
 `;
 
 const ToggleWrapper = styled.div`
-    width: 220px;
+    width: 240px;
     border: 1.30233px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;
@@ -820,7 +841,7 @@ const Arrow = styled.i`
     padding-bottom: 3px;
     position: absolute;
     top: 9px;
-    left: 67%;
+    left: ${() => (window.innerWidth < 1024 ? '70%' : '67%')};
 `;
 
 const Overlay = styled.div`
@@ -835,7 +856,7 @@ const Overlay = styled.div`
 const StyledInfoIcon = styled(InfoIcon)`
     display: inline-block;
     position: absolute;
-    margin-left: 15px;
+    margin-left: 10px;
     width: 15px;
     height: 15px;
     transform: translateX(-50%);
