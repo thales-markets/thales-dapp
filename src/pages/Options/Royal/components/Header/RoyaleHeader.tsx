@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -20,6 +20,17 @@ import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuer
 import { getIsAppReady } from 'redux/modules/app';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { BigNumber, ethers } from 'ethers';
+import erc20Contract from 'utils/contracts/erc20Contract';
+import snxJSConnector from 'utils/snxJSConnector';
+import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
+import { checkAllowance, getIsOVM } from 'utils/network';
+import ApprovalModal from 'components/ApprovalModal';
+import useRoyalePassQuery from '../../V2/components/queries/useRoyalePassQuery';
+import { dispatchMarketNotification } from 'utils/options';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
+import useLatestRoyaleForUserInfo from '../../V2/components/queries/useLastRoyaleForUserInfo';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -46,16 +57,26 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
 }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
     const [openUserInfo, setOpenUserInfo] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
-    const balanceQuery = useEthBalanceQuery(walletAddress ?? '', { enabled: walletAddress !== null });
+    const [allowance, setAllowance] = useState(false);
+    const [walletBalance, setWalletBalance] = useState('0');
+    const [isAllowing, setIsAllowing] = useState<boolean>(false);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
+    const balanceQuery = useEthBalanceQuery(walletAddress, { enabled: walletAddress !== null });
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
+    const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected && isAppReady });
+    const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
+    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
+    const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
+    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
-    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
@@ -75,6 +96,83 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
         return seasons;
     }, [latestSeason]);
 
+    useEffect(() => {
+        if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress)
+            updateRoyalePassBalanceAndAllowance(buyInToken);
+    }, [
+        buyInToken,
+        snxJSConnector.signer,
+        (royaleData as any).buyInAmount,
+        isAllowing,
+        walletAddress,
+        (royalePassData as any).balance,
+    ]);
+
+    const updateRoyalePassBalanceAndAllowance = async (token: any) => {
+        if (token) {
+            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
+            const { thalesRoyalePassContract } = snxJSConnector;
+            if (thalesRoyalePassContract) {
+                try {
+                    const price = (royaleData as any).buyInAmount;
+                    const allowance = await checkAllowance(
+                        price,
+                        erc20Instance,
+                        walletAddress,
+                        thalesRoyalePassContract.address
+                    );
+                    setAllowance(allowance);
+                } catch (e) {
+                    console.log(e);
+                }
+
+                try {
+                    const balance = await erc20Instance.balanceOf(walletAddress);
+                    setWalletBalance(ethers.utils.formatUnits(balance));
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+    };
+
+    const approveRoyalePassMinting = async (approveAmount: BigNumber) => {
+        const erc20Instance = new ethers.Contract(
+            (buyInToken as any).address,
+            erc20Contract.abi,
+            snxJSConnector.signer
+        );
+        try {
+            setIsAllowing(true);
+            const { thalesRoyalePassContract } = snxJSConnector;
+            if (thalesRoyalePassContract) {
+                const tx = await erc20Instance.approve(thalesRoyalePassContract.address, approveAmount, {
+                    gasLimit: MAX_L2_GAS_LIMIT,
+                });
+                setOpenApprovalModal(false);
+                await tx.wait();
+            }
+            setIsAllowing(false);
+        } catch (e) {
+            console.log('failed: ', e);
+            setIsAllowing(false);
+        }
+    };
+
+    const mintRoyalePass = async (walletAddress: string) => {
+        const { thalesRoyalePassContract } = snxJSConnector;
+        if (thalesRoyalePassContract) {
+            const RoyalContract = thalesRoyalePassContract.connect((snxJSConnector as any).signer);
+            try {
+                const tx = await RoyalContract.mint(walletAddress);
+                await tx.wait();
+                dispatchMarketNotification('Successfully Minted Royale Pass');
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    };
+
     return (
         <>
             <Header>
@@ -83,8 +181,37 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                     <UtilWrapper>
                         {walletAddress && (
                             <>
+                                {allowance ? (
+                                    <Button
+                                        className={walletBalance < (royaleData as any).buyInAmount ? 'disabled' : ''}
+                                        disabled={walletBalance < (royaleData as any).buyInAmount}
+                                        onClick={() => {
+                                            mintRoyalePass(walletAddress).then(() =>
+                                                synthsWalletBalancesQuery.refetch()
+                                            );
+                                        }}
+                                    >
+                                        {t('options.royale.scoreboard.mint-royale-pass')}
+                                    </Button>
+                                ) : (
+                                    <>
+                                        <RoyaleTooltip title={t('options.royale.scoreboard.approve-for-minting')}>
+                                            <Button
+                                                style={{ marginRight: 30 }}
+                                                onClick={() => setOpenApprovalModal(true)}
+                                            >
+                                                {t('options.royale.scoreboard.mint-royale-pass')}
+                                            </Button>
+                                        </RoyaleTooltip>
+                                    </>
+                                )}
                                 <Button onClick={() => setShowSwap(true)}>{t('options.swap.button-text')}</Button>
-                                <SUSDBalance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</SUSDBalance>
+                                <Balances>
+                                    <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</span>{' '}
+                                    <span>
+                                        {(royalePassData as any).balance} {t('options.royale.scoreboard.royale-pass')}
+                                    </span>
+                                </Balances>
                             </>
                         )}
                         <Modal
@@ -197,6 +324,16 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                     theme={theme}
                 />
             </Header>
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={(royaleData as any).buyInAmount}
+                    tokenSymbol={SYNTHS_MAP.sUSD}
+                    isAllowing={isAllowing}
+                    onSubmit={approveRoyalePassMinting}
+                    onClose={() => setOpenApprovalModal(false)}
+                    isRoyale={true}
+                />
+            )}
         </>
     );
 };
@@ -381,7 +518,9 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     width: 171px;
     border: 2px solid var(--color);
     box-sizing: border-box;
-    border-radius: 18px;
+    max-height: 265px;
+    overflow: auto;
+    border-radius: 5px;
     font-family: Sansation !important;
     font-style: normal;
     font-size: 20px;
@@ -391,7 +530,7 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     cursor: pointer;
     text-align: center;
     background: var(--color-wrapper);
-    z-index: 5;
+    z-index: 9999;
     p:first-child {
         font-weight: bold;
         font-size: 20px;
@@ -445,17 +584,20 @@ const Button = styled.button`
     }
 `;
 
-const SUSDBalance = styled(Text)`
-    display: flex;
+const Balances = styled.div`
     padding: 3px 15px 6px 5px;
     font-family: Sansation !important;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 22px;
     color: var(--color);
-    text-shadow: 0px 0px 30px var(--color);
     text-align: center;
+    & > span {
+        float: left;
+        clear: left;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        font-family: Sansation !important;
+        line-height: 13px;
+    }
     @media (max-width: 1024px) {
         display: none;
     }

@@ -177,7 +177,9 @@
         "or": "или",
         "enable-wallet-access": {
             "approve-label": "Разрешить использование {{currencyKey}}",
-            "approve-progress-label": "Процесс подтверждения {{currencyKey}}..."
+            "approve-progress-label": "Процесс подтверждения {{currencyKey}}...",
+            "approve-all-label": "Одобрить все",
+            "custom-amount-label": "Пользовательская сумма"
         },
         "sidebar": {
             "trending-label": "Рынки в тренде",
@@ -1142,7 +1144,6 @@
                 "period-expired": "Срок регистрации истек",
                 "season-not-started": "Сезон еще не начался",
                 "approve-susd": "Одобрить sUSD",
-                "buy-in": "Бай-ин: {{buyInAmount}}sUSD",
                 "dead": "мертвых",
                 "round-starts": "Следующий раунд начинается через:",
                 "start-royale": "Запустить Thales Royale",
@@ -1170,7 +1171,18 @@
                 "default-position-down": "ВНИЗ",
                 "default-position-up": "ВВЕРХ",
                 "default-position-info": "Перед началом игры вы можете выбрать позицию по умолчанию, применяемую только к первому раунду. Вы можете снова изменить свою позицию, как только начнется период позиционирования. Для всех остальных раундов позиция должна быть выбрана в течение периода позиционирования.",
-                "default-position-none": "НИКТО"
+                "default-position-none": "НИКТО",
+                "royale-pass": "Королевский пропуск",
+                "mint-royale-pass": "Минт Рояль Пасс",
+                "approve-royale-pass": "Одобрить Royale Pass",
+                "buy-in-collateral-pass": "Королевский пропуск",
+                "buy-in-collateral-susd": "сдолл. США",
+                "buy-in-royale-pass": "Купить с помощью Royale Pass",
+                "buy-in-with": "Купить с",
+                "buy-in": "Бай-ин с долларами США",
+                "no-royale-pass-in-wallet": "У вас нет Royale Pass в кошельке, используйте бай-ин с помощью sUSD или mint Pass, чтобы зарегистрироваться.",
+                "royale-passes": "Королевские пропуска ({{passes}})",
+                "approve-for-minting": "Одобрить sUSD для чеканки Royale Pass"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",

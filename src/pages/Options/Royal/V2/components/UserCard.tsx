@@ -1,7 +1,7 @@
 import { Modal } from '@material-ui/core';
 import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Swap from 'pages/Options/Home/Swap';
 import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
@@ -16,19 +16,21 @@ import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
-import { getIsOVM } from 'utils/network';
+import { checkAllowance, getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
-import { signUp, signUpWithPosition } from '../../getThalesRoyalData';
+import { signUp, signUpWithPass, signUpWithPosition, signUpWithWithPassWithPosition } from '../../getThalesRoyalData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import ApprovalModal from 'components/ApprovalModal';
+import useRoyalePassQuery from './queries/useRoyalePassQuery';
+import useRoyalePassIdQuery from './queries/useRoyalePassIdQuery';
 
 type UserCardProps = {
     ethPrice: string;
@@ -42,11 +44,16 @@ export enum PositionsEnum {
     UP = 'up',
 }
 
+export enum BuyInCollateralEnum {
+    PASS = 'pass',
+    SUSD = 'susd',
+}
+
 export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
     const userQuery = useUserRoyalQuery(walletAddress as any, networkId, selectedSeason, {
@@ -56,11 +63,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
+    const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected });
+    const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
+
+    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, { enabled: isL2 && isWalletConnected });
+    const royalePassId = royalePassIdQuery.isSuccess ? royalePassIdQuery.data : {};
+
     const [allowance, setAllowance] = useState(false);
+    const [isAllowing, setIsAllowing] = useState<boolean>(false);
+    const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+    const [isBuyingIn, setIsBuyingIn] = useState(false);
     const previouslySelectedDefaultPosition = localStorage.getItem(
         'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
     );
@@ -68,6 +84,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         previouslySelectedDefaultPosition ? previouslySelectedDefaultPosition : PositionsEnum.NONE
     );
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
+
+    const [selectedBuyInCollateral, setSelectedBuyInCollateral] = useState(BuyInCollateralEnum.PASS);
+    const [showSelectBuyInDropdown, setShowSelectBuyInDropdown] = useState(false);
+
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
@@ -87,21 +107,39 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     }, [selectedSeason]);
 
-    const updateBalanceAndAllowance = async (token: any) => {
+    useEffect(() => {
+        if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress)
+            updateAllowance(buyInToken).finally(() => updateBalance(buyInToken));
+    }, [buyInToken, snxJSConnector.signer, (royaleData as any).buyInAmount, isAllowing, walletAddress]);
+
+    useEffect(() => {
+        if ((royalePassData as any).balance && !isBuyingIn) {
+            (royalePassData as any).balance > 0
+                ? setSelectedBuyInCollateral(BuyInCollateralEnum.PASS)
+                : setSelectedBuyInCollateral(BuyInCollateralEnum.SUSD);
+        }
+    }, [(royalePassData as any).balance, walletAddress]);
+
+    useEffect(() => {
+        setIsBuyingIn(false);
+    }, [user.status, walletAddress]);
+
+    const updateAllowance = async (token: any) => {
         if (token) {
             const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
                 try {
-                    const allowance = await erc20Instance.allowance(walletAddress, thalesRoyaleContract.address);
-                    setAllowance(!!bigNumberFormatter(allowance));
-                } catch (e) {
-                    console.log(e);
-                }
-
-                try {
-                    const balance = await erc20Instance.balanceOf(walletAddress);
-                    setBalance(ethers.utils.formatUnits(balance));
+                    const parsedBuyInAmount = ethers.utils.parseEther(
+                        Number((royaleData as any).buyInAmount).toString()
+                    );
+                    const allowance = await checkAllowance(
+                        parsedBuyInAmount,
+                        erc20Instance,
+                        walletAddress,
+                        thalesRoyaleContract.address
+                    );
+                    setAllowance(allowance);
                 } catch (e) {
                     console.log(e);
                 }
@@ -109,29 +147,40 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     };
 
-    const approve = async () => {
+    const updateBalance = async (token: any) => {
+        if (token) {
+            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
+            try {
+                const balance = await erc20Instance.balanceOf(walletAddress);
+                setBalance(ethers.utils.formatUnits(balance));
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    };
+
+    const approve = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(
             (buyInToken as any).address,
             erc20Contract.abi,
             snxJSConnector.signer
         );
         try {
+            setIsAllowing(true);
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
-                const tx = await erc20Instance.approve(thalesRoyaleContract.address, ethers.constants.MaxUint256, {
+                const tx = await erc20Instance.approve(thalesRoyaleContract.address, approveAmount, {
                     gasLimit: MAX_L2_GAS_LIMIT,
                 });
+                setOpenApprovalModal(false);
                 await tx.wait();
-                setAllowance(true);
             }
+            setIsAllowing(false);
         } catch (e) {
             console.log('failed: ', e);
+            setIsAllowing(false);
         }
     };
-
-    useEffect(() => {
-        if (buyInToken && snxJSConnector.signer) updateBalanceAndAllowance(buyInToken).then();
-    }, [buyInToken, snxJSConnector.signer]);
 
     const getFooter = (user: User | undefined, royaleData: any) => {
         if (!royaleData) return;
@@ -139,14 +188,92 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         if (royaleData.season === selectedSeason) {
             if (royaleData.signUpPeriod > new Date()) {
                 if (user.status === UserStatus.NOTSIGNED) {
-                    if (allowance) {
-                        const buyInAmount = royaleData.buyInAmount;
-                        return (
-                            <>
+                    const buyInAmount = royaleData.buyInAmount;
+                    if (buyInAmount > Number(balance) && (royalePassData as any).balance === 0) {
+                        if (selectedBuyInCollateral === BuyInCollateralEnum.PASS) {
+                            return (
+                                <DeadText>
+                                    <span>{t('options.royale.scoreboard.no-royale-pass-in-wallet')}</span>
+                                </DeadText>
+                            );
+                        } else {
+                            return (
+                                <>
+                                    <Button
+                                        onClick={() => {
+                                            setShowSwap(true);
+                                        }}
+                                    >
+                                        {t('options.swap.button-text')}
+                                    </Button>
+                                    <Modal
+                                        open={showSwap}
+                                        onClose={(_, reason) => {
+                                            if (reason !== 'backdropClick') setShowSwap(false);
+                                        }}
+                                    >
+                                        <div style={{ height: 0 }}>
+                                            <Swap royaleTheme={true} handleClose={setShowSwap}></Swap>
+                                        </div>
+                                    </Modal>
+                                </>
+                            );
+                        }
+                    }
+                    return (
+                        <FlexContainer>
+                            {selectedBuyInCollateral === BuyInCollateralEnum.SUSD ? (
+                                allowance ? (
+                                    <Button
+                                        className={isBuyingIn || buyInAmount > Number(balance) ? 'disabled' : ''}
+                                        disabled={isBuyingIn || buyInAmount > Number(balance)}
+                                        onClick={() => {
+                                            setIsBuyingIn(true);
+                                            defaultPosition !== PositionsEnum.NONE
+                                                ? (localStorage.setItem(
+                                                      'defaultPosition' +
+                                                          truncateAddress(walletAddress as any, 2, 2) +
+                                                          selectedSeason,
+                                                      defaultPosition
+                                                  ),
+                                                  signUpWithPosition(
+                                                      defaultPosition === PositionsEnum.DOWN ? 1 : 2
+                                                  ).finally(() => {
+                                                      synthsWalletBalancesQuery.refetch();
+                                                      setIsBuyingIn(false);
+                                                  }))
+                                                : signUp().finally(() => {
+                                                      synthsWalletBalancesQuery.refetch();
+                                                      setIsBuyingIn(false);
+                                                  });
+                                        }}
+                                    >
+                                        {t('options.royale.scoreboard.buy-in')}
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        className={isAllowing ? 'disabled' : ''}
+                                        disabled={isAllowing}
+                                        onClick={async () => {
+                                            setOpenApprovalModal(true);
+                                            updateAllowance(buyInToken).then(() => updateBalance(buyInToken));
+                                        }}
+                                    >
+                                        {t('options.royale.scoreboard.approve-susd')}
+                                    </Button>
+                                )
+                            ) : (royalePassData as any).balance > 0 ? (
                                 <Button
-                                    className={buyInAmount > Number(balance) ? 'disabled' : ''}
-                                    disabled={buyInAmount > Number(balance)}
+                                    className={
+                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
+                                            ? 'disabled'
+                                            : ''
+                                    }
+                                    disabled={
+                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
+                                    }
                                     onClick={() => {
+                                        setIsBuyingIn(true);
                                         defaultPosition !== PositionsEnum.NONE
                                             ? (localStorage.setItem(
                                                   'defaultPosition' +
@@ -154,37 +281,32 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                                       selectedSeason,
                                                   defaultPosition
                                               ),
-                                              signUpWithPosition(defaultPosition === PositionsEnum.DOWN ? 1 : 2).then(
-                                                  () => {
-                                                      updateBalanceAndAllowance(buyInToken);
-                                                  }
-                                              ))
-                                            : signUp().then(() => {
-                                                  updateBalanceAndAllowance(buyInToken);
+                                              signUpWithWithPassWithPosition(
+                                                  (royalePassId as any).id,
+                                                  defaultPosition === PositionsEnum.DOWN ? 1 : 2
+                                              ).finally(() => {
+                                                  royalePassQuery.refetch();
+                                                  royalePassIdQuery.refetch();
+                                                  setIsBuyingIn(false);
+                                              }))
+                                            : signUpWithPass((royalePassId as any).id).finally(() => {
+                                                  royalePassQuery.refetch();
+                                                  royalePassIdQuery.refetch();
+                                                  setIsBuyingIn(false);
                                               });
                                     }}
                                 >
-                                    {t('options.royale.scoreboard.buy-in', { buyInAmount })}
+                                    {t('options.royale.scoreboard.buy-in-royale-pass')}
                                 </Button>
-                                {buyInAmount > Number(balance) && (
-                                    <DeadText style={{ marginTop: 10 }}>
-                                        {t('options.royale.scoreboard.insufficient-balance')}
+                            ) : (
+                                !isBuyingIn && (
+                                    <DeadText>
+                                        <span>{t('options.royale.scoreboard.no-royale-pass-in-wallet')}</span>
                                     </DeadText>
-                                )}
-                            </>
-                        );
-                    } else {
-                        return (
-                            <Button
-                                onClick={async () => {
-                                    await approve();
-                                    updateBalanceAndAllowance(buyInToken);
-                                }}
-                            >
-                                {t('options.royale.scoreboard.approve-susd')}
-                            </Button>
-                        );
-                    }
+                                )
+                            )}
+                        </FlexContainer>
+                    );
                 }
             } else {
                 if (user.status === UserStatus.RDY) {
@@ -289,6 +411,18 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         )}
                     </InputWrapper>
                 </FlexContainer>
+                <FlexContainer>
+                    <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
+                    <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
+                </FlexContainer>
+                <RoyalePassContainer>
+                    <UserLabel style={{ padding: (royalePassData as any).balance === 0 ? '15px 0px' : '' }}>
+                        {t('options.royale.scoreboard.royale-passes', { passes: (royalePassData as any).balance })}:
+                    </UserLabel>
+                    <ImageWrapper style={{ display: (royalePassData as any).balance === 0 ? 'none' : '' }}>
+                        <NftImage src="https://thalesmarket.mypinata.cloud/ipfs/QmeVPhCPUYJSwiHmX1NarZEzevRLZAwhj37dCrftALMonW" />
+                    </ImageWrapper>
+                </RoyalePassContainer>
                 <FlexContainer
                     style={{
                         position: 'relative',
@@ -304,10 +438,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <StyledInfoIcon />
                         </RoyaleTooltip>
                     </UserLabel>
-                    <PositionSelector
-                        className={user.status === UserStatus.RDY ? 'disabled' : ''}
-                        isOpen={showSelectDropdown}
-                    >
+                    <Selector className={user.status === UserStatus.RDY ? 'disabled' : ''} isOpen={showSelectDropdown}>
                         {localStorage.getItem(
                             'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
                         ) && user.status === UserStatus.RDY ? (
@@ -346,34 +477,54 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                         {t('options.royale.scoreboard.default-position-' + position.toLowerCase())}
                                     </Text>
                                 ))}
-                    </PositionSelector>
+                    </Selector>
                     {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
                 </FlexContainer>
-                <FlexContainer>
-                    <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
-                    <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
-                </FlexContainer>
-                <FlexContainer>
-                    {walletAddress && sUSDBalance < (royaleData as any).buyInAmount && (
-                        <Button
-                            onClick={() => {
-                                setShowSwap(true);
-                            }}
-                        >
-                            {t('options.swap.button-text')}
-                        </Button>
-                    )}
-                    <Modal
-                        open={showSwap}
-                        onClose={(_, reason) => {
-                            if (reason !== 'backdropClick') setShowSwap(false);
+                <FlexContainer
+                    style={{
+                        position: 'relative',
+                        display:
+                            (user.status === UserStatus.NOTSIGNED && (royaleData as any).signUpPeriod < new Date()) ||
+                            user.status === UserStatus.RDY
+                                ? 'none'
+                                : '',
+                    }}
+                >
+                    <UserLabel>
+                        {t('options.royale.scoreboard.buy-in-with')}:
+                        <RoyaleTooltip title="Choose colateral for buy in">
+                            <StyledInfoIcon />
+                        </RoyaleTooltip>
+                    </UserLabel>
+                    <ToggleWrapper
+                        className={user.status === UserStatus.RDY ? 'disabled' : ''}
+                        style={{
+                            flexDirection: selectedBuyInCollateral === BuyInCollateralEnum.PASS ? 'row' : 'row-reverse',
+                        }}
+                        onClick={() => {
+                            if (user.status !== UserStatus.RDY) {
+                                setSelectedBuyInCollateral(
+                                    selectedBuyInCollateral === BuyInCollateralEnum.PASS
+                                        ? BuyInCollateralEnum.SUSD
+                                        : BuyInCollateralEnum.PASS
+                                );
+                            }
                         }}
                     >
-                        <div style={{ height: 0 }}>
-                            <Swap royaleTheme={true} handleClose={setShowSwap}></Swap>
-                        </div>
-                    </Modal>
+                        {selectedBuyInCollateral === BuyInCollateralEnum.PASS ? (
+                            <BuyInToggle className={user.status === UserStatus.RDY ? 'disabled' : ''} left={true}>
+                                {t('options.royale.scoreboard.buy-in-collateral-' + selectedBuyInCollateral)}
+                            </BuyInToggle>
+                        ) : (
+                            <BuyInToggle className={user.status === UserStatus.RDY ? 'disabled' : ''} left={false}>
+                                {t('options.royale.scoreboard.buy-in-collateral-' + selectedBuyInCollateral)}
+                            </BuyInToggle>
+                        )}
+                    </ToggleWrapper>
+
+                    {showSelectBuyInDropdown && <Overlay onClick={() => setShowSelectBuyInDropdown(false)} />}
                 </FlexContainer>
+
                 <InfoSection>
                     <div>
                         <span>{t('options.royale.footer.up')}</span>
@@ -397,6 +548,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 </InfoSection>
             </FlexDivColumn>
             {getFooter(user, royaleData)}
+            {openApprovalModal && (
+                <ApprovalModal
+                    defaultAmount={(royaleData as any).buyInAmount}
+                    tokenSymbol={SYNTHS_MAP.sUSD}
+                    isAllowing={isAllowing}
+                    onSubmit={approve}
+                    onClose={() => setOpenApprovalModal(false)}
+                    isRoyale={true}
+                />
+            )}
         </UserWrapper>
     );
 };
@@ -411,6 +572,11 @@ const UserAvatar = styled(Image)<{ winner?: boolean }>`
         width: 40px;
         height: 40px;
     }
+`;
+
+const NftImage = styled(Image)`
+    width: 220px;
+    height: 132px;
 `;
 
 const OverlayForDropDown = styled.div`
@@ -479,6 +645,32 @@ const Button = styled.button`
     }
 `;
 
+const BuyInToggle = styled.div<{ left?: boolean }>`
+    position: relative;
+    display: block;
+    float: right;
+    cursor: pointer;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 18px;
+    background: var(--color);
+    border: 1px solid var(--color);
+    box-sizing: border-box;
+    box-shadow: 0px 0px 30px var(--color);
+    border-radius: 20px;
+    width: 60%;
+    float: ${(props) => (props.left ? 'left' : 'right')};
+    text-align: center;
+    padding: 3px 10px 3px 10px;
+    color: var(--color-wrapper);
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+`;
+
 const SearchIcon = styled.i`
     position: absolute;
     right: 10px;
@@ -504,17 +696,29 @@ const InputWrapper = styled.div`
     letter-spacing: -0.4px;
     color: var(--color);
     text-overflow: ellipsis;
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
     @media (max-width: 1024px) {
         width: 150px;
     }
 `;
 
-const PositionSelector = styled.div<{ isOpen: boolean }>`
+const ImageWrapper = styled(InputWrapper)`
+    margin: 14px 0px;
+    height: 135px;
+    @media (max-width: 1024px) {
+        width: 220px;
+    }
+`;
+
+const Selector = styled.div<{ isOpen: boolean }>`
     position: absolute;
     right: 0;
     top: -4px;
     width: 220px;
-    height: ${(props) => (props.isOpen ? '75px' : '28px')};
+    height: ${(props) => (props.isOpen ? 'content' : '28px')};
     border: 1.30233px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;
@@ -529,7 +733,34 @@ const PositionSelector = styled.div<{ isOpen: boolean }>`
     color: var(--color);
     cursor: pointer;
     z-index: 5;
-    background: var(--color-wrapper);
+    background: linear-gradient(180deg, var(--color-wrapper) 0%, #18241d 97.85%);
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    @media (max-width: 1024px) {
+        width: 150px;
+    }
+`;
+
+const ToggleWrapper = styled.div`
+    width: 220px;
+    border: 1.30233px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 19.5349px;
+    height: 28px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 24px;
+    background: linear-gradient(180deg, var(--color-wrapper) 0%, #18241d 97.85%);
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    text-overflow: ellipsis;
     &.disabled {
         opacity: 0.7;
         cursor: not-allowed;
@@ -615,5 +846,17 @@ const StyledInfoIcon = styled(InfoIcon)`
     cursor: auto;
     @media (max-width: 1024px) {
         display: none;
+    }
+`;
+
+const RoyalePassContainer = styled(FlexContainer)`
+    margin: 25px 0px;
+    border-top: 2px dashed #a1e1b4;
+    border-bottom: 2px dashed #a1e1b4;
+    @media (max-width: 600px) {
+        flex-direction: column;
+        & > p {
+            margin-top: 10px;
+        }
     }
 `;

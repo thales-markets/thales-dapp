@@ -151,6 +151,8 @@ export const QUERY_KEYS = {
         Players: () => ['royale', 'players'],
         Rounds: (networkId: NetworkId, season?: number) => ['royale', 'rounds', networkId, season],
         Seasons: (networkId: NetworkId) => ['royale', 'Seasons', networkId],
+        RoyalePass: (walletAddress: string) => ['royale', 'royalePassData', walletAddress],
+        RoyalePassId: (walletAddress: string) => ['royale', 'royalePassIdData', walletAddress],
         Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
         PlayerPositions: (networkId: NetworkId, season: number, address: string) => [
             'royale',

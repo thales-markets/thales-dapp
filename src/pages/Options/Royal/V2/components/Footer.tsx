@@ -9,6 +9,7 @@ import { navigateTo, history } from 'utils/routes';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import queryString from 'query-string';
+import { useLocation } from 'react-router-dom';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -34,7 +35,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
     latestSeason,
 }) => {
     const { t } = useTranslation();
-
+    const location = useLocation();
     const [showStats, setShowStats] = useState(true);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
 
@@ -384,7 +385,7 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     width: 171px;
     border: 2px solid var(--color);
     box-sizing: border-box;
-    border-radius: 18px;
+    border-radius: 5px;
     font-family: Sansation !important;
     font-style: normal;
     font-size: 20px;
@@ -393,6 +394,8 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     color: var(--color);
     cursor: pointer;
     text-align: center;
+    max-height: 265px;
+    overflow: auto;
     background: var(--color-wrapper);
     z-index: 1;
     p:last-child {

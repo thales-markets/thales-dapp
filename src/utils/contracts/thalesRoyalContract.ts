@@ -9,7 +9,7 @@ export const thalesRoyaleContract = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0x3198ab211CdF3E4d13a698E1Fb819507BcA2e579',
-        [NetworkId['Kovan-Ovm']]: '0xB28c1B32c2449aB360d019f81cce5771Da3B2C16',
+        [NetworkId['Kovan-Ovm']]: '0xE1757E47417e4bFF5f3F01713A205E1709344D5D',
     },
     abi: [
         {
@@ -70,6 +70,12 @@ export const thalesRoyaleContract = {
             anonymous: false,
             inputs: [{ indexed: false, internalType: 'uint256', name: 'signUpPeriod', type: 'uint256' }],
             name: 'NewSignUpPeriod',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [{ indexed: false, internalType: 'address', name: '_royalePass', type: 'address' }],
+            name: 'NewThalesRoyalePass',
             type: 'event',
         },
         {
@@ -247,6 +253,13 @@ export const thalesRoyaleContract = {
                 { internalType: 'uint256', name: '', type: 'uint256' },
             ],
             name: 'finalPricePerRoundPerSeason',
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'getBuyInAmount',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
@@ -508,6 +521,13 @@ export const thalesRoyaleContract = {
             type: 'function',
         },
         {
+            inputs: [],
+            name: 'royalePass',
+            outputs: [{ internalType: 'contract IThalesRoyalePass', name: '', type: 'address' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             name: 'royaleSeasonEndTime',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -606,6 +626,13 @@ export const thalesRoyaleContract = {
             type: 'function',
         },
         {
+            inputs: [{ internalType: 'address', name: '_royalePass', type: 'address' }],
+            name: 'setRoyalePassAddress',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'address', name: '_safeBox', type: 'address' }],
             name: 'setSafeBox',
             outputs: [],
@@ -628,17 +655,27 @@ export const thalesRoyaleContract = {
         },
         { inputs: [], name: 'signUp', outputs: [], stateMutability: 'nonpayable', type: 'function' },
         {
-            inputs: [{ internalType: 'address', name: 'player', type: 'address' }],
-            name: 'signUpOnBehalf',
+            inputs: [],
+            name: 'signUpPeriod',
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'uint256', name: 'passId', type: 'uint256' }],
+            name: 'signUpWithPass',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'signUpPeriod',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            stateMutability: 'view',
+            inputs: [
+                { internalType: 'uint256', name: 'passId', type: 'uint256' },
+                { internalType: 'uint256', name: 'position', type: 'uint256' },
+            ],
+            name: 'signUpWithPassWithPosition',
+            outputs: [],
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {

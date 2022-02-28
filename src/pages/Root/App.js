@@ -80,34 +80,28 @@ const App = () => {
                     dispatch(updateWallet({ walletAddress: walletAddress }));
                 },
                 network: (networkId) => {
-                    if (networkId && isNetworkSupported(networkId)) {
-                        if (onboardConnector.onboard.getState().wallet.provider) {
-                            const provider = loadProvider({
-                                provider: onboardConnector.onboard.getState().wallet.provider,
-                            });
-                            const signer = provider.getSigner();
-                            const useOvm = getIsOVM(networkId);
+                    if (networkId) {
+                        if (isNetworkSupported(networkId)) {
+                            if (onboardConnector.onboard.getState().wallet.provider) {
+                                const provider = loadProvider({
+                                    provider: onboardConnector.onboard.getState().wallet.provider,
+                                });
+                                const signer = provider.getSigner();
+                                const useOvm = getIsOVM(networkId);
 
-                            snxJSConnector.setContractSettings({
-                                networkId,
-                                provider,
-                                signer,
-                                useOvm,
-                            });
-                        } else {
-                            const useOvm = getIsOVM(networkId);
-                            snxJSConnector.setContractSettings({ networkId, useOvm });
+                                snxJSConnector.setContractSettings({
+                                    networkId,
+                                    provider,
+                                    signer,
+                                    useOvm,
+                                });
+                            } else {
+                                const useOvm = getIsOVM(networkId);
+                                snxJSConnector.setContractSettings({ networkId, useOvm });
+                            }
+
+                            onboardConnector.onboard.config({ networkId });
                         }
-
-                        onboardConnector.onboard.config({ networkId });
-
-                        dispatch(
-                            updateNetworkSettings({
-                                networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
-                            })
-                        );
-                    } else {
                         dispatch(
                             updateNetworkSettings({
                                 networkId: networkId,
@@ -132,16 +126,8 @@ const App = () => {
                                 signer,
                                 useOvm,
                             });
-
-                            dispatch(
-                                updateNetworkSettings({
-                                    networkId,
-                                    networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
-                                })
-                            );
                             setSelectedWallet(wallet.name);
                         }
-
                         dispatch(
                             updateNetworkSettings({
                                 networkId,

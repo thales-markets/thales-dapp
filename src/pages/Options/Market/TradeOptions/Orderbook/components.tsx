@@ -8,16 +8,18 @@ export const StyledModal = withStyles(() => ({
     paper: {
         borderRadius: '23px',
         width: '500px',
-        background: '#04045a',
+        background: 'linear-gradient(150.74deg, rgba(202, 145, 220, 0.6) -7.89%, rgba(106, 193, 213, 0.6) 107.94%);',
+        padding: '1px',
         overflow: 'hidden',
     },
 }))(Dialog);
 
 export const ModalContainer = styled.div`
+    background: #04045a;
     padding: 20px 30px 35px 30px;
     overflow: auto;
+    border-radius: 23px;
     @media (max-width: 512px) {
-        margin-right: -10px;
         padding: 10px;
     }
 `;

@@ -12,6 +12,7 @@ import { Theme } from '../Home';
 import Cookies from 'universal-cookie';
 import ROUTES from 'constants/routes';
 import { useTranslation } from 'react-i18next';
+import { navigateTo } from 'utils/routes';
 
 type HeaderInput = {
     theme: Theme;
@@ -48,7 +49,10 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                     </ButtonWrapper>
                     <ButtonWrapper>
                         <ButtonContainer>
-                            <DAPPLink target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
+                            <DAPPLink
+                                rel="noreferrer"
+                                onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
+                            >
                                 <i className="icon-home icon-home--thales" /> DAPP
                             </DAPPLink>
                         </ButtonContainer>
@@ -324,6 +328,7 @@ const DAPPLink = styled.a`
     width: 100%;
     text-align: center;
     color: var(--color);
+    cursor: pointer;
     &:visited {
         color: var(--color);
     }

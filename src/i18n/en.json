@@ -172,7 +172,9 @@
         "or": "or",
         "enable-wallet-access": {
             "approve-label": "Approve {{currencyKey}}",
-            "approve-progress-label": "Approving {{currencyKey}}..."
+            "approve-progress-label": "Approving {{currencyKey}}...",
+            "approve-all-label": "Approve all",
+            "custom-amount-label": "Approve amount of"
         },
         "sidebar": {
             "markets": "Markets",
@@ -1138,13 +1140,19 @@
                 "start-season": "Start season",
                 "season-finished": "Season finished",
                 "approve-susd": "Approve sUSD",
-                "buy-in": "Buy-in: {{buyInAmount}} sUSD",
+                "buy-in": "Buy-in with sUSD",
                 "insufficient-balance": "Insufficient sUSD balance",
                 "default-position": "Default position",
                 "default-position-none": "NONE",
                 "default-position-down": "DOWN",
                 "default-position-up": "UP",
                 "default-position-info": "Before the game starts, you can choose a default position applied only to the first round. You can change your position again once the positioning period starts. For all other rounds position must be chosen during the positioning period.",
+                "buy-in-collateral-susd": "sUSD",
+                "buy-in-collateral-pass": "Royale Pass",
+                "buy-in-with": "Buy in with",
+                "royale-passes": "Royale Passes ({{passes}})",
+                "approve-for-minting": "Approve sUSD for Royale Pass minting",
+                "no-royale-pass-in-wallet": "You don't have any Thales Royale Pass in your connected wallet. You can sign-up with sUSD or by minting a Thales Royale Pass.",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
@@ -1165,7 +1173,11 @@
                 "alive": "alive",
                 "winner": "winner",
                 "users-per-page": "Users per page",
-                "no-users": "No players."
+                "no-users": "No players.",
+                "royale-pass": "Royale Pass",
+                "mint-royale-pass": "Mint Royale Pass",
+                "approve-royale-pass": "Approve for Royale Pass",
+                "buy-in-royale-pass": "Buy in with Royale Pass"
             },
             "redirect-dialog": {
                 "title": "You are on Optimism Kovan Network",

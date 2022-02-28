@@ -8,15 +8,15 @@ import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { formatGasLimit, getIsOVM, getL1FeeInWei, isNetworkSupported } from 'utils/network';
+import { bytesFormatter } from 'utils/formatters/ethers';
+import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei, isNetworkSupported } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import Currency from 'components/Currency';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import {
     FlexDiv,
     FlexDivColumn,
@@ -66,6 +66,8 @@ import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
 import { getSynthName } from 'utils/currency';
 import { createOneInchLimitOrder } from 'utils/1inch';
+import ApprovalModal from 'components/ApprovalModal';
+
 const MIN_FUNDING_AMOUNT_ROPSTEN = 1;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
 
@@ -126,6 +128,7 @@ export const CreateMarket: React.FC = () => {
         const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
         const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
         const [l1Fee, setL1Fee] = useState<number | null>(null);
+        const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
         const isL2 = getIsOVM(networkId);
 
         const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
@@ -180,17 +183,20 @@ export const CreateMarket: React.FC = () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
             const getAllowanceForCurrentWallet = async () => {
                 try {
-                    const allowance = await SynthsUSD.allowance(
+                    const initialMint = ethers.utils.parseEther(Number(initialFundingAmount).toString());
+                    const allowance = await checkAllowance(
+                        initialMint,
+                        SynthsUSD,
                         walletAddress,
                         binaryOptionsMarketManagerContract.address
                     );
-                    setAllowance(!!bigNumberFormatter(allowance));
+                    setAllowance(allowance);
                 } catch (e) {
                     console.log(e);
                 }
             };
             getAllowanceForCurrentWallet();
-        }, [walletAddress]);
+        }, [walletAddress, initialFundingAmount, isAllowing]);
 
         const getOrderEndDate = () => Math.round((optionsMarket as any)?.timeRemaining / 1000);
 
@@ -314,7 +320,7 @@ export const CreateMarket: React.FC = () => {
             }
         }, [initialFundingAmount, longAmount, longPrice, shortAmount, shortPrice]);
 
-        const handleAllowance = async () => {
+        const handleAllowance = async (approveAmount: BigNumber) => {
             const {
                 contracts: { SynthsUSD },
             } = snxJSConnector.snxJS as any;
@@ -323,18 +329,14 @@ export const CreateMarket: React.FC = () => {
                 setIsAllowing(true);
                 const gasEstimate = await SynthsUSD.estimateGas.approve(
                     binaryOptionsMarketManagerContract.address,
-                    ethers.constants.MaxUint256
+                    approveAmount
                 );
-                const tx = (await SynthsUSD.approve(
-                    binaryOptionsMarketManagerContract.address,
-                    ethers.constants.MaxUint256,
-                    {
-                        gasLimit: formatGasLimit(gasEstimate, networkId),
-                    }
-                )) as ethers.ContractTransaction;
+                const tx = (await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, approveAmount, {
+                    gasLimit: formatGasLimit(gasEstimate, networkId),
+                })) as ethers.ContractTransaction;
+                setOpenApprovalModal(false);
                 await tx.wait();
                 setIsAllowing(false);
-                setAllowance(true);
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);
@@ -348,7 +350,7 @@ export const CreateMarket: React.FC = () => {
                         style={{ padding: '8px 24px' }}
                         className="primary"
                         disabled={isAllowing}
-                        onClick={handleAllowance}
+                        onClick={() => setOpenApprovalModal(true)}
                     >
                         {isAllowing
                             ? t('options.create-market.summary.waiting-for-approval-button-label')
@@ -1040,6 +1042,15 @@ export const CreateMarket: React.FC = () => {
                         />
                     </FlexDivColumnCentered>
                 </Wrapper>
+                {openApprovalModal && (
+                    <ApprovalModal
+                        defaultAmount={initialFundingAmount}
+                        tokenSymbol={SYNTHS_MAP.sUSD}
+                        isAllowing={isAllowing}
+                        onSubmit={handleAllowance}
+                        onClose={() => setOpenApprovalModal(false)}
+                    />
+                )}
             </Background>
         ) : (
             <Loader />
