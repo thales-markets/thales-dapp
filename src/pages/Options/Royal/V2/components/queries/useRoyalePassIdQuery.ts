@@ -1,7 +1,7 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
-import { erc721Contract } from 'utils/contracts/erc721Contract';
+import erc20Contract from 'utils/contracts/erc20Contract';
 import snxJSConnector from 'utils/snxJSConnector';
 
 export type RoyalePassIdData = {
@@ -25,7 +25,7 @@ const useRoyalePassIdQuery = (walletAddress: string, options?: UseQueryOptions<R
 const getFromContract = async (royalePassContract: any, walletAddress: string): Promise<RoyalePassIdData> => {
     const royaleContractInstance = new ethers.Contract(
         royalePassContract.address,
-        erc721Contract.abi,
+        erc20Contract.abi,
         snxJSConnector.signer
     );
 
