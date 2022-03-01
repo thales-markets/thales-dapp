@@ -120,6 +120,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             (royalePassData as any).balance > 0
                 ? setSelectedBuyInCollateral(BuyInCollateralEnum.PASS)
                 : setSelectedBuyInCollateral(BuyInCollateralEnum.SUSD);
+            royalePassIdQuery.refetch();
         }
     }, [royalePassData, walletAddress]);
 
@@ -255,11 +256,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                                       defaultPosition === PositionsEnum.DOWN ? 1 : 2
                                                   ).finally(() => {
                                                       synthsWalletBalancesQuery.refetch();
-                                                      setIsBuyingIn(false);
                                                   }))
                                                 : signUp().finally(() => {
                                                       synthsWalletBalancesQuery.refetch();
-                                                      setIsBuyingIn(false);
                                                   });
                                         }}
                                     >
@@ -302,23 +301,29 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                               ).finally(() => {
                                                   royalePassQuery.refetch();
                                                   royalePassIdQuery.refetch();
-                                                  setIsBuyingIn(false);
                                               }))
                                             : signUpWithPass((royalePassId as any).id).finally(() => {
                                                   royalePassQuery.refetch();
                                                   royalePassIdQuery.refetch();
-                                                  setIsBuyingIn(false);
                                               });
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in-royale-pass')}
                                 </Button>
+                            ) : !isBuyingIn ? (
+                                <DeadText>
+                                    <span>{t('options.royale.scoreboard.no-royale-pass-in-wallet')}</span>
+                                </DeadText>
                             ) : (
-                                !isBuyingIn && (
-                                    <DeadText>
-                                        <span>{t('options.royale.scoreboard.no-royale-pass-in-wallet')}</span>
-                                    </DeadText>
-                                )
+                                <Button
+                                    className={
+                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
+                                            ? 'disabled'
+                                            : ''
+                                    }
+                                >
+                                    {t('options.royale.scoreboard.buy-in-royale-pass')}
+                                </Button>
                             )}
                         </FlexContainer>
                     );
@@ -512,12 +517,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         </RoyaleTooltip>
                     </UserLabel>
                     <ToggleWrapper
-                        className={user.status === UserStatus.RDY ? 'disabled' : ''}
+                        className={user.status === UserStatus.RDY || isBuyingIn ? 'disabled' : ''}
                         style={{
                             flexDirection: selectedBuyInCollateral === BuyInCollateralEnum.PASS ? 'row' : 'row-reverse',
                         }}
                         onClick={() => {
-                            if (user.status !== UserStatus.RDY) {
+                            if (user.status !== UserStatus.RDY && !isBuyingIn) {
                                 setSelectedBuyInCollateral(
                                     selectedBuyInCollateral === BuyInCollateralEnum.PASS
                                         ? BuyInCollateralEnum.SUSD
@@ -528,23 +533,39 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     >
                         {selectedBuyInCollateral === BuyInCollateralEnum.PASS ? (
                             <>
-                                <BuyInToggle className={user.status === UserStatus.RDY ? 'disabled' : ''} left={true}>
+                                <BuyInToggle
+                                    className={user.status === UserStatus.RDY || isBuyingIn ? 'disabled' : ''}
+                                    style={{ cursor: isBuyingIn ? 'not-allowed' : '' }}
+                                    left={true}
+                                >
                                     {window.innerWidth < 1024
                                         ? t('options.royale.scoreboard.buy-in-collateral-pass-mobile')
                                         : t('options.royale.scoreboard.buy-in-collateral-pass')}
                                 </BuyInToggle>
-                                <BuyInToggle className="disabled" left={false}>
+                                <BuyInToggle
+                                    className="disabled"
+                                    left={false}
+                                    style={{ cursor: isBuyingIn ? 'not-allowed' : '' }}
+                                >
                                     {t('options.royale.scoreboard.buy-in-collateral-susd')}
                                 </BuyInToggle>
                             </>
                         ) : (
                             <>
-                                <BuyInToggle className="disabled" left={true}>
+                                <BuyInToggle
+                                    className="disabled"
+                                    left={true}
+                                    style={{ cursor: isBuyingIn ? 'not-allowed' : '' }}
+                                >
                                     {window.innerWidth < 1024
                                         ? t('options.royale.scoreboard.buy-in-collateral-pass-mobile')
                                         : t('options.royale.scoreboard.buy-in-collateral-pass')}
                                 </BuyInToggle>
-                                <BuyInToggle className={user.status === UserStatus.RDY ? 'disabled' : ''} left={false}>
+                                <BuyInToggle
+                                    className={user.status === UserStatus.RDY || isBuyingIn ? 'disabled' : ''}
+                                    style={{ cursor: isBuyingIn ? 'not-allowed' : '' }}
+                                    left={false}
+                                >
                                     {t('options.royale.scoreboard.buy-in-collateral-susd')}
                                 </BuyInToggle>
                             </>
