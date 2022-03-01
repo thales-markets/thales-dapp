@@ -37,7 +37,7 @@ const Text = styled.span`
     display: block;
     font-family: Roboto !important;
     color: var(--primary-color);
-    font-size: 25px;
+    font-size: 20px;
     line-height: 31px;
 `;
 

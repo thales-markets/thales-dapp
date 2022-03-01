@@ -94,6 +94,8 @@ const MenuCard = styled.div<ManuCardProps>`
     position: fixed;
     width: 241px;
     right: 35px;
+    max-height: 90vh;
+    overflow-y: scroll;
     top: 35px;
     border: 1px solid #64d9fe;
     box-sizing: border-box;

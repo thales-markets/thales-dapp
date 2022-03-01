@@ -116,7 +116,7 @@ const Profile: React.FC = () => {
                 </ContentWrapper>
             </Container.Left>
             <Container.Right layout={isSimpleView}>
-                <PieChartOptionsAllocated size={isSimpleView ? 400 : 350} claimable={positions.claimableAmount} />
+                <PieChartOptionsAllocated size={350} claimable={positions.claimableAmount} />
                 <Wrapper>
                     <Wrapper.Row>
                         <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
@@ -210,7 +210,7 @@ const Notification = styled.span`
 const ContentWrapper = styled.div`
     width: calc(100% + 100px);
     padding-right: 50px;
-    max-height: calc(100vh - 250px);
+    max-height: 870px;
     overflow: hidden;
     overflow-y: auto;
     padding-left: 50px;

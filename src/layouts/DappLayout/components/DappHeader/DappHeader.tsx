@@ -120,7 +120,7 @@ const Sidebar = styled.nav`
     position: fixed;
     top: 0;
     left: 0;
-    width: 89px;
+    width: 72px;
     min-height: 100vh;
     z-index: 100;
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
@@ -178,7 +178,7 @@ const LogoIcon = styled.img`
     cursor: pointer;
     margin: auto;
     margin-top: 10px;
-    margin-bottom: 100px;
+    margin-bottom: 60px;
 `;
 
 const Divider = styled.hr`
