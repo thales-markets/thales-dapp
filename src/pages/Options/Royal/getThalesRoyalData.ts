@@ -15,7 +15,7 @@ export const startRoyaleSeason = async () => {
     }
 };
 
-export const signUp = async () => {
+export const signUp = async (setIsBuyingIn: any) => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
         const royaleContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
@@ -25,11 +25,12 @@ export const signUp = async () => {
             dispatchMarketNotification('Successfully Signed Up');
         } catch (e) {
             console.log(e);
+            setIsBuyingIn(false);
         }
     }
 };
 
-export const signUpWithPosition = async (position: number) => {
+export const signUpWithPosition = async (position: number, setIsBuyingIn: any) => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
         const royaleContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
@@ -39,11 +40,12 @@ export const signUpWithPosition = async (position: number) => {
             dispatchMarketNotification('Successfully Signed Up With Position');
         } catch (e) {
             console.log(e);
+            setIsBuyingIn(false);
         }
     }
 };
 
-export const signUpWithPass = async (royalePassId: number) => {
+export const signUpWithPass = async (royalePassId: number, setIsBuyingIn: any) => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
         const royaleContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
@@ -53,11 +55,12 @@ export const signUpWithPass = async (royalePassId: number) => {
             dispatchMarketNotification('Successfully Signed Up With Royale Pass');
         } catch (e) {
             console.log(e);
+            setIsBuyingIn(false);
         }
     }
 };
 
-export const signUpWithWithPassWithPosition = async (royalePassId: number, position: number) => {
+export const signUpWithWithPassWithPosition = async (royalePassId: number, position: number, setIsBuyingIn: any) => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
         const royaleContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
@@ -67,6 +70,7 @@ export const signUpWithWithPassWithPosition = async (royalePassId: number, posit
             dispatchMarketNotification('Successfully Signed Up With Royale Pass And With Position');
         } catch (e) {
             console.log(e);
+            setIsBuyingIn(false);
         }
     }
 };

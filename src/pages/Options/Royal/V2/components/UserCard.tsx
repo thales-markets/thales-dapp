@@ -125,7 +125,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [royalePassData, walletAddress]);
 
     useEffect(() => {
-        if (user.status === UserStatus.RDY) {
+        if (user.status === UserStatus.RDY && isBuyingIn) {
             setIsBuyingIn(false);
         }
     }, [user.status, walletAddress]);
@@ -255,11 +255,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                                       defaultPosition
                                                   ),
                                                   signUpWithPosition(
-                                                      defaultPosition === PositionsEnum.DOWN ? 1 : 2
+                                                      defaultPosition === PositionsEnum.DOWN ? 1 : 2,
+                                                      setIsBuyingIn
                                                   ).finally(() => {
                                                       synthsWalletBalancesQuery.refetch();
                                                   }))
-                                                : signUp().finally(() => {
+                                                : signUp(setIsBuyingIn).finally(() => {
                                                       synthsWalletBalancesQuery.refetch();
                                                   });
                                         }}
@@ -299,12 +300,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                               ),
                                               signUpWithWithPassWithPosition(
                                                   (royalePassId as any).id,
-                                                  defaultPosition === PositionsEnum.DOWN ? 1 : 2
+                                                  defaultPosition === PositionsEnum.DOWN ? 1 : 2,
+                                                  setIsBuyingIn
                                               ).finally(() => {
                                                   royalePassQuery.refetch();
                                                   royalePassIdQuery.refetch();
                                               }))
-                                            : signUpWithPass((royalePassId as any).id).finally(() => {
+                                            : signUpWithPass((royalePassId as any).id, setIsBuyingIn).finally(() => {
                                                   royalePassQuery.refetch();
                                                   royalePassIdQuery.refetch();
                                               });
@@ -454,7 +456,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <StyledInfoIcon />
                         </RoyaleTooltip>
                     </UserLabel>
-                    <Selector className={user.status === UserStatus.RDY ? 'disabled' : ''} isOpen={showSelectDropdown}>
+                    <Selector
+                        className={user.status === UserStatus.RDY || isBuyingIn ? 'disabled' : ''}
+                        isOpen={showSelectDropdown}
+                    >
                         {localStorage.getItem(
                             'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
                         ) && user.status === UserStatus.RDY ? (
@@ -471,7 +476,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         ) : (
                             <Text
                                 onClick={
-                                    user.status !== UserStatus.RDY ? setShowSelectDropdown.bind(this, true) : undefined
+                                    user.status !== UserStatus.RDY && !isBuyingIn
+                                        ? setShowSelectDropdown.bind(this, true)
+                                        : undefined
                                 }
                             >
                                 {t('options.royale.scoreboard.default-position-' + defaultPosition)}
