@@ -152,7 +152,12 @@ export const QUERY_KEYS = {
         Rounds: (networkId: NetworkId, season?: number) => ['royale', 'rounds', networkId, season],
         Seasons: (networkId: NetworkId) => ['royale', 'Seasons', networkId],
         RoyalePass: (walletAddress: string) => ['royale', 'royalePassData', walletAddress],
-        RoyalePassId: (walletAddress: string) => ['royale', 'royalePassIdData', walletAddress],
+        RoyalePassId: (walletAddress: string, networkId: NetworkId) => [
+            'royale',
+            'royalePassIdData',
+            walletAddress,
+            networkId,
+        ],
         Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
         PlayerPositions: (networkId: NetworkId, season: number, address: string) => [
             'royale',
@@ -164,7 +169,12 @@ export const QUERY_KEYS = {
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
         EthPrice: () => ['royale', 'ethPrice'],
         LatestRoyaleData: () => ['royale', 'latestRoyaleData'],
-        LatestRoyaleDataForUserCard: (season: number) => ['royale', 'LatestRoyaleDataForUserCard', season],
+        LatestRoyaleDataForUserCard: (season: number, walletAddress: string) => [
+            'royale',
+            'LatestRoyaleDataForUserCard',
+            season,
+            walletAddress,
+        ],
         LatestSeason: () => ['royale', 'latestSeason'],
         RoyaleArenaContract: (season: number, walletAddress: string) => [
             'royale',

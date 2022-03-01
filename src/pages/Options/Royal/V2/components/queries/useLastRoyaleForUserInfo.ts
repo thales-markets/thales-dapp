@@ -10,11 +10,16 @@ type LatestRoyaleForUserInfo = {
     signUpPeriod: Date;
     canStartNewSeason: boolean;
     buyInAmount: number;
+    positionInTheFirstRound: number;
 };
 
-const useLatestRoyaleForUserInfo = (selectedSeason: number, options?: UseQueryOptions<LatestRoyaleForUserInfo>) => {
+const useLatestRoyaleForUserInfo = (
+    selectedSeason: number,
+    walletAddress: string,
+    options?: UseQueryOptions<LatestRoyaleForUserInfo>
+) => {
     return useQuery<LatestRoyaleForUserInfo>(
-        QUERY_KEYS.Royale.LatestRoyaleDataForUserCard(selectedSeason),
+        QUERY_KEYS.Royale.LatestRoyaleDataForUserCard(selectedSeason, walletAddress),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
             let season = selectedSeason;
@@ -25,7 +30,7 @@ const useLatestRoyaleForUserInfo = (selectedSeason: number, options?: UseQueryOp
                 }
             }
 
-            return getFromContract(thalesRoyaleContract, season);
+            return getFromContract(thalesRoyaleContract, season, walletAddress);
         },
         {
             refetchInterval: 5000,
@@ -34,7 +39,11 @@ const useLatestRoyaleForUserInfo = (selectedSeason: number, options?: UseQueryOp
     );
 };
 
-const getFromContract = async (RoyaleContract: any, season: number): Promise<LatestRoyaleForUserInfo> => {
+const getFromContract = async (
+    RoyaleContract: any,
+    season: number,
+    walletAddress: string
+): Promise<LatestRoyaleForUserInfo> => {
     const [
         seasonStarted,
         seasonFinished,
@@ -42,6 +51,7 @@ const getFromContract = async (RoyaleContract: any, season: number): Promise<Lat
         canStartNewSeason,
         buyInAmount,
         royaleSeasonCreationTime,
+        positionInTheFirstRound,
     ] = await Promise.all([
         RoyaleContract.seasonStarted(season),
         RoyaleContract.seasonFinished(season),
@@ -49,6 +59,7 @@ const getFromContract = async (RoyaleContract: any, season: number): Promise<Lat
         RoyaleContract.canStartNewSeason(),
         RoyaleContract.buyInAmount(),
         RoyaleContract.seasonCreationTime(season),
+        RoyaleContract.positionInARoundPerSeason(season, walletAddress, 1),
     ]);
     return {
         season,
@@ -57,6 +68,7 @@ const getFromContract = async (RoyaleContract: any, season: number): Promise<Lat
         seasonStarted,
         seasonFinished,
         buyInAmount: Number(ethers.utils.formatEther(buyInAmount)),
+        positionInTheFirstRound: Number(positionInTheFirstRound),
     };
 };
 

@@ -60,13 +60,15 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         enabled: isL2 && isAppReady,
     });
     const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
-    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
+    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, walletAddress, {
+        enabled: isL2 && isAppReady && isWalletConnected,
+    });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
     const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected });
     const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
 
-    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, { enabled: isL2 && isWalletConnected });
+    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
     const royalePassId = royalePassIdQuery.isSuccess ? royalePassIdQuery.data : {};
 
     const [allowance, setAllowance] = useState(false);
@@ -83,6 +85,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [defaultPosition, setDefaultPosition] = useState(
         previouslySelectedDefaultPosition ? previouslySelectedDefaultPosition : PositionsEnum.NONE
     );
+
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
     const [selectedBuyInCollateral, setSelectedBuyInCollateral] = useState(BuyInCollateralEnum.PASS);
@@ -125,10 +128,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [user.status, walletAddress]);
 
     useEffect(() => {
-        previouslySelectedDefaultPosition
-            ? setDefaultPosition(previouslySelectedDefaultPosition)
-            : setDefaultPosition(PositionsEnum.NONE);
-    }, [walletAddress]);
+        if (
+            !previouslySelectedDefaultPosition &&
+            (royaleData as any).signUpPeriod > new Date() &&
+            ((royaleData as any).positionInTheFirstRound === 1 || (royaleData as any).positionInTheFirstRound === 2)
+        ) {
+            setDefaultPosition(
+                (royaleData as any).positionInTheFirstRound === 1 ? PositionsEnum.DOWN : PositionsEnum.UP
+            );
+        }
+    }, [(royaleData as any).positionInTheFirstRound]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
