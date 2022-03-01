@@ -27,10 +27,9 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
     const options = useMemo(() => {
         let data = optionsMarkets;
 
-        if (filters?.assetFilter) {
-            console.log(filters?.assetFilter);
+        if (filters?.assetFilters?.length) {
             data = data.filter((market) => {
-                return market.currencyKey === filters?.assetFilter;
+                return filters.assetFilters.includes(market.currencyKey);
             });
         }
 

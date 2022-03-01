@@ -329,7 +329,8 @@
                 },
                 "current-asset-price-col": "当前资产价格",
                 "price-up-down-col": "价格上涨/下跌",
-                "24h-change-col": "24小时变化"
+                "24h-change-col": "24小时变化",
+                "final-asset-price-col": "当前资产价格"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",

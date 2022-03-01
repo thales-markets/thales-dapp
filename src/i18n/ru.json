@@ -329,7 +329,8 @@
                 },
                 "current-asset-price-col": "Текущая цена актива",
                 "price-up-down-col": "Цена ВВЕРХ/ВНИЗ",
-                "24h-change-col": "24-часовая смена"
+                "24h-change-col": "24-часовая смена",
+                "final-asset-price-col": "Текущая цена актива"
             },
             "hot-market-card": {
                 "time-left": "Осталось времени",

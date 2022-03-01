@@ -88,7 +88,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
     const [sortOptions, setSortOptions] = useState(GridSortFilters);
     const [tableView, setTableView] = useState<boolean>(false);
-    const [assetFilter, setAssetFilter] = useState<string>('');
+    const [assetFilters, setAssetFilters] = useState<string[]>([]);
 
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
 
@@ -259,8 +259,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         {
             columns,
             data: data.filter((market) => {
-                if (assetFilter) {
-                    return market.currencyKey === assetFilter;
+                if (assetFilters?.length) {
+                    return assetFilters.includes(market.currencyKey);
                 }
                 return true;
             }),
@@ -311,9 +311,9 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     })
                     .filter((item) => item),
             ],
-            assetFilter: assetFilter,
+            assetFilters: assetFilters,
         };
-    }, [globalFilter, sortOptions, assetFilter]);
+    }, [globalFilter, sortOptions, assetFilters]);
 
     return (
         <>
@@ -324,16 +324,21 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                             return (
                                 <Item
                                     key={index}
-                                    className={assetFilter == value ? 'active' : ''}
+                                    className={assetFilters.includes(value) ? 'active' : ''}
                                     onClick={() => {
-                                        if (assetFilter === value) {
-                                            setAssetFilter('');
+                                        if (assetFilters.includes(value)) {
+                                            const array = [...assetFilters];
+                                            const index = array.indexOf(value);
+                                            if (index !== -1) {
+                                                array.splice(index, 1);
+                                            }
+                                            setAssetFilters(array);
                                         } else {
-                                            setAssetFilter(value);
+                                            setAssetFilters([...assetFilters, value]);
                                         }
                                     }}
                                 >
-                                    <CurrencyIcon width="40px" height="40px" currencyKey={value}></CurrencyIcon>
+                                    <CurrencyIcon width="40px" height="40px" currencyKey={value} />
                                 </Item>
                             );
                         })}

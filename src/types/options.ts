@@ -259,7 +259,7 @@ export type GridFilters = {
               | undefined
           >
         | [];
-    assetFilter: string;
+    assetFilters: string[];
 };
 
 export type PrimaryOptionsFilter = 'allMarkets' | 'watchlist' | 'recentlyAdded';
