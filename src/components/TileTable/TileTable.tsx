@@ -3,6 +3,7 @@ import Container from './styled-components/Container';
 import Tile from './styled-components/Tile';
 import AssetInfo, { AssetInfoProps } from '../AssetInfo/AssetInfo';
 import { FlexDiv } from '../../theme/common';
+import SPAAnchor from '../SPAAnchor';
 
 type Cell = {
     flexDirection?: string;
@@ -19,12 +20,17 @@ export type TileRow = {
     color?: string;
     cells: Cell[];
     disabled?: boolean;
+    link?: string;
 };
 
 type Properties = {
     firstColumnRenderer?: (row: TileRow | string) => ReactElement;
     lastColumnRenderer?: (row: TileRow | string) => ReactElement;
     rows: (TileRow | string)[];
+};
+
+const wrapInAnchor = (child: JSX.Element, href?: string) => {
+    return href ? <SPAAnchor href={href}>{child}</SPAAnchor> : child;
 };
 
 const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRenderer, rows }) => {
@@ -37,7 +43,7 @@ const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRender
                         lastColumnRenderer ? row.cells.length - 1 : row.cells.length
                     );
 
-                    return (
+                    return wrapInAnchor(
                         <FlexDiv>
                             {firstColumnRenderer && firstColumnRenderer(row)}
                             <Tile lineHidden={index === 0} disabled={row.disabled} color={row.color} key={index}>
@@ -54,7 +60,8 @@ const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRender
                                 ))}
                             </Tile>
                             {lastColumnRenderer && lastColumnRenderer(row)}
-                        </FlexDiv>
+                        </FlexDiv>,
+                        row.link
                     );
                 } else {
                     return (

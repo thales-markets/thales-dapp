@@ -1,5 +1,6 @@
 import { formatCurrency } from '../../../../../utils/formatters/number';
 import { formatShortDate } from '../../../../../utils/formatters/date';
+import { buildOptionsMarketLink } from '../../../../../utils/routes';
 
 const WIN_COLOR = '#50CE99';
 const LOSE_COLOR = '#C3244A';
@@ -43,6 +44,7 @@ const generateRows = (data: any[]) => {
         }
         const marketExpired = d.marketItem.result;
         const userWon = d.marketItem.result === d.optionSide;
+
         return {
             color: marketExpired ? (userWon ? WIN_COLOR : LOSE_COLOR) : '',
             asset: {
@@ -76,6 +78,7 @@ const generateRows = (data: any[]) => {
                         : '$' + formatCurrency(userWon ? Math.abs(d.takerAmount - d.makerAmount) : d.takerAmount),
                 },
             ],
+            link: buildOptionsMarketLink(d.marketItem.address),
         };
     });
 };
