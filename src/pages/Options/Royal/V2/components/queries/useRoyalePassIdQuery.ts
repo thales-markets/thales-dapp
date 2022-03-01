@@ -4,7 +4,7 @@ import thalesData from 'thales-data';
 import { NetworkId } from 'utils/network';
 
 export type RoyalePass = {
-    id: number;
+    id: number | null;
 };
 
 const useRoyalePassIdQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<RoyalePass>) => {
@@ -15,9 +15,15 @@ const useRoyalePassIdQuery = (walletAddress: string, networkId: NetworkId, optio
                 address: walletAddress,
                 network: networkId,
             });
-            return {
-                id: Number(passes[0].id),
-            };
+            if (passes[0]) {
+                return {
+                    id: Number(passes[0].id),
+                };
+            } else {
+                return {
+                    id: null,
+                };
+            }
         },
         {
             refetchInterval: 3000,

@@ -31,6 +31,7 @@ import useRoyalePassQuery from '../../V2/components/queries/useRoyalePassQuery';
 import { dispatchMarketNotification } from 'utils/options';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import useLatestRoyaleForUserInfo from '../../V2/components/queries/useLastRoyaleForUserInfo';
+import useRoyalePassIdQuery from '../../V2/components/queries/useRoyalePassIdQuery';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -75,6 +76,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, walletAddress, {
         enabled: isL2 && isAppReady && isWalletConnected,
     });
+    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
@@ -188,9 +190,10 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                         className={walletBalance < (royaleData as any).buyInAmount ? 'disabled' : ''}
                                         disabled={walletBalance < (royaleData as any).buyInAmount}
                                         onClick={() => {
-                                            mintRoyalePass(walletAddress).then(() =>
-                                                synthsWalletBalancesQuery.refetch()
-                                            );
+                                            mintRoyalePass(walletAddress).then(() => {
+                                                synthsWalletBalancesQuery.refetch();
+                                                royalePassIdQuery.refetch();
+                                            });
                                         }}
                                     >
                                         {t('options.royale.scoreboard.mint-royale-pass')}
