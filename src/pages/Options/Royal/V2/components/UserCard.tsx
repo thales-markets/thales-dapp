@@ -68,7 +68,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected });
     const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
 
-    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, { enabled: isL2 && isWalletConnected });
+    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
     const royalePassId = royalePassIdQuery.isSuccess ? royalePassIdQuery.data : {};
 
     const [allowance, setAllowance] = useState(false);
