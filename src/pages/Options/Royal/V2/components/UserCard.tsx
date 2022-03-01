@@ -125,7 +125,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [royalePassData, walletAddress]);
 
     useEffect(() => {
-        setIsBuyingIn(false);
+        if (user.status === UserStatus.RDY) {
+            setIsBuyingIn(false);
+        }
     }, [user.status, walletAddress]);
 
     useEffect(() => {
@@ -315,13 +317,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                     <span>{t('options.royale.scoreboard.no-royale-pass-in-wallet')}</span>
                                 </DeadText>
                             ) : (
-                                <Button
-                                    className={
-                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
-                                            ? 'disabled'
-                                            : ''
-                                    }
-                                >
+                                <Button className="disabled">
                                     {t('options.royale.scoreboard.buy-in-royale-pass')}
                                 </Button>
                             )}
