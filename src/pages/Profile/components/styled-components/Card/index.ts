@@ -32,31 +32,32 @@ const Card: StyledComponent<'div', any> & Children = styled.div`
     background: #04045a;
     box-sizing: border-box;
     border-radius: 15px;
-    padding: 24px 50px;
-    padding-right: 24px;
+    padding: 24px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    min-height: 143px;
+    height: 140px;
 `;
 const CardColumn = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
+    height: 100%;
     &:first-child {
         flex: 1;
+        justify-content: center;
     }
     flex: 2;
     &:nth-child(2) {
-        flex: 3;
-        margin-left: 20px;
+        margin-left: 10px;
         margin-right: 20px;
     }
 `;
 
 const CardText = styled.span`
     display: block;
-    font-family: Titillium Light !important;
+    font-family: Roboto !important;
     color: var(--primary-color);
 `;
 
@@ -65,13 +66,13 @@ const SectionContainer = styled.div`
 `;
 
 const Header = styled(CardText)`
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
     text-transform: capitalize;
 `;
 
 const SubHeader = styled(CardText)`
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 700;
 `;
 

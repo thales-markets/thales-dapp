@@ -35,7 +35,7 @@ const Row = styled.div`
 
 const Text = styled.span`
     display: block;
-    font-family: Titillium Light !important;
+    font-family: Roboto !important;
     color: var(--primary-color);
     font-size: 25px;
     line-height: 31px;

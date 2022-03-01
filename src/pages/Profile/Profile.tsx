@@ -51,23 +51,23 @@ const Profile: React.FC = () => {
     const allTxAndDataQuery = useCalculateDataQuery(networkId, walletAddress as any, { enabled: isAppReady });
     const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
-    const [isSimpeView, setSimpleView] = useState(true);
+    const [isSimpleView, setSimpleView] = useState(true);
     const [searchText, setSearchText] = useState('');
     const [view, setView] = useState(NavItems.MyPositions);
 
     return (
-        <Container layout={isSimpeView}>
+        <Container layout={isSimpleView}>
             <Container.Fixed>
                 <PageTitle>Trading Profile</PageTitle>
                 <SearchField text={searchText} handleChange={(value) => setSearchText(value)} />
                 <TableGridSwitch
-                    value={!isSimpeView}
-                    clickEventHandler={setSimpleView.bind(this, !isSimpeView)}
+                    value={!isSimpleView}
+                    clickEventHandler={setSimpleView.bind(this, !isSimpleView)}
                     labels={['Simple View', 'In Depth View']}
                 />
             </Container.Fixed>
-            <Container.Left layout={isSimpeView}>
-                <Nav>
+            <Container.Left layout={isSimpleView}>
+                <Nav justifyContent={isSimpleView ? 'space-between' : 'flex-start'}>
                     <NavItem
                         onClick={setView.bind(this, NavItems.MyPositions)}
                         className={view === NavItems.MyPositions ? 'active' : ''}
@@ -96,7 +96,7 @@ const Profile: React.FC = () => {
                 <ContentWrapper>
                     {view === NavItems.MyPositions && (
                         <MyPositions
-                            isSimpleView={isSimpeView}
+                            isSimpleView={isSimpleView}
                             exchangeRates={exchangeRates}
                             positions={positions.live}
                             searchText={searchText}
@@ -104,7 +104,7 @@ const Profile: React.FC = () => {
                     )}
                     {view === NavItems.MaturedPositions && (
                         <MaturedPositions
-                            isSimpleView={isSimpeView}
+                            isSimpleView={isSimpleView}
                             positions={positions.matured}
                             claimed={positions.claimed}
                             searchText={searchText}
@@ -115,8 +115,8 @@ const Profile: React.FC = () => {
                     )}
                 </ContentWrapper>
             </Container.Left>
-            <Container.Right layout={isSimpeView}>
-                <PieChartOptionsAllocated size={isSimpeView ? 400 : 350} claimable={positions.claimableAmount} />
+            <Container.Right layout={isSimpleView}>
+                <PieChartOptionsAllocated size={isSimpleView ? 400 : 350} claimable={positions.claimableAmount} />
                 <Wrapper>
                     <Wrapper.Row>
                         <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
@@ -145,7 +145,7 @@ const Profile: React.FC = () => {
                         </Wrapper.Value>
                     </Wrapper.Row>
                 </Wrapper>
-                <PriceContainer style={{ maxWidth: isSimpeView ? 500 : 400 }}>
+                <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400 }}>
                     <PriceChart showTooltip={true} height={160} currencyKey={'THALES'} showHeading={true} />
                 </PriceContainer>
             </Container.Right>
@@ -154,7 +154,7 @@ const Profile: React.FC = () => {
 };
 
 const PageTitle = styled.p`
-    font-family: Titillium Web !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: 600;
     font-size: 35px;
@@ -169,14 +169,14 @@ const LineUnderNav = styled.div`
     width: 100%;
 `;
 
-const Nav = styled.div`
+const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${(_props) => _props.justifyContent};
 `;
 
 const NavItem = styled.p`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: bold;
     line-height: 40px;

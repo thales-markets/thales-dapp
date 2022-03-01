@@ -145,7 +145,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                     searchQuery={searchText}
                     columns={[
                         {
-                            Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
+                            Header: <>{t('options.home.markets-table.asset-col')}</>,
                             accessor: 'market.currencyKey',
                             Cell: (_props: any) => {
                                 return (
