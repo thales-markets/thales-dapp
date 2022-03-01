@@ -4,6 +4,7 @@ import { useTable, useSortBy, useGlobalFilter, usePagination, useFlexLayout } fr
 import TableView, { NoDataContainer, NoDataText } from './styled-components/Table';
 import Pagination from './styled-components/Pagination';
 import { FlexDivColumn } from 'theme/common';
+import SPAAnchor from 'components/SPAAnchor';
 
 type TableProps = {
     data: any;
@@ -100,21 +101,41 @@ const Table: React.FC<TableProps> = ({
                         <TableView.Body {...getTableBodyProps()}>
                             {page.map((row: any, index: number) => {
                                 prepareRow(row);
-                                return (
-                                    <TableView.Row key={index} {...row.getRowProps()}>
-                                        {row.cells.map((cell: any, cellIndex: number) => {
-                                            return (
-                                                <TableView.Cell
-                                                    defaultFontWeight={'bold'}
-                                                    key={cellIndex}
-                                                    {...cell.getCellProps()}
-                                                >
-                                                    {cell.render('Cell')}
-                                                </TableView.Cell>
-                                            );
-                                        })}
-                                    </TableView.Row>
-                                );
+                                if (row.original.link) {
+                                    return (
+                                        <SPAAnchor href={row.original.link}>
+                                            <TableView.Row key={index} {...row.getRowProps()}>
+                                                {row.cells.map((cell: any, cellIndex: number) => {
+                                                    return (
+                                                        <TableView.Cell
+                                                            defaultFontWeight={'bold'}
+                                                            key={cellIndex}
+                                                            {...cell.getCellProps()}
+                                                        >
+                                                            {cell.render('Cell')}
+                                                        </TableView.Cell>
+                                                    );
+                                                })}
+                                            </TableView.Row>
+                                        </SPAAnchor>
+                                    );
+                                } else {
+                                    return (
+                                        <TableView.Row key={index} {...row.getRowProps()}>
+                                            {row.cells.map((cell: any, cellIndex: number) => {
+                                                return (
+                                                    <TableView.Cell
+                                                        defaultFontWeight={'bold'}
+                                                        key={cellIndex}
+                                                        {...cell.getCellProps()}
+                                                    >
+                                                        {cell.render('Cell')}
+                                                    </TableView.Cell>
+                                                );
+                                            })}
+                                        </TableView.Row>
+                                    );
+                                }
                             })}
                         </TableView.Body>
                     </TableView>

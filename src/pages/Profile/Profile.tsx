@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
 
     const positions = userPositionsQuery.isSuccess
         ? userPositionsQuery.data
-        : { claimable: undefined, claimableAmount: undefined, matured: [], live: [], claimed: [] };
+        : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
 
     const allTxAndDataQuery = useCalculateDataQuery(networkId, walletAddress as any, { enabled: isAppReady });
     const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
@@ -79,8 +79,10 @@ const Profile: React.FC = () => {
                         className={view === NavItems.MaturedPositions ? 'active' : ''}
                     >
                         {NavItems.MaturedPositions}
-                        {positions.claimable && positions.claimable > 0 && (
-                            <Notification> {positions.claimable} </Notification>
+                        {positions.claimable > 0 && (
+                            <>
+                                <Notification> {positions.claimable} </Notification>
+                            </>
                         )}
                     </NavItem>
                     <NavItem

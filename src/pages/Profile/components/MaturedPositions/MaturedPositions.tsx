@@ -33,6 +33,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                 modifiedValue.balances.type = value.tx.side === 'short' ? 'DOWN' : 'UP';
                 modifiedValue.claimable = false;
                 modifiedValue.claimed = true;
+                modifiedValue.link = buildOptionsMarketLink(value.tx.market);
                 newArray.push(modifiedValue);
             });
         }
@@ -42,9 +43,12 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 modifiedValue.claimed = false;
                 if (value.balances.long > 0) {
+                    const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                    modifiedValue.claimed = false;
                     modifiedValue.balances.amount = value.balances.long;
                     modifiedValue.balances.type = 'UP';
                     modifiedValue.claimable = value.market.result === 'long';
+                    modifiedValue.link = buildOptionsMarketLink(value.market.address);
                     newArray.push(modifiedValue);
                 }
                 if (value.balances.short > 0) {
@@ -52,6 +56,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                     newValue.balances.amount = value.balances.short;
                     newValue.balances.type = 'DOWN';
                     newValue.claimable = value.market.result === 'short';
+                    newValue.link = buildOptionsMarketLink(value.market.address);
                     newArray.push(newValue);
                 }
             });
@@ -186,7 +191,6 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                         {
                             Header: t(`options.home.markets-table.final-asset-price-col`),
                             accessor: (row: any) => {
-                                console.log(row);
                                 return <TableText>{formatCurrencyWithSign(USD_SIGN, row.market.finalPrice)}</TableText>;
                             },
                         },

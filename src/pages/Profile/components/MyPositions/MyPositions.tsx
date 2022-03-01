@@ -29,20 +29,23 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
         const newArray: any = [];
         if (positions.length > 0) {
             positions.map((value) => {
-                const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 if (value.balances.long > 0) {
+                    const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                    modifiedValue.link = buildOptionsMarketLink(value.market.address);
                     modifiedValue.balances.amount = value.balances.long;
                     modifiedValue.balances.type = 'UP';
                     newArray.push(modifiedValue);
                 }
                 if (value.balances.short > 0) {
                     const newValue: any = JSON.parse(JSON.stringify(value));
+                    newValue.link = buildOptionsMarketLink(value.market.address);
                     newValue.balances.amount = value.balances.short;
                     newValue.balances.type = 'DOWN';
                     newArray.push(newValue);
                 }
             });
         }
+
         return orderBy(newArray, 'market.maturityDate');
     }, [positions]);
     return (
@@ -131,7 +134,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     searchQuery={searchText}
                     columns={[
                         {
-                            Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
+                            Header: <>{t('options.home.markets-table.asset-col')}</>,
                             accessor: 'market.currencyKey',
                             Cell: (_props: any) => {
                                 return (
