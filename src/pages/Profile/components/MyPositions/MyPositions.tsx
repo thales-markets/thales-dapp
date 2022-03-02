@@ -48,11 +48,19 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
 
         return orderBy(newArray, 'market.maturityDate');
     }, [positions]);
+
+    const filteredData = useMemo(() => {
+        if (searchText === '') return data;
+        return data.filter((value) => {
+            return value.market.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+        });
+    }, [searchText, data]);
+
     return (
         <Container>
             {isSimpleView &&
-                data.length > 0 &&
-                data.map((data: any, index: number) => (
+                filteredData.length > 0 &&
+                filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
                             <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>

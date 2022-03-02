@@ -64,11 +64,19 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
 
         return newArray.sort((a: any) => (a.claimable ? -1 : 1));
     }, [positions]);
+
+    const filteredData = useMemo(() => {
+        if (searchText === '') return data;
+        return data.filter((value: any) => {
+            return value.market.currencyKey.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+        });
+    }, [searchText, data]);
+
     return (
         <Container>
             {isSimpleView &&
-                data.length > 0 &&
-                data.map((data: any, index: number) => (
+                filteredData.length > 0 &&
+                filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
                             <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>

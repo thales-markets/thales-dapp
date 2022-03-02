@@ -16,15 +16,16 @@ const formatAMPM = (date: Date) => {
 };
 
 const generateDateKey = (date: Date) => {
-    const dayOfTheWeek = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date.getDay()); //TODO: add different languages
+    const monthName = date.toLocaleString('default', { month: 'long' }); //TODO: add different languages
     const dayOfTheMonth = date.getDate();
     const year = date.getFullYear();
-    return `${dayOfTheWeek} ${dayOfTheMonth}, ${year}`;
+    return `${monthName} ${dayOfTheMonth}, ${year}`;
 };
 
 const generateRows = (data: any[]) => {
     const dateMap: Record<string, any> = {};
-    data.map((trade) => {
+    console.log(data);
+    data.forEach((trade) => {
         const tradeDateKey = generateDateKey(new Date(trade.timestamp));
         if (!dateMap[tradeDateKey]) {
             dateMap[tradeDateKey] = [];

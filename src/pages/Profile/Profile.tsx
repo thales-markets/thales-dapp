@@ -63,7 +63,7 @@ const Profile: React.FC = () => {
                 <TableGridSwitch
                     value={!isSimpleView}
                     clickEventHandler={setSimpleView.bind(this, !isSimpleView)}
-                    labels={['Simple View', 'In Depth View']}
+                    labels={['Grid', 'Table']}
                 />
             </Container.Fixed>
             <Container.Left layout={isSimpleView}>

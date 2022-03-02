@@ -55,6 +55,9 @@ const MenuItem = styled.li`
     transition: background 300ms;
     &.selected {
         color: #04045a;
+        .sidebar-icon {
+            color: #04045a;
+        }
     }
     .parent-hovered {
         color: #f6f6fe;
