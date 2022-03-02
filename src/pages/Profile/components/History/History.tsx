@@ -7,6 +7,7 @@ import generateRows from './utils/generateRows';
 import { OptionsMarkets } from 'types/options';
 import { keyBy } from 'lodash';
 import { sortOptionsMarkets } from 'utils/options';
+import { currencyKeyToCoinGeckoIndexMap, currencyKeyToNameMap } from '../../../../constants/currency';
 
 type HistoryProps = {
     markets?: OptionsMarkets;
@@ -14,19 +15,29 @@ type HistoryProps = {
     searchText: string;
 };
 
-const History: React.FC<HistoryProps> = ({ markets, trades }) => {
+const History: React.FC<HistoryProps> = ({ markets, trades, searchText }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
 
     const rows = useMemo(() => {
         if (trades.length > 0 && markets) {
             const optionsMarketsMap = keyBy(sortOptionsMarkets(markets), 'address');
-            trades.map((trade: any) => {
-                trade.marketItem = optionsMarketsMap[trade.market];
-            });
-            return generateRows(trades);
+            return generateRows(
+                trades
+                    .map((trade: any) => ({
+                        ...trade,
+                        marketItem: optionsMarketsMap[trade.market],
+                    }))
+                    .filter((trade: any) => {
+                        const search = searchText.toLowerCase();
+                        const tradeValue = `${trade?.marketItem?.currencyKey} ${
+                            currencyKeyToCoinGeckoIndexMap[trade?.marketItem?.asset?.toUpperCase()]
+                        } ${currencyKeyToNameMap[trade?.marketItem?.asset?.toUpperCase()]}`.toLowerCase();
+                        return !searchText || tradeValue.includes(search);
+                    })
+            );
         }
         return [];
-    }, [trades, walletAddress, markets]);
+    }, [trades, walletAddress, markets, searchText]);
 
     return <TileTable rows={rows} />;
 };
