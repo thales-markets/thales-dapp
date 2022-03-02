@@ -44,11 +44,8 @@ const ContainerRight = styled.div<ContainerProps>`
     padding-left: ${(_props) => (_props.layout ? '80px' : '0')};
     max-width: ${(_props) => (_props.layout ? '50%' : '100%')};
     align-items: center;
-    & > div {
-        width: ${(_props) => (_props.layout ? '' : 'auto')};
-    }
     & > div:nth-child(2) {
-        margin: ${(_props) => (_props.layout ? '' : '0 40px')};
+        margin: ${(_props) => (_props.layout ? '' : '0 20px')};
     }
 `;
 
