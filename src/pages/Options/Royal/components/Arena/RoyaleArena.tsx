@@ -19,13 +19,14 @@ import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from '../../Queries/useRoyaleFooterQuery';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { FlexDiv, FlexDivCentered, Wrapper } from 'theme/common';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { getIsOVM } from 'utils/network';
 import useInterval from 'hooks/useInterval';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 
 type RoyaleArenaProps = {
     ethPrice: string;
@@ -237,8 +238,13 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isL2 = getIsOVM(networkId);
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
     const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
@@ -400,7 +406,9 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                     <Button
                         style={{ zIndex: 1000 }}
                         disabled={royaleData.rewardCollectedPerSeason}
-                        onClick={claimReward}
+                        onClick={() => {
+                            claimReward().finally(() => synthsWalletBalancesQuery.refetch());
+                        }}
                     >
                         Claim reward
                     </Button>

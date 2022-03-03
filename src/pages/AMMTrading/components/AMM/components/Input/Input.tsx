@@ -6,6 +6,7 @@ type InputProps = {
     titleColor?: string;
     titleFontSize?: string;
     value: string | number;
+    valueChange?: (value: string | number) => void;
     valueColor?: string;
     valueFontSize?: string;
     subValue?: string;
@@ -20,13 +21,21 @@ const Input: React.FC<InputProps> = ({
     titleColor,
     titleFontSize,
     value,
+    valueChange,
     valueColor,
     valueFontSize,
     subValue,
     subValueColor,
     subValueFontSize,
 }) => {
-    const [amountToBuy, setAmountToBuy] = useState<string | number>(value);
+    const [defaultValue, setDefaultValue] = useState<string | number>(value);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (valueChange) {
+            valueChange(e.target.value);
+        }
+        setDefaultValue(e.target.value);
+    };
 
     return (
         <Container>
@@ -37,8 +46,8 @@ const Input: React.FC<InputProps> = ({
                 <Container.ValueContainer.Value
                     color={valueColor}
                     fontSize={valueFontSize}
-                    value={amountToBuy}
-                    onChange={(e) => setAmountToBuy(e.target.value)}
+                    value={defaultValue}
+                    onChange={handleChange}
                 />
                 <Container.ValueContainer.SubValue color={subValueColor} fontSize={subValueFontSize}>
                     {subValue}
