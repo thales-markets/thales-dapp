@@ -114,6 +114,17 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         setSortOptions(newSortOptions);
     };
 
+    const ammSort = useMemo(
+        () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
+            if (desc) {
+                return +rowA.values[columnId].props.red > +rowB.values[columnId].props.red ? 1 : -1;
+            } else {
+                return +rowA.values[columnId].props.green < +rowB.values[columnId].props.green ? 1 : -1;
+            }
+        },
+        []
+    );
+
     const columns: Array<any> = useMemo(() => {
         return [
             {
@@ -160,6 +171,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                       {
                           Header: t(`options.home.markets-table.amm-size-col`),
                           accessor: (row: any) => <RatioText green={row.availableLongs} red={row.availableShorts} />,
+                          sortType: ammSort,
                       },
                   ]
                 : []),
