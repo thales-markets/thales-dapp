@@ -51,6 +51,7 @@ const Background = styled.section`
         --button-text-active: #04045a;
         --button-bg-inactive: transparent;
         --button-text-inactive: #64d9fe;
+        --notice-text: #04045a;
     }
     &.dark {
         background-color: #04045a;
@@ -75,6 +76,7 @@ const Background = styled.section`
         --button-text-active: #04045a;
         --button-bg-inactive: transparent;
         --button-text-inactive: #64d9fe;
+        --notice-text: #64d9fe;
     }
 `;
 
