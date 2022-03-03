@@ -41,7 +41,7 @@ const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../LandingPage/Home'));
 const Markets = lazy(() => import('../Markets'));
 const AMMTrading = lazy(() => import('../AMMTrading'));
-const OptionsMarket = lazy(() => import('../Options/Market'));
+// const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
@@ -270,9 +270,9 @@ const App = () => {
                             exact
                             path={ROUTES.Options.MarketMatch}
                             render={(routeProps) => (
-                                <MainLayout>
-                                    <OptionsMarket {...routeProps} />
-                                </MainLayout>
+                                <DappLayout>
+                                    <AMMTrading {...routeProps} />
+                                </DappLayout>
                             )}
                         />
 
@@ -281,16 +281,6 @@ const App = () => {
                                 <Markets />
                             </DappLayout>
                         </Route>
-
-                        <Route
-                            exact
-                            path={ROUTES.Test.Markets}
-                            render={(routeProps) => (
-                                <DappLayout>
-                                    <AMMTrading {...routeProps} />
-                                </DappLayout>
-                            )}
-                        />
 
                         <Route exact path={ROUTES.Home}>
                             <MainLayout>

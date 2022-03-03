@@ -30,10 +30,5 @@ export const ROUTES = {
         Space: '/governance/:space',
         Proposal: '/governance/:space/:id',
     },
-    Test: {
-        Home: '/test/markets',
-        AmmTrading: '/test/amm-trading',
-        Markets: '/test/markets/:marketAddress',
-    },
 };
 export default ROUTES;
