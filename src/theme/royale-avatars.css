@@ -39,5 +39,9 @@
 }
 
 .royale-avatar--8:before {
+    content: '\0050';
+}
+
+.royale-avatar--9:before {
     content: '\0052';
 }

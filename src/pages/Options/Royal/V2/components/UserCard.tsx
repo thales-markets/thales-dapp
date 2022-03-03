@@ -368,7 +368,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
 
     const getAvatar = (user: User) => {
         if (user?.status === UserStatus.RDY) {
-            const fallbackAvatar = user.number % 9;
+            const fallbackAvatar = user.number % 10;
             return <i style={{ marginRight: 14 }} className={`royale-avatar royale-avatar--${fallbackAvatar}`}></i>;
         }
         return <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />;

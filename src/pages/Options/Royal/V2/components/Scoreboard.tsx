@@ -345,7 +345,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
 const getAvatar = (user: User, royaleData: any) => {
     if (user.status === UserStatus.RDY) {
         const lastRoundInSeason = royaleData.round;
-        const fallbackAvatar = user.number % 9;
+        const fallbackAvatar = user.number % 10;
         const isUserAWinner =
             (user.isAlive && royaleData.seasonFinished) ||
             (Number(user.deathRound) === lastRoundInSeason && royaleData.seasonFinished);
