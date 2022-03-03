@@ -47,6 +47,10 @@ const Background = styled.section`
         --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
         --color-wrapper: #4673bd;
         --scrollbar-width: 12px;
+        --button-bg-active: #64d9fe;
+        --button-text-active: #04045a;
+        --button-bg-inactive: transparent;
+        --button-text-inactive: #64d9fe;
     }
     &.dark {
         background-color: #04045a;
@@ -67,6 +71,10 @@ const Background = styled.section`
         --color-wrapper: #4673bd;
         --scrollbar-width: 12px;
         --color-scrollbar-hover: #f7f7f7;
+        --button-bg-active: #64d9fe;
+        --button-text-active: #04045a;
+        --button-bg-inactive: transparent;
+        --button-text-inactive: #64d9fe;
     }
 `;
 

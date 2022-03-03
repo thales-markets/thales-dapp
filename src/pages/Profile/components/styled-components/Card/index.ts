@@ -44,10 +44,6 @@ const CardColumn = styled.div`
     align-items: flex-start;
     justify-content: space-between;
     height: 100%;
-    &:first-child {
-        flex: 1;
-        justify-content: center;
-    }
     flex: 2;
     &:nth-child(2) {
         margin-left: 10px;

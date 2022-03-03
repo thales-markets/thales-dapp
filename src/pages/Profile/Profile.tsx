@@ -58,8 +58,12 @@ const Profile: React.FC = () => {
     return (
         <Container layout={isSimpleView}>
             <Container.Fixed>
-                <PageTitle>Trading Profile</PageTitle>
-                <SearchField text={searchText} handleChange={(value) => setSearchText(value)} />
+                <PageTitle>{t('options.trading-profile.title')}</PageTitle>
+                <SearchField
+                    placeholder={t('options.trading-profile.search-placeholder')}
+                    text={searchText}
+                    handleChange={(value) => setSearchText(value)}
+                />
                 <TableGridSwitch
                     value={!isSimpleView}
                     clickEventHandler={setSimpleView.bind(this, !isSimpleView)}

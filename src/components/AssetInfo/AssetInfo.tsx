@@ -36,6 +36,7 @@ const AssetContainer = styled.div`
     flex-direction: row;
     justify-content: start;
     align-items: center;
+    flex: 1;
 `;
 
 export const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`

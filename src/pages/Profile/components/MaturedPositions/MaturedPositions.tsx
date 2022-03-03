@@ -1,4 +1,3 @@
-import PriceChart from 'components/Charts/PriceChart';
 import Currency from 'components/Currency/v2';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import SPAAnchor from 'components/SPAAnchor';
@@ -7,11 +6,11 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
-import { getSynthName } from 'utils/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
+import { formatShortDate } from 'utils/formatters/date';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -89,16 +88,13 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                                                     height="40px"
                                                     currencyKey={data.market.currencyKey}
                                                 />
-                                                <Card.RowTitle>{getSynthName(data.market.currencyKey)}</Card.RowTitle>
                                                 <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
                                             </Card.Row>
-                                        </Card.Column>
-                                        <Card.Column>
-                                            <PriceChart
-                                                containerStyle={{ margin: 'auto' }}
-                                                currencyKey={data.market.currencyKey}
-                                                showFooter
-                                            />
+                                            <Card.Row>
+                                                <Card.RowSubtitle>
+                                                    @{formatShortDate(data.market.maturityDate)}
+                                                </Card.RowSubtitle>
+                                            </Card.Row>
                                         </Card.Column>
                                         <Card.Column>
                                             <Card.Row>
@@ -171,22 +167,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
 
                         {
                             Header: t(`options.home.markets-table.24h-change-col`),
-                            accessor: (row: any) => (
-                                <PriceChart
-                                    currencyKey={row?.market?.currencyKey}
-                                    height={30}
-                                    width={125}
-                                    showFooter={false}
-                                    showPercentageChangeOnSide={true}
-                                    containerStyle={{
-                                        marginTop: '6px',
-                                        marginBottom: '6px',
-                                        marginLeft: '10px',
-                                        whiteSpace: 'pre',
-                                    }}
-                                    footerStyle={{ fontSize: '10px' }}
-                                />
-                            ),
+                            accessor: (row: any) => <TableText>{formatShortDate(row.market.maturityDate)}</TableText>,
                             disableSortBy: true,
                         },
                         {

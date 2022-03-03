@@ -132,46 +132,12 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
-                id: 'currencyKey',
-                Header: t(`options.home.markets-table.24h-change-col`),
-                accessor: (row: any) => (
-                    <PriceChart
-                        currencyKey={row?.currencyKey}
-                        height={30}
-                        width={125}
-                        showFooter={false}
-                        showPercentageChangeOnSide={true}
-                        containerStyle={{ marginTop: '6px', marginBottom: '6px', marginLeft: '10px' }}
-                        footerStyle={{ fontSize: '10px' }}
-                    />
-                ),
-                disableSortBy: true,
-            },
-            {
                 Header: t(`options.home.markets-table.asset-col`),
                 accessor: 'assetFullName',
                 isVisible: false,
                 disableSortBy: true,
                 show: false,
             },
-            ...(isL2
-                ? [
-                      {
-                          Header: t(`options.home.markets-table.amm-size-col`),
-                          accessor: (row: any) => <RatioText green={row.availableLongs} red={row.availableShorts} />,
-                          disableSortBy: true,
-                      },
-                  ]
-                : []),
-            ...(isL2
-                ? [
-                      {
-                          Header: t(`options.home.markets-table.price-up-down-col`),
-                          accessor: (row: any) => <RatioText green={row.longPrice} red={row.shortPrice} />,
-                          disableSortBy: true,
-                      },
-                  ]
-                : []),
             {
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: 'strikePrice',
@@ -189,6 +155,22 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     return <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />;
                 },
             },
+            ...(isL2
+                ? [
+                      {
+                          Header: t(`options.home.markets-table.amm-size-col`),
+                          accessor: (row: any) => <RatioText green={row.availableLongs} red={row.availableShorts} />,
+                      },
+                  ]
+                : []),
+            ...(isL2
+                ? [
+                      {
+                          Header: t(`options.home.markets-table.price-up-down-col`),
+                          accessor: (row: any) => <RatioText green={row.longPrice} red={row.shortPrice} />,
+                      },
+                  ]
+                : []),
             {
                 Header: t(`options.home.markets-table.phase-col`),
                 accessor: 'phase',
@@ -199,6 +181,22 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                         </Phase>
                     );
                 },
+            },
+            {
+                id: 'currencyKey',
+                Header: t(`options.home.markets-table.24h-change-col`),
+                accessor: (row: any) => (
+                    <PriceChart
+                        currencyKey={row?.currencyKey}
+                        height={30}
+                        width={125}
+                        showFooter={false}
+                        showPercentageChangeOnSide={true}
+                        containerStyle={{ marginTop: '6px', marginBottom: '6px', marginLeft: '10px' }}
+                        footerStyle={{ fontSize: '10px' }}
+                    />
+                ),
+                disableSortBy: true,
             },
         ];
     }, [optionsMarkets]);

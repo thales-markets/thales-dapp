@@ -11,7 +11,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
-import { getSynthName } from 'utils/currency';
+import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
@@ -73,8 +73,12 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                     height="40px"
                                                     currencyKey={data.market.currencyKey}
                                                 />
-                                                <Card.RowTitle>{getSynthName(data.market.currencyKey)}</Card.RowTitle>
                                                 <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
+                                            </Card.Row>
+                                            <Card.Row>
+                                                <Card.RowSubtitle>
+                                                    @{formatShortDate(data.market.maturityDate)}
+                                                </Card.RowSubtitle>
                                             </Card.Row>
                                         </Card.Column>
                                         <Card.Column>
