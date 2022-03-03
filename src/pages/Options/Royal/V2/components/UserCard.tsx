@@ -366,6 +366,14 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     };
 
+    const getAvatar = (user: User) => {
+        if (user?.status === UserStatus.RDY) {
+            const fallbackAvatar = user.number % 9;
+            return <i className={`royale-avatar royale-avatar--${fallbackAvatar}`}></i>;
+        }
+        return <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />;
+    };
+
     return (
         <UserWrapper>
             {!openEditDialog ?? (
@@ -383,11 +391,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 walletAddress={walletAddress}
             ></UserEditRoyaleDataDialog>
             <FlexDiv style={{ alignItems: 'center' }}>
-                {user?.avatar ? (
-                    <UserAvatar src={user.avatar} style={{ marginRight: 14 }} />
-                ) : (
-                    <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />
-                )}
+                {user?.avatar ? <UserAvatar src={user.avatar} style={{ marginRight: 14 }} /> : getAvatar(user)}
 
                 <UserLabel>
                     <Trans
@@ -793,7 +797,7 @@ const Selector = styled.div<{ isOpen: boolean }>`
     color: var(--color);
     cursor: pointer;
     z-index: 5;
-    background: linear-gradient(180deg, var(--color-wrapper) 0%, #18241d 97.85%);
+    background: var(--color-background);
     &.disabled {
         opacity: 0.7;
         cursor: not-allowed;
@@ -815,7 +819,7 @@ const ToggleWrapper = styled.div`
     font-style: normal;
     font-size: 20px;
     line-height: 24px;
-    background: linear-gradient(180deg, var(--color-wrapper) 0%, #18241d 97.85%);
+    background: var(--color-background);
     text-align: center;
     cursor: pointer;
     letter-spacing: -0.4px;
