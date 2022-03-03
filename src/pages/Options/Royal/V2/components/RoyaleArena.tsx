@@ -17,6 +17,7 @@ import useRoundsQuery from '../../Queries/useRoundsQuery';
 import { BigNumber } from 'ethers';
 import winnerCard from '../../../../../assets/images/royale/winner-card.svg';
 import winnerCardS2 from '../../../../../assets/images/royale/winner-card-s2.svg';
+import winnerCardS3 from '../../../../../assets/images/royale/winner-card-s3.svg';
 import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getIsOVM } from '../../../../../utils/network';
@@ -89,8 +90,10 @@ const renderRounds = (
                 return winnerCard;
             case 2:
                 return winnerCardS2;
+            case 3:
+                return winnerCardS3;
             default:
-                return winnerCardS2;
+                return winnerCardS3;
         }
     };
 
