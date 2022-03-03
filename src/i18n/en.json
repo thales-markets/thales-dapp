@@ -1264,6 +1264,10 @@
             "available-to-sell-short": "Available to sell short",
             "available-to-buy-long": "Available to buy long",
             "available-to-buy-short": "Available to buy short"
+        },
+        "trading-profile": {
+            "title": "Trading Profile",
+            "search-placeholder": "Search Wallet"
         }
     },
     "governance": {

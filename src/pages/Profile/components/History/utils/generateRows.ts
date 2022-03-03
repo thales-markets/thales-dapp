@@ -24,7 +24,7 @@ const generateDateKey = (date: Date) => {
 
 const generateRows = (data: any[]) => {
     const dateMap: Record<string, any> = {};
-    console.log(data);
+
     data.forEach((trade) => {
         const tradeDateKey = generateDateKey(new Date(trade.timestamp));
         if (!dateMap[tradeDateKey]) {

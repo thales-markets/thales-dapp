@@ -2,16 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 type SearchFieldProps = {
+    placeholder?: string;
     text: string;
     handleChange: (event: any) => void;
 };
 
-const SearchField: React.FC<SearchFieldProps> = ({ text, handleChange }) => {
+const SearchField: React.FC<SearchFieldProps> = ({ placeholder, text, handleChange }) => {
     return (
         <Wrapper>
             <InputField
                 type="text"
-                placeholder="Enter search text"
+                placeholder={`${placeholder || 'Enter search text'}`}
                 defaultValue={text}
                 onChange={(event) => handleChange(event.target.value)}
             />
@@ -38,7 +39,10 @@ const InputField = styled.input`
     padding-right: 25px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box
-    box-sizing: border-box; 
+    box-sizing: border-box;
+    &::placeholder {
+        color: var(--input-border-color);
+    }
 `;
 
 const Icon = styled.i`

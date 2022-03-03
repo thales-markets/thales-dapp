@@ -1269,6 +1269,10 @@
             "sell-volume": "Общий объем продаж",
             "longs-sell-volume": "Объем продаж длинных позиций",
             "shorts-sell-volume": "Объем продаж шорт"
+        },
+        "trading-profile": {
+            "title": "Торговый профиль",
+            "search-placeholder": "Поиск кошелька"
         }
     },
     "governance": {
