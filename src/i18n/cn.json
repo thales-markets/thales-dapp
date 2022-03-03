@@ -1269,6 +1269,10 @@
             "available-to-sell-long": "可长期出售",
             "shorts-sell-volume": "短裤卖出量",
             "longs-sell-volume": "多头卖出量"
+        },
+        "trading-profile": {
+            "title": "交易资料",
+            "search-placeholder": "搜索钱包"
         }
     },
     "governance": {
