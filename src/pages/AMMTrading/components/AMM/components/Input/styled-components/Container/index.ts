@@ -54,6 +54,11 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
     border: 0.8px solid var(--input-border-color);
     border-radius: 10px;
     padding: 5px 14px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    &:active {
+        box-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
+    }
 `;
 
 ValueContainer.Value = Value;

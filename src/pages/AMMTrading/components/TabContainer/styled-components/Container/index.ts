@@ -22,7 +22,7 @@ const MenuContainer: StyledComponent<'div', any> & MenuContainerChild = styled(F
 
 // @ts-ignore
 const Container: StyledComponent<'div', any> & ContainerChild = styled(FlexDiv)`
-    width: 70%;
+    width: 100%;
     flex-direction: column;
 `;
 
