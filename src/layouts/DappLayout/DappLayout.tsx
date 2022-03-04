@@ -52,6 +52,7 @@ const Background = styled.section`
         --button-bg-inactive: transparent;
         --button-text-inactive: #64d9fe;
         --notice-text: #04045a;
+        --amm-switch-circle: #04045a;
     }
     &.dark {
         background-color: #04045a;
@@ -77,6 +78,7 @@ const Background = styled.section`
         --button-bg-inactive: transparent;
         --button-text-inactive: #64d9fe;
         --notice-text: #64d9fe;
+        --amm-switch-circle: #f7f7f7;
     }
 `;
 
