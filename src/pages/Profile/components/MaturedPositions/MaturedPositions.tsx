@@ -17,6 +17,7 @@ type MaturedPositionsProps = {
     positions: UsersAssets[];
     isSimpleView?: boolean;
     searchText: string;
+    isLoading?: boolean;
 };
 
 const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimpleView, claimed, searchText }) => {

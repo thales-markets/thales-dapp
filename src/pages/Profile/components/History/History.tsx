@@ -13,9 +13,10 @@ type HistoryProps = {
     markets?: OptionsMarkets;
     trades: [];
     searchText: string;
+    isLoading?: boolean;
 };
 
-const History: React.FC<HistoryProps> = ({ markets, trades, searchText }) => {
+const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoading }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
 
     const rows = useMemo(() => {
@@ -39,7 +40,7 @@ const History: React.FC<HistoryProps> = ({ markets, trades, searchText }) => {
         return [];
     }, [trades, walletAddress, markets, searchText]);
 
-    return <TileTable rows={rows} />;
+    return <TileTable rows={rows} isLoading={isLoading} />;
 };
 
 export default History;

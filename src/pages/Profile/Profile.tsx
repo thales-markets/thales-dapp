@@ -104,6 +104,7 @@ const Profile: React.FC = () => {
                             exchangeRates={exchangeRates}
                             positions={positions.live}
                             searchText={searchText}
+                            isLoading={userPositionsQuery.isLoading}
                         />
                     )}
                     {view === NavItems.MaturedPositions && (
@@ -112,10 +113,16 @@ const Profile: React.FC = () => {
                             positions={positions.matured}
                             claimed={positions.claimed}
                             searchText={searchText}
+                            isLoading={userPositionsQuery.isLoading}
                         />
                     )}
                     {view === NavItems.History && (
-                        <History markets={markets} trades={DataForUi ? DataForUi.trades : []} searchText={searchText} />
+                        <History
+                            markets={markets}
+                            trades={DataForUi ? DataForUi.trades : []}
+                            searchText={searchText}
+                            isLoading={allTxAndDataQuery.isLoading}
+                        />
                     )}
                 </ContentWrapper>
             </Container.Left>

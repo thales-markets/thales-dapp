@@ -21,6 +21,7 @@ type MyPositionsProps = {
     positions: UsersAssets[];
     isSimpleView: boolean;
     searchText: string;
+    isLoading?: boolean;
 };
 
 const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isSimpleView, searchText }) => {

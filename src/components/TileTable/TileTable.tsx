@@ -27,6 +27,7 @@ type Properties = {
     firstColumnRenderer?: (row: TileRow | string) => ReactElement;
     lastColumnRenderer?: (row: TileRow | string) => ReactElement;
     rows: (TileRow | string)[];
+    isLoading?: boolean;
 };
 
 const wrapInAnchor = (child: JSX.Element, href?: string) => {
