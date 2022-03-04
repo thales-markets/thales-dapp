@@ -62,6 +62,7 @@ const Wrapper = styled.div<{
     margin?: string;
 }>`
     display: flex;
+    text-transform: uppercase;
     align-items: center;
     justify-content: center;
     ${(_props) => (_props?.width ? `width: ${_props.width}` : '')};

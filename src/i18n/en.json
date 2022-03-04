@@ -167,6 +167,8 @@
         "search": "search",
         "buy": "buy",
         "sell": "sell",
+        "long": "long",
+        "short": "short",
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
         "select": "select",

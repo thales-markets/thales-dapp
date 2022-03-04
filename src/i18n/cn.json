@@ -230,7 +230,9 @@
             "display-name": "显示名称",
             "change-display-name": "更改显示名称"
         },
-        "no-data": "没有任何数据可显示"
+        "no-data": "没有任何数据可显示",
+        "long": "长",
+        "short": "短的"
     },
     "modals": {
         "gwei": {
