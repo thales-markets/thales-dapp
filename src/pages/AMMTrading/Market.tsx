@@ -7,6 +7,7 @@ import { getIsAppReady } from 'redux/modules/app';
 
 import RowCard from './components/RowCard';
 import TabContainer from './components/TabContainer';
+import AMM from './components/AMM';
 import { MarketProvider } from './contexts/MarketContext';
 
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
@@ -36,6 +37,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         <MarketProvider optionsMarket={optionMarket}>
             <RowCard />
             <MainContainer>
+                <AMM />
                 <TabContainer />
             </MainContainer>
         </MarketProvider>
