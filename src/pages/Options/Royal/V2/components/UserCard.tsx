@@ -23,7 +23,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import { checkAllowance, getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
-import { signUp, signUpWithPass, signUpWithPosition, signUpWithWithPassWithPosition } from '../../getThalesRoyalData';
+import { signUpWithPosition, signUpWithWithPassWithPosition } from '../../getThalesRoyalData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
@@ -243,26 +243,32 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             {selectedBuyInCollateral === BuyInCollateralEnum.SUSD ? (
                                 allowance ? (
                                     <Button
-                                        className={isBuyingIn || buyInAmount > Number(balance) ? 'disabled' : ''}
-                                        disabled={isBuyingIn || buyInAmount > Number(balance)}
+                                        className={
+                                            defaultPosition === PositionsEnum.NONE ||
+                                            isBuyingIn ||
+                                            buyInAmount > Number(balance)
+                                                ? 'disabled'
+                                                : ''
+                                        }
+                                        disabled={
+                                            defaultPosition === PositionsEnum.NONE ||
+                                            isBuyingIn ||
+                                            buyInAmount > Number(balance)
+                                        }
                                         onClick={() => {
                                             setIsBuyingIn(true);
-                                            defaultPosition !== PositionsEnum.NONE
-                                                ? (localStorage.setItem(
-                                                      'defaultPosition' +
-                                                          truncateAddress(walletAddress as any, 2, 2) +
-                                                          selectedSeason,
-                                                      defaultPosition
-                                                  ),
-                                                  signUpWithPosition(
-                                                      defaultPosition === PositionsEnum.DOWN ? 1 : 2,
-                                                      setIsBuyingIn
-                                                  ).finally(() => {
-                                                      synthsWalletBalancesQuery.refetch();
-                                                  }))
-                                                : signUp(setIsBuyingIn).finally(() => {
-                                                      synthsWalletBalancesQuery.refetch();
-                                                  });
+                                            localStorage.setItem(
+                                                'defaultPosition' +
+                                                    truncateAddress(walletAddress as any, 2, 2) +
+                                                    selectedSeason,
+                                                defaultPosition
+                                            );
+                                            signUpWithPosition(
+                                                defaultPosition === PositionsEnum.DOWN ? 1 : 2,
+                                                setIsBuyingIn
+                                            ).finally(() => {
+                                                synthsWalletBalancesQuery.refetch();
+                                            });
                                         }}
                                     >
                                         {t('options.royale.scoreboard.buy-in')}
@@ -282,34 +288,35 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             ) : (royalePassData as any).balance > 0 ? (
                                 <Button
                                     className={
-                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
+                                        !(royalePassId as any).id ||
+                                        defaultPosition === PositionsEnum.NONE ||
+                                        isBuyingIn ||
+                                        (royalePassData as any).balance === 0
                                             ? 'disabled'
                                             : ''
                                     }
                                     disabled={
-                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
+                                        !(royalePassId as any).id ||
+                                        defaultPosition === PositionsEnum.NONE ||
+                                        isBuyingIn ||
+                                        (royalePassData as any).balance === 0
                                     }
                                     onClick={() => {
                                         setIsBuyingIn(true);
-                                        defaultPosition !== PositionsEnum.NONE
-                                            ? (localStorage.setItem(
-                                                  'defaultPosition' +
-                                                      truncateAddress(walletAddress as any, 2, 2) +
-                                                      selectedSeason,
-                                                  defaultPosition
-                                              ),
-                                              signUpWithWithPassWithPosition(
-                                                  (royalePassId as any).id,
-                                                  defaultPosition === PositionsEnum.DOWN ? 1 : 2,
-                                                  setIsBuyingIn
-                                              ).finally(() => {
-                                                  royalePassQuery.refetch();
-                                                  royalePassIdQuery.refetch();
-                                              }))
-                                            : signUpWithPass((royalePassId as any).id, setIsBuyingIn).finally(() => {
-                                                  royalePassQuery.refetch();
-                                                  royalePassIdQuery.refetch();
-                                              });
+                                        localStorage.setItem(
+                                            'defaultPosition' +
+                                                truncateAddress(walletAddress as any, 2, 2) +
+                                                selectedSeason,
+                                            defaultPosition
+                                        );
+                                        signUpWithWithPassWithPosition(
+                                            (royalePassId as any).id,
+                                            defaultPosition === PositionsEnum.DOWN ? 1 : 2,
+                                            setIsBuyingIn
+                                        ).finally(() => {
+                                            royalePassQuery.refetch();
+                                            royalePassIdQuery.refetch();
+                                        });
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in-royale-pass')}
@@ -366,6 +373,14 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     };
 
+    const getAvatar = (user: User) => {
+        if (user?.status === UserStatus.RDY) {
+            const fallbackAvatar = user.number % 10;
+            return <i style={{ marginRight: 14 }} className={`royale-avatar royale-avatar--${fallbackAvatar}`}></i>;
+        }
+        return <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />;
+    };
+
     return (
         <UserWrapper>
             {!openEditDialog ?? (
@@ -383,11 +398,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                 walletAddress={walletAddress}
             ></UserEditRoyaleDataDialog>
             <FlexDiv style={{ alignItems: 'center' }}>
-                {user?.avatar ? (
-                    <UserAvatar src={user.avatar} style={{ marginRight: 14 }} />
-                ) : (
-                    <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />
-                )}
+                {user?.avatar ? <UserAvatar src={user.avatar} style={{ marginRight: 14 }} /> : getAvatar(user)}
 
                 <UserLabel>
                     <Trans
@@ -481,14 +492,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                         : undefined
                                 }
                             >
-                                {t('options.royale.scoreboard.default-position-' + defaultPosition)}
+                                {defaultPosition === PositionsEnum.NONE
+                                    ? 'SELECT'
+                                    : t('options.royale.scoreboard.default-position-' + defaultPosition)}
                                 <Arrow className="icon icon--arrow-down" />
                             </Text>
                         )}
 
                         {showSelectDropdown &&
                             Object.keys(PositionsEnum)
-                                .filter((position) => position.toLowerCase() !== defaultPosition.toLowerCase())
+                                .filter(
+                                    (position) =>
+                                        position.toLowerCase() !== defaultPosition.toLowerCase() &&
+                                        position.toLowerCase() !== PositionsEnum.NONE
+                                )
                                 .map((position: any, key: number) => (
                                     <Text
                                         onClick={() => {
@@ -793,7 +810,7 @@ const Selector = styled.div<{ isOpen: boolean }>`
     color: var(--color);
     cursor: pointer;
     z-index: 5;
-    background: linear-gradient(180deg, var(--color-wrapper) 0%, #18241d 97.85%);
+    background: var(--color-background);
     &.disabled {
         opacity: 0.7;
         cursor: not-allowed;
@@ -815,7 +832,7 @@ const ToggleWrapper = styled.div`
     font-style: normal;
     font-size: 20px;
     line-height: 24px;
-    background: linear-gradient(180deg, var(--color-wrapper) 0%, #18241d 97.85%);
+    background: var(--color-background);
     text-align: center;
     cursor: pointer;
     letter-spacing: -0.4px;

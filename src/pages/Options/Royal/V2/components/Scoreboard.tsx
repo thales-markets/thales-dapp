@@ -345,10 +345,20 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
 const getAvatar = (user: User, royaleData: any) => {
     if (user.status === UserStatus.RDY) {
         const lastRoundInSeason = royaleData.round;
+        const fallbackAvatar = user.number % 10;
         const isUserAWinner =
             (user.isAlive && royaleData.seasonFinished) ||
             (Number(user.deathRound) === lastRoundInSeason && royaleData.seasonFinished);
-        return <UserAvatar winner={isUserAWinner} src={user.avatar || DiscordImage} />;
+        if (user.avatar) {
+            return <UserAvatar winner={isUserAWinner} src={user.avatar || DiscordImage} />;
+        } else {
+            return (
+                <RoyaleAvatar
+                    winner={isUserAWinner}
+                    className={`royale-avatar royale-avatar--${fallbackAvatar}`}
+                ></RoyaleAvatar>
+            );
+        }
     }
 
     return (
@@ -477,6 +487,15 @@ const UserAvatar = styled(Image)<{ winner?: boolean }>`
     @media (max-width: 1024px) {
         width: 40px;
         height: 40px;
+    }
+`;
+
+const RoyaleAvatar = styled.i<{ winner?: boolean }>`
+    border-radius: 50%50%;
+    border: ${(props) => (props.winner ? '2px solid #FFE489' : 'none')};
+    filter: ${(props) => (props.winner ? 'drop-shadow(0px 0px 15px rgba(255, 232, 155, 0.7))' : 'none')};
+    @media (max-width: 1024px) {
+        font-size: 40px;
     }
 `;
 
