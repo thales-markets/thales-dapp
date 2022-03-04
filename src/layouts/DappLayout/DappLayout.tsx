@@ -92,7 +92,7 @@ const NewWrapper = styled.div`
     margin-right: auto;
     padding: 40px 20px 40px 92px;
     @media (max-width: 1024px) {
-        padding: 40px 20px;
+        padding: 0 20px;
     }
     max-width: 1440px;
     min-height: 100vh;

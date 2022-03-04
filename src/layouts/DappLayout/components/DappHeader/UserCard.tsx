@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { getTheme } from 'redux/modules/ui';
+import UserWalletExpanded from './UserWalletExpanded';
 
 export const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
@@ -24,10 +25,7 @@ export const UserCard: React.FC = () => {
 
     return (
         <>
-            <UserWallet
-                style={{ position: 'absolute', top: '55px', right: '110px' }}
-                walletContainerStyle={{ margin: '0px', border: '1px solid rgba(100, 217, 254, 0.5)' }}
-            />
+            <UserWallet />
             <MenuCardButton onClick={() => setShowCard(!showCard)}>
                 <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
@@ -38,7 +36,7 @@ export const UserCard: React.FC = () => {
                         <LogoContainer>
                             <ThalesLogo className="icon icon--logo" />
                         </LogoContainer>
-                        <UserWallet expandedView={true} />
+                        <UserWalletExpanded />
                         {isWalletConnected && <PieChartUserBalance />}
                         <PriceChart currencyKey={'THALES'} showHeading={true} />
                         {isWalletConnected && <DisplayNameForm />}
@@ -79,10 +77,14 @@ export const Overlay = styled.div`
 
 const MenuCardButton = styled.div`
     position: absolute;
-    top: 55px;
-    right: 44px;
+    top: 40px;
+    right: 20px;
     width: 50px;
     cursor: pointer;
+    @media (max-width: 1024px) {
+        right: 0;
+        top: 20px;
+    }
 `;
 
 const MenuIcon = styled.i`
