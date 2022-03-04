@@ -59,6 +59,9 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
     &:active {
         box-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
     }
+    &:focus {
+        box-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
+    }
 `;
 
 ValueContainer.Value = Value;
