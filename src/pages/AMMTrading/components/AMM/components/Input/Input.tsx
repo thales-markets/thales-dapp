@@ -7,6 +7,7 @@ type InputProps = {
     titleFontSize?: string;
     value: string | number;
     valueChange?: (value: string | number) => void;
+    valueEditDisable?: boolean;
     valueColor?: string;
     valueFontSize?: string;
     subValue?: string;
@@ -22,6 +23,7 @@ const Input: React.FC<InputProps> = ({
     titleFontSize,
     value,
     valueChange,
+    valueEditDisable,
     valueColor,
     valueFontSize,
     subValue,
@@ -48,6 +50,7 @@ const Input: React.FC<InputProps> = ({
                     fontSize={valueFontSize}
                     value={defaultValue}
                     onChange={handleChange}
+                    disabled={valueEditDisable}
                 />
                 <Container.ValueContainer.SubValue color={subValueColor} fontSize={subValueFontSize}>
                     {subValue}
