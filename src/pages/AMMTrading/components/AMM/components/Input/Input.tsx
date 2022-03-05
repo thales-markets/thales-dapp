@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Container from './styled-components/Container';
 
 type InputProps = {
@@ -7,6 +7,7 @@ type InputProps = {
     titleFontSize?: string;
     value: string | number;
     valueChange?: (value: string | number) => void;
+    valueType?: string;
     valueEditDisable?: boolean;
     valueColor?: string;
     valueFontSize?: string;
@@ -23,6 +24,7 @@ const Input: React.FC<InputProps> = ({
     titleFontSize,
     value,
     valueChange,
+    valueType,
     valueEditDisable,
     valueColor,
     valueFontSize,
@@ -30,13 +32,10 @@ const Input: React.FC<InputProps> = ({
     subValueColor,
     subValueFontSize,
 }) => {
-    const [defaultValue, setDefaultValue] = useState<string | number>(value);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (valueChange) {
+        if (typeof valueChange == 'function') {
             valueChange(e.target.value);
         }
-        setDefaultValue(e.target.value);
     };
 
     return (
@@ -48,9 +47,10 @@ const Input: React.FC<InputProps> = ({
                 <Container.ValueContainer.Value
                     color={valueColor}
                     fontSize={valueFontSize}
-                    value={defaultValue}
+                    value={value}
                     onChange={handleChange}
                     disabled={valueEditDisable}
+                    type={valueType ? valueType : ''}
                 />
                 <Container.ValueContainer.SubValue color={subValueColor} fontSize={subValueFontSize}>
                     {subValue}
