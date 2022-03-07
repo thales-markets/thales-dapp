@@ -106,6 +106,24 @@ const Wrapper = styled.div`
     flex-direction: row;
     margin-bottom: 55px;
     align-items: center;
+    @media (max-width: 1250px) {
+        & > div:nth-of-type(4),
+        & > div:last-of-type {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        & > div:nth-of-type(3) {
+            display: none;
+        }
+    }
+
+    @media (max-width: 568px) {
+        & > div:nth-of-type(2) {
+            display: none;
+        }
+    }
 `;
 
 const Icon = styled.i<{ disabled?: boolean }>`
