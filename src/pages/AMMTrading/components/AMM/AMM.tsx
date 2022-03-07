@@ -547,7 +547,7 @@ const AMM: React.FC = () => {
     return (
         <Wrapper>
             <Switch
-                active={orderSide.value == 'buy'}
+                active={orderSide.value !== 'buy'}
                 width={'94px'}
                 height={'32px'}
                 dotSize={'22px'}
