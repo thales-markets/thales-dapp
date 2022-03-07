@@ -15,7 +15,7 @@ const Container: any & Children = styled.div<ContainerProps>`
     position: relative;
     display: flex;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 50px;
     flex-direction: ${(_props) => (_props.layout ? 'row' : 'column-reverse')};
 `;
 
