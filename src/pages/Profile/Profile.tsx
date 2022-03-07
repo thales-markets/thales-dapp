@@ -121,7 +121,7 @@ const Profile: React.FC = () => {
                 </ContentWrapper>
             </Container.Left>
             <Container.Right layout={isSimpleView}>
-                <PieChartOptionsAllocated size={350} claimable={positions.claimableAmount} />
+                <PieChartOptionsAllocated size={330} claimable={positions.claimableAmount} />
                 <Wrapper>
                     <Wrapper.Row>
                         <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
@@ -149,12 +149,12 @@ const Profile: React.FC = () => {
                             {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.investment, 2)}
                         </Wrapper.Value>
                     </Wrapper.Row>
+                    <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
+                        <ThalesBalance showTitle={true} />
+                    </PriceContainer>
                 </Wrapper>
 
-                <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400 }}>
-                    <ThalesBalance showTitle={true} />
-                </PriceContainer>
-                <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400 }}>
+                <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 350 }}>
                     <PriceChart showTooltip={true} height={160} currencyKey={'THALES'} showHeading={true} />
                 </PriceContainer>
             </Container.Right>
@@ -163,6 +163,8 @@ const Profile: React.FC = () => {
 };
 
 const PageTitle = styled.p`
+    position: absolute;
+    top: -100px;
     font-family: Roboto !important;
     font-style: normal;
     font-weight: 600;
