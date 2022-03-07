@@ -23,28 +23,30 @@ const UserWalletExpanded: React.FC = () => {
     return (
         <Wrapper>
             <UserCardSectionHeader>{t('common.user-info-card.wallet')}</UserCardSectionHeader>
-            <WalletContainer onClick={() => (isWalletConnected ? '' : onboardConnector.connectWallet())}>
-                <WalletIcon className="sidebar-icon icon--wallet" />
-                <WalletAddress>
-                    {walletAddress
-                        ? truncateAddress(
-                              walletAddress,
-                              truncateAddressNumberOfCharacters,
-                              truncateAddressNumberOfCharacters
-                          )
-                        : t('common.wallet.connect-your-wallet')}
-                </WalletAddress>
-            </WalletContainer>
-            {isWalletConnected && (
-                <WalletOptions>
-                    <Button style={{ marginRight: '3px' }} onClick={() => onboardConnector.onboard.walletSelect()}>
-                        {t('common.user-info-card.switch')}
-                    </Button>
-                    <Button onClick={() => onboardConnector.disconnectWallet()}>
-                        {t('common.user-info-card.disconnect')}
-                    </Button>
-                </WalletOptions>
-            )}
+            <Container>
+                <WalletContainer onClick={() => (isWalletConnected ? '' : onboardConnector.connectWallet())}>
+                    <WalletIcon className="sidebar-icon icon--wallet" />
+                    <WalletAddress>
+                        {walletAddress
+                            ? truncateAddress(
+                                  walletAddress,
+                                  truncateAddressNumberOfCharacters,
+                                  truncateAddressNumberOfCharacters
+                              )
+                            : t('common.wallet.connect-your-wallet')}
+                    </WalletAddress>
+                </WalletContainer>
+                {isWalletConnected && (
+                    <WalletOptions>
+                        <Button style={{ marginRight: '3px' }} onClick={() => onboardConnector.onboard.walletSelect()}>
+                            {t('common.user-info-card.switch')}
+                        </Button>
+                        <Button onClick={() => onboardConnector.disconnectWallet()}>
+                            {t('common.user-info-card.disconnect')}
+                        </Button>
+                    </WalletOptions>
+                )}
+            </Container>
         </Wrapper>
     );
 };
@@ -53,17 +55,30 @@ const Wrapper = styled.div`
     display: block;
 `;
 
+const Container = styled.div`
+    display: contents;
+    @media (max-width: 1024px) {
+        display: flex;
+        align-items: center;
+        justiyf-content: flex-start;
+    }
+`;
+
 const WalletOptions = styled.div`
     display: flex;
-    flex-direction: row;
     margin-bottom: 18px;
     align-items: center;
+    @media (max-width: 1024px) {
+        flex: 1;
+        width: auto;
+        margin: 0 auto;
+    }
 `;
 
 const Button = styled.div`
     background-color: var(--input-border-color);
     flex: 1;
-    font-size: 11px;
+    font-size: 13px;
     font-family: Titillium Regular !important;
     color: var(--background);
     font-weight: 600;
@@ -71,21 +86,30 @@ const Button = styled.div`
     padding-top: 6px;
     padding-bottom: 6px;
     text-align: center;
-    line-height: 17px;
+    line-height: 20px;
     cursor: pointer;
 `;
 
 const WalletContainer = styled.div`
-    border: 2px solid var(--icon-color);
-    border-radius: 19.5349px;
-    width: 100%;
-    margin: 9px auto;
-    cursor: pointer;
-    padding: 5px 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     max-width: 135px;
+    width: 100%;
+    margin: 9px auto;
+    padding: 4px 12px;
+
+    border: 2px solid var(--icon-color);
+    border-radius: 20px;
+    cursor: pointer;
+
+    @media (max-width: 1024px) {
+        flex: 1;
+        width: auto;
+        max-width: 400px;
+        margin: 0;
+        margin-right: 10px;
+    }
 `;
 
 const WalletIcon = styled.i`

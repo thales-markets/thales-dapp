@@ -39,8 +39,11 @@ export const UserCard: React.FC = () => {
                         </LogoContainer>
                         <UserWalletExpanded />
                         {isWalletConnected && <NetworkSwitchSection />}
-                        {isWalletConnected && <PieChartUserBalance />}
-                        {isWalletConnected && <ThalesBalance />}
+                        <Container>
+                            {isWalletConnected && <PieChartUserBalance />}
+                            {isWalletConnected && <ThalesBalance />}
+                        </Container>
+
                         <PriceChart currencyKey={'THALES'} showHeading={true} />
                         {isWalletConnected && <DisplayNameForm />}
                         <ThemeSelector />
@@ -77,6 +80,18 @@ export const Overlay = styled.div`
     }
 `;
 
+const Container = styled.div`
+    display: contents;
+    @media (max-width: 1024px) {
+        display: flex;
+        align-items: center;
+        justiyf-content: flex-start;
+        & > div {
+            width: 50%;
+        }
+    }
+`;
+
 const MenuCardButton = styled.div`
     position: absolute;
     top: 40px;
@@ -104,7 +119,7 @@ const MenuCard = styled.div<ManuCardProps>`
     border: 1px solid #64d9fe;
     box-sizing: border-box;
     border-radius: 15px;
-    z-index: 3;
+    z-index: 1000;
     &.light {
         background-color: #f7f7f7;
         --background: #f7f7f7;
@@ -117,18 +132,37 @@ const MenuCard = styled.div<ManuCardProps>`
         --icon-color: #f7f7f7;
         --shadow-color: '#64D9FE';
     }
+    @media (max-width: 1024px) {
+        width: 100%;
+        max-width: 100%;
+        max-height: unset;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+        border: none;
+    }
     box-shadow: var(--shadow);
 `;
 
 const CardWrapper = styled.div`
     padding: 24px;
+    max-width: 600px;
+    margin: auto;
+
+    @media (max-width: 568px) {
+        padding: 24px 12px;
+    }
 `;
 
 const CloseIcon = styled.i`
     position: absolute;
     top: 22px;
     right: 19px;
-    font-size: 10px;
+    font-size: 16px;
+    padding: 4px;
+    box-sizing: content-box;
     cursor: pointer;
     color: var(--icon-color);
 `;
@@ -138,6 +172,9 @@ const LogoContainer = styled.div`
     margin: 14px auto 16px auto;
     width: 100%;
     text-align: center;
+    @media (max-width: 1024px) {
+        margin: 0 0 10px 0px;
+    }
 `;
 
 const ThalesLogo = styled.i`
