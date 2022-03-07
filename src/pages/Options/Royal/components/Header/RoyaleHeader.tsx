@@ -6,6 +6,7 @@ import { BigNumber, ethers } from 'ethers';
 import Swap from 'pages/Options/Home/Swap';
 import { OP_sUSD, OP_KOVAN_SUSD } from 'pages/Options/Home/Swap/tokens';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
+import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +31,6 @@ import { Theme } from '../../ThalesRoyal';
 import useLatestRoyaleForUserInfo from '../Scoreboard/queries/useLastRoyaleForUserInfo';
 import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
-import useEthBalanceQuery from './queries/useEthBalanceQuery';
 import UserInfoRoyaleDialog from './UserInfoRoyaleDialog/UserInfoRoyaleDialog';
 
 type RoyaleHeaderInput = {
