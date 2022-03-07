@@ -681,11 +681,6 @@ const AMM: React.FC = () => {
             {txErrorMessage && (
                 <AlertMessage onClose={() => setTxErrorMessage(null)}>{t('amm.price-changed-warning')}</AlertMessage>
             )}
-            <AlertMessage background={'var(--table-border-color)'} onClose={() => setTxErrorMessage(null)}>
-                {
-                    'Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test '
-                }
-            </AlertMessage>
             {getSubmitButton()}
         </Wrapper>
     );
