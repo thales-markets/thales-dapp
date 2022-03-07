@@ -19,6 +19,7 @@ import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
 import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
+import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import PriceChart from 'components/Charts/PriceChart';
 
 enum NavItems {
@@ -149,6 +150,10 @@ const Profile: React.FC = () => {
                         </Wrapper.Value>
                     </Wrapper.Row>
                 </Wrapper>
+
+                <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400 }}>
+                    <ThalesBalance showTitle={true} />
+                </PriceContainer>
                 <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400 }}>
                     <PriceChart showTooltip={true} height={160} currencyKey={'THALES'} showHeading={true} />
                 </PriceContainer>
@@ -228,7 +233,8 @@ const PriceContainer = styled.div`
     box-sizing: border-box;
     width: 100%;
     max-width: 500px;
-    margin: 40px auto;
+    margin: 0 auto;
+    margin-top: 20px;
 `;
 
 export default Profile;

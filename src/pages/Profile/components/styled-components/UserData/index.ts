@@ -17,11 +17,11 @@ const Wrapper: StyledComponent<'div', any> & Children = styled.div`
     background: #04045a;
     box-sizing: border-box;
     border-radius: 15px;
-    padding: 24px 50px;
+    padding: 18px 32px;
     border: 2px solid rgba(100, 217, 254, 0.5);
     width: 100%;
     max-width: 500px;
-    margin: 40px auto;
+    margin: 0 auto;
 `;
 
 const Row = styled.div`
@@ -37,8 +37,8 @@ const Text = styled.span`
     display: block;
     font-family: Roboto !important;
     color: var(--primary-color);
-    font-size: 20px;
-    line-height: 31px;
+    font-size: 18px;
+    line-height: 24px;
 `;
 
 const Label = styled(Text)`

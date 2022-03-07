@@ -56,7 +56,7 @@ const WalletContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    max-width: 135px;
+    max-width: 150px;
 `;
 
 const WalletIcon = styled.i`

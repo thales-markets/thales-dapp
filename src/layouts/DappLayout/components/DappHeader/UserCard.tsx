@@ -16,6 +16,7 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { getTheme } from 'redux/modules/ui';
 import UserWalletExpanded from './UserWalletExpanded';
+import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 
 export const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
@@ -37,11 +38,12 @@ export const UserCard: React.FC = () => {
                             <ThalesLogo className="icon icon--logo" />
                         </LogoContainer>
                         <UserWalletExpanded />
+                        {isWalletConnected && <NetworkSwitchSection />}
                         {isWalletConnected && <PieChartUserBalance />}
+                        {isWalletConnected && <ThalesBalance />}
                         <PriceChart currencyKey={'THALES'} showHeading={true} />
                         {isWalletConnected && <DisplayNameForm />}
                         <ThemeSelector />
-                        {isWalletConnected && <NetworkSwitchSection />}
                         <LanguageCardSelector />
                     </CardWrapper>
                 </MenuCard>
@@ -94,9 +96,9 @@ const MenuIcon = styled.i`
 const MenuCard = styled.div<ManuCardProps>`
     display: ${({ visibility }) => (visibility ? 'block' : 'none')};
     position: fixed;
-    width: 241px;
+    max-width: 280px;
     right: 35px;
-    max-height: 90vh;
+    max-height: 95vh;
     overflow-y: auto;
     top: 35px;
     border: 1px solid #64d9fe;
@@ -119,7 +121,7 @@ const MenuCard = styled.div<ManuCardProps>`
 `;
 
 const CardWrapper = styled.div`
-    padding: 26px;
+    padding: 24px;
 `;
 
 const CloseIcon = styled.i`
