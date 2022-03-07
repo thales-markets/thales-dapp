@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Container from './styled-components/Container';
 
@@ -9,25 +9,26 @@ type SlippageProps = {
 };
 
 const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandler }) => {
-    const [value, setValue] = useState<number>(defaultValue ? defaultValue : 0);
-
     const changeHandler = (event: React.ChangeEvent<HTMLInputElement> | number) => {
         let newValue = 0;
 
-        if (typeof event == 'number') return setValue(event);
+        if (typeof event == 'number' && typeof onChangeHandler == 'function') {
+            return onChangeHandler(event);
+        }
 
-        if (Number(event.target.value) > 100) {
-            newValue = 100;
-        } else if (Number(event.target.value) < 0) {
-            newValue = 0;
-        } else {
-            newValue = Number(event.target.value);
+        if (typeof event !== 'number') {
+            if (Number(event.target.value) > 100) {
+                newValue = 100;
+            } else if (Number(event.target.value) < 0) {
+                newValue = 0;
+            } else {
+                newValue = Number(event.target.value);
+            }
         }
 
         if (typeof onChangeHandler !== 'undefined') {
             onChangeHandler(newValue);
         }
-        setValue(newValue);
     };
 
     const clickHandler = (arg: number) => {
@@ -45,7 +46,7 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
                         return (
                             <Container.ValueContainer.Fixed
                                 key={index}
-                                active={value == percentage}
+                                active={defaultValue == percentage}
                                 onClick={() => clickHandler(percentage)}
                             >{`${percentage}%`}</Container.ValueContainer.Fixed>
                         );
@@ -53,7 +54,7 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
                 <Container.ValueContainer.SlippageInput>
                     <Container.ValueContainer.SlippageInput.InputField
                         type="number"
-                        value={value}
+                        value={defaultValue}
                         onChange={(event) => changeHandler(event)}
                     />
                     <Container.ValueContainer.SlippageInput.Percentage>
