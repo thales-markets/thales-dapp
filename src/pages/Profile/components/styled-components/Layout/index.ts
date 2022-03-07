@@ -20,13 +20,14 @@ const Container: any & Children = styled.div<ContainerProps>`
 `;
 
 const ContainerFixed = styled.div`
-    height: 130px;
     display: flex;
-    flex-direction: column;
-    -webkit-box-pack: justify;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
     position: absolute;
-    top: -140px;
+    width: 100%;
+    max-width: 400px;
+    top: -40px;
 `;
 
 const ContainerLeft = styled.div<ContainerProps>`

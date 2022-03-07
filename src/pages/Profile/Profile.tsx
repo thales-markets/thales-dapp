@@ -163,6 +163,8 @@ const Profile: React.FC = () => {
 };
 
 const PageTitle = styled.p`
+    position: absolute;
+    top: -100px;
     font-family: Roboto !important;
     font-style: normal;
     font-weight: 600;

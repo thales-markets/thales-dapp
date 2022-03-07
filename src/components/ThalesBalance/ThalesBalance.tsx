@@ -118,38 +118,16 @@ const calculateWidth = (inWallet: number, staked: number, escrowedBalance: numbe
     const result = { inWallet: 0, staked: 0, escrowed: 0 };
     if (inWallet >= staked && inWallet >= escrowedBalance) {
         result.inWallet = 100;
-
-        if (staked > escrowedBalance) {
-            result.escrowed = Number(((100 * escrowedBalance) / staked / 2).toFixed(0));
-            result.staked = 100 - result.escrowed;
-            // result.staked = 85;
-        } else {
-            result.staked = Number(((100 * staked) / escrowedBalance / 2).toFixed(0));
-            result.escrowed = 100 - result.staked;
-            // result.escrowed = 85;
-        }
+        result.staked = (Math.log(staked) / Math.log(inWallet)) * 100;
+        result.escrowed = (Math.log(escrowedBalance) / Math.log(inWallet)) * 100;
     } else if (staked >= inWallet && staked >= escrowedBalance) {
         result.staked = 100;
-        if (inWallet > escrowedBalance) {
-            result.escrowed = Number(((100 * escrowedBalance) / inWallet / 2).toFixed(0));
-            result.inWallet = 100 - result.escrowed;
-            // result.inWallet = 85;
-        } else {
-            result.inWallet = Number(((100 * inWallet) / escrowedBalance / 2).toFixed(0));
-            result.escrowed = 100 - result.inWallet;
-            // result.escrowed = 85;
-        }
+        result.inWallet = (Math.log(inWallet) / Math.log(staked)) * 100;
+        result.escrowed = (Math.log(escrowedBalance) / Math.log(staked)) * 100;
     } else if (escrowedBalance >= staked && escrowedBalance >= inWallet) {
         result.escrowed = 100;
-        if (staked > inWallet) {
-            result.inWallet = Number(((100 * inWallet) / staked / 2).toFixed(0));
-            result.staked = 100 - result.inWallet;
-            // result.staked = 85;
-        } else {
-            result.staked = Number(((100 * staked) / inWallet / 2).toFixed(0));
-            result.inWallet = 100 - result.staked;
-            // result.inWallet = 85;
-        }
+        result.staked = (Math.log(staked) / Math.log(escrowedBalance)) * 100;
+        result.inWallet = (Math.log(inWallet) / Math.log(escrowedBalance)) * 100;
     }
     return result;
 };
