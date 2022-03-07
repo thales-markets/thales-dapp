@@ -589,8 +589,13 @@ const AMM: React.FC = () => {
                 subValue={OPTIONS_CURRENCY_MAP[optionSide]}
                 valueChange={(value) => setAmount(value)}
                 borderColor={!isAmountValid ? '#C3244A' : undefined}
-                displayTooltip={!isAmountValid}
-                tooltipText={'Alo bre'}
+                displayTooltip={!isAmountValid || maxLimitExceeded}
+                tooltipText={t(
+                    !isAmountValid ? 'common.errors.insufficient-balance-wallet' : 'common.errors.max-limit-exceeded',
+                    {
+                        currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                    }
+                )}
             />
             <RangeSlider
                 min={1}
