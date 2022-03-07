@@ -1,5 +1,6 @@
 import React from 'react';
 import Container from './styled-components/Container';
+import Tooltip from '@material-ui/core/Tooltip';
 
 type InputProps = {
     title: string;
@@ -14,6 +15,7 @@ type InputProps = {
     subValue?: string;
     subValueColor?: string;
     subValueFontSize?: string;
+    borderColor?: string;
     displayTooltip?: boolean;
     tooltipText?: string;
 };
@@ -31,6 +33,9 @@ const Input: React.FC<InputProps> = ({
     subValue,
     subValueColor,
     subValueFontSize,
+    borderColor,
+    displayTooltip,
+    tooltipText,
 }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof valueChange == 'function') {
@@ -39,24 +44,26 @@ const Input: React.FC<InputProps> = ({
     };
 
     return (
-        <Container>
-            <Container.Title color={titleColor} fontSize={titleFontSize}>
-                {title}
-            </Container.Title>
-            <Container.ValueContainer>
-                <Container.ValueContainer.Value
-                    color={valueColor}
-                    fontSize={valueFontSize}
-                    value={value}
-                    onChange={handleChange}
-                    disabled={valueEditDisable}
-                    type={valueType ? valueType : ''}
-                />
-                <Container.ValueContainer.SubValue color={subValueColor} fontSize={subValueFontSize}>
-                    {subValue}
-                </Container.ValueContainer.SubValue>
-            </Container.ValueContainer>
-        </Container>
+        <Tooltip open={displayTooltip} title={tooltipText ? tooltipText : ''}>
+            <Container borderColor={borderColor}>
+                <Container.Title color={titleColor} fontSize={titleFontSize}>
+                    {title}
+                </Container.Title>
+                <Container.ValueContainer>
+                    <Container.ValueContainer.Value
+                        color={valueColor}
+                        fontSize={valueFontSize}
+                        value={value}
+                        onChange={handleChange}
+                        disabled={valueEditDisable}
+                        type={valueType ? valueType : ''}
+                    />
+                    <Container.ValueContainer.SubValue color={subValueColor} fontSize={subValueFontSize}>
+                        {subValue}
+                    </Container.ValueContainer.SubValue>
+                </Container.ValueContainer>
+            </Container>
+        </Tooltip>
     );
 };
 
