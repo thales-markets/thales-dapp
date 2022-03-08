@@ -1513,7 +1513,8 @@
             "staking": "<0>THALES Staking был перенесен на L2 за </0><1 />.",
             "vesting": "<0>Условное депонирование THALES было перенесено на L2 за </0><1 />.",
             "retro-unlock": "<0>Этот дистрибутив доступен на L1 за </0><1 />.",
-            "retro-airdrop": "<0>Ретро-раздача была перенесена на L2 за </0><1 />."
+            "retro-airdrop": "<0>Ретро-раздача была перенесена на L2 за </0><1 />.",
+            "lp-staking": "<0>Стейкинг LP был перенесен на L2 за </0><1 />."
         },
         "migration-notice": {
             "button-label": "Перенести THALES",
@@ -1522,7 +1523,9 @@
         "tabs": {
             "migrate": "Мигрировать",
             "swap": "Менять",
-            "withdraw": "Изымать"
+            "withdraw": "Изымать",
+            "bridge": "Мост",
+            "migrate-and-bridge": "Миграция и мост"
         },
         "from-label": "От",
         "to-label": "К",
@@ -1531,6 +1534,11 @@
         "title": "Миграция",
         "info-tooltip": "<0>Во время миграции THALES сначала заменяется на OpTHALES в основной сети L1, а затем подключается к основной сети L2 Optimistic в THALES L2 за </0><1 />.",
         "migration-multisig-contact-warning": "Мультиподписи или контракты не должны переноситься напрямую, иначе вы потеряете свои средства.",
-        "migration-amount-label": "Сумма для переноса"
+        "migration-amount-label": "Сумма для переноса",
+        "bridge-button": {
+            "label": "Мост",
+            "progress-label": "Идет перевязка...",
+            "confirmation-message": "Токены успешно подключены к L2"
+        }
     }
 }
