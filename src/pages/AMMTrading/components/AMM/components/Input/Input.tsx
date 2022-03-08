@@ -44,7 +44,7 @@ const Input: React.FC<InputProps> = ({
     };
 
     return (
-        <Tooltip open={displayTooltip} title={tooltipText ? tooltipText : ''}>
+        <Tooltip open={displayTooltip} placement="top-start" title={tooltipText ? tooltipText : ''}>
             <Container borderColor={borderColor}>
                 <Container.Title color={titleColor} fontSize={titleFontSize}>
                     {title}
