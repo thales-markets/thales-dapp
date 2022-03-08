@@ -1288,6 +1288,10 @@
         "trading-profile": {
             "title": "交易资料",
             "search-placeholder": "搜索钱包"
+        },
+        "order-book": {
+            "trade-down": "交易选项",
+            "trade-up": "以旧换新"
         }
     },
     "governance": {

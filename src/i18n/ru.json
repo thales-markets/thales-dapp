@@ -1288,6 +1288,10 @@
         "trading-profile": {
             "title": "Торговый профиль",
             "search-placeholder": "Поиск кошелька"
+        },
+        "order-book": {
+            "trade-up": "Варианты обмена",
+            "trade-down": "Варианты торговли вниз"
         }
     },
     "governance": {
