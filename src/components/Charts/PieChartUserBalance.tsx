@@ -70,7 +70,7 @@ const PieChartUserBalance: React.FC = () => {
                         <PartialAmount>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</PartialAmount>
                         <ThalesAmount>{formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}</ThalesAmount>
                     </BalanceInfoContainer>
-                    <PieChart width={180} height={180}>
+                    <PieChart style={{ margin: 'auto' }} width={180} height={180}>
                         <Pie
                             startAngle={-45}
                             cornerRadius={20}
