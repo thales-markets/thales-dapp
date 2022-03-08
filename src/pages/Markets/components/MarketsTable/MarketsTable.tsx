@@ -34,17 +34,12 @@ import { getSynthName } from 'utils/currency';
 
 import './main.scss';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
+import Phase from '../Phase/Phase';
 
 type MarketsTableProps = {
     exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
     watchlistedMarkets?: string[];
-};
-
-const MarketPhase = {
-    trading: '#50CE99',
-    paused: '#C3244A',
-    maturity: '#F7B91A',
 };
 
 const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
@@ -187,11 +182,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 Header: t(`options.home.markets-table.phase-col`),
                 accessor: 'phase',
                 Cell: (_props: any) => {
-                    return (
-                        <Phase phase={_props?.cell?.value?.toLowerCase()}>
-                            {_props?.cell?.value?.toLowerCase()} <Dot phase={_props?.cell?.value?.toLowerCase()} />
-                        </Phase>
-                    );
+                    return <Phase phase={_props?.cell?.value?.toLowerCase()}></Phase>;
                 },
             },
             {
@@ -480,20 +471,6 @@ const RedText = styled(Text)`
     color: #c3244a;
 `;
 
-const Phase = styled.span<{ phase: 'trading' | 'paused' | 'maturity' }>`
-    color: ${(props: any) => (MarketPhase as any)[props.phase]};
-    text-transform: capitalize;
-    font-weight: 300;
-`;
-
-const Dot = styled.span<{ phase: 'trading' | 'paused' | 'maturity' }>`
-    height: 7px;
-    width: 7px;
-    background-color: ${(props: any) => (MarketPhase as any)[props.phase]};
-    border-radius: 50%;
-    display: inline-block;
-`;
-
 const Arrow = styled.i`
     margin-left: 5px;
     font-size: 15px;
@@ -515,6 +492,9 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    @media (max-width: 1250px) {
+        display: none;
+    }
 `;
 
 const FilterContainer = styled.div`

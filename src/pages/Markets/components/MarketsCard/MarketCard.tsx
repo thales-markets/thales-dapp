@@ -14,6 +14,7 @@ import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatter
 import { formatShortDate } from 'utils/formatters/date';
 import { getSynthName } from 'utils/currency';
 import { USD_SIGN } from 'constants/currency';
+import PhaseComponent from '../Phase/Phase';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;
@@ -36,7 +37,9 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                                 <AssetNameContainer>
                                     <AssetName>{getSynthName(optionMarket.currencyKey)}</AssetName>
                                     <CurrencyKey>{optionMarket.asset}</CurrencyKey>
-                                    <MarketStatus>operational</MarketStatus>
+                                    <MarketStatus>
+                                        <PhaseComponent phase={optionMarket.phase}></PhaseComponent>
+                                    </MarketStatus>
                                 </AssetNameContainer>
                             </AssetContainer>
                         </LeftContainer>
