@@ -1,4 +1,4 @@
-import { Phase, OptionSide } from '../types/options';
+import { Phase, OptionSide, OrderSide } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
     trading: 0,
@@ -12,6 +12,17 @@ export const SIDE: Record<OptionSide | number, number | OptionSide> = {
     0: 'long',
     1: 'short',
 };
+
+export const orderSideOptions = [
+    {
+        value: 'buy' as OrderSide,
+        i18nLabel: 'common.buy',
+    },
+    {
+        value: 'sell' as OrderSide,
+        i18nLabel: 'common.sell',
+    },
+];
 
 export const PHASES = ['trading', 'maturity', 'expiry'] as Phase[];
 export const PHASES_CARDS = ['trading', 'maturity'] as Phase[];

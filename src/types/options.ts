@@ -10,6 +10,8 @@ export type OptionType = 'up' | 'down';
 
 export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
+export type OrderSideOptionType = { value: OrderSide; label?: string; i18nLabel?: string };
+
 export type TradingType = 'AMM' | 'Orderbook';
 
 export type OptionsTransaction = {
