@@ -1283,6 +1283,10 @@
         "trading-profile": {
             "title": "Trading Profile",
             "search-placeholder": "Search Wallet"
+        },
+        "order-book": {
+            "trade-up": "Trade Up Options",
+            "trade-down": "Trade Down Options"
         }
     },
     "governance": {
