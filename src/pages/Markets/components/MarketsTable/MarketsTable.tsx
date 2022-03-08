@@ -87,7 +87,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     ];
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
     const [sortOptions, setSortOptions] = useState(GridSortFilters);
-    const [tableView, setTableView] = useState<boolean>(true);
+    const [tableView, setTableView] = useState<boolean>(window.innerWidth > 1250);
     const [assetFilters, setAssetFilters] = useState<string[]>([]);
 
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];

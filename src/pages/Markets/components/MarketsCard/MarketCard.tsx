@@ -80,13 +80,14 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
 const MarketCardWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    max-width: 390px;
+    max-width: 380px;
+    min-width: 370px;
     border: 2px solid rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
     border-radius: 15px;
-    padding: 31px;
+    padding: 31px 10px 31px 31px;
     margin: 7.5px;
-    flex: 1 0 30%;
+    flex: 1;
     :hover {
         transform: scale(1.02);
         border: 2px solid rgb(100, 217, 254, 1);
