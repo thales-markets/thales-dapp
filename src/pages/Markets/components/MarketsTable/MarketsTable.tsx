@@ -83,6 +83,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
     const [sortOptions, setSortOptions] = useState(GridSortFilters);
     const [tableView, setTableView] = useState<boolean>(window.innerWidth > 1250);
+    const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
     const [assetFilters, setAssetFilters] = useState<string[]>([]);
 
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
@@ -319,6 +320,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     return (
         <>
             <Wrapper>
+                <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
                 <FilterContainer>
                     {allAssets.size > 0 &&
                         [...(allAssets as any)].map((value: string, index: number) => {
@@ -339,7 +341,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                                         }
                                     }}
                                 >
-                                    <CurrencyIcon width="40px" height="40px" currencyKey={value} />
+                                    <CurrencyIcon currencyKey={value} />
                                 </Item>
                             );
                         })}
@@ -353,7 +355,13 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     <SearchField text={globalFilter} handleChange={(value) => setGlobalFilter(value)} />
                 </FormContainer>
             </Wrapper>
-            {!tableView && <SortingMenu items={sortOptions} itemClickEventHandler={updateSortOptions} />}
+            {!tableView && showSorting && (
+                <SortingMenu
+                    setShowSorting={setShowSorting}
+                    items={sortOptions}
+                    itemClickEventHandler={updateSortOptions}
+                />
+            )}
             {tableView && (
                 <>
                     <table {...getTableProps()}>
@@ -485,6 +493,10 @@ const Wrapper = styled(FlexDivRow)`
     margin-bottom: 10px;
     max-width: 1200px;
     align-items: flex-end;
+    @media (max-width: 768px) {
+        align-items: flex-start;
+        max-width: 390px;
+    }
 `;
 
 const FormContainer = styled.div`
@@ -497,22 +509,54 @@ const FormContainer = styled.div`
     }
 `;
 
+const FiltersButton = styled.div`
+    display: none;
+    padding: 6px 20px;
+    border: 1.5px solid rgba(100, 217, 254, 0.5);
+    box-sizing: border-box;
+    border-radius: 30px;
+    background: transparent;
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 11px;
+    text-transform: uppercase;
+    color: #64d9fe;
+    @media (max-width: 768px) {
+        display: block;
+    }
+`;
+
 const FilterContainer = styled.div`
     display: flex;
     align-items: stretch;
 `;
 
 const Item = styled.span`
-    padding: 6px 14px 6px 14px;
     box-sizing: content-box;
-    width: 40px;
+    width: 50px;
     margin-bottom: -10px;
     color: var(--primary-color);
     cursor: pointer;
+
     opacity: 0.5;
     &.active {
         opacity: 1;
         box-shadow: 0px 4px var(--primary-filter-menu-active);
+    }
+
+    & > svg {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    @media (max-width: 768px) {
+        width: 32px;
+        & > svg {
+            width: 26px !important;
+            height: 26px !important;
+        }
     }
 `;
 
