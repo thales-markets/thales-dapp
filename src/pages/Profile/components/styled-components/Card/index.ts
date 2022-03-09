@@ -51,18 +51,38 @@ const CardRow = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    & > svg {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    @media (max-width: 500px) {
+        & > svg {
+            width: 26px !important;
+            height: 26px !important;
+            margin-bottom: 4px;
+        }
+    }
 `;
 
 const CardText = styled.span`
     display: block;
     font-family: Roboto !important;
     color: var(--primary-color);
+    line-height: 100%;
 `;
 
 const SectionContainer = styled.div`
     display: block;
     &:not(:last-child) {
         margin-bottom: 10px;
+    }
+    @media (max-width: 500px) {
+        & > svg {
+            width: 32px !important;
+            height: 32px !important;
+            margin-bottom: 4px;
+        }
     }
 `;
 
@@ -71,11 +91,23 @@ const Header = styled(CardText)`
     font-weight: 400;
     text-transform: capitalize;
     margin-bottom: 4px;
+    @media (max-width: 500px) {
+        font-size: 8px;
+    }
 `;
 
 const SubHeader = styled(CardText)`
     font-size: 23px;
+    span {
+        font-size: 23px !important;
+    }
     font-weight: 700;
+    @media (max-width: 500px) {
+        font-size: 14px;
+        span {
+            font-size: 14px !important;
+        }
+    }
 `;
 
 Card.Wrapper = CardWrapper;

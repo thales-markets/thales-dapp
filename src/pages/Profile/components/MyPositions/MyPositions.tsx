@@ -169,7 +169,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                     height={30}
                                                     width={120}
                                                     footerFontSize="8px"
-                                                    showFooter
+                                                    showFooter={window.innerWidth > 500}
                                                 />
                                             </Card.Section>
                                         </Card.Column>

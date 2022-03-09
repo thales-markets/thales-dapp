@@ -78,6 +78,9 @@ const Title = styled.p`
     text-transform: uppercase;
     color: #64d9fe;
     margin-bottom: 10px;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const Bar = styled.div<{ width: number; background: string }>`
@@ -90,17 +93,20 @@ const Bar = styled.div<{ width: number; background: string }>`
     margin-bottom: 4px;
     background: ${(props) => props.background};
     padding: 0 10px;
+    @media (max-width: 500px) {
+        min-width: 70%;
+    }
 `;
 
 const Label = styled.p`
     font-family: Roboto !important;
     font-style: normal;
     font-weight: normal;
-    font-size: 10px;
     line-height: 21px;
     letter-spacing: 0.035em;
     text-transform: capitalize;
     color: #ffffff;
+    font-size: 8px;
 `;
 
 const Amount = styled.p`
@@ -109,6 +115,9 @@ const Amount = styled.p`
     font-weight: bold;
     font-size: 10px;
     line-height: 18px;
+    @media (max-width: 768px) {
+        font-size: 8px;
+    }
     letter-spacing: 0.035em;
     text-transform: capitalize;
     color: #ffffff;
