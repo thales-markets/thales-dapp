@@ -339,7 +339,9 @@
                 "end-time": "End time",
                 "initial-locked": "Initially Locked",
                 "start-quiz": "Start Quiz",
-                "confirmation-message": "Tokens successfully claimed"
+                "confirmation-message": "Tokens successfully claimed",
+                "olympus-notice": "You can now get THALES bonds on",
+                "olympus-button-text": "Olympus PRO"
             },
             "thales-staking": {
                 "tab-title": "Staking",
@@ -1534,6 +1536,11 @@
             "bridge": "Bridge",
             "withdraw": "Withdraw",
             "swap": "Swap"
+        },
+        "info-messages": {
+            "migrate-and-bridge": "Choose this option if you have LEGACY THALES on L1, want to exchange it to THALES and bridge it to Optimism (L2)",
+            "migrate": "Choose this option if you have LEGACY THALES on L1 and want to exchange it to THALES maintaining it on L1. Be mindful that most of the liquidity of THALES is on OP (L2)",
+            "bridge": "Choose this option if you already have THALES on L1 and want to bridge it to OP (L2)"
         }
     }
 }

@@ -344,7 +344,9 @@
                 "end-time": "Время окончания",
                 "initial-locked": "Изначально заблокировано",
                 "start-quiz": "Начать тест",
-                "confirmation-message": "Токены успешно востребованны"
+                "confirmation-message": "Токены успешно востребованны",
+                "olympus-notice": "Теперь вы можете получить облигации THALES на",
+                "olympus-button-text": "Олимп ПРО"
             },
             "thales-staking": {
                 "tab-title": "Стэйкинг",
@@ -1539,6 +1541,11 @@
             "label": "Мост",
             "progress-label": "Идет перевязка...",
             "confirmation-message": "Токены успешно подключены к L2"
+        },
+        "info-messages": {
+            "bridge": "Выберите этот вариант, если у вас уже есть THALES на L1 и вы хотите подключить его к OP (L2)",
+            "migrate": "Выберите этот вариант, если у вас есть LEGACY THALES на L1 и вы хотите обменять его на THALES, сохранив его на L1. Помните, что большая часть ликвидности THALES приходится на OP (L2)",
+            "migrate-and-bridge": "Выберите этот вариант, если у вас есть LEGACY THALES на L1, вы хотите обменять его на THALES и подключить к Optimism (L2)"
         }
     }
 }

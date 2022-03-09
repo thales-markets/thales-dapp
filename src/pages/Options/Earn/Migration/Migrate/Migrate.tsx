@@ -28,6 +28,7 @@ import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number'
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import {
     ArrowContainer,
+    InfoSection,
     MaxButton,
     NetworkLabel,
     Result,
@@ -220,6 +221,7 @@ const Migrate: React.FC = () => {
 
     return (
         <>
+            <InfoSection>{t('migration.info-messages.migrate-and-bridge')}</InfoSection>
             <InputContainer>
                 <NumericInput
                     value={amount}

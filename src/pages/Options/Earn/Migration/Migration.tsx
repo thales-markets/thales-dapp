@@ -15,12 +15,12 @@ const Migration: React.FC = () => {
 
     const tabs = [
         {
-            id: 'swap',
-            name: t(`migration.tabs.migrate`),
-        },
-        {
             id: 'migrate',
             name: t(`migration.tabs.migrate-and-bridge`),
+        },
+        {
+            id: 'swap',
+            name: t(`migration.tabs.migrate`),
         },
         {
             id: 'bridge',
@@ -36,7 +36,7 @@ const Migration: React.FC = () => {
     const location = useLocation();
     const paramAction = queryString.parse(location.search).action;
     const isTabAvailable = paramAction !== null && tabIds.includes(paramAction);
-    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramAction : 'swap');
+    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramAction : 'migrate');
 
     const optionsTabContent: Array<{
         id: string;
@@ -54,7 +54,7 @@ const Migration: React.FC = () => {
         <GridWrapper>
             <Wrapper>
                 <Container>
-                    <OptionsTabContainer>
+                    <FlexDivRowCentered>
                         <FlexDiv>
                             {optionsTabContent.map((tab, index) => (
                                 <OptionsTab
@@ -91,9 +91,9 @@ const Migration: React.FC = () => {
                                 <StyledInfoIcon />
                             </StyledMaterialTooltip>
                         )}
-                    </OptionsTabContainer>
-                    {selectedTab === 'swap' && <Swap />}
+                    </FlexDivRowCentered>
                     {selectedTab === 'migrate' && <Migrate />}
+                    {selectedTab === 'swap' && <Swap />}
                     {selectedTab === 'bridge' && <Bridge />}
                 </Container>
             </Wrapper>
@@ -127,10 +127,6 @@ const Container = styled(FlexDivColumn)`
     @media (max-width: 767px) {
         padding: 30px 20px 40px 20px;
     }
-`;
-
-const OptionsTabContainer = styled(FlexDivRowCentered)`
-    margin-bottom: 40px;
 `;
 
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`

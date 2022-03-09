@@ -35,6 +35,8 @@ import { getIsOVM, isNetworkSupported } from '../../../utils/network';
 import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
 import MigratedRewards from './MigratedRewards';
+import Notice from './components/Notice';
+import { MigrateButton, MigrateText } from './components/MigrationNotice/MigrationNotice';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -131,6 +133,23 @@ const EarnPage: React.FC = () => {
                         <FlexDivColumn>
                             <TokenOverview />
                             {!isL2 && selectedTab !== 'migration' && <MigrationNotice />}
+                            {isL2 && (
+                                <Notice>
+                                    <MigrateText>{t('options.earn.snx-stakers.olympus-notice')}</MigrateText>
+                                    <FlexDivCentered>
+                                        <MigrateButton
+                                            onClick={() =>
+                                                window.open(
+                                                    'https://pro.olympusdao.finance/#/partners/Thales',
+                                                    '_blank'
+                                                )
+                                            }
+                                        >
+                                            {t('options.earn.snx-stakers.olympus-button-text')}
+                                        </MigrateButton>
+                                    </FlexDivCentered>
+                                </Notice>
+                            )}
                             <MainContentContainer>
                                 <OptionsTabContainer>
                                     {optionsTabContent.map((tab, index) => (

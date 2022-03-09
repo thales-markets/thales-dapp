@@ -344,7 +344,9 @@
                 "end-time": "结束时间",
                 "initial-locked": "初始锁定",
                 "start-quiz": "开始测验",
-                "confirmation-message": "代币已成功认领"
+                "confirmation-message": "代币已成功认领",
+                "olympus-notice": "您现在可以购买 THALES 债券",
+                "olympus-button-text": "奥林巴斯 PRO"
             },
             "thales-staking": {
                 "tab-title": "质押",
@@ -1539,6 +1541,11 @@
             "label": "桥",
             "confirmation-message": "令牌成功桥接到 L2",
             "progress-label": "桥接中..."
+        },
+        "info-messages": {
+            "bridge": "如果您在 L1 上已经有 THALES 并希望将其桥接到 OP (L2)，请选择此选项",
+            "migrate-and-bridge": "如果您在 L1 上有 LEGACY THALES，希望将其交换为 THALES 并将其桥接到 Optimism (L2)，请选择此选项",
+            "migrate": "如果您在 L1 上拥有 LEGACY THALES，并希望将其交换给在 L1 上维护它的 THALES，请选择此选项。请注意，THALES 的大部分流动性都在 OP (L2) 上"
         }
     }
 }

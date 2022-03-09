@@ -28,6 +28,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';
 import {
     ArrowContainer,
+    InfoSection,
     MaxButton,
     NetworkLabel,
     Result,
@@ -227,6 +228,7 @@ const Swap: React.FC = () => {
 
     return (
         <>
+            <InfoSection>{t('migration.info-messages.migrate')}</InfoSection>
             <InputContainer>
                 <NumericInput
                     value={amount}
