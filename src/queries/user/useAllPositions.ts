@@ -74,11 +74,34 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                     .map((market) => {
                         return (snxJSConnector as any).binaryOptionsMarketDataContract
                             .getAccountMarketData(market.address, walletAddress)
-                            .then((result: any) => {
+                            .then(async (result: any) => {
+                                let [positionValueUp, positionValueDown] = [0, 0];
+                                if (result.balances.short > 0) {
+                                    positionValueDown = bigNumberFormatter(
+                                        await (snxJSConnector as any).ammContract.sellToAmmQuote(
+                                            market.address,
+                                            1,
+                                            result.balances.short
+                                        )
+                                    );
+                                }
+
+                                if (result.balances.long > 0) {
+                                    positionValueUp = bigNumberFormatter(
+                                        await (snxJSConnector as any).ammContract.sellToAmmQuote(
+                                            market.address,
+                                            0,
+                                            result.balances.long
+                                        )
+                                    );
+                                }
+
                                 return {
                                     market,
                                     balances: {
                                         long: bigNumberFormatter(result.balances.long),
+                                        longValue: positionValueUp,
+                                        shortValue: positionValueDown,
                                         short: bigNumberFormatter(result.balances.short),
                                     },
                                 };

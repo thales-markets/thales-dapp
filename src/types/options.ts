@@ -193,6 +193,8 @@ export type UsersAssets = {
     balances: {
         long: number;
         short: number;
+        longValue: number;
+        shortValue: number;
     };
 };
 

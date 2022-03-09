@@ -296,7 +296,8 @@
                 "difference-text": "Difference between current and strike price",
                 "time-remaining": "Time remaining",
                 "result": "Current result",
-                "view-market": "View Market"
+                "view-market": "View Market",
+                "price-difference": "Price difference"
             },
             "hot-market-card": {
                 "price-per-option": "Price per option",

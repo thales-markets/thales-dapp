@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 
@@ -34,6 +34,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     modifiedValue.link = buildOptionsMarketLink(value.market.address);
                     modifiedValue.balances.amount = value.balances.long;
                     modifiedValue.balances.type = 'UP';
+                    modifiedValue.balances.value = value.balances.longValue;
                     newArray.push(modifiedValue);
                 }
                 if (value.balances.short > 0) {
@@ -41,6 +42,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     newValue.link = buildOptionsMarketLink(value.market.address);
                     newValue.balances.amount = value.balances.short;
                     newValue.balances.type = 'DOWN';
+                    newValue.balances.value = value.balances.shortValue;
                     newArray.push(newValue);
                 }
             });
@@ -67,29 +69,49 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                 <Card.Wrapper>
                                     <Card>
                                         <Card.Column>
-                                            <Card.Row>
+                                            <Card.Row style={{ marginBottom: 10 }}>
                                                 <CurrencyIcon
-                                                    width="40px"
-                                                    height="40px"
+                                                    width="36px"
+                                                    height="36px"
                                                     currencyKey={data.market.currencyKey}
                                                 />
-                                                <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
+
+                                                <Card.Section>
+                                                    <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
+                                                    <Card.RowTitle
+                                                        style={{
+                                                            color: data.balances.type === 'UP' ? '#50CE99' : '#C3244A',
+                                                        }}
+                                                    >
+                                                        {data.balances.type}
+                                                    </Card.RowTitle>
+                                                </Card.Section>
                                             </Card.Row>
-                                            <Card.Row>
+                                            <Card.Section>
+                                                <Card.RowTitle>Maturity Date</Card.RowTitle>
                                                 <Card.RowSubtitle>
-                                                    @{formatShortDate(data.market.maturityDate)}
+                                                    {formatShortDate(data.market.maturityDate)}
                                                 </Card.RowSubtitle>
-                                            </Card.Row>
+                                            </Card.Section>
+                                            <Card.Section>
+                                                <Card.RowTitle>Time Left</Card.RowTitle>
+                                                <Card.RowSubtitle>
+                                                    <TimeRemaining
+                                                        end={data.market.maturityDate}
+                                                        fontSize={20}
+                                                        showFullCounter={true}
+                                                    />
+                                                </Card.RowSubtitle>
+                                            </Card.Section>
                                         </Card.Column>
                                         <Card.Column>
-                                            <PriceChart
-                                                containerStyle={{ margin: 'auto' }}
-                                                currencyKey={data.market.currencyKey}
-                                                showFooter
-                                            />
-                                        </Card.Column>
-                                        <Card.Column>
-                                            <Card.Row>
+                                            <Card.Section>
+                                                <Card.RowTitle>Strike Price</Card.RowTitle>
+                                                <Card.RowSubtitle>
+                                                    {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
+                                                </Card.RowSubtitle>
+                                            </Card.Section>
+                                            <Card.Section>
                                                 <Card.RowTitle>
                                                     {t('options.home.market-card.current-asset-price')}
                                                 </Card.RowTitle>
@@ -99,26 +121,28 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                         exchangeRates?.[data.market.currencyKey] || 0
                                                     )}
                                                 </Card.RowSubtitle>
-                                            </Card.Row>
-                                            <Card.Row>
-                                                <Card.RowTitle>Strike Price</Card.RowTitle>
+                                            </Card.Section>
+                                            <Card.Section>
+                                                <Card.RowTitle>
+                                                    {t('options.home.market-card.price-difference')}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
+                                                    <PriceDifferenceInfo
+                                                        priceDiff={
+                                                            data.market.strikePrice >
+                                                            (exchangeRates?.[data.market?.currencyKey] || 0)
+                                                        }
+                                                    >
+                                                        {`${getPercentageDifference(
+                                                            data.market.strikePrice,
+                                                            exchangeRates?.[data.market?.currencyKey] || 0
+                                                        ).toFixed(2)}%`}
+                                                    </PriceDifferenceInfo>
                                                 </Card.RowSubtitle>
-                                            </Card.Row>
+                                            </Card.Section>
                                         </Card.Column>
                                         <Card.Column>
-                                            <Card.Row>
-                                                <Card.RowTitle>Time Left</Card.RowTitle>
-                                                <Card.RowSubtitle>
-                                                    <TimeRemaining
-                                                        end={data.market.maturityDate}
-                                                        fontSize={20}
-                                                        showFullCounter={true}
-                                                    />
-                                                </Card.RowSubtitle>
-                                            </Card.Row>
-                                            <Card.Row>
+                                            <Card.Section>
                                                 <Card.RowTitle>Amount</Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {data.balances.amount.toFixed(2)}
@@ -131,7 +155,23 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                         {data.balances.type}
                                                     </span>
                                                 </Card.RowSubtitle>
-                                            </Card.Row>
+                                            </Card.Section>
+                                            <Card.Section>
+                                                <Card.RowTitle>Position Value</Card.RowTitle>
+                                                <Card.RowSubtitle>
+                                                    {formatCurrencyWithSign(USD_SIGN, data.balances.value.toFixed(2))}
+                                                </Card.RowSubtitle>
+                                            </Card.Section>
+                                            <Card.Section>
+                                                <PriceChart
+                                                    containerStyle={{ margin: 'auto' }}
+                                                    currencyKey={data.market.currencyKey}
+                                                    height={30}
+                                                    width={120}
+                                                    footerFontSize="8px"
+                                                    showFooter
+                                                />
+                                            </Card.Section>
                                         </Card.Column>
                                     </Card>
                                 </Card.Wrapper>
@@ -247,6 +287,10 @@ const TableText = styled.span`
     text-align: right;
     text-transform: uppercase;
     color: #ffffff;
+`;
+
+const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
+    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
 `;
 
 export default MyPositions;

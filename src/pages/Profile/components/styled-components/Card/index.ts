@@ -6,6 +6,7 @@ type Children = {
     Row: StyledComponent<'div', any>;
     RowTitle: StyledComponent<'span', any>;
     RowSubtitle: StyledComponent<'span', any>;
+    Section: StyledComponent<'div', any>;
 };
 
 type WrapperProps = {
@@ -32,11 +33,10 @@ const Card: StyledComponent<'div', any> & Children = styled.div`
     background: #04045a;
     box-sizing: border-box;
     border-radius: 15px;
-    padding: 24px;
+    padding: 16px 24px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 140px;
+    justify-content: space-around;
 `;
 const CardColumn = styled.div`
     display: flex;
@@ -44,11 +44,12 @@ const CardColumn = styled.div`
     align-items: flex-start;
     justify-content: space-between;
     height: 100%;
-    flex: 2;
-    &:nth-child(2) {
-        margin-left: 10px;
-        margin-right: 20px;
-    }
+`;
+
+const CardRow = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 const CardText = styled.span`
@@ -59,22 +60,27 @@ const CardText = styled.span`
 
 const SectionContainer = styled.div`
     display: block;
+    &:not(:last-child) {
+        margin-bottom: 10px;
+    }
 `;
 
 const Header = styled(CardText)`
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     text-transform: capitalize;
+    margin-bottom: 4px;
 `;
 
 const SubHeader = styled(CardText)`
-    font-size: 20px;
+    font-size: 23px;
     font-weight: 700;
 `;
 
 Card.Wrapper = CardWrapper;
 Card.Column = CardColumn;
-Card.Row = SectionContainer;
+Card.Section = SectionContainer;
+Card.Row = CardRow;
 Card.RowTitle = Header;
 Card.RowSubtitle = SubHeader;
 
