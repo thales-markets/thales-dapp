@@ -694,7 +694,7 @@ const AMM: React.FC = () => {
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    border: 2px solid var(--input-border-color);
+    border: 2px solid var(--card-border-color);
     border-radius: 15px;
     padding: 30px;
     margin-right: 27px;

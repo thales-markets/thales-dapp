@@ -449,7 +449,7 @@ export const MarketCardContainer = styled.div`
 `;
 
 export const CardContainer = styled.div`
-    border: 2px solid var(--input-border-color);
+    border: 2px solid var(--card-border-color);
     border-radius: 15px;
 `;
 
