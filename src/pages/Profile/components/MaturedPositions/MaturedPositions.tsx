@@ -81,7 +81,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                             <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>
                                 <Card.Wrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
                                     <Card>
-                                        <Card.Column>
+                                        <Card.Column style={{ flex: 1 }}>
                                             <Card.Section>
                                                 <CurrencyIcon
                                                     width="40px"

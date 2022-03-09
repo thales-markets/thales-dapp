@@ -44,6 +44,7 @@ const CardColumn = styled.div`
     align-items: flex-start;
     justify-content: space-between;
     height: 100%;
+    flex: 2;
 `;
 
 const CardRow = styled.div`
