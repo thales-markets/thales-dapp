@@ -35,33 +35,35 @@ import { getIsOVM, isNetworkSupported } from '../../../utils/network';
 import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
 import MigratedRewards from './MigratedRewards';
-
-const DEFAULT_TAB = 'staking';
+import Notice from './components/Notice';
+import { MigrateButton, MigrateText } from './components/MigrationNotice/MigrationNotice';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
+    const defaultTab = isL2 ? 'staking' : 'migration';
+
     const tabs = [
-        {
-            id: 'staking',
-            name: t('options.earn.thales-staking.tab-title'),
-            disabled: false,
-        },
         {
             id: 'retro-rewards',
             name: t('options.earn.snx-stakers.tab-title'),
             disabled: false,
         },
-        {
-            id: 'vesting',
-            name: t('options.earn.vesting.tab-title'),
-            disabled: false,
-        },
     ];
 
     if (isL2) {
+        tabs.unshift({
+            id: 'staking',
+            name: t('options.earn.thales-staking.tab-title'),
+            disabled: false,
+        });
+        tabs.push({
+            id: 'vesting',
+            name: t('options.earn.vesting.tab-title'),
+            disabled: false,
+        });
         tabs.push({
             id: 'lp-staking',
             name: t('options.earn.lp-staking.tab-title'),
@@ -74,11 +76,21 @@ const EarnPage: React.FC = () => {
         });
     } else {
         tabs.push({
+            id: 'staking',
+            name: t('options.earn.thales-staking.tab-title'),
+            disabled: false,
+        });
+        tabs.push({
+            id: 'vesting',
+            name: t('options.earn.vesting.tab-title'),
+            disabled: false,
+        });
+        tabs.push({
             id: 'lp-staking',
             name: t('options.earn.lp-staking.tab-title'),
             disabled: false,
         });
-        tabs.push({
+        tabs.unshift({
             id: 'migration',
             name: t('migration.title'),
             disabled: false,
@@ -94,7 +106,7 @@ const EarnPage: React.FC = () => {
     const location = useLocation();
     const paramTab = queryString.parse(location.search).tab;
     const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
-    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : DEFAULT_TAB);
+    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : defaultTab);
 
     const optionsTabContent: Array<{
         id: string;
@@ -105,7 +117,7 @@ const EarnPage: React.FC = () => {
     useEffect(() => {
         const paramTab = queryString.parse(location.search).tab;
         const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
-        setSelectedTab(isTabAvailable ? paramTab : DEFAULT_TAB);
+        setSelectedTab(isTabAvailable ? paramTab : defaultTab);
     }, [location, isL2]);
 
     return (
@@ -121,6 +133,23 @@ const EarnPage: React.FC = () => {
                         <FlexDivColumn>
                             <TokenOverview />
                             {!isL2 && selectedTab !== 'migration' && <MigrationNotice />}
+                            {isL2 && (
+                                <Notice>
+                                    <MigrateText>{t('options.earn.snx-stakers.olympus-notice')}</MigrateText>
+                                    <FlexDivCentered>
+                                        <MigrateButton
+                                            onClick={() =>
+                                                window.open(
+                                                    'https://pro.olympusdao.finance/#/partners/Thales',
+                                                    '_blank'
+                                                )
+                                            }
+                                        >
+                                            {t('options.earn.snx-stakers.olympus-button-text')}
+                                        </MigrateButton>
+                                    </FlexDivCentered>
+                                </Notice>
+                            )}
                             <MainContentContainer>
                                 <OptionsTabContainer>
                                     {optionsTabContent.map((tab, index) => (
