@@ -134,6 +134,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [user.status, walletAddress]);
 
     useEffect(() => {
+        previouslySelectedDefaultPosition
+            ? setDefaultPosition(previouslySelectedDefaultPosition)
+            : setDefaultPosition(PositionsEnum.NONE);
+    }, [walletAddress]);
+
+    useEffect(() => {
         if (
             !previouslySelectedDefaultPosition &&
             (royaleData as any).signUpPeriod > new Date() &&
