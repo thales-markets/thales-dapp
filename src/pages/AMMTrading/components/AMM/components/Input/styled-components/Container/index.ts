@@ -53,17 +53,11 @@ const Container: StyledComponent<'div', any, { borderColor?: string }> & Contain
 }>`
     display: flex;
     flex-direction: column;
-    border: 0.8px solid ${(_props) => (_props?.borderColor ? _props.borderColor : 'var(--input-border-color)')};
+    border: 0.8px solid ${(_props) => (_props?.borderColor ? _props.borderColor : 'var(--card-border-color)')};
     border-radius: 10px;
     padding: 5px 14px;
     box-sizing: border-box;
     margin-bottom: 8px;
-    &:active {
-        box-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
-    }
-    &:focus {
-        box-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
-    }
 `;
 
 ValueContainer.Value = Value;
