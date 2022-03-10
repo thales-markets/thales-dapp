@@ -1,4 +1,4 @@
-import styled, { StyledComponent } from 'styled-components';
+import styled, { keyframes, StyledComponent } from 'styled-components';
 
 type ContainerChild = {
     ColorLabel: StyledComponent<'div', any, { color?: string }>;
@@ -13,11 +13,25 @@ const ButtonContainer = styled.div`
     margin-top: 50px;
 `;
 
+const gradient = keyframes`
+    0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+`;
+
 const ColorLabel = styled.div<{ color?: string }>`
     border-radius: 15px 15px 0px 0px;
     margin: -32px;
+    background-size: 400% 400%;
     height: 15px;
     z-index: 0;
+    animation: ${gradient} 5s ease infinite;
     ${(_props) => (_props?.color ? `background: ${_props.color}` : '')};
 `;
 
