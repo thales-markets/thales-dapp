@@ -40,7 +40,7 @@ const SubContainer: StyledComponent<'div', any> & SubContainerChildren = styled.
 `;
 
 const Divider = styled.div`
-    border-left: 2px solid var(--input-border-color);
+    border-left: 2px solid var(--card-border-color);
     border-radius: 30px;
     height: 51px;
 `;
