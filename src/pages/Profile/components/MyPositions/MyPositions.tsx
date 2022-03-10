@@ -129,7 +129,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                 <Card.RowSubtitle>
                                                     <PriceDifferenceInfo
                                                         priceDiff={
-                                                            data.market.strikePrice >
+                                                            data.market.strikePrice <
                                                             (exchangeRates?.[data.market?.currencyKey] || 0)
                                                         }
                                                     >
