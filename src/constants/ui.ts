@@ -36,3 +36,17 @@ export enum COLORS_NEW {
     LONG = '#50CE99',
     SHORT = '##C3244A',
 }
+
+export enum UI_COLORS {
+    RED = '#C3244A',
+    GREEN = '#50CE99',
+}
+
+export const TooltipStyles = {
+    error: {
+        backgroundColor: '#FDB7B7',
+        color: '#F30101',
+        fontSize: '12px',
+        lineHeight: '24px',
+    },
+};
