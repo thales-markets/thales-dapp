@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -8,6 +6,7 @@ import Input from 'pages/AMMTrading/components/AMM/components/Input';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button';
 import { Fixed } from 'pages/AMMTrading/components/AMM/components/Slippage/styled-components/Container';
+import Select from 'pages/AMMTrading/components/AMM/components/Select';
 
 import { orderSideOptions } from 'constants/options';
 import { OrderSideOptionType } from 'types/options';
@@ -15,16 +14,16 @@ import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, truncToDecimals } from 'utils/formatters/number';
 import { BigNumber, ethers } from 'ethers';
 import { checkAllowance, formatGasLimit } from 'utils/network';
 import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
 import {
     AMOUNT_PERCENTAGE,
     ORDER_PERIOD_IN_SECONDS,
-    // ORDER_PERIOD_ITEMS_MAP,
+    ORDER_PERIOD_ITEMS_MAP,
     OrderPeriod,
-    // OrderPeriodItem,
+    OrderPeriodItem,
 } from 'constants/options';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { UI_COLORS } from 'constants/ui';
@@ -43,6 +42,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import RangeSlider from 'components/RangeSlider';
 import { FlexDivCentered } from 'theme/common';
+import AlertMessage from 'pages/AMMTrading/components/AlertMessage';
 
 type LimitOrderProps = {
     optionSide: OptionSide;
@@ -123,12 +123,12 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const addressToApprove = ONE_INCH_CONTRACTS[networkId] || '';
 
-    // const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
-    //     return {
-    //         value: period.value,
-    //         label: t(period.i18nLabel),
-    //     };
-    // });
+    const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
+        return {
+            value: period.value,
+            label: t(period.i18nLabel),
+        };
+    });
 
     const [expiration, setExpiration] = useState<OrderPeriod | undefined>(OrderPeriod.ONE_DAY);
     const [customHoursExpiration, setCustomHoursExpiration] = useState<number | string>('');
@@ -193,17 +193,17 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
         [setExpiration, optionsMarket]
     );
 
-    // const setCustomHoursExpirationCallback = useCallback(
-    //     (hours: number | string) => {
-    //         if (checkIfPeriodEndsAfterMarketMaturity(Number(hours) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR])) {
-    //             setCustomHoursExpiration('');
-    //             setExpiration(OrderPeriod.TRADING_END);
-    //         } else {
-    //             setCustomHoursExpiration(hours);
-    //         }
-    //     },
-    //     [setCustomHoursExpiration, setExpiration]
-    // );
+    const setCustomHoursExpirationCallback = useCallback(
+        (hours: number | string) => {
+            if (checkIfPeriodEndsAfterMarketMaturity(Number(hours) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR])) {
+                setCustomHoursExpiration('');
+                setExpiration(OrderPeriod.TRADING_END);
+            } else {
+                setCustomHoursExpiration(hours);
+            }
+        },
+        [setCustomHoursExpiration, setExpiration]
+    );
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
@@ -456,6 +456,25 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                 valueEditDisable={isSubmitting}
                 borderColor={!isAmountValid ? UI_COLORS.RED : ''}
             />
+            <Select
+                title={{ text: t('options.market.trade-options.place-order.expiration-label') }}
+                value={{ text: expiration }}
+                tooltip={{
+                    show: !isExpirationEntered || isExpirationAfterMaturity,
+                    text: !isExpirationEntered
+                        ? t(`common.errors.insufficient-balance-wallet`)
+                        : isExpirationAfterMaturity
+                        ? t('options.market.trade-options.place-order.errors.order-after-maturity')
+                        : '',
+                }}
+                options={{
+                    showCustomInput: true,
+                    list: expirationOptions,
+                    customValue: customHoursExpiration,
+                    onChange: (option: any) => setExpirationCallback(option),
+                    onCustomChange: (value: string | number) => setCustomHoursExpirationCallback(value),
+                }}
+            />
             <FlexDivCentered style={{ margin: '11px 0px' }}>
                 {AMOUNT_PERCENTAGE.map((percentage: number) => (
                     <Fixed
@@ -469,9 +488,12 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
             </FlexDivCentered>
             <Input
                 title={t('options.market.trade-options.place-order.total-label-susd')}
-                value={formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}
-                subValue={OPTIONS_CURRENCY_MAP[optionSide]}
+                value={formatCurrency(Number(price) * Number(amount))}
+                subValue={SYNTHS_MAP.sUSD}
             />
+            {txErrorMessage !== null && (
+                <AlertMessage onClose={() => setTxErrorMessage(null)}>{txErrorMessage}</AlertMessage>
+            )}
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={makerAmount}
