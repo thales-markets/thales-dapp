@@ -1,6 +1,8 @@
 import React from 'react';
 import Container from './styled-components/Container';
 import Tooltip from '@material-ui/core/Tooltip';
+import { withStyles } from '@material-ui/styles';
+import { TooltipStyles } from 'constants/ui';
 
 type InputProps = {
     title: string;
@@ -37,6 +39,17 @@ const Input: React.FC<InputProps> = ({
     displayTooltip,
     tooltipText,
 }) => {
+    const CustomTooltip = withStyles(() => ({
+        tooltip: {
+            minWidth: '100%',
+            width: '100%',
+            margin: '0',
+            backgroundColor: TooltipStyles.error.backgroundColor,
+            color: TooltipStyles.error.color,
+            fontSize: TooltipStyles.error.fontSize,
+        },
+    }))(Tooltip);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof valueChange == 'function') {
             valueChange(e.target.value);
@@ -44,7 +57,7 @@ const Input: React.FC<InputProps> = ({
     };
 
     return (
-        <Tooltip open={displayTooltip} placement="top-start" title={tooltipText ? tooltipText : ''}>
+        <CustomTooltip open={displayTooltip} title={tooltipText ? tooltipText : ''}>
             <Container borderColor={borderColor}>
                 <Container.Title color={titleColor} fontSize={titleFontSize}>
                     {title}
@@ -63,7 +76,7 @@ const Input: React.FC<InputProps> = ({
                     </Container.ValueContainer.SubValue>
                 </Container.ValueContainer>
             </Container>
-        </Tooltip>
+        </CustomTooltip>
     );
 };
 
