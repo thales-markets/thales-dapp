@@ -301,7 +301,8 @@
                 "difference-text": "当前价格与执行价格之间的差异",
                 "time-remaining": "剩余时间",
                 "result": "当前结果",
-                "view-market": "查看市场"
+                "view-market": "查看市场",
+                "price-difference": "差价"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场"

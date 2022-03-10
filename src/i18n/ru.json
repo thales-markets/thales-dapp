@@ -301,7 +301,8 @@
                 "difference-text": "Разница между текущей ценой и ценой исполнения",
                 "time-remaining": "Оставшееся время",
                 "result": "Текущий результат",
-                "view-market": "Посмотреть рынок"
+                "view-market": "Посмотреть рынок",
+                "price-difference": "Разница в цене"
             },
             "market-creation": {
                 "explore-markets-button-label": "Познакомиться с рынками"
