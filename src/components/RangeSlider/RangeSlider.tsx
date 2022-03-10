@@ -8,7 +8,8 @@ type RangeSliderProps = {
     defaultValue: number;
     step?: number;
     showFooter?: boolean;
-    footerText?: string;
+    footerText?: string | Array<string>;
+    showInFooterMinMax?: boolean;
     onChangeEventHandler?: (value: number) => void;
 };
 
@@ -19,6 +20,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     step,
     showFooter,
     footerText,
+    showInFooterMinMax,
     onChangeEventHandler,
 }) => {
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +42,12 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
                 />
             </Container>
             {showFooter && <Footer>{footerText}</Footer>}
+            {showInFooterMinMax && (
+                <Footer justifyContent="space-between">
+                    <span>{footerText?.length ? footerText[0] : ''}</span>
+                    <span>{footerText?.length ? footerText[1] : ''}</span>
+                </Footer>
+            )}
         </>
     );
 };
