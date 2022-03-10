@@ -20,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
-import PriceChart from 'components/Charts/PriceChart';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -121,7 +120,7 @@ const Profile: React.FC = () => {
                 </ContentWrapper>
             </Container.Left>
             <Container.Right layout={isSimpleView}>
-                <PieChartOptionsAllocated size={330} claimable={positions.claimableAmount} />
+                <PieChartOptionsAllocated claimable={positions.claimableAmount} />
                 <Wrapper>
                     <Wrapper.Row>
                         <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
@@ -153,10 +152,6 @@ const Profile: React.FC = () => {
                         <ThalesBalance showTitle={true} />
                     </PriceContainer>
                 </Wrapper>
-
-                <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 350 }}>
-                    <PriceChart showTooltip={true} height={160} currencyKey={'THALES'} showHeading={true} />
-                </PriceContainer>
             </Container.Right>
         </Container>
     );
@@ -184,6 +179,9 @@ const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
     align-items: center;
     justify-content: ${(_props) => _props.justifyContent};
+    @media (max-width: 768px) {
+        margin-top: 20px;
+    }
 `;
 
 const NavItem = styled.p`
@@ -196,8 +194,16 @@ const NavItem = styled.p`
     color: var(--primary-color);
     cursor: pointer;
     padding: 0 50px;
+    white-space: pre;
     &.active {
         box-shadow: 0px 4px var(--primary-filter-menu-active);
+    }
+    @media (max-width: 768px) {
+        font-size: 14px;
+        padding: 0 20px;
+    }
+    @media (max-width: 500px) {
+        font-size: 10px;
     }
 `;
 

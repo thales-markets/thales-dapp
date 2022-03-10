@@ -34,17 +34,12 @@ import { getSynthName } from 'utils/currency';
 
 import './main.scss';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
+import Phase from '../Phase/Phase';
 
 type MarketsTableProps = {
     exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
     watchlistedMarkets?: string[];
-};
-
-const MarketPhase = {
-    trading: '#50CE99',
-    paused: '#C3244A',
-    maturity: '#F7B91A',
 };
 
 const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
@@ -87,7 +82,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     ];
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
     const [sortOptions, setSortOptions] = useState(GridSortFilters);
-    const [tableView, setTableView] = useState<boolean>(true);
+    const [tableView, setTableView] = useState<boolean>(window.innerWidth > 1250);
+    const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
     const [assetFilters, setAssetFilters] = useState<string[]>([]);
 
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
@@ -187,11 +183,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 Header: t(`options.home.markets-table.phase-col`),
                 accessor: 'phase',
                 Cell: (_props: any) => {
-                    return (
-                        <Phase phase={_props?.cell?.value?.toLowerCase()}>
-                            {_props?.cell?.value?.toLowerCase()} <Dot phase={_props?.cell?.value?.toLowerCase()} />
-                        </Phase>
-                    );
+                    return <Phase phase={_props?.cell?.value?.toLowerCase()}></Phase>;
                 },
             },
             {
@@ -328,6 +320,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     return (
         <>
             <Wrapper>
+                <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
                 <FilterContainer>
                     {allAssets.size > 0 &&
                         [...(allAssets as any)].map((value: string, index: number) => {
@@ -348,7 +341,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                                         }
                                     }}
                                 >
-                                    <CurrencyIcon width="40px" height="40px" currencyKey={value} />
+                                    <CurrencyIcon currencyKey={value} />
                                 </Item>
                             );
                         })}
@@ -362,7 +355,13 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     <SearchField text={globalFilter} handleChange={(value) => setGlobalFilter(value)} />
                 </FormContainer>
             </Wrapper>
-            {!tableView && <SortingMenu items={sortOptions} itemClickEventHandler={updateSortOptions} />}
+            {!tableView && showSorting && (
+                <SortingMenu
+                    setShowSorting={setShowSorting}
+                    items={sortOptions}
+                    itemClickEventHandler={updateSortOptions}
+                />
+            )}
             {tableView && (
                 <>
                     <table {...getTableProps()}>
@@ -480,20 +479,6 @@ const RedText = styled(Text)`
     color: #c3244a;
 `;
 
-const Phase = styled.span<{ phase: 'trading' | 'paused' | 'maturity' }>`
-    color: ${(props: any) => (MarketPhase as any)[props.phase]};
-    text-transform: capitalize;
-    font-weight: 300;
-`;
-
-const Dot = styled.span<{ phase: 'trading' | 'paused' | 'maturity' }>`
-    height: 7px;
-    width: 7px;
-    background-color: ${(props: any) => (MarketPhase as any)[props.phase]};
-    border-radius: 50%;
-    display: inline-block;
-`;
-
 const Arrow = styled.i`
     margin-left: 5px;
     font-size: 15px;
@@ -508,6 +493,10 @@ const Wrapper = styled(FlexDivRow)`
     margin-bottom: 10px;
     max-width: 1200px;
     align-items: flex-end;
+    @media (max-width: 768px) {
+        align-items: flex-start;
+        max-width: 390px;
+    }
 `;
 
 const FormContainer = styled.div`
@@ -515,6 +504,28 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    @media (max-width: 1250px) {
+        display: none;
+    }
+`;
+
+const FiltersButton = styled.div`
+    display: none;
+    padding: 6px 20px;
+    border: 1.5px solid rgba(100, 217, 254, 0.5);
+    box-sizing: border-box;
+    border-radius: 30px;
+    background: transparent;
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 11px;
+    text-transform: uppercase;
+    color: #64d9fe;
+    @media (max-width: 768px) {
+        display: block;
+    }
 `;
 
 const FilterContainer = styled.div`
@@ -523,16 +534,29 @@ const FilterContainer = styled.div`
 `;
 
 const Item = styled.span`
-    padding: 6px 14px 6px 14px;
     box-sizing: content-box;
-    width: 40px;
+    width: 50px;
     margin-bottom: -10px;
     color: var(--primary-color);
     cursor: pointer;
+
     opacity: 0.5;
     &.active {
         opacity: 1;
         box-shadow: 0px 4px var(--primary-filter-menu-active);
+    }
+
+    & > svg {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    @media (max-width: 768px) {
+        width: 32px;
+        & > svg {
+            width: 26px !important;
+            height: 26px !important;
+        }
     }
 `;
 

@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
@@ -79,49 +79,57 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                     <Content key={index}>
                         {data.balances.amount > 0 && (
                             <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>
-                                <Card.Wrapper background={data.claimable}>
+                                <Card.Wrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
                                     <Card>
-                                        <Card.Column>
-                                            <Card.Row>
+                                        <Card.Column style={{ flex: 1 }}>
+                                            <Card.Section>
                                                 <CurrencyIcon
                                                     width="40px"
                                                     height="40px"
                                                     currencyKey={data.market.currencyKey}
                                                 />
                                                 <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
-                                            </Card.Row>
-                                            <Card.Row>
-                                                <Card.RowSubtitle>
-                                                    @{formatShortDate(data.market.maturityDate)}
-                                                </Card.RowSubtitle>
-                                            </Card.Row>
+                                            </Card.Section>
                                         </Card.Column>
                                         <Card.Column>
-                                            <Card.Row>
-                                                <Card.RowTitle>Final Asset Price</Card.RowTitle>
+                                            <Card.Section>
+                                                <Card.RowTitle>Maturity Date</Card.RowTitle>
                                                 <Card.RowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.market.finalPrice)}
+                                                    {formatShortDate(data.market.maturityDate)}
                                                 </Card.RowSubtitle>
-                                            </Card.Row>
-                                            <Card.Row>
+                                            </Card.Section>
+                                            <Card.Section>
                                                 <Card.RowTitle>Strike Price</Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
                                                 </Card.RowSubtitle>
-                                            </Card.Row>
+                                            </Card.Section>
                                         </Card.Column>
                                         <Card.Column>
-                                            <Card.Row>
-                                                <Card.RowTitle>Status</Card.RowTitle>
-                                                <Card.RowSubtitle
-                                                    style={{
-                                                        color: data.claimable || data.claimed ? '#50CE99' : '#C3244A',
-                                                    }}
-                                                >
-                                                    {data.claimable ? 'Claimable' : data.claimed ? 'Claimed' : 'RIP'}
+                                            <Card.Section>
+                                                <Card.RowTitle>Final Asset Price</Card.RowTitle>
+                                                <Card.RowSubtitle>
+                                                    {formatCurrencyWithSign(USD_SIGN, data.market.finalPrice)}
                                                 </Card.RowSubtitle>
-                                            </Card.Row>
-                                            <Card.Row>
+                                            </Card.Section>
+                                            <Card.Section>
+                                                <Card.RowTitle>
+                                                    {t('options.home.market-card.price-difference')}
+                                                </Card.RowTitle>
+                                                <Card.RowSubtitle>
+                                                    <PriceDifferenceInfo
+                                                        priceDiff={data.market.strikePrice < data.market.finalPrice}
+                                                    >
+                                                        {`${getPercentageDifference(
+                                                            data.market.strikePrice,
+                                                            data.market.finalPrice
+                                                        ).toFixed(2)}%`}
+                                                    </PriceDifferenceInfo>
+                                                </Card.RowSubtitle>
+                                            </Card.Section>
+                                        </Card.Column>
+                                        <Card.Column>
+                                            <Card.Section>
                                                 <Card.RowTitle>Amount</Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {data.balances.amount.toFixed(2)}
@@ -134,7 +142,21 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                                                         {data.balances.type}
                                                     </span>
                                                 </Card.RowSubtitle>
-                                            </Card.Row>
+                                            </Card.Section>
+                                            <Card.Section>
+                                                <Card.RowTitle>Status</Card.RowTitle>
+                                                <Card.RowSubtitle
+                                                    style={{
+                                                        color: data.claimed
+                                                            ? '#8208FC'
+                                                            : data.claimable
+                                                            ? '#50CE99'
+                                                            : '#C3244A',
+                                                    }}
+                                                >
+                                                    {data.claimable ? 'CLAIM' : data.claimed ? 'CLAIMED' : 'RIP'}
+                                                </Card.RowSubtitle>
+                                            </Card.Section>
                                         </Card.Column>
                                     </Card>
                                 </Card.Wrapper>
@@ -239,6 +261,10 @@ const TableText = styled.span`
     text-align: right;
     text-transform: uppercase;
     color: #ffffff;
+`;
+
+const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
+    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
 `;
 
 export default MaturedPositions;

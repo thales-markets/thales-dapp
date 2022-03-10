@@ -22,6 +22,18 @@ const Wrapper: StyledComponent<'div', any> & Children = styled.div`
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
+    @media (max-width: 1250px) {
+        margin-left: 40px;
+    }
+    @media (max-width: 768px) {
+        padding: 8px;
+        margin-left: 20px;
+    }
+
+    @media (max-width: 500px) {
+        padding: 8px;
+        margin-left: 10px;
+    }
 `;
 
 const Row = styled.div`
@@ -43,11 +55,20 @@ const Text = styled.span`
 
 const Label = styled(Text)`
     font-weight: 400;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const Value = styled(Text)<ValueProps>`
     color: ${(_props) => _props.color ?? 'none'};
     font-weight: 700;
+    @media (max-width: 768px) {
+        font-size: 16px;
+    }
+    @media (max-width: 500px) {
+        font-size: 14px;
+    }
 `;
 
 Wrapper.Row = Row;

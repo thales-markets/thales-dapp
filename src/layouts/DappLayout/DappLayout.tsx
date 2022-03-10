@@ -96,6 +96,9 @@ const NewWrapper = styled.div`
     @media (max-width: 1024px) {
         padding: 0 20px;
     }
+    @media (max-width: 568px) {
+        padding: 0 10px;
+    }
     max-width: 1440px;
     min-height: 100vh;
 `;

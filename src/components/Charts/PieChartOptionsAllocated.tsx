@@ -18,10 +18,9 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 type PieChartProps = {
     claimable?: number;
-    size: number;
 };
 
-const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable, size }) => {
+const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -52,7 +51,7 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable, size }) 
                         <Header>Claimable: </Header>
                         <SubHeader>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, claimable)}</SubHeader>
                     </BalanceInfoContainer>
-                    <PieChart width={size} height={size}>
+                    <PieChart width={getSize()} height={getSize()}>
                         <Pie
                             startAngle={-45}
                             cornerRadius={20}
@@ -74,6 +73,16 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable, size }) 
     );
 };
 
+const getSize = () => {
+    if (window.innerWidth <= 500) {
+        return 174;
+    }
+    if (window.innerWidth <= 768) {
+        return 230;
+    }
+
+    return 330;
+};
 const ChartContainer = styled.div`
     position: relative;
     margin: 0px auto 15px auto;
@@ -90,11 +99,12 @@ const BalanceInfoContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-top: 10px;
 `;
 
 const Header = styled.p`
     text-transform: uppercase;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: 600;
     font-size: 21px;
@@ -103,10 +113,14 @@ const Header = styled.p`
     letter-spacing: 0.035em;
     text-transform: capitalize;
     color: #ffffff;
+    @media (max-width: 768px) {
+        font-size: 10px;
+        line-height: 12px;
+    }
 `;
 
 const SubHeader = styled.p`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-size: 32px;
     font-style: normal;
     font-weight: 600;
@@ -114,6 +128,10 @@ const SubHeader = styled.p`
     letter-spacing: 0.035em;
     text-align: center;
     margin-bottom: 10px;
+    @media (max-width: 768px) {
+        font-size: 18px;
+        line-height: 20px;
+    }
 `;
 
 export default PieChartOptionsAllocated;

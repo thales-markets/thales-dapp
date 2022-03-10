@@ -6,6 +6,7 @@ type Children = {
     Row: StyledComponent<'div', any>;
     RowTitle: StyledComponent<'span', any>;
     RowSubtitle: StyledComponent<'span', any>;
+    Section: StyledComponent<'div', any>;
 };
 
 type WrapperProps = {
@@ -32,11 +33,10 @@ const Card: StyledComponent<'div', any> & Children = styled.div`
     background: #04045a;
     box-sizing: border-box;
     border-radius: 15px;
-    padding: 24px;
+    padding: 16px 24px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 140px;
+    justify-content: space-around;
 `;
 const CardColumn = styled.div`
     display: flex;
@@ -45,9 +45,23 @@ const CardColumn = styled.div`
     justify-content: space-between;
     height: 100%;
     flex: 2;
-    &:nth-child(2) {
-        margin-left: 10px;
-        margin-right: 20px;
+`;
+
+const CardRow = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > svg {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    @media (max-width: 500px) {
+        & > svg {
+            width: 26px !important;
+            height: 26px !important;
+            margin-bottom: 4px;
+        }
     }
 `;
 
@@ -55,26 +69,51 @@ const CardText = styled.span`
     display: block;
     font-family: Roboto !important;
     color: var(--primary-color);
+    line-height: 100%;
 `;
 
 const SectionContainer = styled.div`
     display: block;
+    &:not(:last-child) {
+        margin-bottom: 10px;
+    }
+    @media (max-width: 500px) {
+        & > svg {
+            width: 32px !important;
+            height: 32px !important;
+            margin-bottom: 4px;
+        }
+    }
 `;
 
 const Header = styled(CardText)`
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     text-transform: capitalize;
+    margin-bottom: 4px;
+    @media (max-width: 500px) {
+        font-size: 8px;
+    }
 `;
 
 const SubHeader = styled(CardText)`
-    font-size: 20px;
+    font-size: 23px;
+    span {
+        font-size: 23px !important;
+    }
     font-weight: 700;
+    @media (max-width: 500px) {
+        font-size: 14px;
+        span {
+            font-size: 14px !important;
+        }
+    }
 `;
 
 Card.Wrapper = CardWrapper;
 Card.Column = CardColumn;
-Card.Row = SectionContainer;
+Card.Section = SectionContainer;
+Card.Row = CardRow;
 Card.RowTitle = Header;
 Card.RowSubtitle = SubHeader;
 
