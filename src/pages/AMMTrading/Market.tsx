@@ -38,7 +38,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
-    const [tradingType, setTradingType] = useState<TradingType>(TradingTypes[0].value as TradingType);
+    const [tradingType, setTradingType] = useState<TradingType>(TradingTypes[1].value as TradingType);
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
