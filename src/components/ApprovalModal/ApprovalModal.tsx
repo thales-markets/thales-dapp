@@ -17,7 +17,6 @@ import {
     DefaultSubmitButton,
     SubmitButtonContainer,
     InputContainer,
-    // InputLabel,
     CurrencyLabel,
 } from 'pages/Options/Market/components';
 import onboardConnector from 'utils/onboardConnector';
@@ -192,13 +191,13 @@ const ApprovalModalContainer = styled(ModalContainer)<{ isRoyale?: boolean }>`
 `;
 
 const ApprovalInputContainer = styled(InputContainer)<{ isRoyale?: boolean }>`
-    width: ${(props) => (props.isRoyale ? '165px' : '171px')};
+    width: ${(props) => (props.isRoyale ? '165px' : '200px')};
     height: ${(props) => (props.isRoyale ? '43px' : '60px')};
     margin-bottom: ${(props) => (props.isRoyale ? '0px' : '0px')};
 `;
 
 const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
-    font-size: ${(props) => (props.isRoyale ? '20px' : '25px')};
+    font-size: ${(props) => (props.isRoyale ? '20px' : '')};
     background: ${(props) => (props.isRoyale ? '#e3f7e9' : '')};
     border: ${(props) => (props.isRoyale ? '2px solid var(--color-wrapper)' : '')};
     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};

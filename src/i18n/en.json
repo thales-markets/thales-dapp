@@ -212,6 +212,9 @@
                 "mainnet": "Switch to Mainnet",
                 "optimism": "Switch to Optimism"
             }
+        },
+        "alerts": {
+            "title": { "success": "Success", "info": "Info", "error": "Error" }
         }
     },
     "modals": {
@@ -1102,7 +1105,8 @@
                 "royale": "Royale",
                 "scoreboard": "Scoreboard",
                 "stats": "Stats",
-                "price-source": "Source: Optimism Chainlink ETH feed"
+                "price-source": "Source: Optimism Chainlink ETH feed",
+                "select-position": "Please select default position for the 1st round"
             },
             "battle": {
                 "round": "Round",
@@ -1144,7 +1148,7 @@
                 "approve-susd": "Approve sUSD",
                 "buy-in": "Buy-in with sUSD",
                 "insufficient-balance": "Insufficient sUSD balance",
-                "default-position": "Default position",
+                "default-position": "Choose position for the 1st round",
                 "default-position-none": "NONE",
                 "default-position-down": "DOWN",
                 "default-position-up": "UP",
