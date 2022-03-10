@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { useTranslation } from 'react-i18next';
 
 import { InputContainer } from 'theme/common';
 import dropDown from 'assets/images/drop-down-white.svg';
 import { withStyles } from '@material-ui/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+import { OrderPeriod } from 'constants/options';
 
 import { TooltipType } from 'types/options';
 import { TooltipStyles } from 'constants/ui';
@@ -32,9 +34,10 @@ type SelectPropsType = {
         iconColor?: string;
     };
     options: {
-        onChange?: () => void;
-        onCustomChange?: () => void;
-        customValue?: boolean;
+        onChange?: (value: string) => void;
+        onCustomChange?: (value: string | number) => void;
+        showCustomInput?: boolean;
+        customValue?: string | number;
         list: Array<any>;
         activeItem?: {
             backgroundColor?: string;
@@ -50,7 +53,19 @@ type SelectPropsType = {
 };
 
 const Select: React.FC<SelectPropsType> = ({ title, value, tooltip, container, options }) => {
+    const { t } = useTranslation();
     const [showDropdown, setDropdownState] = useState<boolean>(false);
+
+    const selectedOption = value?.text ? options?.list.find((option: any) => option.value === value?.text) : undefined;
+
+    const valueLabel = selectedOption
+        ? selectedOption.label
+        : value?.text === OrderPeriod.CUSTOM
+        ? Number(options?.customValue) > 0
+            ? `${options?.customValue} hours`
+            : options?.customValue
+        : '';
+
     const CustomTooltip = withStyles(() => ({
         tooltip: {
             minWidth: '100%',
@@ -75,25 +90,43 @@ const Select: React.FC<SelectPropsType> = ({ title, value, tooltip, container, o
                             {title?.text}
                         </Title>
                         <ValueContainer>
-                            <Value value={value?.text} color={value?.color} fontSize={value?.fontSize} />
+                            <Value value={valueLabel} color={value?.color} fontSize={value?.fontSize} readOnly />
                             <Arrow color={container?.iconColor} />
                         </ValueContainer>
                     </Wrapper>
                 </CustomTooltip>
                 <DropdownContainer>
                     <Dropdown show={showDropdown}>
-                        {options?.customValue && (
+                        {options?.showCustomInput && (
                             <CustomInputContainer>
-                                <CustomInput value={'Test'} />
+                                <CustomInput
+                                    value={options?.customValue}
+                                    onChange={(e) => {
+                                        if (options?.onChange && options?.onCustomChange) {
+                                            options.onChange(OrderPeriod.CUSTOM);
+                                            options.onCustomChange(e.target.value);
+                                        }
+                                    }}
+                                    placeholder={t('modals.gwei.placeholder')}
+                                />
                                 <CustomInputLabel>{'hours'}</CustomInputLabel>
                             </CustomInputContainer>
                         )}
                         <ItemContainer>
-                            <Item>{'10 minutes'}</Item>
-                            <Item>{'1 hour'}</Item>
-                            <Item>{'1 day'}</Item>
-                            <Item active={true}>{'1 week'}</Item>
-                            <Item>{'at trading period expiration'}</Item>
+                            {options?.list.map((option: any) => (
+                                <Item
+                                    onClick={() => {
+                                        if (options?.onChange) {
+                                            options.onChange(option.value);
+                                        }
+                                        setDropdownState(false);
+                                    }}
+                                    active={option?.value == value?.text ? true : false}
+                                    key={option.value}
+                                >
+                                    {option.label}
+                                </Item>
+                            ))}
                         </ItemContainer>
                     </Dropdown>
                 </DropdownContainer>
@@ -213,6 +246,7 @@ const Value = styled.input<{ color?: string; fontSize?: string }>`
     background: transparent;
     border: none;
     padding: 0;
+    width: 90%;
     &:focus {
         border: none;
         outline: none;
