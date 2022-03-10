@@ -1286,7 +1286,9 @@
         },
         "order-book": {
             "trade-up": "Trade Up Options",
-            "trade-down": "Trade Down Options"
+            "trade-down": "Trade Down Options",
+            "select-to": "Select to {{type}}",
+            "amount-to": "Amount to {{type}}"
         }
     },
     "governance": {
