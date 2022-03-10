@@ -565,7 +565,9 @@
                 "earn-tooltip": "为泰勒斯/ETH对提供流动性，赚取泰勒斯+DODO双倍奖励",
                 "earn-info-tooltip": "如何提供流动性的查看指南",
                 "circulating-supply-label": "市场供应",
-                "total-supply-label": "总供应"
+                "total-supply-label": "总供应",
+                "celer-bridge-tooltip": "链条之间的快速桥梁 THALES",
+                "celer-bridge": "赛勒桥"
             }
         },
         "quiz": {

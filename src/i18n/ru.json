@@ -565,7 +565,9 @@
                 "earn-tooltip": "Обеспечение ликвидности для пары THALES/ETH и получение двойных вознаграждений THALES + DODO",
                 "earn-info-tooltip": "Просмотр руководства по обеспечению ликвидности",
                 "circulating-supply-label": "Количество в обрашении",
-                "total-supply-label": "Общее количество"
+                "total-supply-label": "Общее количество",
+                "celer-bridge": "Целерский мост",
+                "celer-bridge-tooltip": "Быстрый мост THALES между цепями"
             }
         },
         "quiz": {

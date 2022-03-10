@@ -98,6 +98,20 @@ export const TokentOverview: React.FC = () => {
                             : EMPTY_VALUE}
                     </Content>
                 </ItemContainer>
+                <ItemContainer>
+                    <FlexDivCentered>
+                        <LightTooltip title={t('options.earn.overview.celer-bridge-tooltip')}>
+                            <StyledLink
+                                href="https://cbridge.celer.network/#/transfer"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <CryptoName>{t('options.earn.overview.celer-bridge')}</CryptoName>
+                                <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
+                            </StyledLink>
+                        </LightTooltip>
+                    </FlexDivCentered>
+                </ItemContainer>
             </Container>
         </>
     );

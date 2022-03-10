@@ -560,7 +560,9 @@
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",
                 "earn-info-tooltip": "View guide on how to provide liquidity",
                 "circulating-supply-label": "Circulating supply",
-                "total-supply-label": "Total supply"
+                "total-supply-label": "Total supply",
+                "celer-bridge": "Celer bridge",
+                "celer-bridge-tooltip": "Fast bridge THALES between chains"
             }
         },
         "quiz": {
