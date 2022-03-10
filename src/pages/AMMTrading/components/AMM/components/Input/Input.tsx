@@ -70,6 +70,7 @@ const Input: React.FC<InputProps> = ({
                         onChange={handleChange}
                         disabled={valueEditDisable}
                         type={valueType ? valueType : ''}
+                        readOnly={typeof handleChange !== 'function'}
                     />
                     <Container.ValueContainer.SubValue color={subValueColor} fontSize={subValueFontSize}>
                         {subValue}
