@@ -53,6 +53,7 @@ const Background = styled.section`
         --button-text-inactive: #64d9fe;
         --notice-text: #04045a;
         --amm-switch-circle: #04045a;
+        --card-border-color: rgba(100, 217, 254, 0.5);
     }
     &.dark {
         background-color: #04045a;
@@ -79,6 +80,7 @@ const Background = styled.section`
         --button-text-inactive: #64d9fe;
         --notice-text: #64d9fe;
         --amm-switch-circle: #f7f7f7;
+        --card-border-color: rgba(100, 217, 254, 0.5);
     }
 `;
 
