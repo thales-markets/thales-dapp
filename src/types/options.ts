@@ -12,6 +12,8 @@ export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
 export type OrderSideOptionType = { value: OrderSide; label?: string; i18nLabel?: string };
 
+export type TooltipType = 'error' | 'success' | 'info';
+
 export type TradingType = 'AMM' | 'Orderbook';
 
 export type OptionsTransaction = {
