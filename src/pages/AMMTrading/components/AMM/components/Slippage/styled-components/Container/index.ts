@@ -64,7 +64,7 @@ const ValueContainer: StyledComponent<'div', any> & ValueChildren = styled.div`
     flex-direction: row;
 `;
 
-const Fixed = styled.div<{ active?: boolean }>`
+export const Fixed = styled.div<{ active?: boolean }>`
     display: flex;
     border-radius: 60%;
     align-items: center;
