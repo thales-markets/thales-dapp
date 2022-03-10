@@ -1291,7 +1291,9 @@
         },
         "order-book": {
             "trade-down": "交易选项",
-            "trade-up": "以旧换新"
+            "trade-up": "以旧换新",
+            "amount-to": "金额为 {{type}}",
+            "select-to": "选择 {{type}}"
         }
     },
     "governance": {

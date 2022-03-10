@@ -21,6 +21,7 @@ type SwitchProps = {
     dotGradient?: boolean;
     label?: LabelProps;
     shadow?: boolean;
+    margin?: string;
 };
 
 type SwitchContainerProps = {
@@ -57,9 +58,10 @@ const Switch: React.FC<SwitchProps> = ({
     dotGradient,
     label,
     shadow,
+    margin,
 }) => {
     return (
-        <Wrapper>
+        <Wrapper margin={margin}>
             {label?.firstLabel && <Label fontSize={label?.fontSize}>{label.firstLabel}</Label>}
             <SwitchContainer
                 borderWidth={borderWidth}
@@ -78,7 +80,8 @@ const Switch: React.FC<SwitchProps> = ({
     );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ margin?: string }>`
+    ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
     display: flex;
     flex-direction: row;
     align-items: center;
