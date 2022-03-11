@@ -2,22 +2,23 @@ import React from 'react';
 import styled from 'styled-components';
 
 type ButtonProps = {
-    text: string;
     width?: string;
     height?: string;
     padding?: string;
-    active: boolean;
+    active?: boolean;
     activeTextColor?: string;
     activeBgColor?: string;
     inactiveTextColor?: string;
     inactiveBgColor?: string;
     hoverShadow?: string;
+    hoverBorderEffect?: boolean;
     margin?: string;
     onClickHandler?: () => void;
+    disabled?: boolean;
+    children?: any;
 };
 
 const Button: React.FC<ButtonProps> = ({
-    text,
     width,
     height,
     padding,
@@ -27,8 +28,11 @@ const Button: React.FC<ButtonProps> = ({
     inactiveTextColor,
     inactiveBgColor,
     hoverShadow,
+    hoverBorderEffect,
     margin,
     onClickHandler,
+    disabled,
+    children,
 }) => {
     return (
         <Wrapper
@@ -41,27 +45,31 @@ const Button: React.FC<ButtonProps> = ({
             inactiveTextColor={inactiveTextColor}
             inactiveBgColor={inactiveBgColor}
             hoverShadow={hoverShadow}
+            hoverBorderEffect={hoverBorderEffect}
             margin={margin}
             onClick={() => (onClickHandler ? onClickHandler() : '')}
+            disabled={disabled}
         >
-            {text}
+            {children}
         </Wrapper>
     );
 };
 
-const Wrapper = styled.div<{
+const Wrapper = styled.button<{
     width?: string;
     height?: string;
     padding?: string;
-    active: boolean;
+    active?: boolean;
     activeTextColor?: string;
     activeBgColor?: string;
     inactiveTextColor?: string;
     inactiveBgColor?: string;
     hoverShadow?: string;
+    hoverBorderEffect?: boolean;
     margin?: string;
 }>`
     display: flex;
+    text-transform: uppercase;
     align-items: center;
     justify-content: center;
     ${(_props) => (_props?.width ? `width: ${_props.width}` : '')};
@@ -91,6 +99,10 @@ const Wrapper = styled.div<{
     ${(_props) => (_props?.padding ? `padding: ${_props.padding}` : '')};
     &:hover {
         ${(_props) => (_props?.hoverShadow ? `box-shadow:${_props.hoverShadow}` : '')}
+        ${(_props) => (_props?.hoverBorderEffect ? `border:var(--primary-color)` : '')}
+    }
+    &:disabled {
+        opacity: 0.6;
     }
 `;
 

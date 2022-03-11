@@ -6,7 +6,15 @@ export type Phase = 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';
 
+export type OptionType = 'up' | 'down';
+
 export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
+
+export type OrderSideOptionType = { value: OrderSide; label?: string; i18nLabel?: string };
+
+export type TooltipType = 'error' | 'success' | 'info';
+
+export type TradingType = 'AMM' | 'Orderbook';
 
 export type OptionsTransaction = {
     hash: string;
@@ -189,6 +197,8 @@ export type UsersAssets = {
     balances: {
         long: number;
         short: number;
+        longValue: number;
+        shortValue: number;
     };
 };
 

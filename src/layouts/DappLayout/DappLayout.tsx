@@ -52,6 +52,8 @@ const Background = styled.section`
         --button-bg-inactive: transparent;
         --button-text-inactive: #64d9fe;
         --notice-text: #04045a;
+        --amm-switch-circle: #04045a;
+        --card-border-color: rgba(100, 217, 254, 0.5);
     }
     &.dark {
         background-color: #04045a;
@@ -77,6 +79,8 @@ const Background = styled.section`
         --button-bg-inactive: transparent;
         --button-text-inactive: #64d9fe;
         --notice-text: #64d9fe;
+        --amm-switch-circle: #f7f7f7;
+        --card-border-color: rgba(100, 217, 254, 0.5);
     }
 `;
 
@@ -90,7 +94,10 @@ const NewWrapper = styled.div`
     margin-right: auto;
     padding: 40px 20px 40px 92px;
     @media (max-width: 1024px) {
-        padding: 40px 20px;
+        padding: 0 20px;
+    }
+    @media (max-width: 568px) {
+        padding: 0 10px;
     }
     max-width: 1440px;
     min-height: 100vh;

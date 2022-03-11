@@ -1,6 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
+type LabelProps = {
+    firstLabel?: string;
+    secondLabel?: string;
+    fontSize?: string;
+};
+
 type SwitchProps = {
     active: boolean;
     handleClick?: () => void;
@@ -13,6 +19,9 @@ type SwitchProps = {
     dotSize?: string;
     dotBackground?: string;
     dotGradient?: boolean;
+    label?: LabelProps;
+    shadow?: boolean;
+    margin?: string;
 };
 
 type SwitchContainerProps = {
@@ -23,6 +32,7 @@ type SwitchContainerProps = {
     height?: string;
     background?: string;
     backgroundGradient?: boolean;
+    shadow?: boolean;
 };
 
 type CircleProps = {
@@ -46,21 +56,45 @@ const Switch: React.FC<SwitchProps> = ({
     dotSize,
     dotBackground,
     dotGradient,
+    label,
+    shadow,
+    margin,
 }) => {
     return (
-        <SwitchContainer
-            borderWidth={borderWidth}
-            borderColor={borderColor}
-            width={width}
-            height={height}
-            background={background}
-            backgroundGradient={backgroundGradient}
-            onClick={() => (handleClick ? handleClick() : null)}
-        >
-            <Circle active={active} size={dotSize} background={dotBackground} backgroundGradient={dotGradient} />
-        </SwitchContainer>
+        <Wrapper margin={margin}>
+            {label?.firstLabel && <Label fontSize={label?.fontSize}>{label.firstLabel}</Label>}
+            <SwitchContainer
+                borderWidth={borderWidth}
+                borderColor={borderColor}
+                width={width}
+                height={height}
+                background={background}
+                backgroundGradient={backgroundGradient}
+                shadow={shadow}
+                onClick={() => (handleClick ? handleClick() : null)}
+            >
+                <Circle active={active} size={dotSize} background={dotBackground} backgroundGradient={dotGradient} />
+            </SwitchContainer>
+            {label?.secondLabel && <Label fontSize={label?.fontSize}>{label.secondLabel}</Label>}
+        </Wrapper>
     );
 };
+
+const Wrapper = styled.div<{ margin?: string }>`
+    ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+`;
+
+const Label = styled.span<{ fontSize?: string }>`
+    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '12px')};
+    color: var(--primary-color);
+    margin-left: 5px;
+    margin-right: 5px;
+`;
 
 const SwitchContainer = styled.div<SwitchContainerProps>`
     display: flex;
@@ -69,10 +103,11 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
     cursor: pointer;
     border-width: ${(props: any) => (props?.borderWidth ? props.borderWidth : '1px')};
     border-style: solid;
-    border-color: ${(props: any) => (props?.borderColor ? props.borderColor : '#64D9FE')};
+    border-color: ${(props: any) => (props?.borderColor ? props.borderColor : 'var(--input-border-color)')};
     border-radius: 30px;
     width: ${(props: any) => (props?.width ? props.width : defaultSwitchHeight * 2.18 + 'px')};
     height: ${(props: any) => (props?.height ? props.height : defaultSwitchHeight + 'px')};
+    ${(_props) => (_props.shadow ? 'box-shadow: var(--shadow)' : '')}
 `;
 
 const Circle = styled.div<CircleProps>`
@@ -81,11 +116,7 @@ const Circle = styled.div<CircleProps>`
     border-radius: 60%;
     position: absolute;
     ${(props: any) =>
-        props?.backgroundGradient
-            ? props?.background
-                ? `background-color: ${props.background}`
-                : `background-color: #64D9FE`
-            : `background-color:${props?.background}`};
+        props?.background ? `background-color: ${props.background}` : `background-color: var(--input-border-color)`};
     ${(props: any) => (props?.active ? `right: 5px;` : `left: 5px;`)};
 `;
 

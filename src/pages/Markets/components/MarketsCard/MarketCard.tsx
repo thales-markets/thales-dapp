@@ -14,6 +14,7 @@ import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatter
 import { formatShortDate } from 'utils/formatters/date';
 import { getSynthName } from 'utils/currency';
 import { USD_SIGN } from 'constants/currency';
+import PhaseComponent from '../Phase/Phase';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;
@@ -36,7 +37,9 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                                 <AssetNameContainer>
                                     <AssetName>{getSynthName(optionMarket.currencyKey)}</AssetName>
                                     <CurrencyKey>{optionMarket.asset}</CurrencyKey>
-                                    <MarketStatus>operational</MarketStatus>
+                                    <MarketStatus>
+                                        <PhaseComponent phase={optionMarket.phase}></PhaseComponent>
+                                    </MarketStatus>
                                 </AssetNameContainer>
                             </AssetContainer>
                         </LeftContainer>
@@ -81,12 +84,13 @@ const MarketCardWrapper = styled.div`
     display: flex;
     flex-direction: column;
     max-width: 390px;
+    min-width: 360px;
     border: 2px solid rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
     border-radius: 15px;
-    padding: 31px;
+    padding: 31px 10px 31px 31px;
     margin: 7.5px;
-    flex: 1 0 30%;
+    flex: 1;
     :hover {
         transform: scale(1.02);
         border: 2px solid rgb(100, 217, 254, 1);
@@ -104,13 +108,15 @@ const InsideContainer = styled.div`
 
 const LeftContainer = styled.div`
     display: block;
-    margin-right: 30px;
     flex: 1;
+    width: 50%;
 `;
 
 const RightContainer = styled.div`
     display: block;
+    margin-left: 20px;
     flex: 1;
+    width: 50%;
 `;
 
 const AssetContainer = styled.div`
@@ -129,7 +135,7 @@ export const AssetNameContainer = styled.div`
 `;
 
 export const AssetName = styled.span`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     display: block;
     font-weight: 300;
@@ -139,7 +145,7 @@ export const AssetName = styled.span`
 `;
 
 export const CurrencyKey = styled.span`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     display: block;
     font-size: 20px;
@@ -148,7 +154,7 @@ export const CurrencyKey = styled.span`
 `;
 
 const MarketStatus = styled.span`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-size: 7px;
     display: block;
@@ -158,7 +164,7 @@ const MarketStatus = styled.span`
 const LightHeaderText = styled.span`
     color: var(--primary-color);
     display: block;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     line-height: 110%;
     font-size: 15px;
@@ -173,7 +179,7 @@ const PriceDifferenceInfo = styled.span<{ priceDiff: number }>`
     ${(_props) => (_props.priceDiff > 0 ? 'color: #50CE99' : 'color: #C3244A')};
     margin-left: 5px;
     font-size: 15px;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
 `;
 

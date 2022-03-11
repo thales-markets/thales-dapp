@@ -167,6 +167,8 @@
         "search": "search",
         "buy": "buy",
         "sell": "sell",
+        "long": "long",
+        "short": "short",
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
         "select": "select",
@@ -294,7 +296,8 @@
                 "difference-text": "Difference between current and strike price",
                 "time-remaining": "Time remaining",
                 "result": "Current result",
-                "view-market": "View Market"
+                "view-market": "View Market",
+                "price-difference": "Price difference"
             },
             "hot-market-card": {
                 "price-per-option": "Price per option",
@@ -1281,6 +1284,12 @@
         "trading-profile": {
             "title": "Trading Profile",
             "search-placeholder": "Search Wallet"
+        },
+        "order-book": {
+            "trade-up": "Trade Up Options",
+            "trade-down": "Trade Down Options",
+            "select-to": "Select to {{type}}",
+            "amount-to": "Amount to {{type}}"
         }
     },
     "governance": {
@@ -1379,6 +1388,7 @@
         "amm-disabled-warning": "AMM trading is disabled for this market",
         "amm-disabled": "AMM trading disabled",
         "beta": "BETA",
+        "max-amount": "Max amount {{amount}}",
         "price-changed-warning": "Price changed, please review",
         "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more long options are being bought from the AMM than short, it will add a skew price impact to the long option pricing, while offering short options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market with calculated odds via BlackScholes above 10% and below 90% and up to 24 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
     },

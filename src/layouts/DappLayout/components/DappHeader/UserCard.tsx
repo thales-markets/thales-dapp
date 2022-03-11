@@ -15,6 +15,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { getTheme } from 'redux/modules/ui';
+import UserWalletExpanded from './UserWalletExpanded';
+import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 
 export const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
@@ -24,10 +26,7 @@ export const UserCard: React.FC = () => {
 
     return (
         <>
-            <UserWallet
-                style={{ position: 'absolute', top: '55px', right: '110px' }}
-                walletContainerStyle={{ margin: '0px', border: '1px solid rgba(100, 217, 254, 0.5)' }}
-            />
+            <UserWallet />
             <MenuCardButton onClick={() => setShowCard(!showCard)}>
                 <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
@@ -38,12 +37,16 @@ export const UserCard: React.FC = () => {
                         <LogoContainer>
                             <ThalesLogo className="icon icon--logo" />
                         </LogoContainer>
-                        <UserWallet expandedView={true} />
-                        {isWalletConnected && <PieChartUserBalance />}
+                        <UserWalletExpanded />
+                        {isWalletConnected && <NetworkSwitchSection />}
+                        <Container>
+                            {isWalletConnected && <PieChartUserBalance />}
+                            {isWalletConnected && <ThalesBalance />}
+                        </Container>
+
                         <PriceChart currencyKey={'THALES'} showHeading={true} />
                         {isWalletConnected && <DisplayNameForm />}
                         <ThemeSelector />
-                        {isWalletConnected && <NetworkSwitchSection />}
                         <LanguageCardSelector />
                     </CardWrapper>
                 </MenuCard>
@@ -77,12 +80,28 @@ export const Overlay = styled.div`
     }
 `;
 
+const Container = styled.div`
+    display: contents;
+    @media (max-width: 1024px) {
+        display: flex;
+        align-items: center;
+        justiyf-content: flex-start;
+        & > div {
+            width: 50%;
+        }
+    }
+`;
+
 const MenuCardButton = styled.div`
     position: absolute;
-    top: 55px;
-    right: 44px;
+    top: 40px;
+    right: 20px;
     width: 50px;
     cursor: pointer;
+    @media (max-width: 1024px) {
+        right: 0;
+        top: 20px;
+    }
 `;
 
 const MenuIcon = styled.i`
@@ -92,15 +111,15 @@ const MenuIcon = styled.i`
 const MenuCard = styled.div<ManuCardProps>`
     display: ${({ visibility }) => (visibility ? 'block' : 'none')};
     position: fixed;
-    width: 241px;
+    max-width: 280px;
     right: 35px;
-    max-height: 90vh;
-    overflow-y: scroll;
+    max-height: 95vh;
+    overflow-y: auto;
     top: 35px;
     border: 1px solid #64d9fe;
     box-sizing: border-box;
     border-radius: 15px;
-    z-index: 3;
+    z-index: 1000;
     &.light {
         background-color: #f7f7f7;
         --background: #f7f7f7;
@@ -113,18 +132,37 @@ const MenuCard = styled.div<ManuCardProps>`
         --icon-color: #f7f7f7;
         --shadow-color: '#64D9FE';
     }
+    @media (max-width: 1024px) {
+        width: 100%;
+        max-width: 100%;
+        max-height: unset;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+        border: none;
+    }
     box-shadow: var(--shadow);
 `;
 
 const CardWrapper = styled.div`
-    padding: 26px;
+    padding: 24px;
+    max-width: 600px;
+    margin: auto;
+
+    @media (max-width: 568px) {
+        padding: 24px 12px;
+    }
 `;
 
 const CloseIcon = styled.i`
     position: absolute;
     top: 22px;
     right: 19px;
-    font-size: 10px;
+    font-size: 16px;
+    padding: 4px;
+    box-sizing: content-box;
     cursor: pointer;
     color: var(--icon-color);
 `;
@@ -134,6 +172,9 @@ const LogoContainer = styled.div`
     margin: 14px auto 16px auto;
     width: 100%;
     text-align: center;
+    @media (max-width: 1024px) {
+        margin: 0 0 10px 0px;
+    }
 `;
 
 const ThalesLogo = styled.i`

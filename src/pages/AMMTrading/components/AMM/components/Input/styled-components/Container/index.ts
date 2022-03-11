@@ -48,12 +48,16 @@ const SubValue = styled.span<{ color?: string; fontSize?: string }>`
 `;
 
 // @ts-ignore
-const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
+const Container: StyledComponent<'div', any, { borderColor?: string }> & ContainerChildren = styled.div<{
+    borderColor?: string;
+}>`
     display: flex;
     flex-direction: column;
-    border: 0.8px solid var(--input-border-color);
+    border: 0.8px solid ${(_props) => (_props?.borderColor ? _props.borderColor : 'var(--card-border-color)')};
     border-radius: 10px;
     padding: 5px 14px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
 `;
 
 ValueContainer.Value = Value;

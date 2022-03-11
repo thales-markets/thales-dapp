@@ -1,53 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import UserCard from 'layouts/DappLayout/components/DappHeader/UserCard';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
-import { FlexDiv, FlexDivColumn, Logo } from 'theme/common';
+import { FlexDivColumn } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import { RootState } from 'redux/rootReducer';
 import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import logoIcon from 'assets/images/logo-light.svg';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
-import burger from 'assets/images/burger.svg';
-import { useLocation } from 'react-router-dom';
+import logoIcon from 'assets/images/logo-light.svg';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
+import { useLocation } from 'react-router-dom';
 
-enum BurgerState {
-    Init,
-    Show,
-    Hide,
-}
+// enum BurgerState {
+//     Init,
+//     Show,
+//     Hide,
+// }
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-    const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
 
     return (
-        <FlexDivColumn style={{ width: '100%', flex: 'unset' }}>
+        <FlexDivColumn style={{ width: '100%', height: 80, flex: 'unset' }}>
             <UserCard />
-            <DappHeaderWrapper id="dapp-header" className="dapp-header">
-                <FlexDiv className="dapp-header__logoWrapper">
-                    <Logo to="" className="dapp-header__logoWrapper__logo" />
-                    <BurdgerIcon
-                        className="dapp-header__logoWrapper__burger"
-                        onClick={() =>
-                            setShowBurdgerMenu(
-                                showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show
-                            )
-                        }
-                        hidden={showBurgerMenu === BurgerState.Show}
-                        src={burger}
-                    />
-                </FlexDiv>
-            </DappHeaderWrapper>
-            <Sidebar
-                className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
-            >
+            <Sidebar>
                 <ItemsContainer>
                     <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Home)}>
                         <LogoIcon width="38" height="42" src={logoSmallIcon} />
@@ -91,17 +72,12 @@ const DappHeader: React.FC = () => {
                         label={t('common.sidebar.royale-label')}
                     />
                     <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Game ? 'selected' : ''}
+                        className={location.pathname === ROUTES.Options.Game ? 'selected' : '' + ' game'}
                         href={buildHref(ROUTES.Options.Game)}
                         iconName="game"
                         label={t('common.sidebar.game-label')}
                     />
-                    <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''}
-                        href={buildHref(ROUTES.Options.Leaderboard)}
-                        iconName="leaderboard"
-                        label={t('common.sidebar.leaderboard-label')}
-                    />
+
                     {walletAddress && (
                         <DappHeaderItem
                             className={location.pathname === ROUTES.Options.Profile ? 'selected' : ''}
@@ -121,28 +97,54 @@ const Sidebar = styled.nav`
     top: 0;
     left: 0;
     width: 72px;
-    min-height: 100vh;
+    height: 100vh;
     z-index: 100;
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     padding: 35px 0;
     transition: width 0.3s ease;
     overflow: hidden;
+
     .sidebar-logoBig {
         display: none;
     }
-    &:hover {
-        width: 300px;
-        span {
-            display: block;
+
+    @media (min-width: 1024px) {
+        &:hover {
+            width: 300px;
+            span {
+                display: block;
+            }
+            i {
+                display: block;
+            }
+            .sidebar-logoSmall {
+                display: none;
+            }
+            .sidebar-logoBig {
+                display: block;
+            }
         }
-        i {
-            display: block;
-        }
+    }
+
+    @media (max-width: 1024px) {
+        padding: 0;
+        background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+        box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.25);
+        border-radius: 30px;
+        width: calc(100% - 40px);
+        left: 20px;
+        top: unset;
+        bottom: 20px;
+        height: 55px;
+
         .sidebar-logoSmall {
             display: none;
         }
         .sidebar-logoBig {
-            display: block;
+            display: none;
+        }
+        .game {
+            display: none !important;
         }
     }
     -webkit-user-select: none;
@@ -152,22 +154,12 @@ const Sidebar = styled.nav`
     user-select: none;
 `;
 
-const ItemsContainer = styled.ul``;
-
-const BurdgerIcon = styled.img`
-    position: absolute;
-    right: 30px;
-    top: 52px;
-    padding: 10px;
-`;
-
-const DappHeaderWrapper = styled.div`
-    width: 100%;
-    height: 100px;
+const ItemsContainer = styled.div`
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    @media screen and (max-width: 767px) {
+    flex-direction: column;
+    @media (max-width: 1024px) {
+        flex-direction: row;
+        justify-content: space-around;
         height: 100%;
     }
 `;
@@ -185,6 +177,9 @@ const Divider = styled.hr`
     width: 100%;
     border: none;
     border-top: 3px solid rgb(255, 255, 255, 0.5);
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;
 
 export default DappHeader;

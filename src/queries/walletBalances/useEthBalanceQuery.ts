@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 
 const useEthBalanceQuery = (walletAddress: string, options?: UseQueryOptions<string>) => {
     return useQuery<string>(
-        QUERY_KEYS.Royale.EthBalance(walletAddress),
+        QUERY_KEYS.User.EthBalance(walletAddress),
         async () => {
             const provider = new ethers.providers.Web3Provider((window as any).ethereum);
             const balance = await provider.getBalance(walletAddress);

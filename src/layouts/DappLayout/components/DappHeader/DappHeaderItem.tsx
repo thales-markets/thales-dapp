@@ -67,6 +67,10 @@ const MenuItem = styled.li`
         color: #f6f6fe;
         background: #141c7f;
     }
+
+    @media (max-width: 1024px) {
+        padding: 0 20px;
+    }
 `;
 
 const Text = styled.span`
@@ -81,6 +85,9 @@ const Text = styled.span`
     display: none;
     margin-left: 20px;
     text-transform: uppercase;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;
 
 const Arrow = styled.i<{ open: boolean }>`

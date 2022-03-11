@@ -98,6 +98,7 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        EthBalance: (walletAddress: string) => ['user', 'ethBalance', walletAddress],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
         DisplayNames: () => ['user', 'displayNames'],
         TwitterAccount: (walletAddress: string) => ['user', 'twitterAccount', walletAddress],

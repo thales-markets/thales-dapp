@@ -19,7 +19,7 @@ import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
 import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
-import PriceChart from 'components/Charts/PriceChart';
+import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -127,7 +127,7 @@ const Profile: React.FC = () => {
                 </ContentWrapper>
             </Container.Left>
             <Container.Right layout={isSimpleView}>
-                <PieChartOptionsAllocated size={350} claimable={positions.claimableAmount} />
+                <PieChartOptionsAllocated claimable={positions.claimableAmount} />
                 <Wrapper>
                     <Wrapper.Row>
                         <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
@@ -155,16 +155,18 @@ const Profile: React.FC = () => {
                             {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.investment, 2)}
                         </Wrapper.Value>
                     </Wrapper.Row>
+                    <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
+                        <ThalesBalance showTitle={true} />
+                    </PriceContainer>
                 </Wrapper>
-                <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400 }}>
-                    <PriceChart showTooltip={true} height={160} currencyKey={'THALES'} showHeading={true} />
-                </PriceContainer>
             </Container.Right>
         </Container>
     );
 };
 
 const PageTitle = styled.p`
+    position: absolute;
+    top: -100px;
     font-family: Roboto !important;
     font-style: normal;
     font-weight: 600;
@@ -184,6 +186,9 @@ const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
     align-items: center;
     justify-content: ${(_props) => _props.justifyContent};
+    @media (max-width: 768px) {
+        margin-top: 20px;
+    }
 `;
 
 const NavItem = styled.p`
@@ -196,8 +201,16 @@ const NavItem = styled.p`
     color: var(--primary-color);
     cursor: pointer;
     padding: 0 50px;
+    white-space: pre;
     &.active {
         box-shadow: 0px 4px var(--primary-filter-menu-active);
+    }
+    @media (max-width: 768px) {
+        font-size: 14px;
+        padding: 0 20px;
+    }
+    @media (max-width: 500px) {
+        font-size: 10px;
     }
 `;
 
@@ -235,7 +248,8 @@ const PriceContainer = styled.div`
     box-sizing: border-box;
     width: 100%;
     max-width: 500px;
-    margin: 40px auto;
+    margin: 0 auto;
+    margin-top: 20px;
 `;
 
 export default Profile;

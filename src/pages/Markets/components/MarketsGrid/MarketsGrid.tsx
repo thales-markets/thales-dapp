@@ -91,6 +91,9 @@ const Wrapper = styled(FlexDiv)`
     flex-wrap: wrap;
     max-width: 1200px;
     justify-content: center;
+    @media (max-width: 1250px) {
+        max-width: 1140px;
+    }
 `;
 
 export default MarketsGrid;

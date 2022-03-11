@@ -16,6 +16,7 @@ import useThalesBalanceQuery from '../../queries/walletBalances/useThalesBalance
 import { getCurrencyKeyBalance } from 'utils/balances';
 
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
 
 const PieChartUserBalance: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -38,6 +39,12 @@ const PieChartUserBalance: React.FC = () => {
         enabled: isAppReady && isWalletConnected,
     });
 
+    const ethBalanceQuery = useEthBalanceQuery(walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    const ethBalance = ethBalanceQuery.isSuccess ? ethBalanceQuery.data : 0;
+
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
     useEffect(() => {
@@ -59,12 +66,11 @@ const PieChartUserBalance: React.FC = () => {
             {isWalletConnected && (
                 <ChartContainer>
                     <BalanceInfoContainer>
-                        <TotalHeader>Total</TotalHeader>
-                        <TotalAmount>105.66.00</TotalAmount>
+                        <PartialAmount>{formatCurrencyWithKey('ETH', ethBalance)}</PartialAmount>
                         <PartialAmount>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</PartialAmount>
                         <ThalesAmount>{formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}</ThalesAmount>
                     </BalanceInfoContainer>
-                    <PieChart width={170} height={170}>
+                    <PieChart style={{ margin: 'auto' }} width={180} height={180}>
                         <Pie
                             startAngle={-45}
                             cornerRadius={20}
@@ -89,46 +95,28 @@ const PieChartUserBalance: React.FC = () => {
 };
 
 const ChartContainer = styled.div`
-    width: 170px;
-    height: 170px;
+    width: 180px;
+    height: 180px;
     position: relative;
     margin: 0px auto 15px auto;
 `;
 
 const BalanceInfoContainer = styled.div`
-    left: 0;
-    right: 0;
-    margin-top: 45px;
-    margin-left: auto;
-    margin-right: auto;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
     position: absolute;
     color: var(--icon-color);
 `;
 
-const TotalHeader = styled.p`
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 18px;
-    text-transform: uppercase;
-    font-family: Titillium Regular !important;
-    font-style: normal;
-    font-weight: 600;
-`;
-
-const TotalAmount = styled.p`
-    font-size: 20px;
-    line-height: 100%;
-    margin-bottom: 5px;
-    font-family: Titillium Regular !important;
-    font-style: normal;
-    font-weight: 600;
-`;
-
 const PartialAmount = styled.p`
-    font-size: 15px;
-    line-height: 15px;
+    font-family: Roboto !important;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 19px;
 `;
 
 const ThalesAmount = styled(PartialAmount)`
