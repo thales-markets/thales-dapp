@@ -39,17 +39,6 @@ const Input: React.FC<InputProps> = ({
     displayTooltip,
     tooltipText,
 }) => {
-    const CustomTooltip = withStyles(() => ({
-        tooltip: {
-            minWidth: '100%',
-            width: '100%',
-            margin: '0',
-            backgroundColor: TooltipStyles.error.backgroundColor,
-            color: TooltipStyles.error.color,
-            fontSize: TooltipStyles.error.fontSize,
-        },
-    }))(Tooltip);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof valueChange == 'function') {
             valueChange(e.target.value);
@@ -80,5 +69,16 @@ const Input: React.FC<InputProps> = ({
         </CustomTooltip>
     );
 };
+
+const CustomTooltip = withStyles(() => ({
+    tooltip: {
+        minWidth: '100%',
+        width: '100%',
+        margin: '0',
+        backgroundColor: TooltipStyles.error.backgroundColor,
+        color: TooltipStyles.error.color,
+        fontSize: TooltipStyles.error.fontSize,
+    },
+}))(Tooltip);
 
 export default Input;
