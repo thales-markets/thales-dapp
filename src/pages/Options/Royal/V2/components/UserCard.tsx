@@ -483,7 +483,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         margin: 'margin: 0 0 7px 0',
                     }}
                 >
-                    <UserLabel style={{ width: 150, marginTop: '-25px', padding: '15px 0px' }}>
+                    <UserLabel
+                        style={{ width: window.innerWidth < 400 ? 125 : 150, marginTop: '-25px', padding: '15px 0px' }}
+                    >
                         {t('options.royale.scoreboard.default-position')}:
                         <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
                             <StyledInfoIcon />
@@ -828,7 +830,7 @@ const Selector = styled.div<{ isOpen: boolean }>`
     font-family: Sansation !important;
     font-style: normal;
     font-size: 20px;
-    line-height: 24px;
+    line-height: 29px;
     text-align: center;
     letter-spacing: -0.4px;
     color: var(--color-background);
@@ -916,7 +918,7 @@ const InfoSection = styled.div`
 
 const Arrow = styled.i`
     font-size: 12px;
-    line-height: 8px;
+    line-height: 12px;
     display: inline-block;
     padding-bottom: 3px;
     position: absolute;
