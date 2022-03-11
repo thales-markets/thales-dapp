@@ -20,9 +20,20 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
     currencyKeyFontSize,
     displayInRow,
 }) => {
+    const isMobile = window.innerWidth < 768;
+
     return (
         <AssetContainer>
-            <CurrencyIcon currencyKey={currencyKey} width={logoSize} height={logoSize} />
+            <CurrencyIcon
+                synthIconStyle={{
+                    marginRight: isMobile ? 0 : 7,
+                    height: isMobile ? '30px' : '24px',
+                    width: isMobile ? '30px' : '24px',
+                }}
+                currencyKey={currencyKey}
+                width={logoSize}
+                height={logoSize}
+            />
             <AssetNameContainer displayInRow={displayInRow}>
                 <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>
                 <CurrencyKey fontSize={currencyKeyFontSize}>{currencyKey}</CurrencyKey>
@@ -37,6 +48,11 @@ const AssetContainer = styled.div`
     justify-content: start;
     align-items: center;
     flex: 1;
+    @media screen and (max-width: 767px) {
+        min-height: 100%;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 `;
 
 export const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
@@ -46,6 +62,9 @@ export const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
     text-align: left;
     font-size: 15px;
     color: var(--primary-color) !important;
+    @media screen and (max-width: 767px) {
+        text-align: center;
+    }
 `;
 
 export const AssetName = styled.span<{ fontSize?: string }>`
@@ -57,6 +76,9 @@ export const AssetName = styled.span<{ fontSize?: string }>`
     text-transform: uppercase;
     line-height: 120%;
     margin-right: 2px;
+    @media screen and (max-width: 767px) {
+        display: none;
+    }
 `;
 
 export const CurrencyKey = styled.span<{ fontSize?: string }>`

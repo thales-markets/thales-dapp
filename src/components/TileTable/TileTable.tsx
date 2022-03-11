@@ -2,8 +2,10 @@ import React, { ReactElement } from 'react';
 import Container from './styled-components/Container';
 import Tile from './styled-components/Tile';
 import AssetInfo, { AssetInfoProps } from '../AssetInfo/AssetInfo';
-import { FlexDiv } from '../../theme/common';
+import { FlexDiv, LoaderContainer, NoDataText, NoDataContainer } from '../../theme/common';
 import SPAAnchor from '../SPAAnchor';
+import SimpleLoader from '../SimpleLoader';
+import { useTranslation } from 'react-i18next';
 
 type Cell = {
     flexDirection?: string;
@@ -34,8 +36,16 @@ const wrapInAnchor = (child: JSX.Element, href?: string) => {
     return href ? <SPAAnchor href={href}>{child}</SPAAnchor> : child;
 };
 
-const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRenderer, rows }) => {
-    return (
+const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRenderer, rows, isLoading }) => {
+    const { t } = useTranslation();
+    if (!isLoading && !rows.length) {
+        return (
+            <NoDataContainer>
+                <NoDataText>{t('common.no-data-available')}</NoDataText>
+            </NoDataContainer>
+        );
+    }
+    return !isLoading ? (
         <Container>
             {rows.map((row, index) => {
                 if (typeof row !== 'string') {
@@ -77,6 +87,10 @@ const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRender
                 }
             })}
         </Container>
+    ) : (
+        <LoaderContainer>
+            <SimpleLoader />
+        </LoaderContainer>
     );
 };
 

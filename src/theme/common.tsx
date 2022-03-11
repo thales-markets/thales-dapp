@@ -228,8 +228,8 @@ export const Side = styled(FlexDivColumnCentered)`
 export const LoaderContainer = styled(GridDivCenteredRow)`
     grid-gap: 10px;
     position: absolute;
-    left: 45%;
-    top: 45%;
+    left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%);
 `;
 

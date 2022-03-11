@@ -11,6 +11,8 @@ import { buildOptionsMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
 import { formatShortDate } from 'utils/formatters/date';
+import { LoaderContainer, NoDataContainer, NoDataText } from '../../../../theme/common';
+import SimpleLoader from '../../../../components/SimpleLoader';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -20,7 +22,13 @@ type MaturedPositionsProps = {
     isLoading?: boolean;
 };
 
-const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimpleView, claimed, searchText }) => {
+const MaturedPositions: React.FC<MaturedPositionsProps> = ({
+    positions,
+    isSimpleView,
+    claimed,
+    searchText,
+    isLoading,
+}) => {
     const { t } = useTranslation();
     const data = useMemo(() => {
         const newArray: any = [];
@@ -72,9 +80,18 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
         });
     }, [searchText, data]);
 
+    if (!isLoading && !data.length) {
+        return (
+            <NoDataContainer>
+                <NoDataText>{t('common.no-data-available')}</NoDataText>
+            </NoDataContainer>
+        );
+    }
+
     return (
         <Container>
-            {isSimpleView &&
+            {!isLoading &&
+                isSimpleView &&
                 filteredData.length > 0 &&
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
@@ -165,7 +182,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                         )}
                     </Content>
                 ))}
-            {!isSimpleView && data.length > 0 && (
+            {!isLoading && !isSimpleView && data.length > 0 && (
                 <Table
                     containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
                     data={data}
@@ -238,6 +255,11 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({ positions, isSimple
                         },
                     ]}
                 />
+            )}
+            {isLoading && (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
             )}
         </Container>
     );

@@ -241,6 +241,7 @@ const ContentWrapper = styled.div`
     position: relative;
     left: -50px;
     padding-bottom: 40px;
+    height: 100%;
 `;
 
 const PriceContainer = styled.div`

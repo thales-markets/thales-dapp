@@ -15,6 +15,8 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
+import SimpleLoader from '../../../../components/SimpleLoader';
+import { LoaderContainer, NoDataContainer, NoDataText } from '../../../../theme/common';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -24,7 +26,7 @@ type MyPositionsProps = {
     isLoading?: boolean;
 };
 
-const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isSimpleView, searchText }) => {
+const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isSimpleView, searchText, isLoading }) => {
     const { t } = useTranslation();
     const data = useMemo(() => {
         const newArray: any = [];
@@ -59,9 +61,18 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
         });
     }, [searchText, data]);
 
+    if (!isLoading && !data.length) {
+        return (
+            <NoDataContainer>
+                <NoDataText>{t('common.no-data-available')}</NoDataText>
+            </NoDataContainer>
+        );
+    }
+
     return (
         <Container>
-            {isSimpleView &&
+            {!isLoading &&
+                isSimpleView &&
                 filteredData.length > 0 &&
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
@@ -180,7 +191,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                         )}
                     </Content>
                 ))}
-            {!isSimpleView && data.length > 0 && (
+            {!isLoading && !isSimpleView && data.length > 0 && (
                 <Table
                     containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
                     data={data}
@@ -264,6 +275,11 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                         },
                     ]}
                 />
+            )}
+            {isLoading && (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
             )}
         </Container>
     );

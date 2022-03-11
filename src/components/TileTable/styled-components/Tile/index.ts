@@ -56,6 +56,14 @@ const Tile: StyledComponent<'div', any, { disabled?: boolean; lineHidden?: boole
         background: #64d9fe;
         opacity: ${(props) => (props.disabled ? '1' : '0.5')} !important;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
+        @media screen and (max-width: 767px) {
+            height: 68px;
+        }
+    }
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+        flex-wrap: wrap;
+        min-height: 100px;
     }
 `;
 
@@ -98,6 +106,10 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
         background: #64d9fe;
         opacity: 0.5;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
+        @media screen and (max-width: 767px) {
+            height: 68px;
+            top: -56px;
+        }
     }
 `;
 
