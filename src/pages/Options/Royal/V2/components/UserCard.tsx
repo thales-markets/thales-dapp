@@ -924,7 +924,7 @@ const Arrow = styled.i`
     position: absolute;
     color: var(--color-wrapper);
     top: 9px;
-    left: ${() => (window.innerWidth < 1024 ? '70%' : '67%')};
+    left: ${() => (window.innerWidth < 1024 ? '75%' : '67%')};
 `;
 
 const Overlay = styled.div`

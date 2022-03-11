@@ -136,6 +136,7 @@ const Wrapper = styled.div<{
     margin-top: 10px;
     height: ${(_props) => (_props?.isRoyale ? '50px' : '93px')};
     margin-bottom: 10px;
+    padding: 0px 5px;
 `;
 
 const BottomColoredDiv = styled.div<{
