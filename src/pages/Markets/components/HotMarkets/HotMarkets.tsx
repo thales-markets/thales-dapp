@@ -50,7 +50,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             });
         });
 
-        return markets;
+        return markets.sort((a: HotMarket, b: HotMarket) => a.pricePerOption - b.pricePerOption);
     }, [optionsMarkets]);
 
     const slicedMarkets = useMemo(() => {
@@ -59,6 +59,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     return (
         <>
+            <Title>Most profitable markets</Title>
             {currentMarkets.length > 0 ? (
                 <Wrapper>
                     <Icon
@@ -124,6 +125,20 @@ const Wrapper = styled.div`
             display: none;
         }
     }
+`;
+
+const Title = styled.p`
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 38px;
+    color: #64d9fe;
+    border-bottom: 4px solid rgba(100, 217, 254, 0.5);
+    padding: 4px 20px;
+    text-transform: capitalize;
+    position: relative;
+    top: -20px;
 `;
 
 const Icon = styled.i<{ disabled?: boolean }>`
