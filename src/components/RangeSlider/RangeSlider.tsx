@@ -32,8 +32,8 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     };
 
     return (
-        <Wrapper>
-            <Container disabled={disabled}>
+        <Wrapper disabled={disabled}>
+            <Container>
                 <Container.Slider
                     type="range"
                     min={min}
