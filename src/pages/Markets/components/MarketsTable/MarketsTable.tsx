@@ -408,7 +408,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                         </tbody>
                     </table>
                     <PaginationWrapper
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[5, 10, 20, 25]}
                         count={data.length}
                         rowsPerPage={pageSize}
                         page={pageIndex}
