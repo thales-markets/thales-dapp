@@ -48,8 +48,10 @@ const SubValue = styled.span<{ color?: string; fontSize?: string }>`
 `;
 
 // @ts-ignore
-const Container: StyledComponent<'div', any, { borderColor?: string }> & ContainerChildren = styled.div<{
+const Container: StyledComponent<'div', any, { borderColor?: string; disabled?: boolean }> &
+    ContainerChildren = styled.div<{
     borderColor?: string;
+    disabled?: boolean;
 }>`
     display: flex;
     flex-direction: column;
@@ -58,6 +60,7 @@ const Container: StyledComponent<'div', any, { borderColor?: string }> & Contain
     padding: 5px 14px;
     box-sizing: border-box;
     margin-bottom: 8px;
+    opacity: ${(_props) => (_props?.disabled ? '0.5 !important' : '1')};
 `;
 
 ValueContainer.Value = Value;

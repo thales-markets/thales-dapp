@@ -5,13 +5,16 @@ type ContainerChildren = {
 };
 
 // @ts-ignore
-const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
+const Container: StyledComponent<'div', any, { disabled?: boolean }> & ContainerChildren = styled.div<{
+    disabled?: boolean;
+}>`
     width: 100%;
     border: 1px solid var(--input-border-color);
     border-radius: 30px;
     display: flex;
     align-items: center;
     height: 30px;
+    opacity: ${(_props) => (_props?.disabled ? '0.5 !important' : '')};
     &:active {
         box-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
     }

@@ -11,6 +11,7 @@ type RangeSliderProps = {
     footerText?: string | Array<string>;
     showInFooterMinMax?: boolean;
     onChangeEventHandler?: (value: number) => void;
+    disabled?: boolean;
 };
 
 const RangeSlider: React.FC<RangeSliderProps> = ({
@@ -22,6 +23,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     footerText,
     showInFooterMinMax,
     onChangeEventHandler,
+    disabled,
 }) => {
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof onChangeEventHandler == 'function') {
@@ -31,7 +33,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
 
     return (
         <>
-            <Container>
+            <Container disabled={disabled}>
                 <Container.Slider
                     type="range"
                     min={min}
@@ -39,6 +41,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
                     value={defaultValue}
                     step={step ? step : '0.1'}
                     onChange={(event) => onChangeHandler(event)}
+                    disabled={disabled}
                 />
             </Container>
             {showFooter && <Footer>{footerText}</Footer>}
