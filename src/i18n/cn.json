@@ -217,6 +217,13 @@
                 "mainnet": "切换到主网",
                 "optimism": "转为乐观"
             }
+        },
+        "alerts": {
+            "title": {
+                "error": "错误",
+                "info": "信息",
+                "success": "成功"
+            }
         }
     },
     "modals": {
@@ -1109,7 +1116,8 @@
                 "stats": "数据",
                 "price-source": "来源：Optimism Chainlink的ETH报价",
                 "current-reward-per-winner": "每位获胜者的奖励",
-                "season-finished": "第 {{season}} 季结束"
+                "season-finished": "第 {{season}} 季结束",
+                "select-position": "请选择第一轮的默认位置"
             },
             "battle": {
                 "round": "轮次",
@@ -1171,7 +1179,6 @@
                 "loading-season": "正在加载",
                 "no-users": "没有参赛者",
                 "insufficient-balance": "sUSD 余额不足",
-                "default-position": "默认位置",
                 "default-position-none": "没有任何",
                 "default-position-up": "向上",
                 "default-position-down": "向下",
@@ -1189,7 +1196,8 @@
                 "approve-for-minting": "批准 sUSD 用于 Royale Pass 铸币",
                 "buy-in-collateral-pass-mobile": "NFT",
                 "royale-pass-2": "皇家通行证",
-                "choose-colateral": "选择抵押品买入"
+                "choose-colateral": "选择抵押品买入",
+                "default-position": "选择第一轮的位置"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",
