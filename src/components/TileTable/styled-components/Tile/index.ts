@@ -71,7 +71,7 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
     lineHidden?: boolean;
 }>`
     color: var(--primary-color) !important;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: bold;
     height: 50px;
     position: relative;
@@ -133,7 +133,8 @@ const CellTitle = styled.div<{ fontSize?: number }>`
 `;
 
 const CellValue = styled.div<{ fontSize?: number }>`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
+    white-space: pre;
     font-style: normal;
     font-weight: bold;
     font-size: ${(props) => props.fontSize || '12'}px;
