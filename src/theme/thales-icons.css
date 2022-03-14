@@ -1,0 +1,35 @@
+.v2-icon {
+    display: inline-block;
+    font-family: ThalesIcons !important;
+    vertical-align: middle;
+    font-size: 24px;
+    color: var(--color);
+}
+
+.v2-icon--dollar:before {
+    content: '\0041';
+}
+
+.v2-icon--down:before {
+    content: '\0042';
+}
+
+.v2-icon--info:before {
+    content: '\0043';
+}
+
+.v2-icon--op:before {
+    content: '\0044';
+}
+
+.v2-icon--rip:before {
+    content: '\0045';
+}
+
+.v2-icon--tx:before {
+    content: '\0046';
+}
+
+.v2-icon--up:before {
+    content: '\0047';
+}
