@@ -29,6 +29,11 @@
 }
 
 @font-face {
+    font-family: 'ThalesIcons';
+    src: local('ThalesIcons'), url(../assets/fonts/ThalesIcons/Thales2022.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'SansationLight';
     src: local('SansationLight'), url(../assets/fonts/SansationLight/Sansation-Light.ttf) format('truetype');
 }
