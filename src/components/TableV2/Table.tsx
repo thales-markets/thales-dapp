@@ -66,6 +66,10 @@ const Table: React.FC<TableProps> = ({
         gotoPage(0);
     };
 
+    useEffect(() => {
+        setPageSize(20);
+    }, []);
+
     return (
         <>
             {data?.length && (
@@ -141,7 +145,7 @@ const Table: React.FC<TableProps> = ({
                     </TableView>
                     {!hidePagination && (
                         <Pagination
-                            rowsPerPageOptions={resultsPerPage ? resultsPerPage : [5, 10, 25]}
+                            rowsPerPageOptions={resultsPerPage ? resultsPerPage : [5, 10, 20, 25]}
                             count={data.length}
                             rowsPerPage={pageSize}
                             page={pageIndex}

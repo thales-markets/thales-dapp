@@ -65,6 +65,9 @@ const MenuItem = styled.li`
     }
     &:hover {
         color: #f6f6fe;
+        .sidebar-icon {
+            color: #f6f6fe;
+        }
         background: #141c7f;
     }
 

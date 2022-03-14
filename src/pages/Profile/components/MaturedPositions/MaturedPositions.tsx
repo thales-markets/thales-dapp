@@ -13,6 +13,7 @@ import Table from 'components/TableV2';
 import { formatShortDate } from 'utils/formatters/date';
 import { LoaderContainer, NoDataContainer, NoDataText } from '../../../../theme/common';
 import SimpleLoader from '../../../../components/SimpleLoader';
+import { TFunction } from 'i18next';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -111,13 +112,17 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         </Card.Column>
                                         <Card.Column>
                                             <Card.Section>
-                                                <Card.RowTitle>Maturity Date</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t(`options.home.markets-table.maturity-date-col`)}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatShortDate(data.market.maturityDate)}
                                                 </Card.RowSubtitle>
                                             </Card.Section>
                                             <Card.Section>
-                                                <Card.RowTitle>Strike Price</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t(`options.home.markets-table.strike-price-col`)}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
                                                 </Card.RowSubtitle>
@@ -125,7 +130,9 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         </Card.Column>
                                         <Card.Column>
                                             <Card.Section>
-                                                <Card.RowTitle>Final Asset Price</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t(`options.home.markets-table.final-asset-price-col`)}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatCurrencyWithSign(USD_SIGN, data.market.finalPrice)}
                                                 </Card.RowSubtitle>
@@ -148,31 +155,26 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         </Card.Column>
                                         <Card.Column>
                                             <Card.Section>
-                                                <Card.RowTitle>Amount</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t('options.leaderboard.trades.table.amount-col')}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {data.balances.amount.toFixed(2)}
-                                                    <span
+                                                    <Icon
                                                         style={{
                                                             color: data.balances.type === 'UP' ? '#50CE99' : '#C3244A',
-                                                            marginLeft: 4,
+                                                            marginLeft: 6,
                                                         }}
-                                                    >
-                                                        {data.balances.type}
-                                                    </span>
+                                                        className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
+                                                    ></Icon>
                                                 </Card.RowSubtitle>
                                             </Card.Section>
                                             <Card.Section>
-                                                <Card.RowTitle>Status</Card.RowTitle>
-                                                <Card.RowSubtitle
-                                                    style={{
-                                                        color: data.claimed
-                                                            ? '#8208FC'
-                                                            : data.claimable
-                                                            ? '#50CE99'
-                                                            : '#C3244A',
-                                                    }}
-                                                >
-                                                    {data.claimable ? 'CLAIM' : data.claimed ? 'CLAIMED' : 'RIP'}
+                                                <Card.RowTitle>
+                                                    {t(`options.home.markets-table.status-col`)}
+                                                </Card.RowTitle>
+                                                <Card.RowSubtitle>
+                                                    {getIconOrText(data.claimable, data.claimed, t)}
                                                 </Card.RowSubtitle>
                                             </Card.Section>
                                         </Card.Column>
@@ -206,7 +208,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                         },
 
                         {
-                            Header: t(`options.home.markets-table.24h-change-col`),
+                            Header: t(`options.home.markets-table.maturity-date-col`),
                             accessor: (row: any) => <TableText>{formatShortDate(row.market.maturityDate)}</TableText>,
                             disableSortBy: true,
                         },
@@ -224,31 +226,31 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                             },
                         },
                         {
-                            Header: t(`options.home.markets-table.time-remaining-col`),
+                            Header: t(`options.home.markets-table.status-col`),
                             accessor: (row: any) => (
-                                <TableText
-                                    style={{
-                                        color: row.claimable || row.claimed ? '#50CE99' : '#C3244A',
-                                    }}
-                                >
-                                    {row.claimable ? 'Claimable' : row.claimed ? 'Claimed' : 'RIP'}
-                                </TableText>
+                                <TableText>{getIconOrText(row.claimable, row.claimed, t)}</TableText>
                             ),
                         },
                         {
                             Header: t('options.leaderboard.trades.table.amount-col'),
                             accessor: (row: any) => {
                                 return (
-                                    <TableText>
+                                    <TableText
+                                        style={{
+                                            minWidth: 100,
+                                            marginRight: 20,
+                                            textAlign: 'right',
+                                            display: 'inline-block',
+                                        }}
+                                    >
                                         {row.balances.amount.toFixed(2)}
-                                        <span
+                                        <Icon
                                             style={{
                                                 color: row.balances.type === 'UP' ? '#50CE99' : '#C3244A',
-                                                marginLeft: 4,
+                                                marginLeft: 6,
                                             }}
-                                        >
-                                            {row.balances.type}
-                                        </span>
+                                            className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
+                                        ></Icon>
                                     </TableText>
                                 );
                             },
@@ -265,6 +267,27 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     );
 };
 
+const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction) => {
+    if (claimable) {
+        return (
+            <span>
+                {t('options.home.market-card.claim')}
+                <Icon style={{ color: '#50CE99' }} className="v2-icon v2-icon--dollar"></Icon>
+            </span>
+        );
+    }
+    if (claimed) {
+        return <span style={{ color: '#8208FC' }}>{t('options.home.market-card.claimed')}</span>;
+    } else {
+        return (
+            <span>
+                {t('options.home.market-card.rip')}
+                <Icon style={{ color: '#C3244A' }} className="v2-icon v2-icon--rip"></Icon>
+            </span>
+        );
+    }
+};
+
 const Content = styled.div`
     display: content;
 `;
@@ -276,7 +299,7 @@ const Container = styled.div`
 `;
 
 const TableText = styled.span`
-    font-family: Titillium Regular !imporant;
+    font-family: Roboto !imporant;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -284,6 +307,10 @@ const TableText = styled.span`
     text-align: right;
     text-transform: uppercase;
     color: #ffffff;
+`;
+
+const Icon = styled.i`
+    margin-left: 6px;
 `;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
