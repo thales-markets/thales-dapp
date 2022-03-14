@@ -66,6 +66,10 @@ const Table: React.FC<TableProps> = ({
         gotoPage(0);
     };
 
+    useEffect(() => {
+        setPageSize(20);
+    }, []);
+
     return (
         <>
             {data?.length && (
