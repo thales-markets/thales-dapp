@@ -5,6 +5,7 @@ type CheckboxPropsType = {
     checked?: boolean;
     container?: {
         size?: string;
+        margin?: string;
     };
     label?: {
         text?: string;
@@ -17,7 +18,7 @@ type CheckboxPropsType = {
 
 const Checkbox: React.FC<CheckboxPropsType> = ({ checked, container, label, onChange, disabled }) => {
     return (
-        <CheckboxContainer checked={checked} inputSize={container?.size}>
+        <CheckboxContainer checked={checked} inputSize={container?.size} margin={container?.margin}>
             <Label fontSize={label?.fontSize} color={label?.color}>
                 {label?.text ? label.text : ''}
             </Label>
@@ -48,11 +49,12 @@ const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })<{ size?: string 
     width: ${(_props) => (_props?.size ? _props.size : '32px')};
 `;
 
-const CheckboxContainer = styled.div<{ checked?: boolean; inputSize?: string }>`
+const CheckboxContainer = styled.div<{ checked?: boolean; inputSize?: string; margin?: string }>`
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: ${(_props) => (_props?.checked ? '1 !important' : '0.5 !important')};
+    ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
     ${HiddenCheckbox} {
         width: ${(_props) => (_props?.inputSize ? _props.inputSize : '32px')};
         height: ${(_props) => (_props?.inputSize ? _props.inputSize : '32px')};
