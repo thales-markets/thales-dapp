@@ -34,6 +34,7 @@ const Value = styled.input<{ color?: string; fontSize?: string }>`
     background: transparent;
     border: none;
     padding: 0;
+    width: 80%;
     &:focus {
         border: none;
         outline: none;
@@ -48,11 +49,19 @@ const SubValue = styled.span<{ color?: string; fontSize?: string }>`
 `;
 
 // @ts-ignore
-const Container: StyledComponent<'div', any, { borderColor?: string; disabled?: boolean }> &
+const Container: StyledComponent<
+    'div',
+    any,
+    { borderColor?: string; disabled?: boolean; width?: string; margin?: string }
+> &
     ContainerChildren = styled.div<{
     borderColor?: string;
     disabled?: boolean;
+    width?: string;
+    margin?: string;
 }>`
+    width: ${(_props) => (_props?.width ? _props.width : '100%')};
+    margin: ${(_props) => (_props?.margin ? _props.margin : '')};
     display: flex;
     flex-direction: column;
     border: 0.8px solid ${(_props) => (_props?.borderColor ? _props.borderColor : 'var(--card-border-color)')};

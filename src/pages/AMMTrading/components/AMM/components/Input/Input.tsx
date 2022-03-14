@@ -21,6 +21,10 @@ type InputProps = {
     borderColor?: string;
     displayTooltip?: boolean;
     tooltipText?: string;
+    container?: {
+        width?: string;
+        margin?: string;
+    };
 };
 
 const Input: React.FC<InputProps> = ({
@@ -40,6 +44,7 @@ const Input: React.FC<InputProps> = ({
     borderColor,
     displayTooltip,
     tooltipText,
+    container,
 }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof valueChange == 'function') {
@@ -49,7 +54,12 @@ const Input: React.FC<InputProps> = ({
 
     return (
         <CustomTooltip open={displayTooltip} title={tooltipText ? tooltipText : ''}>
-            <Container borderColor={borderColor} disabled={disabled}>
+            <Container
+                borderColor={borderColor}
+                disabled={disabled}
+                width={container?.width}
+                margin={container?.margin}
+            >
                 <Container.Title color={titleColor} fontSize={titleFontSize}>
                     {title}
                 </Container.Title>
