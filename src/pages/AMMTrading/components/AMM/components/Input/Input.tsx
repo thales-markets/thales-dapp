@@ -59,9 +59,9 @@ const Input: React.FC<InputProps> = ({
                         fontSize={valueFontSize}
                         value={value}
                         onChange={handleChange}
-                        disabled={valueEditDisable}
+                        disabled={valueEditDisable || disabled}
                         type={valueType ? valueType : ''}
-                        readOnly={typeof handleChange !== 'function'}
+                        readOnly={typeof handleChange !== 'function' || disabled}
                     />
                     <Container.ValueContainer.SubValue color={subValueColor} fontSize={subValueFontSize}>
                         {subValue}
