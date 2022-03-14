@@ -298,7 +298,10 @@
                 "time-remaining": "Time remaining",
                 "result": "Current result",
                 "view-market": "View Market",
-                "price-difference": "Price difference"
+                "price-difference": "Price difference",
+                "claim": "CLAIM",
+                "claimed": "CLAIMED",
+                "rip": "RIP"
             },
             "hot-market-card": {
                 "price-per-option": "Price per option",
@@ -330,6 +333,8 @@
                 "amm-size-col": "AMM liquidity",
                 "price-up-down-col": "Price UP/DOWN",
                 "time-remaining-col": "Time remaining",
+                "status-col": "Status",
+                "maturity-date-col": "Maturity Date",
                 "competition-tooltip": "This market is eligible for trading competition",
                 "menu": {
                     "grid": "Grid",

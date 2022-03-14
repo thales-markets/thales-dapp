@@ -100,13 +100,17 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                 </Card.Section>
                                             </Card.Row>
                                             <Card.Section>
-                                                <Card.RowTitle>Maturity Date</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t(`options.home.markets-table.maturity-date-col`)}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatShortDate(data.market.maturityDate)}
                                                 </Card.RowSubtitle>
                                             </Card.Section>
                                             <Card.Section>
-                                                <Card.RowTitle>Time Left</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t(`options.home.markets-table.time-remaining-col`)}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     <TimeRemaining
                                                         end={data.market.maturityDate}
@@ -118,7 +122,9 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                         </Card.Column>
                                         <Card.Column>
                                             <Card.Section>
-                                                <Card.RowTitle>Strike Price</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t('options.home.market-card.strike-price')}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
                                                 </Card.RowSubtitle>
@@ -155,17 +161,19 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                         </Card.Column>
                                         <Card.Column>
                                             <Card.Section>
-                                                <Card.RowTitle>Amount</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t('options.leaderboard.trades.table.amount-col')}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {data.balances.amount.toFixed(2)}
-                                                    <span
+
+                                                    <Icon
                                                         style={{
                                                             color: data.balances.type === 'UP' ? '#50CE99' : '#C3244A',
-                                                            marginLeft: 4,
+                                                            marginLeft: 6,
                                                         }}
-                                                    >
-                                                        {data.balances.type}
-                                                    </span>
+                                                        className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
+                                                    ></Icon>
                                                 </Card.RowSubtitle>
                                             </Card.Section>
                                             <Card.Section>
@@ -259,16 +267,22 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                             Header: t('options.leaderboard.trades.table.amount-col'),
                             accessor: (row: any) => {
                                 return (
-                                    <TableText>
+                                    <TableText
+                                        style={{
+                                            minWidth: 100,
+                                            marginRight: 20,
+                                            textAlign: 'right',
+                                            display: 'inline-block',
+                                        }}
+                                    >
                                         {row.balances.amount.toFixed(2)}
-                                        <span
+                                        <Icon
                                             style={{
                                                 color: row.balances.type === 'UP' ? '#50CE99' : '#C3244A',
-                                                marginLeft: 4,
+                                                marginLeft: 6,
                                             }}
-                                        >
-                                            {row.balances.type}
-                                        </span>
+                                            className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
+                                        ></Icon>
                                     </TableText>
                                 );
                             },
@@ -296,7 +310,7 @@ const Container = styled.div`
 `;
 
 const TableText = styled.span`
-    font-family: Titillium Regular !imporant;
+    font-family: Roboto !imporant;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -305,6 +319,8 @@ const TableText = styled.span`
     text-transform: uppercase;
     color: #ffffff;
 `;
+
+const Icon = styled.i``;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
     ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
