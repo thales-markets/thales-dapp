@@ -293,6 +293,9 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     useEffect(() => {
         gotoPage(0);
     }, [globalFilter]);
+    useEffect(() => {
+        setPageSize(20);
+    }, []);
 
     useEffect(() => {
         setHiddenColumns(['assetFullName']);
