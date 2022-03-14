@@ -17,6 +17,7 @@ type InputProps = {
     subValue?: string;
     subValueColor?: string;
     subValueFontSize?: string;
+    disabled?: boolean;
     borderColor?: string;
     displayTooltip?: boolean;
     tooltipText?: string;
@@ -35,6 +36,7 @@ const Input: React.FC<InputProps> = ({
     subValue,
     subValueColor,
     subValueFontSize,
+    disabled,
     borderColor,
     displayTooltip,
     tooltipText,
@@ -47,7 +49,7 @@ const Input: React.FC<InputProps> = ({
 
     return (
         <CustomTooltip open={displayTooltip} title={tooltipText ? tooltipText : ''}>
-            <Container borderColor={borderColor}>
+            <Container borderColor={borderColor} disabled={disabled}>
                 <Container.Title color={titleColor} fontSize={titleFontSize}>
                     {title}
                 </Container.Title>
