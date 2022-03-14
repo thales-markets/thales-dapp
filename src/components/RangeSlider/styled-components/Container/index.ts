@@ -4,6 +4,12 @@ type ContainerChildren = {
     Slider: StyledComponent<'input', any>;
 };
 
+export const Wrapper = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+`;
+
 // @ts-ignore
 const Container: StyledComponent<'div', any, { disabled?: boolean }> & ContainerChildren = styled.div<{
     disabled?: boolean;

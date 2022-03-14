@@ -1,5 +1,5 @@
 import React from 'react';
-import Container from './styled-components/Container';
+import Container, { Wrapper } from './styled-components/Container';
 import Footer from './styled-components/Footer';
 
 type RangeSliderProps = {
@@ -32,7 +32,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     };
 
     return (
-        <>
+        <Wrapper>
             <Container disabled={disabled}>
                 <Container.Slider
                     type="range"
@@ -51,7 +51,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
                     <span>{footerText?.length ? footerText[1] : ''}</span>
                 </Footer>
             )}
-        </>
+        </Wrapper>
     );
 };
 

@@ -303,7 +303,10 @@
                 "time-remaining": "Оставшееся время",
                 "result": "Текущий результат",
                 "view-market": "Посмотреть рынок",
-                "price-difference": "Разница в цене"
+                "price-difference": "Разница в цене",
+                "claim": "ТРЕБОВАТЬ",
+                "rip": "РВАТЬ",
+                "claimed": "ЗАЯВЛЕН"
             },
             "market-creation": {
                 "explore-markets-button-label": "Познакомиться с рынками"
@@ -334,7 +337,9 @@
                 "current-asset-price-col": "Текущая цена актива",
                 "price-up-down-col": "Цена ВВЕРХ/ВНИЗ",
                 "24h-change-col": "24-часовая смена",
-                "final-asset-price-col": "Текущая цена актива"
+                "final-asset-price-col": "Текущая цена актива",
+                "status-col": "Положение дел",
+                "maturity-date-col": "Дата погашения"
             },
             "hot-market-card": {
                 "time-left": "Осталось времени",
