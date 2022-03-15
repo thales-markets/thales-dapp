@@ -208,7 +208,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const data = useMemo(() => {
         const set: Set<string> = new Set();
         const processedMarkets = optionsMarkets.map((market) => {
-            set.add(market.currencyKey);
+            if (!market.customMarket) set.add(market.currencyKey);
             return {
                 address: market.address,
                 asset: market.asset,
@@ -226,19 +226,21 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         });
 
         const result = new Set(
-            Array.from(set).sort((a, b) => {
-                if (a === 'BTC') return -1;
-                if (b === 'BTC') return 1;
-                if (a === 'ETH') return -1;
-                if (b === 'ETH') return 1;
+            Array.from(set)
+                .sort((a, b) => {
+                    if (a === 'BTC' || a === 'sBTC') return -1;
+                    if (b === 'BTC' || b === 'sETH') return 1;
+                    if (a === 'ETH' || a === 'sETH') return -1;
+                    if (b === 'ETH' || b === 'sETH') return 1;
 
-                if (a === 'SNX') return -1;
-                if (b === 'SNX') return 1;
-                if (a === 'LINK') return -1;
-                if (b === 'LINK') return 1;
+                    if (a === 'SNX' || a === 'sSNX') return -1;
+                    if (b === 'SNX' || b === 'sSNX') return 1;
+                    if (a === 'LINK' || a === 'sLINK') return -1;
+                    if (b === 'LINK' || b === 'sLINK') return 1;
 
-                return 0;
-            })
+                    return 0;
+                })
+                .slice(0, 10)
         );
 
         setAllAssets(result);
