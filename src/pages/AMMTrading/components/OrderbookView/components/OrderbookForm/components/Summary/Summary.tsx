@@ -34,7 +34,7 @@ const Summary: React.FC<SummaryPropsType> = ({ title, items, displayUpDownBorder
 
 const Wrapper = styled.div<{ displayUpDownBorder?: boolean; margin?: string }>`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     ${(_props) => (_props?.displayUpDownBorder ? 'border-top: 1px solid var(--primary-color)' : '')}
     ${(_props) => (_props?.displayUpDownBorder ? 'border-bottom: 1px solid var(--primary-color)' : '')}
@@ -42,11 +42,14 @@ const Wrapper = styled.div<{ displayUpDownBorder?: boolean; margin?: string }>`
 `;
 
 const Row = styled.div<{ color?: string; fontSize?: string }>`
-    display: row;
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
     width: 100%;
+    text-transform: uppercase;
     font-family: Titillium Regular !important;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '12px')};
+    line-height: 110%;
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
 `;
 
@@ -54,6 +57,7 @@ const Title = styled.span`
     font-size: 15px;
     font-weight: 700;
     color: var(--primary-color);
+    margin-bottom: 17px;
 `;
 
 const SubTitle = styled.span`
