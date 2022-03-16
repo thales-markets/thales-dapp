@@ -10,6 +10,7 @@ import { OptionSide } from 'types/options';
 import { TradeOptionType } from '../../OrderbookView';
 
 import { useTranslation } from 'react-i18next';
+import WalletBalance from 'pages/AMMTrading/components/AMM/components/WalletBalance';
 
 type OrderbookFormProps = {
     type: OptionSide;
@@ -43,6 +44,7 @@ const OrderbookForm: React.FC<OrderbookFormProps> = ({ type }) => {
                         : TradeOptionType[1].labelBackgroundColor
                 }
             />
+            <WalletBalance type={type} />
             <Container.ButtonContainer>
                 <Button
                     width={'30%'}
