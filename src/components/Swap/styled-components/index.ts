@@ -104,7 +104,7 @@ const SwapSectionWrapper = styled(FlexDivColumn)<{
     &:first-of-type {
         margin: 60px 20px 20px;
     }
-    &:last-of-type {
+    &:nth-of-type(3) {
         .react-select__indicators {
             display: none !important;
         }
