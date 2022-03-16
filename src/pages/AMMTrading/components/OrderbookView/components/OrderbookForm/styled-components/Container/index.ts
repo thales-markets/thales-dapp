@@ -13,25 +13,30 @@ const ButtonContainer = styled.div`
     margin-top: 50px;
 `;
 
-const gradient = keyframes`
+const gradientAnimation = keyframes`
     0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+        opacity: 1;
+    } 
+    25% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 0.9;
+    }
+    100% {
+        opacity: 1;
+    }
 `;
 
 const ColorLabel = styled.div<{ color?: string }>`
     border-radius: 15px 15px 0px 0px;
     margin: -32px;
-    background-size: 400% 400%;
     height: 15px;
     z-index: 0;
-    animation: ${gradient} 5s ease infinite;
+    animation: ${gradientAnimation} 3s ease infinite;
     ${(_props) => (_props?.color ? `background: ${_props.color}` : '')};
 `;
 
