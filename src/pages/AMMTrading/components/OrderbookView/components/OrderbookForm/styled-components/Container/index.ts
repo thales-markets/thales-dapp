@@ -10,7 +10,7 @@ const ButtonContainer = styled.div`
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 10px;
-    margin-top: 50px;
+    margin-top: 20px;
 `;
 
 const gradientAnimation = keyframes`
@@ -33,7 +33,10 @@ const gradientAnimation = keyframes`
 
 const ColorLabel = styled.div<{ color?: string }>`
     border-radius: 15px 15px 0px 0px;
-    margin: -32px;
+    margin-top: -32px;
+    margin-left: -32px;
+    margin-right: -32px;
+    margin-bottom: 20px;
     height: 15px;
     z-index: 0;
     animation: ${gradientAnimation} 3s ease infinite;
