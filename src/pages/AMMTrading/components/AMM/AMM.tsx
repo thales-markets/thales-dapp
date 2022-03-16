@@ -39,6 +39,7 @@ import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, SIDE, SLIPPAG
 import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
+import WalletBalance from './components/WalletBalance';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -546,6 +547,7 @@ const AMM: React.FC = () => {
     const formDisabled = isSubmitting || isAmmTradingDisabled;
     return (
         <Wrapper>
+            <WalletBalance type={optionSide} />
             <Switch
                 active={orderSide.value !== 'buy'}
                 width={'94px'}
