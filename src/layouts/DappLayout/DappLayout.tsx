@@ -95,6 +95,7 @@ const NewWrapper = styled.div`
     padding: 40px 20px 40px 92px;
     @media (max-width: 1024px) {
         padding: 0 20px;
+        padding-bottom: 90px;
     }
     @media (max-width: 568px) {
         padding: 0 10px;
