@@ -39,7 +39,7 @@ import LanguageSelector from 'components/LanguageSelector';
 import SPAAnchor from '../../../../components/SPAAnchor';
 import { buildHref } from '../../../../utils/routes';
 import { Modal } from '@material-ui/core';
-import Swap from '../Swap';
+import Swap from '../../../../components/Swap/Swap';
 import { getIsOVM } from 'utils/network';
 import NetworkSwitch from 'components/NetworkSwitch';
 

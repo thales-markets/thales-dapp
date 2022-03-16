@@ -1,22 +1,20 @@
-import React, { useState } from 'react';
-
-import styled from 'styled-components';
-
-import UserWallet from 'layouts/DappLayout/components/DappHeader/UserWallet';
 import PieChartUserBalance from 'components/Charts/PieChartUserBalance';
 import PriceChart from 'components/Charts/PriceChart';
 import LanguageCardSelector from 'components/LanguageSelector/v3/LanguageCardSelector';
 import NetworkSwitchSection from 'components/NetworkSwitch/v2/NetworkSwitch';
-import ThemeSelector from 'components/ThemeSelector/ThemeSelector';
-import OutsideClickHandler from 'react-outside-click-handler';
-import DisplayNameForm from './DisplayNameForm';
-
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected } from 'redux/modules/wallet';
-import { getTheme } from 'redux/modules/ui';
-import UserWalletExpanded from './UserWalletExpanded';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
+import ThemeSelector from 'components/ThemeSelector/ThemeSelector';
+import UserWallet from 'layouts/DappLayout/components/DappHeader/UserWallet';
+import React, { useState } from 'react';
+import OutsideClickHandler from 'react-outside-click-handler';
+import { useSelector } from 'react-redux';
+import { getTheme } from 'redux/modules/ui';
+import { getIsWalletConnected } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import DisplayNameForm from './DisplayNameForm';
+import UserSwap from './UserSwap';
+import UserWalletExpanded from './UserWalletExpanded';
 
 export const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
@@ -26,6 +24,7 @@ export const UserCard: React.FC = () => {
 
     return (
         <>
+            <UserSwap />
             <UserWallet />
             <MenuCardButton onClick={() => setShowCard(!showCard)}>
                 <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
