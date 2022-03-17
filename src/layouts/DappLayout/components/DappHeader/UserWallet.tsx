@@ -39,7 +39,7 @@ const UserWallet: React.FC = () => {
 const Wrapper = styled.div`
     display: block;
     position: absolute;
-    top: 40px;
+    top: 0;
     right: 90px;
     @media (max-width: 1024px) {
         right: 70px;

@@ -133,7 +133,6 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
 
     return (
         <>
-            <Title>{t(`governance.title`)}</Title>
             <BackLinkWrapper isOverviewPage={isOverviewPage}>
                 {selectedProposal && (
                     <BackLink
@@ -324,22 +323,6 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     &:hover:not(.selected) {
         cursor: pointer;
         color: #00f9ff;
-    }
-`;
-
-const Title = styled.p`
-    font-weight: bold;
-    line-height: 62px;
-    letter-spacing: -1px;
-    font-size: 39px;
-    padding-top: 20px;
-    padding-bottom: 10px;
-    color: #f6f6fe;
-    align-self: flex-start;
-    @media (max-width: 767px) {
-        font-size: 31px;
-        padding-top: 30px;
-        padding-bottom: 10px;
     }
 `;
 
