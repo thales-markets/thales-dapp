@@ -690,6 +690,7 @@
                 "final-result-label": "Final result",
                 "deposited-currency-label": "Deposited {{currencyKey}}",
                 "amm-liquidity": "AMM liquidity",
+                "amm-price": "AMM Price",
                 "event-name-label": "Event Name",
                 "current-ratio-label": "Current ratio",
                 "final-ratio-label": "Final ratio",
@@ -698,8 +699,12 @@
                 "final-burn-label": "Final burn",
                 "strike-burn-label": "Strike burn",
                 "rank-label": "Rank",
+                "my-positions": "My Positions",
+                "positions-value": "Positions Value",
+                "price-difference": "Price difference",
                 "total-burned": "Total burned",
-                "burned-last-hour": "Burned in the last hour"
+                "burned-last-hour": "Burned in the last hour",
+                "similar-markets": "Similar Markets"
             },
             "widgets": {
                 "amm-widget": "AMM",

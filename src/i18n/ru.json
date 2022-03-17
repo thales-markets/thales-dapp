@@ -696,7 +696,8 @@
                 "price-difference": "Разница в цене",
                 "amm-price": "АММ Цена",
                 "positions-value": "Позиции Значение",
-                "my-positions": "Мои позиции"
+                "my-positions": "Мои позиции",
+                "similar-markets": "Похожие рынки"
             },
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",

@@ -7,13 +7,15 @@ type ValueChildren = {
 
 type SubContainerChildren = {
     Header: StyledComponent<'span', any>;
-    Value: StyledComponent<'span', any> & ValueChildren;
+    Value: StyledComponent<'span', any, { color?: string }> & ValueChildren;
 };
 
 type ContainerChildren = {
     ChartContainer: StyledComponent<'div', any>;
+    ColumnContainer: StyledComponent<'div', any, { leftBorder?: boolean; minWidth?: string }>;
     SubContainer: StyledComponent<'div', any> & SubContainerChildren;
     Divider: StyledComponent<'div', any>;
+    Icon: StyledComponent<'i', any, { color?: string }>;
 };
 
 // @ts-ignore
@@ -28,7 +30,7 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled(CardCo
 
 const ChartContainer = styled.div`
     width: 130px;
-    margin-left: 22px;
+    justify-content: space-around;
 `;
 
 // @ts-ignore
@@ -36,13 +38,29 @@ const SubContainer: StyledComponent<'div', any> & SubContainerChildren = styled.
     display: flex;
     flex-direction: column;
     justify-content: start;
-    margin: 0px 25px;
+    margin: 10px 0px;
+    justify-content: space-around;
+`;
+
+const ColumnContainer = styled.div<{ leftBorder?: boolean; minWidth?: string }>`
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: flex-start;
+    padding: 0px 25px;
+    min-width: ${(_props) => (_props?.minWidth ? _props.minWidth : '')};
+    ${(_props) => (_props?.leftBorder ? 'border-left: 2px solid var(--card-border-color)' : '')};
 `;
 
 const Divider = styled.div`
     border-left: 2px solid var(--card-border-color);
     border-radius: 30px;
-    height: 51px;
+`;
+
+const Icon = styled.i<{ color?: string }>`
+    margin: 0 5px;
+    font-size: 24px;
+    color: ${(_props) => (_props?.color ? _props.color : '')};
 `;
 
 const Header = styled.span`
@@ -55,12 +73,12 @@ const Header = styled.span`
 `;
 
 // @ts-ignore
-const Value: StyledComponent<'span', any> & ValueChildren = styled.span`
+const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?: string }>`
     font-family: Titillium Regular !important;
     font-style: normal;
     font-weight: 700;
     font-size: 25px;
-    color: var(--primary-color);
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
 `;
 
 const Liquidity = styled.span<{ shortLiqFlag?: boolean }>`
@@ -74,6 +92,8 @@ SubContainer.Value = Value;
 
 Container.ChartContainer = ChartContainer;
 Container.Divider = Divider;
+Container.Icon = Icon;
+Container.ColumnContainer = ColumnContainer;
 Container.SubContainer = SubContainer;
 
 export default Container;
