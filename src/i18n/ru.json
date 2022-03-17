@@ -692,7 +692,11 @@
                 "rank-label": "Ранг",
                 "total-burned": "Общий ожог",
                 "burned-last-hour": "Ожог за последний час",
-                "maturity-date": "Дата погашения"
+                "maturity-date": "Дата погашения",
+                "price-difference": "Разница в цене",
+                "amm-price": "АММ Цена",
+                "positions-value": "Позиции Значение",
+                "my-positions": "Мои позиции"
             },
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",

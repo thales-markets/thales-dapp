@@ -692,7 +692,11 @@
                 "rank-label": "排名",
                 "total-burned": "总销毁量",
                 "burned-last-hour": "上一小时销毁量",
-                "maturity-date": "成人礼"
+                "maturity-date": "成人礼",
+                "price-difference": "差价",
+                "positions-value": "职位价值",
+                "amm-price": "AMM 价格",
+                "my-positions": "我的职位"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
