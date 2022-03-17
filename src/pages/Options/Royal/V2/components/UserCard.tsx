@@ -436,9 +436,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <InputWrapper>
                         {user.name}
                         <SearchIcon
-                            onClick={setOpenEditDialog.bind(this, true)}
+                            onClick={() => {
+                                !isWalletConnected ? setOpenEditDialog.bind(this, true) : '';
+                            }}
                             className="icon icon--user-avatar"
                             style={{
+                                display: !isWalletConnected ? 'none' : '',
                                 position: 'relative',
                                 cursor: 'pointer',
                                 top: '3px',
@@ -465,10 +468,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
                 </FlexContainer>
                 <RoyalePassContainer>
-                    <UserLabel style={{ padding: (royalePassData as any).balance === 0 ? '15px 0px' : '' }}>
+                    <UserLabel
+                        style={{
+                            padding: (royalePassData as any).balance === 0 || !isWalletConnected ? '15px 0px' : '',
+                        }}
+                    >
                         {t('options.royale.scoreboard.royale-passes', { passes: (royalePassData as any).balance })}:
                     </UserLabel>
-                    <ImageWrapper style={{ display: (royalePassData as any).balance === 0 ? 'none' : '' }}>
+                    <ImageWrapper
+                        style={{ display: (royalePassData as any).balance === 0 || !isWalletConnected ? 'none' : '' }}
+                    >
                         <NftImage src="https://thales-protocol.s3.eu-north-1.amazonaws.com/THALES_ROYALE_PASS.gif" />
                     </ImageWrapper>
                 </RoyalePassContainer>
@@ -476,7 +485,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     style={{
                         position: 'relative',
                         display:
-                            user.status === UserStatus.NOTSIGNED && (royaleData as any).signUpPeriod < new Date()
+                            (user.status === UserStatus.NOTSIGNED && (royaleData as any).signUpPeriod < new Date()) ||
+                            !isWalletConnected
                                 ? 'none'
                                 : '',
                         borderBottom: '2px dashed var(--color)',
@@ -551,7 +561,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         position: 'relative',
                         display:
                             (user.status === UserStatus.NOTSIGNED && (royaleData as any).signUpPeriod < new Date()) ||
-                            user.status === UserStatus.RDY
+                            user.status === UserStatus.RDY ||
+                            !isWalletConnected
                                 ? 'none'
                                 : '',
                     }}
