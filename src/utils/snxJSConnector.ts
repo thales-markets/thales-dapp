@@ -17,7 +17,6 @@ import lpStakingRewardsContract from './contracts/lpStakingRewardsContract';
 import { synthetix, SynthetixJS, Config } from '@synthetixio/contracts-interface';
 import { gelatoContract } from './contracts/gelatoContract';
 import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
-import bridgeContract from './contracts/bridgeContract';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -41,7 +40,6 @@ type SnxJSConnector = {
     opThalesTokenContract?: ethers.Contract;
     lpStakingRewardsContract?: ethers.Contract;
     gelatoContract?: ethers.Contract;
-    bridgeContract?: ethers.Contract;
     setContractSettings: (contractSettings: Config) => void;
 };
 
@@ -77,7 +75,6 @@ const snxJSConnector: SnxJSConnector = {
         this.opThalesTokenContract = conditionalInitializeContract(opThalesContract, contractSettings);
         this.lpStakingRewardsContract = conditionalInitializeContract(lpStakingRewardsContract, contractSettings);
         this.gelatoContract = conditionalInitializeContract(gelatoContract, contractSettings);
-        this.bridgeContract = conditionalInitializeContract(bridgeContract, contractSettings);
     },
 };
 

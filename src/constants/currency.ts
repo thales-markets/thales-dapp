@@ -154,7 +154,6 @@ export const OPTIONS_CURRENCY_MAP = {
     long: 'sLONG',
     short: 'sSHORT',
 };
-export const LEGACY_THALES_CURRENCY = 'LEGACY THALES';
 export const THALES_CURRENCY = 'THALES';
 export const OP_THALES_CURRENCY = 'OpTHALES';
 export const LP_TOKEN = 'LP Token';

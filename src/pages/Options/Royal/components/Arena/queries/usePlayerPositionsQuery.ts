@@ -24,8 +24,9 @@ const usePlayerPositionsQuery = (
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
+                const currentSeason = Number(await thalesRoyaleContract.season());
                 const positions = await thalesData.binaryOptions.thalesRoyalePositions({
-                    season: selectedSeason,
+                    season: currentSeason,
                     network: networkId,
                 });
                 return positions.filter((position: GraphPosition) => {

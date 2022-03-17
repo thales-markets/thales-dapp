@@ -204,8 +204,6 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                             <Button
                                                 style={{ marginRight: 30 }}
                                                 onClick={() => setOpenApprovalModal(true)}
-                                                disabled={isAllowing}
-                                                className={isAllowing ? 'disabled' : ''}
                                             >
                                                 {t('options.royale.scoreboard.mint-royale-pass')}
                                             </Button>

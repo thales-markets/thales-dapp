@@ -225,14 +225,6 @@ export const StyledInfoIcon = styled(InfoIcon)`
     margin-bottom: -2px;
 `;
 
-export const Tip23Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP23}>
-            TIP-23
-        </TooltipLink>
-    );
-};
-
 export const Tip20Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP20}>

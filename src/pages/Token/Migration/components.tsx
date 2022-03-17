@@ -59,11 +59,3 @@ export const MaxButton = styled(DefaultSubmitButton)`
     margin-left: 4px;
     pointer-events: auto;
 `;
-
-export const InfoSection = styled.span`
-    color: white;
-    margin: 30px 0;
-    font-size: 15px;
-    margin-bottom: 35px;
-    text-align: justify;
-`;

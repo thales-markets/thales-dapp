@@ -18,7 +18,7 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { checkAllowance, formatGasLimit, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
-import { LEGACY_THALES_CURRENCY, THALES_CURRENCY } from 'constants/currency';
+import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
@@ -28,7 +28,6 @@ import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number'
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import {
     ArrowContainer,
-    InfoSection,
     MaxButton,
     NetworkLabel,
     Result,
@@ -221,7 +220,6 @@ const Migrate: React.FC = () => {
 
     return (
         <>
-            <InfoSection>{t('migration.info-messages.migrate-and-bridge')}</InfoSection>
             <InputContainer>
                 <NumericInput
                     value={amount}
@@ -233,13 +231,13 @@ const Migrate: React.FC = () => {
                     {t('migration.from-label')}
                     <NetworkLabel>{network.networkName}</NetworkLabel>
                 </InputLabel>
-                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{LEGACY_THALES_CURRENCY}</CurrencyLabel>
+                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{THALES_CURRENCY}</CurrencyLabel>
                 <ThalesWalletAmountLabel>
                     {isWalletConnected ? (
                         thalesBalanceQuery.isLoading ? (
                             <SimpleLoader />
                         ) : (
-                            formatCurrencyWithKey(LEGACY_THALES_CURRENCY, thalesBalance)
+                            formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)
                         )
                     ) : (
                         '-'
@@ -250,7 +248,7 @@ const Migrate: React.FC = () => {
                 </ThalesWalletAmountLabel>
                 <FieldValidationMessage
                     showValidation={!isAmountValid}
-                    message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LEGACY_THALES_CURRENCY })}
+                    message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
                 />
             </InputContainer>
             <ArrowContainer>
@@ -283,7 +281,7 @@ const Migrate: React.FC = () => {
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
-                    tokenSymbol={LEGACY_THALES_CURRENCY}
+                    tokenSymbol={THALES_CURRENCY}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}

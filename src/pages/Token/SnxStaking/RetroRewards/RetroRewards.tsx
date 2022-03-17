@@ -29,7 +29,7 @@ import {
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { LEGACY_THALES_CURRENCY } from 'constants/currency';
+import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
 import { LINKS } from 'constants/links';
@@ -158,7 +158,7 @@ const RetroRewards: React.FC = () => {
                 <TooltipContainer borderColor={payload[0].payload.color}>
                     <TooltipTitle color={payload[0].payload.color}>{`${payload[0].name}:`}</TooltipTitle>
                     <TooltipAmount color={payload[0].payload.color}>
-                        {formatCurrencyWithKey(LEGACY_THALES_CURRENCY, payload[0].value)}
+                        {formatCurrencyWithKey(THALES_CURRENCY, payload[0].value)}
                     </TooltipAmount>
                 </TooltipContainer>
             );
@@ -247,7 +247,7 @@ const RetroRewards: React.FC = () => {
                                     fontSize={17}
                                     fontWeight={600}
                                 >
-                                    {LEGACY_THALES_CURRENCY}
+                                    {THALES_CURRENCY}
                                 </GradientText>
                             </FlexDivColumnCentered>
                         </PieChartCenterDiv>
@@ -265,21 +265,19 @@ const RetroRewards: React.FC = () => {
                         <div>
                             <Dot backgroundColor="#5EA0A0" />
                             {t('options.earn.snx-stakers.unlocked')}:{' '}
-                            <span className="bold">
-                                {formatCurrencyWithKey(LEGACY_THALES_CURRENCY, vestingInfo.unlocked)}
-                            </span>
+                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
                         </div>
                         <div>
                             <Dot backgroundColor="#AFC171" />
                             {t('options.earn.snx-stakers.claimed')}:{' '}
                             <span className="bold">
-                                {formatCurrencyWithKey(LEGACY_THALES_CURRENCY, vestingInfo.totalClaimed)}
+                                {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}
                             </span>
                         </div>
                         <div>
                             <Dot backgroundColor="#FFD9BA" />
                             {t('options.earn.snx-stakers.locked')}:{' '}
-                            <span className="bold">{formatCurrencyWithKey(LEGACY_THALES_CURRENCY, locked)}</span>
+                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
                         </div>
                     </AmountsContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
@@ -290,9 +288,9 @@ const RetroRewards: React.FC = () => {
                         >
                             {isClaiming
                                 ? t('options.earn.snx-stakers.claiming-unlocked') +
-                                  ` ${formatCurrencyWithKey(LEGACY_THALES_CURRENCY, vestingInfo.unlocked)}...`
+                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
                                 : t('options.earn.snx-stakers.claim') +
-                                  ` ${formatCurrencyWithKey(LEGACY_THALES_CURRENCY, vestingInfo.unlocked)}`}
+                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
                         </DefaultSubmitButton>
                         <ClaimMessage invisible={!!vestingInfo.initialLocked}>
                             {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}

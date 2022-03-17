@@ -233,14 +233,7 @@
         "no-data": "Нет данных для отображения",
         "long": "длинная",
         "short": "короткая",
-        "no-data-available": "Данные недоступны",
-        "alerts": {
-            "title": {
-                "error": "Ошибка",
-                "info": "Информация",
-                "success": "Успех"
-            }
-        }
+        "no-data-available": "Данные недоступны"
     },
     "modals": {
         "gwei": {
@@ -387,9 +380,7 @@
                 "end-time": "Время окончания",
                 "initial-locked": "Изначально заблокировано",
                 "start-quiz": "Начать тест",
-                "confirmation-message": "Токены успешно востребованны",
-                "olympus-notice": "Теперь вы можете получить облигации THALES на",
-                "olympus-button-text": "Олимп ПРО"
+                "confirmation-message": "Токены успешно востребованны"
             },
             "thales-staking": {
                 "tab-title": "Стэйкинг",
@@ -608,9 +599,7 @@
                 "earn-tooltip": "Обеспечение ликвидности для пары THALES/ETH и получение двойных вознаграждений THALES + DODO",
                 "earn-info-tooltip": "Просмотр руководства по обеспечению ликвидности",
                 "circulating-supply-label": "Количество в обрашении",
-                "total-supply-label": "Общее количество",
-                "celer-bridge": "Целерский мост",
-                "celer-bridge-tooltip": "Быстрый мост THALES между цепями"
+                "total-supply-label": "Общее количество"
             }
         },
         "quiz": {
@@ -1161,8 +1150,7 @@
                 "current-positions": "Текущие должности",
                 "scoreboard": "Табло",
                 "current-reward-per-winner": "Награда за победителя",
-                "season-finished": "Сезон {{сезон}} завершен",
-                "select-position": "Пожалуйста, выберите позицию по умолчанию для 1-го раунда"
+                "season-finished": "Сезон {{сезон}} завершен"
             },
             "battle": {
                 "ended": "Закончился",
@@ -1224,6 +1212,7 @@
                 "no-users": "Нет пользователей",
                 "info7": "<italic>Удачи и пусть битва начнется!</italic>",
                 "insufficient-balance": "Недостаточный баланс sUSD",
+                "default-position": "Положение по умолчанию",
                 "default-position-down": "ВНИЗ",
                 "default-position-up": "ВВЕРХ",
                 "default-position-info": "Перед началом игры вы можете выбрать позицию по умолчанию, применяемую только к первому раунду. Вы можете снова изменить свою позицию, как только начнется период позиционирования. Для всех остальных раундов позиция должна быть выбрана в течение периода позиционирования.",
@@ -1241,8 +1230,7 @@
                 "approve-for-minting": "Одобрить sUSD для чеканки Royale Pass",
                 "buy-in-collateral-pass-mobile": "NFT",
                 "choose-colateral": "Выбрать залог для бай-ина",
-                "royale-pass-2": "Королевские пропуска",
-                "default-position": "Выберите позицию для 1-го раунда"
+                "royale-pass-2": "Королевские пропуска"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",
@@ -1581,8 +1569,7 @@
             "staking": "<0>THALES Staking был перенесен на L2 за </0><1 />.",
             "vesting": "<0>Условное депонирование THALES было перенесено на L2 за </0><1 />.",
             "retro-unlock": "<0>Этот дистрибутив доступен на L1 за </0><1 />.",
-            "retro-airdrop": "<0>Ретро-раздача была перенесена на L2 за </0><1 />.",
-            "lp-staking": "<0>Стейкинг LP был перенесен на L2 за </0><1 />."
+            "retro-airdrop": "<0>Ретро-раздача была перенесена на L2 за </0><1 />."
         },
         "migration-notice": {
             "button-label": "Перенести THALES",
@@ -1591,9 +1578,7 @@
         "tabs": {
             "migrate": "Мигрировать",
             "swap": "Менять",
-            "withdraw": "Изымать",
-            "bridge": "Мост",
-            "migrate-and-bridge": "Миграция и мост"
+            "withdraw": "Изымать"
         },
         "from-label": "От",
         "to-label": "К",
@@ -1602,16 +1587,6 @@
         "title": "Миграция",
         "info-tooltip": "<0>Во время миграции THALES сначала заменяется на OpTHALES в основной сети L1, а затем подключается к основной сети L2 Optimistic в THALES L2 за </0><1 />.",
         "migration-multisig-contact-warning": "Мультиподписи или контракты не должны переноситься напрямую, иначе вы потеряете свои средства.",
-        "migration-amount-label": "Сумма для переноса",
-        "bridge-button": {
-            "label": "Мост",
-            "progress-label": "Идет перевязка...",
-            "confirmation-message": "Токены успешно подключены к L2"
-        },
-        "info-messages": {
-            "bridge": "Выберите этот вариант, если у вас уже есть THALES на L1 и вы хотите подключить его к OP (L2)",
-            "migrate": "Выберите этот вариант, если у вас есть LEGACY THALES на L1 и вы хотите обменять его на THALES, сохранив его на L1. Помните, что большая часть ликвидности THALES приходится на OP (L2)",
-            "migrate-and-bridge": "Выберите этот вариант, если у вас есть LEGACY THALES на L1, вы хотите обменять его на THALES и подключить к Optimism (L2)"
-        }
+        "migration-amount-label": "Сумма для переноса"
     }
 }
