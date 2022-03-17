@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import UserCard from 'layouts/DappLayout/components/DappHeader/UserCard';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
-import { FlexDivColumn } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import { RootState } from 'redux/rootReducer';
 import { buildHref } from 'utils/routes';
@@ -14,19 +13,14 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { useLocation } from 'react-router-dom';
 
-// enum BurgerState {
-//     Init,
-//     Show,
-//     Hide,
-// }
-
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
 
     return (
-        <FlexDivColumn style={{ width: '100%', height: 80, flex: 'unset' }}>
+        <Container>
+            <PageTitle>{getTitle(t)}</PageTitle>
             <UserCard />
             <Sidebar>
                 <ItemsContainer>
@@ -52,13 +46,7 @@ const DappHeader: React.FC = () => {
                         label={t('common.sidebar.earn-label')}
                     />
                     <DappHeaderItem
-                        className={
-                            [ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal].includes(
-                                location.pathname
-                            )
-                                ? 'selected'
-                                : ''
-                        }
+                        className={location.pathname.includes(ROUTES.Governance.Home) ? 'selected' : ''}
                         href={buildHref(ROUTES.Governance.Home)}
                         iconName="governance"
                         label={t('common.sidebar.governance-label')}
@@ -88,9 +76,40 @@ const DappHeader: React.FC = () => {
                     )}
                 </ItemsContainer>
             </Sidebar>
-        </FlexDivColumn>
+        </Container>
     );
 };
+
+const getTitle = (t: any) => {
+    if (location.pathname === ROUTES.Options.Home) return t('common.sidebar.markets');
+    if (location.pathname.includes(ROUTES.Governance.Home)) return t('common.sidebar.governance-label');
+    if (location.pathname === ROUTES.Options.Token) return t('common.sidebar.earn-label');
+    if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
+};
+
+const Container = styled.div`
+    height: 80px;
+    width: 100%;
+    flex: unset;
+    position: relative;
+`;
+
+const PageTitle = styled.p`
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 35px;
+    color: var(--primary-color);
+
+    @media (max-width: 1024px) {
+        margin-top: 20px;
+        font-size: 32px;
+    }
+
+    @media (max-width: 568px) {
+        display: none;
+    }
+`;
 
 const Sidebar = styled.nav`
     position: fixed;

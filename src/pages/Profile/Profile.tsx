@@ -58,7 +58,6 @@ const Profile: React.FC = () => {
     return (
         <Container layout={isSimpleView}>
             <Container.Fixed>
-                <PageTitle>{t('options.trading-profile.title')}</PageTitle>
                 <SearchField
                     placeholder={t('options.trading-profile.search-placeholder')}
                     text={searchText}
@@ -163,17 +162,6 @@ const Profile: React.FC = () => {
         </Container>
     );
 };
-
-const PageTitle = styled.p`
-    position: absolute;
-    top: -100px;
-    font-family: Roboto !important;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 35px;
-    line-height: 53px;
-    color: var(--primary-color);
-`;
 
 const LineUnderNav = styled.div`
     height: 4px;

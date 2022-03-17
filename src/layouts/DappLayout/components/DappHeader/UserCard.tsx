@@ -93,7 +93,7 @@ const Container = styled.div`
 
 const MenuCardButton = styled.div`
     position: absolute;
-    top: 40px;
+    top: 0;
     right: 20px;
     width: 50px;
     cursor: pointer;
@@ -109,12 +109,12 @@ const MenuIcon = styled.i`
 
 const MenuCard = styled.div<ManuCardProps>`
     display: ${({ visibility }) => (visibility ? 'block' : 'none')};
-    position: fixed;
+    position: absolute;
     max-width: 280px;
     right: 35px;
     max-height: 95vh;
     overflow-y: auto;
-    top: 35px;
+    top: 0;
     border: 1px solid #64d9fe;
     box-sizing: border-box;
     border-radius: 15px;
@@ -141,6 +141,7 @@ const MenuCard = styled.div<ManuCardProps>`
         right: 0;
         border-radius: 0;
         border: none;
+        position: fixed;
     }
     box-shadow: var(--shadow);
 `;
