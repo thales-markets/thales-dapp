@@ -8,7 +8,7 @@ import onboardConnector from 'utils/onboardConnector';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;
@@ -17,11 +17,14 @@ const UserWallet: React.FC = () => {
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     return (
         <Wrapper>
             <WalletContainer onClick={() => (isWalletConnected ? '' : onboardConnector.connectWallet())}>
-                <WalletIcon className="sidebar-icon icon--wallet" />
+                <WalletIcon
+                    className={` ${networkId === 10 ? 'v2-icon v2-icon--op' : 'sidebar-icon icon--ethereum'}`}
+                />
                 <WalletAddress>
                     {walletAddress
                         ? truncateAddress(
@@ -53,6 +56,7 @@ const WalletContainer = styled.div`
     width: 100%;
     cursor: pointer;
     padding: 5px 12px;
+    padding-left: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
