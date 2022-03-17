@@ -11,6 +11,8 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { formatTimeDifference, calculateDifference } from 'utils/formatters/date';
 
 import { useTranslation } from 'react-i18next';
+import SPAAnchor from 'components/SPAAnchor';
+import { buildOptionsMarketLink } from 'utils/routes';
 
 export type HotMarket = {
     fullAssetName: string;
@@ -39,29 +41,31 @@ const HotMarketCard: React.FC<HotMarket> = ({
     }, 1000);
 
     return (
-        <Card address={address}>
-            <AssetInfo>
-                <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
-                <AssetNameContainer>
-                    <AssetName>{fullAssetName}</AssetName>
-                    <CurrencyKey>{assetName}</CurrencyKey>
-                </AssetNameContainer>
-            </AssetInfo>
-            <SectionContainer>
-                <Header>{t('options.home.hot-market-card.price-per-option')}</Header>
-                <SubHeader>
-                    {pricePerOption != 0 ? formatCurrencyWithSign(USD_SIGN, pricePerOption, 2) : 'N/A'}
-                </SubHeader>
-            </SectionContainer>
-            <SectionContainer>
-                <Header>{t('options.home.hot-market-card.time-left')}</Header>
-                <SubHeader>{time}</SubHeader>
-            </SectionContainer>
-            <SectionContainer>
-                <Header style={{ color: '#50ce99' }}>{t('options.home.hot-market-card.potential-profit')}</Header>
-                <Percentage>{potentialProfit}</Percentage>
-            </SectionContainer>
-        </Card>
+        <SPAAnchor href={buildOptionsMarketLink(address)}>
+            <Card address={address}>
+                <AssetInfo>
+                    <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
+                    <AssetNameContainer>
+                        <AssetName>{fullAssetName}</AssetName>
+                        <CurrencyKey>{assetName}</CurrencyKey>
+                    </AssetNameContainer>
+                </AssetInfo>
+                <SectionContainer>
+                    <Header>{t('options.home.hot-market-card.price-per-option')}</Header>
+                    <SubHeader>
+                        {pricePerOption != 0 ? formatCurrencyWithSign(USD_SIGN, pricePerOption, 2) : 'N/A'}
+                    </SubHeader>
+                </SectionContainer>
+                <SectionContainer>
+                    <Header>{t('options.home.hot-market-card.time-left')}</Header>
+                    <SubHeader>{time}</SubHeader>
+                </SectionContainer>
+                <SectionContainer>
+                    <Header style={{ color: '#50ce99' }}>{t('options.home.hot-market-card.potential-profit')}</Header>
+                    <Percentage>{potentialProfit}</Percentage>
+                </SectionContainer>
+            </Card>
+        </SPAAnchor>
     );
 };
 
