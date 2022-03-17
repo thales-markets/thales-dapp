@@ -293,7 +293,14 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                             </HeaderButton>
                         )}
                         {walletAddress && (
-                            <HeaderButton onClick={() => setOpenUserInfo(true)}>
+                            <HeaderButton
+                                onClick={() => {
+                                    setOpenUserInfo(true);
+                                    setShowBurgerMenu(
+                                        showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show
+                                    );
+                                }}
+                            >
                                 <UserAvatar className="icon icon--user-avatar" />
                                 <UserText>{truncateAddress(walletAddress as any, 5, 5)}</UserText>
                                 <UserText> {balance} Eth </UserText>
@@ -540,7 +547,7 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     cursor: pointer;
     text-align: center;
     background: var(--color-wrapper);
-    z-index: 9999;
+    z-index: 1001;
     p:first-child {
         font-weight: bold;
         font-size: 20px;

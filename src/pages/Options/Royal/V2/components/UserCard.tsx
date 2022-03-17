@@ -145,6 +145,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             (royaleData as any).signUpPeriod > new Date() &&
             ((royaleData as any).positionInTheFirstRound === 1 || (royaleData as any).positionInTheFirstRound === 2)
         ) {
+            localStorage.setItem(
+                'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason,
+                (royaleData as any).positionInTheFirstRound === 1 ? PositionsEnum.DOWN : PositionsEnum.UP
+            );
             setDefaultPosition(
                 (royaleData as any).positionInTheFirstRound === 1 ? PositionsEnum.DOWN : PositionsEnum.UP
             );
