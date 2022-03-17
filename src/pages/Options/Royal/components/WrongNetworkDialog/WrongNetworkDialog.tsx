@@ -154,7 +154,7 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                                     display: 'block',
                                     color: 'var(--color-wrapper)',
                                 }}
-                                href="https://community.optimism.io/docs/infra/networks.html#optimism-mainnet"
+                                href="https://chainid.link/?network=optimism"
                                 target="_blank"
                             >
                                 {t('options.royale.wrong-network-dialog.parameters')}
