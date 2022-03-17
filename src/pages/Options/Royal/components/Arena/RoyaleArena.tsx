@@ -12,6 +12,7 @@ import useRoundsQuery from './queries/useRoundsQuery';
 import { BigNumber } from 'ethers';
 import winnerCard from 'assets/images/royale/winner-card.svg';
 import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
+import winnerCardS3 from 'assets/images/royale/winner-card-s3.svg';
 import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
 
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
@@ -55,7 +56,7 @@ const renderRounds = (
 
     const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
-    const positionsQuery = usePlayerPositionsQuery(0, networkId, walletAddress ?? '', {
+    const positionsQuery = usePlayerPositionsQuery(selectedSeason, networkId, walletAddress ?? '', {
         enabled: networkId !== undefined && isAppReady,
     });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : [];
@@ -92,8 +93,10 @@ const renderRounds = (
                 return winnerCard;
             case 2:
                 return winnerCardS2;
+            case 3:
+                return winnerCardS3;
             default:
-                return winnerCardS2;
+                return winnerCardS3;
         }
     };
 

@@ -228,7 +228,10 @@
             "display-name": "Display Name",
             "change-display-name": "Change Display Name"
         },
-        "no-data-available": "No data available"
+        "no-data-available": "No data available",
+        "alerts": {
+            "title": { "success": "Success", "info": "Info", "error": "Error" }
+        }
     },
     "modals": {
         "gwei": {
@@ -375,7 +378,9 @@
                 "end-time": "End time",
                 "initial-locked": "Initially Locked",
                 "start-quiz": "Start Quiz",
-                "confirmation-message": "Tokens successfully claimed"
+                "confirmation-message": "Tokens successfully claimed",
+                "olympus-notice": "You can now get THALES bonds on",
+                "olympus-button-text": "Olympus PRO"
             },
             "thales-staking": {
                 "tab-title": "Staking",
@@ -594,7 +599,9 @@
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",
                 "earn-info-tooltip": "View guide on how to provide liquidity",
                 "circulating-supply-label": "Circulating supply",
-                "total-supply-label": "Total supply"
+                "total-supply-label": "Total supply",
+                "celer-bridge": "Celer bridge",
+                "celer-bridge-tooltip": "Fast bridge THALES between chains"
             }
         },
         "quiz": {
@@ -1145,7 +1152,8 @@
                 "royale": "Royale",
                 "scoreboard": "Scoreboard",
                 "stats": "Stats",
-                "price-source": "Source: Optimism Chainlink ETH feed"
+                "price-source": "Source: Optimism Chainlink ETH feed",
+                "select-position": "Please select default position for the 1st round"
             },
             "battle": {
                 "round": "Round",
@@ -1187,7 +1195,7 @@
                 "approve-susd": "Approve sUSD",
                 "buy-in": "Buy-in with sUSD",
                 "insufficient-balance": "Insufficient sUSD balance",
-                "default-position": "Default position",
+                "default-position": "Choose position for the 1st round",
                 "default-position-none": "NONE",
                 "default-position-down": "DOWN",
                 "default-position-up": "UP",
@@ -1542,13 +1550,18 @@
     },
     "migration": {
         "title": "Migration",
-        "info-tooltip": "<0>During migration, THALES is first exchanged to OpTHALES on L1 mainnet, and then bridged to L2 Optimistic mainnet into L2 THALES per </0><1 />.",
+        "info-tooltip": "<0>During migration, LEGACY THALES is first exchanged to THALES on L1 mainnet, and then bridged to L2 Optimistic mainnet into L2 THALES per </0><1 />.",
         "migrated-rewards-title": "Migrated rewards",
         "migration-amount-label": "Amount to migrate",
         "from-label": "From",
         "to-label": "To",
         "migration-delay-info": "Deposits take about twenty minutes before they're considered final on Optimistic mainnet.",
         "migration-multisig-contact-warning": "Multisigs or contracts should not be migrating directly, otherwise, you will lose your funds.",
+        "bridge-button": {
+            "label": "Bridge",
+            "progress-label": "Bridging in progress...",
+            "confirmation-message": "Tokens successfully bridged to L2"
+        },
         "migrate-button": {
             "label": "Migrate",
             "progress-label": "Migration in progress...",
@@ -1563,10 +1576,11 @@
             "retro-airdrop": "<0>Retro airdrop has been migrated to L2 per </0><1 />.",
             "retro-unlock": "<0>This distribution is available on L1 per </0><1 />.",
             "staking": "<0>THALES Staking has been migrated to L2 per </0><1 />.",
-            "vesting": "<0>Escrowed THALES has been migrated to L2 per </0><1 />."
+            "vesting": "<0>Escrowed THALES has been migrated to L2 per </0><1 />.",
+            "lp-staking": "<0>LP Staking has been moved to L2 per </0><1 />."
         },
         "migration-notice": {
-            "text": "You can migrate THALES to L2 Optimistic Mainnet",
+            "text": "You can migrate LEGACY THALES to THALES and bridge to L2 Optimistic Mainnet",
             "button-label": "Migrate THALES"
         },
         "migration-opt-out-notice": {
@@ -1580,8 +1594,15 @@
         },
         "tabs": {
             "migrate": "Migrate",
+            "migrate-and-bridge": "Migrate & Bridge",
+            "bridge": "Bridge",
             "withdraw": "Withdraw",
             "swap": "Swap"
+        },
+        "info-messages": {
+            "migrate-and-bridge": "Choose this option if you have LEGACY THALES on L1, want to exchange it to THALES and bridge it to Optimism (L2)",
+            "migrate": "Choose this option if you have LEGACY THALES on L1 and want to exchange it to THALES maintaining it on L1. Be mindful that most of the liquidity of THALES is on OP (L2)",
+            "bridge": "Choose this option if you already have THALES on L1 and want to bridge it to OP (L2)"
         }
     }
 }

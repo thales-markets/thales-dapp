@@ -20,6 +20,7 @@ import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery'
 import useStakingThalesQuery from '../../queries/staking/useStakingThalesQuery';
 import useEscrowThalesQuery from '../../queries/staking/useEscrowThalesQuery';
 import makeBlockie from 'ethereum-blockies-base64';
+import useOpThalesBalanceQuery from '../../queries/walletBalances/useOpThalesBalanceQuery';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -51,6 +52,10 @@ const UserInfo: React.FC = () => {
         enabled: isAppReady && isWalletConnected && isL2,
     });
 
+    const opThalesBalanceQuery = useOpThalesBalanceQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected && !isL2,
+    });
+
     const stakingThalesQuery = useStakingThalesQuery(walletAddress, network.networkId, {
         enabled: isAppReady && isWalletConnected && isL2,
     });
@@ -70,10 +75,16 @@ const UserInfo: React.FC = () => {
     }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess, stakingThalesQuery.data, escrowThalesQuery.data]);
 
     useEffect(() => {
-        if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
+        if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data && isL2) {
             setThalesBalance(Number(thalesBalanceQuery.data.balance));
         }
     }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
+
+    useEffect(() => {
+        if (opThalesBalanceQuery.isSuccess && opThalesBalanceQuery.data && !isL2) {
+            setThalesBalance(Number(opThalesBalanceQuery.data.balance));
+        }
+    }, [opThalesBalanceQuery.isSuccess, opThalesBalanceQuery.data]);
 
     useEffect(() => {
         setThalesTotalBalance(

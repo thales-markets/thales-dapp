@@ -233,7 +233,14 @@
         "no-data": "没有任何数据可显示",
         "long": "长",
         "short": "短的",
-        "no-data-available": "无可用数据"
+        "no-data-available": "无可用数据",
+        "alerts": {
+            "title": {
+                "error": "错误",
+                "info": "信息",
+                "success": "成功"
+            }
+        }
     },
     "modals": {
         "gwei": {
@@ -380,7 +387,9 @@
                 "end-time": "结束时间",
                 "initial-locked": "初始锁定",
                 "start-quiz": "开始测验",
-                "confirmation-message": "代币已成功认领"
+                "confirmation-message": "代币已成功认领",
+                "olympus-notice": "您现在可以购买 THALES 债券",
+                "olympus-button-text": "奥林巴斯 PRO"
             },
             "thales-staking": {
                 "tab-title": "质押",
@@ -599,7 +608,9 @@
                 "earn-tooltip": "为泰勒斯/ETH对提供流动性，赚取泰勒斯+DODO双倍奖励",
                 "earn-info-tooltip": "如何提供流动性的查看指南",
                 "circulating-supply-label": "市场供应",
-                "total-supply-label": "总供应"
+                "total-supply-label": "总供应",
+                "celer-bridge-tooltip": "链条之间的快速桥梁 THALES",
+                "celer-bridge": "赛勒桥"
             }
         },
         "quiz": {
@@ -1150,7 +1161,8 @@
                 "stats": "数据",
                 "price-source": "来源：Optimism Chainlink的ETH报价",
                 "current-reward-per-winner": "每位获胜者的奖励",
-                "season-finished": "第 {{season}} 季结束"
+                "season-finished": "第 {{season}} 季结束",
+                "select-position": "请选择第一轮的默认位置"
             },
             "battle": {
                 "round": "轮次",
@@ -1212,7 +1224,6 @@
                 "loading-season": "正在加载",
                 "no-users": "没有参赛者",
                 "insufficient-balance": "sUSD 余额不足",
-                "default-position": "默认位置",
                 "default-position-none": "没有任何",
                 "default-position-up": "向上",
                 "default-position-down": "向下",
@@ -1230,7 +1241,8 @@
                 "approve-for-minting": "批准 sUSD 用于 Royale Pass 铸币",
                 "buy-in-collateral-pass-mobile": "NFT",
                 "royale-pass-2": "皇家通行证",
-                "choose-colateral": "选择抵押品买入"
+                "choose-colateral": "选择抵押品买入",
+                "default-position": "选择第一轮的位置"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",
@@ -1569,7 +1581,8 @@
             "retro-airdrop": "<0>复古空投已根据</0><1 />迁移到L2。",
             "staking": "<0>THALES Staking 已根据 </0><1 /> 迁移到 L2。",
             "vesting": "<0>托管的 THALES 已根据 </0><1 /> 迁移到 L2。",
-            "retro-unlock": "<0>每个 </0><1 /> 都可以在 L1 上使用此发行版。"
+            "retro-unlock": "<0>每个 </0><1 /> 都可以在 L1 上使用此发行版。",
+            "lp-staking": "<0>LP Staking 已根据 </0><1 /> 迁移到 L2。"
         },
         "migration-notice": {
             "button-label": "迁移泰勒斯",
@@ -1578,7 +1591,9 @@
         "tabs": {
             "withdraw": "提取",
             "swap": "交换",
-            "migrate": "迁移"
+            "migrate": "迁移",
+            "bridge": "桥",
+            "migrate-and-bridge": "迁移和桥接"
         },
         "from-label": "从",
         "to-label": "到",
@@ -1587,6 +1602,16 @@
         "migration-multisig-contact-warning": "多重签名或合约不应直接迁移，否则您将失去资金。",
         "migration-amount-label": "迁移金额",
         "migrated-rewards-title": "迁移奖励",
-        "info-tooltip": "<0>迁移过程中，THALES首先交换到L1主网上的OpTHALES，然后根据</0><1 />桥接到L2 Optimistic主网进入L2 THALES。"
+        "info-tooltip": "<0>迁移过程中，THALES首先交换到L1主网上的OpTHALES，然后根据</0><1 />桥接到L2 Optimistic主网进入L2 THALES。",
+        "bridge-button": {
+            "label": "桥",
+            "confirmation-message": "令牌成功桥接到 L2",
+            "progress-label": "桥接中..."
+        },
+        "info-messages": {
+            "bridge": "如果您在 L1 上已经有 THALES 并希望将其桥接到 OP (L2)，请选择此选项",
+            "migrate-and-bridge": "如果您在 L1 上有 LEGACY THALES，希望将其交换为 THALES 并将其桥接到 Optimism (L2)，请选择此选项",
+            "migrate": "如果您在 L1 上拥有 LEGACY THALES，并希望将其交换给在 L1 上维护它的 THALES，请选择此选项。请注意，THALES 的大部分流动性都在 OP (L2) 上"
+        }
     }
 }
