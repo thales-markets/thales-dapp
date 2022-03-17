@@ -141,6 +141,7 @@ const MenuCard = styled.div<ManuCardProps>`
         right: 0;
         border-radius: 0;
         border: none;
+        position: fixed;
     }
     box-shadow: var(--shadow);
 `;
