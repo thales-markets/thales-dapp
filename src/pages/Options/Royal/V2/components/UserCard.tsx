@@ -113,6 +113,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     }, [selectedSeason]);
 
+    console.log(selectedSeason);
     useEffect(() => {
         if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress)
             updateAllowance(buyInToken).finally(() => updateBalance(buyInToken));
