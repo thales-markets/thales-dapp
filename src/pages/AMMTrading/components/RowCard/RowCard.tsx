@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 
 import PriceChart from 'components/Charts/PriceChart';
 import Container from './styled-components/Container';
@@ -22,10 +23,13 @@ import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import Button from 'components/Button';
+import { getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
 
 const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const similarMarketsVisibility = useSelector((state: RootState) => getSimilarMarketsVisibility(state));
 
     let optBalances = {
         long: 0,
@@ -222,13 +226,19 @@ const RowCard: React.FC = () => {
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
-                    <Container.ColumnContainer>
+                    <Container.ColumnContainer alignItems={'flex-end'}>
                         <Container.ChartContainer>
                             <PriceChart currencyKey={marketInfo.currencyKey} footerFontSize={'10px'} />
                         </Container.ChartContainer>
                         <Container.SubContainer>
-                            <Button margin={'10px 0 0 0'} padding={'5px 20px'}>
-                                {t('options.market.overview.similar-markets')}
+                            <Button
+                                onClickHandler={() => dispatch(setSimilarMarketVisibility(!similarMarketsVisibility))}
+                                margin={'10px 0 0 0'}
+                                padding={'5px 20px'}
+                            >
+                                {similarMarketsVisibility
+                                    ? t('options.market.overview.close-similar-markets')
+                                    : t('options.market.overview.similar-markets')}
                             </Button>
                         </Container.SubContainer>
                     </Container.ColumnContainer>

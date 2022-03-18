@@ -12,7 +12,7 @@ type SubContainerChildren = {
 
 type ContainerChildren = {
     ChartContainer: StyledComponent<'div', any>;
-    ColumnContainer: StyledComponent<'div', any, { leftBorder?: boolean; minWidth?: string }>;
+    ColumnContainer: StyledComponent<'div', any, { leftBorder?: boolean; minWidth?: string; alignItems?: string }>;
     SubContainer: StyledComponent<'div', any> & SubContainerChildren;
     Divider: StyledComponent<'div', any>;
     Icon: StyledComponent<'i', any, { color?: string }>;
@@ -29,7 +29,7 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled(CardCo
 `;
 
 const ChartContainer = styled.div`
-    width: 130px;
+    width: 100%;
     justify-content: space-around;
 `;
 
