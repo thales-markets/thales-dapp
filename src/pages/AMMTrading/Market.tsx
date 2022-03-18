@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 
 import { getIsAppReady } from 'redux/modules/app';
@@ -14,12 +14,12 @@ import OrderbookView from './components/OrderbookView';
 import { MarketProvider } from './contexts/MarketContext';
 
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
-
 import { OptionsMarketInfo } from 'types/options';
 import { TradingType } from 'types/options';
 import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import Loader from 'components/Loader';
+import { setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
 
 type MarketProps = {
     marketAddress: string;
@@ -39,10 +39,15 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
     const [tradingType, setTradingType] = useState<TradingType>(TradingTypes[1].value as TradingType);
+    const dispatch = useDispatch();
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
     });
+
+    useEffect(() => {
+        dispatch(setSimilarMarketVisibility(false));
+    }, [marketAddress]);
 
     useEffect(() => {
         const fetchMarketData = async () => {
@@ -92,6 +97,7 @@ const MainContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
 `;
 
 const HeaderContainer = styled.div`
