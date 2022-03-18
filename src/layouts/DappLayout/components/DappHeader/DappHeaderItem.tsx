@@ -74,6 +74,10 @@ const MenuItem = styled.li`
     @media (max-width: 1024px) {
         padding: 0 20px;
     }
+
+    @media (max-width: 568px) {
+        padding: 0 10px;
+    }
 `;
 
 const Text = styled.span`
