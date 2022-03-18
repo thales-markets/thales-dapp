@@ -87,10 +87,12 @@ const NetworkSwitchContainer = styled(FlexDivRow)`
     width: 100%;
     align-items: center;
     margin: 16px 0px;
+    justify-content: flex-start;
 `;
 
 const SectionHeader = styled(UserCardSectionHeader)`
     display: inline-block;
+    margin-right: 65px;
 `;
 
 const NetworkIcon = styled.i<{ active: boolean }>`
