@@ -704,7 +704,8 @@
                 "price-difference": "Price difference",
                 "total-burned": "Total burned",
                 "burned-last-hour": "Burned in the last hour",
-                "similar-markets": "Similar Markets"
+                "similar-markets": "Similar Markets",
+                "close-similar-markets": "Close Similar Markets"
             },
             "widgets": {
                 "amm-widget": "AMM",
