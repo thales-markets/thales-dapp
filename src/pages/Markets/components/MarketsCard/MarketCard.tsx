@@ -19,9 +19,13 @@ import PhaseComponent from '../Phase/Phase';
 type MarketCardPros = {
     exchangeRates: Rates | null;
     optionMarket: HistoricalOptionsMarketInfo;
+    marketCardStyle?: {
+        maxWidth?: string;
+        wrapperMargin?: string;
+    };
 };
 
-const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) => {
+const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates, marketCardStyle }) => {
     const { t } = useTranslation();
     const currentAssetPrice = exchangeRates?.[optionMarket?.currencyKey] || 0;
     const strikeAndAssetPriceDifference = getPercentageDifference(currentAssetPrice, optionMarket?.strikePrice);
@@ -29,7 +33,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
     return (
         <>
             {optionMarket && (
-                <MarketCardWrapper>
+                <MarketCardWrapper maxWidth={marketCardStyle?.maxWidth} margin={marketCardStyle?.wrapperMargin}>
                     <InsideContainer style={{ alignItems: 'start' }}>
                         <LeftContainer>
                             <AssetContainer>
@@ -80,16 +84,16 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
     );
 };
 
-const MarketCardWrapper = styled.div`
+const MarketCardWrapper = styled.div<{ maxWidth?: string; margin?: string }>`
     display: flex;
     flex-direction: column;
-    max-width: 390px;
+    max-width: ${(_props) => (_props?.maxWidth ? _props?.maxWidth : '390px')};
     min-width: 360px;
     border: 2px solid rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
     border-radius: 15px;
     padding: 31px 10px 31px 31px;
-    margin: 7.5px;
+    margin: ${(_props) => (_props?.margin ? _props.margin : '7.5px')};
     flex: 1;
     :hover {
         transform: scale(1.02);
