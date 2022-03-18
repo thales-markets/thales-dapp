@@ -17,7 +17,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
+import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
 import { setTheme } from 'redux/modules/ui';
 import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
@@ -45,7 +45,6 @@ const AMMTrading = lazy(() => import('../AMMTrading'));
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
-    const walletAddress = useSelector((state) => getWalletAddress(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
@@ -247,7 +246,7 @@ const App = () => {
                                 <TaleOfThales />
                             </DappLayout>
                         </Route>
-                        {walletAddress && (
+                        {selectedWallet && (
                             <Route exact path={ROUTES.Options.Profile}>
                                 <DappLayout>
                                     <Profile />

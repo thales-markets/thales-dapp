@@ -307,6 +307,8 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     padding-top: 15px;
+    position: relative;
+    min-height: 200px;
 `;
 
 const TableText = styled.span`

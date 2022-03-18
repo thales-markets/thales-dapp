@@ -5,7 +5,7 @@ import NetworkSwitchSection from 'components/NetworkSwitch/v2/NetworkSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import ThemeSelector from 'components/ThemeSelector/ThemeSelector';
 import UserWallet from 'layouts/DappLayout/components/DappHeader/UserWallet';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getTheme } from 'redux/modules/ui';
@@ -22,11 +22,19 @@ export const UserCard: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const theme = useSelector((state: RootState) => getTheme(state));
 
+    useEffect(() => {
+        document.getElementsByTagName('body')[0]?.style.setProperty('overflow', showCard ? 'hidden' : 'auto');
+    }, [showCard]);
+
     return (
         <>
             <UserSwap />
             <UserWallet />
-            <MenuCardButton onClick={() => setShowCard(!showCard)}>
+            <MenuCardButton
+                onClick={() => {
+                    setShowCard(!showCard);
+                }}
+            >
                 <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
             <OutsideClickHandler onOutsideClick={() => (showCard ? setShowCard(!showCard) : '')}>
