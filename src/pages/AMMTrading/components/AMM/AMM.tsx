@@ -700,7 +700,7 @@ const Wrapper = styled.div`
     border-radius: 15px;
     padding: 30px;
     margin-right: 27px;
-    width: 30%;
+    width: 40%;
 `;
 
 const ButtonWrapper = styled.div`
