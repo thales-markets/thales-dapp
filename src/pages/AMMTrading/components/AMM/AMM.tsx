@@ -30,7 +30,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
-import { formatCurrencyWithKey, formatPercentage } from '../../../../utils/formatters/number';
+import { formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
 import { AccountMarketInfo, OrderSide, OptionSide } from 'types/options';
@@ -544,6 +544,10 @@ const AMM: React.FC = () => {
         return '#00F152';
     };
 
+    const onMaxClick = () => {
+        setAmount(truncToDecimals(tokenBalance));
+    };
+
     const formDisabled = isSubmitting || isAmmTradingDisabled;
     return (
         <Wrapper>
@@ -598,7 +602,13 @@ const AMM: React.FC = () => {
                         currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
                     }
                 )}
-            />
+            >
+                {!isBuy && (
+                    <MaxButton onClick={onMaxClick} disabled={formDisabled || insufficientLiquidity}>
+                        {t('common.max')}
+                    </MaxButton>
+                )}
+            </Input>
             <RangeSlider
                 min={1}
                 max={maxLimit}
@@ -709,6 +719,30 @@ const ButtonWrapper = styled.div`
     justify-content: space-between;
     margin-bottom: 10px;
     margin-top: 28px;
+`;
+
+const MaxButton = styled.button`
+    position: absolute;
+    top: 5px;
+    right: 14px;
+    padding: 1px 8px;
+    font-weight: 700;
+    font-size: 10px;
+    color: var(--primary-color);
+    background-color: rgba(100, 217, 254, 0.5);
+    border-radius: 10px;
+    line-height: 15.21px;
+    border: none;
+    outline: none;
+    text-transform: uppercase;
+    &:focus {
+        outline: none;
+        border: none;
+    }
+    &:active {
+        outline: none;
+        border-style: none;
+    }
 `;
 
 export default AMM;
