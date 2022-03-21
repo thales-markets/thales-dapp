@@ -19,6 +19,7 @@ type User = {
     status: UserStatus;
     season: number;
     deathRound?: string;
+    defaultPosition?: number;
 };
 
 export const AnonimUser: User = {
@@ -72,6 +73,7 @@ const useUserRoyalQuery = (
                         status: UserStatus.RDY,
                         season: selectedSeason,
                         deathRound: userFromGraph.deathRound,
+                        defaultPosition: userFromGraph.defaultPosition,
                     };
                     return user;
                 } else {
@@ -84,6 +86,7 @@ const useUserRoyalQuery = (
                         status: UserStatus.NOTSIGNED,
                         season: selectedSeason,
                         deathRound: '',
+                        defaultPosition: 0,
                     };
                     return user;
                 }

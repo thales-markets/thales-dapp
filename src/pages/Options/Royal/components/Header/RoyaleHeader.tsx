@@ -73,8 +73,8 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
     const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected && isAppReady });
     const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
-    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, walletAddress, {
-        enabled: isL2 && isAppReady && isWalletConnected,
+    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, {
+        enabled: isL2 && isAppReady,
     });
     const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};

@@ -62,8 +62,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         enabled: isL2 && isAppReady,
     });
     const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
-    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, walletAddress, {
-        enabled: isL2 && isAppReady && isWalletConnected,
+    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, {
+        enabled: isL2 && isAppReady,
     });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
@@ -82,11 +82,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showDefaultPositionWarning, setShowDefaultPositionWarning] = useState(false);
     const [isBuyingIn, setIsBuyingIn] = useState(false);
-    const previouslySelectedDefaultPosition = localStorage.getItem(
-        'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
-    );
+
     const [defaultPosition, setDefaultPosition] = useState(
-        previouslySelectedDefaultPosition ? previouslySelectedDefaultPosition : PositionsEnum.NONE
+        user.defaultPosition === 0
+            ? PositionsEnum.NONE
+            : user.defaultPosition === 1
+            ? PositionsEnum.DOWN
+            : PositionsEnum.UP
     );
 
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
@@ -113,7 +115,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     }, [selectedSeason]);
 
-    console.log(selectedSeason);
     useEffect(() => {
         if (buyInToken && snxJSConnector.signer && (royaleData as any).buyInAmount && walletAddress)
             updateAllowance(buyInToken).finally(() => updateBalance(buyInToken));
@@ -135,26 +136,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [user.status, walletAddress]);
 
     useEffect(() => {
-        previouslySelectedDefaultPosition
-            ? setDefaultPosition(previouslySelectedDefaultPosition)
-            : setDefaultPosition(PositionsEnum.NONE);
-    }, [walletAddress]);
-
-    useEffect(() => {
-        if (
-            !previouslySelectedDefaultPosition &&
-            (royaleData as any).signUpPeriod > new Date() &&
-            ((royaleData as any).positionInTheFirstRound === 1 || (royaleData as any).positionInTheFirstRound === 2)
-        ) {
-            localStorage.setItem(
-                'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason,
-                (royaleData as any).positionInTheFirstRound === 1 ? PositionsEnum.DOWN : PositionsEnum.UP
-            );
+        if (user) {
             setDefaultPosition(
-                (royaleData as any).positionInTheFirstRound === 1 ? PositionsEnum.DOWN : PositionsEnum.UP
+                user.defaultPosition === 0
+                    ? PositionsEnum.NONE
+                    : user.defaultPosition === 1
+                    ? PositionsEnum.DOWN
+                    : PositionsEnum.UP
             );
         }
-    }, [(royaleData as any).positionInTheFirstRound]);
+    }, [walletAddress, user]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
@@ -270,12 +261,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                                 setShowDefaultPositionWarning(true);
                                             } else {
                                                 setIsBuyingIn(true);
-                                                localStorage.setItem(
-                                                    'defaultPosition' +
-                                                        truncateAddress(walletAddress as any, 2, 2) +
-                                                        selectedSeason,
-                                                    defaultPosition
-                                                );
+
                                                 signUpWithPosition(
                                                     defaultPosition === PositionsEnum.DOWN ? 1 : 2,
                                                     setIsBuyingIn
@@ -320,12 +306,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                             setShowDefaultPositionWarning(true);
                                         } else {
                                             setIsBuyingIn(true);
-                                            localStorage.setItem(
-                                                'defaultPosition' +
-                                                    truncateAddress(walletAddress as any, 2, 2) +
-                                                    selectedSeason,
-                                                defaultPosition
-                                            );
                                             signUpWithWithPassWithPosition(
                                                 (royalePassId as any).id,
                                                 defaultPosition === PositionsEnum.DOWN ? 1 : 2,
@@ -511,19 +491,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         isOpen={showSelectDropdown}
                         style={{ border: showDefaultPositionWarning ? '2px solid #FF615F' : '' }}
                     >
-                        {localStorage.getItem(
-                            'defaultPosition' + truncateAddress(walletAddress as any, 2, 2) + selectedSeason
-                        ) && user.status === UserStatus.RDY ? (
-                            <Text>
-                                {t(
-                                    'options.royale.scoreboard.default-position-' +
-                                        localStorage.getItem(
-                                            'defaultPosition' +
-                                                truncateAddress(walletAddress as any, 2, 2) +
-                                                selectedSeason
-                                        )
-                                )}
-                            </Text>
+                        {defaultPosition !== PositionsEnum.NONE && user.status === UserStatus.RDY ? (
+                            <Text>{t('options.royale.scoreboard.default-position-' + defaultPosition)}</Text>
                         ) : (
                             <Text
                                 onClick={
