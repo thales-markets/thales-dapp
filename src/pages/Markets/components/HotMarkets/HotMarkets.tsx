@@ -8,6 +8,7 @@ import HotMarketCard, { HotMarket } from '../MarketsCard/HotMarketCard';
 import HotMarketCardSceleton from '../MarketsCard/HotMarketCardSceleton';
 import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
+import Hammer from 'hammerjs';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -18,12 +19,15 @@ enum MarketType {
     long = 'UP',
 }
 
+const CARDS_TO_SHOW = 5;
+
 const calculatePotentialProfit = (price: number) => {
     return ((1 - price) / price) * 100;
 };
 
 const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const [firstHotIndex, setFirstHotIndex] = useState(0);
+    const [hammerManager, setHammerManager] = useState<any>();
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
 
@@ -53,51 +57,78 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         return markets.sort((a: HotMarket, b: HotMarket) => a.pricePerOption - b.pricePerOption);
     }, [optionsMarkets]);
 
+    const moveLeft = () => {
+        if (firstHotIndex === 0) setFirstHotIndex(currentMarkets.length - 1 - CARDS_TO_SHOW);
+        if (firstHotIndex > 0) setFirstHotIndex(firstHotIndex - 1);
+    };
+    const moveRight = () => {
+        setFirstHotIndex(firstHotIndex + CARDS_TO_SHOW < currentMarkets.length - 1 ? firstHotIndex + 1 : 0);
+    };
+
     const slicedMarkets = useMemo(() => {
-        return currentMarkets.slice(firstHotIndex, firstHotIndex + 5);
+        if (currentMarkets.length) {
+            const wrapper = document.getElementById('wrapper-cards');
+            if (wrapper) {
+                const hammer = new Hammer.Manager(wrapper);
+                if (!hammerManager) {
+                    setHammerManager(hammer);
+                } else {
+                    hammerManager.destroy();
+                    setHammerManager(hammer);
+                }
+
+                if (window.innerWidth <= 1250) {
+                    const swipe = new Hammer.Swipe();
+                    hammer.add(swipe);
+                    hammer.on('swipeleft', moveRight);
+                    hammer.on('swiperight', moveLeft);
+                }
+            }
+        }
+
+        return currentMarkets.slice(
+            firstHotIndex,
+            firstHotIndex + CARDS_TO_SHOW > currentMarkets.length - 1
+                ? firstHotIndex + CARDS_TO_SHOW - currentMarkets.length + 1
+                : firstHotIndex + CARDS_TO_SHOW
+        );
     }, [currentMarkets, firstHotIndex]);
 
     return (
         <>
             <Title>Most profitable markets</Title>
-            {currentMarkets.length > 0 ? (
-                <Wrapper>
-                    <Icon
-                        onClick={() => setFirstHotIndex(firstHotIndex > 0 ? firstHotIndex - 1 : firstHotIndex)}
-                        disabled={firstHotIndex == 0}
-                        className={'icon icon--left'}
-                    />
-                    {slicedMarkets.map((market, index) => (
-                        <HotMarketCard
-                            key={index}
-                            fullAssetName={market.fullAssetName}
-                            currencyKey={market.currencyKey}
-                            assetName={market.assetName}
-                            pricePerOption={market.pricePerOption}
-                            timeRemaining={market.timeRemaining}
-                            potentialProfit={market.potentialProfit}
-                            address={market.address}
+            <Wrapper id="wrapper-cards">
+                {currentMarkets.length > 0 ? (
+                    <>
+                        <Icon onClick={moveLeft} disabled={firstHotIndex == 0} className={'icon icon--left'} />
+                        {slicedMarkets.map((market, index) => (
+                            <HotMarketCard
+                                key={index}
+                                fullAssetName={market.fullAssetName}
+                                currencyKey={market.currencyKey}
+                                assetName={market.assetName}
+                                pricePerOption={market.pricePerOption}
+                                timeRemaining={market.timeRemaining}
+                                potentialProfit={market.potentialProfit}
+                                address={market.address}
+                            />
+                        ))}
+                        <Icon
+                            onClick={moveRight}
+                            disabled={firstHotIndex + 5 == currentMarkets?.length - 1}
+                            className={'icon icon--right'}
                         />
-                    ))}
-                    <Icon
-                        onClick={() =>
-                            setFirstHotIndex(
-                                firstHotIndex + 5 < currentMarkets.length - 1 ? firstHotIndex + 1 : firstHotIndex
-                            )
-                        }
-                        disabled={firstHotIndex + 5 == currentMarkets?.length - 1}
-                        className={'icon icon--right'}
-                    />
-                </Wrapper>
-            ) : (
-                <Wrapper>
-                    <HotMarketCardSceleton></HotMarketCardSceleton>
-                    <HotMarketCardSceleton></HotMarketCardSceleton>
-                    <HotMarketCardSceleton></HotMarketCardSceleton>
-                    <HotMarketCardSceleton></HotMarketCardSceleton>
-                    <HotMarketCardSceleton></HotMarketCardSceleton>
-                </Wrapper>
-            )}
+                    </>
+                ) : (
+                    <>
+                        <HotMarketCardSceleton></HotMarketCardSceleton>
+                        <HotMarketCardSceleton></HotMarketCardSceleton>
+                        <HotMarketCardSceleton></HotMarketCardSceleton>
+                        <HotMarketCardSceleton></HotMarketCardSceleton>
+                        <HotMarketCardSceleton></HotMarketCardSceleton>
+                    </>
+                )}
+            </Wrapper>
         </>
     );
 };
@@ -107,7 +138,7 @@ const Wrapper = styled.div`
     flex-direction: row;
     margin-bottom: 55px;
     align-items: center;
-    @media (max-width: 1250px) {
+    @media (max-width: 1250px) and (min-width: 769px) {
         & > div:nth-of-type(4),
         & > div:last-of-type {
             display: none;
@@ -115,14 +146,24 @@ const Wrapper = styled.div`
     }
 
     @media (max-width: 768px) {
-        & > div:nth-of-type(3) {
-            display: none;
+        & > div {
+            box-shadow: var(--shadow);
+        }
+        & > div:first-of-type,
+        & > div:last-of-type {
+            opacity: 0.5;
+            box-shadow: none;
         }
     }
 
     @media (max-width: 568px) {
-        & > div:nth-of-type(2) {
-            display: none;
+        & > div {
+            opacity: 0.5;
+        }
+
+        & > div:nth-of-type(3) {
+            opacity: 1;
+            box-shadow: var(--shadow);
         }
     }
 `;

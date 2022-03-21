@@ -41,8 +41,8 @@ const HotMarketCard: React.FC<HotMarket> = ({
     }, 1000);
 
     return (
-        <SPAAnchor href={buildOptionsMarketLink(address)}>
-            <Card address={address}>
+        <Card address={address}>
+            <SPAAnchor href={buildOptionsMarketLink(address)}>
                 <AssetInfo>
                     <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
                     <AssetNameContainer>
@@ -64,8 +64,8 @@ const HotMarketCard: React.FC<HotMarket> = ({
                     <Header style={{ color: '#50ce99' }}>{t('options.home.hot-market-card.potential-profit')}</Header>
                     <Percentage>{potentialProfit}</Percentage>
                 </SectionContainer>
-            </Card>
-        </SPAAnchor>
+            </SPAAnchor>
+        </Card>
     );
 };
 
