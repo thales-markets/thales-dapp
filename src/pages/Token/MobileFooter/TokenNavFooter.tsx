@@ -145,7 +145,7 @@ const NavFooter = styled.div`
     right: 0;
     width: 100px;
     padding: 0 10px;
-    z-index: 1000;
+    z-index: 999;
 `;
 
 const Container = styled.div`
