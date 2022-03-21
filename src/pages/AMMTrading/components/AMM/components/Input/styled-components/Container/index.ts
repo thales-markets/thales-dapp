@@ -69,6 +69,7 @@ const Container: StyledComponent<
     padding: 5px 14px;
     box-sizing: border-box;
     margin-bottom: 8px;
+    position: relative;
     opacity: ${(_props) => (_props?.disabled ? '0.5 !important' : '1')};
 `;
 

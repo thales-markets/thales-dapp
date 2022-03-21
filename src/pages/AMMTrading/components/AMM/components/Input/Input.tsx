@@ -25,6 +25,7 @@ type InputProps = {
         width?: string;
         margin?: string;
     };
+    children?: any;
 };
 
 const Input: React.FC<InputProps> = ({
@@ -45,6 +46,7 @@ const Input: React.FC<InputProps> = ({
     displayTooltip,
     tooltipText,
     container,
+    children,
 }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof valueChange == 'function') {
@@ -77,6 +79,7 @@ const Input: React.FC<InputProps> = ({
                         {subValue}
                     </Container.ValueContainer.SubValue>
                 </Container.ValueContainer>
+                {children}
             </Container>
         </CustomTooltip>
     );
