@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivRowCentered, Image } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 
 import ThalesStaking from './ThalesStaking';
 import SnxStaking from './SnxStaking';
@@ -12,20 +12,6 @@ import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
 import TokenOverview from './components/TokenOverview';
-import snxStakingActiveIcon from 'assets/images/snx-staking-active.png';
-import snxStakingIcon from 'assets/images/snx-staking.png';
-import stakingActiveIcon from 'assets/images/staking-active.svg';
-import stakingIcon from 'assets/images/staking.svg';
-import vestingActiveIcon from 'assets/images/vesting-active.svg';
-import vestingIcon from 'assets/images/vesting.svg';
-import lpActiveIcon from 'assets/images/lp-active.svg';
-import lpIcon from 'assets/images/lp.svg';
-import lpl2ActiveIcon from 'assets/images/lp-l2-active.svg';
-import lpl2Icon from 'assets/images/lp-l2.svg';
-import migrationActiveIcon from 'assets/images/migration-active.svg';
-import migrationIcon from 'assets/images/migration.svg';
-import migratedRewardsActiveIcon from 'assets/images/migrated-rewards-active.svg';
-import migratedRewardsIcon from 'assets/images/migrated-rewards.svg';
 
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -34,6 +20,7 @@ import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
 import MigratedRewards from './MigratedRewards';
 import { useSelector } from 'react-redux';
+import TokenNavFooter from './MobileFooter/TokenNavFooter';
 
 const DEFAULT_TAB = 'staking';
 
@@ -156,98 +143,7 @@ const TokenPage: React.FC = () => {
                     </MainContentContainer>
                 </FlexDivColumn>
             </Container>
-            <NavFooter>
-                <Icon
-                    width={30}
-                    height={30}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'staking',
-                            }),
-                        });
-                        setSelectedTab('staking');
-                    }}
-                    src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
-                />
-                <Icon
-                    width={50}
-                    height={50}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'retro-rewards',
-                            }),
-                        });
-                        setSelectedTab('retro-rewards');
-                    }}
-                    src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
-                />
-                <Icon
-                    width={30}
-                    height={30}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'vesting',
-                            }),
-                        });
-                        setSelectedTab('vesting');
-                    }}
-                    src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
-                />
-                <Icon
-                    width={isL2 ? 35 : 50}
-                    height={isL2 ? 35 : 30}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'lp-staking',
-                            }),
-                        });
-                        setSelectedTab('lp-staking');
-                    }}
-                    src={
-                        selectedTab === 'lp-staking' ? (isL2 ? lpl2ActiveIcon : lpActiveIcon) : isL2 ? lpl2Icon : lpIcon
-                    }
-                />
-                {!isL2 && (
-                    <Icon
-                        width={35}
-                        height={30}
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: 'migration',
-                                }),
-                            });
-                            setSelectedTab('migration');
-                        }}
-                        src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
-                    />
-                )}
-                {isL2 && (
-                    <Icon
-                        width={50}
-                        height={40}
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: 'migrated-rewards',
-                                }),
-                            });
-                            setSelectedTab('migrated-rewards');
-                        }}
-                        src={selectedTab === 'migrated-rewards' ? migratedRewardsActiveIcon : migratedRewardsIcon}
-                    />
-                )}
-            </NavFooter>
+            <TokenNavFooter selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </>
     );
 };
@@ -365,27 +261,6 @@ const InnerWidgetsContainer = styled.div`
         border: none;
         padding: 1px;
     }
-`;
-
-const NavFooter = styled(FlexDivRowCentered)`
-    @media (min-width: 767px) {
-        display: none;
-    }
-    height: 88px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background: #04045a;
-    border-radius: 20px 20px 0 0;
-    border-top: 1px solid #ca91dc;
-    width: 100%;
-    padding: 0 40px;
-    z-index: 1000;
-`;
-
-const Icon = styled(Image)<{ width: number; height: number }>`
-    width: ${(props) => props.width}px;
-    height: ${(props) => props.height}px;
 `;
 
 export default TokenPage;

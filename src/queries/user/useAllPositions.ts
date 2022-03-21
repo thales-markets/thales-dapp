@@ -86,7 +86,6 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                                                     short: bigNumberFormatter(result.balances.short),
                                                 },
                                             });
-                                            console.log('matured pushed');
                                         }
                                     }
                                     resolve('');
@@ -135,7 +134,6 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                                                     short: bigNumberFormatter(result.balances.short),
                                                 },
                                             });
-                                            console.log('live pushed');
                                         }
                                     }
                                     resolve('');

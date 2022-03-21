@@ -92,7 +92,7 @@ const Container = styled.div`
     @media (max-width: 1024px) {
         display: flex;
         align-items: center;
-        justiyf-content: flex-start;
+        justify-content: flex-start;
         & > div {
             width: 50%;
         }
