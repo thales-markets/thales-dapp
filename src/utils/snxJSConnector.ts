@@ -18,6 +18,8 @@ import { synthetix, SynthetixJS, Config } from '@synthetixio/contracts-interface
 import { gelatoContract } from './contracts/gelatoContract';
 import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
 import bridgeContract from './contracts/bridgeContract';
+import usdcContract from './contracts/usdcContract';
+import { POLYGON_MUMBAI_ID } from '../constants/network';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -51,7 +53,17 @@ const snxJSConnector: SnxJSConnector = {
 
     setContractSettings: function (contractSettings: Config) {
         this.initialized = true;
-        this.snxJS = synthetix(contractSettings);
+        if (contractSettings.networkId !== POLYGON_MUMBAI_ID) {
+            this.snxJS = synthetix(contractSettings);
+        } else {
+            // @ts-ignore
+            this.snxJS = {
+                contracts: {
+                    // @ts-ignore
+                    SynthsUSD: initializeContract(usdcContract, contractSettings).connect(contractSettings.signer),
+                },
+            };
+        }
         this.signer = contractSettings.signer;
         this.provider = contractSettings.provider;
         this.binaryOptionsMarketDataContract = initializeContract(binaryOptionsMarketDataContract, contractSettings);

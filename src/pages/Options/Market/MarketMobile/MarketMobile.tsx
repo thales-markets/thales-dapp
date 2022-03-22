@@ -24,7 +24,7 @@ import MaturityPhaseCard from '../TradeCard/MaturityPhaseCard';
 import CustomMarketResults from '../CustomMarketResults';
 import { getAmmSelected } from 'redux/modules/marketWidgets';
 import AMM from '../AMM';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 
 type MarketMobileProps = {
     side: OptionSide;
@@ -45,6 +45,7 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
     const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -57,12 +58,12 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
                     <WidgetWrapper
                         className={market.phase === 'maturity' ? 'market__maturity' : ''}
                         background={
-                            market.phase === 'maturity' || (ammSelected && isL2)
+                            market.phase === 'maturity' || (ammSelected && (isL2 || isPolygon))
                                 ? ''
                                 : 'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)'
                         }
                     >
-                        {ammSelected && isL2 && market.phase !== 'maturity' ? (
+                        {ammSelected && (isL2 || isPolygon) && market.phase !== 'maturity' ? (
                             <AMM />
                         ) : market.phase === 'maturity' ? (
                             <MaturityPhaseCard optionsMarket={market} accountMarketInfo={accountInfo} />
@@ -116,7 +117,7 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
                     onClick={setWidget.bind(this, Widgets.Trade)}
                     src={widget === Widgets.Trade ? tradeActiveIcon : tradeIcon}
                 />
-                {market.phase !== 'maturity' && (!ammSelected || !isL2) && (
+                {market.phase !== 'maturity' && (!ammSelected || !(isL2 || isPolygon)) && (
                     <Icon
                         onClick={setWidget.bind(this, Widgets.Orderbook)}
                         src={widget === Widgets.Orderbook ? orderbookActiveIcon : orderbookIcon}

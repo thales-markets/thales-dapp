@@ -6,7 +6,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Wrapper } from 'theme/common';
 import Cookies from 'universal-cookie';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 import Header from './components/Header';
 import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
@@ -31,10 +31,11 @@ const ThalesRoyal: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const latestSeasonQuery = useLatestSeasonQuery({
-        enabled: isAppReady && isL2,
+        enabled: isAppReady && (isL2 || isPolygon),
     });
     const [selectedSeason, setSelectedSeason] = useState(0);
     const [royaleFooterData, setRoyaleStatsData] = useState<FooterData>();
@@ -102,7 +103,9 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            walletAddress && !isL2 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
+            walletAddress && !isL2 && !isPolygon
+                ? setOpenNetworkWarningDialog(true)
+                : setOpenNetworkWarningDialog(false);
         }, 2000);
 
         return () => clearTimeout(timeout);

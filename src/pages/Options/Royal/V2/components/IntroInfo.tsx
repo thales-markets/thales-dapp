@@ -17,7 +17,7 @@ import { Text } from 'theme/common';
 import useLatestRoyaleSeasonInfo from './queries/useLastRoyaleSeasonInfo';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
 
@@ -26,8 +26,9 @@ export const Intro: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
-    const queryForIntro = useLatestRoyaleSeasonInfo({ enabled: isL2 && isAppReady });
+    const queryForIntro = useLatestRoyaleSeasonInfo({ enabled: (isL2 || isPolygon) && isAppReady });
     const data = queryForIntro.isSuccess ? queryForIntro.data : undefined;
 
     const [timeLeftForPositioning, setTimeLeftForPositioning] = useState<Date | null>(

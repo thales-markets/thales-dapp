@@ -139,6 +139,7 @@ const App = () => {
                     }
                 },
             });
+
             onboardConnector.setOnBoard(onboard);
         }
     }, [isAppReady]);

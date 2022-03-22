@@ -20,7 +20,7 @@ import winnerCardS2 from '../../../../../assets/images/royale/winner-card-s2.svg
 import winnerCardS3 from '../../../../../assets/images/royale/winner-card-s3.svg';
 import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
 import { getIsAppReady } from '../../../../../redux/modules/app';
-import { getIsOVM } from '../../../../../utils/network';
+import { getIsOVM, getIsPolygon } from '../../../../../utils/network';
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
@@ -231,6 +231,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -239,7 +240,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
     const royaleDataQuery = useRoyaleArenaContractQuery(memoizedSelectedSeason, walletAddress ?? '', {
-        enabled: isAppReady && isL2,
+        enabled: isAppReady && (isL2 || isPolygon),
     });
 
     const royaleData = useMemo(() => {

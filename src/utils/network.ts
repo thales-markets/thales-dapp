@@ -6,7 +6,7 @@ import { BigNumber, ethers } from 'ethers';
 import { serializeTransaction, UnsignedTransaction } from 'ethers/lib/utils';
 import snxJSConnector from './snxJSConnector';
 
-export type NetworkId = 1 | 3 | 42 | 10 | 69;
+export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001;
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -19,6 +19,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISTIC',
     69: 'KOVAN-OPTIMISTIC',
+    80001: 'POLYGON-MUMBAI',
 };
 
 export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
@@ -27,6 +28,7 @@ export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISM-MAINNET',
     69: 'OPTIMISM-KOVAN',
+    80001: 'POLYGON-MUMBAI',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
@@ -35,6 +37,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISM MAINNET',
     69: 'OPTIMISM KOVAN',
+    80001: 'POLYGON-MUMBAI',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
@@ -86,23 +89,12 @@ export const getInfuraRpcURL = (networkId: NetworkId) => {
 };
 
 export const isNetworkSupported = (networkId: NetworkId): boolean => {
-    switch (networkId) {
-        case 1:
-            return true;
-        case 3:
-            return true;
-        case 42:
-            return true;
-        case 69:
-            return true;
-        case 10:
-            return true;
-        default:
-            return false;
-    }
+    return !!SUPPORTED_NETWORKS[networkId];
 };
 
 export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(networkId);
+
+export const getIsPolygon = (networkId: number): boolean => !!~[80001].indexOf(networkId);
 
 export const formatGwei = (wei: number) => wei / GWEI_UNIT;
 

@@ -50,7 +50,7 @@ import { OrderDirection, PhaseFilterEnum } from '../ExploreMarkets/ExploreMarket
 import { Arrow, ArrowsWrapper, PhaseLabel, Star, StyledTableCell, TableHeaderLabel } from './components';
 import Pagination from './Pagination';
 import SPAAnchor from '../../../../components/SPAAnchor';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 
 dotenv.config();
 
@@ -94,6 +94,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
         const [flippening, setFlippening] = useState<Flippening | undefined>(undefined);
         const [ethBurned, setEthBurned] = useState<ETHBurned | undefined>(undefined);
+
+        const isL2 = getIsOVM(networkId);
+        const isPolygon = getIsPolygon(networkId);
 
         const flippeningQuery = useFlippeningQuery({
             enabled: isAppReady,
@@ -186,9 +189,10 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
             { id: 4, label: t(`options.home.markets-table.strike-price-col`), sortable: true },
             {
                 id: 5,
-                label: getIsOVM(networkId)
-                    ? t(`options.home.markets-table.amm-size-col`)
-                    : t(`options.home.markets-table.pool-size-col`),
+                label:
+                    isL2 || isPolygon
+                        ? t(`options.home.markets-table.amm-size-col`)
+                        : t(`options.home.markets-table.pool-size-col`),
                 sortable: true,
             },
             { id: 6, label: t(`options.home.markets-table.time-remaining-col`), sortable: true },
@@ -412,7 +416,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
-                                                {getIsOVM(networkId) ? (
+                                                {isL2 || isPolygon ? (
                                                     <>
                                                         <span className="green">{market.availableLongs}</span> /{' '}
                                                         <span className="red">{market.availableShorts}</span>

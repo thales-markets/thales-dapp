@@ -45,7 +45,7 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
     const filteredOrders = useMemo(() => {
         if (ordersQuery.isSuccess) {
             return optionsMarkets.reduce((acc, market: any) => {
-                if (market.phase === 'trading') {
+                if (market.phase === 'trading' && Array.isArray(ordersQuery.data)) {
                     const userOrdersForMarket: [] = ordersQuery.data.reduce((temp: any, order: any) => {
                         const odrerData: OrderData = order.data;
                         const isBuy: boolean = odrerData.makerAsset.toLowerCase() === SynthsUSD.address.toLowerCase();

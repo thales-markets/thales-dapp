@@ -21,7 +21,7 @@ import styled from 'styled-components';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo, OptionsMarkets, OrderData } from 'types/options';
 import { getSynthName } from 'utils/currency';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 import { history } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
@@ -99,6 +99,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const [orderDirection, setOrderDirection] = useState(OrderDirection.ASC);
     const searchFilter = useLocation();
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -227,7 +228,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 case 4:
                     return sortByField(a, b, orderDirection, 'strikePrice');
                 case 5:
-                    return !getIsOVM(networkId)
+                    return !(isL2 || isPolygon)
                         ? sortByField(a, b, orderDirection, 'poolSize')
                         : orderDirection === OrderDirection.ASC
                         ? a.availableLongs - b.availableLongs

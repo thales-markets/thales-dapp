@@ -17,6 +17,7 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                 max: Infinity,
                 network: networkId,
             });
+            console.log(optionsMarkets, 'voja');
             return Promise.all(
                 optionsMarkets.map(async (currentMarket) => {
                     if (currentMarket.customMarket) {
