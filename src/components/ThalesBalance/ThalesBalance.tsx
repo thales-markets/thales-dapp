@@ -89,6 +89,7 @@ const Title = styled.p`
 const Bar = styled.div<{ width: number; background: string }>`
     display: flex;
     min-width: 50%;
+    width: 50%;
     width: ${(props) => props.width + '%'};
     justify-content: space-between;
     align-items: center;
@@ -141,6 +142,7 @@ const calculateWidth = (inWallet: number, staked: number, escrowedBalance: numbe
         result.staked = (Math.log(staked) / Math.log(escrowedBalance)) * 100;
         result.inWallet = (Math.log(inWallet) / Math.log(escrowedBalance)) * 100;
     }
+
     return result;
 };
 
