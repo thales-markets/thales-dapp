@@ -194,6 +194,10 @@ export const RoyaleBackground = styled(Background)`
             display: none;
         }
     }
+    @media (max-width: 1024px) {
+        overflow-y: auto;
+        max-height: 100vh;
+    }
 `;
 
 export const InfoSection = styled.div`
