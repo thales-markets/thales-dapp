@@ -52,7 +52,12 @@ const Container: StyledComponent<'div', any> & ContainerChild = styled.div`
     border-radius: 15px;
     padding: 30px;
     margin-right: 27px;
-    width: 35%;
+    min-width: 300px;
+    width: 40%;
+    @media (max-width: 1024px) {
+        width: 100%;
+        margin-right: 0;
+    }
 `;
 
 Container.ColorLabel = ColorLabel;

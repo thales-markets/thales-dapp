@@ -92,7 +92,7 @@ const MaturityDate: React.FC<MaturityDateProps> = ({
                 fontSize={fontSize}
             >
                 {!showTimeRemaining
-                    ? `@ ${formatShortDate(maturityDateUnix)}`
+                    ? `${formatShortDate(maturityDateUnix)}`
                     : timeElapsed
                     ? t('options.common.time-remaining.ended')
                     : showRemainingInWeeks
@@ -112,6 +112,12 @@ const Display = styled.span<{ fontSize?: string; color?: string }>`
     font-weight: 700;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '25px')};
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    @media (max-width: 1024px) {
+        font-size: 21px;
+    }
+    @media (max-width: 568px) {
+        font-size: 18px;
+    }
 `;
 
 export default MaturityDate;

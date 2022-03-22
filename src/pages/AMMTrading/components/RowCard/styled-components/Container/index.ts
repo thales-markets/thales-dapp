@@ -25,7 +25,12 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled(CardCo
     justify-content: space-between;
     flex-direction: row;
     padding: 20px 25px;
+    gap: 10px;
     width: 100%;
+    flex-wrap: wrap;
+    @media (max-width: 568px) {
+        padding: 20px 10px;
+    }
 `;
 
 const ChartContainer = styled.div`
@@ -47,13 +52,20 @@ const ColumnContainer = styled.div<{ leftBorder?: boolean; minWidth?: string }>`
     flex-direction: column;
     align-items: baseline;
     justify-content: flex-start;
-    padding: 0px 25px;
+    @media (max-width: 568px) {
+        padding: 0 10px;
+        flex: 1;
+    }
     min-width: ${(_props) => (_props?.minWidth ? _props.minWidth : '')};
     ${(_props) => (_props?.leftBorder ? 'border-left: 2px solid var(--card-border-color)' : '')};
 `;
 
 const Divider = styled.div`
-    border-left: 2px solid var(--card-border-color);
+    width: 2px;
+    opacity: 0.5;
+    min-height: 115px;
+    margin: 10px 0;
+    background: var(--card-border-color);
     border-radius: 30px;
 `;
 
@@ -70,6 +82,14 @@ const Header = styled.span`
     font-weight: 400;
     font-size: 15px;
     margin-bottom: 8px;
+    white-space: pre;
+    @media (max-width: 1024px) {
+        font-size: 14px;
+    }
+    @media (max-width: 568px) {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
 `;
 
 // @ts-ignore
@@ -78,7 +98,14 @@ const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?
     font-style: normal;
     font-weight: 700;
     font-size: 25px;
+    white-space: pre;
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    @media (max-width: 1024px) {
+        font-size: 21px;
+    }
+    @media (max-width: 568px) {
+        font-size: 18px;
+    }
 `;
 
 const Liquidity = styled.span<{ shortLiqFlag?: boolean }>`

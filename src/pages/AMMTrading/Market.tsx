@@ -98,6 +98,9 @@ const MainContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    @media (max-width: 1024px) {
+        flex-direction: column;
+    }
 `;
 
 const HeaderContainer = styled.div`
@@ -109,6 +112,10 @@ const HeaderContainer = styled.div`
     margin: -30px 0 20px 0;
     &::before {
         visibility: hidden;
+    }
+
+    @media (max-width: 1024px) {
+        margin: 0px 0 20px 0;
     }
 `;
 

@@ -98,7 +98,7 @@ const RowCard: React.FC = () => {
                             <Container.SubContainer.Value>{marketInfo.currencyKey}</Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
-                    <Container.ColumnContainer minWidth={'230px'}>
+                    <Container.ColumnContainer>
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
                                 {t('options.market.overview.maturity-date')}
@@ -120,7 +120,8 @@ const RowCard: React.FC = () => {
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
-                    <Container.ColumnContainer leftBorder={true}>
+                    <Container.Divider />
+                    <Container.ColumnContainer>
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
                                 {t('options.home.market-card.current-asset-price')}
@@ -138,7 +139,8 @@ const RowCard: React.FC = () => {
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
-                    <Container.ColumnContainer leftBorder={true}>
+                    <Container.Divider />
+                    <Container.ColumnContainer>
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
                                 {t('options.market.overview.my-positions')}
@@ -180,7 +182,8 @@ const RowCard: React.FC = () => {
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
-                    <Container.ColumnContainer leftBorder={true}>
+                    <Container.Divider />
+                    <Container.ColumnContainer>
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
                                 {t('options.market.overview.amm-liquidity')}
@@ -226,7 +229,7 @@ const RowCard: React.FC = () => {
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
-                    <Container.ColumnContainer alignItems={'flex-end'}>
+                    <Container.ColumnContainer minWidth="180px" alignItems={'flex-end'}>
                         <Container.ChartContainer>
                             <PriceChart currencyKey={marketInfo.currencyKey} footerFontSize={'10px'} />
                         </Container.ChartContainer>
