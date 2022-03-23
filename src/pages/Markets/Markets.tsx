@@ -40,14 +40,18 @@ const Markets: React.FC = () => {
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
-                ? marketsQuery.data.map((m) => ({
-                      ...m,
-                      openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
-                      availableLongs: (openOrdersMap as any).get(m.address.toLowerCase())?.availableLongs ?? '0',
-                      availableShorts: (openOrdersMap as any).get(m.address.toLowerCase())?.availableShorts ?? '0',
-                      longPrice: (openOrdersMap as any).get(m.address.toLowerCase())?.longPrice ?? '0',
-                      shortPrice: (openOrdersMap as any).get(m.address.toLowerCase())?.shortPrice ?? '0',
-                  }))
+                ? marketsQuery.data.map((m) => {
+                      const apiData = (openOrdersMap as any).get(m.address.toLowerCase());
+                      return {
+                          ...m,
+                          openOrders: apiData?.ordersCount ?? 0,
+                          availableLongs: apiData?.availableLongs ?? 0,
+                          availableShorts: apiData?.availableShorts ?? 0,
+                          longPrice: apiData?.longPrice ?? 0,
+                          shortPrice: apiData?.shortPrice ?? 0,
+                          ammLiquidity: Number(apiData?.availableLongs ?? 0) + Number(apiData?.availableShorts ?? 0),
+                      };
+                  })
                 : marketsQuery.data;
             return sortOptionsMarkets(markets);
         }

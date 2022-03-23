@@ -137,7 +137,7 @@ const Profile: React.FC = () => {
                     <Wrapper.Row>
                         <Wrapper.Label>{t('options.leaderboard.table.gain-col')}: </Wrapper.Label>
                         <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
-                            {formatCurrencyWithSign('', DataForUi?.userData.gain, 2)}%
+                            {formatCurrencyWithSign('', DataForUi?.userData.gain * 100, 2)}%
                         </Wrapper.Value>
                     </Wrapper.Row>
                     <Wrapper.Row>

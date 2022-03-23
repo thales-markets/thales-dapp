@@ -73,6 +73,7 @@ export type HistoricalOptionsMarketInfo = {
     eventName?: string;
     outcome?: string;
     finalPrice?: number;
+    ammLiquidity?: number;
 };
 
 export type OptionsMarketInfo = {

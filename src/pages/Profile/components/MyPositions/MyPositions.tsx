@@ -15,8 +15,8 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
-import SimpleLoader from '../../../../components/SimpleLoader';
-import { LoaderContainer, NoDataContainer, NoDataText } from '../../../../theme/common';
+import SimpleLoader from 'components/SimpleLoader';
+import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -51,7 +51,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
             });
         }
 
-        return orderBy(newArray, 'market.maturityDate');
+        return orderBy(newArray, ['market.value'], ['desc']);
     }, [positions]);
 
     const filteredData = useMemo(() => {
