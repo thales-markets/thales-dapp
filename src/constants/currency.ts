@@ -149,10 +149,10 @@ export const FIAT_CURRENCY_SIGN = {
 };
 export const USD_SIGN = FIAT_CURRENCY_SIGN[FIAT_CURRENCY_MAP.USD];
 
-export const OPTIONS_CURRENCY = ['sLONG', 'sSHORT'];
+export const OPTIONS_CURRENCY = ['UP', 'DOWN'];
 export const OPTIONS_CURRENCY_MAP = {
-    long: 'sLONG',
-    short: 'sSHORT',
+    long: 'UP',
+    short: 'DOWN',
 };
 export const THALES_CURRENCY = 'THALES';
 export const OP_THALES_CURRENCY = 'OpTHALES';

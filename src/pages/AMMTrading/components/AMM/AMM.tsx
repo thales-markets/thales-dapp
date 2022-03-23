@@ -575,7 +575,7 @@ const AMM: React.FC = () => {
                     padding={'5px 0px'}
                     onClickHandler={() => setOptionSide('long')}
                 >
-                    {'LONG'}
+                    {t('options.common.long')}
                 </Button>
                 <Button
                     width={'48%'}
@@ -583,7 +583,7 @@ const AMM: React.FC = () => {
                     padding={'5px 0px'}
                     onClickHandler={() => setOptionSide('short')}
                 >
-                    {'Short'}
+                    {t('options.common.short')}
                 </Button>
             </ButtonWrapper>
             <Input
