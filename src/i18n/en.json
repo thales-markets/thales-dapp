@@ -1301,7 +1301,13 @@
             "trade-up": "Trade Up Options",
             "trade-down": "Trade Down Options",
             "select-to": "Select to {{type}}",
-            "amount-to": "Amount to {{type}}"
+            "amount-to": "Amount to {{type}}",
+            "filters": {
+                "all": "All",
+                "buy-orders": "Buy orders",
+                "sell-orders": "Sell orders",
+                "my-orders": "My orders"
+            }
         }
     },
     "governance": {
