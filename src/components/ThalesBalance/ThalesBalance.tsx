@@ -129,6 +129,9 @@ const Amount = styled.p`
 
 const calculateWidth = (inWallet: number, staked: number, escrowedBalance: number) => {
     const result = { inWallet: 0, staked: 0, escrowed: 0 };
+    if (inWallet === 0 && escrowedBalance === 0 && staked === 0) {
+        return result;
+    }
     if (inWallet >= staked && inWallet >= escrowedBalance) {
         result.inWallet = 100;
         result.staked = (Math.log(staked) / Math.log(inWallet)) * 100;
