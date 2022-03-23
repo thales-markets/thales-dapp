@@ -250,6 +250,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                 {showSelectDropdown &&
                                     allSeasons
                                         .filter((number) => number !== selectedSeason)
+                                        .sort((a, b) => b - a)
                                         .map((option: number, key: number) => (
                                             <Text
                                                 onClick={() => {
@@ -547,7 +548,7 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     cursor: pointer;
     text-align: center;
     background: var(--color-wrapper);
-    z-index: 1001;
+    z-index: 1002;
     p:first-child {
         font-weight: bold;
         font-size: 20px;
@@ -571,7 +572,7 @@ const Overlay = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 4;
+    z-index: 1001;
 `;
 
 const Button = styled.button`
