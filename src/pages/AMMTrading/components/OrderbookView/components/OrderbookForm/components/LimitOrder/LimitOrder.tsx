@@ -81,10 +81,6 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [selectedPercentage, setPercentage] = useState<number>(25);
 
-    //Brisi ovo
-    console.log('isExpirationAfterMaturity ', isExpirationAfterMaturity);
-    console.log('txErrorMessage ', txErrorMessage);
-
     const defaultOrderSideOption = orderSideOptions.find((option) => option.value === defaultOrderSide);
     const [orderSide, setOrderSide] = useState<OrderSideOptionType>(defaultOrderSideOption || orderSideOptions[0]);
 
