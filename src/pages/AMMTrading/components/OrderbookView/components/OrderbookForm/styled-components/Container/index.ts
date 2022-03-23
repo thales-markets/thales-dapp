@@ -52,8 +52,7 @@ const Container: StyledComponent<'div', any> & ContainerChild = styled.div`
     border-radius: 15px;
     padding: 30px;
     margin-right: 27px;
-    min-width: 300px;
-    width: 40%;
+    width: 400px;
     @media (max-width: 1024px) {
         width: 100%;
         margin-right: 0;
