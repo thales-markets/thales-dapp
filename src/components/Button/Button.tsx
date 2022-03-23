@@ -76,7 +76,7 @@ const Wrapper = styled.button<{
     ${(_props) => (_props?.height ? `height: ${_props.height}` : '')};
     border: 1px solid var(--button-bg-active);
     border-radius: 30px;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 700;
     cursor: pointer;
     color: ${(_props) =>
