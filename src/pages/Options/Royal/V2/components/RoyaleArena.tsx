@@ -4,23 +4,24 @@ import { useTranslation } from 'react-i18next';
 import addSeconds from 'date-fns/addSeconds';
 import format from 'date-fns/format';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
-import useInterval from '../../../../../hooks/useInterval';
-import snxJSConnector from '../../../../../utils/snxJSConnector';
-import { dispatchMarketNotification } from '../../../../../utils/options';
 import { RoyaleTooltip } from '../../../Market/components';
-import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
-import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
+import useInterval from 'hooks/useInterval';
+import snxJSConnector from 'utils/snxJSConnector';
+import { dispatchMarketNotification } from 'utils/options';
+import { FlexDiv, FlexDivCentered, Wrapper } from 'theme/common';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../../redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import useRoundsQuery from '../../Queries/useRoundsQuery';
 import { BigNumber } from 'ethers';
-import winnerCard from '../../../../../assets/images/royale/winner-card.svg';
-import winnerCardS2 from '../../../../../assets/images/royale/winner-card-s2.svg';
-import winnerCardS3 from '../../../../../assets/images/royale/winner-card-s3.svg';
+import winnerCard from 'assets/images/royale/winner-card.svg';
+import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
+import winnerCardS3 from 'assets/images/royale/winner-card-s3.svg';
+import winnerCardS4 from 'assets/images/royale/winner-card-s4.svg';
 import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
-import { getIsAppReady } from '../../../../../redux/modules/app';
-import { getIsOVM } from '../../../../../utils/network';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsOVM } from 'utils/network';
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
@@ -92,8 +93,10 @@ const renderRounds = (
                 return winnerCardS2;
             case 3:
                 return winnerCardS3;
+            case 4:
+                return winnerCardS4;
             default:
-                return winnerCardS3;
+                return winnerCardS4;
         }
     };
 
