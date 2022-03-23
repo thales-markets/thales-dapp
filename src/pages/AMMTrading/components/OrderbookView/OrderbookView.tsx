@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 
 import Container from '../TabContainer/styled-components/Container';
 import OrderbookForm from './components/OrderbookForm';
 
 import { OptionSide } from 'types/options';
+import TabContainer from '../TabContainer';
 
 export const TradeOptionType = [
     {
@@ -48,9 +50,17 @@ const OrderbookView: React.FC = () => {
             </Container.Main>
             <Container.Tab>
                 <OrderbookForm type={optionType} />
+                <OrderBookContainer>
+                    <TabContainer optionSide={optionType} />
+                </OrderBookContainer>
             </Container.Tab>
         </Container>
     );
 };
+
+const OrderBookContainer = styled.div`
+    align-items: baseline;
+    width: 70%;
+`;
 
 export default OrderbookView;
