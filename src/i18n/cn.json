@@ -1306,7 +1306,13 @@
             "trade-down": "交易选项",
             "trade-up": "以旧换新",
             "amount-to": "金额为 {{type}}",
-            "select-to": "选择 {{type}}"
+            "select-to": "选择 {{type}}",
+            "filters": {
+                "all": "全部",
+                "my-orders": "我的订单",
+                "buy-orders": "购买订单",
+                "sell-orders": "卖单"
+            }
         }
     },
     "governance": {

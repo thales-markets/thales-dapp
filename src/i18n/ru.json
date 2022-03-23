@@ -1306,7 +1306,13 @@
             "trade-up": "Варианты обмена",
             "trade-down": "Варианты торговли вниз",
             "amount-to": "Сумма до {{тип}}",
-            "select-to": "Выберите {{type}}"
+            "select-to": "Выберите {{type}}",
+            "filters": {
+                "my-orders": "Мои заказы",
+                "all": "Все",
+                "sell-orders": "Заказы на продажу",
+                "buy-orders": "Заказы на покупку"
+            }
         }
     },
     "governance": {

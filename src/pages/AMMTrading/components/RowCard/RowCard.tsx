@@ -72,7 +72,7 @@ const RowCard: React.FC = () => {
                         : null,
             };
         }
-    }, [ammMaxLimitsQuery.isLoading]);
+    }, [ammMaxLimitsQuery.isLoading, optBalances?.long, optBalances?.short]);
 
     const priceDifference = useMemo(() => {
         return formatPricePercentageDifference(marketInfo.strikePrice, marketInfo.currentPrice);
