@@ -58,7 +58,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             }
         };
         fetchMarketData();
-    }, [marketQuery.isSuccess]);
+    }, [marketQuery.isSuccess, marketAddress]);
 
     return optionMarket ? (
         <MarketProvider optionsMarket={optionMarket}>
