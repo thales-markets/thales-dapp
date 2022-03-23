@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Orderbook from '../OrderbookView/components/Orderbook';
 import OptionPriceTab from '../Tabs/OptionPriceTab';
 import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
@@ -23,10 +24,16 @@ import { getIsAppReady } from 'redux/modules/app';
 import { buildOptionsMarketLink } from 'utils/routes';
 import MarketCard from 'pages/Markets/components/MarketsCard';
 
-const TabContainer: React.FC = () => {
+import { OptionSide } from 'types/options';
+
+type TabContainerProps = {
+    optionSide?: OptionSide;
+};
+
+const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const marketInfo = useMarketContext();
 
-    const [currentTab, setCurrentTab] = useState<number>(0);
+    const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
     const similarMarketsVisibility = useSelector((state: RootState) => getSimilarMarketsVisibility(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -69,17 +76,29 @@ const TabContainer: React.FC = () => {
     const { t } = useTranslation();
 
     const tabItems = [
+        ...(optionSide
+            ? [
+                  {
+                      title: t('options.market.widgets.orderbook-widget'),
+                      index: 0,
+                  },
+              ]
+            : []),
+        {
+            title: t('options.market.widgets.chart-trading-view-widget'),
+            index: 1,
+        },
         {
             title: t('options.market.widgets.chart-options-price-widget'),
+            index: 2,
         },
         {
             title: t('options.market.widgets.your-transactions-widget'),
-        },
-        {
-            title: t('options.market.widgets.chart-trading-view-widget'),
+            index: 3,
         },
         {
             title: t('options.market.widgets.recent-transactions-widget'),
+            index: 4,
         },
     ];
 
@@ -92,9 +111,9 @@ const TabContainer: React.FC = () => {
                             tabItems.map((item, index) => {
                                 return (
                                     <Container.Main.Item
-                                        active={index == currentTab}
+                                        active={item.index == currentTab}
                                         key={index}
-                                        onClick={() => setCurrentTab(index)}
+                                        onClick={() => setCurrentTab(item.index)}
                                     >
                                         {item.title}
                                     </Container.Main.Item>
@@ -102,10 +121,11 @@ const TabContainer: React.FC = () => {
                             })}
                     </Container.Main>
                     <Container.Tab>
-                        {currentTab == 0 && <OptionPriceTab />}
-                        {currentTab == 1 && <UserActivity />}
-                        {currentTab == 2 && <TradingView />}
-                        {currentTab == 3 && <MarketActivity />}
+                        {currentTab == 0 && (optionSide ? <Orderbook optionSide={optionSide} /> : <></>)}
+                        {currentTab == 1 && <TradingView />}
+                        {currentTab == 2 && <OptionPriceTab />}
+                        {currentTab == 3 && <UserActivity />}
+                        {currentTab == 4 && <MarketActivity />}
                     </Container.Tab>
                 </Container>
             )}
