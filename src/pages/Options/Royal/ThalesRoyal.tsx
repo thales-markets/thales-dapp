@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import { useSelector } from 'react-redux';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Wrapper } from 'theme/common';
@@ -28,7 +28,7 @@ export enum Theme {
 const cookies = new Cookies();
 
 const ThalesRoyal: React.FC = () => {
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -94,19 +94,19 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
+            !isWalletConnected ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
         }, 2500);
 
         return () => clearTimeout(timeout);
-    }, [walletAddress]);
+    }, [isWalletConnected]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            walletAddress && !isL2 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
+            isWalletConnected && !isL2 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
         }, 2000);
 
         return () => clearTimeout(timeout);
-    }, [networkId, walletAddress]);
+    }, [networkId, isWalletConnected]);
 
     useEffect(() => {
         const body = document.getElementsByTagName('body')[0];

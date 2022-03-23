@@ -82,8 +82,8 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
                             display: 'block',
                         }}
                         onClick={() => {
-                            onboardConnector.connectWallet();
                             onClose();
+                            onboardConnector.connectWallet();
                         }}
                     >
                         {t('options.royale.wallet-not-connected-dialog.button')}

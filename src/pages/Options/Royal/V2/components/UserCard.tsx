@@ -136,6 +136,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [user.status, walletAddress]);
 
     useEffect(() => {
+        if (isBuyingIn) {
+            setIsBuyingIn(false);
+        }
+    }, [walletAddress]);
+
+    useEffect(() => {
         if (user) {
             setDefaultPosition(
                 user.defaultPosition === 0
