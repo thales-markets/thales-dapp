@@ -61,6 +61,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
 
             markets = markets.filter((market) => market.currencyKey == marketInfo?.currencyKey);
             markets = markets.filter((market) => market.availableLongs > 0 && market.availableShorts > 0);
+            markets = markets.filter((market) => market.maturityDate == marketInfo.maturityDate);
             markets = sortOptionsMarkets(markets);
             return markets.slice(0, 6);
         }
