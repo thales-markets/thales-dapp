@@ -197,6 +197,12 @@ export const RoyaleBackground = styled(Background)`
     @media (max-width: 1024px) {
         overflow-y: auto;
         max-height: 100vh;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 `;
 
