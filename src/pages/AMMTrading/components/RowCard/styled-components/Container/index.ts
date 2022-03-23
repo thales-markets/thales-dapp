@@ -12,7 +12,11 @@ type SubContainerChildren = {
 
 type ContainerChildren = {
     ChartContainer: StyledComponent<'div', any>;
-    ColumnContainer: StyledComponent<'div', any, { leftBorder?: boolean; minWidth?: string; alignItems?: string }>;
+    ColumnContainer: StyledComponent<
+        'div',
+        any,
+        { leftBorder?: boolean; minWidth?: string; alignItems?: string; currency?: boolean; priceChart?: boolean }
+    >;
     SubContainer: StyledComponent<'div', any> & SubContainerChildren;
     Divider: StyledComponent<'div', any>;
     Icon: StyledComponent<'i', any, { color?: string }>;
@@ -29,7 +33,11 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled(CardCo
     width: 100%;
     flex-wrap: wrap;
     @media (max-width: 568px) {
+        gap: 0;
         padding: 20px 10px;
+        display: grid;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 `;
 
@@ -47,7 +55,12 @@ const SubContainer: StyledComponent<'div', any> & SubContainerChildren = styled.
     justify-content: space-around;
 `;
 
-const ColumnContainer = styled.div<{ leftBorder?: boolean; minWidth?: string }>`
+const ColumnContainer = styled.div<{
+    leftBorder?: boolean;
+    minWidth?: string;
+    currency?: boolean;
+    priceChart?: boolean;
+}>`
     display: flex;
     flex-direction: column;
     align-items: baseline;
@@ -55,6 +68,10 @@ const ColumnContainer = styled.div<{ leftBorder?: boolean; minWidth?: string }>`
     @media (max-width: 568px) {
         padding: 0 10px;
         flex: 1;
+        flex-direction: ${(_props) => (_props?.currency ? 'row' : 'column')};
+        align-items: ${(_props) => (_props?.currency ? 'center' : 'baseline')};
+        grid-column-start: ${(_props) => _props?.priceChart && 2};
+        grid-row-start: ${(_props) => _props?.priceChart && 1};
     }
     min-width: ${(_props) => (_props?.minWidth ? _props.minWidth : '')};
     ${(_props) => (_props?.leftBorder ? 'border-left: 2px solid var(--card-border-color)' : '')};
@@ -67,6 +84,9 @@ const Divider = styled.div`
     margin: 10px 0;
     background: var(--card-border-color);
     border-radius: 30px;
+    @media (max-width: 568px) {
+        display: none;
+    }
 `;
 
 const Icon = styled.i<{ color?: string }>`

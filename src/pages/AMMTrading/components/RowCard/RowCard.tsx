@@ -82,7 +82,7 @@ const RowCard: React.FC = () => {
         <>
             {marketInfo && (
                 <Container>
-                    <Container.ColumnContainer>
+                    <Container.ColumnContainer currency={true}>
                         <Container.SubContainer>
                             <CurrencyIcon
                                 synthIconStyle={{
@@ -229,7 +229,7 @@ const RowCard: React.FC = () => {
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
-                    <Container.ColumnContainer minWidth="180px" alignItems={'flex-end'}>
+                    <Container.ColumnContainer minWidth="180px" alignItems={'flex-end'} priceChart={true}>
                         <Container.ChartContainer>
                             <PriceChart currencyKey={marketInfo.currencyKey} footerFontSize={'10px'} />
                         </Container.ChartContainer>
