@@ -322,7 +322,12 @@ const TableText = styled.span`
     color: var(--primary-color);
 `;
 
-const Icon = styled.i``;
+const Icon = styled.i`
+    @media (max-width: 568px) {
+        font-size: 16px;
+        line-height: 100%;
+    }
+`;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
     ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};

@@ -313,6 +313,10 @@ const TableText = styled.span`
 
 const Icon = styled.i`
     margin-left: 6px;
+    @media (max-width: 568px) {
+        font-size: 16px;
+        line-height: 100%;
+    }
 `;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
