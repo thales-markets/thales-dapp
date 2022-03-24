@@ -60,10 +60,11 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                 : marketsQuery.data;
 
             markets = markets.filter((market) => market.currencyKey == marketInfo?.currencyKey);
-            markets = markets.filter((market) => market.availableLongs > 0 && market.availableShorts > 0);
+            markets = markets.filter((market) => market.availableLongs > 0 || market.availableShorts > 0);
             markets = markets.filter((market) => market.maturityDate == marketInfo.maturityDate);
+            markets = markets.filter((market) => market.address !== marketInfo.address);
             markets = sortOptionsMarkets(markets);
-            return markets.slice(0, 6);
+            return markets;
         }
         return [];
     }, [marketsQuery]);
