@@ -41,7 +41,7 @@ export const UserSwap: React.FC = () => {
         <>
             <SwapButton
                 onMouseOver={() => setButtonText(t('options.swap.button-text'))}
-                onMouseOut={() => setButtonText(formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance, 4))}
+                onMouseOut={() => setButtonText(formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance, 2))}
                 onClick={() => setShowSwap(true)}
             >
                 <SwapButtonIcon className="v2-icon v2-icon--dollar" />
