@@ -51,7 +51,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
             });
         }
 
-        return orderBy(newArray, ['market.value'], ['desc']);
+        return orderBy(newArray, ['balances.value'], ['desc']);
     }, [positions]);
 
     const filteredData = useMemo(() => {
