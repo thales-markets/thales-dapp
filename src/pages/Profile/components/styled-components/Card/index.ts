@@ -30,7 +30,7 @@ const CardWrapper = styled.div<WrapperProps>`
 
 // @ts-ignore
 const Card: StyledComponent<'div', any> & Children = styled.div`
-    background: #04045a;
+    background: var(--background);
     box-sizing: border-box;
     border-radius: 15px;
     padding: 16px 24px;

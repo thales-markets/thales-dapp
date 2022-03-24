@@ -21,6 +21,9 @@ const Container: any & Children = styled.div<ContainerProps>`
         margin-top: 0;
         flex-direction: column-reverse;
     }
+    *::-webkit-scrollbar-track {
+        border-radius: 8px;
+    }
 `;
 
 const ContainerFixed = styled.div`

@@ -308,11 +308,15 @@ const TableText = styled.span`
     line-height: 285%;
     text-align: right;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--primary-color);
 `;
 
 const Icon = styled.i`
     margin-left: 6px;
+    @media (max-width: 568px) {
+        font-size: 16px;
+        line-height: 100%;
+    }
 `;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`

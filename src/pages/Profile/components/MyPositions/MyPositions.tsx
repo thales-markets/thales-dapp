@@ -51,7 +51,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
             });
         }
 
-        return orderBy(newArray, ['market.value'], ['desc']);
+        return orderBy(newArray, ['balances.value'], ['desc']);
     }, [positions]);
 
     const filteredData = useMemo(() => {
@@ -319,10 +319,15 @@ const TableText = styled.span`
     line-height: 285%;
     text-align: right;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--primary-color);
 `;
 
-const Icon = styled.i``;
+const Icon = styled.i`
+    @media (max-width: 568px) {
+        font-size: 16px;
+        line-height: 100%;
+    }
+`;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
     ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
