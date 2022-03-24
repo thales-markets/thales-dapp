@@ -35,6 +35,10 @@ const Container: StyledComponent<'div', any> & ContainerChild = styled(FlexDiv)`
 const Tab = styled.div`
     width: 100%;
     display: flex;
+    @media (max-width: 1024px) {
+        flex-direction: column;
+        gap: 30px;
+    }
 `;
 
 const MenuItem = styled.div<{ active?: boolean; customActiveColor?: string; noStrech?: boolean; padding?: string }>`
