@@ -516,7 +516,7 @@ const BurgerMenu = styled.div`
     right: -20px;
     background: var(--color-background);
     padding: 15px;
-    z-index: 5;
+    z-index: 1002;
     @media (max-width: 1024px) {
         left: 0;
         right: 0;
