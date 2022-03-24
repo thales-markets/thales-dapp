@@ -1,23 +1,24 @@
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React, { useCallback, useState } from 'react';
+import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Orders, OrderItem, OrderSide, OptionSide, DisplayOrder } from 'types/options';
-import { formatCurrency, formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
-// import CancelOrderModal from '../CancelOrderModal';
-// import FillOrderModal from '../FillOrderModal';
 import { CellProps, Row } from 'react-table';
+
 import OrderbookTable from '../../components/OrderbookTable';
-import styled from 'styled-components';
+import CancelOrderModal from '../CancelOrderModal';
+import FillOrderModal from '../FillOrderModal';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
+
 import { OrderbookFilterEnum } from 'constants/options';
 import { COLORS } from 'constants/ui';
-import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 import { LightTooltip } from 'pages/Options/Market/components';
 import { USD_SIGN } from 'constants/currency';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-import CancelOrderModal from '../CancelOrderModal';
+import { getWalletAddress } from 'redux/modules/wallet';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import { Orders, OrderItem, OrderSide, OptionSide, DisplayOrder } from 'types/options';
 
 type OrderbookSideProps = {
     orders: Orders;
@@ -41,8 +42,8 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
     isLoading,
 }) => {
     const { t } = useTranslation();
-    const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
-    const [cancelOrderModalVisible, setCancelOrderModalVisible] = useState<boolean>(true);
+    const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(true);
+    const [cancelOrderModalVisible, setCancelOrderModalVisible] = useState<boolean>(false);
     const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const openFillOrderModal = useCallback((order: OrderItem) => {
@@ -155,13 +156,12 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                 isLoading={isLoading}
             />
             {fillOrderModalVisible && selectedOrder !== null && (
-                // <FillOrderModal
-                //     order={selectedOrder}
-                //     optionSide={optionSide}
-                //     orderSide={orderSide}
-                //     onClose={() => setFillOrderModalVisible(false)}
-                // />
-                <></>
+                <FillOrderModal
+                    order={selectedOrder}
+                    optionSide={optionSide}
+                    orderSide={orderSide}
+                    onClose={() => setFillOrderModalVisible(false)}
+                />
             )}
             {cancelOrderModalVisible && selectedOrder !== null && (
                 <CancelOrderModal

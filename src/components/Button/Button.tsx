@@ -67,6 +67,7 @@ const Wrapper = styled.button<{
     hoverShadow?: string;
     hoverBorderEffect?: boolean;
     margin?: string;
+    disabled?: boolean;
 }>`
     display: flex;
     text-transform: uppercase;
@@ -98,8 +99,8 @@ const Wrapper = styled.button<{
     ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
     ${(_props) => (_props?.padding ? `padding: ${_props.padding}` : '')};
     &:hover {
-        ${(_props) => (_props?.hoverShadow ? `box-shadow:${_props.hoverShadow}` : '')}
-        ${(_props) => (_props?.hoverBorderEffect ? `border:var(--primary-color)` : '')}
+        ${(_props) => (_props?.hoverShadow && !_props?.disabled ? `box-shadow:${_props.hoverShadow}` : '')}
+        ${(_props) => (_props?.hoverBorderEffect && !_props?.disabled ? `border:var(--primary-color)` : '')}
     }
     &:disabled {
         opacity: 0.6;

@@ -53,7 +53,7 @@ const Filters: React.FC<FiltersProps> = ({
                         key={filterItem}
                         onClickHandler={() => onClick(filterItem)}
                     >
-                        <Icon className={orderbookFilterMap[filterItem].iconClass} />
+                        <Icon className={orderbookFilterMap[filterItem].iconClass} active={filter == filterItem} />
                         {t(`${orderbookFilterMap[filterItem].labeli18}`)}
                     </Button>
                 );
@@ -65,7 +65,7 @@ const Filters: React.FC<FiltersProps> = ({
                     margin={'0px 5px 0px 15px'}
                     onClickHandler={() => onUserOrderFilterClick(!userOrderFilter)}
                 >
-                    <Icon className={'icon icon--user-avatar'} />
+                    <Icon className={'icon icon--user-avatar'} active={userOrderFilter == true} />
                     {t('options.order-book.filters.sell-orders')}
                 </Button>
             </CustomTooltip>
@@ -80,10 +80,11 @@ const Container = styled.div`
     justify-content: flex-end;
 `;
 
-const Icon = styled.i`
+const Icon = styled.i<{ active?: boolean }>`
     font-size: 22px;
-    color: var(--primary-color);
+    color: ${(_props) => (_props?.active ? 'var(--button-text-active)' : 'var(--button-text-inactive)')};
     text-transform: initial;
+    margin-right: 5px;
 `;
 
 const CustomTooltip = withStyles(() => ({
