@@ -6,5 +6,4 @@ export const SimilarMarketsContainer = styled.div`
     flex-wrap: wrap;
     width: 100%;
     justify-content: space-between;
-    margin-top: 20px;
 `;
