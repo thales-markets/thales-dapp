@@ -83,6 +83,7 @@ const Container = styled.div`
 const Icon = styled.i`
     font-size: 22px;
     color: var(--primary-color);
+    text-transform: initial;
 `;
 
 const CustomTooltip = withStyles(() => ({
