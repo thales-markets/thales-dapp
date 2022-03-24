@@ -52,10 +52,12 @@ const Container: StyledComponent<'div', any> & ContainerChild = styled.div`
     border-radius: 15px;
     padding: 30px;
     margin-right: 27px;
-    width: 400px;
+    max-width: 400px;
+    min-width: 340px;
+    width: 100%;
     @media (max-width: 1024px) {
-        width: 100%;
         margin-right: 0;
+        max-width: 100%;
     }
 `;
 

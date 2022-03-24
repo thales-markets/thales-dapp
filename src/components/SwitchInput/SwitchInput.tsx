@@ -23,7 +23,6 @@ const SwitchContainer = styled.div`
     height: 22px;
     position: relative;
     background: linear-gradient(256.68deg, #8208fc 6.58%, #64d9fe 102.94%);
-    border: 2px solid var(--icon-color);
     box-sizing: border-box;
     border-radius: 30px;
     cursor: pointer;
@@ -33,11 +32,11 @@ const SwitchContainer = styled.div`
 const Slider = styled.span<{ switchValue: boolean }>`
     border-radius: 50%;
     position: absolute;
-    top: 3px;
+    top: 4px;
     left: ${(props) => (!props.switchValue ? '3px' : '')};
     right: ${(props) => (props.switchValue ? '3px' : '')};
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     background-color: var(--icon-color);
 `;
 
