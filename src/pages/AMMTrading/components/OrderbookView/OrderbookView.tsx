@@ -61,6 +61,7 @@ const OrderbookView: React.FC = () => {
 const OrderBookContainer = styled.div`
     align-items: baseline;
     max-width: calc(100% - 400px);
+    width: 100%;
     @media (max-width: 1024px) {
         max-width: 100%;
     }
