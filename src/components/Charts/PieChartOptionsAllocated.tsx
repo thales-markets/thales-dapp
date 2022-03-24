@@ -112,7 +112,7 @@ const Header = styled.p`
     text-align: center;
     letter-spacing: 0.035em;
     text-transform: capitalize;
-    color: #ffffff;
+    color: var(--primary-color);
     @media (max-width: 768px) {
         font-size: 10px;
         line-height: 12px;

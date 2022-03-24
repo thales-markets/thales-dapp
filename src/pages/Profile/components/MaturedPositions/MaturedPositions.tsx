@@ -308,7 +308,7 @@ const TableText = styled.span`
     line-height: 285%;
     text-align: right;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--primary-color);
 `;
 
 const Icon = styled.i`

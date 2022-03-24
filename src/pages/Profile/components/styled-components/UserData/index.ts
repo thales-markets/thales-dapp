@@ -14,7 +14,6 @@ type ValueProps = {
 // @ts-ignore
 const Wrapper: StyledComponent<'div', any> & Children = styled.div`
     display: block;
-    background: #04045a;
     box-sizing: border-box;
     border-radius: 15px;
     padding: 18px 32px;
