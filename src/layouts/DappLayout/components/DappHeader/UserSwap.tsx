@@ -34,7 +34,7 @@ export const UserSwap: React.FC = () => {
     const [buttonText, setButtonText] = useState(sUSDBalance);
 
     useEffect(() => {
-        setButtonText(formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance, 4));
+        setButtonText(formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance, 2));
     }, [sUSDBalance]);
 
     return (
