@@ -19,6 +19,7 @@ import { getIsAppReady } from '../../../redux/modules/app';
 import useRoyaleFooterQuery, { FooterData } from './V2/components/queries/useRoyaleFooterQuery';
 import useEthPriceQuery from './Queries/useEthPriceQuery';
 import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
+import useSnxPriceQuery from './Queries/useSnxPriceQuery';
 
 export enum Theme {
     Light,
@@ -39,12 +40,16 @@ const ThalesRoyal: React.FC = () => {
     const [selectedSeason, setSelectedSeason] = useState(0);
     const [royaleFooterData, setRoyaleStatsData] = useState<FooterData>();
     const [ethPrice, setEthPrice] = useState<string>('');
+    const [snxPrice, setSnxPrice] = useState<string>('');
+    const [assetPrice, setAssetPrice] = useState<string>('');
+
     const [positions, setPositions] = useState<Positions>({ up: 0, down: 0 });
 
     const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
 
     const royaleFooterQuery = useRoyaleFooterQuery(selectedSeason, { enabled: isAppReady });
     const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
+    const snxPriceQuery = useSnxPriceQuery({ enabled: isAppReady });
     const positionsQuery = usePositionsQuery(0, networkId, {
         enabled: networkId !== undefined && isAppReady,
     });
@@ -67,6 +72,12 @@ const ThalesRoyal: React.FC = () => {
     }, [ethPriceQuery.isSuccess, ethPriceQuery.data]);
 
     useEffect(() => {
+        if (snxPriceQuery.isSuccess) {
+            setSnxPrice(snxPriceQuery.data);
+        }
+    }, [snxPriceQuery.isSuccess, snxPriceQuery.data]);
+
+    useEffect(() => {
         if (royaleFooterQuery.isSuccess) {
             setRoyaleStatsData(royaleFooterQuery.data);
         }
@@ -81,6 +92,12 @@ const ThalesRoyal: React.FC = () => {
     useEffect(() => {
         setSelectedSeason(latestSeasonQuery.data || 0);
     }, [latestSeasonQuery.isSuccess, latestSeasonQuery.data]);
+
+    useEffect(() => {
+        if (royaleFooterQuery.isSuccess) {
+            royaleFooterQuery.data.seasonAsset === 'ETH' ? setAssetPrice(ethPrice) : setAssetPrice(snxPrice);
+        }
+    }, [ethPrice, snxPrice, royaleFooterQuery.isSuccess, royaleFooterQuery.data]);
 
     useEffect(() => {
         const selectedPageParameter = queryString.parse(location.search).page;
@@ -139,7 +156,7 @@ const ThalesRoyal: React.FC = () => {
                     setTheme={setTheme}
                 />
                 <ScoreboardPage
-                    ethPrice={ethPrice}
+                    assetPrice={assetPrice}
                     positions={positions}
                     royaleFooterData={royaleFooterData}
                     selectedSeason={selectedSeason}
@@ -147,7 +164,7 @@ const ThalesRoyal: React.FC = () => {
                     latestSeason={latestSeason}
                 />
                 <RoyaleArena
-                    ethPrice={ethPrice}
+                    assetPrice={assetPrice}
                     positions={positions}
                     royaleFooterData={royaleFooterData}
                     latestSeason={latestSeason}
@@ -155,7 +172,7 @@ const ThalesRoyal: React.FC = () => {
                     showBattle={selectedPage === 'royale'}
                 />
                 <FooterV2
-                    ethPrice={ethPrice}
+                    assetPrice={assetPrice}
                     positions={positions}
                     royaleData={royaleFooterData}
                     latestSeason={latestSeason}

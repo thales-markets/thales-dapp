@@ -28,7 +28,7 @@ import { FooterData } from './queries/useRoyaleFooterQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 
 type RoyaleArenaProps = {
-    ethPrice: string;
+    assetPrice: string;
     positions: Positions;
     royaleFooterData: FooterData | undefined;
     latestSeason: number;
@@ -224,7 +224,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     showBattle,
     selectedSeason,
     latestSeason,
-    ethPrice,
+    assetPrice,
     positions,
     royaleFooterData,
 }) => {
@@ -376,9 +376,10 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                     </div>
                     <div>
                         <span>
-                            {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                            {t('options.royale.footer.current')} {royaleFooterData?.seasonAsset}{' '}
+                            {t('options.royale.footer.price')}:
                         </span>
-                        <span>${Number(ethPrice).toFixed(2)}</span>
+                        <span>${Number(assetPrice).toFixed(2)}</span>
                     </div>
                     <div>
                         <span>{t('options.royale.footer.reward-per-player')}:</span>

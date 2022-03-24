@@ -12,7 +12,7 @@ import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
 
 type ScoreboardProps = {
-    ethPrice: string;
+    assetPrice: string;
     positions: Positions;
     royaleData: FooterData | undefined;
     latestSeason: number;
@@ -25,7 +25,7 @@ type ScoreboardProps = {
 let showStatsUserSelection = true;
 
 export const FooterV2: React.FC<ScoreboardProps> = ({
-    ethPrice,
+    assetPrice,
     positions,
     royaleData,
     selectedPage,
@@ -196,9 +196,10 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                         </div>
                         <div>
                             <span>
-                                {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                                {t('options.royale.footer.current')} {royaleData?.seasonAsset}{' '}
+                                {t('options.royale.footer.price')}:
                             </span>
-                            <span>${Number(ethPrice).toFixed(2)}</span>
+                            <span>${Number(assetPrice).toFixed(2)}</span>
                             <InfoIconContainer>
                                 <RoyaleTooltip title={t('options.royale.footer.price-source')}>
                                     <StyledInfoIcon />

@@ -36,7 +36,7 @@ import useRoyalePassQuery from './queries/useRoyalePassQuery';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 
 type UserCardProps = {
-    ethPrice: string;
+    assetPrice: string;
     positions: Positions;
     royaleFooterData: FooterData | undefined;
     selectedSeason: number;
@@ -52,7 +52,7 @@ export enum BuyInCollateralEnum {
     SUSD = 'susd',
 }
 
-export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
+export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, assetPrice, positions }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -643,7 +643,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <span>
                                 {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
                             </span>
-                            <span>${Number(ethPrice).toFixed(2)}</span>
+                            <span>${Number(assetPrice).toFixed(2)}</span>
                         </div>
                         <div>
                             <span>{t('options.royale.footer.reward-per-player')}:</span>

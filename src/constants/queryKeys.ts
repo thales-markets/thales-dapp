@@ -168,6 +168,7 @@ export const QUERY_KEYS = {
         ],
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
         EthPrice: () => ['royale', 'ethPrice'],
+        SnxPrice: () => ['royale', 'snxPrice'],
         LatestRoyaleData: () => ['royale', 'latestRoyaleData'],
         LatestRoyaleDataForUserCard: (season: number) => ['royale', 'LatestRoyaleDataForUserCard', season],
         LatestSeason: () => ['royale', 'latestSeason'],
