@@ -64,6 +64,9 @@ const getFromContract = async (
         RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
         RoyaleContract.positionInARoundPerSeason(season, address, roundInASeason),
     ]);
+
+    const tokenName = !parseBytes32String(token) && season < 5 ? 'ETH' : parseBytes32String(token);
+
     return {
         roundChoosingLength: Number(roundChoosingLength),
         roundInASeasonStartTime: new Date(Number(roundInASeasonStartTime) * 1000),
@@ -74,7 +77,7 @@ const getFromContract = async (
         seasonFinished,
         rewardCollectedPerSeason,
         rounds: Number(rounds),
-        token: parseBytes32String(token),
+        token: tokenName,
         targetPrice: ethers.utils.formatEther(targetPrice),
         position: Number(position),
     };

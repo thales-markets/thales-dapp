@@ -1108,7 +1108,7 @@
                 "players-alive": "Игроки живы",
                 "reward-per-player": "Награда на игрока",
                 "down": "ВНИЗ",
-                "price-source": "Источник: канал Optimism Chainlink ETH",
+                "price-source": "Источник: канал Optimism Chainlink {{token}}",
                 "up": "ВВЕРХ",
                 "rd": "Круглый",
                 "price": "Цена",

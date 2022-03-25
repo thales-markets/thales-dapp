@@ -199,9 +199,16 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                 {t('options.royale.footer.current')} {royaleData?.seasonAsset}{' '}
                                 {t('options.royale.footer.price')}:
                             </span>
-                            <span>${Number(assetPrice).toFixed(2)}</span>
+                            <span>
+                                $
+                                {royaleData?.seasonAsset !== 'ETH'
+                                    ? Number(assetPrice).toFixed(4)
+                                    : Number(assetPrice).toFixed(2)}
+                            </span>
                             <InfoIconContainer>
-                                <RoyaleTooltip title={t('options.royale.footer.price-source')}>
+                                <RoyaleTooltip
+                                    title={t('options.royale.footer.price-source', { token: royaleData?.seasonAsset })}
+                                >
                                     <StyledInfoIcon />
                                 </RoyaleTooltip>
                             </InfoIconContainer>

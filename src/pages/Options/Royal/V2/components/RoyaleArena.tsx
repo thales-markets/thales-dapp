@@ -124,7 +124,11 @@ const renderRounds = (
                       </div>
                       <div style={{ marginTop: '10px' }}>
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
-                          <CurrentRoundText>{`$${Number(targetPrice).toFixed(2)}`}</CurrentRoundText>
+                          <CurrentRoundText>
+                              {token !== 'ETH'
+                                  ? `$${Number(targetPrice).toFixed(4)}`
+                                  : `$${Number(targetPrice).toFixed(2)}`}
+                          </CurrentRoundText>
                       </div>
                       <div style={{ marginBottom: '10px' }}>
                           <CurrentRoundTitle>{t('options.royale.battle.in')}</CurrentRoundTitle>
@@ -164,17 +168,21 @@ const renderRounds = (
                           <RoundText style={{ textDecoration: 'line-through' }}>{index}</RoundText>
                       </div>
                       <div style={{ textDecoration: 'line-through' }}>
-                          <CurrentRoundTitle>{`${token} ${t('options.royale.battle.will-be')}`}</CurrentRoundTitle>
-                          <CurrentRoundText>{`$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(
-                              2
-                          )}`}</CurrentRoundText>
+                          <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
+                          <CurrentRoundText>
+                              {token !== 'ETH'
+                                  ? `$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(4)}`
+                                  : `$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(2)}`}
+                          </CurrentRoundText>
                       </div>
                       <RoundHistoryInfo>
                           <FlexDiv>
                               <PrevRoundTitle>{`${token} ${t('options.royale.battle.was')}`}</PrevRoundTitle>
-                              <PrevRoundText>{`$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(
-                                  2
-                              )}`}</PrevRoundText>
+                              <PrevRoundText>
+                                  {token !== 'ETH'
+                                      ? `$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(4)}`
+                                      : `$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(2)}`}
+                              </PrevRoundText>
                           </FlexDiv>
                           <FlexDiv>
                               <PrevRoundTitle>{`${t('options.royale.battle.eliminated')}`}</PrevRoundTitle>
@@ -379,7 +387,12 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                             {t('options.royale.footer.current')} {royaleFooterData?.seasonAsset}{' '}
                             {t('options.royale.footer.price')}:
                         </span>
-                        <span>${Number(assetPrice).toFixed(2)}</span>
+                        <span>
+                            $
+                            {royaleFooterData?.seasonAsset !== 'ETH'
+                                ? Number(assetPrice).toFixed(4)
+                                : Number(assetPrice).toFixed(2)}
+                        </span>
                     </div>
                     <div>
                         <span>{t('options.royale.footer.reward-per-player')}:</span>

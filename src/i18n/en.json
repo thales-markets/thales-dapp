@@ -1107,7 +1107,7 @@
                 "royale": "Royale",
                 "scoreboard": "Scoreboard",
                 "stats": "Stats",
-                "price-source": "Source: Optimism Chainlink ETH feed",
+                "price-source": "Source: Optimism Chainlink {{token}} feed",
                 "select-position": "Please select default position for the 1st round"
             },
             "battle": {

@@ -437,9 +437,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         <InputWrapper>
                             {user.name}
                             <SearchIcon
-                                onClick={() => {
-                                    !isWalletConnected ? setOpenEditDialog.bind(this, true) : '';
-                                }}
+                                onClick={setOpenEditDialog.bind(this, true)}
                                 className="icon icon--user-avatar"
                                 style={{
                                     display: !isWalletConnected ? 'none' : '',
@@ -641,9 +639,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         </div>
                         <div>
                             <span>
-                                {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                                {t('options.royale.footer.current')}
+                                {royaleFooterData?.seasonAsset} {t('options.royale.footer.price')}:
                             </span>
-                            <span>${Number(assetPrice).toFixed(2)}</span>
+                            <span>
+                                {' '}
+                                $
+                                {royaleFooterData?.seasonAsset !== 'ETH'
+                                    ? Number(assetPrice).toFixed(4)
+                                    : Number(assetPrice).toFixed(2)}
+                            </span>
                         </div>
                         <div>
                             <span>{t('options.royale.footer.reward-per-player')}:</span>
