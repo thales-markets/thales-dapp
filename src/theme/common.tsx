@@ -274,7 +274,7 @@ export const Button = styled.button`
         border-bottom: 1.5px solid rgba(106, 193, 213, 1);
         color: #f6f6fe;
         &:hover {
-            border: 1.5px solid#00f9ff;
+            border: 1.5px solid #00f9ff;
             color: #00f9ff;
         }
         &:active {
