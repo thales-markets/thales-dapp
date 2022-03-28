@@ -837,7 +837,7 @@ const ImageWrapper = styled(InputWrapper)`
 const Selector = styled.div<{ isOpen: boolean }>`
     position: absolute;
     right: 0;
-    top: -4px;
+    top: 6px;
     width: 240px;
     height: ${(props) => (props.isOpen ? 'content' : '28px')};
     border: 2px solid var(--color-background);
