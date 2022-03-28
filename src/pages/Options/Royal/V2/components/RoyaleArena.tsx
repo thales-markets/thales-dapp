@@ -4,31 +4,31 @@ import { useTranslation } from 'react-i18next';
 import addSeconds from 'date-fns/addSeconds';
 import format from 'date-fns/format';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
-import useInterval from '../../../../../hooks/useInterval';
-import snxJSConnector from '../../../../../utils/snxJSConnector';
-import { dispatchMarketNotification } from '../../../../../utils/options';
 import { RoyaleTooltip } from '../../../Market/components';
-import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
-import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
+import useInterval from 'hooks/useInterval';
+import snxJSConnector from 'utils/snxJSConnector';
+import { dispatchMarketNotification } from 'utils/options';
+import { FlexDiv, FlexDivCentered, Wrapper } from 'theme/common';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../../redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import useRoundsQuery from '../../Queries/useRoundsQuery';
 import { BigNumber } from 'ethers';
-import winnerCard from '../../../../../assets/images/royale/winner-card.svg';
-import winnerCardS2 from '../../../../../assets/images/royale/winner-card-s2.svg';
-import winnerCardS3 from '../../../../../assets/images/royale/winner-card-s3.svg';
-import winnerCardS4 from '../../../../../assets/images/royale/winner-card-s4.svg';
+import winnerCard from 'assets/images/royale/winner-card.svg';
+import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
+import winnerCardS3 from 'assets/images/royale/winner-card-s3.svg';
+import winnerCardS4 from 'assets/images/royale/winner-card-s4.svg';
 import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
-import { getIsAppReady } from '../../../../../redux/modules/app';
-import { getIsOVM } from '../../../../../utils/network';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsOVM } from 'utils/network';
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 
 type RoyaleArenaProps = {
-    ethPrice: string;
+    assetPrice: string;
     positions: Positions;
     royaleFooterData: FooterData | undefined;
     latestSeason: number;
@@ -124,7 +124,11 @@ const renderRounds = (
                       </div>
                       <div style={{ marginTop: '10px' }}>
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
-                          <CurrentRoundText>{`$${Number(targetPrice).toFixed(2)}`}</CurrentRoundText>
+                          <CurrentRoundText>
+                              {token !== 'ETH'
+                                  ? `$${Number(targetPrice).toFixed(4)}`
+                                  : `$${Number(targetPrice).toFixed(2)}`}
+                          </CurrentRoundText>
                       </div>
                       <div style={{ marginBottom: '10px' }}>
                           <CurrentRoundTitle>{t('options.royale.battle.in')}</CurrentRoundTitle>
@@ -164,17 +168,21 @@ const renderRounds = (
                           <RoundText style={{ textDecoration: 'line-through' }}>{index}</RoundText>
                       </div>
                       <div style={{ textDecoration: 'line-through' }}>
-                          <CurrentRoundTitle>{`${token} ${t('options.royale.battle.will-be')}`}</CurrentRoundTitle>
-                          <CurrentRoundText>{`$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(
-                              2
-                          )}`}</CurrentRoundText>
+                          <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
+                          <CurrentRoundText>
+                              {token !== 'ETH'
+                                  ? `$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(4)}`
+                                  : `$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(2)}`}
+                          </CurrentRoundText>
                       </div>
                       <RoundHistoryInfo>
                           <FlexDiv>
                               <PrevRoundTitle>{`${token} ${t('options.royale.battle.was')}`}</PrevRoundTitle>
-                              <PrevRoundText>{`$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(
-                                  2
-                              )}`}</PrevRoundText>
+                              <PrevRoundText>
+                                  {token !== 'ETH'
+                                      ? `$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(4)}`
+                                      : `$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(2)}`}
+                              </PrevRoundText>
                           </FlexDiv>
                           <FlexDiv>
                               <PrevRoundTitle>{`${t('options.royale.battle.eliminated')}`}</PrevRoundTitle>
@@ -224,7 +232,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     showBattle,
     selectedSeason,
     latestSeason,
-    ethPrice,
+    assetPrice,
     positions,
     royaleFooterData,
 }) => {
@@ -376,9 +384,15 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                     </div>
                     <div>
                         <span>
-                            {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                            {t('options.royale.footer.current')} {royaleFooterData?.seasonAsset}{' '}
+                            {t('options.royale.footer.price')}:
                         </span>
-                        <span>${Number(ethPrice).toFixed(2)}</span>
+                        <span>
+                            $
+                            {royaleFooterData?.seasonAsset !== 'ETH'
+                                ? Number(assetPrice).toFixed(4)
+                                : Number(assetPrice).toFixed(2)}
+                        </span>
                     </div>
                     <div>
                         <span>{t('options.royale.footer.reward-per-player')}:</span>

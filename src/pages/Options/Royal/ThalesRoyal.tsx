@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import { useSelector } from 'react-redux';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Wrapper } from 'theme/common';
@@ -19,6 +19,7 @@ import { getIsAppReady } from '../../../redux/modules/app';
 import useRoyaleFooterQuery, { FooterData } from './V2/components/queries/useRoyaleFooterQuery';
 import useEthPriceQuery from './Queries/useEthPriceQuery';
 import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
+import useSnxPriceQuery from './Queries/useSnxPriceQuery';
 
 export enum Theme {
     Light,
@@ -28,7 +29,7 @@ export enum Theme {
 const cookies = new Cookies();
 
 const ThalesRoyal: React.FC = () => {
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -39,12 +40,16 @@ const ThalesRoyal: React.FC = () => {
     const [selectedSeason, setSelectedSeason] = useState(0);
     const [royaleFooterData, setRoyaleStatsData] = useState<FooterData>();
     const [ethPrice, setEthPrice] = useState<string>('');
+    const [snxPrice, setSnxPrice] = useState<string>('');
+    const [assetPrice, setAssetPrice] = useState<string>('');
+
     const [positions, setPositions] = useState<Positions>({ up: 0, down: 0 });
 
     const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
 
     const royaleFooterQuery = useRoyaleFooterQuery(selectedSeason, { enabled: isAppReady });
     const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
+    const snxPriceQuery = useSnxPriceQuery({ enabled: isAppReady });
     const positionsQuery = usePositionsQuery(0, networkId, {
         enabled: networkId !== undefined && isAppReady,
     });
@@ -67,6 +72,12 @@ const ThalesRoyal: React.FC = () => {
     }, [ethPriceQuery.isSuccess, ethPriceQuery.data]);
 
     useEffect(() => {
+        if (snxPriceQuery.isSuccess) {
+            setSnxPrice(snxPriceQuery.data);
+        }
+    }, [snxPriceQuery.isSuccess, snxPriceQuery.data]);
+
+    useEffect(() => {
         if (royaleFooterQuery.isSuccess) {
             setRoyaleStatsData(royaleFooterQuery.data);
         }
@@ -83,6 +94,12 @@ const ThalesRoyal: React.FC = () => {
     }, [latestSeasonQuery.isSuccess, latestSeasonQuery.data]);
 
     useEffect(() => {
+        if (royaleFooterQuery.isSuccess) {
+            royaleFooterQuery.data.seasonAsset === 'ETH' ? setAssetPrice(ethPrice) : setAssetPrice(snxPrice);
+        }
+    }, [ethPrice, snxPrice, royaleFooterQuery.isSuccess, royaleFooterQuery.data]);
+
+    useEffect(() => {
         const selectedPageParameter = queryString.parse(location.search).page;
 
         if (!selectedPageParameter) {
@@ -94,19 +111,19 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
+            !isWalletConnected ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
         }, 2500);
 
         return () => clearTimeout(timeout);
-    }, [walletAddress]);
+    }, [isWalletConnected]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            walletAddress && !isL2 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
+            isWalletConnected && !isL2 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
         }, 2000);
 
         return () => clearTimeout(timeout);
-    }, [networkId, walletAddress]);
+    }, [networkId, isWalletConnected]);
 
     useEffect(() => {
         const body = document.getElementsByTagName('body')[0];
@@ -139,7 +156,7 @@ const ThalesRoyal: React.FC = () => {
                     setTheme={setTheme}
                 />
                 <ScoreboardPage
-                    ethPrice={ethPrice}
+                    assetPrice={assetPrice}
                     positions={positions}
                     royaleFooterData={royaleFooterData}
                     selectedSeason={selectedSeason}
@@ -147,7 +164,7 @@ const ThalesRoyal: React.FC = () => {
                     latestSeason={latestSeason}
                 />
                 <RoyaleArena
-                    ethPrice={ethPrice}
+                    assetPrice={assetPrice}
                     positions={positions}
                     royaleFooterData={royaleFooterData}
                     latestSeason={latestSeason}
@@ -155,7 +172,7 @@ const ThalesRoyal: React.FC = () => {
                     showBattle={selectedPage === 'royale'}
                 />
                 <FooterV2
-                    ethPrice={ethPrice}
+                    assetPrice={assetPrice}
                     positions={positions}
                     royaleData={royaleFooterData}
                     latestSeason={latestSeason}
@@ -191,6 +208,16 @@ export const RoyaleBackground = styled(Background)`
     }
     .wrapper--showScoreboard {
         .battle {
+            display: none;
+        }
+    }
+    @media (max-width: 1024px) {
+        overflow-y: auto;
+        max-height: 100vh;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
             display: none;
         }
     }

@@ -25,8 +25,6 @@ import lpl2ActiveIcon from '../../../assets/images/lp-l2-active.svg';
 import lpl2Icon from '../../../assets/images/lp-l2.svg';
 import migrationActiveIcon from '../../../assets/images/migration-active.svg';
 import migrationIcon from '../../../assets/images/migration.svg';
-import migratedRewardsActiveIcon from '../../../assets/images/migrated-rewards-active.svg';
-import migratedRewardsIcon from '../../../assets/images/migrated-rewards.svg';
 import Loader from '../../../components/Loader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
@@ -34,7 +32,6 @@ import { getNetworkId } from '../../../redux/modules/wallet';
 import { getIsOVM, isNetworkSupported } from '../../../utils/network';
 import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
-import MigratedRewards from './MigratedRewards';
 import Notice from './components/Notice';
 import { MigrateButton, MigrateText } from './components/MigrationNotice/MigrationNotice';
 
@@ -67,11 +64,6 @@ const EarnPage: React.FC = () => {
         tabs.push({
             id: 'lp-staking',
             name: t('options.earn.lp-staking.tab-title'),
-            disabled: false,
-        });
-        tabs.push({
-            id: 'migrated-rewards',
-            name: t('migration.migrated-rewards-title'),
             disabled: false,
         });
     } else {
@@ -157,7 +149,7 @@ const EarnPage: React.FC = () => {
                                             isActive={tab.id === selectedTab}
                                             key={index}
                                             index={index}
-                                            showFourTabs={false}
+                                            showFourTabs={isL2}
                                             onClick={() => {
                                                 if (tab.disabled) return;
                                                 history.push({
@@ -187,7 +179,6 @@ const EarnPage: React.FC = () => {
                                         {selectedTab === 'vesting' && <Vesting />}
                                         {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
                                         {selectedTab === 'migration' && !isL2 && <Migration />}
-                                        {selectedTab === 'migrated-rewards' && isL2 && <MigratedRewards />}
                                     </InnerWidgetsContainer>
                                 </WidgetsContainer>
                             </MainContentContainer>
@@ -272,24 +263,6 @@ const EarnPage: React.FC = () => {
                                     setSelectedTab('migration');
                                 }}
                                 src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
-                            />
-                        )}
-                        {isL2 && (
-                            <Icon
-                                width={50}
-                                height={40}
-                                onClick={() => {
-                                    history.push({
-                                        pathname: location.pathname,
-                                        search: queryString.stringify({
-                                            tab: 'migrated-rewards',
-                                        }),
-                                    });
-                                    setSelectedTab('migrated-rewards');
-                                }}
-                                src={
-                                    selectedTab === 'migrated-rewards' ? migratedRewardsActiveIcon : migratedRewardsIcon
-                                }
                             />
                         )}
                     </NavFooter>

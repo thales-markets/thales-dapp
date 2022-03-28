@@ -27,7 +27,6 @@ import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
 import TradeHistory from 'pages/Options/TradeHistory';
-import AmmMining from 'pages/Options/AmmMining';
 import AmmReporting from '../Options/AmmReporting';
 import Token from '../V2/articles/Token';
 import Governance from '../V2/articles/Governance';
@@ -205,14 +204,6 @@ const App = () => {
                                 <TradeHistory />
                             </MainLayout>
                         </Route>
-
-                        {isL2 && (
-                            <Route exact path={ROUTES.Options.AmmMining}>
-                                <MainLayout>
-                                    <AmmMining />
-                                </MainLayout>
-                            </Route>
-                        )}
 
                         <Route exact path={ROUTES.Options.AmmReporting}>
                             <MainLayout>

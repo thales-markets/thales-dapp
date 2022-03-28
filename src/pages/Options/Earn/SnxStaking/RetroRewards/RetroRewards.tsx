@@ -311,8 +311,8 @@ const RetroRewards: React.FC = () => {
 };
 
 const RetroRewardsSection = styled(EarnSection)`
-    grid-column: span 6;
-    min-height: 533px;
+    grid-column: span 10;
+    min-height: 300px;
     @media (max-width: 767px) {
         min-height: 200px;
     }

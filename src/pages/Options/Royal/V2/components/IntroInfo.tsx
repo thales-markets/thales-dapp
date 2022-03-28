@@ -16,7 +16,7 @@ import { startRoyale, startRoyaleSeason } from '../../getThalesRoyalData';
 import { Text } from 'theme/common';
 import useLatestRoyaleSeasonInfo from './queries/useLastRoyaleSeasonInfo';
 import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
@@ -26,6 +26,7 @@ export const Intro: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const queryForIntro = useLatestRoyaleSeasonInfo({ enabled: isL2 && isAppReady });
     const data = queryForIntro.isSuccess ? queryForIntro.data : undefined;
@@ -114,8 +115,8 @@ export const Intro: React.FC = () => {
                         <Title>{t('options.royale.scoreboard.starts')}</Title>
                         <Button
                             onClick={startRoyaleSeason}
-                            disabled={!data.canStartNewSeason}
-                            className={!data.canStartNewSeason ? 'disabled' : ''}
+                            disabled={!data.canStartNewSeason || !isWalletConnected}
+                            className={!data.canStartNewSeason || !isWalletConnected ? 'disabled' : ''}
                             style={{
                                 margin: '30px auto',
                                 fontSize: 30,
@@ -135,8 +136,8 @@ export const Intro: React.FC = () => {
                     <Title>{t('options.royale.scoreboard.starts')}</Title>
                     <Button
                         onClick={startRoyaleSeason}
-                        disabled={!data.canStartNewSeason}
-                        className={!data.canStartNewSeason ? 'disabled' : ''}
+                        disabled={!data.canStartNewSeason || !isWalletConnected}
+                        className={!data.canStartNewSeason || !isWalletConnected ? 'disabled' : ''}
                         style={{
                             margin: '30px auto',
                             fontSize: 30,
@@ -157,8 +158,8 @@ export const Intro: React.FC = () => {
                             <Title>{t('options.royale.scoreboard.starts')}</Title>
                             <Button
                                 onClick={startRoyale}
-                                disabled={!data.canStartRoyale}
-                                className={!data.canStartRoyale ? 'disabled' : ''}
+                                disabled={!data.canStartRoyale || !isWalletConnected}
+                                className={!data.canStartRoyale || !isWalletConnected ? 'disabled' : ''}
                                 style={{
                                     margin: '30px auto',
                                     fontSize: 30,

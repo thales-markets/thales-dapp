@@ -60,7 +60,7 @@ const getFromContract = async (
         RoyaleContract.seasonFinished(season),
         RoyaleContract.rewardCollectedPerSeason(season, address),
         RoyaleContract.rounds(),
-        RoyaleContract.oracleKey(),
+        RoyaleContract.oracleKeyPerSeason(season),
         RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
         RoyaleContract.positionInARoundPerSeason(season, address, roundInASeason),
     ]);
