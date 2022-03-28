@@ -73,8 +73,8 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
     const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected && isAppReady });
     const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
-    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, walletAddress, {
-        enabled: isL2 && isAppReady && isWalletConnected,
+    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, {
+        enabled: isL2 && isAppReady,
     });
     const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
@@ -250,6 +250,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                 {showSelectDropdown &&
                                     allSeasons
                                         .filter((number) => number !== selectedSeason)
+                                        .sort((a, b) => b - a)
                                         .map((option: number, key: number) => (
                                             <Text
                                                 onClick={() => {
@@ -293,7 +294,14 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                             </HeaderButton>
                         )}
                         {walletAddress && (
-                            <HeaderButton onClick={() => setOpenUserInfo(true)}>
+                            <HeaderButton
+                                onClick={() => {
+                                    setOpenUserInfo(true);
+                                    setShowBurgerMenu(
+                                        showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show
+                                    );
+                                }}
+                            >
                                 <UserAvatar className="icon icon--user-avatar" />
                                 <UserText>{truncateAddress(walletAddress as any, 5, 5)}</UserText>
                                 <UserText> {balance} Eth </UserText>
@@ -508,7 +516,7 @@ const BurgerMenu = styled.div`
     right: -20px;
     background: var(--color-background);
     padding: 15px;
-    z-index: 5;
+    z-index: 1002;
     @media (max-width: 1024px) {
         left: 0;
         right: 0;
@@ -540,7 +548,7 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     cursor: pointer;
     text-align: center;
     background: var(--color-wrapper);
-    z-index: 9999;
+    z-index: 1002;
     p:first-child {
         font-weight: bold;
         font-size: 20px;
@@ -564,7 +572,7 @@ const Overlay = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 4;
+    z-index: 1001;
 `;
 
 const Button = styled.button`

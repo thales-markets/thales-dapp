@@ -96,7 +96,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
     const getModalContent = () => (
         <ApprovalModalContainer isRoyale={isRoyale}>
             <ModalHeader>
-                <ApprovalModalTitle isRoyale={isRoyale}>
+                <ApprovalModalTitle isRoyale={isRoyale} isMobile={window.innerWidth < 510}>
                     {t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })}
                 </ApprovalModalTitle>
                 <FlexDivRow>
@@ -178,11 +178,14 @@ const StyledRoyaleModal = withStyles(() => ({
     },
 }))(Dialog);
 
-const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean }>`
+const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean; isMobile?: boolean }>`
     flex: 1 0 100%;
     justify-content: center;
     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    @media (max-width: 512px) {
+        flex: 1 0 85%;
+    }
 `;
 
 const ApprovalModalContainer = styled(ModalContainer)<{ isRoyale?: boolean }>`
@@ -203,6 +206,7 @@ const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
+    margin-left: ${(props) => (props.isRoyale ? '20px' : '')};
     border-radius: ${(props) => (props.isRoyale ? '30px' : '')};
     height: ${(props) => (props.isRoyale ? '43px' : '60px')};
     padding-top: ${(props) => (props.isRoyale ? '2px' : '0px')};
@@ -226,7 +230,6 @@ const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     border-radius: ${(props) => (props.isRoyale ? '20px' : '')};
-    // box-shadow: ${(props) => (props.isRoyale ? '0px 0px 30px var(--color-wrapper)' : '')};
     &:hover:not(:disabled) {
         background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
     }

@@ -7,7 +7,7 @@ import { FooterData } from './queries/useRoyaleFooterQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
 
 type Properties = {
-    ethPrice: string;
+    assetPrice: string;
     positions: Positions;
     royaleFooterData: FooterData | undefined;
     selectedSeason: number;
@@ -16,7 +16,7 @@ type Properties = {
 };
 
 export const ScoreboardPage: React.FC<Properties> = ({
-    ethPrice,
+    assetPrice,
     positions,
     royaleFooterData,
     latestSeason,
@@ -29,7 +29,7 @@ export const ScoreboardPage: React.FC<Properties> = ({
             <div style={{ maxWidth: '100%', padding: '5px' }}>
                 <Intro />
                 <UserCard
-                    ethPrice={ethPrice}
+                    assetPrice={assetPrice}
                     positions={positions}
                     royaleFooterData={royaleFooterData}
                     selectedSeason={selectedSeason === 0 ? latestSeason : selectedSeason}

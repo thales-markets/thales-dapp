@@ -1114,10 +1114,11 @@
                 "royale": "鱿鱼游戏",
                 "scoreboard": "积分榜",
                 "stats": "数据",
-                "price-source": "来源：Optimism Chainlink的ETH报价",
+                "price-source": "来源：Optimism Chainlink的{{token}}报价",
                 "current-reward-per-winner": "每位获胜者的奖励",
                 "season-finished": "第 {{season}} 季结束",
-                "select-position": "请选择第一轮的默认位置"
+                "select-position": "请选择第一轮的默认位置",
+                "season-token": "赛季代币：{{token}}"
             },
             "battle": {
                 "round": "轮次",

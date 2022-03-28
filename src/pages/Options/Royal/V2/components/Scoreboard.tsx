@@ -166,180 +166,194 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
         }
     };
 
-    return (
-        <TableWrapper>
-            <TableRow
-                style={{
-                    justifyContent: 'flex-end',
-                    position: 'relative',
-                    marginTop: window.innerWidth < 768 ? '5%' : '5',
-                }}
-            >
-                <SearchWrapper
-                    onChange={(e) => setSearchString(e.target.value)}
-                    value={searchString}
-                    placeholder={t('options.royale.scoreboard.search')}
-                />
-                <SearchIcon className="icon icon--search" />
-            </TableRow>
+    if (selectedSeason && royaleData) {
+        return (
+            <TableWrapper>
+                <TableRow
+                    style={{
+                        justifyContent: 'flex-end',
+                        position: 'relative',
+                        marginTop: window.innerWidth < 768 ? '5%' : '5',
+                    }}
+                >
+                    <SearchWrapper
+                        onChange={(e) => setSearchString(e.target.value)}
+                        value={searchString}
+                        placeholder={t('options.royale.scoreboard.search')}
+                    />
+                    <SearchIcon className="icon icon--search" />
+                </TableRow>
 
-            <TableRow>
-                {HeadCells.map((cell, key) => (
-                    <HeadCellUi
-                        style={{ cursor: cell.sortable ? 'pointer' : 'arrow' }}
-                        onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                        key={key}
-                    >
-                        {cell.text}{' '}
-                        {cell.sortable && (
-                            <ArrowsWrapper>
-                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
-                                    <Arrow
-                                        className={`icon ${
-                                            orderDirection === OrderDirection.DESC
-                                                ? 'icon--arrow-down'
-                                                : 'icon--arrow-up'
-                                        }`}
-                                    />
-                                ) : (
-                                    <>
-                                        <Arrow className="icon icon--double-arrow" />
-                                    </>
-                                )}
-                            </ArrowsWrapper>
-                        )}
-                    </HeadCellUi>
-                ))}
-            </TableRow>
-            {!royaleData?.seasonStarted ? (
-                <NoUsers>
-                    <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>{' '}
-                    {t('options.royale.scoreboard.season-not-started')}
-                </NoUsers>
-            ) : royaleData?.seasonStarted && users.length <= 0 ? (
-                <NoUsers>{t('options.royale.scoreboard.no-users')}</NoUsers>
-            ) : usersForUi ? (
-                usersForUi.usersToDisplay.map((user: User, key: number) => {
-                    const lastRoundInSeason = royaleData?.round;
-
-                    const isUserAWinner =
-                        (user.isAlive && royaleData?.seasonFinished) ||
-                        (Number(user.deathRound) === Number(lastRoundInSeason) && royaleData?.seasonFinished);
-
-                    return (
-                        <TableRow
+                <TableRow>
+                    {HeadCells.map((cell, key) => (
+                        <HeadCellUi
+                            style={{ cursor: cell.sortable ? 'pointer' : 'arrow' }}
+                            onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
                             key={key}
-                            className={user.isAlive || isUserAWinner ? 'alive' : 'dead'}
-                            style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
                         >
-                            <HeadCellUi winner={isUserAWinner}>
-                                <Status>
-                                    <StatusAvatar
-                                        winner={isUserAWinner}
-                                        className={
-                                            user.isAlive || isUserAWinner ? 'icon icon--alive' : 'icon icon--dead'
-                                        }
-                                    />
-                                    <span>
-                                        {user.isAlive || isUserAWinner
-                                            ? royaleData?.seasonFinished
-                                                ? t('options.royale.scoreboard.winner')
-                                                : t('options.royale.scoreboard.alive')
-                                            : t('options.royale.scoreboard.dead')}
-                                    </span>
-                                    <span>
-                                        {!user.isAlive ? t('options.royale.footer.rd') + ': ' + user.deathRound : ''}
-                                    </span>
-                                </Status>
-                            </HeadCellUi>
-                            <HeadCellUi winner={isUserAWinner}>{getAvatar(user, royaleData)}</HeadCellUi>
-                            <HeadCellUi
-                                winner={isUserAWinner}
-                                style={{
-                                    marginRight: 6,
-                                    textDecoration: '',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                }}
+                            {cell.text}{' '}
+                            {cell.sortable && (
+                                <ArrowsWrapper>
+                                    {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                        <Arrow
+                                            className={`icon ${
+                                                orderDirection === OrderDirection.DESC
+                                                    ? 'icon--arrow-down'
+                                                    : 'icon--arrow-up'
+                                            }`}
+                                        />
+                                    ) : (
+                                        <>
+                                            <Arrow className="icon icon--double-arrow" />
+                                        </>
+                                    )}
+                                </ArrowsWrapper>
+                            )}
+                        </HeadCellUi>
+                    ))}
+                </TableRow>
+                {!royaleData?.seasonStarted ? (
+                    <NoUsers>
+                        <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>{' '}
+                        {t('options.royale.scoreboard.season-not-started')}
+                    </NoUsers>
+                ) : royaleData?.seasonStarted && users.length <= 0 ? (
+                    <NoUsers>{t('options.royale.scoreboard.no-users')}</NoUsers>
+                ) : usersForUi ? (
+                    usersForUi.usersToDisplay.map((user: User, key: number) => {
+                        const lastRoundInSeason = royaleData?.round;
+
+                        const isUserAWinner =
+                            (user.isAlive && royaleData?.seasonFinished) ||
+                            (Number(user.deathRound) === Number(lastRoundInSeason) && royaleData?.seasonFinished);
+
+                        return (
+                            <TableRow
+                                key={key}
+                                className={user.isAlive || isUserAWinner ? 'alive' : 'dead'}
+                                style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
                             >
-                                {user.name}
-                            </HeadCellUi>
-                            <HeadCellUi winner={isUserAWinner} style={{ marginLeft: 6 }}>
-                                #{user.number}
-                            </HeadCellUi>
-                        </TableRow>
-                    );
-                })
-            ) : (
-                <LoaderContainer style={{ top: 'calc(50% + 30px)' }}>
+                                <HeadCellUi winner={isUserAWinner}>
+                                    <Status>
+                                        <StatusAvatar
+                                            winner={isUserAWinner}
+                                            className={
+                                                user.isAlive || isUserAWinner ? 'icon icon--alive' : 'icon icon--dead'
+                                            }
+                                        />
+                                        <span>
+                                            {user.isAlive || isUserAWinner
+                                                ? royaleData?.seasonFinished
+                                                    ? t('options.royale.scoreboard.winner')
+                                                    : t('options.royale.scoreboard.alive')
+                                                : t('options.royale.scoreboard.dead')}
+                                        </span>
+                                        <span>
+                                            {!user.isAlive
+                                                ? t('options.royale.footer.rd') + ': ' + user.deathRound
+                                                : ''}
+                                        </span>
+                                    </Status>
+                                </HeadCellUi>
+                                <HeadCellUi winner={isUserAWinner}>{getAvatar(user, royaleData)}</HeadCellUi>
+                                <HeadCellUi
+                                    winner={isUserAWinner}
+                                    style={{
+                                        marginRight: 6,
+                                        textDecoration: '',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                    }}
+                                >
+                                    {user.name}
+                                </HeadCellUi>
+                                <HeadCellUi winner={isUserAWinner} style={{ marginLeft: 6 }}>
+                                    #{user.number}
+                                </HeadCellUi>
+                            </TableRow>
+                        );
+                    })
+                ) : (
+                    <LoaderContainer style={{ top: 'calc(50% + 30px)' }}>
+                        <SimpleLoader />
+                    </LoaderContainer>
+                )}
+
+                {usersForUi?.usersToDisplay ? (
+                    <Pagination>
+                        <PaginationIcon
+                            className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
+                            onClick={() => {
+                                if (page <= 1) return;
+                                setPage(1);
+                            }}
+                        />
+                        <PaginationIcon
+                            className={`icon icon--left ${page <= 1 ? 'disabled' : ''}`}
+                            onClick={() => {
+                                if (page <= 1) return;
+                                setPage(page - 1);
+                            }}
+                        />
+                        <Text className="max-pages">
+                            {page}/{usersForUi?.maxPages}
+                        </Text>
+                        <PaginationIcon
+                            className={`icon icon--right ${
+                                usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
+                            }`}
+                            onClick={() => {
+                                if (usersForUi && usersForUi.maxPages === page) return;
+                                setPage(page + 1);
+                            }}
+                        />
+                        <PaginationIcon
+                            className={`icon icon--double-right ${
+                                usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
+                            }`}
+                            onClick={() => {
+                                if (usersForUi && usersForUi.maxPages === page) return;
+                                setPage(usersForUi.maxPages);
+                            }}
+                        />
+
+                        <PaginationUsers>
+                            <Text onClick={setShowDropdown.bind(this, true)}>{showPerPage}</Text>
+                            {showDropdown &&
+                                PerPageOption.filter((number) => number !== showPerPage).map(
+                                    (option: number, key: number) => (
+                                        <Text
+                                            onClick={() => {
+                                                setShowPerPage(option);
+                                                setShowDropdown(false);
+                                                setPage(1);
+                                            }}
+                                            key={key}
+                                        >
+                                            {option}
+                                        </Text>
+                                    )
+                                )}
+                        </PaginationUsers>
+                        <UsersPerPageText top={selectedLanguage === SupportedLanguages.RUSSIAN ? -3 : 12}>
+                            {t('options.royale.scoreboard.users-per-page')}
+                        </UsersPerPageText>
+                        {showDropdown && <Overlay onClick={() => setShowDropdown(false)} />}
+                    </Pagination>
+                ) : (
+                    ''
+                )}
+            </TableWrapper>
+        );
+    } else {
+        return (
+            <TableWrapper>
+                <LoaderContainer style={{ top: 'calc(50% + 30px)', left: '50%' }}>
                     <SimpleLoader />
                 </LoaderContainer>
-            )}
-
-            {usersForUi?.usersToDisplay ? (
-                <Pagination>
-                    <PaginationIcon
-                        className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
-                        onClick={() => {
-                            if (page <= 1) return;
-                            setPage(1);
-                        }}
-                    />
-                    <PaginationIcon
-                        className={`icon icon--left ${page <= 1 ? 'disabled' : ''}`}
-                        onClick={() => {
-                            if (page <= 1) return;
-                            setPage(page - 1);
-                        }}
-                    />
-                    <Text className="max-pages">
-                        {page}/{usersForUi?.maxPages}
-                    </Text>
-                    <PaginationIcon
-                        className={`icon icon--right ${usersForUi && usersForUi.maxPages === page ? 'disabled' : ''}`}
-                        onClick={() => {
-                            if (usersForUi && usersForUi.maxPages === page) return;
-                            setPage(page + 1);
-                        }}
-                    />
-                    <PaginationIcon
-                        className={`icon icon--double-right ${
-                            usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
-                        }`}
-                        onClick={() => {
-                            if (usersForUi && usersForUi.maxPages === page) return;
-                            setPage(usersForUi.maxPages);
-                        }}
-                    />
-
-                    <PaginationUsers>
-                        <Text onClick={setShowDropdown.bind(this, true)}>{showPerPage}</Text>
-                        {showDropdown &&
-                            PerPageOption.filter((number) => number !== showPerPage).map(
-                                (option: number, key: number) => (
-                                    <Text
-                                        onClick={() => {
-                                            setShowPerPage(option);
-                                            setShowDropdown(false);
-                                            setPage(1);
-                                        }}
-                                        key={key}
-                                    >
-                                        {option}
-                                    </Text>
-                                )
-                            )}
-                    </PaginationUsers>
-                    <UsersPerPageText top={selectedLanguage === SupportedLanguages.RUSSIAN ? -3 : 12}>
-                        {t('options.royale.scoreboard.users-per-page')}
-                    </UsersPerPageText>
-                    {showDropdown && <Overlay onClick={() => setShowDropdown(false)} />}
-                </Pagination>
-            ) : (
-                ''
-            )}
-        </TableWrapper>
-    );
+            </TableWrapper>
+        );
+    }
 };
 
 const getAvatar = (user: User, royaleData: any) => {

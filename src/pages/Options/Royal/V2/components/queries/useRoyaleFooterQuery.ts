@@ -1,6 +1,7 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
+import { parseBytes32String } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 
 export type FooterData = {
@@ -10,6 +11,7 @@ export type FooterData = {
     playersAlive: string;
     season: number;
     seasonFinished: boolean;
+    seasonAsset: any;
 };
 
 const useRoyaleFooterQuery = (selectedSeason: number, options?: UseQueryOptions<FooterData>) => {
@@ -29,11 +31,12 @@ const useRoyaleFooterQuery = (selectedSeason: number, options?: UseQueryOptions<
 const getFromContract = async (RoyaleContract: any, selectedSeason: number): Promise<FooterData> => {
     const seasonContract = Number(await RoyaleContract.season());
     const season = selectedSeason === seasonContract ? seasonContract : selectedSeason;
-    const [round, reward, rewardPerWinnerPerSeason, seasonFinished] = await Promise.all([
+    const [round, reward, rewardPerWinnerPerSeason, seasonFinished, seasonAsset] = await Promise.all([
         RoyaleContract.roundInASeason(season),
         RoyaleContract.rewardPerSeason(season === 0 ? 1 : season),
         RoyaleContract.rewardPerWinnerPerSeason(season === 0 ? 1 : season),
         RoyaleContract.seasonFinished(season),
+        RoyaleContract.oracleKeyPerSeason(season),
     ]);
 
     const totalPlayers = await RoyaleContract.signedUpPlayersCount(season);
@@ -44,7 +47,6 @@ const getFromContract = async (RoyaleContract: any, selectedSeason: number): Pro
 
     playersAlive = totalPlayersPerRoundPerSeason + '/' + totalPlayers;
     const numberOfPlayers = Number(totalPlayersPerRoundPerSeason) > 0 ? Number(totalPlayersPerRoundPerSeason) : 1;
-
     return {
         round: Number(round),
         reward:
@@ -55,6 +57,7 @@ const getFromContract = async (RoyaleContract: any, selectedSeason: number): Pro
         playersAlive,
         season,
         seasonFinished,
+        seasonAsset: parseBytes32String(seasonAsset),
     };
 };
 
