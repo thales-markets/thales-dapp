@@ -14,6 +14,7 @@ type ButtonProps = {
     hoverBorderEffect?: boolean;
     margin?: string;
     onClickHandler?: () => void;
+    fontSize?: string;
     disabled?: boolean;
     children?: any;
 };
@@ -32,6 +33,7 @@ const Button: React.FC<ButtonProps> = ({
     margin,
     onClickHandler,
     disabled,
+    fontSize,
     children,
 }) => {
     return (
@@ -49,6 +51,7 @@ const Button: React.FC<ButtonProps> = ({
             margin={margin}
             onClick={() => (onClickHandler ? onClickHandler() : '')}
             disabled={disabled}
+            fontSize={fontSize}
         >
             {children}
         </Wrapper>
@@ -68,6 +71,7 @@ const Wrapper = styled.button<{
     hoverBorderEffect?: boolean;
     margin?: string;
     disabled?: boolean;
+    fontSize?: string;
 }>`
     display: flex;
     text-transform: uppercase;
@@ -79,6 +83,7 @@ const Wrapper = styled.button<{
     border-radius: 30px;
     font-family: Roboto !important;
     font-weight: 700;
+    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
     cursor: pointer;
     color: ${(_props) =>
         _props?.active
