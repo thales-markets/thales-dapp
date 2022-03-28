@@ -10,6 +10,10 @@ type RangeSliderProps = {
     showFooter?: boolean;
     footerText?: string | Array<string>;
     showInFooterMinMax?: boolean;
+    container?: {
+        margin?: string;
+        padding?: string;
+    };
     onChangeEventHandler?: (value: number) => void;
     disabled?: boolean;
 };
@@ -22,6 +26,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     showFooter,
     footerText,
     showInFooterMinMax,
+    container,
     onChangeEventHandler,
     disabled,
 }) => {
@@ -32,7 +37,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     };
 
     return (
-        <Wrapper disabled={disabled}>
+        <Wrapper disabled={disabled} margin={container?.margin} padding={container?.padding}>
             <Container>
                 <Container.Slider
                     type="range"
