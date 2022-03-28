@@ -47,7 +47,6 @@ const getFromContract = async (RoyaleContract: any, selectedSeason: number): Pro
 
     playersAlive = totalPlayersPerRoundPerSeason + '/' + totalPlayers;
     const numberOfPlayers = Number(totalPlayersPerRoundPerSeason) > 0 ? Number(totalPlayersPerRoundPerSeason) : 1;
-    const tokenName = !parseBytes32String(seasonAsset) && season < 5 ? 'ETH' : parseBytes32String(seasonAsset);
     return {
         round: Number(round),
         reward:
@@ -58,7 +57,7 @@ const getFromContract = async (RoyaleContract: any, selectedSeason: number): Pro
         playersAlive,
         season,
         seasonFinished,
-        seasonAsset: tokenName,
+        seasonAsset: parseBytes32String(seasonAsset),
     };
 };
 
