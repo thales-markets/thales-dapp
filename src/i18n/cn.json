@@ -306,7 +306,8 @@
                 "price-difference": "差价",
                 "claimed": "声称",
                 "claim": "宣称",
-                "rip": "RIP"
+                "rip": "RIP",
+                "position-value": "位置值"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场"

@@ -306,7 +306,8 @@
                 "price-difference": "Разница в цене",
                 "claim": "ТРЕБОВАТЬ",
                 "rip": "РВАТЬ",
-                "claimed": "ЗАЯВЛЕН"
+                "claimed": "ЗАЯВЛЕН",
+                "position-value": "Значение позиции"
             },
             "market-creation": {
                 "explore-markets-button-label": "Познакомиться с рынками"
