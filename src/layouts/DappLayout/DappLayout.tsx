@@ -36,6 +36,7 @@ const Background = styled.section`
         --background: #f7f7f7;
         --icon-color: #04045a;
         --shadow: 0px 0px 50px rgba(4, 4, 90, 0.4);
+        --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
         --primary-color: #04045a;
         --input-border-color: #04045a;
         --table-border-color: #64d9fe;
@@ -60,6 +61,7 @@ const Background = styled.section`
         --background: #04045a;
         --icon-color: #f7f7f7;
         --shadow: 0px 0px 40px #64d9fe;
+        --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
         --primary-color: #f7f7f7;
         --input-border-color: #64d9fe;
         --table-border-color: rgba(100, 217, 254, 0.5);
