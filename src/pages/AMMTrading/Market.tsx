@@ -10,6 +10,7 @@ import TabContainer from './components/TabContainer';
 import AMM from './components/AMM';
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import OrderbookView from './components/OrderbookView';
+import Maturity from './components/Maturity';
 
 import { MarketProvider } from './contexts/MarketContext';
 
@@ -39,6 +40,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
     const [tradingType, setTradingType] = useState<TradingType>(TradingTypes[1].value as TradingType);
+    const [inMaturityPhase, setMaturityPhase] = useState<boolean>(false);
     const dispatch = useDispatch();
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
@@ -57,33 +59,49 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 navigateTo(buildHref(ROUTES.Options.Home));
             }
         };
+
         fetchMarketData();
     }, [marketQuery.isSuccess, marketAddress]);
 
+    useEffect(() => {
+        optionMarket?.phase == 'maturity' ? setMaturityPhase(true) : setMaturityPhase(false);
+    }, [optionMarket?.phase]);
+
     return optionMarket ? (
         <MarketProvider optionsMarket={optionMarket}>
-            <HeaderContainer>
-                <Switch
-                    active={tradingType == 'AMM'}
-                    width={'94px'}
-                    height={'32px'}
-                    dotSize={'22px'}
-                    label={{
-                        firstLabel: TradingTypes[0].value,
-                        secondLabel: TradingTypes[1].value,
-                        fontSize: '25px',
-                    }}
-                    shadow={true}
-                    dotBackground={'var(--amm-switch-circle)'}
-                    handleClick={() => (tradingType == 'AMM' ? setTradingType('Orderbook') : setTradingType('AMM'))}
-                />
-            </HeaderContainer>
+            {!inMaturityPhase && (
+                <HeaderContainer>
+                    <Switch
+                        active={tradingType == 'AMM'}
+                        width={'94px'}
+                        height={'32px'}
+                        dotSize={'22px'}
+                        label={{
+                            firstLabel: TradingTypes[0].value,
+                            secondLabel: TradingTypes[1].value,
+                            fontSize: '25px',
+                        }}
+                        shadow={true}
+                        dotBackground={'var(--amm-switch-circle)'}
+                        handleClick={() => (tradingType == 'AMM' ? setTradingType('Orderbook') : setTradingType('AMM'))}
+                    />
+                </HeaderContainer>
+            )}
             <RowCard />
             {tradingType == TradingTypes[0].value && <OrderbookView />}
             {tradingType == TradingTypes[1].value && (
                 <MainContainer>
-                    <AMM />
-                    <TabContainer />
+                    {inMaturityPhase ? (
+                        <>
+                            <Maturity />
+                            <TabContainer />
+                        </>
+                    ) : (
+                        <>
+                            <AMM />
+                            <TabContainer />
+                        </>
+                    )}
                 </MainContainer>
             )}
         </MarketProvider>
