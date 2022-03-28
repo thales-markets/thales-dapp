@@ -768,7 +768,8 @@
                         "progress-label": "正在进行的…",
                         "success-label": "无需行权",
                         "confirmation-message": "已成功执行选项"
-                    }
+                    },
+                    "exercise-options": "您可以行使以下选项"
                 }
             },
             "trade-options": {

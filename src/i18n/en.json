@@ -768,6 +768,7 @@
                 "maturity": {
                     "card-title": "Market has been closed",
                     "card-subtitle": "Options available:",
+                    "exercise-options": "You can exercise following options",
                     "payout-amount-label": "Payout amount",
                     "end-label": "Time left to exercise",
                     "confirm-button": {

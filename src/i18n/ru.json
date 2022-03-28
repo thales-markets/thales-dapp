@@ -768,7 +768,8 @@
                         "progress-label": "Исполнение в процессе...",
                         "success-label": "Нечего исполнять",
                         "confirmation-message": "Опционы успешно исполненны"
-                    }
+                    },
+                    "exercise-options": "Вы можете использовать следующие варианты"
                 }
             },
             "trade-options": {
