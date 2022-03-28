@@ -177,7 +177,9 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                 </Card.RowSubtitle>
                                             </Card.Section>
                                             <Card.Section>
-                                                <Card.RowTitle>Position Value</Card.RowTitle>
+                                                <Card.RowTitle>
+                                                    {t('options.home.market-card.position-value')}
+                                                </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatCurrencyWithSign(USD_SIGN, data.balances.value.toFixed(2))}
                                                 </Card.RowSubtitle>
@@ -284,6 +286,14 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                             className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
                                         ></Icon>
                                     </TableText>
+                                );
+                            },
+                        },
+                        {
+                            Header: t('options.home.market-card.position-value'),
+                            accessor: (row: any) => {
+                                return (
+                                    <TableText>{formatCurrencyWithSign(USD_SIGN, row?.balances?.value, 2)}</TableText>
                                 );
                             },
                         },

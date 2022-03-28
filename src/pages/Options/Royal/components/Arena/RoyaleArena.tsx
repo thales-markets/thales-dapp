@@ -10,8 +10,10 @@ import { useSelector } from 'react-redux';
 
 import useRoundsQuery from './queries/useRoundsQuery';
 import { BigNumber } from 'ethers';
-import winnerCard from 'assets/images/royale/winner-card.svg';
-import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
+import winnerCard from '../../../../../assets/images/royale/winner-card.svg';
+import winnerCardS2 from '../../../../../assets/images/royale/winner-card-s2.svg';
+import winnerCardS3 from '../../../../../assets/images/royale/winner-card-s3.svg';
+import winnerCardS4 from '../../../../../assets/images/royale/winner-card-s4.svg';
 import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
 
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
@@ -92,8 +94,12 @@ const renderRounds = (
                 return winnerCard;
             case 2:
                 return winnerCardS2;
+            case 3:
+                return winnerCardS3;
+            case 4:
+                return winnerCardS4;
             default:
-                return winnerCardS2;
+                return winnerCardS4;
         }
     };
 
