@@ -282,65 +282,59 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
     };
 
     const getSubmitButton = () => {
+        const defaultButtonProps = {
+            padding: '5px 35px',
+            active: true,
+            margin: '80px auto 0 auto',
+            hoverShadow: 'var(--button-shadow)',
+            fontSize: '20px',
+        };
+
         if (!isWalletConnected) {
             return (
-                <Button
-                    width="60%"
-                    hoverShadow={'var(--shadow)'}
-                    active={true}
-                    margin={'20px auto 0px auto'}
-                    onClickHandler={() => onboardConnector.connectWallet()}
-                >
+                <Button {...defaultButtonProps} onClickHandler={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
         }
         if (insufficientBalance) {
             return (
-                <Button width="60%" active={true} margin={'20px auto 0px auto'} disabled={true} padding={'5px 0px'}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-balance`)}
                 </Button>
             );
         }
         if (!isAmountEntered) {
             return (
-                <Button width="60%" active={true} margin={'20px auto 0px auto'} disabled={true} padding={'5px 0px'}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.enter-amount`)}
                 </Button>
             );
         }
         if (!isPriceEntered) {
             return (
-                <Button width="60%" active={true} margin={'20px auto 0px auto'} disabled={true} padding={'5px 0px'}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.enter-price`)}
                 </Button>
             );
         }
         if (isPriceEntered && !isPriceValid) {
             return (
-                <Button width="60%" active={true} margin={'20px auto 0px auto'} disabled={true} padding={'5px 0px'}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.invalid-price`)}
                 </Button>
             );
         }
         if (!isExpirationEntered) {
             return (
-                <Button width="60%" active={true} margin={'20px auto 0px auto'} disabled={true} padding={'5px 0px'}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.enter-expiration`)}
                 </Button>
             );
         }
         if (!hasAllowance) {
             return (
-                <Button
-                    active={true}
-                    width="60%"
-                    hoverShadow={isAllowing ? 'var(--shadow)' : undefined}
-                    padding={'5px 0px'}
-                    disabled={isAllowing}
-                    onClickHandler={() => setOpenApprovalModal(true)}
-                    margin={'20px auto 0px auto'}
-                >
+                <Button {...defaultButtonProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: makerTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -350,15 +344,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
             );
         }
         return (
-            <Button
-                active={true}
-                width="60%"
-                hoverShadow={isButtonDisabled ? 'var(--shadow)' : undefined}
-                disabled={isButtonDisabled}
-                padding={'5px 0px'}
-                margin={'20px auto 0px auto'}
-                onClickHandler={handleSubmitOrder}
-            >
+            <Button {...defaultButtonProps} disabled={isButtonDisabled} onClickHandler={handleSubmitOrder}>
                 {!isSubmitting
                     ? t(`options.market.trade-options.place-order.confirm-button.label`)
                     : t(`options.market.trade-options.place-order.confirm-button.progress-label`)}
@@ -434,6 +420,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                 min={0}
                 step={0.01}
                 max={1}
+                container={{ margin: '0 0 8px 0' }}
                 defaultValue={Number(price)}
                 onChangeEventHandler={(value) => {
                     setIsPriceValid(Number(value) <= 1);
@@ -452,6 +439,17 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                 valueEditDisable={isSubmitting}
                 borderColor={!isAmountValid ? UI_COLORS.RED : ''}
             />
+            <FlexDivCentered style={{ margin: '4px 0 11px 0' }}>
+                {AMOUNT_PERCENTAGE.map((percentage: number) => (
+                    <Fixed
+                        key={percentage}
+                        onClick={() => calculateAmount(percentage)}
+                        active={percentage == selectedPercentage}
+                    >
+                        {`${percentage}%`}
+                    </Fixed>
+                ))}
+            </FlexDivCentered>
             <Select
                 title={{ text: t('options.market.trade-options.place-order.expiration-label') }}
                 value={{ text: expiration }}
@@ -470,18 +468,10 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                     onChange: (option: any) => setExpirationCallback(option),
                     onCustomChange: (value: string | number) => setCustomHoursExpirationCallback(value),
                 }}
+                container={{
+                    margin: '0 0 8px 0',
+                }}
             />
-            <FlexDivCentered style={{ margin: '11px 0px' }}>
-                {AMOUNT_PERCENTAGE.map((percentage: number) => (
-                    <Fixed
-                        key={percentage}
-                        onClick={() => calculateAmount(percentage)}
-                        active={percentage == selectedPercentage}
-                    >
-                        {`${percentage}%`}
-                    </Fixed>
-                ))}
-            </FlexDivCentered>
             <Input
                 title={t('options.market.trade-options.place-order.total-label-susd')}
                 value={formatCurrency(Number(price) * Number(amount))}

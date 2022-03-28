@@ -62,7 +62,9 @@ const Select: React.FC<SelectPropsType> = ({ title, value, tooltip, container, o
         ? selectedOption.label
         : value?.text === OrderPeriod.CUSTOM
         ? Number(options?.customValue) > 0
-            ? `${options?.customValue} hours`
+            ? Number(options?.customValue) > 1
+                ? `${options?.customValue} ${t('options.common.time-remaining.hours')}`
+                : `${options?.customValue} ${t('options.common.time-remaining.hour')}`
             : options?.customValue
         : '';
 
@@ -109,7 +111,13 @@ const Select: React.FC<SelectPropsType> = ({ title, value, tooltip, container, o
                                     }}
                                     placeholder={t('modals.gwei.placeholder')}
                                 />
-                                <CustomInputLabel>{'hours'}</CustomInputLabel>
+                                <CustomInputLabel>
+                                    {options?.customValue
+                                        ? options.customValue > 1
+                                            ? t('options.common.time-remaining.hours')
+                                            : t('options.common.time-remaining.hour')
+                                        : t('options.common.time-remaining.hour')}
+                                </CustomInputLabel>
                             </CustomInputContainer>
                         )}
                         <ItemContainer>
@@ -177,7 +185,7 @@ const ItemContainer = styled.div`
 const Item = styled.span<{ active?: boolean }>`
     cursor: pointer;
     padding: 6px 22px;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 500;
     font-size: 12px;
     border-radius: 30px;
@@ -202,7 +210,7 @@ const CustomInputContainer = styled.div`
 `;
 
 const CustomInput = styled.input`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 600;
     color: var(--primary-color);
     font-size: 15px;
@@ -217,18 +225,19 @@ const CustomInput = styled.input`
 `;
 
 const CustomInputLabel = styled.span`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 600;
     color: var(--primary-color);
     font-size: 15px;
 `;
 
 const Title = styled.div<{ color?: string; fontSize?: string }>`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 400;
     margin-bottom: 5px;
+    text-transform: uppercase;
     color: ${(_props) => (_props?.color ? _props.color : 'var(--input-border-color)')};
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '14px')};
 `;
 
 const ValueContainer = styled.div`
@@ -239,7 +248,7 @@ const ValueContainer = styled.div`
 `;
 
 const Value = styled.input<{ color?: string; fontSize?: string }>`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 600;
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
