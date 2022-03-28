@@ -40,6 +40,7 @@ import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/n
 
 import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
+import { UI_COLORS } from 'constants/ui';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -463,58 +464,66 @@ const AMM: React.FC = () => {
     }, [amount, maxLimit]);
 
     const getSubmitButton = () => {
+        const defaultButtonProps = {
+            padding: '5px 35px',
+            active: true,
+            margin: '15px auto 0 auto',
+            hoverShadow: 'var(--button-shadow)',
+            fontSize: '20px',
+        };
+
         if (isAmmTradingDisabled) {
             return (
-                <Button disabled={true} padding={'5px 0px'}>
+                <Button disabled={true} {...defaultButtonProps}>
                     {t('amm.amm-disabled')}
                 </Button>
             );
         }
         if (!isWalletConnected) {
             return (
-                <Button padding={'5px 0px'} onClickHandler={() => onboardConnector.connectWallet()}>
+                <Button {...defaultButtonProps} onClickHandler={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
         }
         if (insufficientLiquidity) {
             return (
-                <Button padding={'5px 0px'} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-liquidity`)}
                 </Button>
             );
         }
         if (insufficientBalance) {
             return (
-                <Button padding={'5px 0px'} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-balance`)}
                 </Button>
             );
         }
         if (!isAmountEntered) {
             return (
-                <Button padding={'5px 0px'} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.enter-amount`)}
                 </Button>
             );
         }
         if (!isSlippageValid) {
             return (
-                <Button padding={'5px 0px'} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.invalid-slippage`)}
                 </Button>
             );
         }
         if (maxLimitExceeded) {
             return (
-                <Button padding={'5px 0px'} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-liquidity`)}
                 </Button>
             );
         }
         if (!hasAllowance) {
             return (
-                <Button padding={'5px 0px'} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
+                <Button {...defaultButtonProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -524,7 +533,7 @@ const AMM: React.FC = () => {
             );
         }
         return (
-            <Button padding={'5px 0px'} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleSubmit}>
+            <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleSubmit}>
                 {!isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
                     : t(
@@ -536,12 +545,12 @@ const AMM: React.FC = () => {
 
     const getPriceImpactColor = (priceImpactPercentage: number) => {
         if (priceImpactPercentage >= 0.03 || Number(priceImpactPercentage) <= -0.03) {
-            return '#FF9548;';
+            return UI_COLORS.GREEN;
         }
         if (priceImpactPercentage >= 0.01 || Number(priceImpactPercentage) <= -0.01) {
-            return '#FFCC00';
+            return UI_COLORS.GREEN;
         }
-        return '#00F152';
+        return UI_COLORS.GREEN;
     };
 
     const onMaxClick = () => {
@@ -573,6 +582,8 @@ const AMM: React.FC = () => {
                     width={'48%'}
                     active={optionSide == 'long'}
                     padding={'5px 0px'}
+                    fontSize={'14px'}
+                    hoverShadow={'var(--button-shadow)'}
                     onClickHandler={() => setOptionSide('long')}
                 >
                     {t('options.common.long')}
@@ -581,6 +592,8 @@ const AMM: React.FC = () => {
                     width={'48%'}
                     active={optionSide == 'short'}
                     padding={'5px 0px'}
+                    fontSize={'14px'}
+                    hoverShadow={'var(--button-shadow)'}
                     onClickHandler={() => setOptionSide('short')}
                 >
                     {t('options.common.short')}
@@ -588,7 +601,7 @@ const AMM: React.FC = () => {
             </ButtonWrapper>
             <Input
                 title={t('options.market.trade-options.place-order.amount-label', {
-                    orderSide: OPTIONS_CURRENCY_MAP[optionSide],
+                    orderSide: orderSide.value.toUpperCase(),
                 })}
                 value={amount}
                 valueType={'number'}
@@ -614,6 +627,7 @@ const AMM: React.FC = () => {
                 max={maxLimit}
                 showFooter={true}
                 step={1}
+                container={{ margin: '0 0 30px 0' }}
                 footerText={t('amm.max-amount', {
                     amount: formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], maxLimit),
                 })}
@@ -622,7 +636,7 @@ const AMM: React.FC = () => {
             />
             <Input
                 title={t('options.market.trade-options.place-order.price-label', {
-                    currencyKey: orderSide.value.toUpperCase(),
+                    currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
                 })}
                 value={
                     isGettingQuote
@@ -654,7 +668,7 @@ const AMM: React.FC = () => {
                 valueColor={isPotentialReturnAvailable ? getPriceImpactColor(Number(priceImpact)) : undefined}
                 subValue={
                     isPotentialReturnAvailable
-                        ? `${formatPercentage(potentialBaseReturn)}`
+                        ? `(${formatPercentage(potentialBaseReturn)})`
                         : isBuy && Number(basePrice) > 0 && Number(potentialBaseReturn) > 0
                         ? formatPercentage(potentialReturn)
                         : ''
