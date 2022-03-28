@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Orderbook from '../OrderbookView/components/Orderbook';
@@ -34,6 +34,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const marketInfo = useMarketContext();
 
     const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
+    const [inMaturity, setMaturity] = useState<boolean>(false);
     const similarMarketsVisibility = useSelector((state: RootState) => getSimilarMarketsVisibility(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -45,6 +46,13 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
             return openOrdersQuery.data;
         }
     }, [openOrdersQuery]);
+
+    useEffect(() => {
+        if (marketInfo.phase == 'maturity') {
+            setMaturity(true);
+            setCurrentTab(4);
+        }
+    }, [marketInfo.phase]);
 
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
@@ -78,7 +86,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const { t } = useTranslation();
 
     const tabItems = [
-        ...(optionSide
+        ...(optionSide && !inMaturity
             ? [
                   {
                       title: t('options.market.widgets.orderbook-widget'),
@@ -86,18 +94,30 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                   },
               ]
             : []),
-        {
-            title: t('options.market.widgets.chart-trading-view-widget'),
-            index: 1,
-        },
-        {
-            title: t('options.market.widgets.chart-options-price-widget'),
-            index: 2,
-        },
-        {
-            title: t('options.market.widgets.your-transactions-widget'),
-            index: 3,
-        },
+        ...(!inMaturity
+            ? [
+                  {
+                      title: t('options.market.widgets.chart-trading-view-widget'),
+                      index: 1,
+                  },
+              ]
+            : []),
+        ...(!inMaturity
+            ? [
+                  {
+                      title: t('options.market.widgets.chart-options-price-widget'),
+                      index: 2,
+                  },
+              ]
+            : []),
+        ...(!inMaturity
+            ? [
+                  {
+                      title: t('options.market.widgets.your-transactions-widget'),
+                      index: 3,
+                  },
+              ]
+            : []),
         {
             title: t('options.market.widgets.recent-transactions-widget'),
             index: 4,
@@ -108,13 +128,14 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
         <>
             {!similarMarketsVisibility && (
                 <Container>
-                    <Container.Main>
+                    <Container.Main justifyContent={inMaturity ? 'flex-start' : ''}>
                         {tabItems &&
                             tabItems.map((item, index) => {
                                 return (
                                     <Container.Main.Item
                                         active={item.index == currentTab}
                                         key={index}
+                                        noStrech={inMaturity ? true : false}
                                         onClick={() => setCurrentTab(item.index)}
                                     >
                                         {item.title}
