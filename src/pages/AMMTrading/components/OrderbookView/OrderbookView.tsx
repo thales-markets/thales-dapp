@@ -7,6 +7,7 @@ import OrderbookForm from './components/OrderbookForm';
 
 import { OptionSide } from 'types/options';
 import TabContainer from '../TabContainer';
+import { UI_COLORS } from 'constants/ui';
 
 export const TradeOptionType = [
     {
@@ -36,7 +37,13 @@ const OrderbookView: React.FC = () => {
                     padding={'20px 30px'}
                     onClick={() => setOptionType(TradeOptionType[0].value as OptionSide)}
                 >
-                    {t('options.order-book.trade-up')}
+                    {t('options.order-book.trade-up')}{' '}
+                    {
+                        <Icon
+                            className="v2-icon v2-icon--up"
+                            color={optionType == TradeOptionType[0].value ? UI_COLORS.GREEN : undefined}
+                        />
+                    }
                 </Container.Main.Item>
                 <Container.Main.Item
                     noStrech={true}
@@ -45,7 +52,13 @@ const OrderbookView: React.FC = () => {
                     padding={'20px 30px'}
                     onClick={() => setOptionType(TradeOptionType[1].value as OptionSide)}
                 >
-                    {t('options.order-book.trade-down')}
+                    {t('options.order-book.trade-down')}{' '}
+                    {
+                        <Icon
+                            className="v2-icon v2-icon--down"
+                            color={optionType == TradeOptionType[1].value ? UI_COLORS.RED : undefined}
+                        />
+                    }
                 </Container.Main.Item>
             </Container.Main>
             <Container.Tab>
@@ -65,6 +78,12 @@ const OrderBookContainer = styled.div`
     @media (max-width: 1024px) {
         max-width: 100%;
     }
+`;
+
+const Icon = styled.i<{ color?: string }>`
+    margin: 0 5px;
+    font-size: 24px;
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
 `;
 
 export default OrderbookView;
