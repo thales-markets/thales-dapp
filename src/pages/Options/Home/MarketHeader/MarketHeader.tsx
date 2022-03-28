@@ -225,18 +225,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.trade-history-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
-                    {isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.AmmMining)}>
-                            <SidebarItem
-                                imgSrc={customMarketsDefaultIcon}
-                                imgSrcHoverSelected={customMarketsSelectedIcon}
-                                className={route === ROUTES.Options.AmmMining ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.amm-mining-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
                     {!isL2 && (
                         <SPAAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
                             <SidebarItem
