@@ -9,7 +9,7 @@ export const thalesRoyaleContract = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0x3198ab211CdF3E4d13a698E1Fb819507BcA2e579',
-        [NetworkId['Kovan-Ovm']]: '0xE1757E47417e4bFF5f3F01713A205E1709344D5D',
+        [NetworkId['Kovan-Ovm']]: '0x8f73e225Df3cacD7e6F62AE75538E72feA52d58F',
     },
     abi: [
         {
@@ -26,6 +26,18 @@ export const thalesRoyaleContract = {
         },
         {
             anonymous: false,
+            inputs: [{ indexed: false, internalType: 'uint256', name: '_rounds', type: 'uint256' }],
+            name: 'NewNumberOfRounds',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [{ indexed: false, internalType: 'bytes32', name: '_oracleKey', type: 'bytes32' }],
+            name: 'NewOracleKey',
+            type: 'event',
+        },
+        {
+            anonymous: false,
             inputs: [{ indexed: false, internalType: 'uint256', name: 'pauseBetweenSeasonsTime', type: 'uint256' }],
             name: 'NewPauseBetweenSeasonsTime',
             type: 'event',
@@ -34,6 +46,12 @@ export const thalesRoyaleContract = {
             anonymous: false,
             inputs: [{ indexed: false, internalType: 'contract IPriceFeed', name: 'priceFeed', type: 'address' }],
             name: 'NewPriceFeed',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [{ indexed: false, internalType: 'address', name: '_rewardToken', type: 'address' }],
+            name: 'NewRewardToken',
             type: 'event',
         },
         {
@@ -158,6 +176,7 @@ export const thalesRoyaleContract = {
             inputs: [
                 { indexed: false, internalType: 'address', name: 'user', type: 'address' },
                 { indexed: false, internalType: 'uint256', name: 'season', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'position', type: 'uint256' },
             ],
             name: 'SignedUp',
             type: 'event',
@@ -339,6 +358,13 @@ export const thalesRoyaleContract = {
         {
             inputs: [],
             name: 'oracleKey',
+            outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            name: 'oracleKeyPerSeason',
             outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
             stateMutability: 'view',
             type: 'function',
@@ -591,6 +617,20 @@ export const thalesRoyaleContract = {
             type: 'function',
         },
         {
+            inputs: [{ internalType: 'uint256', name: '_rounds', type: 'uint256' }],
+            name: 'setNumberOfRounds',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'bytes32', name: '_oracleKey', type: 'bytes32' }],
+            name: 'setOracleKey',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
             name: 'setOwner',
             outputs: [],
@@ -607,6 +647,13 @@ export const thalesRoyaleContract = {
         {
             inputs: [{ internalType: 'contract IPriceFeed', name: '_priceFeed', type: 'address' }],
             name: 'setPriceFeed',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'address', name: '_rewardToken', type: 'address' }],
+            name: 'setRewardToken',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
