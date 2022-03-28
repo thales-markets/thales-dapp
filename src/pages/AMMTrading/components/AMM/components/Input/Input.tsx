@@ -5,16 +5,17 @@ import { withStyles } from '@material-ui/styles';
 import { TooltipStyles } from 'constants/ui';
 
 type InputProps = {
-    title: string;
+    title?: string;
     titleColor?: string;
     titleFontSize?: string;
-    value: string | number;
+    value: string | number | React.ReactNode;
+    valueAsComponent?: boolean;
     valueChange?: (value: string | number) => void;
     valueType?: string;
     valueEditDisable?: boolean;
     valueColor?: string;
     valueFontSize?: string;
-    subValue?: string;
+    subValue?: any;
     subValueColor?: string;
     subValueFontSize?: string;
     disabled?: boolean;
@@ -24,6 +25,8 @@ type InputProps = {
     container?: {
         width?: string;
         margin?: string;
+        padding?: string;
+        height?: string;
     };
     children?: any;
 };
@@ -33,6 +36,7 @@ const Input: React.FC<InputProps> = ({
     titleColor,
     titleFontSize,
     value,
+    valueAsComponent,
     valueChange,
     valueType,
     valueEditDisable,
@@ -61,20 +65,28 @@ const Input: React.FC<InputProps> = ({
                 disabled={disabled}
                 width={container?.width}
                 margin={container?.margin}
+                height={container?.height}
+                padding={container?.padding}
             >
-                <Container.Title color={titleColor} fontSize={titleFontSize}>
-                    {title}
-                </Container.Title>
+                {title && (
+                    <Container.Title color={titleColor} fontSize={titleFontSize}>
+                        {title}
+                    </Container.Title>
+                )}
                 <Container.ValueContainer>
-                    <Container.ValueContainer.Value
-                        color={valueColor}
-                        fontSize={valueFontSize}
-                        value={value}
-                        onChange={handleChange}
-                        disabled={valueEditDisable || disabled}
-                        type={valueType ? valueType : ''}
-                        readOnly={typeof handleChange !== 'function' || disabled}
-                    />
+                    {valueAsComponent ? (
+                        value
+                    ) : (
+                        <Container.ValueContainer.Value
+                            color={valueColor}
+                            fontSize={valueFontSize}
+                            value={typeof value == 'string' || typeof value == 'number' ? value : ''}
+                            onChange={handleChange}
+                            disabled={valueEditDisable || disabled}
+                            type={valueType ? valueType : ''}
+                            readOnly={typeof handleChange !== 'function' || disabled}
+                        />
+                    )}
                     <Container.ValueContainer.SubValue color={subValueColor} fontSize={subValueFontSize}>
                         {subValue}
                     </Container.ValueContainer.SubValue>
