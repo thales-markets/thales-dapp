@@ -9,7 +9,6 @@ const Footer = styled.div<{ justifyContent?: string }>`
     font-size: 14px;
     font-family: Titillium Regular !important;
     padding: 0px 5px;
-    margin-bottom: 15px;
 `;
 
 export default Footer;

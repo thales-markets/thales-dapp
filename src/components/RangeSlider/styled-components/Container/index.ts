@@ -4,11 +4,13 @@ type ContainerChildren = {
     Slider: StyledComponent<'input', any>;
 };
 
-export const Wrapper = styled.div<{ disabled?: boolean }>`
+export const Wrapper = styled.div<{ disabled?: boolean; margin?: string; padding?: string }>`
     width: 100%;
     display: flex;
     flex-direction: column;
     opacity: ${(_props) => (_props?.disabled ? '0.5 !important' : '')};
+    ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
+    ${(_props) => (_props?.padding ? `padding: ${_props.padding}` : '')};
 `;
 
 // @ts-ignore
