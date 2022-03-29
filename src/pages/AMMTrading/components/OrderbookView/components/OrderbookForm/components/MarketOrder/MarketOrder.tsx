@@ -328,23 +328,24 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
     }, [amount, total, isBuy, sUSDBalance, tokenBalance]);
 
     const getSubmitButton = () => {
-        const buttonProps = {
-            width: '60%',
+        const defaultButtonProps = {
+            padding: '3px 35px',
             active: true,
-            padding: '5px 0px',
-            margin: '20px auto 0px auto',
+            margin: '24px auto 0 auto',
+            hoverShadow: 'var(--button-shadow)',
+            fontSize: '20px',
         };
 
         if (!isWalletConnected) {
             return (
-                <Button {...buttonProps} onClickHandler={() => onboardConnector.connectWallet()}>
+                <Button {...defaultButtonProps} onClickHandler={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
         }
         if (isBuy && onlyUsersSellOrders) {
             return (
-                <Button {...buttonProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-liquidity`)}
                 </Button>
             );
@@ -352,7 +353,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
 
         if (!isBuy && onlyUsersBuyOrders) {
             return (
-                <Button {...buttonProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-liquidity`)}
                 </Button>
             );
@@ -360,35 +361,35 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
 
         if (insufficientBalance) {
             return (
-                <Button disabled={true} {...buttonProps}>
+                <Button disabled={true} {...defaultButtonProps}>
                     {t(`common.errors.insufficient-balance`)}
                 </Button>
             );
         }
         if (!isAmountEntered) {
             return (
-                <Button disabled={true} {...buttonProps}>
+                <Button disabled={true} {...defaultButtonProps}>
                     {t(`common.errors.enter-amount`)}
                 </Button>
             );
         }
         if (!isSlippageValid) {
             return (
-                <Button disabled={true} {...buttonProps}>
+                <Button disabled={true} {...defaultButtonProps}>
                     {t(`common.errors.invalid-slippage`)}
                 </Button>
             );
         }
         if (insufficientLiquidity) {
             return (
-                <Button disabled={true} {...buttonProps}>
+                <Button disabled={true} {...defaultButtonProps}>
                     {t(`common.errors.insufficient-liquidity`)}
                 </Button>
             );
         }
         if (!hasAllowance) {
             return (
-                <Button disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)} {...buttonProps}>
+                <Button disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)} {...defaultButtonProps}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -398,7 +399,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
             );
         }
         return (
-            <Button disabled={isButtonDisabled} onClickHandler={handleSubmitOrder} {...buttonProps}>
+            <Button disabled={isButtonDisabled} onClickHandler={handleSubmitOrder} {...defaultButtonProps}>
                 {!isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
                     : t(
@@ -444,13 +445,22 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
                 title={t('options.order-book.amount-to', {
                     type: orderSideOptions[1].value,
                 })}
-                value={price}
+                value={amount}
                 valueChange={(value: string | number) => {
                     setAmount(value);
                 }}
                 subValue={isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide]}
                 valueEditDisable={isSubmitting}
-                borderColor={!isAmountValid ? UI_COLORS.RED : ''}
+                borderColor={isAmountValid && !insufficientLiquidity ? '' : UI_COLORS.RED}
+                displayTooltip={!isAmountValid}
+                tooltipText={t(
+                    !isAmountValid
+                        ? 'common.errors.insufficient-balance-wallet'
+                        : 'common.errors.insufficient-liquidity-for-trade',
+                    {
+                        currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                    }
+                )}
             />
             <Input
                 title={
