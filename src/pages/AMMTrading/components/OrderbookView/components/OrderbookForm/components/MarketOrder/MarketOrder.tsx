@@ -439,7 +439,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
                         ? setOrderSide(orderSideOptions[1])
                         : setOrderSide(orderSideOptions[0]);
                 }}
-                margin={'30px 0px'}
+                margin={'20px 0px'}
             />
             <Input
                 title={t('options.order-book.amount-to', {

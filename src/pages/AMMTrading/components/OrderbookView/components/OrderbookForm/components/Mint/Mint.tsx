@@ -513,6 +513,7 @@ const Mint: React.FC = () => {
                 subValue={actionInProgress ? '' : SYNTHS_MAP.sUSD}
                 disabled={actionInProgress}
                 displayTooltip={!isAmountValid}
+                container={{ margin: '19px 0 0 0' }}
                 tooltipText={t(`common.errors.insufficient-balance-wallet`, { currencyKey: SYNTHS_MAP.sUSD })}
             />
             <RowContainer>
