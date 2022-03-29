@@ -53,7 +53,15 @@ const SubValue = styled.span<{ color?: string; fontSize?: string }>`
 const Container: StyledComponent<
     'div',
     any,
-    { borderColor?: string; disabled?: boolean; width?: string; margin?: string; height?: string; padding?: string }
+    {
+        borderColor?: string;
+        disabled?: boolean;
+        width?: string;
+        margin?: string;
+        height?: string;
+        padding?: string;
+        shadow?: string;
+    }
 > &
     ContainerChildren = styled.div<{
     borderColor?: string;
@@ -62,6 +70,7 @@ const Container: StyledComponent<
     margin?: string;
     height?: string;
     padding?: string;
+    shadow?: string;
 }>`
     width: ${(_props) => (_props?.width ? _props.width : '100%')};
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
@@ -76,6 +85,7 @@ const Container: StyledComponent<
     margin-bottom: 8px;
     position: relative;
     opacity: ${(_props) => (_props?.disabled ? '0.5 !important' : '1')};
+    ${(_props) => (_props?.shadow ? `box-shadow: ${_props.shadow}` : '')};
 `;
 
 ValueContainer.Value = Value;

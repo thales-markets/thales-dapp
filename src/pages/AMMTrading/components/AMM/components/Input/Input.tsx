@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from './styled-components/Container';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from '@material-ui/styles';
@@ -52,10 +52,20 @@ const Input: React.FC<InputProps> = ({
     container,
     children,
 }) => {
+    const [focus, setFocus] = useState<boolean>(false);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof valueChange == 'function') {
             valueChange(e.target.value);
         }
+    };
+
+    const onFocus = () => {
+        setFocus(true);
+    };
+
+    const onBlur = () => {
+        setFocus(false);
     };
 
     return (
@@ -67,6 +77,7 @@ const Input: React.FC<InputProps> = ({
                 margin={container?.margin}
                 height={container?.height}
                 padding={container?.padding}
+                shadow={focus ? 'var(--button-shadow)' : undefined}
             >
                 {title && (
                     <Container.Title color={titleColor} fontSize={titleFontSize}>
@@ -84,6 +95,8 @@ const Input: React.FC<InputProps> = ({
                             onChange={handleChange}
                             disabled={valueEditDisable || disabled}
                             type={valueType ? valueType : ''}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
                             readOnly={typeof handleChange !== 'function' || disabled}
                         />
                     )}
