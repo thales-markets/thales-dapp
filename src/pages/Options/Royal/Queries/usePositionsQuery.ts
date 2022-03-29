@@ -1,7 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
-import thalesData from 'thales-data';
 import snxJSConnector from 'utils/snxJSConnector';
 
 export type Positions = {
@@ -9,71 +8,34 @@ export type Positions = {
     down: number;
 };
 
-type GraphPosition = {
-    season: string;
-    id: string;
-    player: string;
-    position: number;
-    round: number;
-    timestamp: number;
-};
-
 const usePositionsQuery = (selectedSeason: number, networkId: NetworkId, options?: UseQueryOptions<Positions>) => {
     return useQuery<Positions>(
         QUERY_KEYS.Royale.Positions(networkId),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
-            if (thalesRoyaleContract) {
-                const currentSeason = Number(await thalesRoyaleContract.season());
-                const round = await thalesRoyaleContract.roundInASeason(currentSeason);
-                if (selectedSeason === 0) {
-                    const positions = await thalesData.binaryOptions.thalesRoyalePositions({
-                        season: currentSeason,
-                        network: networkId,
-                    });
-                    return (
-                        positions.reduce(
-                            (prev: Positions, curr: GraphPosition) => {
-                                if (curr.round === Number(round)) {
-                                    if (curr.position === 2) {
-                                        prev.up++;
-                                    } else if (curr.position === 1) {
-                                        prev.down++;
-                                    }
-                                }
-                                return prev;
-                            },
-                            { up: 0, down: 0 }
-                        ) || { up: 0, down: 0 }
-                    );
-                } else {
-                    const positions = await thalesData.binaryOptions.thalesRoyalePositions({
-                        season: selectedSeason,
-                        network: networkId,
-                    });
-                    return (
-                        positions.reduce(
-                            (prev: Positions, curr: GraphPosition) => {
-                                if (curr.round === Number(round)) {
-                                    if (curr.position === 2) {
-                                        prev.up++;
-                                    } else if (curr.position === 1) {
-                                        prev.down++;
-                                    }
-                                }
-                                return prev;
-                            },
-                            { up: 0, down: 0 }
-                        ) || { up: 0, down: 0 }
-                    );
-                }
-            }
+            return getFromContract(thalesRoyaleContract, selectedSeason);
         },
         {
             refetchInterval: 5000,
             ...options,
         }
     );
+};
+
+const getFromContract = async (RoyaleContract: any, selectedSeason: number): Promise<Positions> => {
+    const seasonContract = Number(await RoyaleContract.season());
+    const season = selectedSeason === seasonContract ? seasonContract : selectedSeason;
+    const roundContract = await RoyaleContract.roundInASeason(season);
+    const round = Number(roundContract) === 0 ? 1 : roundContract;
+
+    const [downPositions, upPositions] = await Promise.all([
+        RoyaleContract.positionsPerRoundPerSeason(season, round, 1),
+        RoyaleContract.positionsPerRoundPerSeason(season, round, 2),
+    ]);
+    return {
+        up: Number(upPositions),
+        down: Number(downPositions),
+    };
 };
 
 export default usePositionsQuery;
