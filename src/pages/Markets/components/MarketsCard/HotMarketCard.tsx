@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useInterval from 'hooks/useInterval';
 
 import { MarketCardContainer } from 'theme/common';
-import { AssetName, CurrencyKey, AssetNameContainer } from './MarketCard';
+import { CurrencyKey, AssetNameContainer } from './MarketCard';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
@@ -15,7 +15,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 
 export type HotMarket = {
-    fullAssetName: string;
+    fullAssetName?: string;
     currencyKey: string;
     assetName: string;
     pricePerOption: number;
@@ -25,7 +25,6 @@ export type HotMarket = {
 };
 
 const HotMarketCard: React.FC<HotMarket> = ({
-    fullAssetName,
     currencyKey,
     assetName,
     pricePerOption,
@@ -46,8 +45,8 @@ const HotMarketCard: React.FC<HotMarket> = ({
                 <AssetInfo>
                     <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
                     <AssetNameContainer>
-                        <AssetName>{fullAssetName}</AssetName>
-                        <CurrencyKey>{assetName}</CurrencyKey>
+                        {/* <AssetName>{fullAssetName}</AssetName> */}
+                        <CurrencyKey alignSelf={'center'}>{assetName}</CurrencyKey>
                     </AssetNameContainer>
                 </AssetInfo>
                 <SectionContainer>

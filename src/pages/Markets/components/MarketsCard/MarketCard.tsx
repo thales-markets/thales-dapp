@@ -131,9 +131,10 @@ const AssetContainer = styled.div`
 `;
 
 export const AssetNameContainer = styled.div`
-    display: block;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     text-align: left;
-
     font-size: 15px;
     color: var(--primary-color) !important;
 `;
@@ -148,7 +149,8 @@ export const AssetName = styled.span`
     line-height: 110%;
 `;
 
-export const CurrencyKey = styled.span`
+export const CurrencyKey = styled.span<{ alignSelf?: string }>`
+    ${(_props) => (_props?.alignSelf ? `align-self: ${_props?.alignSelf}` : '')};
     font-family: Roboto !important;
     font-style: normal;
     display: block;
