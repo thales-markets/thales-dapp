@@ -12,7 +12,7 @@ import { FlexDivColumn } from 'theme/common';
 
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
-import { getSynthName } from 'utils/currency';
+// import { getSynthName } from 'utils/currency';
 import { USD_SIGN } from 'constants/currency';
 import PhaseComponent from '../Phase/Phase';
 
@@ -39,7 +39,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates, mar
                             <AssetContainer>
                                 <CurrencyIcon currencyKey={optionMarket.currencyKey} width="50px" height="50px" />
                                 <AssetNameContainer>
-                                    <AssetName>{getSynthName(optionMarket.currencyKey)}</AssetName>
+                                    {/* <AssetName>{getSynthName(optionMarket.currencyKey)}</AssetName> */}
                                     <CurrencyKey>{optionMarket.asset}</CurrencyKey>
                                     <MarketStatus>
                                         <PhaseComponent phase={optionMarket.phase}></PhaseComponent>
