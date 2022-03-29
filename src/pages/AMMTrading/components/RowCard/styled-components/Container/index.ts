@@ -96,7 +96,7 @@ const Icon = styled.i<{ color?: string }>`
 `;
 
 const Header = styled.span`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     color: var(--primary-color);
     font-weight: 400;
@@ -114,7 +114,7 @@ const Header = styled.span`
 
 // @ts-ignore
 const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?: string }>`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: 700;
     font-size: 25px;
