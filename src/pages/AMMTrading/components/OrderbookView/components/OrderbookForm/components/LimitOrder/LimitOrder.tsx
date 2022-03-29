@@ -410,6 +410,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                     setIsPriceValid(Number(value) <= 1);
                     setPrice(value);
                 }}
+                valueType={'number'}
                 subValue={SYNTHS_MAP.sUSD}
                 valueEditDisable={isSubmitting}
                 borderColor={!isPriceValid ? UI_COLORS.RED : ''}
@@ -435,6 +436,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                 valueChange={(value) => {
                     setAmount(value);
                 }}
+                valueType={'number'}
                 subValue={OPTIONS_CURRENCY_MAP[optionSide]}
                 valueEditDisable={isSubmitting}
                 borderColor={!isAmountValid ? UI_COLORS.RED : ''}
@@ -477,6 +479,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                 title={t('options.market.trade-options.place-order.total-label-susd')}
                 value={formatCurrency(Number(price) * Number(amount))}
                 subValue={SYNTHS_MAP.sUSD}
+                valueEditDisable={true}
             />
             {txErrorMessage !== null && (
                 <AlertMessage onClose={() => setTxErrorMessage(null)}>{txErrorMessage}</AlertMessage>
