@@ -30,6 +30,12 @@ const MenuContainer: StyledComponent<'div', any, { justifyContent?: string }> & 
     align-items: stretch;
     border-bottom: 4px solid var(--table-border-color);
     border-radius: 3px;
+    @media (max-width: 1024px) {
+        margin-top: 30px;
+    }
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 // @ts-ignore

@@ -80,6 +80,9 @@ const OrderBookContainer = styled.div`
     width: 100%;
     @media (max-width: 1024px) {
         max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-top: 0px;
     }
 `;
 

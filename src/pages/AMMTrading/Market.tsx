@@ -91,17 +91,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             {tradingType == TradingTypes[0].value && <OrderbookView />}
             {tradingType == TradingTypes[1].value && (
                 <MainContainer>
-                    {inMaturityPhase ? (
-                        <>
-                            <Maturity />
-                            <TabContainer />
-                        </>
-                    ) : (
-                        <>
-                            <AMM />
-                            <TabContainer />
-                        </>
-                    )}
+                    {inMaturityPhase ? <Maturity /> : <AMM />}
+                    <TabContainer />
                 </MainContainer>
             )}
         </MarketProvider>

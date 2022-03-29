@@ -95,7 +95,7 @@ const Wrapper = styled.div`
         height: 47px;
         border-bottom: 5px solid var(--table-border-color);
         border-top: 5px solid var(--table-border-color);
-        font-family: Titillium Regular !important;
+        font-family: Roboto !important;
         font-size: 12px;
         vertical-align: middle;
         font-weight: bold;
