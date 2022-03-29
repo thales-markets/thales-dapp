@@ -14,7 +14,7 @@ import Button from 'components/Button';
 
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 
-import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { CURRENCY_TO_OPTION, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 
 import { RootState } from 'redux/rootReducer';
@@ -240,37 +240,38 @@ const Mint: React.FC = () => {
     };
 
     const getSubmitButton = () => {
-        const mainProps = {
-            width: '60%',
-            hoverShadow: 'var(--shadow)',
+        const defaultButtonProps = {
+            padding: '3px 35px',
             active: true,
-            margin: '20px auto 0px auto',
+            margin: '24px auto 0 auto',
+            hoverShadow: 'var(--button-shadow)',
+            fontSize: '20px',
         };
 
         if (!isWalletConnected) {
             return (
-                <Button {...mainProps} onClickHandler={() => onboardConnector.connectWallet()}>
+                <Button {...defaultButtonProps} onClickHandler={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
         }
         if (insufficientBalance) {
             return (
-                <Button {...mainProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-balance`)}
                 </Button>
             );
         }
         if (!isAmountEntered) {
             return (
-                <Button {...mainProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.enter-amount`)}
                 </Button>
             );
         }
         if (!hasAllowance) {
             return (
-                <Button {...mainProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
+                <Button {...defaultButtonProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sUSD })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -281,7 +282,11 @@ const Mint: React.FC = () => {
         }
         if (!hasLongAllowance && sellLong) {
             return (
-                <Button {...mainProps} disabled={isLongAllowing} onClickHandler={() => setOpenLongApprovalModal(true)}>
+                <Button
+                    {...defaultButtonProps}
+                    disabled={isLongAllowing}
+                    onClickHandler={() => setOpenLongApprovalModal(true)}
+                >
                     {!isLongAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sLONG })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -293,7 +298,7 @@ const Mint: React.FC = () => {
         if (!hasShortAllowance && sellShort) {
             return (
                 <Button
-                    {...mainProps}
+                    {...defaultButtonProps}
                     disabled={isShortAllowing}
                     onClickHandler={() => setOpenShortApprovalModal(true)}
                 >
@@ -307,20 +312,20 @@ const Mint: React.FC = () => {
         }
         if (isLongSubmitting) {
             return (
-                <Button {...mainProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`options.market.trade-options.mint.confirm-button.submit-long-progress-label`)}
                 </Button>
             );
         }
         if (isShortSubmitting) {
             return (
-                <Button {...mainProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`options.market.trade-options.mint.confirm-button.submit-short-progress-label`)}
                 </Button>
             );
         }
         return (
-            <Button {...mainProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleMint}>
+            <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleMint}>
                 {!isMinting
                     ? t(`options.market.trade-options.mint.confirm-button.label`)
                     : t(`options.market.trade-options.mint.confirm-button.progress-label`)}
@@ -534,7 +539,9 @@ const Mint: React.FC = () => {
             </RowContainer>
             <InputContainer>
                 <Input
-                    title={t('options.market.trade-options.place-order.price-label', { currencyKey: SYNTHS_MAP.sLONG })}
+                    title={t('options.market.trade-options.place-order.price-label', {
+                        currencyKey: CURRENCY_TO_OPTION.get(SYNTHS_MAP.sLONG),
+                    })}
                     container={{ margin: '0 5px 0 0' }}
                     value={longPrice}
                     valueChange={(value) => setLongPrice(value)}
@@ -554,7 +561,7 @@ const Mint: React.FC = () => {
                     value={longAmount}
                     valueChange={(value) => setLongAmount(value)}
                     valueType={'number'}
-                    subValue={SYNTHS_MAP.sLONG}
+                    subValue={CURRENCY_TO_OPTION.get(SYNTHS_MAP.sLONG)}
                     disabled={!sellLong || actionInProgress}
                     borderColor={isLongAmountValid ? undefined : UI_COLORS.RED}
                     displayTooltip={!isLongAmountValid}
@@ -591,7 +598,7 @@ const Mint: React.FC = () => {
             <InputContainer>
                 <Input
                     title={t('options.market.trade-options.place-order.price-label', {
-                        currencyKey: SYNTHS_MAP.sSHORT,
+                        currencyKey: CURRENCY_TO_OPTION.get(SYNTHS_MAP.sSHORT),
                     })}
                     container={{ margin: '0 5px 0 0' }}
                     value={shortPrice}
@@ -612,7 +619,7 @@ const Mint: React.FC = () => {
                     value={shortAmount}
                     valueChange={(value) => setShortAmount(value)}
                     valueType={'number'}
-                    subValue={SYNTHS_MAP.sSHORT}
+                    subValue={CURRENCY_TO_OPTION.get(SYNTHS_MAP.sSHORT)}
                     disabled={!sellShort || actionInProgress}
                     borderColor={isShortAmountValid ? undefined : UI_COLORS.RED}
                     displayTooltip={!isShortAmountValid}
