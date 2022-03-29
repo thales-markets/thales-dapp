@@ -30,7 +30,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
-import { formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
 import { AccountMarketInfo, OrderSide, OptionSide } from 'types/options';
@@ -642,7 +642,7 @@ const AMM: React.FC = () => {
                     isGettingQuote
                         ? '...'
                         : Number(price) > 0 || Number(basePrice) > 0
-                        ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) > 0 ? price : basePrice)
+                        ? formatCurrency(Number(price) > 0 ? price : basePrice, 4)
                         : '-'
                 }
                 subValue={SYNTHS_MAP.sUSD}
@@ -650,7 +650,7 @@ const AMM: React.FC = () => {
             />
             <Input
                 title={t(`amm.total-${orderSide.value}-label`)}
-                value={isGettingQuote ? '...' : Number(price) > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, total) : '-'}
+                value={isGettingQuote ? '...' : Number(price) > 0 ? formatCurrency(total, 4) : '-'}
                 subValue={SYNTHS_MAP.sUSD}
                 valueEditDisable={true}
             />
