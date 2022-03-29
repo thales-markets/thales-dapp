@@ -1118,6 +1118,7 @@
                 "time-left-for-positioning": "Time left for positioning",
                 "time-left-in-round": "Time left in round",
                 "close-round": "Close round",
+                "claim-reward": "Claim reward: {{reward}} sUSD",
                 "was": "Was",
                 "eliminated": "Eliminated",
                 "players": "Players",

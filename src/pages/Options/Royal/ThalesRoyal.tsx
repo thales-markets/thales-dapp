@@ -50,7 +50,7 @@ const ThalesRoyal: React.FC = () => {
     const royaleFooterQuery = useRoyaleFooterQuery(selectedSeason, { enabled: isAppReady });
     const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
     const snxPriceQuery = useSnxPriceQuery({ enabled: isAppReady });
-    const positionsQuery = usePositionsQuery(0, networkId, {
+    const positionsQuery = usePositionsQuery(selectedSeason, networkId, {
         enabled: networkId !== undefined && isAppReady,
     });
 

@@ -1131,7 +1131,8 @@
                 "round": "Круглый",
                 "in": "в",
                 "time-left-for-positioning": "Осталось время для позиционирования",
-                "will-be": "Будет ли {{токен}} больше чем"
+                "will-be": "Будет ли {{токен}} больше чем",
+                "claim-reward": "Получите вознаграждение: {{reward}} sUSD"
             },
             "scoreboard": {
                 "table-header": {

@@ -417,7 +417,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                             claimReward().finally(() => synthsWalletBalancesQuery.refetch());
                         }}
                     >
-                        Claim reward
+                        {t('options.royale.battle.claim-reward', { reward: royaleFooterData?.reward.toFixed(2) })}
                     </Button>
                 ) : (
                     <Button
