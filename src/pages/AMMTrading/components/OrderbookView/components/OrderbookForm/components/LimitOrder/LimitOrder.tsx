@@ -444,6 +444,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                     <Fixed
                         key={percentage}
                         onClick={() => calculateAmount(percentage)}
+                        margin={'0 20px 0 20px'}
                         active={percentage == selectedPercentage}
                     >
                         {`${percentage}%`}
