@@ -9,14 +9,14 @@ import MarketActivity from '../Tabs/MarketActivity';
 import Container from './styled-components/Container';
 import SPAAnchor from 'components/SPAAnchor';
 import { SimilarMarketsContainer } from './styled-components/SimilarMarkets';
-
+import { useDispatch } from 'react-redux';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getSimilarMarketsVisibility } from 'redux/modules/marketWidgets';
+import { getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
 import { getNetworkId } from 'redux/modules/wallet';
 import { sortOptionsMarkets } from 'utils/options';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
@@ -25,6 +25,8 @@ import { buildOptionsMarketLink } from 'utils/routes';
 import MarketCard from 'pages/Markets/components/MarketsCard';
 
 import { OptionSide } from 'types/options';
+import styled from 'styled-components';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 type TabContainerProps = {
     optionSide?: OptionSide;
@@ -32,7 +34,7 @@ type TabContainerProps = {
 
 const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const marketInfo = useMarketContext();
-
+    const dispatch = useDispatch();
     const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const similarMarketsVisibility = useSelector((state: RootState) => getSimilarMarketsVisibility(state));
@@ -40,6 +42,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
 
     const openOrdersMap = useMemo(() => {
         if (openOrdersQuery.isSuccess) {
@@ -126,6 +129,33 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
 
     return (
         <>
+            <FiltersButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>Views</FiltersButton>
+            {showViewsDropdown && (
+                <PositionWrapper>
+                    <Wrapper>
+                        <OutsideClickHandler onOutsideClick={() => setShowViewsDropdown(false)}>
+                            <Title>Views</Title>
+                            {tabItems &&
+                                tabItems.map((item, index) => {
+                                    return (
+                                        <Item
+                                            key={index}
+                                            onClick={() => {
+                                                dispatch(setSimilarMarketVisibility(false));
+                                                setCurrentTab(item.index);
+                                            }}
+                                        >
+                                            {item.title}
+                                        </Item>
+                                    );
+                                })}
+                            <Item onClick={() => dispatch(setSimilarMarketVisibility(true))}>
+                                {t('options.market.overview.similar-markets')}
+                            </Item>
+                        </OutsideClickHandler>
+                    </Wrapper>
+                </PositionWrapper>
+            )}
             {!similarMarketsVisibility && (
                 <Container>
                     <Container.Main justifyContent={inMaturity ? 'flex-start' : ''}>
@@ -165,7 +195,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                                             maxWidth: '49%',
                                             wrapperMargin: '0px 0px 10px 0px',
                                         }}
-                                    />{' '}
+                                    />
                                 </SPAAnchor>
                             );
                         })}
@@ -174,5 +204,85 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
         </>
     );
 };
+
+const PositionWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    height: 0;
+    z-index: 2;
+`;
+
+const FiltersButton = styled.div`
+    display: none;
+    padding: 6px 20px;
+    border: 1.5px solid rgba(100, 217, 254, 0.5);
+    box-sizing: border-box;
+    border-radius: 30px;
+    background: transparent;
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 11px;
+    text-transform: uppercase;
+    color: #64d9fe;
+    @media (max-width: 768px) {
+        display: block;
+        align-self: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+`;
+
+const Wrapper = styled.div`
+    display: none;
+    @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+        border: 2px solid rgba(100, 217, 254, 0.5);
+        box-sizing: border-box;
+        border-radius: 12px;
+        padding: 15px 20px;
+        max-width: 240px;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+        top: -56px;
+        z-index: 2;
+    }
+`;
+
+const Item = styled.div`
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: Roboto !important;
+    font-style: normal;
+
+    @media (max-width: 768px) {
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 162.5%;
+        text-transform: uppercase;
+        color: #ffffff;
+    }
+`;
+
+const Title = styled.p`
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: #64d9fe;
+    @media (min-width: 769px) {
+        display: none;
+    }
+    margin-bottom: 10px;
+`;
 
 export default TabContainer;
