@@ -649,7 +649,7 @@ const AMM: React.FC = () => {
                 valueEditDisable={true}
             />
             <Input
-                title={t('amm.total-buy-label')}
+                title={t(`amm.total-${orderSide.value}-label`)}
                 value={isGettingQuote ? '...' : Number(price) > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, total) : '-'}
                 subValue={SYNTHS_MAP.sUSD}
                 valueEditDisable={true}
@@ -742,7 +742,7 @@ const ButtonWrapper = styled.div`
 const MaxButton = styled.button`
     position: absolute;
     top: 5px;
-    right: 14px;
+    right: 10px;
     padding: 1px 8px;
     font-weight: 700;
     font-size: 10px;
