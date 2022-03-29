@@ -154,6 +154,12 @@ export const OPTIONS_CURRENCY_MAP = {
     long: 'UP',
     short: 'DOWN',
 };
+
+export const CURRENCY_TO_OPTION = new Map([
+    [SYNTHS_MAP.sLONG, 'UP'],
+    [SYNTHS_MAP.sSHORT, 'DOWN'],
+]);
+
 export const THALES_CURRENCY = 'THALES';
 export const OP_THALES_CURRENCY = 'OpTHALES';
 export const LP_TOKEN = 'LP Token';
