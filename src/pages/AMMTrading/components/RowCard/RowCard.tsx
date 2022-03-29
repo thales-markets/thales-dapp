@@ -18,7 +18,7 @@ import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOpt
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 
 import { AccountMarketInfo } from 'types/options';
-import { formatCurrency, formatCurrencyWithKey, formatPricePercentageDifference } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
@@ -116,7 +116,7 @@ const RowCard: React.FC = () => {
                                 {t('options.home.market-card.strike-price')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
-                                {formatCurrencyWithKey(USD_SIGN, marketInfo.strikePrice, 2)}
+                                {formatCurrencyWithSign(USD_SIGN, marketInfo.strikePrice, 2)}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
@@ -127,7 +127,7 @@ const RowCard: React.FC = () => {
                                 {t('options.home.market-card.current-asset-price')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
-                                {formatCurrencyWithKey(USD_SIGN, marketInfo.currentPrice, 2)}
+                                {formatCurrencyWithSign(USD_SIGN, marketInfo.currentPrice, 2)}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                         <Container.SubContainer>
@@ -165,14 +165,14 @@ const RowCard: React.FC = () => {
                             <Container.SubContainer.Value>
                                 {optBalances?.long > 0 &&
                                     positionCurrentValue?.longPositionValue &&
-                                    `${formatCurrencyWithKey(USD_SIGN, positionCurrentValue?.longPositionValue)}`}
+                                    `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.longPositionValue)}`}
                                 {optBalances?.long > 0 && positionCurrentValue?.longPositionValue && (
                                     <Container.Icon className="v2-icon v2-icon--up" color={UI_COLORS.GREEN} />
                                 )}
                                 {optBalances?.long > 0 && optBalances?.short > 0 && ' / '}
                                 {optBalances?.short > 0 &&
                                     positionCurrentValue?.shortPositionValue &&
-                                    `${formatCurrencyWithKey(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
+                                    `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
                                 {optBalances?.short > 0 && positionCurrentValue?.shortPositionValue && (
                                     <Container.Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />
                                 )}
@@ -209,7 +209,7 @@ const RowCard: React.FC = () => {
                             <Container.SubContainer.Value>
                                 <Container.SubContainer.Value.Liquidity>
                                     {openOrdersMap
-                                        ? formatCurrencyWithKey(
+                                        ? formatCurrencyWithSign(
                                               USD_SIGN,
                                               (openOrdersMap as any).get(marketInfo.address.toLowerCase())?.longPrice,
                                               2
@@ -219,7 +219,7 @@ const RowCard: React.FC = () => {
                                 {' / '}
                                 <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
                                     {openOrdersMap
-                                        ? formatCurrencyWithKey(
+                                        ? formatCurrencyWithSign(
                                               USD_SIGN,
                                               (openOrdersMap as any).get(marketInfo.address.toLowerCase())?.shortPrice,
                                               2
