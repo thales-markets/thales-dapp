@@ -131,6 +131,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                         <Currency.Name
                             currencyKey={_props?.cell?.value}
                             showIcon={true}
+                            hideAssetName={true}
                             iconProps={{ type: 'asset' }}
                             synthIconStyle={{ width: 32, height: 32 }}
                             spanStyle={{ float: 'left' }}

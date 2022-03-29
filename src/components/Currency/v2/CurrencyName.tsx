@@ -6,6 +6,7 @@ import { getSynthName } from 'utils/currency';
 type CurrencyNameProps = {
     currencyKey: CurrencyKey;
     showIcon?: boolean;
+    hideAssetName?: boolean;
     iconProps?: Record<string, unknown>;
     synthIconStyle?: CSSProperties;
     spanStyle?: CSSProperties;
@@ -15,6 +16,7 @@ export const CurrencyName: React.FC<CurrencyNameProps> = ({
     synthIconStyle,
     currencyKey,
     showIcon = false,
+    hideAssetName,
     iconProps = {},
     spanStyle,
 }) => (
@@ -29,7 +31,9 @@ export const CurrencyName: React.FC<CurrencyNameProps> = ({
         }}
     >
         {showIcon && <CurrencyIcon currencyKey={currencyKey} synthIconStyle={synthIconStyle} {...iconProps} />}
-        <span style={{ fontWeight: 300, textTransform: 'uppercase' }}>{getSynthName(currencyKey)}</span>
+        {!hideAssetName && (
+            <span style={{ fontWeight: 300, textTransform: 'uppercase' }}>{getSynthName(currencyKey)}</span>
+        )}
         <span style={{ fontWeight: 900, marginLeft: '3px' }}>{currencyKey}</span>
     </span>
 );
