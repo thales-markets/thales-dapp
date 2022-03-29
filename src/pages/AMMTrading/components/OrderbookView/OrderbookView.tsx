@@ -34,6 +34,7 @@ const OrderbookView: React.FC = () => {
                     noStrech={true}
                     active={optionType == TradeOptionType[0].value}
                     customActiveColor={TradeOptionType[0].activeTabShadow}
+                    customActiveLabelColor={optionType == TradeOptionType[0].value ? UI_COLORS.GREEN : undefined}
                     padding={'20px 30px'}
                     onClick={() => setOptionType(TradeOptionType[0].value as OptionSide)}
                 >
@@ -49,6 +50,7 @@ const OrderbookView: React.FC = () => {
                     noStrech={true}
                     active={optionType == TradeOptionType[1].value}
                     customActiveColor={TradeOptionType[1].activeTabShadow}
+                    customActiveLabelColor={optionType == TradeOptionType[1].value ? UI_COLORS.RED : undefined}
                     padding={'20px 30px'}
                     onClick={() => setOptionType(TradeOptionType[1].value as OptionSide)}
                 >
