@@ -64,7 +64,7 @@ const ValueContainer: StyledComponent<'div', any> & ValueChildren = styled.div`
     flex-direction: row;
 `;
 
-export const Fixed = styled.div<{ active?: boolean }>`
+export const Fixed = styled.div<{ active?: boolean; margin?: string }>`
     display: flex;
     border-radius: 60%;
     align-items: center;
@@ -72,7 +72,7 @@ export const Fixed = styled.div<{ active?: boolean }>`
     font-size: 12px;
     width: 32px;
     height: 32px;
-    margin-right: 11px;
+    margin: ${(_props) => (_props?.margin ? _props?.margin : '0 11px 0 0')};
     cursor: pointer;
     font-family: Titillium Regular !important;
     border: 1px solid var(--input-border-color);
