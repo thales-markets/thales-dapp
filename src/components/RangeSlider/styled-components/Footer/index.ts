@@ -8,6 +8,7 @@ const Footer = styled.div<{ justifyContent?: string }>`
     color: var(--notice-text);
     font-size: 14px;
     font-family: Titillium Regular !important;
+    margin-top: 3px;
     padding: 0px 5px;
 `;
 
