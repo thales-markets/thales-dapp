@@ -235,45 +235,45 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     }, [amount, sUSDBalance, tokenBalance]);
 
     const getSubmitButton = () => {
-        const mainProps = {
-            width: '60%',
-            hoverShadow: 'var(--shadow)',
+        const defaultButtonProps = {
+            padding: '3px 35px',
             active: true,
-            margin: '20px auto 0px auto',
-            padding: '5px 20px',
+            margin: '24px auto 0 auto',
+            hoverShadow: 'var(--button-shadow)',
+            fontSize: '20px',
         };
 
         if (!isWalletConnected) {
             return (
-                <Button {...mainProps} onClickHandler={() => onboardConnector.connectWallet()}>
+                <Button {...defaultButtonProps} onClickHandler={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
         }
         if (insufficientOrderAmount) {
             return (
-                <Button {...mainProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-order-amount`)}
                 </Button>
             );
         }
         if (insufficientBalance) {
             return (
-                <Button {...mainProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.insufficient-balance`)}
                 </Button>
             );
         }
         if (!isAmountEntered) {
             return (
-                <Button {...mainProps} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.enter-amount`)}
                 </Button>
             );
         }
         if (!hasAllowance) {
             return (
-                <Button {...mainProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
+                <Button {...defaultButtonProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: takerTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -283,7 +283,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             );
         }
         return (
-            <Button {...mainProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleFillOrder}>
+            <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleFillOrder}>
                 {!isFilling
                     ? t('options.market.trade-options.fill-order.confirm-button.label')
                     : t('options.market.trade-options.fill-order.confirm-button.progress-label')}
@@ -380,7 +380,7 @@ const WalletContainer = styled.div`
 const MaxButton = styled.button`
     position: absolute;
     top: 5px;
-    right: 14px;
+    right: 10px;
     padding: 1px 8px;
     font-weight: 700;
     font-size: 10px;
