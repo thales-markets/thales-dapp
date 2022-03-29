@@ -5,7 +5,13 @@ type MenuContainerChild = {
     Item: StyledComponent<
         'div',
         any,
-        { active?: boolean; customActiveColor?: string; noStrech?: boolean; padding?: string }
+        {
+            active?: boolean;
+            customActiveColor?: string;
+            customActiveLabelColor?: string;
+            noStrech?: boolean;
+            padding?: string;
+        }
     >;
 };
 
@@ -41,12 +47,18 @@ const Tab = styled.div`
     }
 `;
 
-const MenuItem = styled.div<{ active?: boolean; customActiveColor?: string; noStrech?: boolean; padding?: string }>`
+const MenuItem = styled.div<{
+    active?: boolean;
+    customActiveColor?: string;
+    customActiveLabelColor?: string;
+    noStrech?: boolean;
+    padding?: string;
+}>`
     text-align: center;
     ${(_props) => (!_props?.noStrech ? 'flex: 1' : '')};
     font-family: Titillium Regular !important;
     font-style: normal;
-    color: var(--primary-color);
+    color: ${(_props) => (_props?.customActiveLabelColor ? _props?.customActiveLabelColor : 'var(--primary-color)')};
     box-shadow: ${(_props) =>
         _props?.active
             ? _props?.customActiveColor
