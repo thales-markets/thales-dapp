@@ -1131,7 +1131,8 @@
                 "eliminated": "淘汰",
                 "players": "玩家",
                 "ended": "结束",
-                "optimism-timestamp-message": "由于Optimism上L1的最大汇总时间为5分钟，因此本轮结束时间最多会延迟5分钟。"
+                "optimism-timestamp-message": "由于Optimism上L1的最大汇总时间为5分钟，因此本轮结束时间最多会延迟5分钟。",
+                "claim-reward": "领取奖励：{{reward}} sUSD"
             },
             "scoreboard": {
                 "starts": "泰勒斯鱿鱼游戏将开始于:",
