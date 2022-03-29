@@ -222,6 +222,18 @@ const CustomInput = styled.input`
         border: none;
         outline: none;
     }
+    &:-webkit-input-placeholder {
+        color: var(--primary-color);
+        opacity: 0.7;
+    }
+    &:-ms-input-placeholder {
+        color: var(--primary-color);
+        opacity: 0.7;
+    }
+    &::placeholder {
+        color: var(--primary-color);
+        opacity: 0.7;
+    }
 `;
 
 const CustomInputLabel = styled.span`
