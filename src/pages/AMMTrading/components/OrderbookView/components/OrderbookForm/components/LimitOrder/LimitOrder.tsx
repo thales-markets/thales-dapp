@@ -283,7 +283,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
 
     const getSubmitButton = () => {
         const defaultButtonProps = {
-            padding: '5px 35px',
+            padding: '3px 35px',
             active: true,
             margin: '80px auto 0 auto',
             hoverShadow: 'var(--button-shadow)',
