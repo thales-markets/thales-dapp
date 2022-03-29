@@ -1,10 +1,10 @@
 import React, { CSSProperties, useEffect } from 'react';
 import { useTable, useSortBy, useGlobalFilter, usePagination, useFlexLayout } from 'react-table';
-
-import TableView, { NoDataContainer, NoDataText } from './styled-components/Table';
+import TableView from './styled-components/Table';
 import Pagination from './styled-components/Pagination';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn, NoDataText, NoDataContainer } from 'theme/common';
 import SPAAnchor from 'components/SPAAnchor';
+import { useTranslation } from 'react-i18next';
 
 type TableProps = {
     data: any;
@@ -23,6 +23,7 @@ const Table: React.FC<TableProps> = ({
     resultsPerPage,
     containerStyle,
 }) => {
+    const { t } = useTranslation();
     useEffect(() => {
         setGlobalFilter(searchQuery);
     }, [searchQuery]);
@@ -157,7 +158,7 @@ const Table: React.FC<TableProps> = ({
             )}
             {!data.length && (
                 <NoDataContainer>
-                    <NoDataText>No data available</NoDataText>
+                    <NoDataText>{t('common.no-data')}</NoDataText>
                 </NoDataContainer>
             )}
         </>
