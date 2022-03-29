@@ -100,7 +100,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
         ...(!inMaturity
             ? [
                   {
-                      title: t('options.market.widgets.chart-trading-view-widget'),
+                      title: t('options.market.widgets.chart', { currencyKey: marketInfo?.currencyKey }),
                       index: 1,
                   },
               ]
@@ -108,7 +108,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
         ...(!inMaturity
             ? [
                   {
-                      title: t('options.market.widgets.chart-options-price-widget'),
+                      title: t('options.market.widgets.position-price'),
                       index: 2,
                   },
               ]

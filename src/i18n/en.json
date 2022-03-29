@@ -715,6 +715,8 @@
                 "orderbook-widget": "Order book",
                 "trade-widget": "Trade",
                 "chart-trading-view-widget": "Trading view",
+                "chart": "{{currencyKey}} chart",
+                "position-price": "Position price",
                 "chart-options-price-widget": "Options price",
                 "recent-transactions-widget": "Market activity",
                 "your-transactions-widget": "Your activity",

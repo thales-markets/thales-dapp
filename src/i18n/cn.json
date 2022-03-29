@@ -716,7 +716,9 @@
                     "customize-layout": "自定义视图",
                     "reset-layout": "重置布局"
                 },
-                "amm-widget": "AMM"
+                "amm-widget": "AMM",
+                "position-price": "仓位价格",
+                "chart": "{{currencyKey}} 图表"
             },
             "chart-card": {
                 "no-chart-data": "无图表数据"

@@ -716,7 +716,9 @@
                     "customize-layout": "Настроить вид",
                     "reset-layout": "Сбросить вид"
                 },
-                "amm-widget": "AMM"
+                "amm-widget": "AMM",
+                "position-price": "Цена позиции",
+                "chart": "График {{currencyKey}}"
             },
             "chart-card": {
                 "no-chart-data": "Нет данных"
