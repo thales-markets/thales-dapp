@@ -44,6 +44,7 @@ const useProposalQuery = (
                                 name
                                 network
                             }
+                            network
                         }
                     }
                 `,
@@ -97,7 +98,7 @@ const useProposalQuery = (
             const scores = await snapshot.utils.getScores(
                 spaceKey,
                 proposal.strategies,
-                space.network,
+                proposal.network,
                 voterAddresses,
                 block
             );
