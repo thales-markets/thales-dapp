@@ -17,7 +17,7 @@ type ContainerChildren = {
         any,
         { leftBorder?: boolean; minWidth?: string; alignItems?: string; currency?: boolean; priceChart?: boolean }
     >;
-    SubContainer: StyledComponent<'div', any> & SubContainerChildren;
+    SubContainer: StyledComponent<'div', any, { hidden?: boolean }> & SubContainerChildren;
     Divider: StyledComponent<'div', any>;
     Icon: StyledComponent<'i', any, { color?: string }>;
 };
@@ -47,23 +47,27 @@ const ChartContainer = styled.div`
 `;
 
 // @ts-ignore
-const SubContainer: StyledComponent<'div', any> & SubContainerChildren = styled.div`
+const SubContainer: StyledComponent<'div', any, { hidden?: boolean }> & SubContainerChildren = styled.div<{
+    hidden?: boolean;
+}>`
     display: flex;
     flex-direction: column;
     justify-content: start;
     margin: 10px 0px;
+    visibility: ${(_props) => (_props.hidden ? 'hidden' : '')};
     justify-content: space-around;
 `;
 
 const ColumnContainer = styled.div<{
     leftBorder?: boolean;
+    alignItems?: string;
     minWidth?: string;
     currency?: boolean;
     priceChart?: boolean;
 }>`
     display: flex;
     flex-direction: column;
-    align-items: baseline;
+    align-items: ${(_props) => (_props?.alignItems ? _props.alignItems : 'baseline')};
     justify-content: flex-start;
     @media (max-width: 568px) {
         padding: 0 10px;
