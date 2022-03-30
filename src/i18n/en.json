@@ -886,7 +886,7 @@
                         "pool": "Fee pool earns"
                     },
                     "confirm-button": {
-                        "label": "Mint",
+                        "label": "Mint order",
                         "progress-label": "Minting in progress...",
                         "submit-long-progress-label": "Submitting UP order in progress...",
                         "submit-short-progress-label": "Submitting DOWN order in progress..",
