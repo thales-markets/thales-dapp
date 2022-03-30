@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
 import { getTheme } from 'redux/modules/ui';
@@ -8,28 +7,30 @@ import styled from 'styled-components';
 import DappHeader from './components/DappHeader/DappHeader';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { isNetworkSupported } from '../../utils/network';
+import { getNetworkId } from '../../redux/modules/wallet';
 
 type DappLayoutProps = {
     children: React.ReactNode;
 };
 
 const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const theme = useSelector((state: RootState) => getTheme(state));
+
+    useEffect(() => {
+        document.getElementsByTagName('body')[0].style.overflow = isNetworkSupported(networkId) ? 'auto' : 'hidden';
+    }, [networkId]);
+
     return (
-        <>
-            {isAppReady ? (
-                <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
-                    <NewWrapper>
-                        <DappHeader />
-                        {children}
-                    </NewWrapper>
-                    <ToastContainer theme={'colored'} />
-                </Background>
-            ) : (
-                <Loader />
-            )}
-        </>
+        <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
+            <NewWrapper>
+                <DappHeader />
+                {children}
+            </NewWrapper>
+            <ToastContainer theme={'colored'} />
+            {!isNetworkSupported(networkId) && <Loader />}
+        </Background>
     );
 };
 
