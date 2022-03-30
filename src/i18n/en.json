@@ -770,15 +770,15 @@
             "trade-card": {
                 "maturity": {
                     "card-title": "Market has been closed",
-                    "card-subtitle": "Options available:",
-                    "exercise-options": "You can exercise following options",
+                    "card-subtitle": "Positions available:",
+                    "exercise-options": "You can exercise following positions",
                     "payout-amount-label": "Payout amount",
                     "end-label": "Time left to exercise",
                     "confirm-button": {
-                        "label": "Exercise options",
+                        "label": "Exercise position",
                         "progress-label": "Exercising in progress...",
                         "success-label": "Nothing to exercise",
-                        "confirmation-message": "Options successfully exercised"
+                        "confirmation-message": "Positions successfully exercised"
                     }
                 }
             },
