@@ -1,5 +1,4 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import snapshot from '@snapshot-labs/snapshot.js';
 import { ethers } from 'ethers';
 import { uniqBy } from 'lodash';
 import request, { gql } from 'graphql-request';
@@ -85,6 +84,7 @@ const useProposalQuery = (
                             id
                             voter
                             choice
+                            vp_by_strategy
                         }
                     }
                 `,
@@ -93,15 +93,13 @@ const useProposalQuery = (
 
             const voterAddresses = votes.map((e: Vote) => ethers.utils.getAddress(e.voter));
 
-            const block = parseInt(proposal.snapshot);
-
-            const scores = await snapshot.utils.getScores(
-                spaceKey,
-                proposal.strategies,
-                proposal.network,
-                voterAddresses,
-                block
-            );
+            const scores = [] as any;
+            proposal.strategies.forEach((_: SpaceStrategy, key: number) => {
+                scores.push({});
+                votes.forEach((vote: Vote) => {
+                    scores[key][vote.voter] = vote.vp_by_strategy[key];
+                });
+            });
 
             let mappedVotes = votes as MappedVotes[];
 

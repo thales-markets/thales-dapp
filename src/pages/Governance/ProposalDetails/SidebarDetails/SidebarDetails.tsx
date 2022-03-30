@@ -10,7 +10,11 @@ import Results from '../Results';
 import History from '../History';
 import { useTranslation } from 'react-i18next';
 import TipsApprovalBox from '../TipsApprovalBox';
-import { SpaceKey, VOTING_COUNCIL_PROPOSAL_ID } from '../../../../constants/governance';
+import {
+    SpaceKey,
+    VOTING_COUNCIL_PROPOSAL_ID,
+    VOTING_ORACLE_COUNCIL_PROPOSAL_ID,
+} from '../../../../constants/governance';
 
 type SidebarType = 'results' | 'history' | 'approval-box';
 
@@ -27,7 +31,9 @@ const SidebarDetails: React.FC<SidebarDetailsProps> = ({ proposal, type }) => {
     const proposalResults =
         proposalResultsQuery.isSuccess && proposalResultsQuery.data ? proposalResultsQuery.data : undefined;
     const isCouncilVoting = useMemo(
-        () => proposal.space.id === SpaceKey.COUNCIL && proposal.id === VOTING_COUNCIL_PROPOSAL_ID,
+        () =>
+            proposal.space.id === SpaceKey.COUNCIL &&
+            (proposal.id === VOTING_COUNCIL_PROPOSAL_ID || proposal.id === VOTING_ORACLE_COUNCIL_PROPOSAL_ID),
         [proposal]
     );
 
