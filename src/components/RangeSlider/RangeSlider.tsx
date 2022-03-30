@@ -30,7 +30,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     onChangeEventHandler,
     disabled,
 }) => {
-    const [focus, setFocus] = useState<boolean>(true);
+    const [focus, setFocus] = useState<boolean>(false);
 
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof onChangeEventHandler == 'function') {

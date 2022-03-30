@@ -699,7 +699,10 @@
                 "amm-price": "AMM 价格",
                 "my-positions": "我的职位",
                 "similar-markets": "类似市场",
-                "close-similar-markets": "关闭类似市场"
+                "close-similar-markets": "关闭类似市场",
+                "my-position": "我的位置",
+                "final-result": "最后结果",
+                "position-value": "职位价值"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",

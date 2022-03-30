@@ -699,7 +699,10 @@
                 "positions-value": "Позиции Значение",
                 "my-positions": "Мои позиции",
                 "similar-markets": "Похожие рынки",
-                "close-similar-markets": "Закрыть похожие рынки"
+                "close-similar-markets": "Закрыть похожие рынки",
+                "final-result": "Конечный результат",
+                "my-position": "Моя позиция",
+                "position-value": "Значение позиции"
             },
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",

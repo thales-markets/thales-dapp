@@ -17,7 +17,7 @@ import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 
-import { AccountMarketInfo } from 'types/options';
+import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
@@ -82,12 +82,13 @@ const RowCard: React.FC = () => {
         <>
             {marketInfo && (
                 <Container>
-                    <Container.ColumnContainer currency={true}>
+                    <Container.ColumnContainer currency={true} alignItems={'center'}>
                         <Container.SubContainer>
                             <CurrencyIcon
                                 synthIconStyle={{
                                     height: '51px',
                                     width: '51px',
+                                    marginRight: '0px !important',
                                 }}
                                 currencyKey={marketInfo.currencyKey}
                                 width={'51px'}
@@ -124,7 +125,11 @@ const RowCard: React.FC = () => {
                     <Container.ColumnContainer>
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
-                                {t('options.home.market-card.current-asset-price')}
+                                {marketInfo?.phase == 'maturity'
+                                    ? t('options.market.overview.final-price-label', {
+                                          currencyKey: marketInfo.currencyKey,
+                                      })
+                                    : t('options.home.market-card.current-asset-price')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
                                 {formatCurrencyWithSign(USD_SIGN, marketInfo.currentPrice, 2)}
@@ -143,7 +148,9 @@ const RowCard: React.FC = () => {
                     <Container.ColumnContainer>
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
-                                {t('options.market.overview.my-positions')}
+                                {marketInfo?.phase !== 'maturity'
+                                    ? t('options.market.overview.my-positions')
+                                    : t('options.market.overview.my-position')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
                                 {optBalances?.long > 0 && `${formatCurrency(optBalances?.long)}`}
@@ -160,75 +167,93 @@ const RowCard: React.FC = () => {
                         </Container.SubContainer>
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
-                                {t('options.market.overview.positions-value')}
+                                {marketInfo?.phase !== 'maturity'
+                                    ? t('options.market.overview.positions-value')
+                                    : t('options.market.overview.position-value')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
-                                {optBalances?.long > 0 &&
-                                    positionCurrentValue?.longPositionValue &&
-                                    `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.longPositionValue)}`}
-                                {optBalances?.long > 0 && positionCurrentValue?.longPositionValue && (
-                                    <Container.Icon className="v2-icon v2-icon--up" color={UI_COLORS.GREEN} />
-                                )}
-                                {optBalances?.long > 0 && optBalances?.short > 0 && ' / '}
-                                {optBalances?.short > 0 &&
-                                    positionCurrentValue?.shortPositionValue &&
-                                    `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
-                                {optBalances?.short > 0 && positionCurrentValue?.shortPositionValue && (
-                                    <Container.Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />
-                                )}
-                                {!positionCurrentValue?.shortPositionValue &&
-                                    !positionCurrentValue?.longPositionValue &&
-                                    'N/A'}
+                                <PositionPrice
+                                    marketInfo={marketInfo}
+                                    positionCurrentValue={positionCurrentValue}
+                                    optBalances={optBalances}
+                                />
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
                     <Container.Divider />
-                    <Container.ColumnContainer>
-                        <Container.SubContainer>
-                            <Container.SubContainer.Header>
-                                {t('options.market.overview.amm-liquidity')}
-                            </Container.SubContainer.Header>
-                            <Container.SubContainer.Value>
-                                <Container.SubContainer.Value.Liquidity>
-                                    {openOrdersMap
-                                        ? (openOrdersMap as any).get(marketInfo.address.toLowerCase())?.availableLongs
-                                        : '0'}
-                                </Container.SubContainer.Value.Liquidity>
-                                {' / '}
-                                <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
-                                    {openOrdersMap
-                                        ? (openOrdersMap as any).get(marketInfo.address.toLowerCase())?.availableShorts
-                                        : '0'}
-                                </Container.SubContainer.Value.Liquidity>
-                            </Container.SubContainer.Value>
-                        </Container.SubContainer>
-                        <Container.SubContainer>
-                            <Container.SubContainer.Header>
-                                {t('options.market.overview.amm-price')}
-                            </Container.SubContainer.Header>
-                            <Container.SubContainer.Value>
-                                <Container.SubContainer.Value.Liquidity>
-                                    {openOrdersMap
-                                        ? formatCurrencyWithSign(
-                                              USD_SIGN,
-                                              (openOrdersMap as any).get(marketInfo.address.toLowerCase())?.longPrice,
-                                              2
-                                          )
-                                        : '0'}
-                                </Container.SubContainer.Value.Liquidity>
-                                {' / '}
-                                <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
-                                    {openOrdersMap
-                                        ? formatCurrencyWithSign(
-                                              USD_SIGN,
-                                              (openOrdersMap as any).get(marketInfo.address.toLowerCase())?.shortPrice,
-                                              2
-                                          )
-                                        : '0'}
-                                </Container.SubContainer.Value.Liquidity>
-                            </Container.SubContainer.Value>
-                        </Container.SubContainer>
-                    </Container.ColumnContainer>
+                    {marketInfo.phase == 'trading' && (
+                        <Container.ColumnContainer>
+                            <Container.SubContainer>
+                                <Container.SubContainer.Header>
+                                    {t('options.market.overview.amm-liquidity')}
+                                </Container.SubContainer.Header>
+                                <Container.SubContainer.Value>
+                                    <Container.SubContainer.Value.Liquidity>
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(marketInfo.address.toLowerCase())
+                                                  ?.availableLongs
+                                            : '0'}
+                                    </Container.SubContainer.Value.Liquidity>
+                                    {' / '}
+                                    <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(marketInfo.address.toLowerCase())
+                                                  ?.availableShorts
+                                            : '0'}
+                                    </Container.SubContainer.Value.Liquidity>
+                                </Container.SubContainer.Value>
+                            </Container.SubContainer>
+                            <Container.SubContainer>
+                                <Container.SubContainer.Header>
+                                    {t('options.market.overview.amm-price')}
+                                </Container.SubContainer.Header>
+                                <Container.SubContainer.Value>
+                                    <Container.SubContainer.Value.Liquidity>
+                                        {openOrdersMap
+                                            ? formatCurrencyWithSign(
+                                                  USD_SIGN,
+                                                  (openOrdersMap as any).get(marketInfo.address.toLowerCase())
+                                                      ?.longPrice,
+                                                  2
+                                              )
+                                            : '0'}
+                                    </Container.SubContainer.Value.Liquidity>
+                                    {' / '}
+                                    <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
+                                        {openOrdersMap
+                                            ? formatCurrencyWithSign(
+                                                  USD_SIGN,
+                                                  (openOrdersMap as any).get(marketInfo.address.toLowerCase())
+                                                      ?.shortPrice,
+                                                  2
+                                              )
+                                            : '0'}
+                                    </Container.SubContainer.Value.Liquidity>
+                                </Container.SubContainer.Value>
+                            </Container.SubContainer>
+                        </Container.ColumnContainer>
+                    )}
+                    {marketInfo?.phase == 'maturity' && (
+                        <Container.ColumnContainer>
+                            <Container.SubContainer>
+                                <Container.SubContainer.Header>
+                                    {t('options.market.overview.final-result')}
+                                </Container.SubContainer.Header>
+                                <Container.SubContainer.Value>
+                                    <Container.Icon
+                                        className={`v2-icon ${
+                                            marketInfo.result == 'long' ? 'v2-icon--up' : 'v2-icon--down'
+                                        }`}
+                                        color={marketInfo.result == 'long' ? UI_COLORS.GREEN : UI_COLORS.RED}
+                                    />
+                                </Container.SubContainer.Value>
+                            </Container.SubContainer>
+                            <Container.SubContainer hidden={true}>
+                                <Container.SubContainer.Header>{'Hidden'}</Container.SubContainer.Header>
+                                <Container.SubContainer.Value>{'Hidden'}</Container.SubContainer.Value>
+                            </Container.SubContainer>
+                        </Container.ColumnContainer>
+                    )}
                     <Container.ColumnContainer minWidth="180px" alignItems={'flex-end'} priceChart={true}>
                         <Container.ChartContainer>
                             <PriceChart currencyKey={marketInfo.currencyKey} footerFontSize={'10px'} />
@@ -247,6 +272,45 @@ const RowCard: React.FC = () => {
                     </Container.ColumnContainer>
                 </Container>
             )}
+        </>
+    );
+};
+
+type PositionPriceProps = {
+    marketInfo: OptionsMarketInfo;
+    optBalances: {
+        long: number;
+        short: number;
+    };
+    positionCurrentValue:
+        | undefined
+        | {
+              longPositionValue: number | null;
+              shortPositionValue: number | null;
+          };
+};
+
+const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue }) => {
+    if (marketInfo?.phase == 'maturity' && marketInfo?.result) {
+        return <>{`${formatCurrencyWithSign(USD_SIGN, optBalances[marketInfo?.result])}`}</>;
+    }
+
+    return (
+        <>
+            {optBalances.long > 0 &&
+                positionCurrentValue?.longPositionValue &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.longPositionValue)}`}
+            {optBalances.long > 0 && positionCurrentValue?.longPositionValue && (
+                <Container.Icon className="v2-icon v2-icon--up" color={UI_COLORS.GREEN} />
+            )}
+            {optBalances.long > 0 && optBalances.short > 0 && ' / '}
+            {optBalances.short > 0 &&
+                positionCurrentValue?.shortPositionValue &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
+            {optBalances?.short > 0 && positionCurrentValue?.shortPositionValue && (
+                <Container.Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />
+            )}
+            {!positionCurrentValue?.shortPositionValue && !positionCurrentValue?.longPositionValue && 'N/A'}
         </>
     );
 };

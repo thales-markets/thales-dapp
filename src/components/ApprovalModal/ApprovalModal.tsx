@@ -17,7 +17,6 @@ import {
     DefaultSubmitButton,
     SubmitButtonContainer,
     InputContainer,
-    // InputLabel,
     CurrencyLabel,
 } from 'pages/Options/Market/components';
 import onboardConnector from 'utils/onboardConnector';

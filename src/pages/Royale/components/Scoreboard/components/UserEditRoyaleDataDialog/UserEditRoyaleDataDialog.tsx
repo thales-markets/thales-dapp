@@ -11,7 +11,7 @@ import Web3 from 'web3';
 import { User } from '../../queries/useRoyalePlayersQuery';
 import './media.scss';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import { Theme } from 'pages/Options/Royal/ThalesRoyal';
+import { Theme } from 'pages/Royale/ThalesRoyal';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 
 type UserEditRoyaleDataDialogProps = {
