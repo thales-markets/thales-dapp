@@ -92,6 +92,10 @@ const WrongNetworkWrapper = styled.div`
     box-sizing: border-box;
     box-shadow: 0px 0px 90px 10px #64d9fe;
     border-radius: 15px;
+    @media (max-width: 767px) {
+        padding: 5px;
+        max-width: calc(100% - 10px);
+    }
 `;
 
 const WrongNetworkText = styled.p`
