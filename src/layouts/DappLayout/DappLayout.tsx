@@ -6,6 +6,8 @@ import Loader from 'components/Loader';
 import { getTheme } from 'redux/modules/ui';
 import styled from 'styled-components';
 import DappHeader from './components/DappHeader/DappHeader';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type DappLayoutProps = {
     children: React.ReactNode;
@@ -22,6 +24,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
                         <DappHeader />
                         {children}
                     </NewWrapper>
+                    <ToastContainer theme={'colored'} />
                 </Background>
             ) : (
                 <Loader />

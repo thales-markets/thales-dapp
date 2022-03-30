@@ -1,4 +1,5 @@
 import { Layout } from 'react-grid-layout';
+import { ToastPosition, TypeOptions } from 'react-toastify';
 
 export enum MarketWidgetKey {
     MATURITY_PHASE = 'maturity-phase-widget',
@@ -49,4 +50,31 @@ export const TooltipStyles = {
         fontSize: '12px',
         lineHeight: '24px',
     },
+};
+
+export const toastBasicProperties = {
+    position: 'top-right' as ToastPosition,
+    autoClose: 7000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    progress: undefined,
+};
+
+export const getSuccessToastOptions = (message: string) => {
+    return {
+        ...toastBasicProperties,
+        render: message,
+        isLoading: false,
+        type: 'success' as TypeOptions,
+    };
+};
+
+export const getErrorToastOptions = (message: string) => {
+    return {
+        ...toastBasicProperties,
+        render: message,
+        isLoading: false,
+        type: 'error' as TypeOptions,
+    };
 };

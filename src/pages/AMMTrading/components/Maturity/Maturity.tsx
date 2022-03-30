@@ -12,7 +12,7 @@ import TimeRemaining from 'components/TimeRemaining';
 
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 
-import { UI_COLORS } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions, UI_COLORS } from 'constants/ui';
 import { useBOMContractContext } from 'pages/AMMTrading/contexts/BOMContractContext';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { RootState } from 'redux/rootReducer';
@@ -25,9 +25,10 @@ import { refetchMarketQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { L2_EXERCISE_GAS_LIMIT } from 'constants/options';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
-import { dispatchMarketNotification } from 'utils/options';
+// import { dispatchMarketNotification } from 'utils/options';
 import { formatCurrency } from 'utils/formatters/number';
 import { SYNTHS_MAP } from 'constants/currency';
+import { toast } from 'react-toastify';
 
 const Maturity: React.FC = () => {
     const { t } = useTranslation();
@@ -38,13 +39,10 @@ const Maturity: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isExercising, setIsExercising] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
-
-    console.log('txErrorMessage ', txErrorMessage);
 
     let accountMarketInfo = {
         long: 0,
@@ -113,8 +111,9 @@ const Maturity: React.FC = () => {
     }, [isWalletConnected, nothingToExercise]);
 
     const handleExercise = async () => {
+        const id = toast.loading(t('options.market.trade-card.maturity.confirm-button.progress-label'));
+
         try {
-            setTxErrorMessage(null);
             setIsExercising(true);
             const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
             const tx = (await BOMContractWithSigner.exerciseOptions({
@@ -138,7 +137,11 @@ const Maturity: React.FC = () => {
 
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('options.market.trade-card.maturity.confirm-button.confirmation-message'));
+                toast.update(
+                    id,
+                    getSuccessToastOptions(t('options.market.trade-card.maturity.confirm-button.confirmation-message'))
+                );
+                // dispatchMarketNotification(t('options.market.trade-card.maturity.confirm-button.confirmation-message'));
                 dispatch(
                     updateOptionsPendingTransactionStatus({
                         hash: txResult.transactionHash,
@@ -151,7 +154,7 @@ const Maturity: React.FC = () => {
             }
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
             setIsExercising(false);
         }
     };
