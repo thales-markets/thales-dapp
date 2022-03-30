@@ -1,11 +1,11 @@
 import { DialogTitle } from '@material-ui/core';
 import { StyledModal } from 'pages/Options/Market/TradeOptions/Orderbook/components';
+import { RoyaleBackground } from 'pages/Royale/ThalesRoyal';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Text } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
-import { RoyaleBackground } from '../../Royal/ThalesRoyal';
 import './media.scss';
 
 type WalletNotConnectedDialogProps = {

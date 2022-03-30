@@ -1,6 +1,6 @@
 import { Modal } from '@material-ui/core';
 import metamask from 'assets/images/metamask.svg';
-import { Theme } from 'pages/Options/Royal/ThalesRoyal';
+import { Theme } from 'pages/Royale/ThalesRoyal';
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
