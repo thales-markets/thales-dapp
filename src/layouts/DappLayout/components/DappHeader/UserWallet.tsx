@@ -48,6 +48,11 @@ const Wrapper = styled.div`
         right: 70px;
         top: 20px;
     }
+
+    @media (max-width: 400px) {
+        right: 55px;
+        top: 20px;
+    }
 `;
 
 const WalletContainer = styled.div`

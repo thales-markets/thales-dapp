@@ -217,6 +217,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                     onClick={async () => {
                         await swapTx();
                         updateBalanceAndAllowance(fromToken);
+                        handleClose(this, false);
                     }}
                     disabled={Number(amount) > Number(balance)}
                 >

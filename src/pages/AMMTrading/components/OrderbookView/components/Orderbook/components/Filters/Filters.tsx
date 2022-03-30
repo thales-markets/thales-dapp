@@ -48,25 +48,27 @@ const Filters: React.FC<FiltersProps> = ({
                 return (
                     <Button
                         active={filter == filterItem}
-                        padding={'2px 12px'}
+                        padding={'9px 12px'}
                         margin={'0px 5px 0px 0px'}
+                        fontSize={'12px'}
                         key={filterItem}
                         onClickHandler={() => onClick(filterItem)}
                     >
-                        <Icon className={orderbookFilterMap[filterItem].iconClass} active={filter == filterItem} />
                         {t(`${orderbookFilterMap[filterItem].labeli18}`)}
+                        <Icon className={orderbookFilterMap[filterItem].iconClass} active={filter == filterItem} />
                     </Button>
                 );
             })}
             <CustomTooltip title={userOrderFilterTooltipText}>
                 <Button
                     active={userOrderFilter == true}
-                    padding={'2px 12px'}
+                    padding={'9px 12px'}
                     margin={'0px 5px 0px 15px'}
+                    fontSize={'12px'}
                     onClickHandler={() => onUserOrderFilterClick(!userOrderFilter)}
                 >
-                    <Icon className={'icon icon--user-avatar'} active={userOrderFilter == true} />
                     {t('options.order-book.filters.sell-orders')}
+                    <Icon className={'icon icon--user-avatar'} active={userOrderFilter == true} />
                 </Button>
             </CustomTooltip>
         </Container>
@@ -81,10 +83,10 @@ const Container = styled.div`
 `;
 
 const Icon = styled.i<{ active?: boolean }>`
-    font-size: 22px;
+    font-size: 12px;
     color: ${(_props) => (_props?.active ? 'var(--button-text-active)' : 'var(--button-text-inactive)')};
     text-transform: initial;
-    margin-right: 5px;
+    margin-left: 3px;
 `;
 
 const CustomTooltip = withStyles(() => ({

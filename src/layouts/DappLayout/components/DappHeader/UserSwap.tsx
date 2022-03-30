@@ -68,11 +68,17 @@ const SwapButton = styled.div`
     color: var(--background);
     border-radius: 20px;
     cursor: pointer;
+    white-space: pre;
     padding: 5px;
     right: 234px;
     top: 0;
     @media (max-width: 1024px) {
         right: 224px;
+        top: 22px;
+    }
+
+    @media (max-width: 400px) {
+        right: 194px;
         top: 22px;
     }
 `;

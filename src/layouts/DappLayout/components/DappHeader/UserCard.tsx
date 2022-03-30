@@ -109,6 +109,10 @@ const MenuCardButton = styled.div`
         right: 0;
         top: 20px;
     }
+
+    @media (max-width: 400px) {
+        width: 40px;
+    }
 `;
 
 const MenuIcon = styled.i`
