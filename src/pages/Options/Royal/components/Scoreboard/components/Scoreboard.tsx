@@ -1,3 +1,6 @@
+import DiscordImage from 'assets/images/royale/discord.png';
+import notSigned from 'assets/images/royale/not-signed.svg';
+import SimpleLoader from 'components/SimpleLoader';
 import i18n from 'i18n';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
@@ -11,11 +14,8 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Image, LoaderContainer, Text } from 'theme/common';
 import { getIsOVM } from 'utils/network';
-import useRoyalePlayersQuery, { User, UserStatus } from '../queries/useRoyalePlayersQuery';
 import useRoyaleDataForScoreboard from '../queries/useRoyaleDataForScoreboard';
-import DiscordImage from 'assets/images/royale/discord.png';
-import notSigned from 'assets/images/royale/not-signed.svg';
-import SimpleLoader from 'components/SimpleLoader';
+import useRoyalePlayersQuery, { User, UserStatus } from '../queries/useRoyalePlayersQuery';
 
 const PerPageOption = [15, 25, 50, 100];
 
@@ -38,7 +38,7 @@ type ScoreboardProps = {
 
 const defaultOrderBy = 1;
 
-const Scoreboard: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
+export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
@@ -359,10 +359,20 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
 const getAvatar = (user: User, royaleData: any) => {
     if (user.status === UserStatus.RDY) {
         const lastRoundInSeason = royaleData.round;
+        const fallbackAvatar = user.number % 10;
         const isUserAWinner =
             (user.isAlive && royaleData.seasonFinished) ||
             (Number(user.deathRound) === lastRoundInSeason && royaleData.seasonFinished);
-        return <UserAvatar winner={isUserAWinner} src={user.avatar || DiscordImage} />;
+        if (user.avatar) {
+            return <UserAvatar winner={isUserAWinner} src={user.avatar || DiscordImage} />;
+        } else {
+            return (
+                <RoyaleAvatar
+                    winner={isUserAWinner}
+                    className={`royale-avatar royale-avatar--${fallbackAvatar}`}
+                ></RoyaleAvatar>
+            );
+        }
     }
 
     return (
@@ -494,6 +504,15 @@ const UserAvatar = styled(Image)<{ winner?: boolean }>`
     }
 `;
 
+const RoyaleAvatar = styled.i<{ winner?: boolean }>`
+    border-radius: 50%50%;
+    border: ${(props) => (props.winner ? '2px solid #FFE489' : 'none')};
+    filter: ${(props) => (props.winner ? 'drop-shadow(0px 0px 15px rgba(255, 232, 155, 0.7))' : 'none')};
+    @media (max-width: 1024px) {
+        font-size: 40px;
+    }
+`;
+
 const StatusAvatar = styled.i<{ winner?: boolean }>`
     color: ${(props) => (props.winner ? '#FFE489' : 'var(--color)')};
     font-size: 35px;
@@ -596,4 +615,4 @@ const Overlay = styled.div`
     z-index: 4;
 `;
 
-export default Scoreboard;
+export default ScoreboardV2;

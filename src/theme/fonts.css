@@ -29,6 +29,11 @@
 }
 
 @font-face {
+    font-family: 'RoyaleAvatars';
+    src: local('RoyaleAvatars'), url(../assets/fonts/ThalesIcons/royale-avatars.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'ThalesIcons';
     src: local('ThalesIcons'), url(../assets/fonts/ThalesIcons/Thales2022.ttf) format('truetype');
 }

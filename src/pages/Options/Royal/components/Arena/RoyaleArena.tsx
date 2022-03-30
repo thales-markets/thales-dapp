@@ -54,7 +54,7 @@ const renderRounds = (
 
     const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
-    const positionsQuery = usePlayerPositionsQuery(0, networkId, walletAddress ?? '', {
+    const positionsQuery = usePlayerPositionsQuery(selectedSeason, networkId, walletAddress ?? '', {
         enabled: networkId !== undefined && isAppReady,
     });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : [];
