@@ -8,6 +8,7 @@ import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Que
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getTheme } from 'redux/modules/ui';
@@ -225,7 +226,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     };
 
     return (
-        <>
+        <OutsideClickHandler onOutsideClick={handleClose.bind(this, false)}>
             {networkId !== 1 && networkId !== 10 ? (
                 <SwapDialog
                     royaleTheme={royaleTheme}
@@ -398,7 +399,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                     )}
                 </SwapDialog>
             )}
-        </>
+        </OutsideClickHandler>
     );
 };
 
