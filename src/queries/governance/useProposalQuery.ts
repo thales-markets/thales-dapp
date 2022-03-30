@@ -1,8 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
+import snapshot from '@snapshot-labs/snapshot.js';
 import { ethers } from 'ethers';
 import { uniqBy } from 'lodash';
 import request, { gql } from 'graphql-request';
-import { SNAPSHOT_GRAPHQL_URL, SpaceKey } from 'constants/governance';
+import { SNAPSHOT_GRAPHQL_URL, SpaceKey, StatusEnum } from 'constants/governance';
 import { MappedVotes, Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import voting from 'utils/voting';
@@ -93,13 +94,27 @@ const useProposalQuery = (
 
             const voterAddresses = votes.map((e: Vote) => ethers.utils.getAddress(e.voter));
 
-            const scores = [] as any;
+            const block = parseInt(proposal.snapshot);
+
+            // TODO - the logic for scores needs refactoring because `getScores` has some bugs
+            const finalScores = [] as any;
             proposal.strategies.forEach((_: SpaceStrategy, key: number) => {
-                scores.push({});
+                finalScores.push({});
                 votes.forEach((vote: Vote) => {
-                    scores[key][vote.voter] = vote.vp_by_strategy[key];
+                    finalScores[key][vote.voter] = vote.vp_by_strategy[key];
                 });
             });
+
+            const scores =
+                proposal.state === StatusEnum.Closed
+                    ? finalScores
+                    : await snapshot.utils.getScores(
+                          spaceKey,
+                          proposal.strategies,
+                          proposal.network,
+                          voterAddresses,
+                          block
+                      );
 
             let mappedVotes = votes as MappedVotes[];
 
