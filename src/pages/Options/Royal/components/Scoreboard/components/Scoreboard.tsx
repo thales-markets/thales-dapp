@@ -15,7 +15,6 @@ import useRoyalePlayersQuery, { User, UserStatus } from '../queries/useRoyalePla
 import useRoyaleDataForScoreboard from '../queries/useRoyaleDataForScoreboard';
 import DiscordImage from 'assets/images/royale/discord.png';
 import notSigned from 'assets/images/royale/not-signed.svg';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import SimpleLoader from 'components/SimpleLoader';
 
 const PerPageOption = [15, 25, 50, 100];
@@ -391,13 +390,6 @@ const SearchWrapper = styled.input`
     &::placeholder {
         color: var(--coior);
     }
-`;
-
-const StyledLoader = styled(CircularProgress)`
-    position: absolute;
-    left: calc(50% - 22px);
-    top: calc(50% - 22px);
-    color: var(--color) !important;
 `;
 
 const SearchIcon = styled.i`

@@ -4,7 +4,7 @@ import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from '../../Queries/useRoyaleFooterQuery';
 import Intro from './components/IntroInfo';
 import ScoreboardV2 from './components/Scoreboard';
-import UserCard from './components/UserCard';
+import { UserCard } from './components/UserCard';
 
 type Properties = {
     assetPrice: string;
