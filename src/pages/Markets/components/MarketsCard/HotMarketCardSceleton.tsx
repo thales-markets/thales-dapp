@@ -62,7 +62,7 @@ const AssetInfo = styled.div`
 
 const CardText = styled.span`
     display: block;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     color: var(--primary-color);
 `;
 

@@ -43,7 +43,7 @@ const Value = styled.input<{ color?: string; fontSize?: string }>`
 `;
 
 const SubValue = styled.span<{ color?: string; fontSize?: string }>`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 600;
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};

@@ -24,7 +24,7 @@ const InputField = styled.input`
     padding: 5px 17px 5px 14px;
     border-radius: 30px;
     font-size: 12px;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     &:active {
         box-shadow: var(--shadow);
     }
@@ -39,7 +39,7 @@ const Percentage = styled.span`
     display: block;
     right: 10px;
     font-size: 12px;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
 `;
 
 // @ts-ignore
@@ -52,7 +52,7 @@ const SlippageInput: StyledComponent<'div', any> & SlippageInputChildren = style
 
 const Title = styled.span`
     color: var(--primary-color);
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-size: 14px;
     margin-bottom: 9px;
     text-transform: uppercase;
@@ -74,7 +74,7 @@ export const Fixed = styled.div<{ active?: boolean; margin?: string }>`
     height: 32px;
     margin: ${(_props) => (_props?.margin ? _props?.margin : '0 11px 0 0')};
     cursor: pointer;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     border: 1px solid var(--input-border-color);
     background-color: ${(_props) => (_props?.active ? 'var(--button-bg-active)' : 'var(--button-bg-inactive)')};
     color: ${(_props) => (_props?.active ? 'var(--button-text-active)' : 'var(--button-text-inactive)')};

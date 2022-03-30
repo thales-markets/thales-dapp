@@ -28,7 +28,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    font-family: Titillium Web;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: normal;
     font-size: 15px;

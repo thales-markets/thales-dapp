@@ -115,7 +115,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                         border: 'none',
                                     }}
                                     itemStyle={{
-                                        fontFamily: 'Titillium Light !imporant',
+                                        fontFamily: 'Roboto !imporant',
                                         fontSize: '20px',
                                         fontWeight: 600,
                                         color: 'white',
@@ -188,7 +188,7 @@ const ChartWrapper = styled.div<{ flexOrder?: boolean }>`
 `;
 
 const ChartHeader = styled.div`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     width: 100%;
     margin-bottom: 10px;
     text-align: left;
@@ -199,14 +199,14 @@ const CoinName = styled.p`
     letter-spacing: 0.035em;
     text-transform: uppercase;
     color: #64d9fe;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
 `;
 
 const Price = styled.p`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -222,7 +222,7 @@ const ChartFooter = styled.div`
 `;
 
 const FooterInfo = styled.p`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: normal;
     font-size: 15px;
@@ -244,7 +244,7 @@ const PriceChange = styled(FooterInfo)<{ uptrend?: boolean; fontSize?: string }>
 `;
 
 const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     color: ${(props: any) => (props.uptrend ? '#50CE99' : '#C04119')};
     font-weight: bold;
     font-size: 15px;

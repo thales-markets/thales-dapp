@@ -17,14 +17,14 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
 
 const Date = styled.span`
     display: block;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 700;
     font-size: 15px;
 `;
 
 const Time = styled.span`
     display: block;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-weight: 300;
     font-size: 15px;
 `;

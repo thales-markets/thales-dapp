@@ -444,7 +444,7 @@ export const PaginationWrapper = styled(TablePagination)`
             display: block;
         }
         .MuiTablePagination-caption {
-            font-family: Titillium Regular !important;
+            font-family: Roboto !important;
             font-style: normal;
         }
         .MuiTablePagination-toolbar {
@@ -453,7 +453,7 @@ export const PaginationWrapper = styled(TablePagination)`
     }
 
     .MuiTablePagination-selectRoot {
-        font-family: Titillium Regular !important;
+        font-family: Roboto !important;
         font-style: normal;
     }
 
@@ -472,7 +472,7 @@ export const PaginationWrapper = styled(TablePagination)`
 `;
 
 const Text = styled.span`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     text-align: right !important;
 `;

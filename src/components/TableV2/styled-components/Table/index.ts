@@ -19,7 +19,7 @@ type Children = {
 
 // @ts-ignore
 const Table: StyledComponent<'div', any> & Children = styled.div`
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     width: 100%;
     color: var(--primary-color);

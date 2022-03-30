@@ -62,7 +62,7 @@ const MenuItem = styled.div<{
 }>`
     text-align: center;
     ${(_props) => (!_props?.noStrech ? 'flex: 1' : '')};
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     color: ${(_props) => (_props?.customActiveLabelColor ? _props?.customActiveLabelColor : 'var(--primary-color)')};
     box-shadow: ${(_props) =>

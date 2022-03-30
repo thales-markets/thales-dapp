@@ -92,7 +92,7 @@ const Button = styled.div`
     width: 100%;
     background-color: var(--input-border-color);
     font-size: 11px;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     color: var(--background);
     font-weight: 600;
     border-radius: 20px;

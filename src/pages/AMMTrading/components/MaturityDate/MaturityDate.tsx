@@ -107,7 +107,7 @@ const MaturityDate: React.FC<MaturityDateProps> = ({
 
 const Display = styled.span<{ fontSize?: string; color?: string }>`
     cursor: pointer;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: 700;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '25px')};

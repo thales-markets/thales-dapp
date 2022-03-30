@@ -47,7 +47,7 @@ const Row = styled.div<{ color?: string; fontSize?: string }>`
     justify-content: space-between;
     width: 100%;
     text-transform: uppercase;
-    font-family: Titillium Regular !important;
+    font-family: Roboto !important;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '12px')};
     line-height: 110%;
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
