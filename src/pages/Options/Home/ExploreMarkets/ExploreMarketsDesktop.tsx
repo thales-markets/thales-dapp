@@ -83,7 +83,7 @@ const isOrderInMarket = (orderData: OrderData, market: HistoricalOptionsMarketIn
     );
 };
 
-const defaultOrderBy = 2; // time remaining
+const defaultOrderBy = 5; // time remaining
 
 const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -96,7 +96,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const [secondLevelUserFilter, setSecondLevelUserFilter] = useState<SecondaryFilters>(SecondaryFilters.all);
     const [assetSearch, setAssetSearch] = useState<string>('');
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
-    const [orderDirection, setOrderDirection] = useState(OrderDirection.ASC);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const searchFilter = useLocation();
     const isL2 = getIsOVM(networkId);
 
@@ -218,9 +218,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             switch (orderBy) {
                 case 1:
                 case 2:
-                    if (a.asset === b.asset) {
-                        return sortByField(a, b, OrderDirection.ASC, 'strikePrice');
-                    }
                     return sortByField(a, b, orderDirection, 'asset');
                 case 3:
                     return sortByAssetPrice(a, b, orderDirection, exchangeRates);
@@ -232,6 +229,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                         : orderDirection === OrderDirection.ASC
                         ? a.availableLongs - b.availableLongs
                         : b.availableLongs - a.availableLongs;
+
                 case 6:
                     return sortByTime(a, b, orderDirection);
                 case 7:

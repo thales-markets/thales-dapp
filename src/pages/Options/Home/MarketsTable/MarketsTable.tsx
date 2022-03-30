@@ -73,7 +73,7 @@ interface HeadCell {
     sortable: boolean;
 }
 
-const defaultOrderBy = 2; // time remaining
+const defaultOrderBy = 5; // time remaining
 
 const MarketsTable: React.FC<MarketsTableProps> = memo(
     ({
@@ -132,11 +132,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                         setOrderDirection(OrderDirection.ASC);
                         break;
                     case OrderDirection.ASC:
-                        if (orderBy === defaultOrderBy) {
-                            setOrderDirection(OrderDirection.DESC);
-                        } else {
-                            setOrderDirection(OrderDirection.ASC);
-                        }
+                        setOrderDirection(OrderDirection.DESC);
                         setOrderBy(defaultOrderBy);
                         break;
                 }

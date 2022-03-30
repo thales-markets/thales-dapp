@@ -23,6 +23,7 @@ export const ROUTES = {
         Royal: '/royale',
         Game: '/tale-of-thales',
         TokenMigration: '/token?tab=migration&action=migrate',
+        Profile: '/profile',
     },
     Governance: {
         Home: '/governance',

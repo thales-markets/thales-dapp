@@ -1,37 +1,37 @@
+import { Modal } from '@material-ui/core';
+import ApprovalModal from 'components/ApprovalModal';
+import { SYNTHS_MAP } from 'constants/currency';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { BigNumber, ethers } from 'ethers';
+import Swap from 'components/Swap/Swap';
+import { OP_sUSD, OP_KOVAN_SUSD } from 'components/Swap/tokens';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
+import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import { Text } from 'theme/common';
 import Cookies from 'universal-cookie';
+import { getCurrencyKeyBalance } from 'utils/balances';
+import { erc20Contract } from 'utils/contracts/erc20Contract';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
+import { checkAllowance, getIsOVM } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
-import useEthBalanceQuery from '../../Queries/useEthBalanceQuery';
+import { dispatchMarketNotification } from 'utils/options';
+import snxJSConnector from 'utils/snxJSConnector';
+import useRoyalePassIdQuery from '../../Queries/useRoyalePassIdQuery';
+import useRoyalePassQuery from '../../Queries/useRoyalePassQuery';
 import { Theme } from '../../ThalesRoyal';
-import UserInfoRoyaleDialog from '../UserInfoRoyaleDialog/UserInfoRoyaleDialog';
+import useLatestRoyaleForUserInfo from '../Scoreboard/queries/useLastRoyaleForUserInfo';
 import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
-import { Text } from '../../../../../theme/common';
-import Swap from 'pages/Options/Home/Swap';
-import { Modal } from '@material-ui/core';
-import { SYNTHS_MAP } from 'constants/currency';
-import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import { getIsAppReady } from 'redux/modules/app';
-import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
-import { BigNumber, ethers } from 'ethers';
-import erc20Contract from 'utils/contracts/erc20Contract';
-import snxJSConnector from 'utils/snxJSConnector';
-import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
-import { checkAllowance, getIsOVM } from 'utils/network';
-import ApprovalModal from 'components/ApprovalModal';
-import useRoyalePassQuery from '../../V2/components/queries/useRoyalePassQuery';
-import { dispatchMarketNotification } from 'utils/options';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
-import useLatestRoyaleForUserInfo from '../../V2/components/queries/useLastRoyaleForUserInfo';
-import useRoyalePassIdQuery from '../../V2/components/queries/useRoyalePassIdQuery';
+import UserInfoRoyaleDialog from './UserInfoRoyaleDialog/UserInfoRoyaleDialog';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -204,8 +204,6 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                             <Button
                                                 style={{ marginRight: 30 }}
                                                 onClick={() => setOpenApprovalModal(true)}
-                                                disabled={isAllowing}
-                                                className={isAllowing ? 'disabled' : ''}
                                             >
                                                 {t('options.royale.scoreboard.mint-royale-pass')}
                                             </Button>

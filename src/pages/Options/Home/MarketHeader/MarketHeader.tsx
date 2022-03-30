@@ -39,9 +39,11 @@ import LanguageSelector from 'components/LanguageSelector';
 import SPAAnchor from '../../../../components/SPAAnchor';
 import { buildHref } from '../../../../utils/routes';
 import { Modal } from '@material-ui/core';
-import Swap from '../Swap';
+import Swap from '../../../../components/Swap/Swap';
 import { getIsOVM } from 'utils/network';
 import NetworkSwitch from 'components/NetworkSwitch';
+
+import UserCard from 'layouts/DappLayout/components/DappHeader/UserCard';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -83,6 +85,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
 
     return (
         <FlexDivColumn style={{ width: '100%', flex: 'unset' }}>
+            <UserCard />
             <MarketHeaderWrapper
                 id="dapp-header"
                 className={`dapp-header ${className}`}
@@ -333,7 +336,7 @@ const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     height: 100px;
     display: flex;
     align-items: center;
-    justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
+    justify-content: ${(props: any) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
     @media screen and (max-width: 767px) {
         height: 100%;
     }

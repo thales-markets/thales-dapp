@@ -12,7 +12,7 @@ type WrongNetworkDialogProps = {
     setOpen: (data: any) => void;
 };
 
-export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, setOpen }) => {
+const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, setOpen }) => {
     const { t } = useTranslation();
     const onClose = () => {
         setOpen(false);
@@ -64,8 +64,11 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
         <RoyaleBackground>
             <StyledModal
                 open={open}
-                onClose={onClose}
-                disableBackdropClick
+                onClose={(_event, reason) => {
+                    if (reason !== 'backdropClick') {
+                        onClose();
+                    }
+                }}
                 PaperProps={{
                     style: {
                         backgroundColor: '#64D9FE',

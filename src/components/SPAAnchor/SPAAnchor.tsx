@@ -37,6 +37,7 @@ const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, h
 };
 
 const Anchor = styled.a`
+    color: var(--primary-color);
     display: contents;
 `;
 

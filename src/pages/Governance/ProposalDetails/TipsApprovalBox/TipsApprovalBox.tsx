@@ -7,7 +7,6 @@ import SimpleLoader from 'components/SimpleLoader';
 import { Proposal, ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
 import { Pie, PieChart, Cell } from 'recharts';
-import { PieChartContainer } from 'pages/Options/Earn/components';
 import { getProposalApprovalData } from 'utils/governance';
 
 type TipsApprovalBoxProps = {
@@ -101,6 +100,15 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
 
 const Container = styled(FlexDivRow)`
     width: 100%;
+`;
+
+const PieChartContainer = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
 `;
 
 const VotedIn = styled(FlexDivColumnCentered)`

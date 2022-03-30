@@ -15,16 +15,12 @@ export const LINKS = {
             'https://thalesmarket.io/governance/thalesgov.eth/0x2b9f3fadf2bc92af007845b8d2e941e26428ddb965d24f985f7b969b87e58d9c',
         TIP20:
             'https://thalesmarket.io/governance/thalesgov.eth/0xa6b29b64e1455fbfdfbfa14af46711e3ce324ae315543ca3e3c5401dc3967eef',
-        TIP23:
-            'https://thalesmarket.io/governance/thalesgov.eth/0x9c5c0b18ca03009165db141d4ef11d8eb6f15d04e1c8e9fb9dfe9ad6ab09a53e',
         Bonus: {
             SnxStaking: 'https://staking.synthetix.io/',
             AMM: 'https://thalesmarket.io/markets',
             ThalesRoyale: 'https://thalesmarket.io/royale',
         },
         Uniswap:
-            'https://app.uniswap.org/#/swap?outputCurrency=0x8947da500Eb47F82df21143D0C01A29862a8C3c5&chain=mainnet',
-        UniswapL2:
             'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11&chain=optimism',
     },
     AMM: {

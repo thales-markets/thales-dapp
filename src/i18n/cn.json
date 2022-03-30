@@ -200,7 +200,8 @@
             "trade-history-label": "交易历史",
             "amm-mining-label": "AMM奖励",
             "amm-reporting-label": "AMM报告",
-            "markets": "市场"
+            "markets": "市场",
+            "profile-label": "轮廓"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -218,13 +219,21 @@
                 "optimism": "转为乐观"
             }
         },
-        "alerts": {
-            "title": {
-                "error": "错误",
-                "info": "信息",
-                "success": "成功"
-            }
-        }
+        "user-info-card": {
+            "network": "网络",
+            "wallet": "钱包",
+            "language": "语",
+            "theme": "主题",
+            "change": "改变",
+            "disconnect": "断开",
+            "switch": "转变",
+            "display-name": "显示名称",
+            "change-display-name": "更改显示名称"
+        },
+        "no-data": "没有任何数据可显示",
+        "long": "长",
+        "short": "短的",
+        "no-data-available": "无可用数据"
     },
     "modals": {
         "gwei": {
@@ -279,7 +288,8 @@
             "orderbook": "订单簿",
             "trade-type": "交易类型",
             "search-placeholder-for-mining": "试试地址",
-            "search-placeholder-for-reporting": "尝试市场"
+            "search-placeholder-for-reporting": "尝试市场",
+            "all-markets": "所有市场"
         },
         "home": {
             "market-card": {
@@ -292,7 +302,12 @@
                 "difference-text": "当前价格与执行价格之间的差异",
                 "time-remaining": "剩余时间",
                 "result": "当前结果",
-                "view-market": "查看市场"
+                "view-market": "查看市场",
+                "price-difference": "差价",
+                "claimed": "声称",
+                "claim": "宣称",
+                "rip": "RIP",
+                "position-value": "位置值"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场"
@@ -315,7 +330,22 @@
                 "pool-size-col": "市场大小",
                 "amm-size-col": "AMM流动性",
                 "time-remaining-col": "剩余时间",
-                "competition-tooltip": "该市场参与交易竞赛"
+                "competition-tooltip": "该市场参与交易竞赛",
+                "menu": {
+                    "grid": "网格",
+                    "table": "桌子"
+                },
+                "current-asset-price-col": "当前资产价格",
+                "price-up-down-col": "价格上涨/下跌",
+                "24h-change-col": "24小时变化",
+                "final-asset-price-col": "当前资产价格",
+                "status-col": "状态",
+                "maturity-date-col": "成人礼"
+            },
+            "hot-market-card": {
+                "time-left": "剩下的时间",
+                "potential-profit": "潜在利润",
+                "price-per-option": "每个选项的价格"
             }
         },
         "earn": {
@@ -351,9 +381,7 @@
                 "end-time": "结束时间",
                 "initial-locked": "初始锁定",
                 "start-quiz": "开始测验",
-                "confirmation-message": "代币已成功认领",
-                "olympus-notice": "您现在可以购买 THALES 债券",
-                "olympus-button-text": "奥林巴斯 PRO"
+                "confirmation-message": "代币已成功认领"
             },
             "thales-staking": {
                 "tab-title": "质押",
@@ -572,9 +600,7 @@
                 "earn-tooltip": "为泰勒斯/ETH对提供流动性，赚取泰勒斯+DODO双倍奖励",
                 "earn-info-tooltip": "如何提供流动性的查看指南",
                 "circulating-supply-label": "市场供应",
-                "total-supply-label": "总供应",
-                "celer-bridge-tooltip": "链条之间的快速桥梁 THALES",
-                "celer-bridge": "赛勒桥"
+                "total-supply-label": "总供应"
             }
         },
         "quiz": {
@@ -666,7 +692,14 @@
                 "strike-burn-label": "执行销毁量",
                 "rank-label": "排名",
                 "total-burned": "总销毁量",
-                "burned-last-hour": "上一小时销毁量"
+                "burned-last-hour": "上一小时销毁量",
+                "maturity-date": "成人礼",
+                "price-difference": "差价",
+                "positions-value": "职位价值",
+                "amm-price": "AMM 价格",
+                "my-positions": "我的职位",
+                "similar-markets": "类似市场",
+                "close-similar-markets": "关闭类似市场"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
@@ -683,7 +716,9 @@
                     "customize-layout": "自定义视图",
                     "reset-layout": "重置布局"
                 },
-                "amm-widget": "AMM"
+                "amm-widget": "AMM",
+                "position-price": "仓位价格",
+                "chart": "{{currencyKey}} 图表"
             },
             "chart-card": {
                 "no-chart-data": "无图表数据"
@@ -736,7 +771,8 @@
                         "progress-label": "正在进行的…",
                         "success-label": "无需行权",
                         "confirmation-message": "已成功执行选项"
-                    }
+                    },
+                    "exercise-options": "您可以行使以下选项"
                 }
             },
             "trade-options": {
@@ -889,6 +925,14 @@
             "header": {
                 "orderbook": "订单簿",
                 "amm": "AMM"
+            },
+            "your-activity": {
+                "activity": "活动",
+                "amount": "数量",
+                "paid": "有薪酬的",
+                "strike-price": "行使价",
+                "time-date": "时间/日期",
+                "name": "资产名称"
             }
         },
         "quick-trading": {
@@ -1260,6 +1304,22 @@
             "available-to-sell-long": "可长期出售",
             "shorts-sell-volume": "短裤卖出量",
             "longs-sell-volume": "多头卖出量"
+        },
+        "trading-profile": {
+            "title": "交易资料",
+            "search-placeholder": "搜索钱包"
+        },
+        "order-book": {
+            "trade-down": "交易选项",
+            "trade-up": "以旧换新",
+            "amount-to": "金额为 {{type}}",
+            "select-to": "选择 {{type}}",
+            "filters": {
+                "all": "全部",
+                "my-orders": "我的订单",
+                "buy-orders": "购买订单",
+                "sell-orders": "卖单"
+            }
         }
     },
     "governance": {
@@ -1359,7 +1419,8 @@
         "skew-label": "倾斜冲击",
         "beta": "测试版",
         "total-buy-label": "支付总额",
-        "explanation-text": "<0>Thales AMM 是旨在为 Thales Binary Markets 提供流动性的智能合约。</0><0>AMM 使用 BlackScholes 算法来确定二元期权的实际价格。根据该价格和偏差（代表 AMM 对当前市场的敞口），AMM 将向交易者提供买入或卖出报价。</0><0>Thales 的 AMM 始终旨在重新平衡其敞口，因此如果从 AMM 购买的多头期权多于空头，这将对多头期权定价产生偏斜的价格影响，同时以基本价格提供空头期权。</0><0>由于 AMM 处于测试阶段，因此有一个上限(limit) 每个市场，可以随时买卖的期权数量是有限的。然而，即使一侧的所有期权都从 AMM 购买，一旦交易者购买相反头寸的期权，就会有更多的流动性可用。</0><0>Thales 的 AMM 仅支持在具有在市场成熟前 24 小时内通过 BlackScholes 计算出 10% 以上和 90% 以下的赔率，以避免边缘情况和最后一分钟的领先。</0><0>可以在此处找到有关 AMM 的更多信息：</0> <1 />"
+        "explanation-text": "<0>Thales AMM 是旨在为 Thales Binary Markets 提供流动性的智能合约。</0><0>AMM 使用 BlackScholes 算法来确定二元期权的实际价格。根据该价格和偏差（代表 AMM 对当前市场的敞口），AMM 将向交易者提供买入或卖出报价。</0><0>Thales 的 AMM 始终旨在重新平衡其敞口，因此如果从 AMM 购买的多头期权多于空头，这将对多头期权定价产生偏斜的价格影响，同时以基本价格提供空头期权。</0><0>由于 AMM 处于测试阶段，因此有一个上限(limit) 每个市场，可以随时买卖的期权数量是有限的。然而，即使一侧的所有期权都从 AMM 购买，一旦交易者购买相反头寸的期权，就会有更多的流动性可用。</0><0>Thales 的 AMM 仅支持在具有在市场成熟前 24 小时内通过 BlackScholes 计算出 10% 以上和 90% 以下的赔率，以避免边缘情况和最后一分钟的领先。</0><0>可以在此处找到有关 AMM 的更多信息：</0> <1 />",
+        "max-amount": "最大金额 {{amount}}"
     },
     "articles": {
         "token": {
@@ -1527,8 +1588,7 @@
             "retro-airdrop": "<0>复古空投已根据</0><1 />迁移到L2。",
             "staking": "<0>THALES Staking 已根据 </0><1 /> 迁移到 L2。",
             "vesting": "<0>托管的 THALES 已根据 </0><1 /> 迁移到 L2。",
-            "retro-unlock": "<0>每个 </0><1 /> 都可以在 L1 上使用此发行版。",
-            "lp-staking": "<0>LP Staking 已根据 </0><1 /> 迁移到 L2。"
+            "retro-unlock": "<0>每个 </0><1 /> 都可以在 L1 上使用此发行版。"
         },
         "migration-notice": {
             "button-label": "迁移泰勒斯",
@@ -1537,9 +1597,7 @@
         "tabs": {
             "withdraw": "提取",
             "swap": "交换",
-            "migrate": "迁移",
-            "bridge": "桥",
-            "migrate-and-bridge": "迁移和桥接"
+            "migrate": "迁移"
         },
         "from-label": "从",
         "to-label": "到",
@@ -1548,16 +1606,6 @@
         "migration-multisig-contact-warning": "多重签名或合约不应直接迁移，否则您将失去资金。",
         "migration-amount-label": "迁移金额",
         "migrated-rewards-title": "迁移奖励",
-        "info-tooltip": "<0>迁移过程中，THALES首先交换到L1主网上的OpTHALES，然后根据</0><1 />桥接到L2 Optimistic主网进入L2 THALES。",
-        "bridge-button": {
-            "label": "桥",
-            "confirmation-message": "令牌成功桥接到 L2",
-            "progress-label": "桥接中..."
-        },
-        "info-messages": {
-            "bridge": "如果您在 L1 上已经有 THALES 并希望将其桥接到 OP (L2)，请选择此选项",
-            "migrate-and-bridge": "如果您在 L1 上有 LEGACY THALES，希望将其交换为 THALES 并将其桥接到 Optimism (L2)，请选择此选项",
-            "migrate": "如果您在 L1 上拥有 LEGACY THALES，并希望将其交换给在 L1 上维护它的 THALES，请选择此选项。请注意，THALES 的大部分流动性都在 OP (L2) 上"
-        }
+        "info-tooltip": "<0>迁移过程中，THALES首先交换到L1主网上的OpTHALES，然后根据</0><1 />桥接到L2 Optimistic主网进入L2 THALES。"
     }
 }

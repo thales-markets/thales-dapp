@@ -5,9 +5,9 @@ import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
-import EarnPage from 'pages/Options/Earn/Earn.tsx';
-import GamePage from 'pages/Options/Game/Game.tsx';
-import LeaderboardPage from 'pages/Options/Home/Leaderboard';
+import TokenPage from 'pages/Token/Token.tsx';
+import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
+import Profile from 'pages/Profile/Profile.tsx';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
 import ThalesRoyal from 'pages/Options/Royal/ThalesRoyal';
@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
+import { setTheme } from 'redux/modules/ui';
 import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
@@ -26,16 +27,20 @@ import snxJSConnector from 'utils/snxJSConnector';
 import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
+import Leaderboard from 'pages/Leaderboard';
 import TradeHistory from 'pages/Options/TradeHistory';
 import AmmReporting from '../Options/AmmReporting';
-import Token from '../V2/articles/Token';
-import Governance from '../V2/articles/Governance';
-import Whitepaper from '../V2/articles/Whitepaper';
+import Cookies from 'universal-cookie';
+import Token from '../LandingPage/articles/Token';
+import Governance from '../LandingPage/articles/Governance';
+import Whitepaper from '../LandingPage/articles/Whitepaper';
+import DappLayout from 'layouts/DappLayout';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../V2/Home'));
-const OptionsHome = lazy(() => import('../Options/Home'));
-const OptionsMarket = lazy(() => import('../Options/Market'));
+const Home = lazy(() => import('../LandingPage/Home'));
+const Markets = lazy(() => import('../Markets'));
+const AMMTrading = lazy(() => import('../AMMTrading'));
+// const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
@@ -46,6 +51,8 @@ const App = () => {
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
     queryConnector.setQueryClient();
+
+    const cookies = new Cookies();
 
     useEffect(() => {
         const init = async () => {
@@ -58,6 +65,7 @@ const App = () => {
                         infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
                         provider: window.ethereum,
                     });
+
                     const useOvm = getIsOVM(networkId);
 
                     snxJSConnector.setContractSettings({ networkId, provider, useOvm });
@@ -73,6 +81,11 @@ const App = () => {
     }, []);
 
     useEffect(() => {
+        // Init value of theme selected from the cookie
+        if (isAppReady) {
+            dispatch(setTheme(Number(cookies.get('home-theme')) == 0 ? 0 : 1));
+        }
+
         if (isAppReady && networkId && isNetworkSupported(networkId)) {
             const onboard = initOnboard(networkId, {
                 address: (walletAddress) => {
@@ -185,14 +198,6 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.Leaderboard}>
-                                <MainLayout>
-                                    <LeaderboardPage />
-                                </MainLayout>
-                            </Route>
-                        )}
-
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
                                 <QuickTradingPage />
@@ -222,37 +227,49 @@ const App = () => {
                             exact
                             path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
                             render={(routeProps) => (
-                                <MainLayout>
+                                <DappLayout>
                                     <GovernancePage {...routeProps} />
-                                </MainLayout>
+                                </DappLayout>
                             )}
                         />
                         <Route exact path={ROUTES.Options.Game}>
-                            <MainLayout>
-                                <GamePage />
-                            </MainLayout>
+                            <DappLayout>
+                                <TaleOfThales />
+                            </DappLayout>
+                        </Route>
+                        {selectedWallet && (
+                            <Route exact path={ROUTES.Options.Profile}>
+                                <DappLayout>
+                                    <Profile />
+                                </DappLayout>
+                            </Route>
+                        )}
+                        <Route exact path={ROUTES.Options.Token}>
+                            <DappLayout>
+                                <TokenPage />
+                            </DappLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.Token}>
-                            <MainLayout>
-                                <EarnPage />
-                            </MainLayout>
+                        <Route exact path={ROUTES.Options.Leaderboard}>
+                            <DappLayout>
+                                <Leaderboard />
+                            </DappLayout>
                         </Route>
 
                         <Route
                             exact
                             path={ROUTES.Options.MarketMatch}
                             render={(routeProps) => (
-                                <MainLayout>
-                                    <OptionsMarket {...routeProps} />
-                                </MainLayout>
+                                <DappLayout>
+                                    <AMMTrading {...routeProps} />
+                                </DappLayout>
                             )}
                         />
 
                         <Route exact path={ROUTES.Options.Home}>
-                            <MainLayout>
-                                <OptionsHome />
-                            </MainLayout>
+                            <DappLayout>
+                                <Markets />
+                            </DappLayout>
                         </Route>
 
                         <Route exact path={ROUTES.Home}>
@@ -260,6 +277,7 @@ const App = () => {
                                 <Home />
                             </MainLayout>
                         </Route>
+
                         <Route exact path={ROUTES.Article.Token}>
                             <MainLayout>
                                 <Token />
@@ -277,9 +295,9 @@ const App = () => {
                         </Route>
                         <Route>
                             <Redirect to={ROUTES.Options.Home} />
-                            <MainLayout>
-                                <OptionsHome />
-                            </MainLayout>
+                            <DappLayout>
+                                <Markets />
+                            </DappLayout>
                         </Route>
                     </Switch>
                 </Router>

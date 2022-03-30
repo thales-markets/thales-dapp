@@ -73,8 +73,6 @@ export const Background = styled.section`
         background-size: cover !important;
     }
 
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-
     &#landing-hero {
         min-height: 900px;
         @media (max-width: 767px) {
@@ -127,6 +125,36 @@ export const Background = styled.section`
             }
         }
     }
+    &.light {
+        background-color: #f7f7f7;
+        --background: #f7f7f7;
+        --icon-color: #04045a;
+        --shadow: 0px 0px 50px rgba(4, 4, 90, 0.4);
+        --primary-color: #04045a;
+        --input-border-color: #04045a;
+        --table-border-color: #64d9fe;
+        --table-header-text-color: #64d9fe;
+        --disabled-item: #8181ac;
+        --enabled-item: #04045a;
+        --primary-filter-menu-active: #04045a;
+        --hotmarket-arrow-enabled: #64d9fe;
+        --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
+    }
+    &.dark {
+        background-color: #04045a;
+        --background: #04045a;
+        --icon-color: #f7f7f7;
+        --shadow: 0px 0px 40px #64d9fe;
+        --primary-color: #f7f7f7;
+        --input-border-color: #64d9fe;
+        --table-border-color: rgba(100, 217, 254, 0.5);
+        --table-header-text-color: #64d9fe;
+        --disabled-item: #8181ac;
+        --enabled-item: #f7f7f7;
+        --primary-filter-menu-active: #64d9fe;
+        --hotmarket-arrow-enabled: #64d9fe;
+        --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
+    }
 `;
 
 export const MainWrapper = styled.div`
@@ -161,6 +189,20 @@ export const Wrapper = styled(FlexDivColumn)`
     }
 `;
 
+export const NewWrapper = styled(FlexDivColumn)`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    @media (min-width: 1000px) {
+        padding: 40px 100px 40px 100px;
+    }
+    min-height: 100vh;
+`;
+
 type SectionProps = {
     class?: string;
     id?: string;
@@ -186,8 +228,8 @@ export const Side = styled(FlexDivColumnCentered)`
 export const LoaderContainer = styled(GridDivCenteredRow)`
     grid-gap: 10px;
     position: absolute;
-    left: 45%;
-    top: 45%;
+    left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%);
 `;
 
@@ -232,7 +274,7 @@ export const Button = styled.button`
         border-bottom: 1.5px solid rgba(106, 193, 213, 1);
         color: #f6f6fe;
         &:hover {
-            border: 1.5px solid#00f9ff;
+            border: 1.5px solid #00f9ff;
             color: #00f9ff;
         }
         &:active {
@@ -385,4 +427,45 @@ export const GradientText = styled.span<{ gradient: string; fontSize: number; fo
     -moz-background-clip: text;
     -webkit-text-fill-color: transparent;
     -moz-text-fill-color: transparent;
+`;
+
+export const UserCardSectionHeader = styled.span`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 20px;
+    color: #64d9fe;
+    text-transform: uppercase;
+`;
+
+export const MarketCardContainer = styled.div`
+    border: 2px solid rgb(100, 217, 254, 0.5);
+    :hover {
+        transform: scale(1.02);
+        border: 2px solid rgb(100, 217, 254, 1);
+    }
+    cursor: pointer;
+`;
+
+export const CardContainer = styled.div`
+    border: 2px solid var(--card-border-color);
+    border-radius: 15px;
+`;
+
+export const InputContainer = styled.div`
+    border: 0.8px solid var(--card-border-color);
+    border-radius: 10px;
+`;
+
+export const NoDataText = styled.span`
+    color: var(--primary-color);
+    font-size: 24px;
+`;
+
+export const NoDataContainer = styled.div`
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
 `;

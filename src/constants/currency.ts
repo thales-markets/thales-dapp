@@ -134,6 +134,11 @@ export const CRYPTO_CURRENCY = [
     'USDT',
     'VELO',
     'ZRX',
+    'THALES',
+    'SOL',
+    'UNI',
+    'CRV',
+    'AAVE',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -144,12 +149,17 @@ export const FIAT_CURRENCY_SIGN = {
 };
 export const USD_SIGN = FIAT_CURRENCY_SIGN[FIAT_CURRENCY_MAP.USD];
 
-export const OPTIONS_CURRENCY = ['sLONG', 'sSHORT'];
+export const OPTIONS_CURRENCY = ['UP', 'DOWN'];
 export const OPTIONS_CURRENCY_MAP = {
-    long: 'sLONG',
-    short: 'sSHORT',
+    long: 'UP',
+    short: 'DOWN',
 };
-export const LEGACY_THALES_CURRENCY = 'LEGACY THALES';
+
+export const CURRENCY_TO_OPTION = new Map([
+    [SYNTHS_MAP.sLONG, 'UP'],
+    [SYNTHS_MAP.sSHORT, 'DOWN'],
+]);
+
 export const THALES_CURRENCY = 'THALES';
 export const OP_THALES_CURRENCY = 'OpTHALES';
 export const LP_TOKEN = 'LP Token';
@@ -260,6 +270,70 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.VELO]: 'Velo',
     [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
     [SYNTHS_MAP.sSOL]: 'Solana',
+};
+
+export const currencyKeyToCoinGeckoIndexMap = {
+    [CRYPTO_CURRENCY_MAP.KNC]: 'kyber-network-crystal',
+    [CRYPTO_CURRENCY_MAP.COMP]: 'compound-coin',
+    [CRYPTO_CURRENCY_MAP.REN]: 'republic-protocol',
+    [CRYPTO_CURRENCY_MAP.LEND]: 'ethlend',
+    [CRYPTO_CURRENCY_MAP.SNX]: 'havven',
+    [CRYPTO_CURRENCY_MAP.BTC]: 'bitcoin',
+    [CRYPTO_CURRENCY_MAP.ETH]: 'ethereum',
+    [CRYPTO_CURRENCY_MAP.XRP]: 'ripple',
+    [CRYPTO_CURRENCY_MAP.BCH]: 'binance-peg-bitcoin-cash',
+    [CRYPTO_CURRENCY_MAP.LTC]: 'binance-peg-litecoin',
+    [CRYPTO_CURRENCY_MAP.EOS]: 'eos',
+    [CRYPTO_CURRENCY_MAP.BNB]: 'oec-binance-coin',
+    [CRYPTO_CURRENCY_MAP.XTZ]: 'tezos',
+    [CRYPTO_CURRENCY_MAP.XMR]: 'monero',
+    [CRYPTO_CURRENCY_MAP.ADA]: 'binance-peg-cardano',
+    [CRYPTO_CURRENCY_MAP.LINK]: 'chainlink',
+    [CRYPTO_CURRENCY_MAP.TRX]: 'tron',
+    [CRYPTO_CURRENCY_MAP.DASH]: 'dash',
+    [CRYPTO_CURRENCY_MAP.ETC]: 'ethereum-classic',
+    [CRYPTO_CURRENCY_MAP.BAT]: 'basic-attention-token',
+    [CRYPTO_CURRENCY_MAP.DAI]: 'dai',
+    [CRYPTO_CURRENCY_MAP.REP]: 'augur',
+    [CRYPTO_CURRENCY_MAP.USDC]: 'usd-coin',
+    [CRYPTO_CURRENCY_MAP.USDT]: 'tether',
+    [CRYPTO_CURRENCY_MAP.VELO]: 'velo',
+    [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
+    [CRYPTO_CURRENCY_MAP.THALES]: 'thales',
+    [CRYPTO_CURRENCY_MAP.SOL]: 'solana',
+    [CRYPTO_CURRENCY_MAP.CRV]: 'curve-dao-token',
+    [CRYPTO_CURRENCY_MAP.UNI]: 'uniswap',
+    [CRYPTO_CURRENCY_MAP.AAVE]: 'aave',
+    [SYNTHS_MAP.sBTC]: 'bitcoin',
+    [SYNTHS_MAP.sETH]: 'ethereum',
+    [SYNTHS_MAP.sCOMP]: 'compound-coin',
+    [SYNTHS_MAP.sXRP]: 'ripple',
+    [SYNTHS_MAP.sBCH]: 'binance-peg-bitcoin-cash',
+    [SYNTHS_MAP.sXRP]: 'binance-peg-litecoin',
+    [SYNTHS_MAP.sEOS]: 'eos',
+    [SYNTHS_MAP.sBNB]: 'oec-binance-coin',
+    [SYNTHS_MAP.sXTZ]: 'tezos',
+    [SYNTHS_MAP.sXMR]: 'monero',
+    [SYNTHS_MAP.sADA]: 'binance-peg-cardano',
+    [SYNTHS_MAP.sLINK]: 'chainlink',
+    [SYNTHS_MAP.sTRX]: 'tron',
+    [SYNTHS_MAP.sDASH]: 'dash',
+    [SYNTHS_MAP.sETC]: 'ethereum-classic',
+    [SYNTHS_MAP.sBAT]: 'basic-attention-token',
+    [SYNTHS_MAP.sDAI]: 'dai',
+    [SYNTHS_MAP.sREP]: 'augur',
+    [SYNTHS_MAP.sUSDC]: 'usd-coin',
+    [SYNTHS_MAP.sUSDT]: 'tether',
+    [SYNTHS_MAP.sVELO]: 'velo',
+    [SYNTHS_MAP.sZRX]: '0x',
+    [SYNTHS_MAP.sTHALES]: 'thales',
+    [SYNTHS_MAP.sSOL]: 'solana',
+    [SYNTHS_MAP.sCRV]: 'curve-dao-token',
+    [SYNTHS_MAP.sUNI]: 'uniswap',
+    [SYNTHS_MAP.sAAVE]: 'aave',
+    [SYNTHS_MAP.sDOT]: 'polkadot',
+    [SYNTHS_MAP.sRUNE]: 'thorchain',
+    [SYNTHS_MAP.sYFI]: 'yearn-finance',
 };
 
 export const sUSD_EXCHANGE_RATE = 1;

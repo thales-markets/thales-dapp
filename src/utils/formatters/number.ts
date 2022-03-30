@@ -58,7 +58,7 @@ export const formatPercentageWithSign = (value: NumericValue, decimals = DEFAULT
 
 // TODO: use a library for this, because the sign does not always appear on the left. (perhaps something like number.toLocaleString)
 export const formatCurrencyWithSign = (sign: string | null | undefined, value: NumericValue, decimals?: number) =>
-    `${sign}${formatCurrency(value, decimals || getPrecision(value))}`;
+    `${sign ? sign + ' ' : ''}${formatCurrency(value, decimals || getPrecision(value))}`;
 
 export const formatCurrencyWithKey = (
     currencyKey: CurrencyKey,
@@ -86,4 +86,20 @@ export const formatNumberShort = (value: number) => {
         value >= 1.0e3
         ? formatCurrency(value / 1.0e3, 2, true) + 'k'
         : formatCurrency(value, 2, true);
+};
+
+// export const convertToCurrency = (amount: number, valueInCurrency: number, currencySymbol: string) => {
+
+// }
+
+export const formatPricePercentageGrowth = (priceChange: number) => {
+    return priceChange > 0 ? `+ ${Math.abs(priceChange).toFixed(2)}%` : `- ${Math.abs(priceChange).toFixed(2)}%`;
+};
+
+export const calculatePercentageChange = (lastPrice: number, firstPrice: number) => {
+    return ((lastPrice - firstPrice) / lastPrice) * 100;
+};
+
+export const formatPricePercentageDifference = (targetPrice: number, currentPrice: number) => {
+    return ((currentPrice - targetPrice) / targetPrice) * 100;
 };
