@@ -10,7 +10,7 @@ import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
 import Profile from 'pages/Profile/Profile.tsx';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
-import ThalesRoyal from 'pages/Options/Royal/ThalesRoyal';
+import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';

@@ -7,18 +7,18 @@ import styled from 'styled-components';
 import { Background, Wrapper } from 'theme/common';
 import Cookies from 'universal-cookie';
 import { getIsOVM } from 'utils/network';
-import WrongNetworkDialog from './components/WrongNetworkDialog/WrongNetworkDialog';
-import { getIsAppReady } from '../../../redux/modules/app';
-import useEthPriceQuery from './Queries/useEthPriceQuery';
-import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
-import useSnxPriceQuery from './Queries/useSnxPriceQuery';
-import useRoyaleFooterQuery, { FooterData } from './Queries/useRoyaleFooterQuery';
-import useLatestSeasonQuery from './Queries/useLatestSeasonQuery';
-import Header from './components/Header';
-import ScoreboardPage from './components/Scoreboard/ScoreboardPage';
+import WalletNotConnectedDialog from 'pages/Options/components/WalletNotConnectedDialog/WalletNotConnectedDialog';
+import { getIsAppReady } from 'redux/modules/app';
 import RoyaleArena from './components/Arena/RoyaleArena';
 import FooterV2 from './components/Footer/Footer';
-import WalletNotConnectedDialog from '../components/WalletNotConnectedDialog/WalletNotConnectedDialog';
+import Header from './components/Header';
+import ScoreboardPage from './components/Scoreboard/ScoreboardPage';
+import WrongNetworkDialog from './components/WrongNetworkDialog/WrongNetworkDialog';
+import useEthPriceQuery from './Queries/useEthPriceQuery';
+import useLatestSeasonQuery from './Queries/useLatestSeasonQuery';
+import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
+import useRoyaleFooterQuery, { FooterData } from './Queries/useRoyaleFooterQuery';
+import useSnxPriceQuery from './Queries/useSnxPriceQuery';
 
 export enum Theme {
     Light,
