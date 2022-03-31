@@ -26,11 +26,10 @@ import {
     OrderPeriodItem,
 } from 'constants/options';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-import { UI_COLORS } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions, UI_COLORS } from 'constants/ui';
 
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
@@ -42,7 +41,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import RangeSlider from 'components/RangeSlider';
 import { FlexDivCentered } from 'theme/common';
-import AlertMessage from 'pages/AMMTrading/components/AlertMessage';
+import { toast } from 'react-toastify';
 
 type LimitOrderProps = {
     optionSide: OptionSide;
@@ -74,7 +73,6 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isExpirationAfterMaturity, setIsExpirationAfterMaturity] = useState<boolean>(false);
@@ -242,8 +240,9 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
     };
 
     const handleSubmitOrder = async () => {
-        setTxErrorMessage(null);
         setIsSubmitting(true);
+
+        const id = toast.loading(t('options.market.trade-options.place-order.confirm-button.progress-label'));
 
         const newMakerAmount = isBuy ? Number(amount) * Number(price) : amount;
         const newTakerAmount = isBuy ? amount : Number(amount) * Number(price);
@@ -259,8 +258,11 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                 newTakerAmount,
                 expiry
             );
-            dispatchMarketNotification(
-                t('options.market.trade-options.place-order.confirm-button.confirmation-message')
+            toast.update(
+                id,
+                getSuccessToastOptions(
+                    t('options.market.trade-options.place-order.confirm-button.confirmation-message')
+                )
             );
             refetchOrderbook(baseToken);
             refetchOrders(networkId);
@@ -268,7 +270,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
             onPlaceOrder && onPlaceOrder();
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
         }
         setIsSubmitting(false);
     };
@@ -481,9 +483,6 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                 subValue={SYNTHS_MAP.sUSD}
                 valueEditDisable={true}
             />
-            {txErrorMessage !== null && (
-                <AlertMessage onClose={() => setTxErrorMessage(null)}>{txErrorMessage}</AlertMessage>
-            )}
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={makerAmount}
