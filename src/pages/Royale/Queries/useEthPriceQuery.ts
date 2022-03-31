@@ -10,8 +10,9 @@ const useEthPriceQuery = (options?: UseQueryOptions<any>) => {
             const { priceFeedContract } = snxJSConnector;
 
             if (priceFeedContract) {
-                const currencies = await priceFeedContract.getCurrencies();
-                return ethers.utils.formatEther(await priceFeedContract.rateForCurrency(currencies[1]));
+                return ethers.utils.formatEther(
+                    await priceFeedContract.rateForCurrency(snxJSConnector.snxJS?.toBytes32('ETH'))
+                );
             }
         },
         {
