@@ -39,8 +39,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     modifiedValue.balances.type = 'UP';
                     modifiedValue.balances.value = value.balances.longValue;
                     modifiedValue.balances.priceDiff = getPercentageDifference(
-                        modifiedValue.market.strikePrice,
-                        exchangeRates?.[modifiedValue.market?.currencyKey] || 0
+                        exchangeRates?.[modifiedValue.market?.currencyKey] || 0,
+                        modifiedValue.market.strikePrice
                     );
                     newArray.push(modifiedValue);
                 }
@@ -51,8 +51,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     newValue.balances.type = 'DOWN';
                     newValue.balances.value = value.balances.shortValue;
                     newValue.balances.priceDiff = getPercentageDifference(
-                        newValue.market.strikePrice,
-                        exchangeRates?.[newValue.market?.currencyKey] || 0
+                        exchangeRates?.[newValue.market?.currencyKey] || 0,
+                        newValue.market.strikePrice
                     );
                     newArray.push(newValue);
                 }
