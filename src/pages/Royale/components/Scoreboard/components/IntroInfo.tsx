@@ -69,18 +69,27 @@ const Intro: React.FC = () => {
     }, 1000);
 
     useEffect(() => {
-        const round = data?.roundInASeason;
-        timeLeftForPositioning && timeLeftForPositioning?.getHours() === 0
-            ? (document.title =
-                  format(timeLeftForPositioning, 'mm:ss') +
-                  t('options.royale.scoreboard.round-positioning') +
-                  t('options.royale.scoreboard.thales-suffix'))
-            : timeLeftInRound && timeLeftInRound.getHours() === 0
-            ? (document.title =
-                  format(timeLeftInRound, 'mm:ss') +
-                  t('options.royale.scoreboard.round-ending', { round }) +
-                  t('options.royale.scoreboard.thales-suffix'))
-            : 'Thales: Binary options trading powered by Synthetix.';
+        if (
+            timeLeftInRound &&
+            timeLeftInRound.getHours() === 0 &&
+            timeLeftInRound.getMinutes() === 0 &&
+            timeLeftInRound.getSeconds() === 1
+        ) {
+            document.title = 'Thales: Binary options trading powered by Synthetix.';
+        } else {
+            const round = data?.roundInASeason;
+            timeLeftForPositioning && timeLeftForPositioning?.getHours() === 0
+                ? (document.title =
+                      format(timeLeftForPositioning, 'mm:ss') +
+                      t('options.royale.scoreboard.round-positioning') +
+                      t('options.royale.scoreboard.thales-suffix'))
+                : timeLeftInRound && timeLeftInRound.getHours() === 0
+                ? (document.title =
+                      format(timeLeftInRound, 'mm:ss') +
+                      t('options.royale.scoreboard.round-ending', { round }) +
+                      t('options.royale.scoreboard.thales-suffix'))
+                : 'Thales: Binary options trading powered by Synthetix.';
+        }
     }, [timeLeftInRound, timeLeftForPositioning]);
 
     const lessThanADayBeforeSeason = () => {
