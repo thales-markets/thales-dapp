@@ -49,7 +49,7 @@ const DisplayNameForm: React.FC = () => {
     };
 
     useEffect(() => {
-        if (currentDisplayName !== '') setDisplayName(currentDisplayName);
+        setDisplayName(currentDisplayName);
     }, [currentDisplayName]);
 
     const { t } = useTranslation();
