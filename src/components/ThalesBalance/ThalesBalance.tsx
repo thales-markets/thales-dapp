@@ -10,6 +10,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getIsOVM } from 'utils/network';
+import useOpThalesBalanceQuery from '../../queries/walletBalances/useOpThalesBalanceQuery';
 
 type ThalesBalanceProps = {
     showTitle?: boolean;
@@ -28,6 +29,10 @@ const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
         refetchInterval: 60 * 1000,
     });
 
+    const opThalesBalanceQuery = useOpThalesBalanceQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && !isL2,
+    });
+
     const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isL2,
         refetchInterval: 60 * 1000,
@@ -38,7 +43,13 @@ const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
         refetchInterval: 60 * 1000,
     });
 
-    const inWallet = thalesBalanceQuery.isSuccess ? thalesBalanceQuery.data.balance : 0;
+    const inWallet = isL2
+        ? thalesBalanceQuery.isSuccess
+            ? thalesBalanceQuery.data.balance
+            : 0
+        : opThalesBalanceQuery.isSuccess
+        ? Number(opThalesBalanceQuery.data.balance)
+        : 0;
     const staked = stakingThalesQuery.isSuccess ? stakingThalesQuery.data.thalesStaked : 0;
     const escrowedBalance = escrowThalesQuery.isSuccess ? escrowThalesQuery.data.escrowedBalance : 0;
 

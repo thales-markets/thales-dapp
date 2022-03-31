@@ -18,11 +18,10 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { checkAllowance, formatGasLimit, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
-import { THALES_CURRENCY, LEGACY_THALES_CURRENCY } from 'constants/currency';
+import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
-import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import FieldValidationMessage from 'components/FieldValidationMessage';
@@ -41,8 +40,10 @@ import InfoWarningMessage from 'components/InfoWarningMessage';
 import { FlexDiv } from 'theme/common';
 import styled from 'styled-components';
 import ApprovalModal from 'components/ApprovalModal';
+import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';
+import { thalesContract as thalesTokenContract } from 'utils/contracts/thalesContract';
 
-const Migrate: React.FC = () => {
+const Bridge: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -51,7 +52,7 @@ const Migrate: React.FC = () => {
     const network = useSelector((state: RootState) => getNetwork(state));
     const [amount, setAmount] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-    const [thalesBalance, setThalesBalance] = useState<number | string>('');
+    const [opThalesBalance, setOpThalesBalance] = useState<number | string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
@@ -60,34 +61,34 @@ const Migrate: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
 
     const isAmountEntered = Number(amount) > 0;
-    const insufficientBalance = Number(thalesBalance) < Number(amount) || Number(thalesBalance) === 0;
+    const insufficientBalance = Number(opThalesBalance) < Number(amount) || Number(opThalesBalance) === 0;
 
     const isButtonDisabled =
         isSubmitting || !isWalletConnected || !isAmountEntered || insufficientBalance || !hasAllowance;
 
-    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
+    const opThalesBalanceQuery = useOpThalesBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
     useEffect(() => {
-        if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
-            setThalesBalance(Number(thalesBalanceQuery.data.balance));
+        if (opThalesBalanceQuery.isSuccess && opThalesBalanceQuery.data) {
+            setOpThalesBalance(Number(opThalesBalanceQuery.data.balance));
         }
-    }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
+    }, [opThalesBalanceQuery.isSuccess, opThalesBalanceQuery.data]);
 
     useEffect(() => {
-        const { thalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
+        const { opThalesTokenContract, bridgeContract } = snxJSConnector as any;
 
-        if (thalesTokenContract && thalesExchangerContract) {
-            const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
-            const addressToApprove = thalesExchangerContract.address;
+        if (opThalesTokenContract && bridgeContract) {
+            const opThalesTokenContractWithSigner = opThalesTokenContract.connect((snxJSConnector as any).signer);
+            const addressToApprove = bridgeContract.address;
 
             const getAllowance = async () => {
                 try {
                     const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
                     const allowance = await checkAllowance(
                         parsedAmount,
-                        thalesTokenContractWithSigner,
+                        opThalesTokenContractWithSigner,
                         walletAddress,
                         addressToApprove
                     );
@@ -104,16 +105,18 @@ const Migrate: React.FC = () => {
 
     useEffect(() => {
         const fetchGasLimit = async () => {
-            const { thalesExchangerContract } = snxJSConnector as any;
-
-            if (thalesExchangerContract) {
+            const { bridgeContract, opThalesTokenContract } = snxJSConnector as any;
+            if (bridgeContract) {
                 try {
-                    const thalesExchangerContractWithSigner = thalesExchangerContract.connect(
-                        (snxJSConnector as any).signer
-                    );
+                    const bridgeContractWithSigner = bridgeContract.connect((snxJSConnector as any).signer);
                     const parsedAmount = ethers.utils.parseEther(amount.toString());
-                    const gasEstimate = await thalesExchangerContractWithSigner.estimateGas.exchangeThalesToL2OpThales(
-                        parsedAmount
+                    const gasEstimate = await bridgeContractWithSigner.estimateGas.depositERC20To(
+                        opThalesTokenContract.address,
+                        (thalesTokenContract as any).addresses[L1_TO_L2_NETWORK_MAPPER[networkId]],
+                        walletAddress,
+                        parsedAmount,
+                        2000000,
+                        '0x'
                     );
                     setGasLimit(formatGasLimit(gasEstimate, networkId));
                 } catch (e) {
@@ -127,19 +130,19 @@ const Migrate: React.FC = () => {
     }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const { thalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
+        const { opThalesTokenContract, bridgeContract } = snxJSConnector as any;
 
-        if (thalesTokenContract && thalesExchangerContract) {
-            const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
-            const addressToApprove = thalesExchangerContract.address;
+        if (opThalesTokenContract && bridgeContract) {
+            const opThalesTokenContractWithSigner = opThalesTokenContract.connect((snxJSConnector as any).signer);
+            const addressToApprove = bridgeContract.address;
 
             try {
                 setIsAllowing(true);
-                const gasEstimate = await thalesTokenContractWithSigner.estimateGas.approve(
+                const gasEstimate = await opThalesTokenContractWithSigner.estimateGas.approve(
                     addressToApprove,
                     approveAmount
                 );
-                const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, approveAmount, {
+                const tx = (await opThalesTokenContractWithSigner.approve(addressToApprove, approveAmount, {
                     gasLimit: formatGasLimit(gasEstimate, networkId),
                 })) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
@@ -160,15 +163,22 @@ const Migrate: React.FC = () => {
         setIsSubmitting(true);
 
         try {
-            const { thalesExchangerContract } = snxJSConnector as any;
-            const thalesExchangerContractWithSigner = thalesExchangerContract.connect((snxJSConnector as any).signer);
+            const { bridgeContract, opThalesTokenContract } = snxJSConnector as any;
+            const bridgeContractWithSigner = bridgeContract.connect((snxJSConnector as any).signer);
 
             const parsedAmount = ethers.utils.parseEther(amount.toString());
-            const tx = await thalesExchangerContractWithSigner.exchangeThalesToL2OpThales(parsedAmount);
+            const tx = await bridgeContractWithSigner.depositERC20To(
+                opThalesTokenContract.address,
+                (thalesTokenContract as any).addresses[L1_TO_L2_NETWORK_MAPPER[networkId]],
+                walletAddress,
+                parsedAmount,
+                2000000,
+                '0x'
+            );
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('migration.migrate-button.confirmation-message'));
+                dispatchMarketNotification(t('migration.bridge-button.confirmation-message'));
                 setIsSubmitting(false);
                 setAmount('');
             }
@@ -206,22 +216,22 @@ const Migrate: React.FC = () => {
         }
         return (
             <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleSubmit}>
-                {!isSubmitting ? t('migration.migrate-button.label') : t('migration.migrate-button.progress-label')}
+                {!isSubmitting ? t('migration.bridge-button.label') : t('migration.bridge-button.progress-label')}
             </DefaultSubmitButton>
         );
     };
 
     const onMaxClick = () => {
-        setAmount(truncToDecimals(thalesBalance, 8));
+        setAmount(truncToDecimals(opThalesBalance, 8));
     };
 
     useEffect(() => {
-        setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= thalesBalance));
-    }, [amount, thalesBalance]);
+        setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= opThalesBalance));
+    }, [amount, opThalesBalance]);
 
     return (
         <>
-            <InfoSection>{t('migration.info-messages.migrate-and-bridge')}</InfoSection>
+            <InfoSection>{t('migration.info-messages.bridge')}</InfoSection>
             <InputContainer>
                 <NumericInput
                     value={amount}
@@ -233,13 +243,13 @@ const Migrate: React.FC = () => {
                     {t('migration.from-label')}
                     <NetworkLabel>{network.networkName}</NetworkLabel>
                 </InputLabel>
-                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{LEGACY_THALES_CURRENCY}</CurrencyLabel>
+                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{THALES_CURRENCY}</CurrencyLabel>
                 <ThalesWalletAmountLabel>
                     {isWalletConnected ? (
-                        thalesBalanceQuery.isLoading ? (
+                        opThalesBalanceQuery.isLoading ? (
                             <SimpleLoader />
                         ) : (
-                            formatCurrencyWithKey(LEGACY_THALES_CURRENCY, thalesBalance)
+                            formatCurrencyWithKey(THALES_CURRENCY, opThalesBalance)
                         )
                     ) : (
                         '-'
@@ -250,7 +260,7 @@ const Migrate: React.FC = () => {
                 </ThalesWalletAmountLabel>
                 <FieldValidationMessage
                     showValidation={!isAmountValid}
-                    message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LEGACY_THALES_CURRENCY })}
+                    message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
                 />
             </InputContainer>
             <ArrowContainer>
@@ -283,7 +293,7 @@ const Migrate: React.FC = () => {
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
-                    tokenSymbol={LEGACY_THALES_CURRENCY}
+                    tokenSymbol={THALES_CURRENCY}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}
@@ -297,4 +307,4 @@ const MessageContainer = styled(FlexDiv)`
     margin-top: 10px;
 `;
 
-export default Migrate;
+export default Bridge;

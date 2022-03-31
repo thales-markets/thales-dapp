@@ -160,6 +160,7 @@ export const CURRENCY_TO_OPTION = new Map([
     [SYNTHS_MAP.sSHORT, 'DOWN'],
 ]);
 
+export const LEGACY_THALES_CURRENCY = 'LEGACY THALES';
 export const THALES_CURRENCY = 'THALES';
 export const OP_THALES_CURRENCY = 'OpTHALES';
 export const LP_TOKEN = 'LP Token';

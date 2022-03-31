@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDiv, FlexDivRowCentered } from 'theme/common';
 import Migrate from './Migrate';
+import Bridge from './Bridge';
 import Swap from './Swap';
 import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
@@ -15,16 +16,20 @@ const Migration: React.FC = () => {
     const tabs = [
         {
             id: 'migrate',
+            name: t(`migration.tabs.migrate-and-bridge`),
+        },
+        {
+            id: 'swap',
             name: t(`migration.tabs.migrate`),
+        },
+        {
+            id: 'bridge',
+            name: t(`migration.tabs.bridge`),
         },
         // {
         //     id: 'withdraw',
         //     name: t(`migration.tabs.withdraw`),
         // },
-        {
-            id: 'swap',
-            name: t(`migration.tabs.swap`),
-        },
     ];
     const tabIds = tabs.map((tab) => tab.id);
 
@@ -49,7 +54,7 @@ const Migration: React.FC = () => {
         <GridWrapper>
             <Wrapper>
                 <Container>
-                    <OptionsTabContainer>
+                    <FlexDivRowCentered>
                         <FlexDiv>
                             {optionsTabContent.map((tab, index) => (
                                 <OptionsTab
@@ -72,21 +77,24 @@ const Migration: React.FC = () => {
                                 </OptionsTab>
                             ))}
                         </FlexDiv>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={
-                                <Trans
-                                    i18nKey="migration.info-tooltip"
-                                    components={[<span key="1" />, <Tip20Link key="2" />]}
-                                />
-                            }
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
-                    </OptionsTabContainer>
+                        {selectedTab === 'migrate' && (
+                            <StyledMaterialTooltip
+                                arrow={true}
+                                title={
+                                    <Trans
+                                        i18nKey="migration.info-tooltip"
+                                        components={[<span key="1" />, <Tip20Link key="2" />]}
+                                    />
+                                }
+                                interactive
+                            >
+                                <StyledInfoIcon />
+                            </StyledMaterialTooltip>
+                        )}
+                    </FlexDivRowCentered>
                     {selectedTab === 'migrate' && <Migrate />}
                     {selectedTab === 'swap' && <Swap />}
+                    {selectedTab === 'bridge' && <Bridge />}
                 </Container>
             </Wrapper>
         </GridWrapper>
@@ -103,7 +111,7 @@ const Wrapper = styled(FlexDivColumnCentered)`
     padding: 1px;
     border-radius: 15px;
     margin: 60px 10px 50px 10px;
-    min-width: 500px;
+    min-width: 550px;
     @media (max-width: 767px) {
         margin: 10px;
         min-width: 200px;
@@ -115,14 +123,10 @@ const Container = styled(FlexDivColumn)`
     box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
     border-radius: 15px;
     padding: 30px 60px 40px 60px;
-    max-width: 500px;
+    max-width: 550px;
     @media (max-width: 767px) {
         padding: 30px 20px 40px 20px;
     }
-`;
-
-const OptionsTabContainer = styled(FlexDivRowCentered)`
-    margin-bottom: 40px;
 `;
 
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
