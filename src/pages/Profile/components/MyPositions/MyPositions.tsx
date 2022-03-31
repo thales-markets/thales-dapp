@@ -38,6 +38,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     modifiedValue.balances.amount = value.balances.long;
                     modifiedValue.balances.type = 'UP';
                     modifiedValue.balances.value = value.balances.longValue;
+                    modifiedValue.balances.priceDiff = getPercentageDifference(
+                        modifiedValue.market.strikePrice,
+                        exchangeRates?.[modifiedValue.market?.currencyKey] || 0
+                    );
                     newArray.push(modifiedValue);
                 }
                 if (value.balances.short > 0) {
@@ -46,12 +50,18 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     newValue.balances.amount = value.balances.short;
                     newValue.balances.type = 'DOWN';
                     newValue.balances.value = value.balances.shortValue;
+                    newValue.balances.priceDiff = getPercentageDifference(
+                        newValue.market.strikePrice,
+                        exchangeRates?.[newValue.market?.currencyKey] || 0
+                    );
                     newArray.push(newValue);
                 }
             });
         }
 
-        return orderBy(newArray, ['balances.value'], ['desc']);
+        console.log(newArray);
+
+        return orderBy(newArray, ['balances.value', 'balances.priceDiff'], ['desc', 'asc']);
     }, [positions]);
 
     const filteredData = useMemo(() => {
@@ -151,10 +161,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                             (exchangeRates?.[data.market?.currencyKey] || 0)
                                                         }
                                                     >
-                                                        {`${getPercentageDifference(
-                                                            data.market.strikePrice,
-                                                            exchangeRates?.[data.market?.currencyKey] || 0
-                                                        ).toFixed(2)}%`}
+                                                        {`${data.balances.priceDiff.toFixed(2)}%`}
                                                     </PriceDifferenceInfo>
                                                 </Card.RowSubtitle>
                                             </Card.Section>
