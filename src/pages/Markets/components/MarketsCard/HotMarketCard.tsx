@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useInterval from 'hooks/useInterval';
 
 import { MarketCardContainer } from 'theme/common';
-import { CurrencyKey, AssetNameContainer } from './MarketCard';
+import { CurrencyKey } from './MarketCard';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
@@ -116,6 +116,16 @@ const Percentage = styled(CardText)`
     font-size: 25px;
     font-weight: 700;
     color: #50ce99;
+`;
+
+const AssetNameContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: left;
+    font-size: 15px;
+    color: var(--primary-color) !important;
+    word-spacing: 50px;
 `;
 
 export default HotMarketCard;
