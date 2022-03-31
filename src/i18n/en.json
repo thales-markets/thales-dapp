@@ -880,9 +880,9 @@
                 "mint": {
                     "amount-label": "Amount",
                     "minting-label": "You're going to mint",
-                    "long-label": "UP options",
-                    "short-label": "DOWN options",
-                    "sell-options-title": "Sell minted UP/DOWN options",
+                    "long-label": "UP position",
+                    "short-label": "DOWN position",
+                    "sell-options-title": "Sell minted UP/DOWN positions",
                     "fees": {
                         "minting": "Minting fee",
                         "creator": "Creator earns",
@@ -893,7 +893,7 @@
                         "progress-label": "Minting in progress...",
                         "submit-long-progress-label": "Submitting UP order in progress...",
                         "submit-short-progress-label": "Submitting DOWN order in progress..",
-                        "confirmation-message": "Options successfully minted"
+                        "confirmation-message": "Positions successfully minted"
                     }
                 },
                 "fill-order": {
