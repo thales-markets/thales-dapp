@@ -59,8 +59,6 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
             });
         }
 
-        console.log(newArray);
-
         return orderBy(newArray, ['balances.value', 'balances.priceDiff'], ['desc', 'asc']);
     }, [positions]);
 
@@ -222,6 +220,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                     <Currency.Name
                                         currencyKey={_props?.cell?.value}
                                         showIcon={true}
+                                        hideAssetName={true}
                                         iconProps={{ type: 'asset' }}
                                         synthIconStyle={{ width: 32, height: 32 }}
                                         spanStyle={{ float: 'left' }}
