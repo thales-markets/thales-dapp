@@ -10,7 +10,7 @@ export type Positions = {
 
 const usePositionsQuery = (selectedSeason: number, networkId: NetworkId, options?: UseQueryOptions<Positions>) => {
     return useQuery<Positions>(
-        QUERY_KEYS.Royale.Positions(networkId),
+        QUERY_KEYS.Royale.Positions(selectedSeason, networkId),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
             return getFromContract(thalesRoyaleContract, selectedSeason);
