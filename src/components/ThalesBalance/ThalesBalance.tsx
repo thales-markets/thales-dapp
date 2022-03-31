@@ -121,7 +121,10 @@ const Label = styled.p`
     letter-spacing: 0.035em;
     text-transform: capitalize;
     color: #ffffff;
-    font-size: 8px;
+    font-size: 10px;
+    @media (max-width: 512px) {
+        font-size: 8px;
+    }
 `;
 
 const Amount = styled.p`
