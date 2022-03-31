@@ -342,7 +342,8 @@
                 "24h-change-col": "24-часовая смена",
                 "final-asset-price-col": "Текущая цена актива",
                 "status-col": "Положение дел",
-                "maturity-date-col": "Дата погашения"
+                "maturity-date-col": "Дата погашения",
+                "out-of-liquidity": "Из ликвидности"
             },
             "hot-market-card": {
                 "time-left": "Осталось времени",

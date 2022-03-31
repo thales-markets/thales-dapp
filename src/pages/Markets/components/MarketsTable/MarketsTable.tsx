@@ -35,6 +35,7 @@ import { getSynthName } from 'utils/currency';
 import './main.scss';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import Phase from '../Phase/Phase';
+import { UI_COLORS } from 'constants/ui';
 
 type MarketsTableProps = {
     exchangeRates: Rates | null;
@@ -173,7 +174,18 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 ? [
                       {
                           Header: t(`options.home.markets-table.amm-size-col`),
-                          accessor: (row: any) => <RatioText green={row.availableLongs} red={row.availableShorts} />,
+                          accessor: (row: any) => {
+                              if (Number(row.availableLongs) > 0 || Number(row.availableShorts) > 0) {
+                                  return <RatioText green={row.availableLongs} red={row.availableShorts} />;
+                              }
+                              return (
+                                  <YellowText>
+                                      {row?.phase !== 'maturity'
+                                          ? t('options.home.markets-table.out-of-liquidity')
+                                          : t('options.market.overview.maturity-label')}
+                                  </YellowText>
+                              );
+                          },
                           sortType: ammSort,
                       },
                   ]
@@ -507,6 +519,10 @@ const GreenText = styled(Text)`
 
 const RedText = styled(Text)`
     color: #c3244a;
+`;
+
+const YellowText = styled(Text)`
+    color: ${UI_COLORS.YELLOW};
 `;
 
 const Arrow = styled.i`

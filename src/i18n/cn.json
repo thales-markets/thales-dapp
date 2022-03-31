@@ -342,7 +342,8 @@
                 "24h-change-col": "24小时变化",
                 "final-asset-price-col": "当前资产价格",
                 "status-col": "状态",
-                "maturity-date-col": "成人礼"
+                "maturity-date-col": "成人礼",
+                "out-of-liquidity": "流动性不足"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",
