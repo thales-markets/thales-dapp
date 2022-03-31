@@ -46,7 +46,6 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
         setFocus(false);
     };
 
-    console.log('Fokus ', focus);
     return (
         <Wrapper disabled={disabled} margin={container?.margin} padding={container?.padding}>
             <Container shadow={focus ? 'var(--button-shadow)' : undefined}>
