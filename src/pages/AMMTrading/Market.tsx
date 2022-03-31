@@ -102,7 +102,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 };
 
 const MainContainer = styled.div`
-    margin-top: 17px;
+    margin-top: 10px;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -118,7 +118,7 @@ const HeaderContainer = styled.div`
     align-items: center;
     justify-content: center;
     padding: 0;
-    margin: -30px 0 20px 0;
+    margin: -77px 0 20px 0;
     &::before {
         visibility: hidden;
     }

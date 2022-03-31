@@ -32,7 +32,7 @@ const Wrapper = styled.div`
     font-style: normal;
     font-weight: normal;
     font-size: 15px;
-    margin-right: 25px;
+    margin-right: 15px;
 `;
 
 const Label = styled.span`

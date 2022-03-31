@@ -170,7 +170,7 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
+        Positions: (season: number, networkId: NetworkId) => ['royale', 'positions', season, networkId],
         PlayerPositions: (networkId: NetworkId, season: number, address: string) => [
             'royale',
             'positions',
