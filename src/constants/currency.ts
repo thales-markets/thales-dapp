@@ -249,7 +249,7 @@ export const currencyKeyToNameMap = {
     [SYNTHS_MAP.sRUNE]: 'THORChain',
     [SYNTHS_MAP.sNIKKEI]: 'Nikkei 225 Index',
     [SYNTHS_MAP.sTSLA]: 'Tesla',
-    [SYNTHS_MAP.sCRV]: 'Curve DAO Token',
+    [SYNTHS_MAP.sCRV]: 'Curve',
     [SYNTHS_MAP.sAMZN]: 'Amazon',
     [SYNTHS_MAP.sCEX]: 'Centralised Exchange Index',
     [SYNTHS_MAP.sXAG]: 'Silver Ounce',
