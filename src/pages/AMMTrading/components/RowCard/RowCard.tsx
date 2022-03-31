@@ -300,16 +300,10 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
             {optBalances.long > 0 &&
                 positionCurrentValue?.longPositionValue &&
                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.longPositionValue)}`}
-            {optBalances.long > 0 && positionCurrentValue?.longPositionValue && (
-                <Container.Icon className="v2-icon v2-icon--up" color={UI_COLORS.GREEN} />
-            )}
             {optBalances.long > 0 && optBalances.short > 0 && ' / '}
             {optBalances.short > 0 &&
                 positionCurrentValue?.shortPositionValue &&
                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
-            {optBalances?.short > 0 && positionCurrentValue?.shortPositionValue && (
-                <Container.Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />
-            )}
             {!positionCurrentValue?.shortPositionValue && !positionCurrentValue?.longPositionValue && 'N/A'}
         </>
     );
