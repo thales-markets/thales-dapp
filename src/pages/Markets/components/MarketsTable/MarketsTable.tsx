@@ -85,8 +85,14 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const [tableView, setTableView] = useState<boolean>(window.innerWidth > 1250);
     const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
     const [assetFilters, setAssetFilters] = useState<string[]>([]);
+    const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(true);
+    const [dataCount, setDataCount] = useState<number>(0);
 
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
+    const liquidSwitchLabels = [
+        t(`options.home.markets-table.menu.only-liquid`),
+        t(`options.home.markets-table.menu.all`),
+    ];
 
     const updateSortOptions = (index: number) => {
         const newSortOptions = [...sortOptions];
@@ -208,23 +214,36 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
 
     const data = useMemo(() => {
         const set: Set<string> = new Set();
-        const processedMarkets = optionsMarkets.map((market) => {
-            if (!market.customMarket) set.add(market.currencyKey);
-            return {
-                address: market.address,
-                asset: market.asset,
-                currencyKey: market.currencyKey,
-                assetFullName: getSynthName(market.currencyKey),
-                availableLongs: market.availableLongs,
-                availableShorts: market.availableShorts,
-                longPrice: formatCurrencyWithSign(USD_SIGN, market.longPrice, 2),
-                shortPrice: formatCurrencyWithSign(USD_SIGN, market.shortPrice, 2),
-                strikePrice: market.strikePrice,
-                currentPrice: exchangeRates?.[market.currencyKey] || 0,
-                timeRemaining: market.timeRemaining,
-                phase: market.phase,
-            };
-        });
+        const processedMarkets = optionsMarkets
+            .map((market) => {
+                if (!market.customMarket) set.add(market.currencyKey);
+                return {
+                    address: market.address,
+                    asset: market.asset,
+                    currencyKey: market.currencyKey,
+                    assetFullName: getSynthName(market.currencyKey),
+                    availableLongs: market.availableLongs,
+                    availableShorts: market.availableShorts,
+                    longPrice: formatCurrencyWithSign(USD_SIGN, market.longPrice, 2),
+                    shortPrice: formatCurrencyWithSign(USD_SIGN, market.shortPrice, 2),
+                    strikePrice: market.strikePrice,
+                    currentPrice: exchangeRates?.[market.currencyKey] || 0,
+                    timeRemaining: market.timeRemaining,
+                    phase: market.phase,
+                };
+            })
+            .filter((market) => {
+                if (!showOnlyLiquid) return market;
+                if (market.availableLongs > 0 && market.availableShorts > 0) {
+                    return market;
+                }
+            })
+            .filter((market) => {
+                if (assetFilters?.length) {
+                    return assetFilters.includes(market.currencyKey);
+                }
+                return market;
+            });
 
         const result = new Set(
             Array.from(set)
@@ -247,7 +266,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         setAllAssets(result);
 
         return processedMarkets;
-    }, [optionsMarkets]);
+    }, [optionsMarkets, showOnlyLiquid, assetFilters]);
 
     const {
         getTableProps,
@@ -263,12 +282,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     } = useTable(
         {
             columns,
-            data: data.filter((market) => {
-                if (assetFilters?.length) {
-                    return assetFilters.includes(market.currencyKey);
-                }
-                return true;
-            }),
+            data: data,
             initalState: {
                 pageIndex: 1,
             },
@@ -295,7 +309,12 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
 
     useEffect(() => {
         gotoPage(0);
-    }, [globalFilter]);
+    }, [globalFilter, showOnlyLiquid, assetFilters]);
+
+    useEffect(() => {
+        setDataCount(data.length);
+    }, [data?.length, showOnlyLiquid, assetFilters]);
+
     useEffect(() => {
         setPageSize(20);
     }, []);
@@ -353,6 +372,11 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                         })}
                 </FilterContainer>
                 <FormContainer>
+                    <TableGridSwitch
+                        value={!showOnlyLiquid}
+                        labels={liquidSwitchLabels}
+                        clickEventHandler={() => setOnlyLiquid(!showOnlyLiquid)}
+                    />
                     <TableGridSwitch
                         value={tableView}
                         labels={labels}
@@ -412,7 +436,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     </table>
                     <PaginationWrapper
                         rowsPerPageOptions={[5, 10, 20, 25]}
-                        count={data.length}
+                        count={dataCount}
                         rowsPerPage={pageSize}
                         page={pageIndex}
                         onPageChange={handleChangePage}

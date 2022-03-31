@@ -333,7 +333,9 @@
                 "competition-tooltip": "该市场参与交易竞赛",
                 "menu": {
                     "grid": "网格",
-                    "table": "桌子"
+                    "table": "桌子",
+                    "all": "全部",
+                    "only-liquid": "液体"
                 },
                 "current-asset-price-col": "当前资产价格",
                 "price-up-down-col": "价格上涨/下跌",

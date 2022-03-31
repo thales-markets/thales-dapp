@@ -333,7 +333,9 @@
                 "competition-tooltip": "Этот рынок имеет право на торговую конкуренцию ",
                 "menu": {
                     "grid": "Сетка",
-                    "table": "Таблица"
+                    "table": "Таблица",
+                    "only-liquid": "Жидкость",
+                    "all": "Все"
                 },
                 "current-asset-price-col": "Текущая цена актива",
                 "price-up-down-col": "Цена ВВЕРХ/ВНИЗ",

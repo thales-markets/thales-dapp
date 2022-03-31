@@ -339,7 +339,9 @@
                 "competition-tooltip": "This market is eligible for trading competition",
                 "menu": {
                     "grid": "Grid",
-                    "table": "Table"
+                    "table": "Table",
+                    "only-liquid": "Liquid",
+                    "all": "All"
                 }
             }
         },
