@@ -6,12 +6,11 @@ import HotMarkets from './components/HotMarkets';
 
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
-import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
 import { sortOptionsMarkets } from 'utils/options';
@@ -22,21 +21,15 @@ import { PHASE } from 'constants/options';
 const Markets: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
-    const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
 
     const openOrdersMap = useMemo(() => {
         if (openOrdersQuery.isSuccess) {
             return openOrdersQuery.data;
         }
     }, [openOrdersQuery]);
-    const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
@@ -75,11 +68,7 @@ const Markets: React.FC = () => {
     return (
         <>
             <HotMarkets optionsMarkets={hotMarkets} />
-            <MarketsTable
-                optionsMarkets={optionsMarkets}
-                exchangeRates={exchangeRates}
-                watchlistedMarkets={watchlistedMarkets}
-            />
+            <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
         </>
     );
 };
