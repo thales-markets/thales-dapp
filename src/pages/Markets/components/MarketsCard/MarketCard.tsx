@@ -66,7 +66,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates, mar
                             <FlexDivColumn>
                                 <LightHeaderText>
                                     {`${t('options.home.market-card.strike-price')}`}
-                                    <PriceDifferenceInfo priceDiff={strikeAndAssetPriceDifference}>
+                                    <PriceDifferenceInfo priceDiff={currentAssetPrice - optionMarket.strikePrice}>
                                         {`${strikeAndAssetPriceDifference.toFixed(2)}%`}
                                     </PriceDifferenceInfo>
                                 </LightHeaderText>
