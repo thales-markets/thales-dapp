@@ -23,7 +23,6 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import snxJSConnector from 'utils/snxJSConnector';
 import { maxBy } from 'lodash';
 import { checkAllowance, formatGasLimit } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
 import onboardConnector from 'utils/onboardConnector';
 
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
@@ -34,11 +33,11 @@ import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryC
 import { AccountMarketInfo, OneInchErrorResponse, OptionSide, OrderItem, Orders, OrderSide } from 'types/options';
 import Button from 'components/Button';
 import Input from 'pages/AMMTrading/components/AMM/components/Input';
-import { UI_COLORS } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions, UI_COLORS } from 'constants/ui';
 import Slippage from 'pages/AMMTrading/components/AMM/components/Slippage';
 import NetworkFees from 'pages/AMMTrading/components/AMM/components/NetworkFees';
-import AlertMessage from 'pages/AMMTrading/components/AlertMessage';
 import Divider from 'pages/AMMTrading/components/AMM/styled-components/Divider';
+import { toast } from 'react-toastify';
 type MarketOrderPropsType = {
     optionSide: OptionSide;
 };
@@ -60,7 +59,6 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [insufficientLiquidity, setInsufficientLiquidity] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
@@ -208,9 +206,10 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
         }
     };
     const handleSubmitOrder = async () => {
+        const id = toast.loading(t('options.market.trade-options.place-order.confirm-button.progress-label'));
+
         try {
             if (window.ethereum) {
-                setTxErrorMessage(null);
                 setIsSubmitting(true);
                 window.web3 = new Web3(Web3.givenProvider);
                 const tokenAmount = ethers.utils.parseEther(amount.toString());
@@ -225,17 +224,23 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
                 refetchTrades(optionsMarket.address);
                 refetchUserTrades(optionsMarket.address, walletAddress);
                 setIsSubmitting(false);
-                dispatchMarketNotification(
-                    t(
-                        `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t(
+                            `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
+                        )
                     )
                 );
                 resetForm();
             }
         } catch (e: any) {
             console.log(e);
-            setTxErrorMessage(
-                e.code === 4001 ? t('common.errors.user-rejected-tx') : t('common.errors.unknown-error-try-again')
+            toast.update(
+                id,
+                getErrorToastOptions(
+                    e.code === 4001 ? t('common.errors.user-rejected-tx') : t('common.errors.unknown-error-try-again')
+                )
             );
             setIsSubmitting(false);
         }
@@ -309,7 +314,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
 
     const set1InchError = (errorType?: OneInchErrorType) => {
         setInsufficientLiquidity(errorType === 'insufficient-liquidity');
-        setTxErrorMessage(errorType === 'general' ? t('common.errors.unknown-error-try-again-general') : null);
+        toast(getErrorToastOptions(errorType === 'general' ? t('common.errors.unknown-error-try-again-general') : ''));
     };
 
     useEffect(() => {
@@ -499,7 +504,6 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
             />
             <Divider />
             <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
-            {txErrorMessage !== null && <AlertMessage>{txErrorMessage}</AlertMessage>}
             {getSubmitButton()}
             {openApprovalModal && (
                 <ApprovalModal
