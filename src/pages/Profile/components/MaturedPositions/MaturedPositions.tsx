@@ -146,8 +146,8 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                         priceDiff={data.market.strikePrice < data.market.finalPrice}
                                                     >
                                                         {`${getPercentageDifference(
-                                                            data.market.strikePrice,
-                                                            data.market.finalPrice
+                                                            data.market.finalPrice,
+                                                            data.market.strikePrice
                                                         ).toFixed(2)}%`}
                                                     </PriceDifferenceInfo>
                                                 </Card.RowSubtitle>
