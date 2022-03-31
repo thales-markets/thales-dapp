@@ -78,3 +78,21 @@ export const getErrorToastOptions = (message: string) => {
         type: 'error' as TypeOptions,
     };
 };
+
+export const getWarningToastOptions = (message: string) => {
+    return {
+        ...toastBasicProperties,
+        render: message,
+        isLoading: false,
+        type: 'warning' as TypeOptions,
+    };
+};
+
+export const getInfoToastOptions = (message: string) => {
+    return {
+        ...toastBasicProperties,
+        render: message,
+        isLoading: false,
+        type: 'info' as TypeOptions,
+    };
+};

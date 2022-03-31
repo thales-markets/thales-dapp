@@ -12,7 +12,6 @@ import Slippage from './components/Slippage';
 import Divider from './styled-components/Divider';
 import NetworkFees from './components/NetworkFees';
 import ApprovalModal from 'components/ApprovalModal';
-import AlertMessage from '../AlertMessage';
 
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { useSelector } from 'react-redux';
@@ -21,7 +20,6 @@ import styled from 'styled-components';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
-import { dispatchMarketNotification } from 'utils/options';
 
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
@@ -40,7 +38,8 @@ import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/n
 
 import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
-import { UI_COLORS } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
+import { toast } from 'react-toastify';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -79,7 +78,6 @@ const AMM: React.FC = () => {
     const [isGettingQuote, setIsGettingQuote] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isPriceChanged, setIsPriceChanged] = useState<boolean>(false);
     const [maxLimitExceeded, setMaxLimitExceeded] = useState<boolean>(false);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
@@ -351,9 +349,10 @@ const AMM: React.FC = () => {
     }, 5000);
 
     const handleSubmit = async () => {
-        setTxErrorMessage(null);
         setIsSubmitting(true);
         setIsPriceChanged(false);
+
+        const id = toast.loading(t('amm.progress'));
 
         const { priceChanged, latestGasLimit } = await fetchAmmPriceData(true, true);
         if (priceChanged) {
@@ -391,9 +390,12 @@ const AMM: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(
-                    t(
-                        `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t(
+                            `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
+                        )
                     )
                 );
                 refetchAmmData(walletAddress, optionsMarket?.address, networkId);
@@ -405,7 +407,7 @@ const AMM: React.FC = () => {
             }
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
             setIsSubmitting(false);
         }
     };
@@ -447,6 +449,10 @@ const AMM: React.FC = () => {
     useEffect(() => {
         setIsSlippageValid(Number(slippage) > 0 && Number(slippage) <= 100);
     }, [slippage]);
+
+    useEffect(() => {
+        toast(getWarningToastOptions(t('amm.price-changed-warning')));
+    }, [isPriceChanged]);
 
     useEffect(() => {
         setIsAmountValid(
@@ -707,10 +713,6 @@ const AMM: React.FC = () => {
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}
                 />
-            )}
-            {isPriceChanged && <AlertMessage>{t('amm.price-changed-warning')}</AlertMessage>}
-            {txErrorMessage && (
-                <AlertMessage onClose={() => setTxErrorMessage(null)}>{t('amm.price-changed-warning')}</AlertMessage>
             )}
             {getSubmitButton()}
         </Wrapper>
