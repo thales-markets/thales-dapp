@@ -216,8 +216,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                     className={Number(amount) > Number(balance) ? 'disabled primary' : 'primary'}
                     onClick={async () => {
                         await swapTx();
-                        updateBalanceAndAllowance(fromToken);
-                        handleClose(this, false);
+                        updateBalanceAndAllowance(fromToken).finally(() => handleClose(this, false));
                     }}
                     disabled={Number(amount) > Number(balance)}
                 >
@@ -254,7 +253,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                                     royaleTheme={royaleTheme}
                                     style={{ alignSelf: 'center', marginRight: 5, cursor: 'pointer' }}
                                     onClick={() => {
-                                        setAmount(Number(Number(balance).toFixed(4)).toString());
+                                        setAmount(Number(balance).toFixed(5));
                                     }}
                                 >
                                     {t('options.swap.balance')}: {Number(balance).toFixed(4)}
@@ -262,7 +261,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                                 <SwapDialog.MaxButton
                                     royaleTheme={royaleTheme}
                                     onClick={() => {
-                                        setAmount(Number(Number(balance).toFixed(4)).toString());
+                                        setAmount(Number(balance).toFixed(5));
                                     }}
                                 >
                                     {t('options.swap.max')}
@@ -278,13 +277,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                                         <FlexDivRowCentered>
                                             <SwapDialog.TokenLogo src={option.logoURI}></SwapDialog.TokenLogo>
                                             <FlexDivColumnCentered>
-                                                <SwapDialog.Text
-                                                    screenWidth={window.innerWidth}
-                                                    royaleTheme={royaleTheme}
-                                                    contentSize="large"
-                                                >
-                                                    {option.name}
-                                                </SwapDialog.Text>
                                                 <SwapDialog.Text royaleTheme={royaleTheme} contentSize="large">
                                                     {option.symbol}
                                                 </SwapDialog.Text>
@@ -348,9 +340,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                                         <FlexDivRowCentered>
                                             <SwapDialog.TokenLogo src={option.logoURI}></SwapDialog.TokenLogo>
                                             <FlexDivColumnCentered>
-                                                <SwapDialog.Text royaleTheme={royaleTheme} contentSize="large">
-                                                    {option.name}
-                                                </SwapDialog.Text>
                                                 <SwapDialog.Text royaleTheme={royaleTheme} contentSize="large">
                                                     {option.symbol}
                                                 </SwapDialog.Text>

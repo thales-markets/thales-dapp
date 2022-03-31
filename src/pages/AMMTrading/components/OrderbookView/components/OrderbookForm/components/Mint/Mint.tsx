@@ -25,17 +25,16 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
 import snxJSConnector from 'utils/snxJSConnector';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchMarketQueries, refetchOrderbook } from 'utils/queryConnector';
 import onboardConnector from 'utils/onboardConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrency, truncToDecimals } from 'utils/formatters/number';
-import { UI_COLORS } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions, UI_COLORS } from 'constants/ui';
 import Summary from '../Summary';
 import Divider from 'pages/AMMTrading/components/AMM/styled-components/Divider';
 import NetworkFees from 'pages/AMMTrading/components/AMM/components/NetworkFees';
 import ApprovalModal from 'components/ApprovalModal';
-import AlertMessage from 'pages/AMMTrading/components/AlertMessage';
+import { toast } from 'react-toastify';
 
 const Mint: React.FC = () => {
     const { t } = useTranslation();
@@ -50,7 +49,6 @@ const Mint: React.FC = () => {
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isMinting, setIsMinting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [longPrice, setLongPrice] = useState<number | string>(1);
     const [shortPrice, setShortPrice] = useState<number | string>(1);
@@ -183,8 +181,9 @@ const Mint: React.FC = () => {
         }
     };
     const handleMint = async () => {
+        const id = toast.loading(t('options.market.trade-options.mint.confirm-button.progress-label'));
+
         try {
-            setTxErrorMessage(null);
             setIsMinting(true);
             const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
             const mintAmount = ethers.utils.parseEther(amount.toString());
@@ -210,8 +209,11 @@ const Mint: React.FC = () => {
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
                 if (!sellShort && !sellLong) {
-                    dispatchMarketNotification(
-                        t('options.market.trade-options.mint.confirm-button.confirmation-message')
+                    toast.update(
+                        id,
+                        getSuccessToastOptions(
+                            t('options.market.trade-options.mint.confirm-button.confirmation-message')
+                        )
                     );
                 }
                 dispatch(
@@ -234,7 +236,7 @@ const Mint: React.FC = () => {
             setIsMinting(false);
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
             setIsMinting(false);
         }
     };
@@ -424,8 +426,13 @@ const Mint: React.FC = () => {
         const {
             contracts: { SynthsUSD },
         } = snxJSConnector.snxJS as any;
-        setTxErrorMessage(null);
         isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
+
+        const id = toast.loading(
+            isLong
+                ? t('options.market.trade-options.mint.confirm-button.submit-long-progress-label')
+                : t('options.market.trade-options.mint.confirm-button.submit-short-progress-label')
+        );
 
         const takerToken = SynthsUSD.address;
         const makerAmount = optionsAmount;
@@ -443,10 +450,13 @@ const Mint: React.FC = () => {
                 expiry
             );
             refetchOrderbook(makerToken);
-            dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
+            toast.update(
+                id,
+                getSuccessToastOptions(t('options.market.trade-options.mint.confirm-button.confirmation-message'))
+            );
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
         }
         isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
     };
@@ -653,7 +663,6 @@ const Mint: React.FC = () => {
             <Divider />
             <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} l1Fee={l1Fee} />
             {getSubmitButton()}
-            {txErrorMessage !== null && <AlertMessage>{txErrorMessage}</AlertMessage>}
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
