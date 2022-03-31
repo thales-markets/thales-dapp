@@ -139,6 +139,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                                 tabItems.map((item, index) => {
                                     return (
                                         <Item
+                                            active={!similarMarketsVisibility && currentTab === item.index}
                                             key={index}
                                             onClick={() => {
                                                 dispatch(setSimilarMarketVisibility(false));
@@ -149,7 +150,10 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                                         </Item>
                                     );
                                 })}
-                            <Item onClick={() => dispatch(setSimilarMarketVisibility(true))}>
+                            <Item
+                                active={similarMarketsVisibility}
+                                onClick={() => dispatch(setSimilarMarketVisibility(true))}
+                            >
                                 {t('options.market.overview.similar-markets')}
                             </Item>
                         </OutsideClickHandler>
@@ -256,18 +260,17 @@ const Wrapper = styled.div`
     }
 `;
 
-const Item = styled.div`
+const Item = styled.div<{ active: boolean }>`
     text-transform: uppercase;
     cursor: pointer;
     font-family: Roboto !important;
     font-style: normal;
+    color: ${(_props) => (_props?.active ? '#64d9fe' : '#ffffff')};
 
     @media (max-width: 768px) {
         font-weight: bold;
         font-size: 12px;
         line-height: 162.5%;
-        text-transform: uppercase;
-        color: #ffffff;
     }
 `;
 
