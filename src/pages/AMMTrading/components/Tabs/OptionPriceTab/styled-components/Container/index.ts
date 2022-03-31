@@ -41,6 +41,7 @@ const Price = styled.span`
 
 const Position = styled.span`
     font-weight: 700;
+    text-transform: uppercase;
 `;
 
 PriceContainer.Price = Price;

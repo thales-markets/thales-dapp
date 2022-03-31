@@ -14,17 +14,18 @@ import { mean, maxBy, orderBy } from 'lodash';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 
 import { OptionsTransactions, Orders } from 'types/options';
 
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
+import { useTranslation } from 'react-i18next';
 
 const OptionPriceTab: React.FC = () => {
     const optionsMarket = useMarketContext();
-
+    const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const longOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket?.longAddress, {
@@ -139,14 +140,14 @@ const OptionPriceTab: React.FC = () => {
                     <Container.Footer.PriceContainer.Price>{shortMarketPrice}</Container.Footer.PriceContainer.Price>
                     {' | '}
                     <Container.Footer.PriceContainer.Position>
-                        {SYNTHS_MAP.sSHORT}
+                        {t('common.short')}
                     </Container.Footer.PriceContainer.Position>
                 </Container.Footer.PriceContainer>
                 <Container.Footer.PriceContainer long={true}>
                     <Container.Footer.PriceContainer.Price>{longMarketPrice}</Container.Footer.PriceContainer.Price>
                     {' | '}
                     <Container.Footer.PriceContainer.Position>
-                        {SYNTHS_MAP.sLONG}
+                        {t('common.long')}
                     </Container.Footer.PriceContainer.Position>
                 </Container.Footer.PriceContainer>
             </Container.Footer>
