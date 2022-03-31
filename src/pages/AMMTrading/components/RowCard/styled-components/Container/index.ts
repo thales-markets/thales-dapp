@@ -28,7 +28,7 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled(CardCo
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-    padding: 20px 25px;
+    padding: 5px 25px;
     gap: 10px;
     width: 100%;
     flex-wrap: wrap;
