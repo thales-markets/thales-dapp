@@ -199,6 +199,7 @@ const NavItem = styled.p`
     }
     @media (max-width: 500px) {
         font-size: 10px;
+        padding: 0;
     }
 `;
 
@@ -217,6 +218,12 @@ const Notification = styled.span`
     margin-top: 6px;
     margin-bottom: 8px;
     display: inline-block;
+    @media (max-width: 512px) {
+        font-size: 12px;
+        line-height: 20px;
+        width: 22px;
+        margin-left: 10px;
+    }
 `;
 
 const ContentWrapper = styled.div`
