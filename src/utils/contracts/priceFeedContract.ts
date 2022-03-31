@@ -8,7 +8,7 @@ export const priceFeedContract = {
         [NetworkId.Kovan]: '0x750dCAdcA8e9e7f9702c85383119ea8034450993',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0xf4aef21d906992aFAdde7A9676e1dB4feb6390DD',
+        [NetworkId['Mainnet-Ovm']]: '0xCd9c0E99396627C7746b4363B880939Ac2828d3E',
         [NetworkId['Kovan-Ovm']]: '0xDa00B46a924dA3019b2F5fC13E770956F75C04C7',
     },
     abi: [
