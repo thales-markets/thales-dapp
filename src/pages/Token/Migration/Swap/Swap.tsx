@@ -18,7 +18,7 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { checkAllowance, formatGasLimit } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
-import { OP_THALES_CURRENCY, THALES_CURRENCY } from 'constants/currency';
+import { LEGACY_THALES_CURRENCY, THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
@@ -28,6 +28,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';
 import {
     ArrowContainer,
+    InfoSection,
     MaxButton,
     NetworkLabel,
     Result,
@@ -56,7 +57,7 @@ const Swap: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
 
     const isAmountEntered = Number(amount) > 0;
-    const insufficientBalance = Number(opThalesBalance) < Number(amount) || Number(opThalesBalance) === 0;
+    const insufficientBalance = Number(thalesBalance) < Number(amount) || Number(thalesBalance) === 0;
 
     const isButtonDisabled =
         isSubmitting || !isWalletConnected || !isAmountEntered || insufficientBalance || !hasAllowance;
@@ -82,10 +83,10 @@ const Swap: React.FC = () => {
     }, [opThalesBalanceQuery.isSuccess, opThalesBalanceQuery.data]);
 
     useEffect(() => {
-        const { opThalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
+        const { thalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
 
-        if (opThalesTokenContract && thalesExchangerContract) {
-            const opThalesTokenContractWithSigner = opThalesTokenContract.connect((snxJSConnector as any).signer);
+        if (thalesTokenContract && thalesExchangerContract) {
+            const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
             const addressToApprove = thalesExchangerContract.address;
 
             const getAllowance = async () => {
@@ -93,7 +94,7 @@ const Swap: React.FC = () => {
                     const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
                     const allowance = await checkAllowance(
                         parsedAmount,
-                        opThalesTokenContractWithSigner,
+                        thalesTokenContractWithSigner,
                         walletAddress,
                         addressToApprove
                     );
@@ -118,7 +119,7 @@ const Swap: React.FC = () => {
                         (snxJSConnector as any).signer
                     );
                     const parsedAmount = ethers.utils.parseEther(amount.toString());
-                    const gasEstimate = await thalesExchangerContractWithSigner.estimateGas.exchangeOpThalesToThales(
+                    const gasEstimate = await thalesExchangerContractWithSigner.estimateGas.exchangeThalesToOpThales(
                         parsedAmount
                     );
                     setGasLimit(formatGasLimit(gasEstimate, networkId));
@@ -133,19 +134,19 @@ const Swap: React.FC = () => {
     }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const { opThalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
+        const { thalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
 
-        if (opThalesTokenContract && thalesExchangerContract) {
-            const opThalesTokenContractWithSigner = opThalesTokenContract.connect((snxJSConnector as any).signer);
+        if (thalesTokenContract && thalesExchangerContract) {
+            const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
             const addressToApprove = thalesExchangerContract.address;
 
             try {
                 setIsAllowing(true);
-                const gasEstimate = await opThalesTokenContractWithSigner.estimateGas.approve(
+                const gasEstimate = await thalesTokenContractWithSigner.estimateGas.approve(
                     addressToApprove,
                     approveAmount
                 );
-                const tx = (await opThalesTokenContractWithSigner.approve(addressToApprove, approveAmount, {
+                const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, approveAmount, {
                     gasLimit: formatGasLimit(gasEstimate, networkId),
                 })) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
@@ -170,11 +171,11 @@ const Swap: React.FC = () => {
             const thalesExchangerContractWithSigner = thalesExchangerContract.connect((snxJSConnector as any).signer);
 
             const parsedAmount = ethers.utils.parseEther(amount.toString());
-            const tx = await thalesExchangerContractWithSigner.exchangeOpThalesToThales(parsedAmount);
+            const tx = await thalesExchangerContractWithSigner.exchangeThalesToOpThales(parsedAmount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('migration.swap-button.confirmation-message'));
+                dispatchMarketNotification(t('migration.migrate-button.confirmation-message'));
                 setIsSubmitting(false);
                 setAmount('');
             }
@@ -203,30 +204,31 @@ const Swap: React.FC = () => {
             return (
                 <DefaultSubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: OP_THALES_CURRENCY })
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: LEGACY_THALES_CURRENCY })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: OP_THALES_CURRENCY,
+                              currencyKey: LEGACY_THALES_CURRENCY,
                           })}
                 </DefaultSubmitButton>
             );
         }
         return (
             <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleSubmit}>
-                {!isSubmitting ? t('migration.swap-button.label') : t('migration.swap-button.progress-label')}
+                {!isSubmitting ? t('migration.migrate-button.label') : t('migration.migrate-button.progress-label')}
             </DefaultSubmitButton>
         );
     };
 
     const onMaxClick = () => {
-        setAmount(truncToDecimals(opThalesBalance, 8));
+        setAmount(truncToDecimals(thalesBalance, 8));
     };
 
     useEffect(() => {
-        setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= opThalesBalance));
-    }, [amount, opThalesBalance]);
+        setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= thalesBalance));
+    }, [amount, thalesBalance]);
 
     return (
         <>
+            <InfoSection>{t('migration.info-messages.migrate')}</InfoSection>
             <InputContainer>
                 <NumericInput
                     value={amount}
@@ -238,13 +240,13 @@ const Swap: React.FC = () => {
                     {t('migration.from-label')}
                     <NetworkLabel>{network.networkName}</NetworkLabel>
                 </InputLabel>
-                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{OP_THALES_CURRENCY}</CurrencyLabel>
+                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{LEGACY_THALES_CURRENCY}</CurrencyLabel>
                 <ThalesWalletAmountLabel>
                     {isWalletConnected ? (
                         thalesBalanceQuery.isLoading ? (
                             <SimpleLoader />
                         ) : (
-                            formatCurrencyWithKey(OP_THALES_CURRENCY, opThalesBalance)
+                            formatCurrencyWithKey(LEGACY_THALES_CURRENCY, thalesBalance)
                         )
                     ) : (
                         '-'
@@ -255,7 +257,7 @@ const Swap: React.FC = () => {
                 </ThalesWalletAmountLabel>
                 <FieldValidationMessage
                     showValidation={!isAmountValid}
-                    message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: OP_THALES_CURRENCY })}
+                    message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LEGACY_THALES_CURRENCY })}
                 />
             </InputContainer>
             <ArrowContainer>
@@ -273,7 +275,7 @@ const Swap: React.FC = () => {
                         thalesBalanceQuery.isLoading ? (
                             <SimpleLoader />
                         ) : (
-                            formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)
+                            formatCurrencyWithKey(THALES_CURRENCY, opThalesBalance)
                         )
                     ) : (
                         '-'
@@ -291,7 +293,7 @@ const Swap: React.FC = () => {
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
-                    tokenSymbol={OP_THALES_CURRENCY}
+                    tokenSymbol={LEGACY_THALES_CURRENCY}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}

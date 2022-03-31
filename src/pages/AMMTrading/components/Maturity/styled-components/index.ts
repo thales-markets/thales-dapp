@@ -7,6 +7,9 @@ export const Container = styled(CardContainer)`
     padding: 20px 30px;
     margin-right: 20px;
     width: 50%;
+    @media (max-width: 568px) {
+        width: 100%;
+    }
 `;
 
 export const Header = styled.span`

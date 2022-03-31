@@ -3,19 +3,27 @@ import styled from 'styled-components';
 import { Trans } from 'react-i18next';
 import { FlexDivCentered } from 'theme/common';
 import NetworkSwitch from 'components/NetworkSwitch';
-import { Tip20Link } from '../../components';
+import { Tip20Link, Tip23Link } from '../../components';
 
 type MigrationInfoProps = {
     messageKey: string;
+    tipNumber?: number;
 };
 
-const MigrationInfo: React.FC<MigrationInfoProps> = ({ messageKey }) => {
+const MigrationInfo: React.FC<MigrationInfoProps> = ({ messageKey, tipNumber }) => {
+    const getTipLink = () => {
+        if (tipNumber === 23) {
+            return <Tip23Link key="2" />;
+        }
+        return <Tip20Link key="2" />;
+    };
+
     return (
         <Conatiner>
             <Message>
                 <Trans
                     i18nKey={`migration.migration-messages.${messageKey}`}
-                    components={[<span key="1" />, <Tip20Link key="2" />]}
+                    components={[<span key="1" />, getTipLink()]}
                 />
             </Message>
             <FlexDivCentered>
