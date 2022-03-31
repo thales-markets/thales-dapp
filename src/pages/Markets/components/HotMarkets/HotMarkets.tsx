@@ -186,6 +186,7 @@ const Icon = styled.i<{ disabled?: boolean }>`
     cursor: pointer;
     font-size: 60px;
     color: ${(_props) => (_props?.disabled ? 'var(--hotmarket-arrow-disable)' : 'var(--hotmarket-arrow-enabled)')};
+    pointer-events: ${(_props) => (_props?.disabled ? 'none' : 'auto')};
 `;
 
 export default HotMarkets;
