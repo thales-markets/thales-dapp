@@ -112,6 +112,7 @@ const Display = styled.span<{ fontSize?: string; color?: string }>`
     font-weight: 700;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '25px')};
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    width: 140px;
     @media (max-width: 1024px) {
         font-size: 21px;
     }
