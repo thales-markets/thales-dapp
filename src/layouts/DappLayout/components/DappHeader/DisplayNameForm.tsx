@@ -58,7 +58,10 @@ const DisplayNameForm: React.FC = () => {
         <Wrapper>
             <UserCardSectionHeader>{t('common.user-info-card.display-name')}</UserCardSectionHeader>
             <DisplayNameInput value={displayName} onChange={(event) => setDisplayName(event.target.value)} />
-            <Button onClick={() => dispatchDisplayName(walletAddress, displayName)}>
+            <Button
+                disabled={displayName === '' || displayName === currentDisplayName}
+                onClick={() => dispatchDisplayName(walletAddress, displayName)}
+            >
                 {t('common.user-info-card.change-display-name')}
             </Button>
         </Wrapper>
@@ -88,7 +91,7 @@ const DisplayNameInput = styled.input`
     }
 `;
 
-const Button = styled.div`
+const Button = styled.div<{ disabled?: boolean }>`
     width: 100%;
     background-color: var(--input-border-color);
     font-size: 11px;
@@ -101,6 +104,8 @@ const Button = styled.div`
     text-align: center;
     line-height: 17px;
     cursor: pointer;
+    opacity: ${(_props) => (_props?.disabled ? '0.3' : '1')};
+    pointer-events: ${(_props) => (_props?.disabled ? 'none' : 'auto')};
 `;
 
 export default DisplayNameForm;
