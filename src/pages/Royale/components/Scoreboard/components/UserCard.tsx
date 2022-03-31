@@ -43,8 +43,8 @@ type UserCardProps = {
 };
 export enum PositionsEnum {
     NONE = 'none',
-    DOWN = 'down',
     UP = 'up',
+    DOWN = 'down',
 }
 
 export enum BuyInCollateralEnum {
