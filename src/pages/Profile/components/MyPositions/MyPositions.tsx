@@ -196,7 +196,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                     containerStyle={{ margin: 'auto' }}
                                                     currencyKey={data.market.currencyKey}
                                                     height={30}
-                                                    width={120}
+                                                    width={window.innerWidth > 400 ? 120 : 60}
                                                     footerFontSize="8px"
                                                     showFooter={window.innerWidth > 500}
                                                 />

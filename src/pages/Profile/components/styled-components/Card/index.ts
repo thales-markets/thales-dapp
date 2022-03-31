@@ -37,6 +37,9 @@ const Card: StyledComponent<'div', any> & Children = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-around;
+    @media (max-width: 380px) {
+        padding: 16px 10px;
+    }
 `;
 const CardColumn = styled.div`
     display: flex;
@@ -70,6 +73,7 @@ const CardText = styled.span`
     font-family: Roboto !important;
     color: var(--primary-color);
     line-height: 100%;
+    white-space: pre;
 `;
 
 const SectionContainer = styled.div`
@@ -100,12 +104,20 @@ const SubHeader = styled(CardText)`
     font-size: 23px;
     span {
         font-size: 23px !important;
+        white-space: pre;
     }
     font-weight: 700;
     @media (max-width: 500px) {
         font-size: 14px;
         span {
             font-size: 14px !important;
+        }
+    }
+
+    @media (max-width: 400px) {
+        font-size: 12px;
+        span {
+            font-size: 12px !important;
         }
     }
 `;
