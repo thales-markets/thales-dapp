@@ -17,6 +17,8 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
+import useOpThalesBalanceQuery from '../../queries/walletBalances/useOpThalesBalanceQuery';
+import { getIsOVM } from '../../utils/network';
 
 const PieChartUserBalance: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -24,6 +26,7 @@ const PieChartUserBalance: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
 
     const [thalesBalance, setThalesBalance] = useState(0);
 
@@ -36,7 +39,11 @@ const PieChartUserBalance: React.FC = () => {
             : null;
 
     const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && isL2,
+    });
+
+    const opThalesBalanceQuery = useOpThalesBalanceQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && !isL2,
     });
 
     const ethBalanceQuery = useEthBalanceQuery(walletAddress, {
@@ -52,6 +59,12 @@ const PieChartUserBalance: React.FC = () => {
             setThalesBalance(Number(thalesBalanceQuery.data.balance));
         }
     }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
+
+    useEffect(() => {
+        if (opThalesBalanceQuery.isSuccess && opThalesBalanceQuery.data && !isL2) {
+            setThalesBalance(Number(opThalesBalanceQuery.data.balance));
+        }
+    }, [opThalesBalanceQuery.isSuccess, opThalesBalanceQuery.data]);
 
     const data =
         sUSDBalance || thalesBalance
