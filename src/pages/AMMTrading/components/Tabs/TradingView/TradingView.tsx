@@ -18,7 +18,7 @@ const TradingView: React.FC = () => {
                 style="2"
                 range="12m"
                 withdateranges={true}
-                hide_side_toolbar={true}
+                hide_side_toolbar={false}
                 theme="Dark"
             />
         </Container>
