@@ -11,12 +11,28 @@ type Tooltips = 'info' | 'warning' | 'success';
 type CustomTooltipProps = {
     message: string;
     type: Tooltips;
+    iconColor?: string;
+    placement?: string;
 };
 
 type TooltipContentProps = {
     message: string;
     type: Tooltips;
 };
+
+type PlacementType =
+    | 'bottom-end'
+    | 'bottom-start'
+    | 'bottom'
+    | 'left-end'
+    | 'left-start'
+    | 'left'
+    | 'right-end'
+    | 'right-start'
+    | 'right'
+    | 'top-end'
+    | 'top-start'
+    | 'top';
 
 const icons = {
     info: {
@@ -49,19 +65,19 @@ const ModifiedTooltip = withStyles(() => ({
     },
 }))(Tooltip);
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ message, type }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ message, type, iconColor, placement }) => {
     return (
         <>
-            <ModifiedTooltip
-                TransitionComponent={Fade}
-                title={<TooltipContent message={message} type={type} />}
-                placement={'top'}
-                arrow
-            >
-                <IconContainer>
-                    <Icon className={icons[type].className} color={UI_COLORS.GREEN} fontSize={'11px'} />
-                </IconContainer>
-            </ModifiedTooltip>
+            <IconContainer>
+                <ModifiedTooltip
+                    TransitionComponent={Fade}
+                    title={<TooltipContent message={message} type={type} />}
+                    placement={placement ? (placement as PlacementType) : 'top'}
+                    arrow
+                >
+                    <Icon className={icons[type].className} color={iconColor} fontSize={'11px'} />
+                </ModifiedTooltip>
+            </IconContainer>
         </>
     );
 };

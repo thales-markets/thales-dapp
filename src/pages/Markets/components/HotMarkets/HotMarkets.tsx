@@ -9,6 +9,7 @@ import HotMarketCardSceleton from '../MarketsCard/HotMarketCardSceleton';
 import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
 import Hammer from 'hammerjs';
+import Tooltip from 'components/Tooltip';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -96,7 +97,17 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     return (
         <>
-            <Title>Most profitable markets</Title>
+            <Title>
+                {'Most profitable markets'}
+                <Tooltip
+                    message={
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
+                    }
+                    type={'info'}
+                    iconColor={'var(--table-header-text-color)'}
+                    placement={'right'}
+                />
+            </Title>
             <Wrapper id="wrapper-cards">
                 {currentMarkets.length > 0 ? (
                     <>
@@ -169,6 +180,8 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.p`
+    display: flex;
+    flex-direction: row;
     font-family: Roboto !important;
     font-style: normal;
     font-weight: 600;

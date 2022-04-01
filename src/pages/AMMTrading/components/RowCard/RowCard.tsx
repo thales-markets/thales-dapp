@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import Button from 'components/Button';
 import { getIsBuyState, getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
+import Tooltip from 'components/Tooltip';
 
 const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
@@ -149,6 +150,12 @@ const RowCard: React.FC = () => {
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
                                 {t('options.market.overview.price-difference')}
+                                <Tooltip
+                                    message={
+                                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
+                                    }
+                                    type={'info'}
+                                />
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value color={priceDifference > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}>
                                 {priceDifference ? `${priceDifference.toFixed(2)}%` : 'N/A'}
