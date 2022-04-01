@@ -60,6 +60,7 @@ type UISliceState = {
     fullLayout: Layout[];
     ammSelected: boolean;
     showSimilarMarket: boolean;
+    isBuy: boolean;
     isLong: boolean;
 };
 
@@ -81,6 +82,7 @@ const defaultState: UISliceState = {
     fullLayout: getDefaultLayout(),
     ammSelected: true,
     showSimilarMarket: false,
+    isBuy: true,
     isLong: true,
 };
 
@@ -90,6 +92,7 @@ const initialState: UISliceState = {
     fullLayout: getInitialFullLayout(),
     ammSelected: getInitialAmmSelected(),
     showSimilarMarket: false,
+    isBuy: true,
     isLong: true,
 };
 
@@ -156,6 +159,9 @@ export const uiSlice = createSlice({
         setSimilarMarketVisibility: (state: UISliceState, action: PayloadAction<boolean>) => {
             state.showSimilarMarket = action.payload;
         },
+        setBuyState: (state: UISliceState, action: PayloadAction<boolean>) => {
+            state.isBuy = action.payload;
+        },
         setLongState: (state: UISliceState, action: PayloadAction<boolean>) => {
             state.isLong = action.payload;
         },
@@ -175,6 +181,7 @@ export const {
     setMarketWidgetLayout,
     setAmmSelected,
     setSimilarMarketVisibility,
+    setBuyState,
     setLongState,
 } = uiSlice.actions;
 
@@ -184,6 +191,7 @@ export const getCurrentLayout = (state: RootState) => getUIState(state).currentL
 export const getFullLayout = (state: RootState) => getUIState(state).fullLayout;
 export const getAmmSelected = (state: RootState) => getUIState(state).ammSelected;
 export const getSimilarMarketsVisibility = (state: RootState) => getUIState(state).showSimilarMarket;
+export const getIsBuyState = (state: RootState) => getUIState(state).isBuy;
 export const getIsLongState = (state: RootState) => getUIState(state).isLong;
 
 export default uiSlice.reducer;

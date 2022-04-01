@@ -22,14 +22,14 @@ import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import Button from 'components/Button';
-import { getIsLongState, getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
+import { getIsBuyState, getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
 
 const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const similarMarketsVisibility = useSelector((state: RootState) => getSimilarMarketsVisibility(state));
-    const isLong = useSelector((state: RootState) => getIsLongState(state));
+    const isBuy = useSelector((state: RootState) => getIsBuyState(state));
 
     let optBalances = {
         long: 0,
@@ -55,17 +55,15 @@ const RowCard: React.FC = () => {
         ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? (ammMaxLimitsQuery.data as AmmMaxLimits) : undefined;
 
     const ammData = useMemo(() => {
-        if (ammMaxLimits) {
-            return {
-                buyMax: isLong ? ammMaxLimits?.maxBuyLong : ammMaxLimits?.maxBuyShort,
-                sellMax: isLong ? ammMaxLimits.maxSellLong : ammMaxLimits.maxSellShort,
-                buyPrice: isLong ? ammMaxLimits.buyLongPrice : ammMaxLimits.buyShortPrice,
-                sellPrice: isLong ? ammMaxLimits.sellLongPrice : ammMaxLimits.sellShortPrice,
-            };
-        }
+        if (!ammMaxLimits) return undefined;
 
-        return undefined;
-    }, [ammMaxLimits, isLong]);
+        return {
+            maxUp: isBuy ? ammMaxLimits?.maxBuyLong : ammMaxLimits?.maxSellLong,
+            maxDown: isBuy ? ammMaxLimits.maxBuyShort : ammMaxLimits.maxSellShort,
+            priceUp: isBuy ? ammMaxLimits.buyLongPrice : ammMaxLimits.sellLongPrice,
+            priceDown: isBuy ? ammMaxLimits.buyShortPrice : ammMaxLimits.sellShortPrice,
+        };
+    }, [ammMaxLimits, isBuy]);
 
     const positionCurrentValue = useMemo(() => {
         if (ammMaxLimitsQuery?.isSuccess && (optBalances?.long > 0 || optBalances?.short > 0)) {
@@ -199,11 +197,11 @@ const RowCard: React.FC = () => {
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
                                     <Container.SubContainer.Value.Liquidity>
-                                        {ammData ? ammData.buyMax?.toFixed(1) : '0'}
+                                        {ammData ? ammData.maxUp?.toFixed(1) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                     {' / '}
                                     <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
-                                        {ammData ? ammData.sellMax?.toFixed(1) : '0'}
+                                        {ammData ? ammData.maxDown?.toFixed(1) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                 </Container.SubContainer.Value>
                             </Container.SubContainer>
@@ -213,11 +211,11 @@ const RowCard: React.FC = () => {
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
                                     <Container.SubContainer.Value.Liquidity>
-                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.buyPrice, 3) : '0'}
+                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceUp, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                     {' / '}
                                     <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
-                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.sellPrice, 3) : '0'}
+                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceDown, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                 </Container.SubContainer.Value>
                             </Container.SubContainer>
