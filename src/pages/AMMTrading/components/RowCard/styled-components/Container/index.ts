@@ -100,6 +100,8 @@ const Icon = styled.i<{ color?: string }>`
 `;
 
 const Header = styled.span`
+    display: flex;
+    flex-direction: row;
     font-family: Roboto !important;
     font-style: normal;
     color: var(--primary-color);
