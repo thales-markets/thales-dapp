@@ -150,12 +150,6 @@ const RowCard: React.FC = () => {
                         <Container.SubContainer>
                             <Container.SubContainer.Header>
                                 {t('options.market.overview.price-difference')}
-                                <Tooltip
-                                    message={
-                                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
-                                    }
-                                    type={'info'}
-                                />
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value color={priceDifference > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}>
                                 {priceDifference ? `${priceDifference.toFixed(2)}%` : 'N/A'}
@@ -204,6 +198,12 @@ const RowCard: React.FC = () => {
                             <Container.SubContainer>
                                 <Container.SubContainer.Header>
                                     {t('options.market.overview.amm-liquidity')}
+                                    <Tooltip
+                                        message={t('options.market.overview.amm-liquidity-tooltip')}
+                                        type={'info'}
+                                        placement={'right'}
+                                        container={{ alignItems: 'center' }}
+                                    />
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
                                     <Container.SubContainer.Value.Liquidity>

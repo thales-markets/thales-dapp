@@ -19,8 +19,8 @@ export const Text = styled.span<{ margin?: string }>`
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
 `;
 
-export const IconContainer = styled.div`
+export const IconContainer = styled.div<{ alignItems?: string }>`
     display: flex;
-    align-items: flex-start;
+    align-items: ${(_props) => (_props?.alignItems ? _props.alignItems : 'flex-start')};
     margin: 0px 5px;
 `;

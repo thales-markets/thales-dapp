@@ -309,6 +309,9 @@
                 "time-left": "Time left",
                 "potential-profit": "Potential profit"
             },
+            "hot-markets": {
+                "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor."
+            },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets"
             },
@@ -698,6 +701,7 @@
                 "final-result-label": "Final result",
                 "deposited-currency-label": "Deposited {{currencyKey}}",
                 "amm-liquidity": "AMM liquidity",
+                "amm-liquidity-tooltip": "Currently available amounts of UP and DOWN tokens.",
                 "amm-price": "AMM Price",
                 "final-result": "Final Result",
                 "event-name-label": "Event Name",

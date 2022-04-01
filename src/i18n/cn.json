@@ -349,6 +349,9 @@
                 "time-left": "剩下的时间",
                 "potential-profit": "潜在利润",
                 "price-per-option": "每个选项的价格"
+            },
+            "hot-markets": {
+                "tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买当前具有最高潜在利润的位置代币。"
             }
         },
         "earn": {
@@ -709,7 +712,8 @@
                 "close-similar-markets": "关闭类似市场",
                 "my-position": "我的位置",
                 "final-result": "最后结果",
-                "position-value": "职位价值"
+                "position-value": "职位价值",
+                "amm-liquidity-tooltip": "当前可用数量的 UP 和 DOWN 代币。"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 
 // import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { OptionsMarkets } from 'types/options';
@@ -27,6 +28,7 @@ const calculatePotentialProfit = (price: number) => {
 };
 
 const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
+    const { t } = useTranslation();
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
     const currentMarkets = useMemo(() => {
@@ -100,9 +102,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             <Title>
                 {'Most profitable markets'}
                 <Tooltip
-                    message={
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
-                    }
+                    message={t('options.home.hot-markets.tooltip-text')}
                     type={'info'}
                     iconColor={'var(--table-header-text-color)'}
                     placement={'right'}
