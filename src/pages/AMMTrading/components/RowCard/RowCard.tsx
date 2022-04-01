@@ -84,8 +84,11 @@ const RowCard: React.FC = () => {
     }, [ammMaxLimitsQuery.isLoading, optBalances?.long, optBalances?.short]);
 
     const priceDifference = useMemo(() => {
-        return formatPricePercentageDifference(marketInfo.strikePrice, marketInfo.currentPrice);
-    }, [marketInfo.currentPrice, marketInfo.strikePrice]);
+        return formatPricePercentageDifference(
+            marketInfo.strikePrice,
+            marketInfo?.phase == 'maturity' ? marketInfo.finalPrice : marketInfo.currentPrice
+        );
+    }, [marketInfo.currentPrice, marketInfo.strikePrice, marketInfo?.phase]);
 
     return (
         <>
