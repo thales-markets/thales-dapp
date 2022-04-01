@@ -20,8 +20,10 @@ const useBinaryOptionsMarketOrderbook = (
     return useQuery<OrderbookInfo>(
         QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress),
         async () => {
-            const buyOrders = await getAllBuyOrdersForToken(networkId, optionsTokenAddress);
-            const sellOrders = await getAllSellOrdersForToken(networkId, optionsTokenAddress);
+            const [buyOrders, sellOrders] = await Promise.all([
+                getAllBuyOrdersForToken(networkId, optionsTokenAddress),
+                getAllSellOrdersForToken(networkId, optionsTokenAddress),
+            ]);
 
             if (sellOrders.length > 0) {
                 orderbook.sellOrders = orderBy(
