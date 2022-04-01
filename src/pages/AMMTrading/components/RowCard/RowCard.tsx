@@ -140,7 +140,10 @@ const RowCard: React.FC = () => {
                                     : t('options.home.market-card.current-asset-price')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
-                                {formatCurrencyWithSign(USD_SIGN, marketInfo.currentPrice, 2)}
+                                {marketInfo?.phase == 'maturity'
+                                    ? formatCurrencyWithSign(USD_SIGN, marketInfo.finalPrice, 2)
+                                    : formatCurrencyWithSign(USD_SIGN, marketInfo.currentPrice, 2)}
+                                {}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                         <Container.SubContainer>
