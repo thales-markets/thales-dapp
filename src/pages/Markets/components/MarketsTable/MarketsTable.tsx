@@ -247,7 +247,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             })
             .filter((market) => {
                 if (!showOnlyLiquid) return market;
-                if (market.availableLongs > 0 && market.availableShorts > 0) {
+                if (market.availableLongs > 0 || market.availableShorts > 0) {
                     return market;
                 }
             })
@@ -352,8 +352,9 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     .filter((item) => item),
             ],
             assetFilters: assetFilters,
+            showOnlyLiquid,
         };
-    }, [globalFilter, sortOptions, assetFilters]);
+    }, [globalFilter, sortOptions, assetFilters, showOnlyLiquid]);
 
     return (
         <>

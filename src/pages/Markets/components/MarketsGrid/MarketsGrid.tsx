@@ -33,6 +33,12 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
             });
         }
 
+        if (filters?.showOnlyLiquid) {
+            data = data.filter((market) => {
+                return market.availableLongs > 0 || market.availableShorts > 0;
+            });
+        }
+
         if (filters?.searchQuery) {
             data = data.filter((market) => {
                 if (market?.asset.toLowerCase().includes(filters.searchQuery)) return market;

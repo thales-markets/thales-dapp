@@ -271,6 +271,7 @@ export type GridFilters = {
           >
         | [];
     assetFilters: string[];
+    showOnlyLiquid?: boolean;
 };
 
 export type PrimaryOptionsFilter = 'allMarkets' | 'watchlist' | 'recentlyAdded';
