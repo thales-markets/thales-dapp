@@ -128,6 +128,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
 
     const approve = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
+        const id = toast.loading(t('options.swap.progress'));
         try {
             setIsAllowing(true);
             setLoading(true);
@@ -137,6 +138,8 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
             await tx.wait();
             setLoading(false);
             setIsAllowing(false);
+            toast.update(id, getSuccessToastOptions(t('options.swap.approval-success')));
+            setOpenApprovalModal(false);
             return {
                 data: (req.data as any).data,
                 to: (req.data as any).to,
@@ -144,6 +147,14 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
         } catch (e) {
             console.log('failed: ', e);
             setIsAllowing(false);
+            setLoading(false);
+            toast.update(
+                id,
+                getErrorToastOptions(
+                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.approval-failed')
+                )
+            );
+            setOpenApprovalModal(false);
         }
     };
 
@@ -177,10 +188,11 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
             }
         } catch (e: any) {
             setLoading(false);
-            // setTxErrorMessage(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'));
             toast.update(
                 id,
-                getErrorToastOptions(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'))
+                getErrorToastOptions(
+                    (e as any).code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed')
+                )
             );
             console.log('failed: ', e);
         }
@@ -230,7 +242,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     };
 
     return (
-        <OutsideClickHandler onOutsideClick={handleClose.bind(this, false)}>
+        <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, false)}>
             {networkId !== 1 && networkId !== 10 ? (
                 <SwapDialog
                     royaleTheme={royaleTheme}

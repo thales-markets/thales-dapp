@@ -203,6 +203,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
         } catch (e) {
             console.log(e);
             setIsAllowing(false);
+            setOpenApprovalModal(false);
         }
     };
     const handleSubmitOrder = async () => {

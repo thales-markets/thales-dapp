@@ -1138,6 +1138,8 @@
             "tx-success": "Successfully bought sUSD",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",
+            "approval-success": "Approval successful",
+            "approval-failed": "Approval failed",
             "from": "From",
             "balance": "Balance",
             "max": "Max",

@@ -196,6 +196,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         } catch (e) {
             console.log(e);
             setIsAllowing(false);
+            setOpenApprovalModal(false);
         }
     };
 

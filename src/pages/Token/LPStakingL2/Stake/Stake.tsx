@@ -157,6 +157,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsAllowingStake(false);
+            setOpenApprovalModal(false);
         }
     };
 

@@ -256,6 +256,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         } catch (e) {
             console.log(e);
             setIsAllowing(false);
+            setOpenApprovalModal(false);
         }
     };
 
