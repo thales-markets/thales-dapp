@@ -15,6 +15,8 @@ import { formatShortDate } from 'utils/formatters/date';
 // import { getSynthName } from 'utils/currency';
 import { USD_SIGN } from 'constants/currency';
 import PhaseComponent from '../Phase/Phase';
+import Tooltip from 'components/Tooltip';
+import { UI_COLORS } from 'constants/ui';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;
@@ -70,6 +72,17 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates, mar
                                     <PriceDifferenceInfo priceDiff={currentAssetPrice - optionMarket.strikePrice}>
                                         {`${strikeAndAssetPriceDifference.toFixed(2)}%`}
                                     </PriceDifferenceInfo>
+                                    <Tooltip
+                                        message={
+                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
+                                        }
+                                        type={'info'}
+                                        iconColor={
+                                            currentAssetPrice - optionMarket.strikePrice > 0
+                                                ? UI_COLORS.GREEN
+                                                : UI_COLORS.RED
+                                        }
+                                    />
                                 </LightHeaderText>
                                 <StrongHeaderText style={{ marginBottom: '10px' }}>
                                     {formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}
@@ -169,12 +182,13 @@ const MarketStatus = styled.span`
 `;
 
 const LightHeaderText = styled.span`
+    display: flex;
+    flex-direction: row;
     color: var(--primary-color);
-    display: block;
     font-family: Roboto !important;
     font-style: normal;
     line-height: 110%;
-    font-size: 15px;
+    font-size: 14px;
 `;
 
 const StrongHeaderText = styled(LightHeaderText)`
