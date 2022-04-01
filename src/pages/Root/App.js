@@ -193,9 +193,9 @@ const App = () => {
                         </Route>
 
                         <Route exact path={ROUTES.Options.CreateMarket}>
-                            <MainLayout>
+                            <DappLayout>
                                 <OptionsCreateMarket />
-                            </MainLayout>
+                            </DappLayout>
                         </Route>
 
                         <Route exact path={ROUTES.Options.QuickTrading}>
