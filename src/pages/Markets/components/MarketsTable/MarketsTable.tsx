@@ -531,6 +531,7 @@ const Arrow = styled.i`
     margin-left: 5px;
     font-size: 15px;
     text-transform: none;
+    color: var(--table-header-text-color);
 `;
 
 const Wrapper = styled(FlexDivRow)`
