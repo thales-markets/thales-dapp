@@ -1147,7 +1147,8 @@
             "to": "到",
             "max": "最大限度",
             "from": "从",
-            "estimated-gas": "估计气体"
+            "estimated-gas": "估计气体",
+            "progress": "请稍等..."
         },
         "royale": {
             "header": {

@@ -1142,7 +1142,8 @@
             "balance": "Balance",
             "max": "Max",
             "to": "To",
-            "estimated-gas": "Estimated Gas"
+            "estimated-gas": "Estimated Gas",
+            "progress": "Please wait..."
         },
         "royale": {
             "header": {

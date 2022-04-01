@@ -144,6 +144,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                                             onClick={() => {
                                                 dispatch(setSimilarMarketVisibility(false));
                                                 setCurrentTab(item.index);
+                                                setShowViewsDropdown(false);
                                             }}
                                         >
                                             {item.title}

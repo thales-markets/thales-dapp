@@ -121,9 +121,15 @@ const Label = styled.p`
     letter-spacing: 0.035em;
     text-transform: capitalize;
     color: #ffffff;
-    font-size: 10px;
+    font-size: 12px;
+    @media (max-width: 1024px) {
+        font-size: 10px;
+        line-height: 20px;
+    }
+
     @media (max-width: 512px) {
         font-size: 8px;
+        line-height: 16px;
     }
 `;
 
@@ -131,9 +137,13 @@ const Amount = styled.p`
     font-family: Roboto !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 18px;
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
+        font-size: 10px;
+    }
+
+    @media (max-width: 512px) {
         font-size: 8px;
     }
     letter-spacing: 0.035em;
