@@ -30,3 +30,15 @@ table {
     width: 100%;
     max-width: 1200px;
 }
+
+tbody > a > tr > td:first-child {
+    @media (min-width: 1024px) {
+        min-width: 100px;
+    }
+}
+
+thead > tr > th {
+    @media (min-width: 1024px) {
+        min-width: 120px;
+    }
+}

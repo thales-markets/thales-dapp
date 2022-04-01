@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { OptionsMarkets } from 'types/options';
@@ -87,7 +87,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
     const [assetFilters, setAssetFilters] = useState<string[]>([]);
     const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(true);
-    const [dataCount, setDataCount] = useState<number>(0);
+    // const [dataCount, setDataCount] = useState<number>(0);
 
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
     const liquidSwitchLabels = [
@@ -147,16 +147,11 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
-                Header: t(`options.home.markets-table.asset-col`),
-                accessor: 'assetFullName',
-                isVisible: false,
-                disableSortBy: true,
-                show: false,
-            },
-            {
+                id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
-                accessor: 'strikePrice',
-                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2),
+                accessor: (row: any) => formatCurrencyWithSign(USD_SIGN, row?.strikePrice, 2),
+                // accessor: 'strikePrice',
+                // Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2),
             },
             {
                 Header: t(`options.home.markets-table.current-asset-price-col`),
@@ -206,7 +201,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
-                id: 'currencyKey',
+                id: 'priceChart',
                 Header: t(`options.home.markets-table.24h-change-col`),
                 accessor: (row: any) => (
                     <PriceChart
@@ -281,15 +276,30 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         return processedMarkets;
     }, [optionsMarkets, showOnlyLiquid, assetFilters]);
 
+    // Custom global search filter -> useTable
+    const ourGlobalFilterFunction = useCallback((rows: any, _columnIds: string[], filterValue: any) => {
+        if (!filterValue) return rows;
+        return rows.filter(
+            (row: any) =>
+                row?.original?.asset.toLowerCase().includes(filterValue.toLowerCase()) ||
+                row?.original?.assetFullName.toLowerCase().includes(filterValue.toLowerCase()) ||
+                row?.original?.currentPrice.toFixed(2).includes(filterValue) ||
+                row?.original?.phase.includes(filterValue) ||
+                row?.original?.longPrice.includes(filterValue) ||
+                row?.original?.shortPrice.includes(filterValue) ||
+                row?.original?.strikePrice.toFixed(2).includes(filterValue)
+        );
+    }, []);
+
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         page,
+        rows,
         prepareRow,
         state,
         setGlobalFilter,
-        setHiddenColumns,
         gotoPage,
         setPageSize,
     } = useTable(
@@ -299,6 +309,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             initalState: {
                 pageIndex: 1,
             },
+            globalFilter: ourGlobalFilterFunction,
             autoResetPage: false,
             autoResetSortBy: false,
             autoResetGlobalFilter: false,
@@ -324,17 +335,13 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         gotoPage(0);
     }, [globalFilter, showOnlyLiquid, assetFilters]);
 
-    useEffect(() => {
-        setDataCount(data.length);
-    }, [data?.length, showOnlyLiquid, assetFilters]);
+    // useEffect(() => {
+    //     setDataCount(data.length);
+    // }, [data?.length, showOnlyLiquid, assetFilters, globalFilter]);
 
     useEffect(() => {
         setPageSize(20);
     }, []);
-
-    useEffect(() => {
-        setHiddenColumns(['assetFullName']);
-    }, [columns]);
 
     const filters = useMemo(() => {
         return {
@@ -453,7 +460,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     </table>
                     <PaginationWrapper
                         rowsPerPageOptions={[5, 10, 20, 25]}
-                        count={dataCount}
+                        count={rows?.length ? rows.length : 0}
                         rowsPerPage={pageSize}
                         page={pageIndex}
                         onPageChange={handleChangePage}
