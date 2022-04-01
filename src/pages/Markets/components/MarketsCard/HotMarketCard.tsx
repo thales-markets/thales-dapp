@@ -45,7 +45,6 @@ const HotMarketCard: React.FC<HotMarket> = ({
                 <AssetInfo>
                     <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
                     <AssetNameContainer>
-                        {/* <AssetName>{fullAssetName}</AssetName> */}
                         <CurrencyKey alignSelf={'center'}>{assetName}</CurrencyKey>
                     </AssetNameContainer>
                 </AssetInfo>
@@ -125,7 +124,7 @@ const AssetNameContainer = styled.div`
     text-align: left;
     font-size: 15px;
     color: var(--primary-color) !important;
-    word-spacing: 50px;
+    /* word-spacing: 50px; */
 `;
 
 export default HotMarketCard;
