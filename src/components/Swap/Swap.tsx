@@ -1,6 +1,5 @@
 import ApprovalModal from 'components/ApprovalModal';
 import SimpleLoader from 'components/SimpleLoader';
-import { ValidationMessage } from 'components/ValidationMessage/ValidationMessage';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { BigNumber, ethers } from 'ethers';
 import { get } from 'lodash';
@@ -18,13 +17,14 @@ import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered,
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { checkAllowance, getIsOVM, getTransactionPrice } from 'utils/network';
-import { dispatchMarketNotification } from 'utils/options';
 import { refetchUserBalance } from 'utils/queryConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
 import SwapDialog from './styled-components';
 import { ETH_Dai, ETH_Eth, ETH_sUSD, ETH_USDC, ETH_USDT, OP_Dai, OP_Eth, OP_sUSD, OP_USDC, OP_USDT } from './tokens';
+import { toast } from 'react-toastify';
+import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 
 const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const { t } = useTranslation();
@@ -44,7 +44,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const [balance, setBalance] = useState('0');
     const [isLoading, setLoading] = useState(false);
     const [showSceleton, setShowSceleton] = useState(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
 
@@ -150,6 +149,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
 
     const swapTx = async () => {
         setLoading(true);
+        const id = toast.loading(t('options.swap.progress'));
         try {
             const req = await swapQuery.refetch();
             if (req.isSuccess) {
@@ -164,7 +164,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                 await tx.wait();
                 refetchUserBalance(walletAddress as any, networkId);
                 setLoading(false);
-                dispatchMarketNotification(t('options.swap.tx-success'));
+                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success')));
                 return {
                     data: (data as any).tx.data,
                     from: (data as any).tx.from,
@@ -177,7 +177,11 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
             }
         } catch (e: any) {
             setLoading(false);
-            setTxErrorMessage(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'));
+            // setTxErrorMessage(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'));
+            toast.update(
+                id,
+                getErrorToastOptions(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'))
+            );
             console.log('failed: ', e);
         }
     };
@@ -241,7 +245,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
             ) : (
                 <SwapDialog
                     royaleTheme={royaleTheme}
-                    contentType={` ${isLoading ? 'loading' : ''} ${txErrorMessage !== null ? 'error' : ''}`}
+                    contentType={` ${isLoading ? 'loading' : ''}`}
                     className={theme == 0 ? 'light' : 'dark'}
                 >
                     <SwapDialog.CloseButton royaleTheme={royaleTheme} onClick={handleClose.bind(this, false)} />
@@ -371,11 +375,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                             <SimpleLoader />
                         </LoaderContainer>
                     )}
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
 
                     {openApprovalModal && (
                         <ApprovalModal
