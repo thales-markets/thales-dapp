@@ -747,7 +747,7 @@ const ButtonWrapper = styled.div`
     margin-top: 28px;
 `;
 
-const MaxButton = styled.button`
+export const MaxButton = styled.button`
     position: absolute;
     top: 5px;
     right: 10px;

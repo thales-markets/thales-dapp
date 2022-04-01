@@ -35,6 +35,7 @@ import onboardConnector from 'utils/onboardConnector';
 import { FlexDivRow } from 'theme/common';
 import { fillLimitOrder, getFillOrderData, ONE_INCH_CONTRACTS } from 'utils/1inch';
 import { UI_COLORS } from 'constants/ui';
+import { MaxButton } from 'pages/AMMTrading/components/AMM/AMM';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -375,30 +376,6 @@ const WalletContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-`;
-
-const MaxButton = styled.button`
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    padding: 1px 8px;
-    font-weight: 700;
-    font-size: 10px;
-    color: var(--primary-color);
-    background-color: rgba(100, 217, 254, 0.5);
-    border-radius: 10px;
-    line-height: 15.21px;
-    border: none;
-    outline: none;
-    text-transform: uppercase;
-    &:focus {
-        outline: none;
-        border: none;
-    }
-    &:active {
-        outline: none;
-        border-style: none;
-    }
 `;
 
 export default FillOrderModal;
