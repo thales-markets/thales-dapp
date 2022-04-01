@@ -761,6 +761,7 @@ const MaxButton = styled.button`
     border: none;
     outline: none;
     text-transform: uppercase;
+    cursor: pointer;
     &:focus {
         outline: none;
         border: none;
