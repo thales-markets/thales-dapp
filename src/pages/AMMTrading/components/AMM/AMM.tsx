@@ -14,8 +14,9 @@ import NetworkFees from './components/NetworkFees';
 import ApprovalModal from 'components/ApprovalModal';
 
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
+import { setLongState } from 'redux/modules/marketWidgets';
 import styled from 'styled-components';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
@@ -50,6 +51,7 @@ const AMM: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const dispatch = useDispatch();
 
     const orderSideOptions = [
         {
@@ -178,6 +180,10 @@ const AMM: React.FC = () => {
             getAllowance();
         }
     }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance, sellAmount, isAllowing]);
+
+    useEffect(() => {
+        optionSide == 'long' ? dispatch(setLongState(true)) : dispatch(setLongState(false));
+    }, [optionSide]);
 
     const fetchL1Fee = async (
         ammContractWithSigner: any,
@@ -579,9 +585,9 @@ const AMM: React.FC = () => {
                 }}
                 shadow={true}
                 dotBackground={'var(--amm-switch-circle)'}
-                handleClick={() =>
-                    orderSide.value == 'buy' ? setOrderSide(orderSideOptions[1]) : setOrderSide(orderSideOptions[0])
-                }
+                handleClick={() => {
+                    orderSide.value == 'buy' ? setOrderSide(orderSideOptions[1]) : setOrderSide(orderSideOptions[0]);
+                }}
             />
             <ButtonWrapper>
                 <Button

@@ -10,12 +10,11 @@ import { useMarketContext } from '../../contexts/MarketContext';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 
-import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
+import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
@@ -23,13 +22,14 @@ import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import Button from 'components/Button';
-import { getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
+import { getIsLongState, getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
 
 const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const similarMarketsVisibility = useSelector((state: RootState) => getSimilarMarketsVisibility(state));
+    const isLong = useSelector((state: RootState) => getIsLongState(state));
 
     let optBalances = {
         long: 0,
@@ -38,24 +38,34 @@ const RowCard: React.FC = () => {
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketInfo.address, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(marketInfo.address);
-    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(marketInfo.address, {
+        enabled: isAppReady,
+    });
 
     if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
         optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
     }
 
-    const openOrdersMap = useMemo(() => {
-        if (openOrdersQuery.isSuccess) {
-            return openOrdersQuery.data;
+    const ammMaxLimits =
+        ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? (ammMaxLimitsQuery.data as AmmMaxLimits) : undefined;
+
+    const ammData = useMemo(() => {
+        if (ammMaxLimits) {
+            return {
+                buyMax: isLong ? ammMaxLimits?.maxBuyLong : ammMaxLimits?.maxBuyShort,
+                sellMax: isLong ? ammMaxLimits.maxSellLong : ammMaxLimits.maxSellShort,
+                buyPrice: isLong ? ammMaxLimits.buyLongPrice : ammMaxLimits.buyShortPrice,
+                sellPrice: isLong ? ammMaxLimits.sellLongPrice : ammMaxLimits.sellShortPrice,
+            };
         }
-    }, [openOrdersQuery.isLoading]);
+
+        return undefined;
+    }, [ammMaxLimits, isLong]);
 
     const positionCurrentValue = useMemo(() => {
         if (ammMaxLimitsQuery?.isSuccess && (optBalances?.long > 0 || optBalances?.short > 0)) {
@@ -189,17 +199,11 @@ const RowCard: React.FC = () => {
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
                                     <Container.SubContainer.Value.Liquidity>
-                                        {openOrdersMap
-                                            ? (openOrdersMap as any).get(marketInfo.address.toLowerCase())
-                                                  ?.availableLongs
-                                            : '0'}
+                                        {ammData ? ammData.buyMax?.toFixed(1) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                     {' / '}
                                     <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
-                                        {openOrdersMap
-                                            ? (openOrdersMap as any).get(marketInfo.address.toLowerCase())
-                                                  ?.availableShorts
-                                            : '0'}
+                                        {ammData ? ammData.sellMax?.toFixed(1) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                 </Container.SubContainer.Value>
                             </Container.SubContainer>
@@ -209,25 +213,11 @@ const RowCard: React.FC = () => {
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
                                     <Container.SubContainer.Value.Liquidity>
-                                        {openOrdersMap
-                                            ? formatCurrencyWithSign(
-                                                  USD_SIGN,
-                                                  (openOrdersMap as any).get(marketInfo.address.toLowerCase())
-                                                      ?.longPrice,
-                                                  2
-                                              )
-                                            : '0'}
+                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.buyPrice, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                     {' / '}
                                     <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
-                                        {openOrdersMap
-                                            ? formatCurrencyWithSign(
-                                                  USD_SIGN,
-                                                  (openOrdersMap as any).get(marketInfo.address.toLowerCase())
-                                                      ?.shortPrice,
-                                                  2
-                                              )
-                                            : '0'}
+                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.sellPrice, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                 </Container.SubContainer.Value>
                             </Container.SubContainer>
