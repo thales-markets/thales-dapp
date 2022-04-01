@@ -60,6 +60,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates, mar
                                 key={optionMarket.currencyKey}
                                 currencyKey={optionMarket.currencyKey}
                                 height={75}
+                                isAnimationActive={false}
                             />
                         </LeftContainer>
                         <RightContainer>

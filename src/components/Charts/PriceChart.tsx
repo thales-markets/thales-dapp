@@ -26,6 +26,7 @@ type PriceChartProps = {
     containerStyle?: CSSProperties;
     footerStyle?: CSSProperties;
     footerFontSize?: string;
+    isAnimationActive?: boolean;
 };
 
 const PriceChart: React.FC<PriceChartProps> = ({
@@ -41,6 +42,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     containerStyle,
     footerStyle,
     footerFontSize,
+    isAnimationActive,
 }) => {
     const { t } = useTranslation();
 
@@ -133,7 +135,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                 strokeWidth={1.5}
                                 stroke={`${percentagePriceChange > 0 ? '#50CE99' : '#C04119'}`}
                                 fill={`url(#${percentagePriceChange > 0 ? 'colorPriceBull' : 'colorPriceBear'})`}
-                                // isAnimationActive={false}
+                                isAnimationActive={isAnimationActive}
                             />
                         </AreaChart>
                     </ResponsiveContainer>

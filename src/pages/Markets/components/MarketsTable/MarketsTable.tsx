@@ -217,6 +217,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                         showPercentageChangeOnSide={true}
                         containerStyle={{ marginTop: '6px', marginBottom: '6px', marginLeft: '10px' }}
                         footerStyle={{ fontSize: '10px' }}
+                        isAnimationActive={false}
                     />
                 ),
                 disableSortBy: true,
