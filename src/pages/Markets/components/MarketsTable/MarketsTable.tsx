@@ -380,7 +380,10 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                                         }
                                     }}
                                 >
-                                    <CurrencyIcon currencyKey={value} />
+                                    <CurrencyIcon
+                                        synthIconStyle={{ marginRight: '0px !important' }}
+                                        currencyKey={value}
+                                    />
                                 </Item>
                             );
                         })}
@@ -588,7 +591,7 @@ const Item = styled.span`
     margin-bottom: -10px;
     color: var(--primary-color);
     cursor: pointer;
-
+    text-align: center;
     opacity: 0.5;
     &.active {
         opacity: 1;
