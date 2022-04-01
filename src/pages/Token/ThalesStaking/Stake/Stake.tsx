@@ -177,6 +177,7 @@ const Stake: React.FC = () => {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsAllowingStake(false);
+            setOpenApprovalModal(false);
         }
     };
 

@@ -151,6 +151,7 @@ const Migrate: React.FC = () => {
                 console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsAllowing(false);
+                setOpenApprovalModal(false);
             }
         }
     };

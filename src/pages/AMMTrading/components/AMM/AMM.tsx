@@ -270,6 +270,7 @@ const AMM: React.FC = () => {
         } catch (e) {
             console.log(e);
             setIsAllowing(false);
+            setOpenApprovalModal(false);
         }
     };
 

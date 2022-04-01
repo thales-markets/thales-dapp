@@ -236,6 +236,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
         } catch (e) {
             console.log(e);
             setIsAllowing(false);
+            setOpenApprovalModal(false);
         }
     };
 
