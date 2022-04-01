@@ -21,7 +21,10 @@ const UserWallet: React.FC = () => {
 
     return (
         <Wrapper>
-            <WalletContainer onClick={() => (isWalletConnected ? '' : onboardConnector.connectWallet())}>
+            <WalletContainer
+                connected={isWalletConnected}
+                onClick={() => (isWalletConnected ? '' : onboardConnector.connectWallet())}
+            >
                 <WalletIcon
                     className={` ${networkId === 10 ? 'v2-icon v2-icon--op' : 'sidebar-icon icon--ethereum'}`}
                 />
@@ -55,11 +58,11 @@ const Wrapper = styled.div`
     }
 `;
 
-const WalletContainer = styled.div`
+const WalletContainer = styled.div<{ connected: boolean }>`
     border: 1px solid rgba(100, 217, 254, 0.5);
     border-radius: 19.5349px;
     width: 100%;
-    cursor: pointer;
+    cursor: ${(_props) => (_props.connected ? 'text' : 'pointer')};
     padding: 5px 12px;
     padding-left: 5px;
     display: flex;
