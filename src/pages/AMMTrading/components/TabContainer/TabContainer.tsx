@@ -153,7 +153,10 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                                 })}
                             <Item
                                 active={similarMarketsVisibility}
-                                onClick={() => dispatch(setSimilarMarketVisibility(true))}
+                                onClick={() => {
+                                    dispatch(setSimilarMarketVisibility(true));
+                                    setShowViewsDropdown(false);
+                                }}
                             >
                                 {t('options.market.overview.similar-markets')}
                             </Item>
