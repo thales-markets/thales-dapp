@@ -15,6 +15,7 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 
 import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
+import Loader from 'components/Loader';
 
 // const MAX_HOT_MARKETS = 6;
 
@@ -69,6 +70,7 @@ const Markets: React.FC = () => {
         <>
             <HotMarkets optionsMarkets={hotMarkets} />
             <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
+            {networkId === 1 && <Loader hideMainnet={true} />}
         </>
     );
 };

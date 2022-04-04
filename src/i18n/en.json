@@ -212,6 +212,7 @@
         "unsupported-network": {
             "title": "Oops! You are on the wrong network!",
             "description": "You have selected the wrong network in your wallet. To continue, please switch to Ethereum mainnet or Optimism network.",
+            "description2": "You have selected the wrong network in your wallet. To continue, please switch to Optimism network.",
             "button": {
                 "mainnet": "Switch to Mainnet",
                 "optimism": "Switch to Optimism"

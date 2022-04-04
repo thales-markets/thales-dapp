@@ -13,7 +13,11 @@ import { RootState } from 'redux/rootReducer';
 import { isNetworkSupported } from 'utils/network';
 import { useTranslation } from 'react-i18next';
 
-const Loader: React.FC = () => {
+type LoaderProps = {
+    hideMainnet?: boolean;
+};
+
+const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -24,23 +28,27 @@ const Loader: React.FC = () => {
     });
     return (
         <Wrapper>
-            {networkId && !isNetworkSupported(networkId) ? (
+            {(networkId && !isNetworkSupported(networkId)) || hideMainnet ? (
                 <WrongNetworkWrapper>
                     <Image style={{ width: 150, height: 150, margin: 'auto' }} src={angry} />
                     <WrongNetworkText className="pale-grey">{t(`common.unsupported-network.title`)}</WrongNetworkText>
 
                     <ExplanationText style={{ marginTop: 5 }} className="pale-grey text-s lh32 ls25">
-                        {t(`common.unsupported-network.description`)}
+                        {hideMainnet
+                            ? t(`common.unsupported-network.description2`)
+                            : t(`common.unsupported-network.description`)}
                     </ExplanationText>
-                    <FlexDivRowCentered>
+                    <FlexDivRowCentered style={hideMainnet ? { justifyContent: 'center' } : {}}>
                         <NetworkButton onClick={switchNetwork.bind(this, '0xA')}>
                             <OpLogo />
                             <span>{t(`common.unsupported-network.button.optimism`)}</span>
                         </NetworkButton>
-                        <NetworkButton onClick={switchNetwork.bind(this, '0x1')}>
-                            <EthereumLogo />
-                            <span>{t(`common.unsupported-network.button.mainnet`)}</span>
-                        </NetworkButton>
+                        {!hideMainnet && (
+                            <NetworkButton onClick={switchNetwork.bind(this, '0x1')}>
+                                <EthereumLogo />
+                                <span>{t(`common.unsupported-network.button.mainnet`)}</span>
+                            </NetworkButton>
+                        )}
                     </FlexDivRowCentered>
                 </WrongNetworkWrapper>
             ) : history.location.pathname === '/' ? (
