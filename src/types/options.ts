@@ -6,7 +6,15 @@ export type Phase = 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';
 
+export type OptionType = 'up' | 'down';
+
 export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
+
+export type OrderSideOptionType = { value: OrderSide; label?: string; i18nLabel?: string };
+
+export type TooltipType = 'error' | 'success' | 'info';
+
+export type TradingType = 'AMM' | 'Orderbook';
 
 export type OptionsTransaction = {
     hash: string;
@@ -65,6 +73,7 @@ export type HistoricalOptionsMarketInfo = {
     eventName?: string;
     outcome?: string;
     finalPrice?: number;
+    ammLiquidity?: number;
 };
 
 export type OptionsMarketInfo = {
@@ -189,6 +198,8 @@ export type UsersAssets = {
     balances: {
         long: number;
         short: number;
+        longValue?: number;
+        shortValue?: number;
     };
 };
 
@@ -247,3 +258,29 @@ export type ETHBurned = {
 };
 
 export type ExpirationOptions = ExpirationOption[];
+
+export type GridFilters = {
+    searchQuery: string;
+    sort?:
+        | Array<
+              | {
+                    column: string;
+                    type: 'asc' | 'desc';
+                }
+              | undefined
+          >
+        | [];
+    assetFilters: string[];
+    showOnlyLiquid?: boolean;
+};
+
+export type PrimaryOptionsFilter = 'allMarkets' | 'watchlist' | 'recentlyAdded';
+
+export type GridSortOption = 'byName' | 'byTimeRemaining';
+
+export type SortOption = {
+    property: string;
+    displayName: string;
+    desc: boolean;
+    asc: boolean;
+};

@@ -1,22 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../rootReducer';
 
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+
 const sliceName = 'ui';
 
+export enum Theme {
+    Light,
+    Dark,
+}
+
 type UISliceState = {
-    theme: string;
+    theme: number;
 };
 
 const initialState: UISliceState = {
-    theme: '',
+    theme: 1,
 };
 
 export const uiSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
-        setTheme: (state, action: PayloadAction<string>) => {
+        setTheme: (state, action: PayloadAction<number>) => {
             state.theme = action.payload;
+            cookies.set('home-theme', action.payload);
         },
     },
 });

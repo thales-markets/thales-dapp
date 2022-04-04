@@ -19,11 +19,6 @@
 }
 
 @font-face {
-    font-family: 'RoyaleAvatars';
-    src: local('RoyaleAvatars'), url(../assets/fonts/ThalesIcons/royale-avatars.ttf) format('truetype');
-}
-
-@font-face {
     font-family: 'SidebarIcons';
     src: local('SidebarIcons'), url(../assets/fonts/ThalesIcons/sidebar.ttf) format('truetype');
 }
@@ -31,6 +26,16 @@
 @font-face {
     font-family: 'Homepage Icons';
     src: local('Homepage Icons'), url(../assets/fonts/HomepageIcons/homepage.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'RoyaleAvatars';
+    src: local('RoyaleAvatars'), url(../assets/fonts/ThalesIcons/royale-avatars.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'ThalesIcons';
+    src: local('ThalesIcons'), url(../assets/fonts/ThalesIcons/Thales2022.ttf) format('truetype');
 }
 
 @font-face {
@@ -76,4 +81,14 @@
 @font-face {
     font-family: 'Playfair Display';
     src: local('Playfair Display'), url(../assets/fonts/PlayfairDisplay/Playfair-Display.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Titillium Regular';
+    src: local('TitilliumRegular'), url(../assets/fonts/TitilliumWeb/TitilliumWeb-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Titillium Light';
+    src: local('TitilliumLight'), url(../assets/fonts/TitilliumWeb/TitilliumWeb-Light.ttf) format('truetype');
 }

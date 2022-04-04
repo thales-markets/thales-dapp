@@ -1,31 +1,30 @@
+import { Dialog, withStyles } from '@material-ui/core';
+import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
+import Checkbox from 'components/Checkbox';
+import FieldValidationMessage from 'components/FieldValidationMessage';
+import { BigNumber, ethers } from 'ethers';
+import {
+    CurrencyLabel,
+    DefaultSubmitButton,
+    InputContainer,
+    SubmitButtonContainer,
+} from 'pages/Options/Market/components';
+import NumericInput from 'pages/Options/Market/components/NumericInput';
+import {
+    ModalContainer,
+    ModalHeader,
+    ModalTitle,
+    StyledModal,
+} from 'pages/Options/Market/TradeOptions/Orderbook/components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
-import { BigNumber, ethers } from 'ethers';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
-import {
-    ModalContainer,
-    ModalTitle,
-    StyledModal,
-    ModalHeader,
-} from 'pages/Options/Market/TradeOptions/Orderbook/components';
-import ValidationMessage from 'components/ValidationMessage';
-import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
-import {
-    DefaultSubmitButton,
-    SubmitButtonContainer,
-    InputContainer,
-    CurrencyLabel,
-} from 'pages/Options/Market/components';
-import onboardConnector from 'utils/onboardConnector';
-import { FlexDivRow, FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
-import NumericInput from 'pages/Options/Market/components/NumericInput';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import Checkbox from 'components/Checkbox';
-import FieldValidationMessage from 'components/FieldValidationMessage';
-import { Dialog, withStyles } from '@material-ui/core';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
+import onboardConnector from 'utils/onboardConnector';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
@@ -48,7 +47,6 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [amount, setAmount] = useState<number | string>(defaultAmount);
     const [approveAll, setApproveAll] = useState<boolean>(true);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
 
     const maxApproveAmount = bigNumberFormatter(ethers.constants.MaxUint256);
@@ -145,11 +143,6 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                 </FlexContainer>
             </FlexDivColumnCentered>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-            <ValidationMessage
-                showValidation={txErrorMessage !== null}
-                message={txErrorMessage}
-                onDismiss={() => setTxErrorMessage(null)}
-            />
         </ApprovalModalContainer>
     );
 
@@ -194,13 +187,13 @@ const ApprovalModalContainer = styled(ModalContainer)<{ isRoyale?: boolean }>`
 `;
 
 const ApprovalInputContainer = styled(InputContainer)<{ isRoyale?: boolean }>`
-    width: ${(props) => (props.isRoyale ? '165px' : '200px')};
+    width: ${(props) => (props.isRoyale ? '165px' : '171px')};
     height: ${(props) => (props.isRoyale ? '43px' : '60px')};
     margin-bottom: ${(props) => (props.isRoyale ? '0px' : '0px')};
 `;
 
 const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
-    font-size: ${(props) => (props.isRoyale ? '20px' : '')};
+    font-size: ${(props) => (props.isRoyale ? '20px' : '25px')};
     background: ${(props) => (props.isRoyale ? '#e3f7e9' : '')};
     border: ${(props) => (props.isRoyale ? '2px solid var(--color-wrapper)' : '')};
     color: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};

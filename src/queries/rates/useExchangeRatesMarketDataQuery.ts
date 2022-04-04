@@ -37,7 +37,7 @@ const useExchangeRatesMarketDataQuery = (
             return exchangeRates;
         },
         {
-            refetchInterval: 5000,
+            refetchInterval: 60 * 1000,
             ...options,
         }
     );

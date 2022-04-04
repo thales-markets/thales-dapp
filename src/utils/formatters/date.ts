@@ -3,6 +3,8 @@ import { strPadLeft } from './string';
 
 export const formatTxTimestamp = (timestamp: number | Date) => format(timestamp, 'MMM d, yy | HH:mm');
 
+export const formatHoursAndMinutesFromTimestamp = (timestamp: number) => format(timestamp, 'HH:mm');
+export const formatShortDateFromTimestamp = (timestamp: number) => format(timestamp, 'd MMM yyyy');
 export const toJSTimestamp = (timestamp: number) => timestamp * 1000;
 
 export const formatShortDate = (date: Date | number) => format(date, 'MMM d, yyyy');
@@ -97,3 +99,56 @@ export const convertLocalToUTCDate = (date: Date) => {
 };
 
 export const getCurrentTimestampSeconds = () => Date.now() / 1000;
+
+export const calculateDifference = (end: number) => {
+    // In seconds
+    let delta = Math.abs(end - Date.now()) / 1000;
+
+    let days = 0;
+    let hours = 0;
+    let minutes = 0;
+    let seconds = 0;
+
+    days = Math.floor(delta / 86400);
+    delta - days * 86400 > 0 ? (delta -= days * 86400) : { days, hours, minutes, seconds };
+
+    hours = Math.floor(delta / 3600) % 24;
+    delta - hours * 3600 > 0 ? (delta -= hours * 3600) : { days, hours, minutes, seconds };
+
+    minutes = Math.floor(delta / 60) % 60;
+    delta - minutes * 60 ? (delta -= minutes * 60) : { days, hours, minutes, seconds };
+
+    seconds = Math.floor(delta % 60);
+
+    return { days, hours, minutes, seconds };
+};
+
+export const formatTimeDifference = ({
+    days,
+    hours,
+    minutes,
+    seconds,
+    delimiter = ':',
+}: {
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+    delimiter?: string;
+}) => {
+    return `${days ? (days < 10 ? `0${days}` : days) : '00'}${delimiter}${
+        hours ? (hours < 10 ? `0${hours}` : hours) : '00'
+    }${delimiter}${minutes ? (minutes < 10 ? `0${minutes}` : minutes) : '00'}${delimiter}${
+        seconds ? (seconds < 10 ? `0${seconds}` : seconds) : '00'
+    }`;
+};
+
+export const getDayName = (timestamp: number, locale?: string) => {
+    const date = new Date(timestamp);
+    return date ? date.toLocaleDateString(locale ? locale : 'en', { weekday: 'short' }) : 'N/A';
+};
+
+export const getDateOfMonth = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date ? date.getDate() : 'N/A';
+};

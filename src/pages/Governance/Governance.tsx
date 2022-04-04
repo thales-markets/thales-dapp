@@ -1,15 +1,8 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import ROUTES from 'constants/routes';
 import { navigateToGovernance } from 'utils/routes';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { isNetworkSupported } from 'utils/network';
-import MarketHeader from 'pages/Options/Home/MarketHeader';
-import Loader from 'components/Loader';
-import { Background, FlexDivCentered, FlexDivColumn, FlexDiv, Wrapper, FlexDivRow } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDiv, FlexDivRow } from 'theme/common';
 import { SNAPSHOT_GRAPHQL_URL, SpaceKey, StatusEnum } from 'constants/governance';
 import ProposalList from './ProposalList';
 import ProposalDetails from './ProposalDetails';
@@ -30,7 +23,6 @@ type GovernancePageProps = RouteComponentProps<{
 
 const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [selectedProposal, setSelectedProposal] = useState<Proposal | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState<SpaceKey>(SpaceKey.TIPS);
     const [statusFilter, setStatusFilter] = useState<StatusEnum>(StatusEnum.All);
@@ -140,119 +132,104 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     const isOverviewPage = !selectedProposal;
 
     return (
-        <Background>
-            <Wrapper>
-                {networkId && isNetworkSupported(networkId) ? (
-                    <>
-                        <MarketHeader route={ROUTES.Governance.Home} />
-                        <Title>{t(`governance.title`)}</Title>
-                        <BackLinkWrapper isOverviewPage={isOverviewPage}>
-                            {selectedProposal && (
-                                <BackLink
-                                    onClick={() => {
-                                        setSelectedProposal(undefined);
-                                        navigateToGovernance(selectedProposal.space.id);
-                                    }}
-                                >
-                                    <ArrowIcon />
-                                    {t(`governance.back-to-proposals`)}
-                                </BackLink>
-                            )}
-                        </BackLinkWrapper>
-                        <Container id="proposal-details">
-                            <MainContentContainer isOverviewPage={isOverviewPage}>
-                                <MainContentWrapper isOverviewPage={isOverviewPage}>
-                                    {!selectedProposal && (
-                                        <>
-                                            <OptionsTabWrapper>
-                                                {isMobile ? (
-                                                    <TabDropdown activeTab={selectedTab} onSelect={setSelectedTab} />
-                                                ) : (
-                                                    <OptionsTabContainer>
-                                                        {optionsTabContent.map((tab, index) => (
-                                                            <OptionsTab
-                                                                isActive={tab.id === selectedTab}
-                                                                key={index}
-                                                                index={index}
-                                                                onClick={() => {
-                                                                    navigateToGovernance(tab.id);
-                                                                    setSelectedTab(tab.id);
-                                                                }}
-                                                                className={`${
-                                                                    tab.id === selectedTab ? 'selected' : ''
-                                                                }`}
-                                                            >
-                                                                {tab.name}
-                                                            </OptionsTab>
-                                                        ))}
-                                                    </OptionsTabContainer>
-                                                )}
-                                                {selectedTab !== SpaceKey.THALES_STAKERS && (
-                                                    <StatusDropdown
-                                                        activeStatus={statusFilter}
-                                                        onSelect={setStatusFilter}
-                                                    />
-                                                )}
-                                            </OptionsTabWrapper>
-                                            {selectedTab === SpaceKey.TIPS && (
-                                                <ProposalList
-                                                    spaceKey={SpaceKey.TIPS}
-                                                    onItemClick={setSelectedProposal}
-                                                    statusFilter={statusFilter}
-                                                    resetFilters={() => setStatusFilter(StatusEnum.All)}
-                                                />
-                                            )}
-                                            {selectedTab === SpaceKey.COUNCIL && (
-                                                <ProposalList
-                                                    spaceKey={SpaceKey.COUNCIL}
-                                                    onItemClick={setSelectedProposal}
-                                                    statusFilter={statusFilter}
-                                                    resetFilters={() => setStatusFilter(StatusEnum.All)}
-                                                />
-                                            )}
-                                            {selectedTab === SpaceKey.THALES_STAKERS && <ThalesStakers />}
-                                        </>
-                                    )}
-                                    {selectedProposal && <ProposalDetails proposal={selectedProposal} />}
-                                </MainContentWrapper>
-                            </MainContentContainer>
-                            {!selectedProposal && (
-                                <SidebarContainer>
-                                    <SidebarWrapper>
-                                        <Sidebar>
-                                            <CouncilMembers />
-                                        </Sidebar>
-                                    </SidebarWrapper>
-                                </SidebarContainer>
-                            )}
-                            {selectedProposal && (
-                                <SidebarContainer>
-                                    {selectedProposal.space.id === SpaceKey.TIPS && (
-                                        <SidebarWrapper>
-                                            <Sidebar>
-                                                <SidebarDetails proposal={selectedProposal} type="approval-box" />
-                                            </Sidebar>
-                                        </SidebarWrapper>
-                                    )}
-                                    <SidebarWrapper>
-                                        <Sidebar>
-                                            <SidebarDetails proposal={selectedProposal} type="results" />
-                                        </Sidebar>
-                                    </SidebarWrapper>
-                                    <SidebarWrapper>
-                                        <Sidebar>
-                                            <SidebarDetails proposal={selectedProposal} type="history" />
-                                        </Sidebar>
-                                    </SidebarWrapper>
-                                </SidebarContainer>
-                            )}
-                        </Container>
-                    </>
-                ) : (
-                    <Loader />
+        <>
+            <BackLinkWrapper isOverviewPage={isOverviewPage}>
+                {selectedProposal && (
+                    <BackLink
+                        onClick={() => {
+                            setSelectedProposal(undefined);
+                            navigateToGovernance(selectedProposal.space.id);
+                        }}
+                    >
+                        <ArrowIcon />
+                        {t(`governance.back-to-proposals`)}
+                    </BackLink>
                 )}
-            </Wrapper>
-        </Background>
+            </BackLinkWrapper>
+            <Container id="proposal-details">
+                <MainContentContainer isOverviewPage={isOverviewPage}>
+                    <MainContentWrapper isOverviewPage={isOverviewPage}>
+                        {!selectedProposal && (
+                            <>
+                                <OptionsTabWrapper>
+                                    {isMobile ? (
+                                        <TabDropdown activeTab={selectedTab} onSelect={setSelectedTab} />
+                                    ) : (
+                                        <OptionsTabContainer>
+                                            {optionsTabContent.map((tab, index) => (
+                                                <OptionsTab
+                                                    isActive={tab.id === selectedTab}
+                                                    key={index}
+                                                    index={index}
+                                                    onClick={() => {
+                                                        navigateToGovernance(tab.id);
+                                                        setSelectedTab(tab.id);
+                                                    }}
+                                                    className={`${tab.id === selectedTab ? 'selected' : ''}`}
+                                                >
+                                                    {tab.name}
+                                                </OptionsTab>
+                                            ))}
+                                        </OptionsTabContainer>
+                                    )}
+                                    {selectedTab !== SpaceKey.THALES_STAKERS && (
+                                        <StatusDropdown activeStatus={statusFilter} onSelect={setStatusFilter} />
+                                    )}
+                                </OptionsTabWrapper>
+                                {selectedTab === SpaceKey.TIPS && (
+                                    <ProposalList
+                                        spaceKey={SpaceKey.TIPS}
+                                        onItemClick={setSelectedProposal}
+                                        statusFilter={statusFilter}
+                                        resetFilters={() => setStatusFilter(StatusEnum.All)}
+                                    />
+                                )}
+                                {selectedTab === SpaceKey.COUNCIL && (
+                                    <ProposalList
+                                        spaceKey={SpaceKey.COUNCIL}
+                                        onItemClick={setSelectedProposal}
+                                        statusFilter={statusFilter}
+                                        resetFilters={() => setStatusFilter(StatusEnum.All)}
+                                    />
+                                )}
+                                {selectedTab === SpaceKey.THALES_STAKERS && <ThalesStakers />}
+                            </>
+                        )}
+                        {selectedProposal && <ProposalDetails proposal={selectedProposal} />}
+                    </MainContentWrapper>
+                </MainContentContainer>
+                {!selectedProposal && (
+                    <SidebarContainer>
+                        <SidebarWrapper>
+                            <Sidebar>
+                                <CouncilMembers />
+                            </Sidebar>
+                        </SidebarWrapper>
+                    </SidebarContainer>
+                )}
+                {selectedProposal && (
+                    <SidebarContainer>
+                        {selectedProposal.space.id === SpaceKey.TIPS && (
+                            <SidebarWrapper>
+                                <Sidebar>
+                                    <SidebarDetails proposal={selectedProposal} type="approval-box" />
+                                </Sidebar>
+                            </SidebarWrapper>
+                        )}
+                        <SidebarWrapper>
+                            <Sidebar>
+                                <SidebarDetails proposal={selectedProposal} type="results" />
+                            </Sidebar>
+                        </SidebarWrapper>
+                        <SidebarWrapper>
+                            <Sidebar>
+                                <SidebarDetails proposal={selectedProposal} type="history" />
+                            </Sidebar>
+                        </SidebarWrapper>
+                    </SidebarContainer>
+                )}
+            </Container>
+        </>
     );
 };
 
@@ -346,22 +323,6 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     &:hover:not(.selected) {
         cursor: pointer;
         color: #00f9ff;
-    }
-`;
-
-const Title = styled.p`
-    font-weight: bold;
-    line-height: 62px;
-    letter-spacing: -1px;
-    font-size: 39px;
-    padding-top: 20px;
-    padding-bottom: 10px;
-    color: #f6f6fe;
-    align-self: flex-start;
-    @media (max-width: 767px) {
-        font-size: 31px;
-        padding-top: 30px;
-        padding-bottom: 10px;
     }
 `;
 

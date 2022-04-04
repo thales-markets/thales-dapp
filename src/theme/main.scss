@@ -157,20 +157,18 @@ table {
 }
 
 *::-webkit-scrollbar {
+    border-radius: 8px;
     width: var(--scrollbar-width, 10px);
 }
 *::-webkit-scrollbar-track {
-    background: var(--color-wrapper, #04045a);
+    background: var(--color-wrapper, #4673bd);
 }
 *::-webkit-scrollbar-thumb {
-    border-radius: 15px;
-    background: var(--color, #355dff);
+    border-radius: 8px;
+    background: var(--color, #f7f7f7);
 }
 *::-webkit-scrollbar-thumb:active {
     background: #44e1e2;
-}
-*::-webkit-scrollbar-thumb:hover {
-    background: var(--color-scrollbar-hover, rgb(67, 116, 255));
 }
 
 input::-webkit-outer-spin-button,
@@ -240,4 +238,5 @@ a {
 @import './medias/landing-page.css';
 @import './icons.css';
 @import './sidebar-icons.css';
+@import './thales-icons.css';
 @import './royale-avatars.css';

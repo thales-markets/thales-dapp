@@ -218,6 +218,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         } catch (e) {
             console.log(e);
             setIsAllowing(false);
+            setOpenApprovalModal(false);
         }
     };
     const handleSubmitOrder = async () => {

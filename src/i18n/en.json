@@ -27,8 +27,8 @@
             "asset-col": "Asset",
             "strike-price-col": "Strike price",
             "maturity-date-col": "Maturity date",
-            "long-col": "sLONG",
-            "short-col": "sSHORT",
+            "long-col": "UP",
+            "short-col": "DOWN",
             "pool-size-col": "Pool size",
             "amm-size-col": "AMM liquidity",
             "amount-col": "Amount",
@@ -74,7 +74,7 @@
         },
         "options": {
             "title": "Trade Binary Options",
-            "option1": "Binary options enable users to go long or short on specific outcomes based on price feeds.",
+            "option1": "Binary options enable users to go up or down on specific outcomes based on price feeds.",
             "option2": "Know your odds, capture opportunities to profit on trends, or hedge risk on volatile assets.",
             "option3": "Trade, mint, and exercise binary options like never before!",
             "view-markets": "Start Trading"
@@ -126,6 +126,7 @@
         "contracts": {
             "view": "View contract"
         },
+        "no-data": "Do not have any data to show",
         "tx-status": {
             "waiting": "Waiting",
             "open": "Open",
@@ -151,7 +152,7 @@
             "insufficient-liquidity": "Insufficient liquidity",
             "insufficient-liquidity-for-trade": "Insufficient liquidity for this trade",
             "insufficient-order-amount": "Insufficient order amount",
-            "invalid-order-amount-max": "The sLONG amount must be less than or equal to the {{max}}",
+            "invalid-order-amount-max": "The UP amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
             "enter-valid-slippage": "Enter a valid slippage percentage",
@@ -166,6 +167,8 @@
         "search": "search",
         "buy": "buy",
         "sell": "sell",
+        "long": "up",
+        "short": "down",
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
         "select": "select",
@@ -193,6 +196,7 @@
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
             "game-label": "Tale of Thales",
+            "profile-label": "Profile",
             "trade-history-label": "Trading history",
             "amm-mining-label": "AMM rewards",
             "amm-reporting-label": "AMM reporting"
@@ -208,14 +212,24 @@
         "unsupported-network": {
             "title": "Oops! You are on the wrong network!",
             "description": "You have selected the wrong network in your wallet. To continue, please switch to Ethereum mainnet or Optimism network.",
+            "description2": "You have selected the wrong network in your wallet. To continue, please switch to Optimism network.",
             "button": {
                 "mainnet": "Switch to Mainnet",
                 "optimism": "Switch to Optimism"
             }
         },
-        "alerts": {
-            "title": { "success": "Success", "info": "Info", "error": "Error" }
-        }
+        "user-info-card": {
+            "wallet": "Wallet",
+            "theme": "Theme",
+            "change": "Change",
+            "network": "Network",
+            "language": "Language",
+            "disconnect": "Disconnect",
+            "switch": "Switch",
+            "display-name": "Display Name",
+            "change-display-name": "Change Display Name"
+        },
+        "no-data-available": "No data available"
     },
     "modals": {
         "gwei": {
@@ -258,6 +272,7 @@
             "my-orders": "My Orders",
             "my-assets": "My Assets",
             "watchlist": "Watchlist",
+            "all-markets": "All Markets",
             "recently-added": "Recently Added",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
@@ -265,8 +280,8 @@
             "olympics": "Olympics",
             "competition": "Trading Competition",
             "custom": "Custom Markets",
-            "long": "Long",
-            "short": "Short",
+            "long": "Up",
+            "short": "Down",
             "my-trades": "My Trades",
             "amm": "AMM",
             "orderbook": "Order book",
@@ -283,7 +298,20 @@
                 "difference-text": "Difference between current and strike price",
                 "time-remaining": "Time remaining",
                 "result": "Current result",
-                "view-market": "View Market"
+                "view-market": "View Market",
+                "price-difference": "Price difference",
+                "position-value": "Position value",
+                "claim": "CLAIM",
+                "claimed": "CLAIMED",
+                "rip": "RIP"
+            },
+            "hot-market-card": {
+                "price-per-option": "Price",
+                "time-left": "Time left",
+                "potential-profit": "Potential profit"
+            },
+            "hot-markets": {
+                "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor."
             },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets"
@@ -299,14 +327,27 @@
             },
             "markets-table": {
                 "asset-col": "Asset",
+                "24h-change-col": "24H Change",
                 "strike-price-col": "Strike price",
                 "asset-price-col": "Asset price",
+                "current-asset-price-col": "Current Asset Price",
+                "final-asset-price-col": "Final Asset Price",
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
                 "pool-size-col": "Pool size",
                 "amm-size-col": "AMM liquidity",
+                "out-of-liquidity": "Out Of Liquidity",
+                "price-up-down-col": "Price UP/DOWN",
                 "time-remaining-col": "Time remaining",
-                "competition-tooltip": "This market is eligible for trading competition"
+                "status-col": "Status",
+                "maturity-date-col": "Maturity Date",
+                "competition-tooltip": "This market is eligible for trading competition",
+                "menu": {
+                    "grid": "Grid",
+                    "table": "Table",
+                    "only-liquid": "Liquid",
+                    "all": "All"
+                }
             }
         },
         "earn": {
@@ -585,7 +626,7 @@
         "create-market": {
             "title": "Create a new Binary Options market",
             "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
-            "note": "* Note: The amount of sUSD deposited will dictate how many long and short options tokens will be minted. For example, depositing 1,000 sUSD mints 1,000 sLONG and 1,000 sSHORT options tokens for this market.",
+            "note": "* Note: The amount of sUSD deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 sUSD mints 1,000 UP and 1,000 DOWN options tokens for this market.",
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
@@ -598,7 +639,7 @@
             },
             "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
             "insufficient-amount": "Please ensure your wallet has sufficient sUSD.",
-            "sellOptions": "Sell minted LONG/SHORT options",
+            "sellOptions": "Sell minted UP/DOWN options",
             "summary": {
                 "title": "Market Summary",
                 "strikePrice": "Strike price",
@@ -639,6 +680,14 @@
                 "orderbook": "Order book",
                 "amm": "AMM"
             },
+            "your-activity": {
+                "time-date": "Time/Date",
+                "name": "Asset Name",
+                "strike-price": "Strike price",
+                "paid": "Paid",
+                "amount": "Amount",
+                "activity": "Activity"
+            },
             "overview": {
                 "view-market-contract-tooltip": "View market contract",
                 "strike-price-label": "Strike price",
@@ -646,12 +695,16 @@
                 "current-price-label": "Current {{currencyKey}} price",
                 "final-price-label": "Final {{currencyKey}} price",
                 "maturity-label": "Maturity",
+                "maturity-date": "Maturity Date",
                 "time-remaining-label": "Time remaining",
                 "expiry-label": "Expiry",
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
                 "deposited-currency-label": "Deposited {{currencyKey}}",
                 "amm-liquidity": "AMM liquidity",
+                "amm-liquidity-tooltip": "Currently available amounts of UP and DOWN tokens.",
+                "amm-price": "AMM Price",
+                "final-result": "Final Result",
                 "event-name-label": "Event Name",
                 "current-ratio-label": "Current ratio",
                 "final-ratio-label": "Final ratio",
@@ -660,8 +713,15 @@
                 "final-burn-label": "Final burn",
                 "strike-burn-label": "Strike burn",
                 "rank-label": "Rank",
+                "my-positions": "My Positions",
+                "my-position": "My Position",
+                "positions-value": "Positions Value",
+                "position-value": "Position Value",
+                "price-difference": "Price difference",
                 "total-burned": "Total burned",
-                "burned-last-hour": "Burned in the last hour"
+                "burned-last-hour": "Burned in the last hour",
+                "similar-markets": "Similar Markets",
+                "close-similar-markets": "Close Similar Markets"
             },
             "widgets": {
                 "amm-widget": "AMM",
@@ -670,8 +730,10 @@
                 "orderbook-widget": "Order book",
                 "trade-widget": "Trade",
                 "chart-trading-view-widget": "Trading view",
+                "chart": "{{currencyKey}} chart",
+                "position-price": "Position price",
                 "chart-options-price-widget": "Options price",
-                "recent-transactions-widget": "Recent market activity",
+                "recent-transactions-widget": "Market activity",
                 "your-transactions-widget": "Your activity",
                 "custom-market-results-widget": "Results",
                 "custom-market-results-odds-widget": "Odds",
@@ -723,22 +785,23 @@
             "trade-card": {
                 "maturity": {
                     "card-title": "Market has been closed",
-                    "card-subtitle": "Options available:",
+                    "card-subtitle": "Positions available:",
+                    "exercise-options": "You can exercise following positions",
                     "payout-amount-label": "Payout amount",
                     "end-label": "Time left to exercise",
                     "confirm-button": {
-                        "label": "Exercise options",
+                        "label": "Exercise position",
                         "progress-label": "Exercising in progress...",
                         "success-label": "Nothing to exercise",
-                        "confirmation-message": "Options successfully exercised"
+                        "confirmation-message": "Positions successfully exercised"
                     }
                 }
             },
             "trade-options": {
-                "trade-long-options-tab-title": "Trade Long options",
-                "trade-short-options-tab-title": "Trade Short options",
-                "trade-long-options-tab-title-mobile": "Long options",
-                "trade-short-options-tab-title-mobile": "Short options",
+                "trade-long-options-tab-title": "Trade UP options",
+                "trade-short-options-tab-title": "Trade DOWN options",
+                "trade-long-options-tab-title-mobile": "UP options",
+                "trade-short-options-tab-title-mobile": "DOWN options",
                 "market-tab-title": "Market",
                 "limit-tab-title": "Limit",
                 "mint-tab-title": "Mint",
@@ -805,8 +868,8 @@
                     "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's order books",
                     "confirm-button": {
                         "label": "Submit order",
-                        "long": "Submit sLong",
-                        "short": "Submit sShort",
+                        "long": "Submit UP",
+                        "short": "Submit DOWN",
                         "progress-label": "Submitting order in progress...",
                         "confirmation-message": "Order successfully submitted"
                     },
@@ -829,20 +892,20 @@
                 "mint": {
                     "amount-label": "Amount",
                     "minting-label": "You're going to mint",
-                    "long-label": "LONG options",
-                    "short-label": "SHORT options",
-                    "sell-options-title": "Sell minted LONG/SHORT options",
+                    "long-label": "UP position",
+                    "short-label": "DOWN position",
+                    "sell-options-title": "Sell minted UP/DOWN positions",
                     "fees": {
                         "minting": "Minting fee",
                         "creator": "Creator earns",
                         "pool": "Fee pool earns"
                     },
                     "confirm-button": {
-                        "label": "Mint",
+                        "label": "Mint order",
                         "progress-label": "Minting in progress...",
-                        "submit-long-progress-label": "Submitting LONG order in progress...",
-                        "submit-short-progress-label": "Submitting SHORT order in progress..",
-                        "confirmation-message": "Options successfully minted"
+                        "submit-long-progress-label": "Submitting UP order in progress...",
+                        "submit-short-progress-label": "Submitting DOWN order in progress..",
+                        "confirmation-message": "Positions successfully minted"
                     }
                 },
                 "fill-order": {
@@ -857,6 +920,8 @@
                     "total-label": "Total (sUSD)",
                     "protocol-fee-label": "0x protocol fee",
                     "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's order books",
+                    "progress": "Please wait...",
+                    "success": "Fill order successful",
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."
@@ -996,8 +1061,8 @@
                     "timestamp": "Date | Time",
                     "view-less": "View less",
                     "view-more": "View more",
-                    "long": "Long",
-                    "short": "Short",
+                    "long": "Up",
+                    "short": "Down",
                     "buy": "Buy",
                     "sell": "Sell",
                     "tx-status": "TX Status"
@@ -1046,12 +1111,12 @@
                 "minutes-short": "m",
                 "seconds-short": "s"
             },
-            "long": "long",
-            "short": "short",
-            "amount-long": "{{amount}} long",
-            "amount-short": "{{amount}} short",
-            "long-price": "Long price",
-            "short-price": "Short price",
+            "long": "up",
+            "short": "down",
+            "amount-long": "{{amount}} up",
+            "amount-short": "{{amount}} down",
+            "long-price": "Up price",
+            "short-price": "Down price",
             "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read how it works first!",
             "order-periods": {
                 "10M": "10 minutes",
@@ -1080,11 +1145,14 @@
             "tx-success": "Successfully bought sUSD",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",
+            "approval-success": "Approval successful",
+            "approval-failed": "Approval failed",
             "from": "From",
             "balance": "Balance",
             "max": "Max",
             "to": "To",
-            "estimated-gas": "Estimated Gas"
+            "estimated-gas": "Estimated Gas",
+            "progress": "Please wait..."
         },
         "royale": {
             "header": {
@@ -1223,7 +1291,7 @@
         "amm-mining": {
             "title": "AMM rewards",
             "subtitle1": "The first batch of Thales markets on Optimism was incentivized with 20,000 THALES.",
-            "subtitle1a": "The second batch is also being incentivized with 20,000 THALES (10,000 THALES for short trades and 10,000 THALES for long trades). This incentive will be distributed pro-rata based on volume to all <b>AMM buyers.</b>",
+            "subtitle1a": "The second batch is also being incentivized with 20,000 THALES (10,000 THALES for down trades and 10,000 THALES for up trades). This incentive will be distributed pro-rata based on volume to all <b>AMM buyers.</b>",
             "subtitle2": "This incentive will run until January 26th, 8:00am UTC. The THALES tokens rewards will be distributed as soon as the token is available on Optimism L2.  For more information please <b>read our blog post</b>",
             "subtitle3": "You can check the expected amount of THALES rewards in the table below.",
             "subtitle4": "The results presented are provisional and subject to final corrections by Thales CCs and Thales Council",
@@ -1236,21 +1304,45 @@
         "amm-reporting": {
             "market": "Market",
             "volume": "Volume",
-            "long-price": "Long price",
-            "short-price": "Short price",
-            "longs-volume": "Longs buy volume",
-            "shorts-volume": "Shorts buy volume",
+            "long-price": "Up price",
+            "short-price": "Down price",
+            "longs-volume": "Ups buy volume",
+            "shorts-volume": "Downs buy volume",
             "total-volume": "Total Buy volume",
-            "longs-sell-volume": "Longs sell volume",
-            "shorts-sell-volume": "Shorts sell volume",
+            "longs-sell-volume": "Ups sell volume",
+            "shorts-sell-volume": "Downs sell volume",
             "sell-volume": "Total Sell volume",
             "spent-on-market": "Spent on Market",
-            "longs-held": "Longs held",
-            "shorts-held": "Shorts held",
-            "available-to-sell-long": "Available to sell long",
-            "available-to-sell-short": "Available to sell short",
-            "available-to-buy-long": "Available to buy long",
-            "available-to-buy-short": "Available to buy short"
+            "longs-held": "Ups held",
+            "shorts-held": "Downs held",
+            "available-to-sell-long": "Available to sell up",
+            "available-to-sell-short": "Available to sell down",
+            "available-to-buy-long": "Available to buy up",
+            "available-to-buy-short": "Available to buy down"
+        },
+        "trading-profile": {
+            "title": "Trading Profile",
+            "search-placeholder": "Search Wallet",
+            "history": {
+                "strike": "Strike",
+                "price": "Price",
+                "amount": "Amount",
+                "paid": "Paid",
+                "expired": "Expired",
+                "expires": "Expires @"
+            }
+        },
+        "order-book": {
+            "trade-up": "Trade Up Options",
+            "trade-down": "Trade Down Options",
+            "select-to": "Select to {{type}}",
+            "amount-to": "Amount to {{type}}",
+            "filters": {
+                "all": "All",
+                "buy-orders": "Buy orders",
+                "sell-orders": "Sell orders",
+                "my-orders": "My orders"
+            }
         }
     },
     "governance": {
@@ -1341,16 +1433,18 @@
         "total-buy-label": "Total to pay",
         "total-sell-label": "Total to receive",
         "return-label": "Potential profit",
-        "return-tooltip": "Potential profit if this option wins",
+        "return-tooltip": "Potential profit if this position wins",
         "skew-label": "Skew impact",
+        "progress": "Please wait...",
         "skew-tooltip": "AMM will add a price impact on the side it is more exposed to",
-        "max-limit-buy-tooltip": "The maximum amount of {{currencyKey}} options for buying from AMM",
-        "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} options for sale to AMM",
+        "max-limit-buy-tooltip": "The maximum amount of {{currencyKey}} positions for buying from AMM",
+        "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} positions for sale to AMM",
         "amm-disabled-warning": "AMM trading is disabled for this market",
         "amm-disabled": "AMM trading disabled",
         "beta": "BETA",
+        "max-amount": "Max amount {{amount}}",
         "price-changed-warning": "Price changed, please review",
-        "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more long options are being bought from the AMM than short, it will add a skew price impact to the long option pricing, while offering short options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market with calculated odds via BlackScholes above 10% and below 90% and up to 24 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
+        "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more up options are being bought from the AMM than downs, it will add a skew price impact to the up option pricing, while offering down options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market with calculated odds via BlackScholes above 10% and below 90% and up to 24 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
     },
     "articles": {
         "token": {
@@ -1503,15 +1597,15 @@
         "to-label": "To",
         "migration-delay-info": "Deposits take about twenty minutes before they're considered final on Optimistic mainnet.",
         "migration-multisig-contact-warning": "Multisigs or contracts should not be migrating directly, otherwise, you will lose your funds.",
-        "bridge-button": {
-            "label": "Bridge",
-            "progress-label": "Bridging in progress...",
-            "confirmation-message": "Tokens successfully bridged to L2"
-        },
         "migrate-button": {
             "label": "Migrate",
             "progress-label": "Migration in progress...",
             "confirmation-message": "Tokens successfully migrated to L2"
+        },
+        "bridge-button": {
+            "label": "Bridge",
+            "progress-label": "Bridging in progress...",
+            "confirmation-message": "Tokens successfully bridged to L2"
         },
         "swap-button": {
             "label": "Swap",
