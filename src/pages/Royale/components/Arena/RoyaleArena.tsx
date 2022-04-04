@@ -11,6 +11,7 @@ import winnerCard from 'assets/images/royale/winner-card.svg';
 import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
 import winnerCardS3 from 'assets/images/royale/winner-card-s3.svg';
 import winnerCardS4 from 'assets/images/royale/winner-card-s4.svg';
+import winnerCardS5 from 'assets/images/royale/winner-card-s5.svg';
 import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
@@ -95,8 +96,10 @@ const renderRounds = (
                 return winnerCardS3;
             case 4:
                 return winnerCardS4;
+            case 5:
+                return winnerCardS5;
             default:
-                return winnerCardS4;
+                return winnerCardS5;
         }
     };
 

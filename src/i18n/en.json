@@ -920,6 +920,8 @@
                     "total-label": "Total (sUSD)",
                     "protocol-fee-label": "0x protocol fee",
                     "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's order books",
+                    "progress": "Please wait...",
+                    "success": "Fill order successful",
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."

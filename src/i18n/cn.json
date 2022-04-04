@@ -915,7 +915,9 @@
                     "confirm-button": {
                         "label": "填写订单",
                         "progress-label": "正在填写订单…"
-                    }
+                    },
+                    "progress": "请稍等...",
+                    "success": "填写订单成功"
                 },
                 "cancel-order": {
                     "title": "取消订单？",
