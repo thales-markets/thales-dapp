@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers';
 import { NetworkId } from 'utils/network';
 import { SpaceKey } from './governance';
 
@@ -153,7 +154,7 @@ export const QUERY_KEYS = {
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
-        Quote: (networkId: NetworkId) => ['swap', 'quote', networkId],
+        Quote: (networkId: NetworkId, amount: BigNumber) => ['swap', 'quote', networkId, amount],
         Approve: (networkId: NetworkId) => ['swap', 'approve', networkId],
         Swap: (networkId: NetworkId) => ['swap', 'swap', networkId],
     },

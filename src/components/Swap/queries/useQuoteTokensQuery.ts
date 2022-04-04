@@ -34,7 +34,7 @@ const useQuoteTokensQuery = (
     options?: UseQueryOptions<Preview>
 ) => {
     return useQuery<Preview>(
-        QUERY_KEYS.Swap.Quote(networkId),
+        QUERY_KEYS.Swap.Quote(networkId, amount),
         async () => {
             let url = baseUrl + networkId + suffix;
             const fromUrl = 'fromTokenAddress=' + fromToken.address;

@@ -81,8 +81,10 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
         if (fromToken && Number(amount) > 0) {
             setShowSceleton(true);
             quoteQuery.refetch().then((resp) => {
-                setPreviewData(resp.data as any);
-                setShowSceleton(false);
+                if (resp.data) {
+                    setPreviewData(resp.data as any);
+                    setShowSceleton(false);
+                }
             });
         } else if (fromToken) {
             Number(amount) !== 0 ? setAmount('') : '';
