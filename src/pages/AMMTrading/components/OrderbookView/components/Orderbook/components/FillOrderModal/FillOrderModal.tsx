@@ -36,6 +36,8 @@ import { FlexDivRow } from 'theme/common';
 import { fillLimitOrder, getFillOrderData, ONE_INCH_CONTRACTS } from 'utils/1inch';
 import { UI_COLORS } from 'constants/ui';
 import { MaxButton } from 'pages/AMMTrading/components/AMM/AMM';
+import { toast } from 'react-toastify';
+import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -203,17 +205,26 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const handleFillOrder = async () => {
         setTxErrorMessage(null);
         setIsFilling(true);
-
+        const id = toast.loading(t('options.market.trade-options.fill-order.progress'));
         try {
             await fillLimitOrder(networkId, walletAddress, order, amount, gasLimit, isBuy);
             refetchOrderbook(baseToken);
             refetchTrades(optionsMarket.address);
             refetchUserTrades(optionsMarket.address, walletAddress);
             refetchOrders(networkId);
+            toast.update(id, getSuccessToastOptions(t('options.market.trade-options.fill-order.success')));
             onClose();
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            toast.update(
+                id,
+                getErrorToastOptions(
+                    (e as any).code === 4001
+                        ? t('options.swap.tx-user-rejected')
+                        : t('common.errors.unknown-error-try-again')
+                )
+            );
             setIsFilling(false);
         }
     };
