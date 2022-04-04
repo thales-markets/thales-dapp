@@ -217,7 +217,8 @@
             "button": {
                 "mainnet": "切换到主网",
                 "optimism": "转为乐观"
-            }
+            },
+            "description2": "您在钱包中选择了错误的网络。要继续，请切换到 Optimism 网络。"
         },
         "user-info-card": {
             "network": "网络",

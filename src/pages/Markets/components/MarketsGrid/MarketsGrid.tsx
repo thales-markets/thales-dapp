@@ -9,7 +9,6 @@ import { FlexDiv } from 'theme/common';
 import MarketCard from '../MarketsCard/MarketCard';
 import { PaginationWrapper } from '../MarketsTable/MarketsTable';
 
-import { getSynthName } from 'utils/currency';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 
@@ -41,9 +40,12 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
 
         if (filters?.searchQuery) {
             data = data.filter((market) => {
-                if (market?.asset.toLowerCase().includes(filters.searchQuery)) return market;
-                if (market?.strikePrice.toString().includes(filters.searchQuery)) return market;
-                if (getSynthName(market.currencyKey).toLowerCase().includes(filters.searchQuery)) return market;
+                if (market?.asset.toLowerCase().includes(filters.searchQuery.toLowerCase())) return market;
+                if (market?.strikePrice.toFixed(2).includes(filters.searchQuery)) return market;
+                if (exchangeRates && exchangeRates[market.currencyKey]) {
+                    if (exchangeRates[market.currencyKey].toFixed(2).includes(filters.searchQuery)) return market;
+                }
+                if (market?.phase.includes(filters.searchQuery)) return market;
             });
         }
 
@@ -60,6 +62,8 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
                 }
             });
         }
+
+        console.log('Data ', data);
 
         setDataCount(data?.length || 0);
         data = data.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage);
