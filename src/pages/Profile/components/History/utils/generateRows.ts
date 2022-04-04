@@ -1,6 +1,7 @@
 import { formatCurrency } from '../../../../../utils/formatters/number';
 import { formatShortDate } from '../../../../../utils/formatters/date';
 import { buildOptionsMarketLink } from '../../../../../utils/routes';
+import { TFunction } from 'i18next';
 
 const WIN_COLOR = '#50CE99';
 const LOSE_COLOR = '#C3244A';
@@ -22,7 +23,9 @@ const generateDateKey = (date: Date) => {
     return `${monthName} ${dayOfTheMonth}, ${year}`;
 };
 
-const generateRows = (data: any[]) => {
+const getOptionSideLabel = (optionSide: string) => (optionSide.toLowerCase() === 'short' ? 'down' : 'up');
+
+const generateRows = (data: any[], translator: TFunction) => {
     const dateMap: Record<string, any> = {};
 
     data.forEach((trade) => {
@@ -44,10 +47,10 @@ const generateRows = (data: any[]) => {
             return d;
         }
         const marketExpired = d.marketItem.result;
-        const userWon = d.marketItem.result === d.optionSide;
+        const isLong = d.optionSide === 'long';
 
         return {
-            color: marketExpired ? (userWon ? WIN_COLOR : LOSE_COLOR) : '',
+            dotColor: marketExpired ? (isLong ? WIN_COLOR : LOSE_COLOR) : '',
             asset: {
                 currencyKey: d.marketItem.currencyKey,
                 assetNameFontSize: '12px',
@@ -55,9 +58,12 @@ const generateRows = (data: any[]) => {
             },
             cells: [
                 { title: d.orderSide, value: formatAMPM(new Date(d.timestamp)) },
-                { title: 'strike', value: '$' + formatCurrency(d.marketItem.strikePrice) },
                 {
-                    title: 'price',
+                    title: translator('options.trading-profile.history.strike'),
+                    value: '$' + formatCurrency(d.marketItem.strikePrice),
+                },
+                {
+                    title: translator('options.trading-profile.history.price'),
                     value:
                         '$' +
                         formatCurrency(
@@ -65,18 +71,20 @@ const generateRows = (data: any[]) => {
                         ),
                 },
                 {
-                    title: 'amount',
-                    value: `${formatCurrency(d.orderSide == 'sell' ? d.takerAmount : d.makerAmount)} ${d.optionSide}`,
+                    title: translator('options.trading-profile.history.amount'),
+                    value: `${formatCurrency(
+                        d.orderSide == 'sell' ? d.takerAmount : d.makerAmount
+                    )} ${getOptionSideLabel(d.optionSide)}`,
                 },
                 {
-                    title: 'paid',
+                    title: translator('options.trading-profile.history.paid'),
                     value: '$' + formatCurrency(d.orderSide == 'sell' ? d.makerAmount : d.takerAmount),
                 },
                 {
-                    title: marketExpired ? (userWon ? 'profit' : 'loss') : 'expires @',
-                    value: !marketExpired
-                        ? formatShortDate(new Date(d.marketItem.maturityDate))
-                        : '$' + formatCurrency(userWon ? Math.abs(d.takerAmount - d.makerAmount) : d.takerAmount),
+                    title: marketExpired
+                        ? translator('options.trading-profile.history.expired')
+                        : translator('options.trading-profile.history.expires'),
+                    value: formatShortDate(new Date(d.marketItem.maturityDate)),
                 },
             ],
             link: buildOptionsMarketLink(d.marketItem.address),

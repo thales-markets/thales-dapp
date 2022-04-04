@@ -1324,7 +1324,15 @@
         },
         "trading-profile": {
             "title": "交易资料",
-            "search-placeholder": "搜索钱包"
+            "search-placeholder": "搜索钱包",
+            "history": {
+                "expired": "已到期",
+                "strike": "罢工",
+                "price": "价钱",
+                "amount": "数量",
+                "paid": "有薪酬的",
+                "expires": "过期@"
+            }
         },
         "order-book": {
             "trade-down": "交易选项",

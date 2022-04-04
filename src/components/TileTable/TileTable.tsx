@@ -19,7 +19,8 @@ type Cell = {
 
 export type TileRow = {
     asset: AssetInfoProps;
-    color?: string;
+    backgroundColor?: string;
+    dotColor?: string;
     cells: Cell[];
     disabled?: boolean;
     link?: string;
@@ -57,7 +58,13 @@ const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRender
                     return wrapInAnchor(
                         <FlexDiv>
                             {firstColumnRenderer && firstColumnRenderer(row)}
-                            <Tile lineHidden={index === 0} disabled={row.disabled} color={row.color} key={index}>
+                            <Tile
+                                lineHidden={index === 0}
+                                disabled={row.disabled}
+                                dotColor={row.dotColor}
+                                backgroundColor={row.backgroundColor}
+                                key={index}
+                            >
                                 <AssetInfo {...row.asset} />
                                 {cells.map((cell, index) => (
                                     <Tile.Cell direction={cell.flexDirection} key={index}>

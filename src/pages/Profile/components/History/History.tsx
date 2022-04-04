@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import TileTable from 'components/TileTable';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
@@ -18,6 +19,7 @@ type HistoryProps = {
 
 const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoading }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const { t } = useTranslation();
 
     const rows = useMemo(() => {
         if (trades.length > 0 && markets) {
@@ -34,7 +36,8 @@ const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoadin
                             currencyKeyToCoinGeckoIndexMap[trade?.marketItem?.asset?.toUpperCase()]
                         } ${currencyKeyToNameMap[trade?.marketItem?.asset?.toUpperCase()]}`.toLowerCase();
                         return !searchText || tradeValue.includes(search);
-                    })
+                    }),
+                t
             );
         }
         return [];

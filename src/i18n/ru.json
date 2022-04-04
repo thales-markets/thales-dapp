@@ -1324,7 +1324,15 @@
         },
         "trading-profile": {
             "title": "Торговый профиль",
-            "search-placeholder": "Поиск кошелька"
+            "search-placeholder": "Поиск кошелька",
+            "history": {
+                "price": "Цена",
+                "amount": "Количество",
+                "strike": "Наносить удар",
+                "paid": "Оплаченный",
+                "expired": "Истекший",
+                "expires": "Истекает @"
+            }
         },
         "order-book": {
             "trade-up": "Варианты обмена",

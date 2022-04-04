@@ -1319,7 +1319,15 @@
         },
         "trading-profile": {
             "title": "Trading Profile",
-            "search-placeholder": "Search Wallet"
+            "search-placeholder": "Search Wallet",
+            "history": {
+                "strike": "Strike",
+                "price": "Price",
+                "amount": "Amount",
+                "paid": "Paid",
+                "expired": "Expired",
+                "expires": "Expires @"
+            }
         },
         "order-book": {
             "trade-up": "Trade Up Options",

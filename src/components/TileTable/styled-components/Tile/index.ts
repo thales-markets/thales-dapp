@@ -13,14 +13,20 @@ type Children = {
 };
 
 // @ts-ignore
-const Tile: StyledComponent<'div', any, { disabled?: boolean; lineHidden?: boolean }> & Children = styled(FlexDiv)<{
-    color?: string;
+const Tile: StyledComponent<
+    'div',
+    any,
+    { disabled?: boolean; lineHidden?: boolean; dotColor?: string; backgroundColor?: string }
+> &
+    Children = styled(FlexDiv)<{
+    dotColor?: string;
+    backgroundColor?: string;
     disabled?: boolean;
     lineHidden?: boolean;
 }>`
     position: relative;
-    background: ${(props) => props.color || 'transparent'};
-    border: 2px solid ${(props) => (props.color ? 'transparent' : 'rgba(100, 217, 254, 0.5)')};
+    background: ${(props) => props.backgroundColor || 'transparent'};
+    border: 2px solid ${(props) => (props.backgroundColor ? 'transparent' : 'rgba(100, 217, 254, 0.5)')};
     box-sizing: border-box;
     border-radius: 15px;
     justify-content: space-between;
@@ -41,9 +47,9 @@ const Tile: StyledComponent<'div', any, { disabled?: boolean; lineHidden?: boole
         height: 15px;
         border-radius: 50%;
         border: 4px solid var(--background);
-        background: ${(props) => props.color || '#64d9fe'} !important;
-        box-shadow: 0 0 0 3px ${(props) => props.color || '#64d9fe'} !important;
-        opacity: ${(props) => (props.color || props.disabled ? '1' : '0.5')} !important;
+        background: ${(props) => props.dotColor || '#64d9fe'} !important;
+        box-shadow: 0 0 0 3px ${(props) => props.dotColor || '#64d9fe'} !important;
+        opacity: ${(props) => (props.dotColor || props.disabled ? '1' : '0.5')} !important;
     }
     &:after {
         content: '';
