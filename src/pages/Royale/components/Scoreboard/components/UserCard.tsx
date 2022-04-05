@@ -42,9 +42,9 @@ type UserCardProps = {
     selectedSeason: number;
 };
 export enum PositionsEnum {
-    NONE = 'none',
-    UP = 'up',
-    DOWN = 'down',
+    NONE = 0,
+    UP = 1,
+    DOWN = 2,
 }
 
 export enum BuyInCollateralEnum {
@@ -80,7 +80,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
-    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+    // const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showDefaultPositionWarning, setShowDefaultPositionWarning] = useState(false);
     const [isBuyingIn, setIsBuyingIn] = useState(false);
 
@@ -91,6 +91,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             ? PositionsEnum.DOWN
             : PositionsEnum.UP
     );
+
+    const [defaultPositions, setDefaultPositions] = useState([2, 1, 2, 1, 2, 1]);
 
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
@@ -485,73 +487,71 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <FlexContainer
                         style={{
                             position: 'relative',
-                            display:
-                                (user.status === UserStatus.NOTSIGNED &&
-                                    (royaleData as any).signUpPeriod < new Date()) ||
-                                !isWalletConnected
-                                    ? 'none'
-                                    : '',
+                            // display:
+                            //     (user.status === UserStatus.NOTSIGNED &&
+                            //         (royaleData as any).signUpPeriod < new Date()) ||
+                            //     !isWalletConnected
+                            //         ? 'none'
+                            //         : '',
                             borderBottom: '2px dashed var(--color)',
                             margin: 'margin: 0 0 7px 0',
+                            flexDirection: 'column',
                         }}
                     >
                         <UserLabel
                             style={{
-                                width: window.innerWidth < 400 ? 125 : 150,
+                                width: window.innerWidth < 400 ? 125 : '',
                                 marginTop: '-25px',
                                 padding: '15px 0px',
                             }}
                         >
-                            {t('options.royale.scoreboard.default-position')}:
+                            Rounds positioning:
                             <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
                                 <StyledInfoIcon />
                             </RoyaleTooltip>
                         </UserLabel>
-                        <Selector
-                            className={user.status === UserStatus.RDY || isBuyingIn ? 'disabled' : ''}
-                            isOpen={showSelectDropdown}
-                            style={{ border: showDefaultPositionWarning ? '2px solid #FF615F' : '' }}
-                        >
-                            {defaultPosition !== PositionsEnum.NONE && user.status === UserStatus.RDY ? (
-                                <Text>{t('options.royale.scoreboard.default-position-' + defaultPosition)}</Text>
-                            ) : (
-                                <Text
-                                    onClick={
-                                        user.status !== UserStatus.RDY && !isBuyingIn
-                                            ? setShowSelectDropdown.bind(this, true)
-                                            : undefined
-                                    }
+                        <FlexContainer style={{ padding: '15px 0px', width: '100%' }}>
+                            {defaultPositions.map((roundPosition: number, key: number) => (
+                                <PositionButton
+                                    key={key}
+                                    long={roundPosition === 2 ? true : false}
+                                    onClick={() => {
+                                        const positions = defaultPositions;
+                                        positions[key] === 1 ? (positions[key] = 2) : (positions[key] = 1);
+                                        setDefaultPositions(positions);
+                                    }}
                                 >
-                                    {defaultPosition === PositionsEnum.NONE
-                                        ? 'SELECT'
-                                        : t('options.royale.scoreboard.default-position-' + defaultPosition)}
-                                    <Arrow className="icon icon--arrow-down" />
-                                </Text>
-                            )}
-
-                            {showSelectDropdown &&
-                                Object.keys(PositionsEnum)
-                                    .filter(
-                                        (position) =>
-                                            position.toLowerCase() !== defaultPosition.toLowerCase() &&
-                                            position.toLowerCase() !== PositionsEnum.NONE
-                                    )
-                                    .map((position: any, key: number) => (
-                                        <Text
-                                            onClick={() => {
-                                                setDefaultPosition(
-                                                    PositionsEnum[position as keyof typeof PositionsEnum]
-                                                );
-                                                setShowSelectDropdown(false);
-                                                setShowDefaultPositionWarning(false);
-                                            }}
-                                            key={key}
-                                        >
-                                            {t('options.royale.scoreboard.default-position-' + position.toLowerCase())}
-                                        </Text>
-                                    ))}
-                        </Selector>
-                        {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
+                                    {roundPosition === 2 ? '△' : <Circle />}
+                                </PositionButton>
+                            ))}
+                        </FlexContainer>
+                        <FlexContainer style={{ padding: '15px 0px' }}>
+                            <Button
+                                onClick={() => {
+                                    const positions = [];
+                                    for (let i = 0; i < 6; i++) {
+                                        positions.push(Math.round(Math.random()) === 0 ? 1 : 2);
+                                    }
+                                    setDefaultPositions(positions);
+                                }}
+                            >
+                                Shuffle positions
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setDefaultPositions([2, 2, 2, 2, 2, 2]);
+                                }}
+                            >
+                                All UP
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setDefaultPositions([1, 1, 1, 1, 1, 1]);
+                                }}
+                            >
+                                All DOWN
+                            </Button>
+                        </FlexContainer>
                     </FlexContainer>
                     <FlexContainer
                         style={{
@@ -864,36 +864,6 @@ const ImageWrapper = styled(InputWrapper)`
     }
 `;
 
-const Selector = styled.div<{ isOpen: boolean }>`
-    position: absolute;
-    right: 0;
-    top: 6px;
-    width: 240px;
-    height: ${(props) => (props.isOpen ? 'content' : '28px')};
-    border: 2px solid var(--color-background);
-    box-sizing: border-box;
-    border-radius: 19.5349px;
-    white-space: nowrap;
-    overflow: hidden;
-    font-family: Sansation !important;
-    font-style: normal;
-    font-size: 20px;
-    line-height: 29px;
-    text-align: center;
-    letter-spacing: -0.4px;
-    color: var(--color-background);
-    cursor: pointer;
-    z-index: 5;
-    background: var(--color);
-    &.disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-    @media (max-width: 1024px) {
-        width: 150px;
-    }
-`;
-
 const ToggleWrapper = styled.div`
     width: 240px;
     border: 1.30233px solid var(--color);
@@ -964,17 +934,6 @@ const InfoSection = styled.div`
     }
 `;
 
-const Arrow = styled.i`
-    font-size: 12px;
-    line-height: 12px;
-    display: inline-block;
-    padding-bottom: 3px;
-    position: absolute;
-    color: var(--color-wrapper);
-    top: 9px;
-    left: ${() => (window.innerWidth < 1024 ? '75%' : '67%')};
-`;
-
 const Overlay = styled.div`
     position: fixed;
     top: 0;
@@ -1011,4 +970,30 @@ const RoyalePassContainer = styled(FlexContainer)`
             margin-top: 10px;
         }
     }
+`;
+
+const PositionButton = styled.button<{ long?: boolean }>`
+    transition: all 0.2s ease-in-out;
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    background: ${(props) => (props.long ? '#b9c7c2' : '#8e1d38')};
+    border: 3px solid #e5e5e5;
+    box-sizing: border-box;
+    box-shadow: ${(props) => (props.long ? 'inset 0 4px 30px #137b9b' : '')};
+    color: #e5e5e5;
+    font-size: 25px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const Circle = styled.div<{ disabled?: boolean; selected?: boolean }>`
+    width: 20px;
+    height: 20px;
+    border-radius: 50px;
+    background: transparent;
+    box-sizing: border-box;
+    border: ${(props) => (props.selected ? '1px solid #CA7070' : '1px solid #e5e5e5')};
 `;
