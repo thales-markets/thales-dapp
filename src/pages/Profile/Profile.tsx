@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
+import Loader from '../../components/Loader';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -56,110 +57,115 @@ const Profile: React.FC = () => {
     const [view, setView] = useState(NavItems.MyPositions);
 
     return (
-        <Container layout={isSimpleView}>
-            <Container.Fixed>
-                <SearchField
-                    placeholder={t('options.trading-profile.search-placeholder')}
-                    text={searchText}
-                    handleChange={(value) => setSearchText(value)}
-                />
-                <TableGridSwitch
-                    value={!isSimpleView}
-                    clickEventHandler={setSimpleView.bind(this, !isSimpleView)}
-                    labels={['Grid', 'Table']}
-                />
-            </Container.Fixed>
-            <Container.Left layout={isSimpleView}>
-                <Nav justifyContent={isSimpleView ? 'space-between' : 'flex-start'}>
-                    <NavItem
-                        onClick={setView.bind(this, NavItems.MyPositions)}
-                        className={view === NavItems.MyPositions ? 'active' : ''}
-                    >
-                        {NavItems.MyPositions}
-                    </NavItem>
-                    <NavItem
-                        onClick={setView.bind(this, NavItems.MaturedPositions)}
-                        className={view === NavItems.MaturedPositions ? 'active' : ''}
-                    >
-                        {NavItems.MaturedPositions}
-                        {positions.claimable > 0 && (
-                            <>
-                                <Notification> {positions.claimable} </Notification>
-                            </>
+        <>
+            <Container layout={isSimpleView}>
+                <Container.Fixed>
+                    <SearchField
+                        placeholder={t('options.trading-profile.search-placeholder')}
+                        text={searchText}
+                        handleChange={(value) => setSearchText(value)}
+                    />
+                    <TableGridSwitch
+                        value={!isSimpleView}
+                        clickEventHandler={setSimpleView.bind(this, !isSimpleView)}
+                        labels={['Grid', 'Table']}
+                    />
+                </Container.Fixed>
+                <Container.Left layout={isSimpleView}>
+                    <Nav justifyContent={isSimpleView ? 'space-between' : 'flex-start'}>
+                        <NavItem
+                            onClick={setView.bind(this, NavItems.MyPositions)}
+                            className={view === NavItems.MyPositions ? 'active' : ''}
+                        >
+                            {NavItems.MyPositions}
+                        </NavItem>
+                        <NavItem
+                            onClick={setView.bind(this, NavItems.MaturedPositions)}
+                            className={view === NavItems.MaturedPositions ? 'active' : ''}
+                        >
+                            {NavItems.MaturedPositions}
+                            {positions.claimable > 0 && (
+                                <>
+                                    <Notification> {positions.claimable} </Notification>
+                                </>
+                            )}
+                        </NavItem>
+                        <NavItem
+                            onClick={setView.bind(this, NavItems.History)}
+                            className={view === NavItems.History ? 'active' : ''}
+                        >
+                            {NavItems.History}
+                        </NavItem>
+                    </Nav>
+                    <LineUnderNav />
+                    <ContentWrapper>
+                        {view === NavItems.MyPositions && (
+                            <MyPositions
+                                isSimpleView={isSimpleView}
+                                exchangeRates={exchangeRates}
+                                positions={positions.live}
+                                searchText={searchText}
+                                isLoading={userPositionsQuery.isLoading}
+                            />
                         )}
-                    </NavItem>
-                    <NavItem
-                        onClick={setView.bind(this, NavItems.History)}
-                        className={view === NavItems.History ? 'active' : ''}
-                    >
-                        {NavItems.History}
-                    </NavItem>
-                </Nav>
-                <LineUnderNav />
-                <ContentWrapper>
-                    {view === NavItems.MyPositions && (
-                        <MyPositions
-                            isSimpleView={isSimpleView}
-                            exchangeRates={exchangeRates}
-                            positions={positions.live}
-                            searchText={searchText}
-                            isLoading={userPositionsQuery.isLoading}
-                        />
-                    )}
-                    {view === NavItems.MaturedPositions && (
-                        <MaturedPositions
-                            isSimpleView={isSimpleView}
-                            positions={positions.matured}
-                            claimed={positions.claimed}
-                            searchText={searchText}
-                            isLoading={userPositionsQuery.isLoading}
-                        />
-                    )}
-                    {view === NavItems.History && (
-                        <History
-                            markets={markets}
-                            trades={DataForUi ? DataForUi.trades : []}
-                            searchText={searchText}
-                            isLoading={allTxAndDataQuery.isLoading}
-                        />
-                    )}
-                </ContentWrapper>
-            </Container.Left>
-            <Container.Right layout={isSimpleView}>
-                <PieChartOptionsAllocated claimable={positions.claimableAmount} />
-                <Wrapper>
-                    <Wrapper.Row>
-                        <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
-                        <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
-                            {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.profit, 2)}
-                        </Wrapper.Value>
-                    </Wrapper.Row>
-                    <Wrapper.Row>
-                        <Wrapper.Label>{t('options.leaderboard.table.gain-col')}: </Wrapper.Label>
-                        <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
-                            {formatCurrencyWithSign('', DataForUi?.userData.gain * 100, 2)}%
-                        </Wrapper.Value>
-                    </Wrapper.Row>
-                    <Wrapper.Row>
-                        <Wrapper.Label>{t('options.leaderboard.table.trades-col')}: </Wrapper.Label>
-                        <Wrapper.Value>{DataForUi?.userData.trades}</Wrapper.Value>
-                    </Wrapper.Row>
-                    <Wrapper.Row>
-                        <Wrapper.Label>{t('options.leaderboard.table.volume-col')}: </Wrapper.Label>
-                        <Wrapper.Value>{formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.volume, 2)}</Wrapper.Value>
-                    </Wrapper.Row>
-                    <Wrapper.Row>
-                        <Wrapper.Label>{t('options.leaderboard.table.investment-col')}: </Wrapper.Label>
-                        <Wrapper.Value>
-                            {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.investment, 2)}
-                        </Wrapper.Value>
-                    </Wrapper.Row>
-                    <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
-                        <ThalesBalance showTitle={true} />
-                    </PriceContainer>
-                </Wrapper>
-            </Container.Right>
-        </Container>
+                        {view === NavItems.MaturedPositions && (
+                            <MaturedPositions
+                                isSimpleView={isSimpleView}
+                                positions={positions.matured}
+                                claimed={positions.claimed}
+                                searchText={searchText}
+                                isLoading={userPositionsQuery.isLoading}
+                            />
+                        )}
+                        {view === NavItems.History && (
+                            <History
+                                markets={markets}
+                                trades={DataForUi ? DataForUi.trades : []}
+                                searchText={searchText}
+                                isLoading={allTxAndDataQuery.isLoading}
+                            />
+                        )}
+                    </ContentWrapper>
+                </Container.Left>
+                <Container.Right layout={isSimpleView}>
+                    <PieChartOptionsAllocated claimable={positions.claimableAmount} />
+                    <Wrapper>
+                        <Wrapper.Row>
+                            <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
+                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
+                                {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.profit, 2)}
+                            </Wrapper.Value>
+                        </Wrapper.Row>
+                        <Wrapper.Row>
+                            <Wrapper.Label>{t('options.leaderboard.table.gain-col')}: </Wrapper.Label>
+                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
+                                {formatCurrencyWithSign('', DataForUi?.userData.gain * 100, 2)}%
+                            </Wrapper.Value>
+                        </Wrapper.Row>
+                        <Wrapper.Row>
+                            <Wrapper.Label>{t('options.leaderboard.table.trades-col')}: </Wrapper.Label>
+                            <Wrapper.Value>{DataForUi?.userData.trades}</Wrapper.Value>
+                        </Wrapper.Row>
+                        <Wrapper.Row>
+                            <Wrapper.Label>{t('options.leaderboard.table.volume-col')}: </Wrapper.Label>
+                            <Wrapper.Value>
+                                {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.volume, 2)}
+                            </Wrapper.Value>
+                        </Wrapper.Row>
+                        <Wrapper.Row>
+                            <Wrapper.Label>{t('options.leaderboard.table.investment-col')}: </Wrapper.Label>
+                            <Wrapper.Value>
+                                {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.investment, 2)}
+                            </Wrapper.Value>
+                        </Wrapper.Row>
+                        <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
+                            <ThalesBalance showTitle={true} />
+                        </PriceContainer>
+                    </Wrapper>
+                </Container.Right>
+            </Container>
+            {networkId === 1 && <Loader hideMainnet={true} />}
+        </>
     );
 };
 
