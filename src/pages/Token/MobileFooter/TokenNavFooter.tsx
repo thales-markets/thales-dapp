@@ -54,18 +54,20 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                         }}
                         src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
                     />
-                    <Icon
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: 'retro-rewards',
-                                }),
-                            });
-                            setSelectedTab('retro-rewards');
-                        }}
-                        src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
-                    />
+                    {!isL2 && (
+                        <Icon
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'retro-rewards',
+                                    }),
+                                });
+                                setSelectedTab('retro-rewards');
+                            }}
+                            src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
+                        />
+                    )}
                     <Icon
                         onClick={() => {
                             history.push({

@@ -137,9 +137,15 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        MigratedRewards: (walletAddress: string, networkId: NetworkId) => [
+        MigratedRetroRewards: (walletAddress: string, networkId: NetworkId) => [
             'token',
-            'migratedRewards',
+            'migratedRetroRewards',
+            walletAddress,
+            networkId,
+        ],
+        MigratedInvestorsRetroRewards: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'migratedInvestorsRetroRewards',
             walletAddress,
             networkId,
         ],
