@@ -513,17 +513,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         </UserLabel>
                         <FlexContainer style={{ padding: '15px 0px', width: '100%' }}>
                             {defaultPositions.map((roundPosition: number, key: number) => (
-                                <PositionButton
-                                    key={key}
-                                    long={roundPosition === 2 ? true : false}
-                                    onClick={() => {
-                                        const positions = defaultPositions;
-                                        positions[key] === 1 ? (positions[key] = 2) : (positions[key] = 1);
-                                        setDefaultPositions(positions);
-                                    }}
-                                >
-                                    {roundPosition === 2 ? '△' : <Circle />}
-                                </PositionButton>
+                                <>
+                                    <SupText>{key + 1}.</SupText>
+                                    <PositionButton
+                                        key={key}
+                                        long={roundPosition === 2 ? true : false}
+                                        onClick={() => {
+                                            const positions = defaultPositions;
+                                            positions[key] === 1 ? (positions[key] = 2) : (positions[key] = 1);
+                                            setDefaultPositions(positions);
+                                        }}
+                                    >
+                                        {roundPosition === 2 ? '△' : <Circle />}
+                                    </PositionButton>
+                                </>
                             ))}
                         </FlexContainer>
                         <FlexContainer style={{ padding: '15px 0px', width: '100%' }}>
@@ -995,4 +998,13 @@ const Circle = styled.div<{ disabled?: boolean; selected?: boolean }>`
     background: transparent;
     box-sizing: border-box;
     border: ${(props) => (props.selected ? '1px solid #CA7070' : '1px solid #e5e5e5')};
+`;
+
+const SupText = styled.sup`
+    font-family: Sansation !important;
+    font-style: normal;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    margin-bottom: 15px;
+    margin-left: 5px;
 `;
