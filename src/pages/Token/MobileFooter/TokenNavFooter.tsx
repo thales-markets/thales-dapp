@@ -120,12 +120,12 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                                 history.push({
                                     pathname: location.pathname,
                                     search: queryString.stringify({
-                                        tab: 'retro-rewards',
+                                        tab: 'strategic-investors',
                                     }),
                                 });
-                                setSelectedTab('retro-rewards');
+                                setSelectedTab('strategic-investors');
                             }}
-                            src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
+                            src={selectedTab === 'strategic-investors' ? snxStakingActiveIcon : snxStakingIcon}
                         />
                     )}
                 </Container>

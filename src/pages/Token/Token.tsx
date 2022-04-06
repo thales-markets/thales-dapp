@@ -60,7 +60,7 @@ const TokenPage: React.FC = () => {
             disabled: false,
         });
         tabs.push({
-            id: 'retro-rewards',
+            id: 'strategic-investors',
             name: t('options.earn.snx-stakers.tab-title'),
             disabled: false,
         });
@@ -142,7 +142,7 @@ const TokenPage: React.FC = () => {
                         <WidgetsContainer>
                             <InnerWidgetsContainer>
                                 {selectedTab === 'staking' && <ThalesStaking />}
-                                {selectedTab === 'retro-rewards' && <SnxStaking />}
+                                {selectedTab === 'strategic-investors' && <SnxStaking />}
                                 {selectedTab === 'vesting' && <Vesting />}
                                 {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
                                 {selectedTab === 'migration' && !isL2 && <Migration />}
