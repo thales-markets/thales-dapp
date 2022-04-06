@@ -2,7 +2,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const vestingEscrowContract = {
     addresses: {
-        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Mainnet]: '0x088c6Ad16ba124F1d40fD2A3EDe63ef2E8dAe39f',
         [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: '0x758c5D4b48A9beDcF38f81cB6f75cd8Ce92C846E',
