@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn } from 'theme/common';
-
 import ThalesStaking from './ThalesStaking';
 import SnxStaking from './SnxStaking';
 import Vesting from './Vesting';
@@ -12,7 +11,6 @@ import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
 import TokenOverview from './components/TokenOverview';
-
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
@@ -22,6 +20,7 @@ import { useSelector } from 'react-redux';
 import TokenNavFooter from './MobileFooter/TokenNavFooter';
 import Notice from './components/Notice';
 import { MigrateButton, MigrateText } from './components/MigrationNotice/MigrationNotice';
+import MigratedRewards from './MigratedRewards';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
@@ -32,47 +31,37 @@ const TokenPage: React.FC = () => {
 
     const tabs = [
         {
-            id: 'retro-rewards',
-            name: t('options.earn.snx-stakers.tab-title'),
+            id: 'staking',
+            name: t('options.earn.thales-staking.tab-title'),
+            disabled: false,
+        },
+        {
+            id: 'vesting',
+            name: t('options.earn.vesting.tab-title'),
+            disabled: false,
+        },
+        {
+            id: 'lp-staking',
+            name: t('options.earn.lp-staking.tab-title'),
             disabled: false,
         },
     ];
 
     if (isL2) {
-        tabs.unshift({
-            id: 'staking',
-            name: t('options.earn.thales-staking.tab-title'),
-            disabled: false,
-        });
         tabs.push({
-            id: 'vesting',
-            name: t('options.earn.vesting.tab-title'),
-            disabled: false,
-        });
-        tabs.push({
-            id: 'lp-staking',
-            name: t('options.earn.lp-staking.tab-title'),
+            id: 'migrated-rewards',
+            name: t('migration.migrated-rewards-title'),
             disabled: false,
         });
     } else {
-        tabs.push({
-            id: 'staking',
-            name: t('options.earn.thales-staking.tab-title'),
-            disabled: false,
-        });
-        tabs.push({
-            id: 'vesting',
-            name: t('options.earn.vesting.tab-title'),
-            disabled: false,
-        });
-        tabs.push({
-            id: 'lp-staking',
-            name: t('options.earn.lp-staking.tab-title'),
-            disabled: false,
-        });
         tabs.unshift({
             id: 'migration',
             name: t('migration.title'),
+            disabled: false,
+        });
+        tabs.push({
+            id: 'strategic-investors',
+            name: t('options.earn.snx-stakers.tab-title'),
             disabled: false,
         });
     }
@@ -153,10 +142,11 @@ const TokenPage: React.FC = () => {
                         <WidgetsContainer>
                             <InnerWidgetsContainer>
                                 {selectedTab === 'staking' && <ThalesStaking />}
-                                {selectedTab === 'retro-rewards' && <SnxStaking />}
+                                {selectedTab === 'strategic-investors' && <SnxStaking />}
                                 {selectedTab === 'vesting' && <Vesting />}
                                 {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
                                 {selectedTab === 'migration' && !isL2 && <Migration />}
+                                {selectedTab === 'migrated-rewards' && isL2 && <MigratedRewards />}
                             </InnerWidgetsContainer>
                         </WidgetsContainer>
                     </MainContentContainer>

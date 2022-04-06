@@ -55,6 +55,7 @@ export enum TransactionFilterEnum {
     ADD_TO_ESCROW = 'addToEscrow',
     VEST = 'vest',
     CLAIM_MIGRATED_REWARDS = 'claimMigratedRewards',
+    CLAIM_MIGRATED_RETRO_REWARDS = 'claimMigratedRetroRewards',
     LP_STAKE = 'lpStake',
     LP_UNSTAKE = 'lpUnstake',
     LP_CLAIM_STAKING_REWARDS = 'lpClaimStakingRewards',
@@ -120,4 +121,18 @@ export type TokenInfo = {
     circulatingSupply: number;
     price?: number;
     marketCap?: number;
+};
+
+type RetroReward = {
+    balance: number;
+    rawBalance: string;
+    index: number;
+    proof: string[];
+};
+
+export type MigratedRetroReward = {
+    isClaimPaused: boolean;
+    hasClaimRights: boolean;
+    claimed: boolean;
+    reward?: RetroReward;
 };

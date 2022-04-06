@@ -1,11 +1,11 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
 
-export const vestingEscrowContract = {
+export const airdrop = {
     addresses: {
-        [NetworkId.Mainnet]: '0x088c6Ad16ba124F1d40fD2A3EDe63ef2E8dAe39f',
+        [NetworkId.Mainnet]: '0x4f896abE9E28C2Db248a8DdAC205ca1cf84A2771',
         [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x758c5D4b48A9beDcF38f81cB6f75cd8Ce92C846E',
+        [NetworkId.Kovan]: '0x686525728323b10bF611C6d260604c02946792ab',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
@@ -20,19 +20,14 @@ export const vestingEscrowContract = {
                     type: 'address',
                 },
                 {
-                    internalType: 'address',
+                    internalType: 'contract IERC20',
                     name: '_token',
                     type: 'address',
                 },
                 {
-                    internalType: 'uint256',
-                    name: '_startTime',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_endTime',
-                    type: 'uint256',
+                    internalType: 'bytes32',
+                    name: '_root',
+                    type: 'bytes32',
                 },
             ],
             payable: false,
@@ -43,38 +38,25 @@ export const vestingEscrowContract = {
             anonymous: false,
             inputs: [
                 {
-                    indexed: true,
+                    indexed: false,
                     internalType: 'address',
-                    name: '_address',
+                    name: 'claimer',
                     type: 'address',
                 },
                 {
                     indexed: false,
                     internalType: 'uint256',
-                    name: '_amount',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'timestamp',
                     type: 'uint256',
                 },
             ],
             name: 'Claim',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: true,
-                    internalType: 'address',
-                    name: '_recipient',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: '_amount',
-                    type: 'uint256',
-                },
-            ],
-            name: 'Fund',
             type: 'event',
         },
         {
@@ -110,6 +92,40 @@ export const vestingEscrowContract = {
             type: 'event',
         },
         {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'isPaused',
+                    type: 'bool',
+                },
+            ],
+            name: 'PauseChanged',
+            type: 'event',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            name: '_claimed',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [
                 {
@@ -134,35 +150,20 @@ export const vestingEscrowContract = {
             type: 'function',
         },
         {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_amount',
-                    type: 'uint256',
-                },
-            ],
-            name: 'addTokens',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
             constant: true,
             inputs: [
                 {
-                    internalType: 'address',
-                    name: '_recipient',
-                    type: 'address',
+                    internalType: 'uint256',
+                    name: 'index',
+                    type: 'uint256',
                 },
             ],
-            name: 'balanceOf',
+            name: 'canClaim',
             outputs: [
                 {
-                    internalType: 'uint256',
+                    internalType: 'bool',
                     name: '',
-                    type: 'uint256',
+                    type: 'bool',
                 },
             ],
             payable: false,
@@ -171,7 +172,23 @@ export const vestingEscrowContract = {
         },
         {
             constant: false,
-            inputs: [],
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'index',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'bytes32[]',
+                    name: 'merkleProof',
+                    type: 'bytes32[]',
+                },
+            ],
             name: 'claim',
             outputs: [],
             payable: false,
@@ -180,53 +197,23 @@ export const vestingEscrowContract = {
         },
         {
             constant: true,
-            inputs: [],
-            name: 'endTime',
-            outputs: [
+            inputs: [
                 {
                     internalType: 'uint256',
-                    name: '',
+                    name: 'index',
                     type: 'uint256',
                 },
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address[]',
-                    name: '_recipients',
-                    type: 'address[]',
-                },
-                {
-                    internalType: 'uint256[]',
-                    name: '_amounts',
-                    type: 'uint256[]',
-                },
-            ],
-            name: 'fund',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            name: 'initialLocked',
+            name: 'claimed',
             outputs: [
                 {
                     internalType: 'uint256',
-                    name: '',
+                    name: 'claimedBlock',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'claimedMask',
                     type: 'uint256',
                 },
             ],
@@ -237,43 +224,7 @@ export const vestingEscrowContract = {
         {
             constant: true,
             inputs: [],
-            name: 'initialLockedSupply',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_recipient',
-                    type: 'address',
-                },
-            ],
-            name: 'lockedOf',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'lockedSupply',
+            name: 'lastPauseTime',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -333,6 +284,51 @@ export const vestingEscrowContract = {
         {
             constant: true,
             inputs: [],
+            name: 'paused',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'root',
+            outputs: [
+                {
+                    internalType: 'bytes32',
+                    name: '',
+                    type: 'bytes32',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'bool',
+                    name: '_paused',
+                    type: 'bool',
+                },
+            ],
+            name: 'setPaused',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: 'startTime',
             outputs: [
                 {
@@ -351,81 +347,9 @@ export const vestingEscrowContract = {
             name: 'token',
             outputs: [
                 {
-                    internalType: 'address',
+                    internalType: 'contract IERC20',
                     name: '',
                     type: 'address',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            name: 'totalClaimed',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'unallocatedSupply',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_recipient',
-                    type: 'address',
-                },
-            ],
-            name: 'vestedOf',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'vestedSupply',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
                 },
             ],
             payable: false,
@@ -435,4 +359,4 @@ export const vestingEscrowContract = {
     ],
 };
 
-export default vestingEscrowContract;
+export default airdrop;

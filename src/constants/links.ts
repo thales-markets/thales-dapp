@@ -17,6 +17,8 @@ export const LINKS = {
             'https://thalesmarket.io/governance/thalesgov.eth/0xa6b29b64e1455fbfdfbfa14af46711e3ce324ae315543ca3e3c5401dc3967eef',
         TIP23:
             'https://thalesmarket.io/governance/thalesgov.eth/0x9c5c0b18ca03009165db141d4ef11d8eb6f15d04e1c8e9fb9dfe9ad6ab09a53e',
+        TIP37:
+            'https://thalesmarket.io/governance/thalesgov.eth/0x19c02d0a14ffa5c7685a635f78a9911b757b8b1545ebcfa6a26a7684793a2fa9',
         Bonus: {
             SnxStaking: 'https://staking.synthetix.io/',
             AMM: 'https://thalesmarket.io/markets',
