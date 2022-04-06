@@ -83,6 +83,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     // const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showDefaultPositionWarning, setShowDefaultPositionWarning] = useState(false);
     const [isBuyingIn, setIsBuyingIn] = useState(false);
+    const [allPositionsUp, setAllPositionsUp] = useState(true);
 
     const [defaultPosition, setDefaultPosition] = useState(
         user.defaultPosition === 0
@@ -525,8 +526,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 </PositionButton>
                             ))}
                         </FlexContainer>
-                        <FlexContainer style={{ padding: '15px 0px' }}>
+                        <FlexContainer style={{ padding: '15px 0px', width: '100%' }}>
                             <Button
+                                style={{ width: 191 }}
                                 onClick={() => {
                                     const positions = [];
                                     for (let i = 0; i < 6; i++) {
@@ -538,18 +540,15 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 Shuffle positions
                             </Button>
                             <Button
+                                style={{ width: 191, justifyContent: 'center' }}
                                 onClick={() => {
-                                    setDefaultPositions([2, 2, 2, 2, 2, 2]);
+                                    allPositionsUp
+                                        ? setDefaultPositions([2, 2, 2, 2, 2, 2])
+                                        : setDefaultPositions([1, 1, 1, 1, 1, 1]);
+                                    setAllPositionsUp(!allPositionsUp);
                                 }}
                             >
-                                All UP
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setDefaultPositions([1, 1, 1, 1, 1, 1]);
-                                }}
-                            >
-                                All DOWN
+                                {allPositionsUp ? 'All UP' : 'All DOWN'}
                             </Button>
                         </FlexContainer>
                     </FlexContainer>
@@ -973,7 +972,7 @@ const RoyalePassContainer = styled(FlexContainer)`
 `;
 
 const PositionButton = styled.button<{ long?: boolean }>`
-    transition: all 0.2s ease-in-out;
+    transition: background 0.1s ease-in-out;
     width: 40px;
     height: 40px;
     border-radius: 50px;
