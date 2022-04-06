@@ -1,4 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
+import { POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const bridgeContract = {
     addresses: {
@@ -10,6 +11,7 @@ export const bridgeContract = {
         [NetworkId.Goerli]: 'TBD', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
         [NetworkId['Kovan-Ovm']]: 'TBD',
+        [POLYGON_MUMBAI_ID]: 'TBD',
     },
     abi: [
         {

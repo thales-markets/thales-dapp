@@ -1,4 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
+import { POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const limitOrderProtocol1inchContract = {
     addresses: {
@@ -10,6 +11,7 @@ export const limitOrderProtocol1inchContract = {
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0xb707d89d29c189421163515c59e42147371d6857',
         [NetworkId['Kovan-Ovm']]: 'TBD',
+        [POLYGON_MUMBAI_ID]: 'TBD',
     },
     abi: [
         {

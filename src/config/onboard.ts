@@ -8,6 +8,7 @@ import disclaimer from 'assets/docs/thales-protocol-disclaimer.pdf';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import { initReactI18next } from 'react-i18next';
 import i18n from 'i18next';
+import { POLYGON_MUMBAI_ID } from '../constants/network';
 
 const ledgerIcon =
     '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#FFFFFF" d="M399,341.522c0,31.535-25.609,57.1-57.201,57.1H170.2c-31.592,0-57.2-25.564-57.2-57.1V170.222c0-31.533,25.608-57.1,57.2-57.1h171.599c31.592,0,57.201,25.566,57.201,57.1V341.522z"/><g><path fill="#152633" d="M343.266,127.313H224.914v159.661h159.791V168.626c0-22.671-18.652-41.313-41.313-41.313C343.355,127.313,343.303,127.313,343.266,127.313z"/><path fill="#152633" d="M188.018,127.313h-20.396c-22.656,0-41.309,18.656-41.309,41.313v20.396h61.705V127.313z"/><path fill="#152633" d="M126.313,225.919h61.705v61.708h-61.705V225.919z"/><path fill="#152633" d="M323.518,385.706h20.396c22.673,0,41.313-18.653,41.313-41.309c0-0.037,0-0.09,0-0.129v-19.75h-61.709V385.706z"/><path fill="#152633" d="M224.914,324.519h61.707v61.71h-61.707V324.519z"/><path fill="#152633" d="M126.313,324.519v20.4c0,22.651,18.652,41.31,41.309,41.31h20.396v-61.71H126.313z"/></g></svg>';
@@ -85,6 +86,7 @@ export const initOnboard = (networkId: LocalNetworkId, subscriptions: Subscripti
                         [NetworkId['Mainnet-Ovm']]: getInfuraRpcURL(NetworkId['Mainnet-Ovm']),
                         [NetworkId.Kovan]: getInfuraRpcURL(NetworkId.Kovan),
                         [NetworkId['Kovan-Ovm']]: getInfuraRpcURL(NetworkId['Kovan-Ovm']),
+                        [POLYGON_MUMBAI_ID]: getInfuraRpcURL(POLYGON_MUMBAI_ID),
                     },
                     preferred: true,
                     svg: walletConnectIcon,

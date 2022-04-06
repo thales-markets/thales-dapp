@@ -23,7 +23,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { FlexDiv, FlexDivCentered, Wrapper } from 'theme/common';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 import useInterval from 'hooks/useInterval';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import useRoundsQuery from './queries/useRoundsQuery';
@@ -255,6 +255,7 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress ?? '', networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -263,7 +264,7 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
     const royaleDataQuery = useRoyaleArenaContractQuery(memoizedSelectedSeason, walletAddress ?? '', {
-        enabled: isAppReady && isL2,
+        enabled: isAppReady && (isL2 || isPolygon),
     });
 
     const royaleData = useMemo(() => {

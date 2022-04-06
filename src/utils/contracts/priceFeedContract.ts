@@ -1,4 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
+import { POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const priceFeedContract = {
     addresses: {
@@ -10,6 +11,7 @@ export const priceFeedContract = {
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0xf4aef21d906992aFAdde7A9676e1dB4feb6390DD',
         [NetworkId['Kovan-Ovm']]: '0xDa00B46a924dA3019b2F5fC13E770956F75C04C7',
+        [POLYGON_MUMBAI_ID]: '0x9E0B492F029F969affBFd78cA17302c2da2604E6',
     },
     abi: [
         {

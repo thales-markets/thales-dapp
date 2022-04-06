@@ -169,6 +169,7 @@ export const CreateMarket: React.FC = () => {
             const {
                 contracts: { SynthsUSD },
             } = snxJSConnector.snxJS as any;
+
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
             const getAllowanceForCurrentWallet = async () => {
                 try {
@@ -313,7 +314,9 @@ export const CreateMarket: React.FC = () => {
             const {
                 contracts: { SynthsUSD },
             } = snxJSConnector.snxJS as any;
+
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
+
             try {
                 setIsAllowing(true);
                 const gasEstimate = await SynthsUSD.estimateGas.approve(

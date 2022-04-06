@@ -5,11 +5,11 @@ import {
     LimitOrderProtocolFacade,
     Web3ProviderConnector,
 } from '@1inch/limit-order-protocol';
-import { NetworkId } from '@synthetixio/contracts-interface';
 import axios from 'axios';
 import { ethers } from 'ethers';
 import qs from 'query-string';
 import Web3 from 'web3';
+import { NetworkId } from './network';
 
 export const ONE_INCH_BASE_URL = 'https://limit-orders.1inch.io/v1.0/';
 export const ONE_INCH_LIMT_URL_ALL = '/limit-order/all?';
@@ -19,20 +19,18 @@ export const ONE_INCH_CONTRACTS: Record<NetworkId, string | null> = {
     1: '0x3ef51736315f52d568d6d2cf289419b9cfffe782',
     10: '0xb707d89d29c189421163515c59e42147371d6857',
     3: '',
-    4: '',
-    5: '',
     42: '',
     69: '',
+    80001: '',
 };
 
 export const ONE_INCH_SWAP_CONTRACTS: Record<NetworkId, string | null> = {
     1: '0x1111111254fb6c44bac0bed2854e76f90643097d',
     10: '0x1111111254760f7ab3f16433eea9304126dcd199',
     3: '',
-    4: '',
-    5: '',
     42: '',
     69: '',
+    80001: '',
 };
 
 export const ONE_INCH_SWAP_APPROVE_ALLOWANCE_URL = 'approve/allowance';

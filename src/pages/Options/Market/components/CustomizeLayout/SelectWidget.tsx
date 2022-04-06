@@ -7,7 +7,7 @@ import { RootState } from 'redux/rootReducer';
 import { isMarketWidgetVisible } from 'utils/options';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import Checkbox from 'components/Checkbox';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 
 type SelectWidgetProps = {
     widgetKey: MarketWidgetKey;
@@ -23,6 +23,7 @@ const SelectWidget: React.FC<SelectWidgetProps> = ({ widgetKey, phase, isCustomM
     const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     return isMarketWidgetVisible(
         widgetKey,
@@ -32,7 +33,7 @@ const SelectWidget: React.FC<SelectWidgetProps> = ({ widgetKey, phase, isCustomM
         isWalletConnected,
         true,
         ammSelected,
-        isL2
+        isL2 || isPolygon
     ) ? (
         <Checkbox
             label={t(`options.market.widgets.${widgetKey}`)}

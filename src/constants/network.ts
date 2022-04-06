@@ -53,3 +53,5 @@ export const OPTIMISM_OPTIONS = [
         link: 'https://www.optimism.io/',
     },
 ];
+
+export const POLYGON_MUMBAI_ID = 80001;

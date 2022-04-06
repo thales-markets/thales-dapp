@@ -23,7 +23,7 @@ import xyz from 'assets/images/xyz.png';
 import flippening from 'assets/images/flippening.png';
 import burn from 'assets/images/burn.png';
 import { getSynthName } from 'utils/currency';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -36,6 +36,8 @@ type MarketCardMobileProps = {
 export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarkets, exchangeRates }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     return (
         <Wrapper>
             {optionsMarkets.map((market: HistoricalOptionsMarketInfo, index) => {
@@ -132,12 +134,12 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                 {market.customMarket && (
                                     <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                         <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {getIsOVM(networkId)
+                                            {isL2 || isPolygon
                                                 ? t('options.home.market-card.amm-liquidity')
                                                 : t('options.home.market-card.pool-size')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
-                                            {getIsOVM(networkId) ? (
+                                            {isL2 || isPolygon ? (
                                                 <>
                                                     <span className="green">{market.availableLongs}</span> /{' '}
                                                     <span className="red">{market.availableShorts}</span>
@@ -153,12 +155,12 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                 <FlexDivRow style={{ marginBottom: 8 }}>
                                     <FlexDivColumnCentered>
                                         <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {getIsOVM(networkId)
+                                            {isL2 || isPolygon
                                                 ? t('options.home.market-card.amm-liquidity')
                                                 : t('options.home.market-card.pool-size')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
-                                            {getIsOVM(networkId) ? (
+                                            {isL2 || isPolygon ? (
                                                 <>
                                                     <span className="green">{market.availableLongs}</span> /{' '}
                                                     <span className="red">{market.availableShorts}</span>

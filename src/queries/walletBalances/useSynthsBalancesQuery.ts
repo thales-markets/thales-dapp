@@ -3,10 +3,10 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { bytesFormatter, bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 
 import { SYNTHS_MAP, CurrencyKey } from 'constants/currency';
-import { BigNumberish } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { NetworkId } from 'utils/network';
+import { getIsPolygon, NetworkId } from 'utils/network';
 
 const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<any>) => {
     return useQuery<any>(
@@ -20,30 +20,50 @@ const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, opt
                     usdBalance: number;
                 }
             > = {};
+            const isPolygon = getIsPolygon(networkId);
 
-            const [balanceResults, totalBalanceResults] = await Promise.all([
-                (snxJSConnector as any).snxJS?.contracts.SynthUtil.synthsBalances(walletAddress),
-                (snxJSConnector as any).snxJS?.contracts.SynthUtil.totalSynthsInKey(
-                    walletAddress,
-                    bytesFormatter(SYNTHS_MAP.sUSD)
-                ),
-            ]);
+            if (!isPolygon) {
+                const [balanceResults, totalBalanceResults] = await Promise.all([
+                    (snxJSConnector as any).snxJS?.contracts.SynthUtil.synthsBalances(walletAddress),
+                    (snxJSConnector as any).snxJS?.contracts.SynthUtil.totalSynthsInKey(
+                        walletAddress,
+                        bytesFormatter(SYNTHS_MAP.sUSD)
+                    ),
+                ]);
 
-            const [synthsKeys, synthsBalances, synthsUSDBalances] = balanceResults;
+                const [synthsKeys, synthsBalances, synthsUSDBalances] = balanceResults;
 
-            synthsKeys.forEach((key: string, i: string) => {
-                const synthName = parseBytes32String(key) as CurrencyKey;
-                balances[synthName] = {
-                    balance: bigNumberFormatter(synthsBalances[i]),
-                    balanceBN: synthsBalances[i],
-                    usdBalance: bigNumberFormatter(synthsUSDBalances[i]),
+                synthsKeys.forEach((key: string, i: string) => {
+                    const synthName = parseBytes32String(key) as CurrencyKey;
+                    balances[synthName] = {
+                        balance: bigNumberFormatter(synthsBalances[i]),
+                        balanceBN: synthsBalances[i],
+                        usdBalance: bigNumberFormatter(synthsUSDBalances[i]),
+                    };
+                });
+
+                return {
+                    balances: isEmpty(balances) ? 0 : balances,
+                    usdBalance: totalBalanceResults ? bigNumberFormatter(totalBalanceResults) : 0,
                 };
-            });
+            } else {
+                const {
+                    contracts: { SynthsUSD },
+                } = snxJSConnector.snxJS as any;
 
-            return {
-                balances: isEmpty(balances) ? 0 : balances,
-                usdBalance: totalBalanceResults ? bigNumberFormatter(totalBalanceResults) : 0,
-            };
+                const usdBalance = await SynthsUSD.balanceOf(walletAddress);
+
+                return {
+                    balances: {
+                        [SYNTHS_MAP.sUSD]: {
+                            balance: Number(ethers.utils.formatUnits(usdBalance)),
+                            balanceBN: Number(ethers.utils.formatUnits(usdBalance)),
+                            usdBalance: Number(ethers.utils.formatUnits(usdBalance)),
+                        },
+                    },
+                    usdBalance: Number(ethers.utils.formatUnits(usdBalance)),
+                };
+            }
         },
         options
     );

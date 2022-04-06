@@ -88,3 +88,11 @@ export const OP_KOVAN_SUSD = {
     symbol: 'sUSD',
     synth: true,
 };
+
+export const POLYGON_MUMBAI_USDC = {
+    symbol: 'USDC',
+    name: 'USD Coin',
+    address: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',
+    decimals: 18,
+    logoURI: 'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
+};
