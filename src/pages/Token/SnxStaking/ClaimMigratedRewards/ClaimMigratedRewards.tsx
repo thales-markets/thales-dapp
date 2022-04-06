@@ -10,7 +10,7 @@ import { ethers } from 'ethers';
 import { MigratedRetroReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import { refetchMigratedRetroRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
+import { refetchMigratedInvestorsRetroRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
 import {
     StyledInfoIcon,
     ButtonContainer,
@@ -30,9 +30,10 @@ import {
     StakingRewardsLabel,
     GridAction,
 } from '../../gridComponents';
-import useMigratedRetroRewardsQuery from 'queries/token/useMigratedRetroRewardsQuery';
+import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInvestorsRetroRewardsQuery';
 import { DefaultSubmitButton } from 'pages/Options/Market/components';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import styled from 'styled-components';
 
 const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -46,7 +47,7 @@ const ClaimMigratedRewards: React.FC = () => {
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
-    const { unclaimedRetroAirdropContract } = snxJSConnector as any;
+    const { unclaimedInvestorsRetroAirdropContract } = snxJSConnector as any;
 
     const isClaimAvailable =
         migratedRewards &&
@@ -55,8 +56,8 @@ const ClaimMigratedRewards: React.FC = () => {
         !migratedRewards.claimed &&
         !migratedRewards.isClaimPaused;
 
-    const migratedRewardsQuery = useMigratedRetroRewardsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && !!unclaimedRetroAirdropContract,
+    const migratedRewardsQuery = useMigratedInvestorsRetroRewardsQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && !!unclaimedInvestorsRetroAirdropContract,
     });
 
     useEffect(() => {
@@ -66,8 +67,8 @@ const ClaimMigratedRewards: React.FC = () => {
     }, [migratedRewardsQuery.isSuccess, migratedRewardsQuery.data]);
 
     useEffect(() => {
-        const fetchL1Fee = async (unclaimedRetroAirdropContractWithSigner: any, migratedRewards: any) => {
-            const txRequest = await unclaimedRetroAirdropContractWithSigner.populateTransaction.claim(
+        const fetchL1Fee = async (unclaimedInvestorsRetroAirdropContractWithSigner: any, migratedRewards: any) => {
+            const txRequest = await unclaimedInvestorsRetroAirdropContractWithSigner.populateTransaction.claim(
                 migratedRewards.reward.index,
                 migratedRewards.reward.rawBalance,
                 migratedRewards.reward.proof
@@ -78,22 +79,22 @@ const ClaimMigratedRewards: React.FC = () => {
         const fetchGasLimit = async () => {
             if (migratedRewards && migratedRewards.reward) {
                 try {
-                    const unclaimedRetroAirdropContractWithSigner = unclaimedRetroAirdropContract.connect(
+                    const unclaimedInvestorsRetroAirdropContractWithSigner = unclaimedInvestorsRetroAirdropContract.connect(
                         (snxJSConnector as any).signer
                     );
                     if (isL2) {
                         const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            unclaimedRetroAirdropContractWithSigner.estimateGas.claim(
+                            unclaimedInvestorsRetroAirdropContractWithSigner.estimateGas.claim(
                                 migratedRewards.reward.index,
                                 migratedRewards.reward.rawBalance,
                                 migratedRewards.reward.proof
                             ),
-                            fetchL1Fee(unclaimedRetroAirdropContractWithSigner, migratedRewards),
+                            fetchL1Fee(unclaimedInvestorsRetroAirdropContractWithSigner, migratedRewards),
                         ]);
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setL1Fee(l1FeeInWei);
                     } else {
-                        const gasEstimate = await unclaimedRetroAirdropContractWithSigner.estimateGas.claim(
+                        const gasEstimate = await unclaimedInvestorsRetroAirdropContractWithSigner.estimateGas.claim(
                             migratedRewards.reward.index,
                             migratedRewards.reward.rawBalance,
                             migratedRewards.reward.proof
@@ -106,19 +107,19 @@ const ClaimMigratedRewards: React.FC = () => {
                 }
             }
         };
-        if (!isWalletConnected || !isClaimAvailable || !unclaimedRetroAirdropContract) return;
+        if (!isWalletConnected || !isClaimAvailable || !unclaimedInvestorsRetroAirdropContract) return;
         fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable, unclaimedRetroAirdropContract]);
+    }, [isWalletConnected, isClaimAvailable, unclaimedInvestorsRetroAirdropContract]);
 
     const handleClaimOngoingAirdrop = async () => {
         if (isClaimAvailable && migratedRewards && migratedRewards.reward) {
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
-                const unclaimedRetroAirdropContractWithSigner = unclaimedRetroAirdropContract.connect(
+                const unclaimedInvestorsRetroAirdropContractWithSigner = unclaimedInvestorsRetroAirdropContract.connect(
                     (snxJSConnector as any).signer
                 );
-                const tx = (await unclaimedRetroAirdropContractWithSigner.claim(
+                const tx = (await unclaimedInvestorsRetroAirdropContractWithSigner.claim(
                     migratedRewards.reward.index,
                     migratedRewards.reward.rawBalance,
                     migratedRewards.reward.proof,
@@ -128,7 +129,7 @@ const ClaimMigratedRewards: React.FC = () => {
 
                 if (txResult && txResult.transactionHash) {
                     dispatchMarketNotification(t('options.earn.thales-staking.staking-rewards.confirmation-message'));
-                    refetchMigratedRetroRewards(walletAddress, networkId);
+                    refetchMigratedInvestorsRetroRewards(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setMigratedRewards({
                         ...migratedRewards,
@@ -151,18 +152,22 @@ const ClaimMigratedRewards: React.FC = () => {
 
     return (
         <EarnSection
-            orderOnMobile={3}
-            orderOnTablet={3}
-            style={{ gridColumn: 'span 10', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
+            style={{
+                gridColumn: 'span 4',
+                gridRow: 'span 2',
+                padding: 0,
+                border: '0',
+                background: 'transparent',
+            }}
         >
             <SectionHeader>
                 <div>
-                    {t('options.earn.thales-staking.staking-rewards.migrated-rewards.title')}
+                    {t('options.earn.thales-staking.staking-rewards.unclaimed-rewards.title')}
                     <StyledMaterialTooltip
                         arrow={true}
                         title={
                             <Trans
-                                i18nKey="options.earn.thales-staking.staking-rewards.migrated-rewards.info-tooltip"
+                                i18nKey="options.earn.thales-staking.staking-rewards.unclaimed-rewards.info-tooltip"
                                 components={[<span key="1" />, <Tip37Link key="2" />]}
                             />
                         }
@@ -172,14 +177,14 @@ const ClaimMigratedRewards: React.FC = () => {
                     </StyledMaterialTooltip>
                 </div>
             </SectionHeader>
-            <GridContainer>
-                <StakingRewardsItem style={{ gridColumn: 'span 12' }}>
+            <GridContainer style={{ height: '100%' }}>
+                <StyledStakingRewardsItem style={{ gridColumn: 'span 12' }}>
                     <StakingRewardsLabel color="#64D9FE">
-                        {t('options.earn.thales-staking.staking-rewards.migrated-rewards.rewards-label')}
+                        {t('options.earn.thales-staking.staking-rewards.unclaimed-rewards.rewards-label')}
                     </StakingRewardsLabel>
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, balance)}</StakingRewardsContent>
-                </StakingRewardsItem>
-                <GridAction>
+                </StyledStakingRewardsItem>
+                <StyledGridAction>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainer>
                         <DefaultSubmitButton
@@ -216,10 +221,19 @@ const ClaimMigratedRewards: React.FC = () => {
                         message={txErrorMessage}
                         onDismiss={() => setTxErrorMessage(null)}
                     />
-                </GridAction>
+                </StyledGridAction>
             </GridContainer>
         </EarnSection>
     );
 };
+
+const StyledGridAction = styled(GridAction)`
+    padding: 80px 20px 20px 20px;
+`;
+
+const StyledStakingRewardsItem = styled(StakingRewardsItem)`
+    padding-top: 40px;
+    padding-bottom: 40px;
+`;
 
 export default ClaimMigratedRewards;

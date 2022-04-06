@@ -1,42 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDiv, FlexDivRowCentered } from 'theme/common';
-import Migrate from './Migrate';
 import Bridge from './Bridge';
-import Swap from './Swap';
 import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
-import { StyledInfoIcon, StyledMaterialTooltip, Tip20Link } from '../components';
 
 const Migration: React.FC = () => {
     const { t } = useTranslation();
 
     const tabs = [
         {
-            id: 'migrate',
-            name: t(`migration.tabs.migrate-and-bridge`),
-        },
-        {
-            id: 'swap',
-            name: t(`migration.tabs.migrate`),
-        },
-        {
             id: 'bridge',
             name: t(`migration.tabs.bridge`),
         },
-        // {
-        //     id: 'withdraw',
-        //     name: t(`migration.tabs.withdraw`),
-        // },
     ];
     const tabIds = tabs.map((tab) => tab.id);
 
     const location = useLocation();
     const paramAction = queryString.parse(location.search).action;
     const isTabAvailable = paramAction !== null && tabIds.includes(paramAction);
-    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramAction : 'migrate');
+    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramAction : 'bridge');
 
     const optionsTabContent: Array<{
         id: string;
@@ -77,23 +62,7 @@ const Migration: React.FC = () => {
                                 </OptionsTab>
                             ))}
                         </FlexDiv>
-                        {selectedTab === 'migrate' && (
-                            <StyledMaterialTooltip
-                                arrow={true}
-                                title={
-                                    <Trans
-                                        i18nKey="migration.info-tooltip"
-                                        components={[<span key="1" />, <Tip20Link key="2" />]}
-                                    />
-                                }
-                                interactive
-                            >
-                                <StyledInfoIcon />
-                            </StyledMaterialTooltip>
-                        )}
                     </FlexDivRowCentered>
-                    {selectedTab === 'migrate' && <Migrate />}
-                    {selectedTab === 'swap' && <Swap />}
                     {selectedTab === 'bridge' && <Bridge />}
                 </Container>
             </Wrapper>

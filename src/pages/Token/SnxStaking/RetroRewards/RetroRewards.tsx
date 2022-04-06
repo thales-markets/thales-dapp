@@ -18,25 +18,24 @@ import {
     PieChartCenterDiv,
     PieChartCenterText,
     PieChartContainer,
-    SectionContentContainer,
     SectionHeader,
     LearnMore,
     StyledMaterialTooltip,
     ClaimMessage,
     StyledInfoIcon,
-    TooltipLink,
+    SectionContentContainer,
+    Tip37Link,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { LEGACY_THALES_CURRENCY } from 'constants/currency';
+import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
-import { LINKS } from 'constants/links';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import i18n from 'i18n';
-import MigrationInfo from '../../components/MigrationInfo';
 import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { GridContainer } from 'pages/Token/gridComponents';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -158,7 +157,7 @@ const RetroRewards: React.FC = () => {
                 <TooltipContainer borderColor={payload[0].payload.color}>
                     <TooltipTitle color={payload[0].payload.color}>{`${payload[0].name}:`}</TooltipTitle>
                     <TooltipAmount color={payload[0].payload.color}>
-                        {formatCurrencyWithKey(LEGACY_THALES_CURRENCY, payload[0].value)}
+                        {formatCurrencyWithKey(THALES_CURRENCY, payload[0].value)}
                     </TooltipAmount>
                 </TooltipContainer>
             );
@@ -167,7 +166,9 @@ const RetroRewards: React.FC = () => {
     };
 
     return (
-        <RetroRewardsSection>
+        <EarnSection
+            style={{ gridColumn: 'span 6', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
+        >
             <SectionHeader>
                 <div>
                     {t('options.earn.snx-stakers.retro-rewards.title')}
@@ -176,7 +177,7 @@ const RetroRewards: React.FC = () => {
                         title={
                             <Trans
                                 i18nKey="options.earn.snx-stakers.retro-rewards.info-tooltip"
-                                components={[<div key="1" />, <span key="3" />, <EligibilityLink key="2" />]}
+                                components={[<span key="1" />, <Tip37Link key="2" />]}
                             />
                         }
                         interactive
@@ -185,8 +186,8 @@ const RetroRewards: React.FC = () => {
                     </StyledMaterialTooltip>
                 </div>
             </SectionHeader>
-            {!isL2 && (
-                <SectionContentContainer>
+            <GridContainer style={{ gridGap: 0 }}>
+                <StyledSectionContentContainer>
                     <PieChartContainer>
                         <InfoDiv>
                             <InfoLabel>{t('options.earn.snx-stakers.start-time')}</InfoLabel>
@@ -247,7 +248,7 @@ const RetroRewards: React.FC = () => {
                                     fontSize={17}
                                     fontWeight={600}
                                 >
-                                    {LEGACY_THALES_CURRENCY}
+                                    {THALES_CURRENCY}
                                 </GradientText>
                             </FlexDivColumnCentered>
                         </PieChartCenterDiv>
@@ -265,21 +266,19 @@ const RetroRewards: React.FC = () => {
                         <div>
                             <Dot backgroundColor="#5EA0A0" />
                             {t('options.earn.snx-stakers.unlocked')}:{' '}
-                            <span className="bold">
-                                {formatCurrencyWithKey(LEGACY_THALES_CURRENCY, vestingInfo.unlocked)}
-                            </span>
+                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
                         </div>
                         <div>
                             <Dot backgroundColor="#AFC171" />
                             {t('options.earn.snx-stakers.claimed')}:{' '}
                             <span className="bold">
-                                {formatCurrencyWithKey(LEGACY_THALES_CURRENCY, vestingInfo.totalClaimed)}
+                                {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}
                             </span>
                         </div>
                         <div>
                             <Dot backgroundColor="#FFD9BA" />
                             {t('options.earn.snx-stakers.locked')}:{' '}
-                            <span className="bold">{formatCurrencyWithKey(LEGACY_THALES_CURRENCY, locked)}</span>
+                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
                         </div>
                     </AmountsContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
@@ -290,9 +289,9 @@ const RetroRewards: React.FC = () => {
                         >
                             {isClaiming
                                 ? t('options.earn.snx-stakers.claiming-unlocked') +
-                                  ` ${formatCurrencyWithKey(LEGACY_THALES_CURRENCY, vestingInfo.unlocked)}...`
+                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
                                 : t('options.earn.snx-stakers.claim') +
-                                  ` ${formatCurrencyWithKey(LEGACY_THALES_CURRENCY, vestingInfo.unlocked)}`}
+                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
                         </DefaultSubmitButton>
                         <ClaimMessage invisible={!!vestingInfo.initialLocked}>
                             {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
@@ -303,18 +302,18 @@ const RetroRewards: React.FC = () => {
                         message={txErrorMessage}
                         onDismiss={() => setTxErrorMessage(null)}
                     />
-                </SectionContentContainer>
-            )}
-            {isL2 && <MigrationInfo messageKey="retro-unlock" />}
-        </RetroRewardsSection>
+                </StyledSectionContentContainer>
+            </GridContainer>
+        </EarnSection>
     );
 };
 
-const RetroRewardsSection = styled(EarnSection)`
-    grid-column: span 10;
-    min-height: 300px;
+const StyledSectionContentContainer = styled(SectionContentContainer)`
+    grid-column: span 12;
+    background: #04045a;
+    padding: 20px;
     @media (max-width: 767px) {
-        min-height: 200px;
+        padding: 0 20px 20px 20px;
     }
 `;
 
@@ -390,14 +389,5 @@ const TooltipTitle = styled.span<{ color: string }>`
     color: ${(props) => props.color};
     margin-bottom: 10px;
 `;
-
-const EligibilityLink: React.FC = () => {
-    const { t } = useTranslation();
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.RetroUnlockEligibilitySheet}>
-            {t('common.here')}
-        </TooltipLink>
-    );
-};
 
 export default RetroRewards;
