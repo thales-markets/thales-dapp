@@ -1598,7 +1598,7 @@
         "connect-wallet-warning": "In order to enable progress tracking, please connect your Ethereum wallet before starting the game."
     },
     "migration": {
-        "title": "Migration",
+        "title": "Bridge to Optimism",
         "info-tooltip": "<0>During migration, LEGACY THALES is first exchanged to THALES on L1 mainnet, and then bridged to L2 Optimistic mainnet into L2 THALES per </0><1 />.",
         "migrated-rewards-title": "Migrated retro rewards",
         "migration-amount-label": "Amount to migrate",

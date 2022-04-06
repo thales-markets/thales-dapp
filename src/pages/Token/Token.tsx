@@ -35,19 +35,19 @@ const TokenPage: React.FC = () => {
             name: t('options.earn.thales-staking.tab-title'),
             disabled: false,
         },
-    ];
-
-    if (isL2) {
-        tabs.push({
+        {
             id: 'vesting',
             name: t('options.earn.vesting.tab-title'),
             disabled: false,
-        });
-        tabs.push({
+        },
+        {
             id: 'lp-staking',
             name: t('options.earn.lp-staking.tab-title'),
             disabled: false,
-        });
+        },
+    ];
+
+    if (isL2) {
         tabs.push({
             id: 'migrated-rewards',
             name: t('migration.migrated-rewards-title'),
@@ -55,23 +55,13 @@ const TokenPage: React.FC = () => {
         });
     } else {
         tabs.unshift({
-            id: 'retro-rewards',
-            name: t('options.earn.snx-stakers.tab-title'),
-            disabled: false,
-        });
-        tabs.unshift({
             id: 'migration',
             name: t('migration.title'),
             disabled: false,
         });
         tabs.push({
-            id: 'vesting',
-            name: t('options.earn.vesting.tab-title'),
-            disabled: false,
-        });
-        tabs.push({
-            id: 'lp-staking',
-            name: t('options.earn.lp-staking.tab-title'),
+            id: 'retro-rewards',
+            name: t('options.earn.snx-stakers.tab-title'),
             disabled: false,
         });
     }
