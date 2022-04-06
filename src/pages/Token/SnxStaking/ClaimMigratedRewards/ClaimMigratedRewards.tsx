@@ -32,7 +32,6 @@ import {
 } from '../../gridComponents';
 import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInvestorsRetroRewardsQuery';
 import { DefaultSubmitButton } from 'pages/Options/Market/components';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import styled from 'styled-components';
 
 const ClaimMigratedRewards: React.FC = () => {
