@@ -366,7 +366,7 @@
                 "retro-rewards": {
                     "title": "Retro unlock",
                     "not-eligible-message": "You are not eligible for this distribution.",
-                    "learn-more-text": "Rewards are unlocked linearly over 2 years. There is no penalty for claiming currently unlocked rewards.",
+                    "learn-more-text": "Rewards are unlocked linearly. There is no penalty for claiming currently unlocked rewards.",
                     "learn-more": "Learn more",
                     "info-tooltip": "<0>New retro unlock for strategic investors per </0><1 />."
                 },
@@ -486,10 +486,10 @@
                         "info-tooltip": "<0>Unclaimed retro rewards from L1 have been migrated to L2 per </0><1 />."
                     },
                     "unclaimed-rewards": {
-                        "title": "Unclaimed rewards",
-                        "rewards-label": "Unclaimed rewards",
-                        "claimed-message": "You have already claimed unclaimed rewards.",
-                        "info-tooltip": "<0>Unclaimed rewards from L1 per </0><1 />."
+                        "title": "Migrated rewards",
+                        "rewards-label": "Migrated rewards",
+                        "claimed-message": "You have already claimed migrated rewards.",
+                        "info-tooltip": "<0>Unclaimed rewards for strategic investors per </0><1 />."
                     },
                     "info-tooltip": "Unclaimed weekly rewards are forfeit."
                 }

@@ -159,7 +159,6 @@ export const LearnMore = styled.span<{ top: string }>`
     font-size: 14px;
     line-height: 24px;
     cursor: pointer;
-    z-index: 101;
     height: 20px;
     @media (max-width: 767px) {
         top: ${(props) => props.top};
