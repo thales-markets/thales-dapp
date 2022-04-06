@@ -10,6 +10,7 @@ import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
+import useRoyalePasportQuery from 'pages/Royale/Queries/usePassportQuery';
 import { Positions } from 'pages/Royale/Queries/usePositionsQuery';
 import { FooterData } from 'pages/Royale/Queries/useRoyaleFooterQuery';
 import useRoyalePassIdQuery from 'pages/Royale/Queries/useRoyalePassIdQuery';
@@ -73,6 +74,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
 
     const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
     const royalePassId = royalePassIdQuery.isSuccess ? royalePassIdQuery.data : {};
+
+    const royalePassportQuery = useRoyalePasportQuery(walletAddress, networkId, selectedSeason, {
+        enabled: isL2 && isWalletConnected,
+    });
+    const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : {};
+    console.log(royalePassports);
 
     const [allowance, setAllowance] = useState(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);

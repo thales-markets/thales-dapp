@@ -171,6 +171,13 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        RoyalePassport: (walletAddress: string, networkId: NetworkId, season: number) => [
+            'royale',
+            'royalePassport',
+            walletAddress,
+            networkId,
+            season,
+        ],
         Positions: (season: number, networkId: NetworkId) => ['royale', 'positions', season, networkId],
         PlayerPositions: (networkId: NetworkId, season: number, address: string) => [
             'royale',
