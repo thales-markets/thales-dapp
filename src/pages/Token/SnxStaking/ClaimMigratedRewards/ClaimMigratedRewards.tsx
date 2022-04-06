@@ -122,8 +122,7 @@ const ClaimMigratedRewards: React.FC = () => {
                 const tx = (await unclaimedInvestorsRetroAirdropContractWithSigner.claim(
                     migratedRewards.reward.index,
                     migratedRewards.reward.rawBalance,
-                    migratedRewards.reward.proof,
-                    { gasLimit: MAX_L2_GAS_LIMIT }
+                    migratedRewards.reward.proof
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
