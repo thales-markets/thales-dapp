@@ -10,13 +10,16 @@ import ROUTES from 'constants/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
 import { useSelector } from 'react-redux';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useLocation } from 'react-router-dom';
+import { getIsPolygon } from '../../../../utils/network';
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const location = useLocation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isPolygon = getIsPolygon(networkId);
 
     return (
         <Container>
@@ -39,12 +42,14 @@ const DappHeader: React.FC = () => {
                     />
 
                     <Divider />
-                    <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Token ? 'selected' : ''}
-                        href={buildHref(ROUTES.Options.Token)}
-                        iconName="token"
-                        label={t('common.sidebar.earn-label')}
-                    />
+                    {!isPolygon && (
+                        <DappHeaderItem
+                            className={location.pathname === ROUTES.Options.Token ? 'selected' : ''}
+                            href={buildHref(ROUTES.Options.Token)}
+                            iconName="token"
+                            label={t('common.sidebar.earn-label')}
+                        />
+                    )}
                     <DappHeaderItem
                         className={location.pathname.includes(ROUTES.Governance.Home) ? 'selected' : ''}
                         href={buildHref(ROUTES.Governance.Home)}
@@ -53,12 +58,14 @@ const DappHeader: React.FC = () => {
                     />
 
                     <Divider />
-                    <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Royal ? 'selected' : ''}
-                        href={buildHref(ROUTES.Options.Royal)}
-                        iconName="thales-royale"
-                        label={t('common.sidebar.royale-label')}
-                    />
+                    {!isPolygon && (
+                        <DappHeaderItem
+                            className={location.pathname === ROUTES.Options.Royal ? 'selected' : ''}
+                            href={buildHref(ROUTES.Options.Royal)}
+                            iconName="thales-royale"
+                            label={t('common.sidebar.royale-label')}
+                        />
+                    )}
                     <DappHeaderItem
                         className={location.pathname === ROUTES.Options.Game ? 'selected' : '' + ' game'}
                         href={buildHref(ROUTES.Options.Game)}

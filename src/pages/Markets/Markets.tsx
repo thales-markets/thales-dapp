@@ -31,11 +31,13 @@ const Markets: React.FC = () => {
             return openOrdersQuery.data;
         }
     }, [openOrdersQuery]);
+
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
                 ? marketsQuery.data.map((m) => {
                       const apiData = (openOrdersMap as any).get(m.address.toLowerCase());
+
                       return {
                           ...m,
                           openOrders: apiData?.ordersCount ?? 0,
@@ -50,12 +52,13 @@ const Markets: React.FC = () => {
             return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery]);
+    }, [marketsQuery, openOrdersMap]);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
     });
+
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
     const hotMarkets = useMemo(

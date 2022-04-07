@@ -41,6 +41,7 @@ import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
+import { getStableCoinForNetwork } from '../../../../utils/currency';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -146,7 +147,7 @@ const AMM: React.FC = () => {
 
     const sellToken = isBuy ? SynthsUSD.address : isLong ? optionsMarket?.longAddress : optionsMarket?.shortAddress;
     const sellAmount = isBuy ? total : amount;
-    const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
+    const sellTokenCurrencyKey = isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide];
 
     const formatBuySellArguments = () => {
         const marketAddress = optionsMarket?.address;
@@ -625,7 +626,7 @@ const AMM: React.FC = () => {
                 tooltipText={t(
                     !isAmountValid ? 'common.errors.insufficient-balance-wallet' : 'common.errors.max-limit-exceeded',
                     {
-                        currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                        currencyKey: isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide],
                     }
                 )}
             >
@@ -658,13 +659,13 @@ const AMM: React.FC = () => {
                         ? formatCurrency(Number(price) > 0 ? price : basePrice, 4)
                         : '-'
                 }
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={true}
             />
             <Input
                 title={t(`amm.total-${orderSide.value}-label`)}
                 value={isGettingQuote ? '...' : Number(price) > 0 ? formatCurrency(total, 4) : '-'}
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={true}
             />
             <Input
@@ -674,7 +675,10 @@ const AMM: React.FC = () => {
                         ? '...'
                         : Number(price) > 0
                         ? isPotentialReturnAvailable
-                            ? `${formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(potentialReturn) * Number(total))}`
+                            ? `${formatCurrencyWithKey(
+                                  getStableCoinForNetwork(networkId),
+                                  Number(potentialReturn) * Number(total)
+                              )}`
                             : '-'
                         : '-'
                 }

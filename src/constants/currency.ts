@@ -139,6 +139,7 @@ export const CRYPTO_CURRENCY = [
     'UNI',
     'CRV',
     'AAVE',
+    'MATIC',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 

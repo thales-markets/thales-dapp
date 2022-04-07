@@ -825,12 +825,12 @@
                     },
                     "table": {
                         "type-col": "Тип",
-                        "price-col": "ЦЕНА (sUSD)",
+                        "price-col": "ЦЕНА ({{token}})",
                         "amount-col": "СУММА ({{currencyKey}})",
                         "filled-col": "ИСПОЛНЕНО (%)",
                         "return-col": "ПРИБЫЛЬ",
                         "return-col-tooltip": "Потенциальная прибыль, если этот опцион выиграет",
-                        "total-col": "В СУММЕ (sUSD)",
+                        "total-col": "В СУММЕ ({{token}})",
                         "time-remaining-col": "ОСТАВШЕЕСЯ ВРЕМЯ",
                         "cancel-col-tooltip": "Нажмите, чтобы отменить заказ"
                     }
@@ -1140,7 +1140,7 @@
             "ratio": "Соотношение"
         },
         "swap": {
-            "button-text": "Приобрести sUSD",
+            "button-text": "Приобрести {{token}}",
             "select-token": "Выберите токен",
             "enter-amount": "Введите сумму",
             "approve": "Дать разрешение на обмен {{currency}}",

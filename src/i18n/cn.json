@@ -825,12 +825,12 @@
                     },
                     "table": {
                         "type-col": "类型",
-                        "price-col": "价格（sUSD）",
+                        "price-col": "价格({{token}})",
                         "amount-col": "金额（{{currencyKey}}）",
                         "filled-col": "填充（%）",
                         "return-col": "返回",
                         "return-col-tooltip": "如果此选项获胜，则可能返回",
-                        "total-col": "总计（sUSD）",
+                        "total-col": "总计({{token}})",
                         "time-remaining-col": "剩余时间",
                         "cancel-col-tooltip": "单击以取消订单"
                     }
@@ -1140,7 +1140,7 @@
             "ratio": "比率"
         },
         "swap": {
-            "button-text": "获取 sUSD",
+            "button-text": "获取 {{token}}",
             "select-token": "选取代币",
             "enter-amount": "输入数量",
             "approve": "授予交易{{currency}}的权限}",

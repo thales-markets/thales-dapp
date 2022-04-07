@@ -832,12 +832,12 @@
                     },
                     "table": {
                         "type-col": "Type",
-                        "price-col": "PRICE (sUSD)",
+                        "price-col": "PRICE ({{token}})",
                         "amount-col": "AMOUNT ({{currencyKey}})",
                         "filled-col": "FILLED (%)",
                         "return-col": "RETURN",
                         "return-col-tooltip": "Potential return if this option wins",
-                        "total-col": "TOTAL (sUSD)",
+                        "total-col": "TOTAL ({{token}})",
                         "time-remaining-col": "TIME REMAINING",
                         "cancel-col-tooltip": "Click to cancel your order"
                     }
@@ -1135,7 +1135,7 @@
             "ratio": "Ratio"
         },
         "swap": {
-            "button-text": "Get sUSD",
+            "button-text": "Get {{token}}",
             "select-token": "Select a token",
             "enter-amount": "Enter amount",
             "approve": "Give permission to swap {{currency}}",

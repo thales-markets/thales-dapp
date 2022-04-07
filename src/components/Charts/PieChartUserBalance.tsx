@@ -3,7 +3,7 @@ import { PieChart, Pie, Cell } from 'recharts';
 
 import styled from 'styled-components';
 
-import { SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
 
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
@@ -18,7 +18,8 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
 import useOpThalesBalanceQuery from '../../queries/walletBalances/useOpThalesBalanceQuery';
-import { getIsOVM } from '../../utils/network';
+import { getIsOVM, getIsPolygon } from '../../utils/network';
+import { getStableCoinForNetwork } from '../../utils/currency';
 
 const PieChartUserBalance: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -27,6 +28,7 @@ const PieChartUserBalance: React.FC = () => {
     const network = useSelector((state: RootState) => getNetwork(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const [thalesBalance, setThalesBalance] = useState(0);
 
@@ -68,10 +70,12 @@ const PieChartUserBalance: React.FC = () => {
 
     const data =
         sUSDBalance || thalesBalance
-            ? [
-                  { name: 'sUSD', value: sUSDBalance ? sUSDBalance : 4000, color: '#50CE99' },
-                  { name: 'thales', value: thalesBalance ? thalesBalance : 600, color: '#8208FC' },
-              ]
+            ? isPolygon
+                ? [{ name: 'sUSD', value: sUSDBalance ? sUSDBalance : 4000, color: '#50CE99' }]
+                : [
+                      { name: 'sUSD', value: sUSDBalance ? sUSDBalance : 4000, color: '#50CE99' },
+                      { name: 'thales', value: thalesBalance ? thalesBalance : 600, color: '#8208FC' },
+                  ]
             : [{ name: 'No data', value: 1, color: '#8181ac' }];
 
     return (
@@ -79,9 +83,18 @@ const PieChartUserBalance: React.FC = () => {
             {isWalletConnected && (
                 <ChartContainer>
                     <BalanceInfoContainer>
-                        <PartialAmount>{formatCurrencyWithKey('ETH', ethBalance)}</PartialAmount>
-                        <PartialAmount>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</PartialAmount>
-                        <ThalesAmount>{formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}</ThalesAmount>
+                        <PartialAmount>
+                            {formatCurrencyWithKey(
+                                isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : CRYPTO_CURRENCY_MAP.ETH,
+                                ethBalance
+                            )}
+                        </PartialAmount>
+                        <PartialAmount>
+                            {formatCurrencyWithKey(getStableCoinForNetwork(networkId), sUSDBalance)}
+                        </PartialAmount>
+                        {!isPolygon && (
+                            <ThalesAmount>{formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}</ThalesAmount>
+                        )}
                     </BalanceInfoContainer>
                     <PieChart style={{ margin: 'auto' }} width={180} height={180}>
                         <Pie
@@ -99,7 +112,6 @@ const PieChartUserBalance: React.FC = () => {
                                 <Cell key={`cell-${index}`} fill={entry.color} />
                             ))}
                         </Pie>
-                        <h2>Test</h2>
                     </PieChart>
                 </ChartContainer>
             )}

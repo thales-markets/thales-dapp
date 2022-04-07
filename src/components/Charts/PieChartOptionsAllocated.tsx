@@ -15,6 +15,7 @@ import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuer
 import { getCurrencyKeyBalance } from 'utils/balances';
 
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { getStableCoinForNetwork } from '../../utils/currency';
 
 type PieChartProps = {
     claimable?: number;
@@ -47,9 +48,13 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
                 <ChartContainer>
                     <BalanceInfoContainer>
                         <Header>sUSD in Wallet:</Header>
-                        <SubHeader>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</SubHeader>
+                        <SubHeader>
+                            {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), sUSDBalance)}
+                        </SubHeader>
                         <Header>Claimable: </Header>
-                        <SubHeader>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, claimable)}</SubHeader>
+                        <SubHeader>
+                            {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), claimable)}
+                        </SubHeader>
                     </BalanceInfoContainer>
                     <PieChart width={getSize()} height={getSize()}>
                         <Pie

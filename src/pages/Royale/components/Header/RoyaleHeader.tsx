@@ -4,7 +4,7 @@ import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import Swap from 'components/Swap/Swap';
-import { OP_sUSD, OP_KOVAN_SUSD } from 'components/Swap/tokens';
+import { OP_sUSD, OP_KOVAN_SUSD, POLYGON_MUMBAI_USDC } from 'components/Swap/tokens';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';

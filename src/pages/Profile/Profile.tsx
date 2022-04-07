@@ -21,6 +21,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import Loader from '../../components/Loader';
+import { getIsPolygon } from '../../utils/network';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -40,6 +41,7 @@ const Profile: React.FC = () => {
         refetchInterval: false,
     });
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
+    const isPolygon = getIsPolygon(networkId);
 
     const userPositionsQuery = useAllPositions(networkId, walletAddress as any, {
         enabled: isAppReady && walletAddress !== null,
@@ -158,9 +160,11 @@ const Profile: React.FC = () => {
                                 {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.investment, 2)}
                             </Wrapper.Value>
                         </Wrapper.Row>
-                        <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
-                            <ThalesBalance showTitle={true} />
-                        </PriceContainer>
+                        {!isPolygon && (
+                            <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
+                                <ThalesBalance showTitle={true} />
+                            </PriceContainer>
+                        )}
                     </Wrapper>
                 </Container.Right>
             </Container>

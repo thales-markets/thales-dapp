@@ -42,6 +42,7 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import RangeSlider from 'components/RangeSlider';
 import { FlexDivCentered } from 'theme/common';
 import { toast } from 'react-toastify';
+import { getStableCoinForNetwork } from '../../../../../../../../utils/currency';
 
 type LimitOrderProps = {
     optionSide: OptionSide;
@@ -113,7 +114,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
 
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
     const makerAmount = isBuy ? Number(price) * Number(amount) : amount;
-    const makerTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
+    const makerTokenCurrencyKey = isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide];
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const addressToApprove = ONE_INCH_CONTRACTS[networkId] || '';
 
@@ -414,7 +415,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                     setPrice(value);
                 }}
                 valueType={'number'}
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={isSubmitting}
                 borderColor={!isPriceValid ? UI_COLORS.RED : ''}
                 displayTooltip={!isPriceValid}
@@ -481,7 +482,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
             <Input
                 title={t('options.market.trade-options.place-order.total-label-susd')}
                 value={formatCurrency(Number(price) * Number(amount))}
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={true}
             />
             {openApprovalModal && (

@@ -38,6 +38,7 @@ import Slippage from 'pages/AMMTrading/components/AMM/components/Slippage';
 import NetworkFees from 'pages/AMMTrading/components/AMM/components/NetworkFees';
 import Divider from 'pages/AMMTrading/components/AMM/styled-components/Divider';
 import { toast } from 'react-toastify';
+import { getStableCoinForNetwork } from '../../../../../../../../utils/currency';
 type MarketOrderPropsType = {
     optionSide: OptionSide;
 };
@@ -71,7 +72,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
         return [
             {
                 value: 'buy' as OrderSide,
-                label: SYNTHS_MAP.sUSD,
+                label: getStableCoinForNetwork(networkId),
             },
             {
                 value: 'sell' as OrderSide,
@@ -129,7 +130,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
 
     const buyToken = isBuy ? baseToken : SynthsUSD.address;
     const sellToken = isBuy ? SynthsUSD.address : baseToken;
-    const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
+    const sellTokenCurrencyKey = isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide];
     const addressToApprove = ONE_INCH_SWAP_CONTRACTS[networkId] || '';
 
     const baseUrl = get1InchBaseURL(networkId);
@@ -455,7 +456,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
                 valueChange={(value: string | number) => {
                     setAmount(value);
                 }}
-                subValue={isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide]}
+                subValue={isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide]}
                 valueEditDisable={isSubmitting}
                 borderColor={isAmountValid && !insufficientLiquidity ? '' : UI_COLORS.RED}
                 displayTooltip={!isAmountValid}
@@ -464,7 +465,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
                         ? 'common.errors.insufficient-balance-wallet'
                         : 'common.errors.insufficient-liquidity-for-trade',
                     {
-                        currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                        currencyKey: isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide],
                     }
                 )}
             />
@@ -472,7 +473,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
                 title={
                     isBuy
                         ? t('options.market.trade-options.place-order.price-for-label', {
-                              currencyKey: SYNTHS_MAP.sUSD,
+                              currencyKey: getStableCoinForNetwork(networkId),
                           })
                         : t('options.market.trade-options.place-order.price-label', {
                               currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
@@ -484,7 +485,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
                         : `${formatCurrency(Number(price))} (${formatPercentageWithSign(priceImpactPercentage)})`
                 }
                 valueEditDisable={true}
-                subValue={isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD}
+                subValue={isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : getStableCoinForNetwork(networkId)}
             />
             <Input
                 title={
@@ -496,7 +497,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
                 }
                 value={isBuy ? formatCurrency(Number(total)) : `${formatCurrency(Number(price))}`}
                 valueEditDisable={true}
-                subValue={isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD}
+                subValue={isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : getStableCoinForNetwork(networkId)}
             />
             <Slippage
                 fixed={SLIPPAGE_PERCENTAGE}
