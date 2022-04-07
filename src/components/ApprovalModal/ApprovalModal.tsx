@@ -28,7 +28,7 @@ import onboardConnector from 'utils/onboardConnector';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
-    tokenSymbol: string;
+    tokenSymbol: string | undefined;
     isAllowing: boolean;
     onSubmit: (approveAmount: BigNumber) => void;
     onClose: () => void;
