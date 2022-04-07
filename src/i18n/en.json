@@ -1342,8 +1342,8 @@
             }
         },
         "order-book": {
-            "trade-up": "Trade Up Options",
-            "trade-down": "Trade Down Options",
+            "trade-up": "Trade Up Positions",
+            "trade-down": "Trade Down Positions",
             "select-to": "Select to {{type}}",
             "amount-to": "Amount to {{type}}",
             "filters": {
