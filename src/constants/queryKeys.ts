@@ -192,12 +192,7 @@ export const QUERY_KEYS = {
         LatestRoyaleData: () => ['royale', 'latestRoyaleData'],
         LatestRoyaleDataForUserCard: (season: number) => ['royale', 'LatestRoyaleDataForUserCard', season],
         LatestSeason: () => ['royale', 'latestSeason'],
-        RoyaleArenaContract: (season: number, walletAddress: string) => [
-            'royale',
-            'royaleArenaContract',
-            season,
-            walletAddress,
-        ],
+        RoyaleArenaContract: (season: number, tokenId: string) => ['royale', 'royaleArenaContract', season, tokenId],
         RoyaleDataForScoreboard: (season: number) => ['royale', 'royaleDataForScoreboad', season],
         FooterData: (season: number) => ['royale', 'footerData', season],
     },

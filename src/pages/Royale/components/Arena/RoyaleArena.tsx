@@ -27,6 +27,7 @@ import { getIsOVM } from 'utils/network';
 import useInterval from 'hooks/useInterval';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import useRoundsQuery from './queries/useRoundsQuery';
+import useRoyalePasportQuery from 'pages/Royale/Queries/usePassportQuery';
 
 type RoyaleArenaProps = {
     assetPrice: string;
@@ -262,7 +263,13 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
 
     const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
-    const royaleDataQuery = useRoyaleArenaContractQuery(memoizedSelectedSeason, walletAddress ?? '', {
+    const royalePassportQuery = useRoyalePasportQuery(walletAddress ?? '', networkId, selectedSeason, {
+        enabled: isL2 && isWalletConnected,
+    });
+    const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
+    const passportID = royalePassports.length > 0 ? '' + parseInt('' + royalePassports[0].id, 16) : '';
+
+    const royaleDataQuery = useRoyaleArenaContractQuery(selectedSeason, passportID, {
         enabled: isAppReady && isL2,
     });
 

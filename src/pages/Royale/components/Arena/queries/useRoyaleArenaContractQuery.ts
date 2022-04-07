@@ -19,12 +19,12 @@ export type RoyaleArenaData = {
     position: number;
 };
 
-const useRoyaleArenaContractQuery = (season: number, address: string, options?: UseQueryOptions<RoyaleArenaData>) => {
+const useRoyaleArenaContractQuery = (season: number, tokenId: string, options?: UseQueryOptions<RoyaleArenaData>) => {
     return useQuery<RoyaleArenaData>(
-        QUERY_KEYS.Royale.RoyaleArenaContract(season, address),
+        QUERY_KEYS.Royale.RoyaleArenaContract(season, tokenId),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
-            return getFromContract(thalesRoyaleContract, season, address);
+            return getFromContract(thalesRoyaleContract, season, tokenId);
         },
         {
             refetchInterval: 5000,
@@ -36,15 +36,15 @@ const useRoyaleArenaContractQuery = (season: number, address: string, options?: 
 const getFromContract = async (
     RoyaleContract: any,
     season: number,
-    address: string | null
+    tokenId: string | null
 ): Promise<RoyaleArenaData> => {
     const roundInASeason = await RoyaleContract.roundInASeason(season);
     const [
+        isPlayerAlive,
         roundInASeasonStartTime,
         roundInASeasonEndTime,
         roundChoosingLength,
         canCloseRound,
-        isPlayerAlive,
         seasonFinished,
         rewardCollectedPerSeason,
         rounds,
@@ -52,18 +52,19 @@ const getFromContract = async (
         targetPrice,
         position,
     ] = await Promise.all([
+        RoyaleContract.isTokenAliveInASpecificSeason(tokenId, season),
         RoyaleContract.roundInASeasonStartTime(season),
         RoyaleContract.roundInSeasonEndTime(season),
         RoyaleContract.roundChoosingLength(),
         RoyaleContract.canCloseRound(),
-        RoyaleContract.isTokenAliveInASpecificSeason(address, season),
         RoyaleContract.seasonFinished(season),
-        RoyaleContract.rewardCollectedPerSeason(season, address),
+        RoyaleContract.tokenRewardCollectedPerSeason(tokenId),
         RoyaleContract.rounds(),
         RoyaleContract.oracleKeyPerSeason(season),
         RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
-        RoyaleContract.positionInARoundPerSeason(season, address, roundInASeason),
+        RoyaleContract.tokenPositionInARoundPerSeason(tokenId, roundInASeason),
     ]);
+
     return {
         roundChoosingLength: Number(roundChoosingLength),
         roundInASeasonStartTime: new Date(Number(roundInASeasonStartTime) * 1000),

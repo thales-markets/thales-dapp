@@ -85,7 +85,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         enabled: isL2 && isWalletConnected,
     });
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
-    console.log(royalePassports);
 
     const [allowance, setAllowance] = useState(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
