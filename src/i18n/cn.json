@@ -490,7 +490,13 @@
                     "weekly-bonus-rewards": "在基本奖励之上的最高奖励奖励",
                     "amm-label": "AMM",
                     "snx-staking-label": "SNX质押",
-                    "thales-royale-label": "泰勒斯鱿鱼游戏"
+                    "thales-royale-label": "泰勒斯鱿鱼游戏",
+                    "unclaimed-rewards": {
+                        "title": "迁移奖励",
+                        "claimed-message": "您已领取迁移奖励。",
+                        "rewards-label": "迁移奖励",
+                        "info-tooltip": "<0>战略投资者每</0><1 />的无人认领奖励。"
+                    }
                 }
             },
             "vesting": {
@@ -565,7 +571,8 @@
                     "claimMigratedRewards": "没有与此钱包相关的迁移奖励交易。",
                     "lpStake": "没有与此钱包相关的 LP 股权交易。",
                     "lpClaimStakingRewards": "没有 LP 质押奖励与此钱包相关的交易。",
-                    "lpUnstake": "没有与此钱包相关的 LP 取消质押交易。"
+                    "lpUnstake": "没有与此钱包相关的 LP 取消质押交易。",
+                    "claimMigratedRetroRewards": "没有与此钱包相关的迁移复古奖励交易。"
                 },
                 "types": {
                     "claimRetroAirdrop": "领取追溯空投",
@@ -580,7 +587,8 @@
                     "lpUnstake": "LP 解除质押",
                     "lpClaimStakingRewards": "领取 LP 质押奖励",
                     "claimMigratedRewards": "领取迁移奖励",
-                    "lpStake": "LP股权"
+                    "lpStake": "LP股权",
+                    "claimMigratedRetroRewards": "领取迁移的复古奖励"
                 },
                 "filter": {
                     "all": "全部",
@@ -596,7 +604,8 @@
                     "lpClaimStakingRewards": "LP质押奖励",
                     "claimMigratedRewards": "迁移奖励",
                     "lpUnstake": "LP 解除质押",
-                    "lpStake": "LP股权"
+                    "lpStake": "LP股权",
+                    "claimMigratedRetroRewards": "迁移的复古奖励"
                 }
             },
             "overview": {

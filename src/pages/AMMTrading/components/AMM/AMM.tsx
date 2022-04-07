@@ -566,8 +566,37 @@ const AMM: React.FC = () => {
         return UI_COLORS.GREEN;
     };
 
-    const onMaxClick = () => {
-        setAmount(truncToDecimals(tokenBalance));
+    const onMaxClick = async (isBuy: boolean) => {
+        if (isBuy) {
+            const { ammContract } = snxJSConnector as any;
+            const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
+
+            const calcPrice = !price ? basePrice : price;
+
+            if (calcPrice) {
+                let _suggestedAmount = Number(sUSDBalance) / Number(calcPrice);
+                const suggestedAmount = ethers.utils.parseEther(_suggestedAmount.toString());
+
+                const ammQuote = await ammContractWithSigner.buyFromAmmQuote(
+                    optionsMarket.address,
+                    SIDE[optionSide],
+                    suggestedAmount
+                );
+
+                const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
+                const sUSDDifference = bigNumberFormatter(ammQuote) - sUSDBalance;
+
+                _suggestedAmount = Number(sUSDBalance) / Number(ammPrice);
+
+                if (sUSDDifference < 0) {
+                    _suggestedAmount -= Math.abs(Number(sUSDDifference) / Number(ammPrice));
+                }
+
+                setAmount(truncToDecimals(_suggestedAmount));
+            }
+        } else {
+            setAmount(truncToDecimals(tokenBalance));
+        }
     };
 
     const formDisabled = isSubmitting || isAmmTradingDisabled;
@@ -629,11 +658,9 @@ const AMM: React.FC = () => {
                     }
                 )}
             >
-                {!isBuy && (
-                    <MaxButton onClick={onMaxClick} disabled={formDisabled || insufficientLiquidity}>
-                        {t('common.max')}
-                    </MaxButton>
-                )}
+                <MaxButton onClick={() => onMaxClick(isBuy)} disabled={formDisabled || insufficientLiquidity}>
+                    {t('common.max')}
+                </MaxButton>
             </Input>
             <RangeSlider
                 min={1}

@@ -490,7 +490,13 @@
                     "snx-staking-label": "забастовка SNX",
                     "max-reward-label": "Максимальная награда: {{max}}",
                     "amm-label": "АДМ",
-                    "thales-royale-label": "Роял Талес"
+                    "thales-royale-label": "Роял Талес",
+                    "unclaimed-rewards": {
+                        "title": "Перенесенные награды",
+                        "rewards-label": "Перенесенные награды",
+                        "claimed-message": "Вы уже запросили перенесенные вознаграждения.",
+                        "info-tooltip": "<0>Невостребованные вознаграждения для стратегических инвесторов за </0><1 />."
+                    }
                 }
             },
             "vesting": {
@@ -565,7 +571,8 @@
                     "lpClaimStakingRewards": "С этим кошельком не связано никаких транзакций вознаграждения за стейкинг LP.",
                     "lpUnstake": "С этим кошельком не связаны транзакции LP.",
                     "claimMigratedRewards": "Нет перенесенных транзакций с вознаграждениями, связанных с этим кошельком.",
-                    "lpStake": "С этим кошельком не связаны транзакции со ставками LP."
+                    "lpStake": "С этим кошельком не связаны транзакции со ставками LP.",
+                    "claimMigratedRetroRewards": "С этим кошельком не связаны перенесенные ретро-вознаграждения."
                 },
                 "types": {
                     "claimRetroAirdrop": "Востребовать ретро-аирдроп",
@@ -580,7 +587,8 @@
                     "claimMigratedRewards": "Запросить перенесенные награды",
                     "lpClaimStakingRewards": "Получите вознаграждение за стейкинг LP",
                     "lpUnstake": "LP снять ставку",
-                    "lpStake": "ставка LP"
+                    "lpStake": "ставка LP",
+                    "claimMigratedRetroRewards": "Требуйте перенесенных ретро-наград"
                 },
                 "filter": {
                     "all": "Все",
@@ -596,7 +604,8 @@
                     "lpUnstake": "LP снять ставку",
                     "lpClaimStakingRewards": "Награды за стейкинг LP",
                     "claimMigratedRewards": "Перенесенные награды",
-                    "lpStake": "ставка LP"
+                    "lpStake": "ставка LP",
+                    "claimMigratedRetroRewards": "Перенесенные ретро-награды"
                 }
             },
             "overview": {
