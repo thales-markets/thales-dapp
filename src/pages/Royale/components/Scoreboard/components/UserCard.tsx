@@ -480,8 +480,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         <UserLabel
                             style={{
                                 width: window.innerWidth < 400 ? 125 : '',
-                                marginTop: '-25px',
                                 padding: '15px 0px',
+                                whiteSpace: initial,
                             }}
                         >
                             Choose positions for all rounds for selected Royale Passport ID:
