@@ -1263,7 +1263,13 @@
                 "royale-pass-2": "皇家通行证",
                 "choose-colateral": "选择抵押品买入",
                 "default-position-info": "游戏开始前，您可以选择一个适用于所有 6 个回合的默认位置。一旦每轮的定位期开始，您可以再次更改您的位置。",
-                "default-position": "在所有回合中选择默认位置"
+                "default-position": "在所有回合中选择默认位置",
+                "passport-id": "护照ID：",
+                "all-down": "全部关闭",
+                "all-up": "全部向上",
+                "shuffle-positions": "洗牌位置",
+                "passports-in-wallet": "钱包中的皇家护照：",
+                "choose-default-positions": "为选定的 Royale Passport ID 选择所有回合的默认位置："
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

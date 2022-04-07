@@ -466,7 +466,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     </RoyalePassContainer>
                     <RoyalePassportContainer>
                         <FlexDivSpaceBetween>
-                            <UserLabel>Royale Passports in wallet:</UserLabel>
+                            <UserLabel>{t('options.royale.scoreboard.passports-in-wallet')}</UserLabel>
                             <InputWrapper
                                 style={{
                                     maxWidth: 140,
@@ -476,7 +476,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             </InputWrapper>
                         </FlexDivSpaceBetween>
                         <FlexDivSpaceBetween style={{ marginTop: 10 }}>
-                            <UserLabel>Royale Passport ID:</UserLabel>
+                            <UserLabel>{t('options.royale.scoreboard.passport-id')}</UserLabel>
                             <InputWrapper
                                 style={{
                                     maxWidth: 140,
@@ -505,9 +505,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 width: window.innerWidth < 400 ? 125 : '',
                                 padding: '15px 0px',
                                 whiteSpace: 'initial',
+                                textAlign: 'initial',
                             }}
                         >
-                            Choose default positions for all rounds for selected Royale Passport ID:
+                            {t('options.royale.scoreboard.choose-default-positions')}
                             <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
                                 <StyledInfoIcon />
                             </RoyaleTooltip>
@@ -574,7 +575,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 }}
                                 onClick={randomizePositions}
                             >
-                                Shuffle positions
+                                {t('options.royale.scoreboard.shuffle-positions')}
                             </Button>
                             <Button
                                 disabled={isBuyingIn || user.status === UserStatus.RDY}
@@ -597,7 +598,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                     setAllPositionsUp(!allPositionsUp);
                                 }}
                             >
-                                {allPositionsUp ? 'All UP' : 'All DOWN'}
+                                {allPositionsUp
+                                    ? t('options.royale.scoreboard.all-up')
+                                    : t('options.royale.scoreboard.all-down')}
                             </Button>
                         </FlexContainer>
                     </FlexContainer>
