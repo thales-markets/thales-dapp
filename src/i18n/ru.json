@@ -344,7 +344,8 @@
                 "final-asset-price-col": "Текущая цена актива",
                 "status-col": "Положение дел",
                 "maturity-date-col": "Дата погашения",
-                "out-of-liquidity": "Из ликвидности"
+                "out-of-liquidity": "Из ликвидности",
+                "twap-tooltip": "Этот актив использует ценовой поток TWAP из этой пары пулов Uniswap V3:"
             },
             "hot-market-card": {
                 "time-left": "Осталось времени",

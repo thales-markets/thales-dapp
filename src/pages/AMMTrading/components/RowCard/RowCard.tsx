@@ -18,7 +18,7 @@ import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOpt
 
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
+import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import Button from 'components/Button';
@@ -108,7 +108,19 @@ const RowCard: React.FC = () => {
                             />
                         </Container.SubContainer>
                         <Container.SubContainer>
-                            <Container.SubContainer.Value>{marketInfo.currencyKey}</Container.SubContainer.Value>
+                            <Container.SubContainer.Value>
+                                {marketInfo.currencyKey}
+                                {currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.source == 'TWAP' && (
+                                    <Tooltip
+                                        message={t('options.home.markets-table.twap-tooltip')}
+                                        link={currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.link}
+                                        type={'info'}
+                                        iconColor={'var(--primary-color)'}
+                                        container={{ width: '15px' }}
+                                        interactive={true}
+                                    />
+                                )}
+                            </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
                     <Container.ColumnContainer>

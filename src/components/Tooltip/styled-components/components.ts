@@ -19,8 +19,13 @@ export const Text = styled.span<{ margin?: string }>`
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
 `;
 
-export const IconContainer = styled.div<{ alignItems?: string }>`
+export const IconContainer = styled.div<{ alignItems?: string; width?: string }>`
     display: flex;
     align-items: ${(_props) => (_props?.alignItems ? _props.alignItems : 'flex-start')};
     margin: 0px 5px;
+    width: ${(_props) => (_props?.width ? _props.width : '')};
+`;
+
+export const LinkInTooltip = styled.a`
+    color: var(--primary-color);
 `;

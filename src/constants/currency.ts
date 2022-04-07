@@ -347,5 +347,140 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sYFI]: 'yearn-finance',
 };
 
+export const currencyKeyToDataFeedSourceMap = {
+    [CRYPTO_CURRENCY_MAP.KNC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.COMP]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.REN]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LEND]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.SNX]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.BTC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ETH]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.XRP]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.BCH]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LTC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.EOS]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.BNB]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.XTZ]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.XMR]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ADA]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LINK]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.TRX]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.DASH]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ETC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.BAT]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.DAI]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.REP]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.USDC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.USDT]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.VELO]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ZRX]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.THALES]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.SOL]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.CRV]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.UNI]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.AAVE]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LYRA]: {
+        source: 'TWAP',
+        link: 'https://optimistic.etherscan.io/address/0xF334F6104A179207DdaCfb41FA3567FEea8595C2',
+    },
+    [CRYPTO_CURRENCY_MAP.LUNA]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+};
+
 export const sUSD_EXCHANGE_RATE = 1;
 export const SYNTH_DECIMALS = 18;

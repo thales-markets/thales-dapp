@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Tooltip from '@material-ui/core/Tooltip';
-import { Container, Icon, Text, IconContainer } from './styled-components/components';
+import { Container, Icon, Text, IconContainer, LinkInTooltip } from './styled-components/components';
 import { UI_COLORS } from 'constants/ui';
 import { withStyles } from '@material-ui/styles';
 import Fade from '@material-ui/core/Fade';
@@ -10,17 +10,21 @@ type Tooltips = 'info' | 'warning' | 'success';
 
 type CustomTooltipProps = {
     message: string;
+    link?: string;
     type: Tooltips;
     iconColor?: string;
     placement?: string;
     container?: {
         alignItems?: string;
+        width?: string;
     };
+    interactive?: boolean;
 };
 
 type TooltipContentProps = {
     message: string;
     type: Tooltips;
+    link?: string;
 };
 
 type PlacementType =
@@ -68,16 +72,25 @@ const ModifiedTooltip = withStyles(() => ({
     },
 }))(Tooltip);
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ message, type, iconColor, placement, container }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({
+    message,
+    link,
+    type,
+    iconColor,
+    placement,
+    container,
+    interactive,
+}) => {
     return (
         <>
             <ModifiedTooltip
                 TransitionComponent={Fade}
-                title={<TooltipContent message={message} type={type} />}
+                title={<TooltipContent message={message} type={type} link={link} />}
                 placement={placement ? (placement as PlacementType) : 'top'}
                 arrow
+                interactive={interactive ? true : false}
             >
-                <IconContainer alignItems={container?.alignItems}>
+                <IconContainer alignItems={container?.alignItems} width={container?.width}>
                     <Icon className={icons[type].className} color={iconColor} fontSize={'11px'} />
                 </IconContainer>
             </ModifiedTooltip>
@@ -85,11 +98,16 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ message, type, iconColor,
     );
 };
 
-const TooltipContent: React.FC<TooltipContentProps> = ({ message, type }) => {
+const TooltipContent: React.FC<TooltipContentProps> = ({ message, type, link }) => {
     return (
         <Container>
             <Icon className={icons[type].className} color={icons[type].color} fontSize={'11px'} margin={'7px 0'} />
             <Text margin={'0 0 10px 0'}>{message}</Text>
+            {link && (
+                <LinkInTooltip href={link} target="_blank">
+                    {link}
+                </LinkInTooltip>
+            )}
         </Container>
     );
 };
