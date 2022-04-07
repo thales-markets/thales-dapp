@@ -345,7 +345,7 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
         if (thalesRoyaleContract) {
             const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
 
-            const tx = await RoyalContract.claimRewardForSeason(memoizedSelectedSeason);
+            const tx = await RoyalContract.claimRewardForSeason(memoizedSelectedSeason, passportID);
 
             const txResult = await tx.wait();
 
