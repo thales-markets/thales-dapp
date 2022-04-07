@@ -10,7 +10,6 @@ type LatestRoyaleForUserInfo = {
     signUpPeriod: Date;
     canStartNewSeason: boolean;
     buyInAmount: number;
-    currentRound: number;
 };
 
 const useLatestRoyaleForUserInfo = (selectedSeason: number, options?: UseQueryOptions<LatestRoyaleForUserInfo>) => {
@@ -43,7 +42,6 @@ const getFromContract = async (RoyaleContract: any, season: number): Promise<Lat
         canStartNewSeason,
         buyInAmount,
         royaleSeasonCreationTime,
-        currentRound,
     ] = await Promise.all([
         RoyaleContract.seasonStarted(season),
         RoyaleContract.seasonFinished(season),
@@ -51,7 +49,6 @@ const getFromContract = async (RoyaleContract: any, season: number): Promise<Lat
         RoyaleContract.canStartNewSeason(),
         RoyaleContract.buyInAmount(),
         RoyaleContract.seasonCreationTime(season),
-        RoyaleContract.roundInASeason(season),
     ]);
     return {
         season,
@@ -60,7 +57,6 @@ const getFromContract = async (RoyaleContract: any, season: number): Promise<Lat
         seasonStarted,
         seasonFinished,
         buyInAmount: Number(ethers.utils.formatEther(buyInAmount)),
-        currentRound: Number(currentRound),
     };
 };
 
