@@ -21,6 +21,7 @@ const useRoyalePasportQuery = (
                 network: networkId,
                 season,
             });
+
             return passports;
         },
         {

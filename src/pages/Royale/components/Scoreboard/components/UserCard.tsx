@@ -511,6 +511,16 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 {royalePassports.length}
                             </InputWrapper>
                         </FlexDivSpaceBetween>
+                        <FlexDivSpaceBetween style={{ marginTop: 10 }}>
+                            <UserLabel>Royale Passports ID:</UserLabel>
+                            <InputWrapper
+                                style={{
+                                    maxWidth: 140,
+                                }}
+                            >
+                                {royalePassports.length > 0 ? parseInt(royalePassports[0].id as any, 16) : 'N/A'}
+                            </InputWrapper>
+                        </FlexDivSpaceBetween>
                     </RoyalePassportContainer>
                     <FlexContainer
                         style={{
@@ -1003,6 +1013,7 @@ const RoyalePassContainer = styled(FlexContainer)`
 
 const RoyalePassportContainer = styled.div`
     padding-bottom: 25px;
+    margin-bottom: 20px;
     border-bottom: 2px dashed var(--color);
     display: flex;
     flex-direction: column;
