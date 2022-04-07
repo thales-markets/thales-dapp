@@ -11,9 +11,9 @@ const useRoyalePasportQuery = (
     walletAddress: string,
     networkId: NetworkId,
     season: number,
-    options?: UseQueryOptions<RoyalePassport>
+    options?: UseQueryOptions<RoyalePassport[]>
 ) => {
-    return useQuery<RoyalePassport>(
+    return useQuery<RoyalePassport[]>(
         QUERY_KEYS.Royale.RoyalePassport(walletAddress, networkId, season),
         async () => {
             const passports = await thalesData.binaryOptions.thalesRoyalePassportPlayers({
@@ -21,7 +21,6 @@ const useRoyalePasportQuery = (
                 network: networkId,
                 season,
             });
-            console.log(passports);
             return passports;
         },
         {

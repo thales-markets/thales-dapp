@@ -23,7 +23,15 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, LoaderContainer, Text } from 'theme/common';
+import {
+    FlexDiv,
+    FlexDivCentered,
+    FlexDivColumn,
+    FlexDivSpaceBetween,
+    Image,
+    LoaderContainer,
+    Text,
+} from 'theme/common';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
@@ -78,7 +86,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royalePassportQuery = useRoyalePasportQuery(walletAddress, networkId, selectedSeason, {
         enabled: isL2 && isWalletConnected,
     });
-    const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : {};
+    const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
     console.log(royalePassports);
 
     const [allowance, setAllowance] = useState(false);
@@ -492,6 +500,18 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <NftImage src="https://thales-protocol.s3.eu-north-1.amazonaws.com/THALES_ROYALE_PASS.gif" />
                         </ImageWrapper>
                     </RoyalePassContainer>
+                    <RoyalePassportContainer>
+                        <FlexDivSpaceBetween>
+                            <UserLabel>Royale Passports in wallet:</UserLabel>
+                            <InputWrapper
+                                style={{
+                                    maxWidth: 140,
+                                }}
+                            >
+                                {royalePassports.length}
+                            </InputWrapper>
+                        </FlexDivSpaceBetween>
+                    </RoyalePassportContainer>
                     <FlexContainer
                         style={{
                             position: 'relative',
@@ -773,6 +793,7 @@ const UserLabel = styled.p`
     font-style: normal;
     font-size: 20px;
     color: var(--color);
+    white-space: pre;
 `;
 
 const Button = styled.button`
@@ -971,13 +992,24 @@ const StyledInfoIcon = styled(InfoIcon)`
 
 const RoyalePassContainer = styled(FlexContainer)`
     margin: 25px 0px;
-    border-top: 2px dashed var(--color);
     border-bottom: 2px dashed var(--color);
     @media (max-width: 600px) {
         flex-direction: column;
         & > p {
             margin-top: 10px;
         }
+    }
+`;
+
+const RoyalePassportContainer = styled.div`
+    padding-bottom: 25px;
+    border-bottom: 2px dashed var(--color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    & > div {
+        width: 100%;
     }
 `;
 
