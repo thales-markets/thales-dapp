@@ -583,7 +583,7 @@ const AMM: React.FC = () => {
                     suggestedAmount
                 );
 
-                const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
+                const ammPrice = bigNumberFormatter(ammQuote) / Number(_suggestedAmount);
                 const sUSDDifference = bigNumberFormatter(ammQuote) - sUSDBalance;
 
                 _suggestedAmount = Number(sUSDBalance) / Number(ammPrice);
