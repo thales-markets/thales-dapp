@@ -41,7 +41,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
 
             const royalePlayersDataMap = new Map<string, any>(royalePlayersDataResult);
 
-            const data = await thalesData.binaryOptions.thalesRoyalePlayers({
+            const data = await thalesData.binaryOptions.thalesRoyalePassportPlayers({
                 season,
                 network: networkId,
             });
@@ -50,13 +50,13 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
 
             data.map((player: any) => {
                 const isAlive = player.isAlive;
-                const address = player.address;
+                const address = player.owner;
                 const number = player.number;
                 const season = player.season;
                 const deathRound = player.deathRound;
 
-                if (royalePlayersDataMap.has(player.address.toLowerCase())) {
-                    const discordUser: any = royalePlayersDataMap.get(player.address.toLowerCase());
+                if (royalePlayersDataMap.has(player.owner.toLowerCase())) {
+                    const discordUser: any = royalePlayersDataMap.get(player.owner.toLowerCase());
                     const user = {
                         isAlive,
                         address,
