@@ -1,6 +1,6 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
 
-export const binaryOptionsMarketDataContract = {
+export const binaryOptionsMarketManagerContract = {
     addresses: {
         [NetworkId.Mainnet]: '0x5ed98Ebb66A929758C7Fe5Ac60c979aDF0F4040a',
         [NetworkId.Ropsten]: '0x708f748CD51dcFaE38F9f18ae928007F293898ce',
@@ -1103,4 +1103,4 @@ export const binaryOptionsMarketDataContract = {
     ],
 };
 
-export default binaryOptionsMarketDataContract;
+export default binaryOptionsMarketManagerContract;

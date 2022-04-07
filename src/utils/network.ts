@@ -38,8 +38,8 @@ export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
-    name: 'MAINNET',
-    networkId: 1,
+    name: 'OPTIMISM MAINNET',
+    networkId: 10,
 };
 
 export const hasEthereumInjected = () => !!window.ethereum;

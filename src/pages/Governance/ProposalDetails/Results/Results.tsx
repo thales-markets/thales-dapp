@@ -14,7 +14,12 @@ import {
 } from 'pages/Governance/components';
 import { truncateText } from 'utils/formatters/string';
 import styled from 'styled-components';
-import { FIRST_COUNCIL_ELECTIONS_ID, NUMBER_OF_COUNCIL_MEMBERS } from 'constants/governance';
+import {
+    FIRST_COUNCIL_ELECTIONS_ID,
+    NUMBER_OF_COUNCIL_MEMBERS,
+    VOTING_ORACLE_COUNCIL_PROPOSAL_ID,
+    NUMBER_OF_ORACLE_COUNCIL_MEMBERS,
+} from 'constants/governance';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
 import SimpleLoader from 'components/SimpleLoader';
 import { ProposalResults } from 'types/governance';
@@ -62,7 +67,11 @@ const Results: React.FC<ResultsProps> = ({
         return [];
     }, [proposalResults]);
 
-    const numberOfCouncilMemebers = isCouncilResults ? NUMBER_OF_COUNCIL_MEMBERS + 1 : NUMBER_OF_COUNCIL_MEMBERS;
+    const numberOfCouncilMemebers = isCouncilResults
+        ? NUMBER_OF_COUNCIL_MEMBERS + 1
+        : proposalId === VOTING_ORACLE_COUNCIL_PROPOSAL_ID
+        ? NUMBER_OF_ORACLE_COUNCIL_MEMBERS
+        : NUMBER_OF_COUNCIL_MEMBERS;
 
     return (
         <>

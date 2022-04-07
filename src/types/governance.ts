@@ -51,6 +51,7 @@ export type Vote = {
     proposal: string;
     choice: any;
     metadata: any;
+    vp_by_strategy: any;
 };
 
 export interface MappedVotes extends Vote {

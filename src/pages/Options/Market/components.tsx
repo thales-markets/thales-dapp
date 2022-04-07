@@ -377,6 +377,7 @@ const StyledRoyaleTooltip = withStyles(() => ({
         color: 'var(--color-wrapper)',
         width: '20px !important',
         height: '16px !important',
+        marginTop: '-16px !important',
         marginLeft: '0 !important',
         marginBottom: '-14px !important',
         '&::before': {

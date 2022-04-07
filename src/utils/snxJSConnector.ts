@@ -16,6 +16,10 @@ import opThalesContract from './contracts/opThalesContract';
 import lpStakingRewardsContract from './contracts/lpStakingRewardsContract';
 import { synthetix, SynthetixJS, Config } from '@synthetixio/contracts-interface';
 import { gelatoContract } from './contracts/gelatoContract';
+import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
+import bridgeContract from './contracts/bridgeContract';
+import unclaimedRetroAirdropContract from './contracts/unclaimedRetroAirdrop';
+import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -34,10 +38,14 @@ type SnxJSConnector = {
     limitOrderProtocol1inchContract?: ethers.Contract;
     ammContract?: ethers.Contract;
     thalesRoyaleContract?: ethers.Contract;
+    thalesRoyalePassContract?: ethers.Contract;
     thalesExchangerContract?: ethers.Contract;
     opThalesTokenContract?: ethers.Contract;
     lpStakingRewardsContract?: ethers.Contract;
     gelatoContract?: ethers.Contract;
+    bridgeContract?: ethers.Contract;
+    unclaimedRetroAirdropContract?: ethers.Contract;
+    unclaimedInvestorsRetroAirdropContract?: ethers.Contract;
     setContractSettings: (contractSettings: Config) => void;
 };
 
@@ -68,10 +76,20 @@ const snxJSConnector: SnxJSConnector = {
         );
         this.ammContract = conditionalInitializeContract(ammContract, contractSettings);
         this.thalesRoyaleContract = conditionalInitializeContract(thalesRoyaleContract, contractSettings);
+        this.thalesRoyalePassContract = conditionalInitializeContract(thalesRoyalePassContract, contractSettings);
         this.thalesExchangerContract = conditionalInitializeContract(thalesExchangerContract, contractSettings);
         this.opThalesTokenContract = conditionalInitializeContract(opThalesContract, contractSettings);
         this.lpStakingRewardsContract = conditionalInitializeContract(lpStakingRewardsContract, contractSettings);
         this.gelatoContract = conditionalInitializeContract(gelatoContract, contractSettings);
+        this.bridgeContract = conditionalInitializeContract(bridgeContract, contractSettings);
+        this.unclaimedRetroAirdropContract = conditionalInitializeContract(
+            unclaimedRetroAirdropContract,
+            contractSettings
+        );
+        this.unclaimedInvestorsRetroAirdropContract = conditionalInitializeContract(
+            unclaimedInvestorsRetroAirdropContract,
+            contractSettings
+        );
     },
 };
 

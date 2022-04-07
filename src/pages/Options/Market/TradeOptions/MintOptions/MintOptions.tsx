@@ -192,6 +192,7 @@ const MintOptions: React.FC = () => {
         } catch (e) {
             console.log(e);
             setIsAllowing(false);
+            setOpenApprovalModal(false);
         }
     };
     const handleMint = async () => {

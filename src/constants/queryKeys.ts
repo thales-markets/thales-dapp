@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers';
 import { NetworkId } from 'utils/network';
 import { SpaceKey } from './governance';
 
@@ -35,6 +36,10 @@ export const QUERY_KEYS = {
     },
     Medium: {
         Posts: ['medium', 'posts'],
+    },
+    PriceData: {
+        Currency: (currencyKey: string) => ['pricedata', currencyKey],
+        Latest: (currencyKey: string) => ['latest', 'price', currencyKey],
     },
     Network: {
         EthGasPrice: ['network', 'ethGasPrice'],
@@ -87,6 +92,14 @@ export const QUERY_KEYS = {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
         Orders: (walletAddress: string, networkId: NetworkId) => ['user', 'orders', walletAddress, networkId],
         Assets: (walletAddress: string, networkId: NetworkId) => ['user', 'assets', walletAddress, networkId],
+        Data: (walletAddress: string, networkId: NetworkId) => ['user', 'transactions', walletAddress, networkId],
+        AllPositions: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'allPositions',
+            walletAddress,
+            networkId,
+        ],
+        EthBalance: (walletAddress: string) => ['user', 'ethBalance', walletAddress],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
         DisplayNames: () => ['user', 'displayNames'],
         TwitterAccount: (walletAddress: string) => ['user', 'twitterAccount', walletAddress],
@@ -124,9 +137,15 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        MigratedRewards: (walletAddress: string, networkId: NetworkId) => [
+        MigratedRetroRewards: (walletAddress: string, networkId: NetworkId) => [
             'token',
-            'migratedRewards',
+            'migratedRetroRewards',
+            walletAddress,
+            networkId,
+        ],
+        MigratedInvestorsRetroRewards: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'migratedInvestorsRetroRewards',
             walletAddress,
             networkId,
         ],
@@ -141,7 +160,7 @@ export const QUERY_KEYS = {
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
-        Quote: (networkId: NetworkId) => ['swap', 'quote', networkId],
+        Quote: (networkId: NetworkId, amount: BigNumber) => ['swap', 'quote', networkId, amount],
         Approve: (networkId: NetworkId) => ['swap', 'approve', networkId],
         Swap: (networkId: NetworkId) => ['swap', 'swap', networkId],
     },
@@ -151,7 +170,14 @@ export const QUERY_KEYS = {
         Players: () => ['royale', 'players'],
         Rounds: (networkId: NetworkId, season?: number) => ['royale', 'rounds', networkId, season],
         Seasons: (networkId: NetworkId) => ['royale', 'Seasons', networkId],
-        Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
+        RoyalePass: (walletAddress: string) => ['royale', 'royalePassData', walletAddress],
+        RoyalePassId: (walletAddress: string, networkId: NetworkId) => [
+            'royale',
+            'royalePassIdData',
+            walletAddress,
+            networkId,
+        ],
+        Positions: (season: number, networkId: NetworkId) => ['royale', 'positions', season, networkId],
         PlayerPositions: (networkId: NetworkId, season: number, address: string) => [
             'royale',
             'positions',
@@ -161,6 +187,7 @@ export const QUERY_KEYS = {
         ],
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
         EthPrice: () => ['royale', 'ethPrice'],
+        SnxPrice: () => ['royale', 'snxPrice'],
         LatestRoyaleData: () => ['royale', 'latestRoyaleData'],
         LatestRoyaleDataForUserCard: (season: number) => ['royale', 'LatestRoyaleDataForUserCard', season],
         LatestSeason: () => ['royale', 'latestSeason'],

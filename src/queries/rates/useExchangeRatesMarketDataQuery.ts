@@ -17,7 +17,7 @@ const useExchangeRatesMarketDataQuery = (
     return useQuery<Rates>(
         QUERY_KEYS.Rates.ExchangeRatesMarketData(networkId),
         async () => {
-            const filteredMarkets = uniqBy(markets, (market) => market.address).map((market) => ({
+            const filteredMarkets = uniqBy(markets, (market) => market.currencyKey).map((market) => ({
                 currencyKey: market.currencyKey,
                 address: market.address,
             }));
@@ -37,7 +37,7 @@ const useExchangeRatesMarketDataQuery = (
             return exchangeRates;
         },
         {
-            refetchInterval: 5000,
+            refetchInterval: 60 * 1000,
             ...options,
         }
     );
