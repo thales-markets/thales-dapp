@@ -148,7 +148,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [walletAddress]);
 
     useEffect(() => {
-        if (user && user.defaultPositions) {
+        if (user && user.defaultPositions && user.status !== UserStatus.NOTSIGNED) {
             setDefaultPositions(user.defaultPositions);
         }
     }, [walletAddress, user]);
@@ -209,6 +209,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             console.log('failed: ', e);
             setIsAllowing(false);
         }
+    };
+
+    const randomizePositions = () => {
+        const positions = [];
+        for (let i = 0; i < 6; i++) {
+            positions.push(Math.round(Math.random()) === 0 ? 1 : 2);
+        }
+        setDefaultPositions(positions);
+    };
+
+    const switchSinglePosition = (key: number) => {
+        const positions = defaultPositions;
+        positions[key] === 1 ? (positions[key] = 2) : (positions[key] = 1);
+        setDefaultPositions(positions);
     };
 
     const getFooter = (user: User | undefined, royaleData: any) => {
@@ -493,7 +507,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 whiteSpace: 'initial',
                             }}
                         >
-                            Choose positions for all rounds for selected Royale Passport ID:
+                            Choose default positions for all rounds for selected Royale Passport ID:
                             <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
                                 <StyledInfoIcon />
                             </RoyaleTooltip>
@@ -503,21 +517,28 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 <>
                                     <SupText>{key + 1}.</SupText>
                                     <PositionButton
-                                        currentRound={(royaleData as any).currentRound === key + 1}
-                                        disabled={(royaleData as any).signUpPeriod < new Date()}
+                                        currentRound={
+                                            (royaleData as any).currentRound === key + 1 &&
+                                            !(royaleData as any).seasonFinished
+                                        }
+                                        disabled={
+                                            isBuyingIn ||
+                                            user.status === UserStatus.RDY ||
+                                            (royaleData as any).signUpPeriod < new Date()
+                                        }
                                         key={key}
-                                        long={roundPosition === 2}
-                                        onClick={() => {
-                                            const positions = defaultPositions;
-                                            positions[key] === 1 ? (positions[key] = 2) : (positions[key] = 1);
-                                            setDefaultPositions(positions);
-                                        }}
+                                        long={Number(roundPosition) === 2}
+                                        onClick={() => switchSinglePosition(key)}
                                     >
-                                        {roundPosition === 2 ? (
+                                        {Number(roundPosition) === 2 ? (
                                             '△'
                                         ) : (
                                             <Circle
-                                                currentRound={(royaleData as any).currentRound === key + 1}
+                                                key={key + 'k'}
+                                                currentRound={
+                                                    (royaleData as any).currentRound === key + 1 &&
+                                                    !(royaleData as any).seasonFinished
+                                                }
                                                 disabled={(royaleData as any).signUpPeriod < new Date()}
                                             />
                                         )}
@@ -525,37 +546,49 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 </>
                             ))}
                         </FlexContainer>
-                        <FlexContainer style={{ padding: '15px 0px', width: '100%' }}>
+                        <FlexContainer
+                            style={{
+                                padding: '15px 0px',
+                                width: '100%',
+                                display:
+                                    user.status === UserStatus.RDY ||
+                                    (user.status === UserStatus.NOTSIGNED &&
+                                        (royaleData as any).signUpPeriod < new Date()) ||
+                                    !isWalletConnected
+                                        ? 'none'
+                                        : '',
+                            }}
+                        >
                             <Button
+                                disabled={isBuyingIn || user.status === UserStatus.RDY}
                                 style={{
                                     width: 191,
                                     display:
+                                        user.status === UserStatus.RDY ||
                                         (user.status === UserStatus.NOTSIGNED &&
                                             (royaleData as any).signUpPeriod < new Date()) ||
                                         !isWalletConnected
                                             ? 'none'
                                             : '',
+                                    cursor: isBuyingIn || user.status === UserStatus.RDY ? 'not-allowed' : '',
                                 }}
-                                onClick={() => {
-                                    const positions = [];
-                                    for (let i = 0; i < 6; i++) {
-                                        positions.push(Math.round(Math.random()) === 0 ? 1 : 2);
-                                    }
-                                    setDefaultPositions(positions);
-                                }}
+                                onClick={randomizePositions}
                             >
                                 Shuffle positions
                             </Button>
                             <Button
+                                disabled={isBuyingIn || user.status === UserStatus.RDY}
                                 style={{
                                     width: 191,
                                     justifyContent: 'center',
                                     display:
+                                        user.status === UserStatus.RDY ||
                                         (user.status === UserStatus.NOTSIGNED &&
                                             (royaleData as any).signUpPeriod < new Date()) ||
                                         !isWalletConnected
                                             ? 'none'
                                             : '',
+                                    cursor: isBuyingIn || user.status === UserStatus.RDY ? 'not-allowed' : '',
                                 }}
                                 onClick={() => {
                                     allPositionsUp
