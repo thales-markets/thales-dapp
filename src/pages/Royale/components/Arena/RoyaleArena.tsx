@@ -40,6 +40,7 @@ type RoyaleArenaProps = {
 
 const renderRounds = (
     royaleData: RoyaleArenaData,
+    tokenId: string,
     timeLeftForPositioning: Date | null,
     timeLeftInRound: Date | null,
     selectedSeason: number,
@@ -77,7 +78,7 @@ const renderRounds = (
         if (thalesRoyaleContract) {
             const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
 
-            const tx = await RoyalContract.takeAPosition(BigNumber.from(option));
+            const tx = await RoyalContract.takeAPosition(tokenId, BigNumber.from(option));
 
             const txResult = await tx.wait();
 
@@ -386,6 +387,7 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                         {royaleData ? (
                             renderRounds(
                                 royaleData,
+                                passportID,
                                 timeLeftForPositioning,
                                 timeLeftInRound,
                                 memoizedSelectedSeason,
