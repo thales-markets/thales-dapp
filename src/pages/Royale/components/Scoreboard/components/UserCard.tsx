@@ -148,10 +148,10 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [walletAddress]);
 
     useEffect(() => {
-        if (royalePassports) {
-            // setDefaultPositions(royalePassports[0].defaultPositions);
+        if (user && user.defaultPositions) {
+            setDefaultPositions(user.defaultPositions);
         }
-    }, [walletAddress, royalePassports]);
+    }, [walletAddress, user]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
@@ -475,12 +475,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <FlexContainer
                         style={{
                             position: 'relative',
-                            // display:
-                            //     (user.status === UserStatus.NOTSIGNED &&
-                            //         (royaleData as any).signUpPeriod < new Date()) ||
-                            //     !isWalletConnected
-                            //         ? 'none'
-                            //         : '',
+                            display:
+                                (user.status === UserStatus.NOTSIGNED &&
+                                    (royaleData as any).signUpPeriod < new Date()) ||
+                                !isWalletConnected
+                                    ? 'none'
+                                    : '',
                             borderBottom: '2px dashed var(--color)',
                             margin: 'margin: 0 0 7px 0',
                             flexDirection: 'column',
@@ -1008,7 +1008,7 @@ const PositionButton = styled.button<{ long?: boolean; currentRound?: boolean }>
     background: ${(props) => (props.long ? '#59CDA3' : '#8e1d38')};
     border: 3px solid #e5e5e5;
     box-sizing: border-box;
-    box-shadow: ${(props) => (props.currentRound ? 'inset 0px 4px 30px #137B9B' : '')};
+    box-shadow: ${(props) => (props.currentRound && props.long ? 'inset 0px 4px 30px #137B9B' : '')};
     color: #e5e5e5;
     font-size: ${(props) => (props.currentRound ? '45px' : '30px')};
     cursor: pointer;
