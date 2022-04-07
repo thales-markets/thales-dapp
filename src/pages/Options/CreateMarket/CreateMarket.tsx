@@ -9,7 +9,14 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
-import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei, isNetworkSupported } from 'utils/network';
+import {
+    checkAllowance,
+    formatGasLimit,
+    getIsOVM,
+    getIsPolygon,
+    getL1FeeInWei,
+    isNetworkSupported,
+} from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -119,6 +126,7 @@ export const CreateMarket: React.FC = () => {
         const [l1Fee, setL1Fee] = useState<number | null>(null);
         const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
         const isL2 = getIsOVM(networkId);
+        const isPolygon = getIsPolygon(networkId);
 
         const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
@@ -212,7 +220,7 @@ export const CreateMarket: React.FC = () => {
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
                 if (txResult && txResult.events) {
-                    const rawData = txResult.events[txResult.events?.length - 1];
+                    const rawData = txResult.events[txResult.events?.length - (isPolygon ? 2 : 1)];
                     if (rawData && rawData.decode) {
                         const goodData = rawData.decode(rawData.data);
                         setMarket(goodData.market);
