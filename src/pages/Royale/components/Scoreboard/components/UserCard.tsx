@@ -463,7 +463,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             </InputWrapper>
                         </FlexDivSpaceBetween>
                         <FlexDivSpaceBetween style={{ marginTop: 10 }}>
-                            <UserLabel>Royale Passports ID:</UserLabel>
+                            <UserLabel>Royale Passport ID:</UserLabel>
                             <InputWrapper
                                 style={{
                                     maxWidth: 140,
@@ -491,7 +491,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             style={{
                                 width: window.innerWidth < 400 ? 125 : '',
                                 padding: '15px 0px',
-                                whiteSpace: initial,
+                                whiteSpace: 'initial',
                             }}
                         >
                             Choose positions for all rounds for selected Royale Passport ID:

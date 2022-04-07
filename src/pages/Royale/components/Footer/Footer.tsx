@@ -49,6 +49,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
 
     useEffect(() => {
         if (royaleData) {
+            console.log(royaleData);
             if (selectedPage === 'royale') {
                 if (royaleData.round > 0) {
                     history.push({

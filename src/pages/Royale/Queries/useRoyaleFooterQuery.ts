@@ -39,9 +39,10 @@ const getFromContract = async (RoyaleContract: any, selectedSeason: number): Pro
         RoyaleContract.oracleKeyPerSeason(season),
     ]);
 
-    const totalPlayers = await RoyaleContract.signedUpPlayersCount(season);
+    const totalPlayers = await RoyaleContract.mintedTokensCount(season);
+
     const totalPlayersPerRoundPerSeason =
-        Number(round) > 1 ? await RoyaleContract.totalPlayersPerRoundPerSeason(season, round) : totalPlayers;
+        Number(round) > 1 ? await RoyaleContract.totalTokensPerRoundPerSeason(season, round) : totalPlayers;
 
     let playersAlive = '';
 

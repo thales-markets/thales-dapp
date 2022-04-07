@@ -56,7 +56,7 @@ const getFromContract = async (
         RoyaleContract.roundInSeasonEndTime(season),
         RoyaleContract.roundChoosingLength(),
         RoyaleContract.canCloseRound(),
-        RoyaleContract.isPlayerAliveInASpecificSeason(address, season),
+        RoyaleContract.isTokenAliveInASpecificSeason(address, season),
         RoyaleContract.seasonFinished(season),
         RoyaleContract.rewardCollectedPerSeason(season, address),
         RoyaleContract.rounds(),
