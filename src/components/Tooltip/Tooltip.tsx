@@ -98,13 +98,18 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
     );
 };
 
+const onLinkClickEvent = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    return false;
+};
+
 const TooltipContent: React.FC<TooltipContentProps> = ({ message, type, link }) => {
     return (
         <Container>
             <Icon className={icons[type].className} color={icons[type].color} fontSize={'11px'} margin={'7px 0'} />
             <Text margin={'0 0 10px 0'}>{message}</Text>
             {link && (
-                <LinkInTooltip href={link} target="_blank">
+                <LinkInTooltip href={link} target="_blank" onClick={onLinkClickEvent}>
                     {link}
                 </LinkInTooltip>
             )}
