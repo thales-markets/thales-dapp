@@ -141,7 +141,7 @@ const RowCard: React.FC = () => {
                                 {t('options.home.market-card.strike-price')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
-                                {formatCurrencyWithSign(USD_SIGN, marketInfo.strikePrice, 2)}
+                                {formatCurrencyWithSign(USD_SIGN, marketInfo.strikePrice)}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
@@ -157,8 +157,8 @@ const RowCard: React.FC = () => {
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
                                 {marketInfo?.phase == 'maturity'
-                                    ? formatCurrencyWithSign(USD_SIGN, marketInfo.finalPrice, 2)
-                                    : formatCurrencyWithSign(USD_SIGN, marketInfo.currentPrice, 2)}
+                                    ? formatCurrencyWithSign(USD_SIGN, marketInfo.finalPrice)
+                                    : formatCurrencyWithSign(USD_SIGN, marketInfo.currentPrice)}
                                 {}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
