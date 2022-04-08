@@ -162,14 +162,14 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             {
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
-                accessor: (row: any) => formatCurrencyWithSign(USD_SIGN, row?.strikePrice, 2),
-                // accessor: 'strikePrice',
-                // Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2),
+                accessor: 'strikePrice',
+                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value),
             },
             {
+                id: 'currentPrice',
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
-                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2),
+                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value),
             },
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),
