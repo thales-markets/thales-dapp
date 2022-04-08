@@ -22,6 +22,7 @@ export const ONE_INCH_CONTRACTS: Record<NetworkId, string | null> = {
     42: '',
     69: '',
     80001: '',
+    137: '0xb707d89D29c189421163515c59E42147371D6857',
 };
 
 export const ONE_INCH_SWAP_CONTRACTS: Record<NetworkId, string | null> = {
@@ -31,6 +32,7 @@ export const ONE_INCH_SWAP_CONTRACTS: Record<NetworkId, string | null> = {
     42: '',
     69: '',
     80001: '',
+    137: '0x1111111254fb6c44bAC0beD2854e76F90643097d',
 };
 
 export const ONE_INCH_SWAP_APPROVE_ALLOWANCE_URL = 'approve/allowance';

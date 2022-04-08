@@ -1,5 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_MUMBAI_ID } from '../../constants/network';
+import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const thalesContract = {
     addresses: {
@@ -12,6 +12,7 @@ export const thalesContract = {
         [NetworkId['Mainnet-Ovm']]: '0x217D47011b23BB961eB6D93cA9945B7501a5BB11',
         [NetworkId['Kovan-Ovm']]: '0xf584fF99F97B5ABB1872af1AA7924Fedf3e1b53d',
         [POLYGON_MUMBAI_ID]: 'TBD',
+        [POLYGON_ID]: 'TBD',
     },
     abi: [
         {

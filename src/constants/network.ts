@@ -55,3 +55,4 @@ export const OPTIMISM_OPTIONS = [
 ];
 
 export const POLYGON_MUMBAI_ID = 80001;
+export const POLYGON_ID = 137;

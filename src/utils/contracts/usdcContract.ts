@@ -1,5 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_MUMBAI_ID } from '../../constants/network';
+import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const erc20Contract = {
     addresses: {
@@ -12,6 +12,7 @@ export const erc20Contract = {
         [NetworkId['Mainnet-Ovm']]: 'TBD',
         [NetworkId['Kovan-Ovm']]: 'TBD',
         [POLYGON_MUMBAI_ID]: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',
+        [POLYGON_ID]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
     },
     abi: [
         { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },

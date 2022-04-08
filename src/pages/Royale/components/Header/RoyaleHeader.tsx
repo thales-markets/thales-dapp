@@ -4,7 +4,7 @@ import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import Swap from 'components/Swap/Swap';
-import { OP_sUSD, OP_KOVAN_SUSD, POLYGON_MUMBAI_USDC } from 'components/Swap/tokens';
+import { OP_sUSD, OP_KOVAN_SUSD, POLYGON_USDC } from 'components/Swap/tokens';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
@@ -83,7 +83,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
         enabled: (isL2 || isPolygon) && isWalletConnected,
     });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
-    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : isPolygon ? POLYGON_MUMBAI_USDC : '';
+    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : isPolygon ? POLYGON_USDC : '';
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,

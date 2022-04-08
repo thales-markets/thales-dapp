@@ -5,7 +5,7 @@ import { AlertMessageTypeEnum } from 'components/AlertMessage/AlertMessage';
 import ApprovalModal from 'components/ApprovalModal';
 import SimpleLoader from 'components/SimpleLoader';
 import Swap from 'components/Swap';
-import { OP_KOVAN_SUSD, OP_sUSD, POLYGON_MUMBAI_USDC } from 'components/Swap/tokens';
+import { OP_KOVAN_SUSD, OP_sUSD, POLYGON_USDC } from 'components/Swap/tokens';
 import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
@@ -95,7 +95,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             : PositionsEnum.UP
     );
 
-    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : isPolygon ? POLYGON_MUMBAI_USDC : '';
+    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : isPolygon ? POLYGON_USDC : '';
 
     const [selectedBuyInCollateral, setSelectedBuyInCollateral] = useState(BuyInCollateralEnum.PASS);
     const [showSelectBuyInDropdown, setShowSelectBuyInDropdown] = useState(false);

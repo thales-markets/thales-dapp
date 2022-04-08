@@ -1,5 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_MUMBAI_ID } from '../../constants/network';
+import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const binaryOptionsMarketManagerContract = {
     addresses: {
@@ -12,6 +12,7 @@ export const binaryOptionsMarketManagerContract = {
         [NetworkId['Mainnet-Ovm']]: '0xBE086E0A2c588Ad64C8530048cE4356190D6a6F3',
         [NetworkId['Kovan-Ovm']]: '0x6382660BF24f5e7BeC43a7D47591F823488FDB8D',
         [POLYGON_MUMBAI_ID]: '0x924364736B2e1c3d84656591a84bFA4aF1dc1291',
+        [POLYGON_ID]: '0x85f1B57A1D3Ac7605de3Df8AdA056b3dB9676eCE',
     },
     abi: [
         {

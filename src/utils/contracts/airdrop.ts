@@ -1,5 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_MUMBAI_ID } from '../../constants/network';
+import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const airdrop = {
     addresses: {
@@ -12,6 +12,7 @@ export const airdrop = {
         [NetworkId['Mainnet-Ovm']]: '0x42B6e9b5Bb96a02E02e651d3104Fc3546E1313F2',
         [NetworkId['Kovan-Ovm']]: '0xA84062253E6FBC0c03Ab100A7953Ebe88BE86415',
         [POLYGON_MUMBAI_ID]: 'TBD',
+        [POLYGON_ID]: 'TBD',
     },
     abi: [
         {

@@ -19,7 +19,7 @@ import { gelatoContract } from './contracts/gelatoContract';
 import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
 import bridgeContract from './contracts/bridgeContract';
 import usdcContract from './contracts/usdcContract';
-import { POLYGON_MUMBAI_ID } from '../constants/network';
+import { getIsPolygon } from './network';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -53,7 +53,7 @@ const snxJSConnector: SnxJSConnector = {
 
     setContractSettings: function (contractSettings: Config) {
         this.initialized = true;
-        if (contractSettings.networkId !== POLYGON_MUMBAI_ID) {
+        if (!getIsPolygon(contractSettings.networkId || 10)) {
             this.snxJS = synthetix(contractSettings);
         } else {
             // @ts-ignore

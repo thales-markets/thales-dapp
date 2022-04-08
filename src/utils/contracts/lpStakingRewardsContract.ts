@@ -1,5 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_MUMBAI_ID } from '../../constants/network';
+import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const lpStakingRewardsContract = {
     addresses: {
@@ -12,6 +12,7 @@ export const lpStakingRewardsContract = {
         [NetworkId['Mainnet-Ovm']]: '0x31a20E5b7b1b067705419D57Ab4F72E81cC1F6Bf',
         [NetworkId['Kovan-Ovm']]: 'TBD',
         [POLYGON_MUMBAI_ID]: 'TBD',
+        [POLYGON_ID]: 'TBD',
     },
     abi: [
         {

@@ -6,7 +6,7 @@ import { BigNumber, ethers } from 'ethers';
 import { serializeTransaction, UnsignedTransaction } from 'ethers/lib/utils';
 import snxJSConnector from './snxJSConnector';
 
-export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001;
+export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137;
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -20,6 +20,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     10: 'OPTIMISTIC',
     69: 'KOVAN-OPTIMISTIC',
     80001: 'POLYGON-MUMBAI',
+    137: 'POLYGON-MAINNET',
 };
 
 export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
@@ -29,6 +30,7 @@ export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     10: 'OPTIMISM-MAINNET',
     69: 'OPTIMISM-KOVAN',
     80001: 'POLYGON-MUMBAI',
+    137: 'POLYGON-MAINNET',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
@@ -37,7 +39,8 @@ export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISM MAINNET',
     69: 'OPTIMISM KOVAN',
-    80001: 'POLYGON-MUMBAI',
+    80001: 'POLYGON MUMBAI',
+    137: 'POLYGON',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
@@ -94,7 +97,7 @@ export const isNetworkSupported = (networkId: NetworkId): boolean => {
 
 export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(networkId);
 
-export const getIsPolygon = (networkId: number): boolean => !!~[80001].indexOf(networkId);
+export const getIsPolygon = (networkId: number): boolean => !!~[137, 80001].indexOf(networkId);
 
 export const formatGwei = (wei: number) => wei / GWEI_UNIT;
 
