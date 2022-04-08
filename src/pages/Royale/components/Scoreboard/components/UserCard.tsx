@@ -562,6 +562,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         >
                             <Button
                                 disabled={isBuyingIn || user.status === UserStatus.RDY}
+                                className={isBuyingIn || user.status === UserStatus.RDY ? 'disabled' : ''}
                                 style={{
                                     width: 191,
                                     display:
@@ -578,6 +579,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 {t('options.royale.scoreboard.shuffle-positions')}
                             </Button>
                             <Button
+                                className={isBuyingIn || user.status === UserStatus.RDY ? 'disabled' : ''}
                                 disabled={isBuyingIn || user.status === UserStatus.RDY}
                                 style={{
                                     width: 191,
