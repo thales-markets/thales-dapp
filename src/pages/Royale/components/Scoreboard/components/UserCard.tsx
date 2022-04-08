@@ -489,12 +489,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <FlexContainer
                         style={{
                             position: 'relative',
-                            // display:
-                            //     (user.status === UserStatus.NOTSIGNED &&
-                            //         (royaleData as any).signUpPeriod < new Date()) ||
-                            //     !isWalletConnected
-                            //         ? 'none'
-                            //         : '',
+                            display:
+                                (user.status === UserStatus.NOTSIGNED &&
+                                    (royaleData as any).signUpPeriod < new Date()) ||
+                                !isWalletConnected
+                                    ? 'none'
+                                    : '',
                             borderBottom: '2px dashed var(--color)',
                             margin: 'margin: 0 0 7px 0',
                             flexDirection: 'column',
