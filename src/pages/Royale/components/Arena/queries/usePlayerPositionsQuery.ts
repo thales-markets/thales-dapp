@@ -39,3 +39,11 @@ const usePlayerPositionsQuery = (
 };
 
 export default usePlayerPositionsQuery;
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
+    );
+};
+
+export default usePlayerPositionsQuery;
