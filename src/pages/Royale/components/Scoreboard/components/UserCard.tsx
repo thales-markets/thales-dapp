@@ -515,7 +515,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         </UserLabel>
                         <PositionalButtonsContainer>
                             {defaultPositions.map((roundPosition: number, key: number) => (
-                                <>
+                                <FlexDiv key={key}>
                                     <SupText>{key + 1}.</SupText>
                                     <PositionButton
                                         currentRound={
@@ -527,7 +527,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                             user.status === UserStatus.RDY ||
                                             (royaleData as any).signUpPeriod < new Date()
                                         }
-                                        key={key}
                                         long={Number(roundPosition) === 2}
                                         onClick={() => switchSinglePosition(key)}
                                     >
@@ -535,7 +534,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                             '△'
                                         ) : (
                                             <Circle
-                                                key={key + 'k'}
                                                 currentRound={
                                                     (royaleData as any).currentRound === key + 1 &&
                                                     !(royaleData as any).seasonFinished
@@ -544,7 +542,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                             />
                                         )}
                                     </PositionButton>
-                                </>
+                                </FlexDiv>
                             ))}
                         </PositionalButtonsContainer>
                         <FlexContainer
@@ -1102,5 +1100,6 @@ const SupText = styled.sup`
         width: 10px;
         display: flex;
         margin-left: 0px;
+        margin-right: 5px;
     }
 `;

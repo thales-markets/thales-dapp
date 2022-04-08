@@ -1226,7 +1226,7 @@
                 "default-position-up": "UP",
                 "default-position-info": "Before the game starts, you can choose a default positions applied to all 6 rounds. You can change your position again once the positioning period for each round starts.",
                 "choose-default-positions": "Choose default positions for all rounds for selected Royale Passport ID:",
-                "passports-in-wallet": "Royale Passports in wallet:",
+                "passports-in-wallet": "Passports in wallet:",
                 "passport-id": "Passport ID:",
                 "shuffle-positions": "Shuffle positions",
                 "all-up": "All UP",
