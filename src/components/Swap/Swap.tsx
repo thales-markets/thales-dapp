@@ -1,6 +1,6 @@
 import ApprovalModal from 'components/ApprovalModal';
 import SimpleLoader from 'components/SimpleLoader';
-import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { BigNumber, ethers } from 'ethers';
 import { get } from 'lodash';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
@@ -69,7 +69,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
 
     const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
+    const ethRate = get(exchangeRates, isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : SYNTHS_MAP.sETH, null);
 
     const approveSpenderQuery = useApproveSpender(networkId, {
         enabled: false,
