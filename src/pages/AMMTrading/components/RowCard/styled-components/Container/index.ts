@@ -120,6 +120,8 @@ const Header = styled.span`
 
 // @ts-ignore
 const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?: string }>`
+    display: flex;
+    flex-direction: row;
     font-family: Roboto !important;
     font-style: normal;
     font-weight: 700;
