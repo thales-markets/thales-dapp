@@ -564,7 +564,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 disabled={isBuyingIn || user.status === UserStatus.RDY}
                                 className={isBuyingIn || user.status === UserStatus.RDY ? 'disabled' : ''}
                                 style={{
-                                    width: 191,
                                     display:
                                         user.status === UserStatus.RDY ||
                                         (user.status === UserStatus.NOTSIGNED &&
@@ -573,6 +572,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                             ? 'none'
                                             : '',
                                     cursor: isBuyingIn || user.status === UserStatus.RDY ? 'not-allowed' : '',
+                                    whiteSpace: 'pre',
                                 }}
                                 onClick={randomizePositions}
                             >
@@ -582,7 +582,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 className={isBuyingIn || user.status === UserStatus.RDY ? 'disabled' : ''}
                                 disabled={isBuyingIn || user.status === UserStatus.RDY}
                                 style={{
-                                    width: 191,
                                     justifyContent: 'center',
                                     display:
                                         user.status === UserStatus.RDY ||
@@ -592,6 +591,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                             ? 'none'
                                             : '',
                                     cursor: isBuyingIn || user.status === UserStatus.RDY ? 'not-allowed' : '',
+                                    whiteSpace: 'pre',
                                 }}
                                 onClick={() => {
                                     allPositionsUp
