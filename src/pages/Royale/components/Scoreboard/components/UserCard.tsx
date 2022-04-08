@@ -489,12 +489,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     <FlexContainer
                         style={{
                             position: 'relative',
-                            display:
-                                (user.status === UserStatus.NOTSIGNED &&
-                                    (royaleData as any).signUpPeriod < new Date()) ||
-                                !isWalletConnected
-                                    ? 'none'
-                                    : '',
+                            // display:
+                            //     (user.status === UserStatus.NOTSIGNED &&
+                            //         (royaleData as any).signUpPeriod < new Date()) ||
+                            //     !isWalletConnected
+                            //         ? 'none'
+                            //         : '',
                             borderBottom: '2px dashed var(--color)',
                             margin: 'margin: 0 0 7px 0',
                             flexDirection: 'column',
@@ -502,9 +502,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     >
                         <UserLabel
                             style={{
-                                width: window.innerWidth < 400 ? 125 : '',
+                                width: window.innerWidth < 400 ? '100%' : '',
                                 padding: '15px 0px',
-                                whiteSpace: 'initial',
+                                whiteSpace: 'break-spaces',
                                 textAlign: 'initial',
                             }}
                         >
@@ -513,7 +513,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 <StyledInfoIcon />
                             </RoyaleTooltip>
                         </UserLabel>
-                        <FlexContainer style={{ padding: '15px 0px', width: '100%' }}>
+                        <PositionalButtonsContainer>
                             {defaultPositions.map((roundPosition: number, key: number) => (
                                 <>
                                     <SupText>{key + 1}.</SupText>
@@ -546,7 +546,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                     </PositionButton>
                                 </>
                             ))}
-                        </FlexContainer>
+                        </PositionalButtonsContainer>
                         <FlexContainer
                             style={{
                                 padding: '15px 0px',
@@ -1036,6 +1036,16 @@ const RoyalePassportContainer = styled.div`
     }
 `;
 
+const PositionalButtonsContainer = styled(FlexContainer)`
+    padding: 15px 0px;
+    width: 100%;
+    @media (max-width: 600px) {
+        flex-wrap: wrap;
+        gap: 10px 20px;
+        justify-content: center;
+    }
+`;
+
 const PositionButton = styled.button<{ long?: boolean; currentRound?: boolean }>`
     transition: all 0.1s ease-in-out;
     width: ${(props) => (props.currentRound ? '60px' : '45px')};
@@ -1056,6 +1066,18 @@ const PositionButton = styled.button<{ long?: boolean; currentRound?: boolean }>
         box-shadow: ${(props) => (props.long ? 'inset 0px 4px 30px #137B9B' : '')};
         cursor: not-allowed;
     }
+    &:nth-child(6n-4) {
+        margin-left: ${(props) => (props.currentRound ? '-7px' : '')};
+        margin-right: ${(props) => (props.currentRound ? '-8px' : '')};
+    }
+    &:nth-child(6n) {
+        margin-left: ${(props) => (props.currentRound ? '-7px' : '')};
+        margin-right: ${(props) => (props.currentRound ? '-8px' : '')};
+    }
+    &:nth-child(6n-2) {
+        margin-left: ${(props) => (props.currentRound ? '-7px' : '')};
+        margin-right: ${(props) => (props.currentRound ? '-7px' : '')};
+    }
 `;
 
 const Circle = styled.div<{ currentRound?: boolean; disabled: boolean }>`
@@ -1074,4 +1096,9 @@ const SupText = styled.sup`
     color: var(--color);
     margin-bottom: 30px;
     margin-left: 5px;
+    @media (max-width: 600px) {
+        width: 10px;
+        display: flex;
+        margin-left: 0px;
+    }
 `;
