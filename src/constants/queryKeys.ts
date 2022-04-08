@@ -179,12 +179,12 @@ export const QUERY_KEYS = {
             season,
         ],
         Positions: (season: number, networkId: NetworkId) => ['royale', 'positions', season, networkId],
-        PlayerPositions: (networkId: NetworkId, season: number, address: string) => [
+        PlayerPositions: (networkId: NetworkId, season: number, tokenId: string) => [
             'royale',
             'positions',
             networkId,
             season,
-            address,
+            tokenId,
         ],
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
         EthPrice: () => ['royale', 'ethPrice'],

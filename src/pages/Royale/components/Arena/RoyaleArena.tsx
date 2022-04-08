@@ -48,7 +48,6 @@ const renderRounds = (
 ) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const { roundInASeason, rounds, token, targetPrice, isPlayerAlive, position } = royaleData;
     const cards = [];
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -57,18 +56,16 @@ const renderRounds = (
 
     const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
-    const positionsQuery = usePlayerPositionsQuery(selectedSeason, networkId, walletAddress ?? '', {
-        enabled: networkId !== undefined && isAppReady,
+    const positionsQuery = usePlayerPositionsQuery(selectedSeason, networkId, tokenId ?? '', {
+        enabled: networkId !== undefined && isAppReady && tokenId !== '' && selectedSeason > 0,
     });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : [];
 
-    const roundsInformation = useMemo(
-        () =>
-            roundsGraphInfo.map((r) => {
-                return { ...r, position: positions.find((p) => p.round === r.round)?.position || 0 };
-            }),
-        [positions, roundsGraphInfo]
-    );
+    const roundsInformation = useMemo(() => {
+        return roundsGraphInfo.map((r) => {
+            return { ...r, position: positions.find((p: any) => p.round === r.round)?.position || 0 };
+        });
+    }, [positions, roundsGraphInfo]);
 
     const vote = (option: number) => async () => {
         if (option === roundsInformation[roundInASeason - 1]?.position) {
@@ -111,7 +108,8 @@ const renderRounds = (
         const selectedPosition =
             index === roundInASeason && selectedSeason === latestSeason
                 ? position
-                : roundsInformation[index - 1]?.position;
+                : Number(positions[index - 1]?.position);
+
         index === roundInASeason
             ? cards.push(
                   <CurrentRound id={`round${index}`} key={index}>
