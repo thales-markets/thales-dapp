@@ -13,7 +13,8 @@ const limitBlogMeta = (text: string, limit: number) => {
 };
 
 const formatDate = (timestamp: Date) => {
-    return timestamp.toString().split(' ')[0];
+    const date = new Date(timestamp);
+    return date.toLocaleDateString();
 };
 
 const BlogPosts: React.FC = () => {
@@ -48,7 +49,7 @@ const BlogPosts: React.FC = () => {
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
                         <BlogTitle>{limitBlogMeta(blog.title, 50)}</BlogTitle>
                         <BlogDescription>
-                            <p>{limitBlogMeta(blog.description, 200)}</p>
+                            <p>{limitBlogMeta(blog['content:encoded'], 200)}</p>
                         </BlogDescription>
                         <MediumDate>{formatDate(blog.pubDate)}</MediumDate>
                         <MediumIcon className="icon-home icon-home--medium" />
