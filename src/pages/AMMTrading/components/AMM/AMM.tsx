@@ -185,6 +185,10 @@ const AMM: React.FC = () => {
         orderSide.value == 'buy' ? dispatch(setBuyState(true)) : dispatch(setBuyState(false));
     }, [orderSide?.value]);
 
+    useEffect(() => {
+        setAmount('');
+    }, [orderSide?.value, optionSide]);
+
     const fetchL1Fee = async (
         ammContractWithSigner: any,
         marketAddress: string,
