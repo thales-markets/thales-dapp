@@ -5,7 +5,6 @@ import { RootState } from 'redux/rootReducer';
 
 import { getIsAppReady } from 'redux/modules/app';
 
-import RowCard from './components/RowCard';
 import TabContainer from './components/TabContainer';
 import AMM from './components/AMM';
 import Switch from 'components/SwitchInput/SwitchInputNew';
@@ -87,7 +86,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                     />
                 </HeaderContainer>
             )}
-            <RowCard />
+            {/* <RowCard /> */}
             {tradingType == TradingTypes[0].value && <OrderbookView />}
             {tradingType == TradingTypes[1].value && (
                 <MainContainer>
