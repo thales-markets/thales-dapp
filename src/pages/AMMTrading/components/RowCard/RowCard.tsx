@@ -1,7 +1,5 @@
 import React, { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 
-import PriceChart from 'components/Charts/PriceChart';
 import Container from './styled-components/Container';
 import MaturityDate from '../MaturityDate';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
@@ -21,15 +19,12 @@ import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
-import Button from 'components/Button';
-import { getIsBuyState, getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
+import { getIsBuyState } from 'redux/modules/marketWidgets';
 import Tooltip from 'components/Tooltip';
 
 const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
     const { t } = useTranslation();
-    const dispatch = useDispatch();
-    const similarMarketsVisibility = useSelector((state: RootState) => getSimilarMarketsVisibility(state));
     const isBuy = useSelector((state: RootState) => getIsBuyState(state));
 
     let optBalances = {
@@ -267,22 +262,6 @@ const RowCard: React.FC = () => {
                             </Container.SubContainer>
                         </Container.ColumnContainer>
                     )}
-                    <Container.ColumnContainer minWidth="180px" alignItems={'flex-end'} priceChart={true}>
-                        <Container.ChartContainer>
-                            <PriceChart currencyKey={marketInfo.currencyKey} footerFontSize={'10px'} />
-                        </Container.ChartContainer>
-                        <Container.SubContainer>
-                            <Button
-                                onClickHandler={() => dispatch(setSimilarMarketVisibility(!similarMarketsVisibility))}
-                                margin={'10px 0 0 0'}
-                                padding={'5px 20px'}
-                            >
-                                {similarMarketsVisibility
-                                    ? t('options.market.overview.close-similar-markets')
-                                    : t('options.market.overview.similar-markets')}
-                            </Button>
-                        </Container.SubContainer>
-                    </Container.ColumnContainer>
                 </Container>
             )}
         </>

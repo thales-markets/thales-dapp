@@ -49,7 +49,7 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
                     <BalanceInfoContainer>
                         <Header>sUSD in Wallet:</Header>
                         <SubHeader>
-                            {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), sUSDBalance)}
+                            {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), sUSDBalance, 2)}
                         </SubHeader>
                         <Header>Claimable: </Header>
                         <SubHeader>

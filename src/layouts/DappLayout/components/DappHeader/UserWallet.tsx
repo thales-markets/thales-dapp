@@ -9,6 +9,8 @@ import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { buildHref, navigateTo } from 'utils/routes';
+import ROUTES from 'constants/routes';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;
@@ -23,7 +25,9 @@ const UserWallet: React.FC = () => {
         <Wrapper>
             <WalletContainer
                 connected={isWalletConnected}
-                onClick={() => (isWalletConnected ? '' : onboardConnector.connectWallet())}
+                onClick={() =>
+                    isWalletConnected ? navigateTo(buildHref(ROUTES.Options.Profile)) : onboardConnector.connectWallet()
+                }
             >
                 <WalletIcon
                     className={` ${networkId === 10 ? 'v2-icon v2-icon--op' : 'sidebar-icon icon--ethereum'}`}
@@ -69,6 +73,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     align-items: center;
     justify-content: center;
     max-width: 150px;
+    cursor: pointer;
 `;
 
 const WalletIcon = styled.i`

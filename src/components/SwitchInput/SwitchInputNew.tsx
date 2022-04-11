@@ -9,6 +9,7 @@ type LabelProps = {
 
 type SwitchProps = {
     active: boolean;
+    disabled?: boolean;
     handleClick?: () => void;
     width?: string;
     height?: string;
