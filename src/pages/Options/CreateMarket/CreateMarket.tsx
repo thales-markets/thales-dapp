@@ -55,7 +55,7 @@ import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
-import { ZERO_ADDRESS } from '../../../constants/network';
+import { POLYGON_ID, ZERO_ADDRESS } from '../../../constants/network';
 import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
@@ -165,9 +165,12 @@ export const CreateMarket: React.FC = () => {
             initialFundingAmount === '';
 
         const formatCreateMarketArguments = () => {
-            const initialMint = ethers.utils.parseEther(initialFundingAmount.toString());
+            const initialMint = ethers.utils.parseUnits(
+                initialFundingAmount.toString(),
+                networkId === POLYGON_ID ? 6 : 18
+            );
             const oracleKey = bytesFormatter((currencyKey as CurrencyKeyOptionType).value);
-            const price = ethers.utils.parseEther(strikePrice.toString());
+            const price = ethers.utils.parseUnits(strikePrice.toString(), networkId === POLYGON_ID ? 6 : 18);
             const maturity = Math.round((maturityDate as Date).getTime() / 1000);
             return { oracleKey, price, maturity, initialMint };
         };
@@ -181,7 +184,10 @@ export const CreateMarket: React.FC = () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
             const getAllowanceForCurrentWallet = async () => {
                 try {
-                    const initialMint = ethers.utils.parseEther(Number(initialFundingAmount).toString());
+                    const initialMint = ethers.utils.parseUnits(
+                        initialFundingAmount.toString(),
+                        networkId === POLYGON_ID ? 6 : 18
+                    );
                     const allowance = await checkAllowance(
                         initialMint,
                         SynthsUSD,
@@ -282,6 +288,7 @@ export const CreateMarket: React.FC = () => {
                         setUserHasEnoughFunds(true);
                         setL1Fee(l1FeeInWei);
                     } else {
+                        console.log('dadssd', oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS);
                         const gasEstimate = await BOMMContractWithSigner.estimateGas.createMarket(
                             oracleKey,
                             price,
@@ -290,6 +297,7 @@ export const CreateMarket: React.FC = () => {
                             false,
                             ZERO_ADDRESS
                         );
+                        console.log('122222');
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setUserHasEnoughFunds(true);
                     }

@@ -26,6 +26,7 @@ type SwitchProps = {
 };
 
 type SwitchContainerProps = {
+    disabled?: boolean;
     handleClick?: () => void;
     borderWidth?: string;
     borderColor?: string;
@@ -47,6 +48,7 @@ const defaultSwitchHeight = 28;
 
 const Switch: React.FC<SwitchProps> = ({
     active,
+    disabled,
     handleClick,
     width,
     height,
@@ -62,9 +64,10 @@ const Switch: React.FC<SwitchProps> = ({
     margin,
 }) => {
     return (
-        <Wrapper margin={margin}>
+        <Wrapper margin={margin} disabled={disabled}>
             {label?.firstLabel && <Label fontSize={label?.fontSize}>{label.firstLabel}</Label>}
             <SwitchContainer
+                disabled={disabled}
                 borderWidth={borderWidth}
                 borderColor={borderColor}
                 width={width}
@@ -72,7 +75,7 @@ const Switch: React.FC<SwitchProps> = ({
                 background={background}
                 backgroundGradient={backgroundGradient}
                 shadow={shadow}
-                onClick={() => (handleClick ? handleClick() : null)}
+                onClick={() => (!disabled && handleClick ? handleClick() : null)}
             >
                 <Circle active={active} size={dotSize} background={dotBackground} backgroundGradient={dotGradient} />
             </SwitchContainer>
@@ -81,13 +84,15 @@ const Switch: React.FC<SwitchProps> = ({
     );
 };
 
-const Wrapper = styled.div<{ margin?: string }>`
+const Wrapper = styled.div<{ margin?: string; disabled?: boolean }>`
     ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
+    opacity: ${(props: any) => (props.disabled ? '0.4' : '1')};
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     width: 100%;
+    cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'default')};
 `;
 
 const Label = styled.span<{ fontSize?: string }>`
@@ -101,7 +106,7 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
     display: flex;
     align-items: center;
     position: relative;
-    cursor: pointer;
+    cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'pointer')};
     border-width: ${(props: any) => (props?.borderWidth ? props.borderWidth : '1px')};
     border-style: solid;
     border-color: ${(props: any) => (props?.borderColor ? props.borderColor : 'var(--input-border-color)')};
