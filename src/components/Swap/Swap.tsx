@@ -41,6 +41,7 @@ import {
 } from './tokens';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { getStableCoinForNetwork } from '../../utils/currency';
 
 const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const { t } = useTranslation();
@@ -196,7 +197,10 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                 await tx.wait();
                 refetchUserBalance(walletAddress as any, networkId);
                 setLoading(false);
-                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success')));
+                toast.update(
+                    id,
+                    getSuccessToastOptions(t('options.swap.tx-success', { token: getStableCoinForNetwork(networkId) }))
+                );
                 return {
                     data: (data as any).tx.data,
                     from: (data as any).tx.from,

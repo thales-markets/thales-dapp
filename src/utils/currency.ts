@@ -6,7 +6,7 @@ import {
     SYNTHS_MAP,
     currencyKeyToNameMap,
 } from 'constants/currency';
-import { POLYGON_MUMBAI_ID } from '../constants/network';
+import { getIsPolygon } from './network';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
 export const isCryptoCurrency = (currencyKey: CurrencyKey) => !!CRYPTO_CURRENCY_MAP[currencyKey];
@@ -29,10 +29,9 @@ export const getSynthAsset = (currencyKey: string) =>
     SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
 
 export const getStableCoinForNetwork = (networkId: number) => {
-    switch (networkId) {
-        case POLYGON_MUMBAI_ID:
-            return CRYPTO_CURRENCY_MAP.USDC;
-        default:
-            return SYNTHS_MAP.sUSD;
+    if (getIsPolygon(networkId)) {
+        return CRYPTO_CURRENCY_MAP.USDC;
     }
+
+    return SYNTHS_MAP.sUSD;
 };

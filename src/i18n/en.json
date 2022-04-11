@@ -1142,7 +1142,7 @@
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
             "not-supported": " Swap is not supported on Test networks",
-            "tx-success": "Successfully bought sUSD",
+            "tx-success": "Successfully bought {{token}}",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",
             "approval-success": "Approval successful",
