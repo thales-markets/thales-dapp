@@ -51,11 +51,18 @@ const useUserRoyalQuery = (
                 const royalePlayersDataUrl = BASE_URL + walletAddress;
                 const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
                 const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
-                const royalePlayerFromGraph = await thalesData.binaryOptions.thalesRoyalePassportPlayers({
-                    season: selectedSeason,
-                    network: networkId,
-                    owner: walletAddress,
-                });
+                const royalePlayerFromGraph =
+                    networkId === 10 && selectedSeason <= 5
+                        ? await thalesData.binaryOptions.thalesRoyalePlayers({
+                              season: selectedSeason,
+                              network: networkId,
+                              address: walletAddress,
+                          })
+                        : await thalesData.binaryOptions.thalesRoyalePassportPlayers({
+                              season: selectedSeason,
+                              network: networkId,
+                              owner: walletAddress,
+                          });
                 if (royalePlayerFromGraph.length > 0) {
                     const userFromGraph = royalePlayerFromGraph[0];
                     const user: User = {

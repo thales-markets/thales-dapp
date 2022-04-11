@@ -28,6 +28,8 @@ import useInterval from 'hooks/useInterval';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import useRoundsQuery from './queries/useRoundsQuery';
 import useRoyalePasportQuery from 'pages/Royale/Queries/usePassportQuery';
+import usePlayerHistoricalPositionsQuery from './queries/usePlayerHistoricalPositionsQuery';
+import useUserRoyalQuery, { AnonimUser } from '../Scoreboard/queries/useUserRoyalQuery';
 
 type RoyaleArenaProps = {
     assetPrice: string;
@@ -44,10 +46,12 @@ const renderRounds = (
     timeLeftForPositioning: Date | null,
     timeLeftInRound: Date | null,
     selectedSeason: number,
-    latestSeason: number
+    latestSeason: number,
+    isHistoricalPlayerWinner: boolean
 ) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const { roundInASeason, rounds, token, targetPrice, isPlayerAlive, position } = royaleData;
     const cards = [];
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -59,13 +63,26 @@ const renderRounds = (
     const positionsQuery = usePlayerPositionsQuery(selectedSeason, networkId, tokenId ?? '', {
         enabled: networkId !== undefined && isAppReady && tokenId !== '' && selectedSeason > 0,
     });
+
+    const historicalPositionsQuery = usePlayerHistoricalPositionsQuery(selectedSeason, networkId, walletAddress ?? '', {
+        enabled: networkId !== undefined && isAppReady && networkId === 10 && selectedSeason > 0 && selectedSeason <= 5,
+    });
+
     const positions = positionsQuery.isSuccess ? positionsQuery.data : [];
+
+    const historicalPositions = historicalPositionsQuery.isSuccess ? historicalPositionsQuery.data : [];
 
     const roundsInformation = useMemo(() => {
         return roundsGraphInfo.map((r) => {
             return { ...r, position: positions.find((p: any) => p.round === r.round)?.position || 0 };
         });
     }, [positions, roundsGraphInfo]);
+
+    const historicalRoundsInformation = useMemo(() => {
+        return roundsGraphInfo.map((r) => {
+            return { ...r, position: historicalPositions.find((p: any) => p.round === r.round)?.position || 0 };
+        });
+    }, [historicalPositions, roundsGraphInfo]);
 
     const vote = (option: number) => async () => {
         if (option === roundsInformation[roundInASeason - 1]?.position) {
@@ -102,12 +119,14 @@ const renderRounds = (
         }
     };
 
-    const isWinner = isPlayerAlive && royaleData.seasonFinished;
+    const isWinner = (isHistoricalPlayerWinner || isPlayerAlive) && royaleData.seasonFinished;
 
     for (let index = 1; index <= rounds; index++) {
         const selectedPosition =
             index === roundInASeason && selectedSeason === latestSeason
                 ? position
+                : selectedSeason <= 5 && networkId === 10
+                ? Number(historicalPositions[index - 1]?.position)
                 : Number(positions[index - 1]?.position);
 
         index === roundInASeason
@@ -174,8 +193,16 @@ const renderRounds = (
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
                           <CurrentRoundText>
                               {token !== 'ETH'
-                                  ? `$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(4)}`
-                                  : `$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(2)}`}
+                                  ? `$${
+                                        networkId === 10 && selectedSeason <= 5
+                                            ? Number(historicalRoundsInformation[index - 1]?.strikePrice).toFixed(4)
+                                            : Number(roundsInformation[index - 1]?.strikePrice).toFixed(4)
+                                    }`
+                                  : `$${
+                                        networkId === 10 && selectedSeason <= 5
+                                            ? Number(historicalRoundsInformation[index - 1]?.strikePrice).toFixed(2)
+                                            : Number(roundsInformation[index - 1]?.strikePrice).toFixed(2)
+                                    }`}
                           </CurrentRoundText>
                       </div>
                       <RoundHistoryInfo>
@@ -183,14 +210,28 @@ const renderRounds = (
                               <PrevRoundTitle>{`${token} ${t('options.royale.battle.was')}`}</PrevRoundTitle>
                               <PrevRoundText>
                                   {token !== 'ETH'
-                                      ? `$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(4)}`
-                                      : `$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(2)}`}
+                                      ? `$${
+                                            networkId === 10 && selectedSeason <= 5
+                                                ? Number(historicalRoundsInformation[index - 1]?.finalPrice).toFixed(4)
+                                                : Number(roundsInformation[index - 1]?.finalPrice).toFixed(4)
+                                        }`
+                                      : `$${
+                                            networkId === 10 && selectedSeason <= 5
+                                                ? Number(historicalRoundsInformation[index - 1]?.finalPrice).toFixed(2)
+                                                : Number(roundsInformation[index - 1]?.finalPrice).toFixed(2)
+                                        }`}
                               </PrevRoundText>
                           </FlexDiv>
                           <FlexDiv>
                               <PrevRoundTitle>{`${t('options.royale.battle.eliminated')}`}</PrevRoundTitle>
-                              <PrevRoundText>{`${roundsInformation[index - 1]?.eliminatedPerRoundPerSeason || 0}/${
-                                  roundsInformation[index - 1]?.totalPlayersPerRoundPerSeason || 0
+                              <PrevRoundText>{`${
+                                  networkId === 10 && selectedSeason <= 5
+                                      ? historicalRoundsInformation[index - 1]?.eliminatedPerRoundPerSeason || 0
+                                      : roundsInformation[index - 1]?.eliminatedPerRoundPerSeason || 0
+                              }/${
+                                  networkId === 10 && selectedSeason <= 5
+                                      ? historicalRoundsInformation[index - 1]?.totalPlayersPerRoundPerSeason || 0
+                                      : roundsInformation[index - 1]?.totalPlayersPerRoundPerSeason || 0
                               } ${t('options.royale.battle.players')}`}</PrevRoundText>
                           </FlexDiv>
                       </RoundHistoryInfo>
@@ -268,7 +309,15 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
     const passportID = royalePassports.length > 0 ? '' + parseInt('' + royalePassports[0].id, 16) : '';
 
-    const royaleDataQuery = useRoyaleArenaContractQuery(selectedSeason, passportID, {
+    const userQuery = useUserRoyalQuery(walletAddress as any, networkId, selectedSeason, {
+        enabled: isL2 && isAppReady && networkId === 10 && selectedSeason <= 5,
+    });
+
+    const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
+
+    const [isHistoricalPlayerWinner, setIsHistoricalPlayerWinner] = useState<boolean>(false);
+
+    const royaleDataQuery = useRoyaleArenaContractQuery(networkId, selectedSeason, walletAddress ?? '', passportID, {
         enabled: isAppReady && isL2,
     });
 
@@ -289,9 +338,19 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                 token: '',
                 targetPrice: '',
                 position: 0,
+                round: 0,
             };
         }
     }, [royaleDataQuery.isSuccess, royaleDataQuery.data]);
+
+    useEffect(() => {
+        const isUserAWinner =
+            (user.isAlive && royaleData.seasonFinished) ||
+            (Number(user.deathRound) === royaleData.round && royaleData.seasonFinished);
+        if (isUserAWinner) {
+            setIsHistoricalPlayerWinner(true);
+        }
+    }, [user]);
 
     const {
         roundInASeasonStartTime,
@@ -311,7 +370,10 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
             (roundInASeasonEndTime.getTime() - roundInASeasonStartTime.getTime()) / 1000
         )
     );
-    const isWinner = useMemo(() => royaleData.isPlayerAlive && royaleData.seasonFinished, [royaleData]);
+    const isWinner = useMemo(
+        () => (isHistoricalPlayerWinner || royaleData.isPlayerAlive) && royaleData.seasonFinished,
+        [royaleData]
+    );
 
     useInterval(async () => {
         setTimeLeftForPositioning(getTimeLeft(roundInASeasonStartTime, roundChoosingLength));
@@ -389,7 +451,8 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                                 timeLeftForPositioning,
                                 timeLeftInRound,
                                 memoizedSelectedSeason,
-                                latestSeason
+                                latestSeason,
+                                isHistoricalPlayerWinner
                             )
                         ) : (
                             <></>

@@ -378,7 +378,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     if ((royaleData as any).season !== selectedSeason) {
         return (
             <UserWrapper style={{ height: 420 }}>
-                <LoaderContainer style={{ top: 'calc(50% + 120px)', left: '50%', display: 'relative' }}>
+                <LoaderContainer style={{ top: 'calc(50% + 140px)', left: '50%', display: 'relative' }}>
                     <SimpleLoader />
                 </LoaderContainer>
             </UserWrapper>
