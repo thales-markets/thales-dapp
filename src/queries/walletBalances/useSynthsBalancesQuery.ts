@@ -54,9 +54,7 @@ const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, opt
 
                 let usdBalance = await SynthsUSD.balanceOf(walletAddress);
 
-                if (networkId === POLYGON_ID) {
-                    usdBalance = Number(ethers.utils.formatUnits(usdBalance)) * 10e11;
-                }
+                usdBalance = Number(ethers.utils.formatUnits(usdBalance)) * (networkId === POLYGON_ID ? 10e11 : 1);
 
                 return {
                     balances: {
