@@ -724,7 +724,8 @@
                 "final-result": "Конечный результат",
                 "my-position": "Моя позиция",
                 "position-value": "Значение позиции",
-                "amm-liquidity-tooltip": "На данный момент доступно количество токенов UP и DOWN."
+                "amm-liquidity-tooltip": "На данный момент доступно количество токенов UP и DOWN.",
+                "no-similar-markets": "По этому активу нет рынков с такой же датой погашения."
             },
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",

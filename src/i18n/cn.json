@@ -724,7 +724,8 @@
                 "my-position": "我的位置",
                 "final-result": "最后结果",
                 "position-value": "职位价值",
-                "amm-liquidity-tooltip": "当前可用数量的 UP 和 DOWN 代币。"
+                "amm-liquidity-tooltip": "当前可用数量的 UP 和 DOWN 代币。",
+                "no-similar-markets": "该资产没有市场且到期日相同。"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",

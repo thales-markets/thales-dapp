@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
+import { useTranslation } from 'react-i18next';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
@@ -16,9 +17,11 @@ import MarketCard from 'pages/Markets/components/MarketsCard';
 import SPAAnchor from 'components/SPAAnchor';
 import { getIsAppReady } from 'redux/modules/app';
 import Loader from 'components/Loader';
+import { NoDataContainer, NoDataText } from 'theme/common';
 
 const SimilarMarkets: React.FC = () => {
     const marketInfo = useMarketContext();
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
@@ -59,7 +62,6 @@ const SimilarMarkets: React.FC = () => {
     });
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
-    console.log('optionsMarkets ', optionsMarkets);
     return (
         <>
             {!openOrdersQuery.isLoading ? (
@@ -79,6 +81,11 @@ const SimilarMarkets: React.FC = () => {
                                 </SPAAnchor>
                             );
                         })}
+                    {!optionsMarkets?.length && (
+                        <NoDataContainer>
+                            <NoDataText>{t('options.market.overview.no-similar-markets')}</NoDataText>
+                        </NoDataContainer>
+                    )}
                 </SimilarMarketsContainer>
             ) : (
                 <Loader />

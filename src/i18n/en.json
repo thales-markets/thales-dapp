@@ -731,7 +731,8 @@
                 "total-burned": "Total burned",
                 "burned-last-hour": "Burned in the last hour",
                 "similar-markets": "Similar Markets",
-                "close-similar-markets": "Close Similar Markets"
+                "close-similar-markets": "Close Similar Markets",
+                "no-similar-markets": "There are not markets from this asset and with same maturity date."
             },
             "widgets": {
                 "amm-widget": "AMM",
