@@ -184,7 +184,12 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                           Header: t(`options.home.markets-table.amm-size-col`),
                           accessor: (row: any) => {
                               if (Number(row.availableLongs) > 0 || Number(row.availableShorts) > 0) {
-                                  return <RatioText green={row.availableLongs} red={row.availableShorts} />;
+                                  return (
+                                      <RatioText
+                                          green={Number(row.availableLongs).toFixed(1)}
+                                          red={Number(row.availableShorts).toFixed(1)}
+                                      />
+                                  );
                               }
                               return (
                                   <YellowText>
