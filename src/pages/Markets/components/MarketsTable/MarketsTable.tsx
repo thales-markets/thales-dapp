@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 
 import Currency from 'components/Currency/v2';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -45,7 +45,7 @@ type MarketsTableProps = {
 
 const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
+    const isL2OrPolygon = getIsOVM(networkId) || getIsPolygon(networkId);
 
     const { t } = useTranslation();
 
@@ -165,7 +165,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     return <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />;
                 },
             },
-            ...(isL2
+            ...(isL2OrPolygon
                 ? [
                       {
                           Header: t(`options.home.markets-table.amm-size-col`),
@@ -185,7 +185,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                       },
                   ]
                 : []),
-            ...(isL2
+            ...(isL2OrPolygon
                 ? [
                       {
                           Header: t(`options.home.markets-table.price-up-down-col`),
