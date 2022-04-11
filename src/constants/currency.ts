@@ -46,6 +46,8 @@ import { ReactComponent as BCHIcon } from 'assets/currencies/crypto/BCH.svg';
 import { ReactComponent as SNXIcon } from 'assets/currencies/crypto/SNX.svg';
 import { ReactComponent as KNCIcon } from 'assets/currencies/crypto/KNC.svg';
 import { ReactComponent as sSOLIcon } from 'assets/synths/sSOL.svg';
+import { ReactComponent as LYRAIcon } from 'assets/currencies/crypto/LYRA.svg';
+import { ReactComponent as LUNAIcon } from 'assets/currencies/crypto/LUNA.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -140,6 +142,8 @@ export const CRYPTO_CURRENCY = [
     'CRV',
     'AAVE',
     'MATIC',
+    'LYRA',
+    'LUNA',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -214,6 +218,8 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.KNC]: KNCIcon,
     [CRYPTO_CURRENCY_MAP.LEND]: sAAVEIcon,
     [SYNTHS_MAP.sSOL]: sSOLIcon,
+    [CRYPTO_CURRENCY_MAP.LYRA]: LYRAIcon,
+    [CRYPTO_CURRENCY_MAP.LUNA]: LUNAIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -271,6 +277,8 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.USDT]: 'Tether',
     [CRYPTO_CURRENCY_MAP.VELO]: 'Velo',
     [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
+    [CRYPTO_CURRENCY_MAP.LYRA]: 'Lyra',
+    [CRYPTO_CURRENCY_MAP.LUNA]: 'Luna',
     [SYNTHS_MAP.sSOL]: 'Solana',
 };
 
@@ -306,6 +314,8 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.CRV]: 'curve-dao-token',
     [CRYPTO_CURRENCY_MAP.UNI]: 'uniswap',
     [CRYPTO_CURRENCY_MAP.AAVE]: 'aave',
+    [CRYPTO_CURRENCY_MAP.LYRA]: 'lyra-finance',
+    [CRYPTO_CURRENCY_MAP.LUNA]: 'terra-luna',
     [SYNTHS_MAP.sBTC]: 'bitcoin',
     [SYNTHS_MAP.sETH]: 'ethereum',
     [SYNTHS_MAP.sCOMP]: 'compound-coin',
@@ -336,6 +346,141 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sDOT]: 'polkadot',
     [SYNTHS_MAP.sRUNE]: 'thorchain',
     [SYNTHS_MAP.sYFI]: 'yearn-finance',
+};
+
+export const currencyKeyToDataFeedSourceMap = {
+    [CRYPTO_CURRENCY_MAP.KNC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.COMP]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.REN]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LEND]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.SNX]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.BTC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ETH]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.XRP]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.BCH]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LTC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.EOS]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.BNB]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.XTZ]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.XMR]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ADA]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LINK]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.TRX]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.DASH]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ETC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.BAT]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.DAI]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.REP]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.USDC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.USDT]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.VELO]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ZRX]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.THALES]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.SOL]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.CRV]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.UNI]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.AAVE]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LYRA]: {
+        source: 'TWAP',
+        link: 'https://optimistic.etherscan.io/address/0xF334F6104A179207DdaCfb41FA3567FEea8595C2',
+    },
+    [CRYPTO_CURRENCY_MAP.LUNA]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
 };
 
 export const sUSD_EXCHANGE_RATE = 1;

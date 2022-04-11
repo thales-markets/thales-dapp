@@ -292,9 +292,11 @@ const Mint: React.FC = () => {
                     onClickHandler={() => setOpenLongApprovalModal(true)}
                 >
                     {!isLongAllowing
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sLONG })
+                        ? t('common.enable-wallet-access.approve-label', {
+                              currencyKey: CURRENCY_TO_OPTION.get(SYNTHS_MAP.sLONG),
+                          })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: SYNTHS_MAP.sLONG,
+                              currencyKey: CURRENCY_TO_OPTION.get(SYNTHS_MAP.sLONG),
                           })}
                 </Button>
             );
@@ -307,9 +309,11 @@ const Mint: React.FC = () => {
                     onClickHandler={() => setOpenShortApprovalModal(true)}
                 >
                     {!isShortAllowing
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sSHORT })
+                        ? t('common.enable-wallet-access.approve-label', {
+                              currencyKey: CURRENCY_TO_OPTION.get(SYNTHS_MAP.sSHORT),
+                          })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: SYNTHS_MAP.sSHORT,
+                              currencyKey: CURRENCY_TO_OPTION.get(SYNTHS_MAP.sSHORT),
                           })}
                 </Button>
             );
@@ -679,7 +683,7 @@ const Mint: React.FC = () => {
             {openLongApprovalModal && (
                 <ApprovalModal
                     defaultAmount={longAmount}
-                    tokenSymbol={SYNTHS_MAP.sLONG}
+                    tokenSymbol={CURRENCY_TO_OPTION.get(SYNTHS_MAP.sLONG)}
                     isAllowing={isLongAllowing}
                     onSubmit={handleLongAllowance}
                     onClose={() => setOpenLongApprovalModal(false)}
@@ -688,7 +692,7 @@ const Mint: React.FC = () => {
             {openShortApprovalModal && (
                 <ApprovalModal
                     defaultAmount={shortAmount}
-                    tokenSymbol={SYNTHS_MAP.sSHORT}
+                    tokenSymbol={CURRENCY_TO_OPTION.get(SYNTHS_MAP.sSHORT)}
                     isAllowing={isShortAllowing}
                     onSubmit={handleShortAllowance}
                     onClose={() => setOpenShortApprovalModal(false)}

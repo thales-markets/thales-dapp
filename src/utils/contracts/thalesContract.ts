@@ -3,10 +3,10 @@ import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const thalesContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0x03E173Ad8d1581A4802d3B532AcE27a62c5B81dc',
-        [NetworkId.Ropsten]: '0x39Ed4A44C5a390415F1b1dDE2C77a61168aAdFbf',
+        [NetworkId.Mainnet]: '0x8947da500Eb47F82df21143D0C01A29862a8C3c5',
+        [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x9e7769409E3e5A6821eeDcF33371FCA929fE6A48',
+        [NetworkId.Kovan]: '0x8e801fb67436dae72af6eeb50e3f70d50019530f',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0x217D47011b23BB961eB6D93cA9945B7501a5BB11',

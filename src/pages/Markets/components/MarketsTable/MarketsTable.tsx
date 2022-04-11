@@ -25,9 +25,10 @@ import PriceChart from 'components/Charts/PriceChart';
 import { TablePagination } from '@material-ui/core';
 import SortingMenu from 'components/SortingMenu';
 import SPAAnchor from 'components/SPAAnchor';
+import Tooltip from 'components/Tooltip';
 
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
+import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
 import { buildOptionsMarketLink } from 'utils/routes';
 
 import { getSynthName } from 'utils/currency';
@@ -131,32 +132,44 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const columns: Array<any> = useMemo(() => {
         return [
             {
+                id: 'asset',
                 Header: t(`options.home.markets-table.asset-col`),
-                accessor: 'asset',
-                Cell: (_props: any) => {
+                accessor: (row: any) => {
                     return (
-                        <Currency.Name
-                            currencyKey={_props?.cell?.value}
-                            showIcon={true}
-                            hideAssetName={true}
-                            iconProps={{ type: 'asset' }}
-                            synthIconStyle={{ width: 32, height: 32 }}
-                            spanStyle={{ float: 'left' }}
-                        />
+                        <>
+                            <Currency.Name
+                                currencyKey={row?.currencyKey}
+                                showIcon={true}
+                                hideAssetName={true}
+                                iconProps={{ type: 'asset' }}
+                                synthIconStyle={{ width: 32, height: 32 }}
+                                spanStyle={{ float: 'left' }}
+                            />
+                            {currencyKeyToDataFeedSourceMap[row?.currencyKey]?.source == 'TWAP' && (
+                                <Tooltip
+                                    message={t('options.home.markets-table.twap-tooltip')}
+                                    link={currencyKeyToDataFeedSourceMap[row?.currencyKey]?.link}
+                                    type={'info'}
+                                    iconColor={'var(--primary-color)'}
+                                    container={{ width: '15px' }}
+                                    interactive={true}
+                                />
+                            )}
+                        </>
                     );
                 },
             },
             {
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
-                accessor: (row: any) => formatCurrencyWithSign(USD_SIGN, row?.strikePrice, 2),
-                // accessor: 'strikePrice',
-                // Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2),
+                accessor: 'strikePrice',
+                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value),
             },
             {
+                id: 'currentPrice',
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
-                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2),
+                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value),
             },
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),

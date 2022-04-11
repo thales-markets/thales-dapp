@@ -248,3 +248,11 @@ export const Tip17Link: React.FC = () => {
         </TooltipLink>
     );
 };
+
+export const Tip37Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP37}>
+            TIP-37
+        </TooltipLink>
+    );
+};

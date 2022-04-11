@@ -342,6 +342,7 @@
                 "status-col": "Status",
                 "maturity-date-col": "Maturity Date",
                 "competition-tooltip": "This market is eligible for trading competition",
+                "twap-tooltip": "This asset uses a TWAP Price Feed from this Uniswap V3 pool pair:",
                 "menu": {
                     "grid": "Grid",
                     "table": "Table",
@@ -352,7 +353,7 @@
         },
         "earn": {
             "snx-stakers": {
-                "tab-title": "Retro rewards",
+                "tab-title": "Strategic investors",
                 "retro-airdrop": {
                     "title": "Retro Airdrop",
                     "claimed-message": "You have already claimed the airdrop.",
@@ -366,9 +367,9 @@
                 "retro-rewards": {
                     "title": "Retro unlock",
                     "not-eligible-message": "You are not eligible for this distribution.",
-                    "learn-more-text": "Rewards are unlocked linearly over 2 years. There is no penalty for claiming currently unlocked rewards.",
+                    "learn-more-text": "Rewards are unlocked linearly. There is no penalty for claiming currently unlocked rewards.",
                     "learn-more": "Learn more",
-                    "info-tooltip": "<0>15 million THALES has been allocated on a pro rata basis to all SNX stakers since staking started until Sep 06, 2021 10:00 AM UTC.</0><0>There was a minimum of 24 THALES allocated through this algorithim to be eligible.</0> <1>You can check if you met the threshold </1><2 />."
+                    "info-tooltip": "<0>New retro unlock for strategic investors per </0><1 />."
                 },
                 "airdropped-amount": "Airdropped amount",
                 "claim": "Claim",
@@ -480,10 +481,16 @@
                         "confirmation-message": "Period successfully closed"
                     },
                     "migrated-rewards": {
+                        "title": "Migrated retro rewards",
+                        "rewards-label": "Migrated retro rewards",
+                        "claimed-message": "You have already claimed migrated retro rewards.",
+                        "info-tooltip": "<0>Unclaimed retro rewards from L1 have been migrated to L2 per </0><1 />."
+                    },
+                    "unclaimed-rewards": {
                         "title": "Migrated rewards",
                         "rewards-label": "Migrated rewards",
                         "claimed-message": "You have already claimed migrated rewards.",
-                        "info-tooltip": "<0>Unclaimed staking rewards from L1 have been migrated to L2 per </0><1 />."
+                        "info-tooltip": "<0>Unclaimed rewards for strategic investors per </0><1 />."
                     },
                     "info-tooltip": "Unclaimed weekly rewards are forfeit."
                 }
@@ -552,6 +559,7 @@
                     "claimRetroUnlocked": "No retro unlocked transactions associated with this wallet.",
                     "claimStakingRewards": "No staking rewards transactions associated with this wallet.",
                     "claimMigratedRewards": "No migrated rewards transactions associated with this wallet.",
+                    "claimMigratedRetroRewards": "No migrated retro rewards transactions associated with this wallet.",
                     "stake": "No stake transactions associated with this wallet.",
                     "startUnstake": "No start unstaking transactions associated with this wallet.",
                     "cancelUnstake": "No cancel unstaking transactions associated with this wallet.",
@@ -567,6 +575,7 @@
                     "claimRetroUnlocked": "Claim retro unlock",
                     "claimStakingRewards": "Claim staking rewards",
                     "claimMigratedRewards": "Claim migrated rewards",
+                    "claimMigratedRetroRewards": "Claim migrated retro rewards",
                     "stake": "Stake",
                     "startUnstake": "Start unstaking",
                     "cancelUnstake": "Cancel unstaking",
@@ -583,6 +592,7 @@
                     "claimRetroUnlocked": "Retro unlock",
                     "claimStakingRewards": "Staking rewards",
                     "claimMigratedRewards": "Migrated rewards",
+                    "claimMigratedRetroRewards": "Migrated retro rewards",
                     "stake": "Stake",
                     "startUnstake": "Start unstaking",
                     "cancelUnstake": "Cancel unstaking",
@@ -1333,8 +1343,8 @@
             }
         },
         "order-book": {
-            "trade-up": "Trade Up Options",
-            "trade-down": "Trade Down Options",
+            "trade-up": "Trade Up Positions",
+            "trade-down": "Trade Down Positions",
             "select-to": "Select to {{type}}",
             "amount-to": "Amount to {{type}}",
             "filters": {
@@ -1589,9 +1599,9 @@
         "connect-wallet-warning": "In order to enable progress tracking, please connect your Ethereum wallet before starting the game."
     },
     "migration": {
-        "title": "Migration",
+        "title": "Bridge to Optimism",
         "info-tooltip": "<0>During migration, LEGACY THALES is first exchanged to THALES on L1 mainnet, and then bridged to L2 Optimistic mainnet into L2 THALES per </0><1 />.",
-        "migrated-rewards-title": "Migrated rewards",
+        "migrated-rewards-title": "Migrated retro rewards",
         "migration-amount-label": "Amount to migrate",
         "from-label": "From",
         "to-label": "To",
@@ -1620,8 +1630,8 @@
             "lp-staking": "<0>LP Staking has been moved to L2 per </0><1 />."
         },
         "migration-notice": {
-            "text": "You can migrate LEGACY THALES to THALES and bridge to L2 Optimistic Mainnet",
-            "button-label": "Migrate THALES"
+            "text": "You can bridge L1 THALES to L2 Optimistic Mainnet",
+            "button-label": "Bridge THALES"
         },
         "migration-opt-out-notice": {
             "opt-out-text": "<0>All staked and escrowed THALES is scheduled for automatic migration to L2 Optimism Mainnet per </0><1 />.<0> If you would like to opt out of this migration, and keep your THALES on L1 Mainnet, you may do so by signing the following message with your wallet.</0>",

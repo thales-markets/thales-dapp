@@ -42,6 +42,20 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
             </BurgerWrapper>
             {showNav && (
                 <Container>
+                    {!isL2 && (
+                        <Icon
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'migration',
+                                    }),
+                                });
+                                setSelectedTab('migration');
+                            }}
+                            src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
+                        />
+                    )}
                     <Icon
                         onClick={() => {
                             history.push({
@@ -53,18 +67,6 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                             setSelectedTab('staking');
                         }}
                         src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
-                    />
-                    <Icon
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: 'retro-rewards',
-                                }),
-                            });
-                            setSelectedTab('retro-rewards');
-                        }}
-                        src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
                     />
                     <Icon
                         onClick={() => {
@@ -98,20 +100,6 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                                 : lpIcon
                         }
                     />
-                    {!isL2 && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'migration',
-                                    }),
-                                });
-                                setSelectedTab('migration');
-                            }}
-                            src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
-                        />
-                    )}
                     {isL2 && (
                         <Icon
                             onClick={() => {
@@ -124,6 +112,20 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                                 setSelectedTab('migrated-rewards');
                             }}
                             src={selectedTab === 'migrated-rewards' ? migratedRewardsActiveIcon : migratedRewardsIcon}
+                        />
+                    )}
+                    {!isL2 && (
+                        <Icon
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'strategic-investors',
+                                    }),
+                                });
+                                setSelectedTab('strategic-investors');
+                            }}
+                            src={selectedTab === 'strategic-investors' ? snxStakingActiveIcon : snxStakingIcon}
                         />
                     )}
                 </Container>
