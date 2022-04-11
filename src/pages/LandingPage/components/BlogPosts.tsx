@@ -19,7 +19,10 @@ const formatDate = (timestamp: Date) => {
 const BlogPosts: React.FC = () => {
     const blogPostsQuery = mediumPostsQuery({ enabled: true });
     const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
-    const blogPosts = blogPostsQuery.isSuccess ? blogPostsQuery.data.slice(blogPostsCount - 3, blogPostsCount) : [];
+    const blogPosts =
+        blogPostsQuery.isSuccess && blogPostsQuery?.data?.length
+            ? blogPostsQuery.data.slice(blogPostsCount - 3, blogPostsCount)
+            : [];
 
     const carouselChangeHandler = (change: number) => {
         if (change < 0) {
