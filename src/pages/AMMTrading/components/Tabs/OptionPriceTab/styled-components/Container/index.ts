@@ -25,6 +25,9 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
 // @ts-ignore
 const Footer: StyledComponent<'div', any> & FooterChildren = styled(FlexDivRow)`
     margin-right: 50px;
+    @media (max-width: 768px) {
+        margin-right: 0px;
+    }
 `;
 
 // @ts-ignore
