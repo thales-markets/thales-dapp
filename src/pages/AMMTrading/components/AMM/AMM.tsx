@@ -185,6 +185,10 @@ const AMM: React.FC = () => {
         orderSide.value == 'buy' ? dispatch(setBuyState(true)) : dispatch(setBuyState(false));
     }, [orderSide?.value]);
 
+    useEffect(() => {
+        setAmount('');
+    }, [orderSide?.value, optionSide]);
+
     const fetchL1Fee = async (
         ammContractWithSigner: any,
         marketAddress: string,
@@ -658,7 +662,10 @@ const AMM: React.FC = () => {
                     }
                 )}
             >
-                <MaxButton onClick={() => onMaxClick(isBuy)} disabled={formDisabled || insufficientLiquidity}>
+                <MaxButton
+                    onClick={() => onMaxClick(isBuy)}
+                    disabled={formDisabled || insufficientLiquidity || isGettingQuote}
+                >
                     {t('common.max')}
                 </MaxButton>
             </Input>
@@ -797,6 +804,9 @@ export const MaxButton = styled.button`
     &:active {
         outline: none;
         border-style: none;
+    }
+    &:disabled {
+        opacity: 0.6;
     }
 `;
 

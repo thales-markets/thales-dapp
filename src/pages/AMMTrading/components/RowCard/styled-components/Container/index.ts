@@ -33,6 +33,7 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled(CardCo
     width: 100%;
     flex-wrap: wrap;
     @media (max-width: 568px) {
+        margin-top: 20px;
         gap: 0;
         padding: 20px 10px;
         display: grid;

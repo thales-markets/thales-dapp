@@ -113,6 +113,9 @@ const MarketCardWrapper = styled.div<{ maxWidth?: string; margin?: string }>`
         border: 2px solid rgb(100, 217, 254, 1);
     }
     cursor: pointer;
+    @media (max-width: 768px) {
+        min-width: 100%;
+    }
 `;
 
 const InsideContainer = styled.div`
