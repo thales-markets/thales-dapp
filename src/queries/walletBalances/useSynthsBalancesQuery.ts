@@ -7,6 +7,7 @@ import { BigNumberish, ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { getIsPolygon, NetworkId } from 'utils/network';
+import { POLYGON_ID } from '../../constants/network';
 
 const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<any>) => {
     return useQuery<any>(
@@ -51,17 +52,21 @@ const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, opt
                     contracts: { SynthsUSD },
                 } = snxJSConnector.snxJS as any;
 
-                const usdBalance = await SynthsUSD.balanceOf(walletAddress);
+                let usdBalance = await SynthsUSD.balanceOf(walletAddress);
+
+                if (networkId === POLYGON_ID) {
+                    usdBalance = Number(ethers.utils.formatUnits(usdBalance)) * 10e11;
+                }
 
                 return {
                     balances: {
                         [SYNTHS_MAP.sUSD]: {
-                            balance: Number(ethers.utils.formatUnits(usdBalance)),
-                            balanceBN: Number(ethers.utils.formatUnits(usdBalance)),
-                            usdBalance: Number(ethers.utils.formatUnits(usdBalance)),
+                            balance: usdBalance,
+                            balanceBN: usdBalance,
+                            usdBalance: usdBalance,
                         },
                     },
-                    usdBalance: Number(ethers.utils.formatUnits(usdBalance)),
+                    usdBalance: usdBalance,
                 };
             }
         },

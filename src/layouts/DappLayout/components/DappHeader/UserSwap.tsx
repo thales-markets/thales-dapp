@@ -31,7 +31,7 @@ export const UserSwap: React.FC = () => {
             ? { synths: synthsWalletBalancesQuery.data }
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
-
+    console.log(sUSDBalance);
     const [buttonText, setButtonText] = useState(sUSDBalance);
 
     useEffect(() => {
