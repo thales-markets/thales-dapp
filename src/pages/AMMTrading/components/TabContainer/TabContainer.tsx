@@ -82,7 +82,13 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
         <>
             <Container>
                 <RowCard />
-                <FiltersButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>Views</FiltersButton>
+                <FiltersButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
+                    {currentTab
+                        ? t('options.market.row-card.current-view', {
+                              currentView: tabItems.find((item) => item.index == currentTab)?.title,
+                          })
+                        : t('options.market.row-card.views')}
+                </FiltersButton>
                 {showViewsDropdown && (
                     <PositionWrapper>
                         <Wrapper>

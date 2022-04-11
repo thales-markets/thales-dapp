@@ -961,6 +961,10 @@
                 "strike-price": "行使价",
                 "time-date": "时间/日期",
                 "name": "资产名称"
+            },
+            "row-card": {
+                "views": "意见",
+                "current-view": "视图：{{ currentView }}"
             }
         },
         "quick-trading": {

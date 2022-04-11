@@ -698,6 +698,10 @@
                 "amount": "Amount",
                 "activity": "Activity"
             },
+            "row-card": {
+                "views": "Views",
+                "current-view": "View: {{ currentView }} "
+            },
             "overview": {
                 "view-market-contract-tooltip": "View market contract",
                 "strike-price-label": "Strike price",
