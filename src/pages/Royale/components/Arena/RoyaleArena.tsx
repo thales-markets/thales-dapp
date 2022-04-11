@@ -349,8 +349,10 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
             (Number(user.deathRound) === royaleData.round && royaleData.seasonFinished);
         if (isUserAWinner) {
             setIsHistoricalPlayerWinner(true);
+        } else {
+            setIsHistoricalPlayerWinner(false);
         }
-    }, [user]);
+    }, [user, selectedSeason, royaleData]);
 
     const {
         roundInASeasonStartTime,
