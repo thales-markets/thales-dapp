@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Orderbook from '../OrderbookView/components/Orderbook';
@@ -7,22 +7,10 @@ import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
 import MarketActivity from '../Tabs/MarketActivity';
 import Container from './styled-components/Container';
-import SPAAnchor from 'components/SPAAnchor';
-import { SimilarMarketsContainer } from './styled-components/SimilarMarkets';
-import { useDispatch } from 'react-redux';
-import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
-import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getSimilarMarketsVisibility, setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
-import { getNetworkId } from 'redux/modules/wallet';
-import { sortOptionsMarkets } from 'utils/options';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { getIsAppReady } from 'redux/modules/app';
-import { buildOptionsMarketLink } from 'utils/routes';
-import MarketCard from 'pages/Markets/components/MarketsCard';
+import SimilarMarkets from '../Tabs/SimilarMarkets';
+import RowCard from '../RowCard';
 
 import { OptionSide } from 'types/options';
 import styled from 'styled-components';
@@ -34,21 +22,9 @@ type TabContainerProps = {
 
 const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const marketInfo = useMarketContext();
-    const dispatch = useDispatch();
     const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
-    const similarMarketsVisibility = useSelector((state: RootState) => getSimilarMarketsVisibility(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
-    const openOrdersQuery = fetchAllMarketOrders(networkId);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
-
-    const openOrdersMap = useMemo(() => {
-        if (openOrdersQuery.isSuccess) {
-            return openOrdersQuery.data;
-        }
-    }, [openOrdersQuery]);
 
     useEffect(() => {
         if (marketInfo.phase == 'maturity') {
@@ -56,35 +32,6 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
             setCurrentTab(4);
         }
     }, [marketInfo.phase]);
-
-    const optionsMarkets = useMemo(() => {
-        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
-            let markets = openOrdersMap
-                ? marketsQuery.data.map((m) => ({
-                      ...m,
-                      openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
-                      availableLongs: (openOrdersMap as any).get(m.address.toLowerCase())?.availableLongs ?? '0',
-                      availableShorts: (openOrdersMap as any).get(m.address.toLowerCase())?.availableShorts ?? '0',
-                      longPrice: (openOrdersMap as any).get(m.address.toLowerCase())?.longPrice ?? '0',
-                      shortPrice: (openOrdersMap as any).get(m.address.toLowerCase())?.shortPrice ?? '0',
-                  }))
-                : marketsQuery.data;
-
-            markets = markets.filter((market) => market.currencyKey == marketInfo?.currencyKey);
-            markets = markets.filter((market) => market.availableLongs > 0 || market.availableShorts > 0);
-            markets = markets.filter((market) => market.maturityDate == marketInfo.maturityDate);
-            markets = markets.filter((market) => market.address !== marketInfo.address);
-            markets = sortOptionsMarkets(markets);
-            return markets;
-        }
-        return [];
-    }, [marketsQuery]);
-
-    const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
-        enabled: isAppReady && optionsMarkets.length > 0,
-        refetchInterval: false,
-    });
-    const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
     const { t } = useTranslation();
 
@@ -125,90 +72,65 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
             title: t('options.market.widgets.recent-transactions-widget'),
             index: 4,
         },
+        {
+            title: t('options.market.overview.similar-markets'),
+            index: 5,
+        },
     ];
 
     return (
         <>
-            <FiltersButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>Views</FiltersButton>
-            {showViewsDropdown && (
-                <PositionWrapper>
-                    <Wrapper>
-                        <OutsideClickHandler onOutsideClick={() => setShowViewsDropdown(false)}>
-                            <Title>Views</Title>
-                            {tabItems &&
-                                tabItems.map((item, index) => {
-                                    return (
-                                        <Item
-                                            active={!similarMarketsVisibility && currentTab === item.index}
-                                            key={index}
-                                            onClick={() => {
-                                                dispatch(setSimilarMarketVisibility(false));
-                                                setCurrentTab(item.index);
-                                                setShowViewsDropdown(false);
-                                            }}
-                                        >
-                                            {item.title}
-                                        </Item>
-                                    );
-                                })}
-                            <Item
-                                active={similarMarketsVisibility}
-                                onClick={() => {
-                                    dispatch(setSimilarMarketVisibility(true));
-                                    setShowViewsDropdown(false);
-                                }}
-                            >
-                                {t('options.market.overview.similar-markets')}
-                            </Item>
-                        </OutsideClickHandler>
-                    </Wrapper>
-                </PositionWrapper>
-            )}
-            {!similarMarketsVisibility && (
-                <Container>
-                    <Container.Main justifyContent={inMaturity ? 'flex-start' : ''}>
-                        {tabItems &&
-                            tabItems.map((item, index) => {
-                                return (
-                                    <Container.Main.Item
-                                        active={item.index == currentTab}
-                                        key={index}
-                                        noStrech={inMaturity ? true : false}
-                                        onClick={() => setCurrentTab(item.index)}
-                                    >
-                                        {item.title}
-                                    </Container.Main.Item>
-                                );
-                            })}
-                    </Container.Main>
-                    <Container.Tab>
-                        {currentTab == 0 && (optionSide ? <Orderbook optionSide={optionSide} /> : <></>)}
-                        {currentTab == 1 && <TradingView />}
-                        {currentTab == 2 && <OptionPriceTab />}
-                        {currentTab == 3 && <UserActivity />}
-                        {currentTab == 4 && <MarketActivity />}
-                    </Container.Tab>
-                </Container>
-            )}
-            {similarMarketsVisibility && (
-                <SimilarMarketsContainer>
-                    {optionsMarkets?.length > 0 &&
-                        optionsMarkets.map((optionMarket, index) => {
+            <Container>
+                <RowCard />
+                <FiltersButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>Views</FiltersButton>
+                {showViewsDropdown && (
+                    <PositionWrapper>
+                        <Wrapper>
+                            <OutsideClickHandler onOutsideClick={() => setShowViewsDropdown(false)}>
+                                <Title>Views</Title>
+                                {tabItems &&
+                                    tabItems.map((item, index) => {
+                                        return (
+                                            <Item
+                                                active={currentTab === item.index}
+                                                key={index}
+                                                onClick={() => {
+                                                    setCurrentTab(item.index);
+                                                    setShowViewsDropdown(false);
+                                                }}
+                                            >
+                                                {item.title}
+                                            </Item>
+                                        );
+                                    })}
+                            </OutsideClickHandler>
+                        </Wrapper>
+                    </PositionWrapper>
+                )}
+                <Container.Main justifyContent={inMaturity ? 'flex-start' : ''}>
+                    {tabItems &&
+                        tabItems.map((item, index) => {
                             return (
-                                <SPAAnchor key={index} href={buildOptionsMarketLink(optionMarket.address)}>
-                                    <MarketCard
-                                        optionMarket={optionMarket}
-                                        exchangeRates={exchangeRates}
-                                        marketCardStyle={{
-                                            maxWidth: '49%',
-                                            wrapperMargin: '0px 0px 10px 0px',
-                                        }}
-                                    />
-                                </SPAAnchor>
+                                <Container.Main.Item
+                                    active={item.index == currentTab}
+                                    key={index}
+                                    noStrech={inMaturity ? true : false}
+                                    onClick={() => setCurrentTab(item.index)}
+                                >
+                                    {item.title}
+                                </Container.Main.Item>
                             );
                         })}
-                </SimilarMarketsContainer>
-            )}
+                </Container.Main>
+                <Container.Tab>
+                    {currentTab == 0 && (optionSide ? <Orderbook optionSide={optionSide} /> : <></>)}
+                    {currentTab == 1 && <TradingView />}
+                    {currentTab == 2 && <OptionPriceTab />}
+                    {currentTab == 3 && <UserActivity />}
+                    {currentTab == 4 && <MarketActivity />}
+                    {currentTab == 5 && <SimilarMarkets />}
+                </Container.Tab>
+            </Container>
         </>
     );
 };
