@@ -29,8 +29,7 @@ const mediumPostsQuery = (options?: UseQueryOptions<Blog[]>) => {
         async () => {
             const parser: Parser<postsParserType> = new Parser();
             const feed = await parser.parseURL(
-                'https://medium.com/feed/@thalesmarket'
-                // 'https://cors-anywhere.herokuapp.com/https://medium.com/feed/@thalesmarket'
+                'https://cors-anywhere.herokuapp.com/https://medium.com/feed/@thalesmarket'
             );
             return feed?.items;
         },
