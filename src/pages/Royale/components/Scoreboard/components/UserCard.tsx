@@ -86,21 +86,24 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     });
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
 
-    const [allowance, setAllowance] = useState(false);
+    const [selectedRoyalePassport, setSelectedRoyalePassport] = useState<number | null>(null);
+
+    const [allowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [balance, setBalance] = useState('0');
-    const [openEditDialog, setOpenEditDialog] = useState(false);
-    const [showSwap, setShowSwap] = useState(false);
-    const [isBuyingIn, setIsBuyingIn] = useState(false);
-    const [allPositionsUp, setAllPositionsUp] = useState(true);
+    const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+    const [showSwap, setShowSwap] = useState<boolean>(false);
+    const [isBuyingIn, setIsBuyingIn] = useState<boolean>(false);
+    const [allPositionsUp, setAllPositionsUp] = useState<boolean>(true);
+    const [showSelectDropdown, setShowSelectDropdown] = useState<boolean>(false);
 
     const [defaultPositions, setDefaultPositions] = useState([2, 1, 2, 1, 2, 1]);
 
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
     const [selectedBuyInCollateral, setSelectedBuyInCollateral] = useState(BuyInCollateralEnum.PASS);
-    const [showSelectBuyInDropdown, setShowSelectBuyInDropdown] = useState(false);
+    const [showSelectBuyInDropdown, setShowSelectBuyInDropdown] = useState<boolean>(false);
 
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
@@ -152,6 +155,12 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
             setDefaultPositions(user.defaultPositions);
         }
     }, [walletAddress, user]);
+
+    useEffect(() => {
+        if (user && royalePassports.length > 0) {
+            setSelectedRoyalePassport(royalePassports[0]?.id);
+        }
+    }, [walletAddress, user, royalePassports]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
@@ -400,19 +409,36 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     user={user}
                     walletAddress={walletAddress}
                 ></UserEditRoyaleDataDialog>
-                <FlexDiv style={{ alignItems: 'center' }}>
-                    {user?.avatar ? <UserAvatar src={user.avatar} style={{ marginRight: 14 }} /> : getAvatar(user)}
+                <FlexDivSpaceBetween>
+                    <FlexDiv style={{ alignItems: 'center' }}>
+                        {user?.avatar ? <UserAvatar src={user.avatar} style={{ marginRight: 14 }} /> : getAvatar(user)}
 
-                    <UserLabel>
-                        <Trans
-                            i18nKey="options.royale.scoreboard.player-no"
-                            components={{ sans: <span style={{ fontFamily: 'sans-serif !important' }} /> }}
-                        />
+                        <UserLabel>
+                            <Trans
+                                i18nKey="options.royale.scoreboard.player-no"
+                                components={{ sans: <span style={{ fontFamily: 'sans-serif !important' }} /> }}
+                            />
 
-                        {' #'}
-                        {user?.number}
-                    </UserLabel>
-                </FlexDiv>
+                            {' #'}
+                            {user?.number}
+                        </UserLabel>
+                    </FlexDiv>
+                    <FlexDiv>
+                        {' '}
+                        <Button
+                            // disabled={royalePassports.length === 0}
+                            // className={royalePassports.length === 0 ? 'disabled' : ''}
+                            style={{
+                                // display: royalePassports.length === 0 ? 'none' : '',
+                                // cursor: royalePassports.length === 0 ? 'not-allowed' : '',
+                                whiteSpace: 'pre',
+                                fontSize: 15,
+                            }}
+                        >
+                            Show my Passports
+                        </Button>
+                    </FlexDiv>
+                </FlexDivSpaceBetween>
                 <FlexDivColumn style={{ margin: '20px 0' }}>
                     <FlexContainer>
                         <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
@@ -475,15 +501,45 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 {royalePassports.length}
                             </InputWrapper>
                         </FlexDivSpaceBetween>
-                        <FlexDivSpaceBetween style={{ marginTop: 10 }}>
+                        <FlexDivSpaceBetween style={{ marginTop: 10, position: 'relative' }}>
                             <UserLabel>{t('options.royale.scoreboard.passport-id')}</UserLabel>
-                            <InputWrapper
-                                style={{
-                                    maxWidth: 140,
-                                }}
+                            <Selector
+                                className={royalePassports.length < 2 ? 'disabled' : ''}
+                                isOpen={showSelectDropdown}
                             >
-                                {royalePassports.length > 0 ? parseInt(royalePassports[0].id as any, 16) : 'N/A'}
-                            </InputWrapper>
+                                {royalePassports.length === 0 ? (
+                                    <Text>N/A</Text>
+                                ) : royalePassports.length === 1 ? (
+                                    <Text>{parseInt(royalePassports[0].id as any, 16)}</Text>
+                                ) : (
+                                    <Text
+                                        onClick={
+                                            royalePassports.length > 1
+                                                ? setShowSelectDropdown.bind(this, true)
+                                                : undefined
+                                        }
+                                    >
+                                        {parseInt(selectedRoyalePassport as any, 16)}
+                                        <Arrow className="icon icon--arrow-down" />
+                                    </Text>
+                                )}
+
+                                {showSelectDropdown &&
+                                    royalePassports
+                                        .filter((passport) => passport.id !== selectedRoyalePassport)
+                                        .map((passport: any, key: number) => (
+                                            <Text
+                                                onClick={() => {
+                                                    setSelectedRoyalePassport(passport.id);
+                                                    setShowSelectDropdown(false);
+                                                }}
+                                                key={key}
+                                            >
+                                                {parseInt(passport.id as any, 16)}
+                                            </Text>
+                                        ))}
+                            </Selector>
+                            {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
                         </FlexDivSpaceBetween>
                     </RoyalePassportContainer>
                     <FlexContainer
@@ -1102,4 +1158,42 @@ const SupText = styled.sup`
         margin-left: 0px;
         margin-right: 5px;
     }
+`;
+
+const Selector = styled.div<{ isOpen: boolean }>`
+    width: 240px;
+    height: ${(props) => (props.isOpen ? 'content' : '28px')};
+    border: 2px solid var(--color-background);
+    box-sizing: border-box;
+    border-radius: 19.5349px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 29px;
+    text-align: center;
+    letter-spacing: -0.4px;
+    color: var(--color-background);
+    cursor: pointer;
+    z-index: 5;
+    background: var(--color);
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    @media (max-width: 1024px) {
+        width: 150px;
+    }
+`;
+
+const Arrow = styled.i`
+    font-size: 12px;
+    line-height: 12px;
+    display: inline-block;
+    padding-bottom: 3px;
+    position: absolute;
+    color: var(--color-wrapper);
+    top: 9px;
+    left: ${() => (window.innerWidth < 1024 ? '75%' : '67%')};
 `;
