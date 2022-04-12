@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Wrapper } from 'theme/common';
@@ -18,6 +18,7 @@ import useLatestSeasonQuery from './Queries/useLatestSeasonQuery';
 import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
 import useRoyaleFooterQuery, { FooterData } from './Queries/useRoyaleFooterQuery';
 import useRoyaleAssetPriceQuery from './Queries/useRoyaleAssetPriceQuery';
+import useRoyalePasportQuery from './Queries/usePassportQuery';
 
 export enum Theme {
     Light,
@@ -31,6 +32,7 @@ const ThalesRoyal: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const latestSeasonQuery = useLatestSeasonQuery({
         enabled: isAppReady && isL2,
@@ -55,6 +57,19 @@ const ThalesRoyal: React.FC = () => {
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
+
+    const royalePassportQuery = useRoyalePasportQuery(walletAddress, networkId, selectedSeason, {
+        enabled: isL2 && isWalletConnected,
+    });
+    const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
+
+    const [selectedRoyalePassport, setSelectedRoyalePassport] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (royalePassports.length > 0) {
+            setSelectedRoyalePassport(royalePassports[0]?.id);
+        }
+    }, [walletAddress, royalePassports]);
 
     useEffect(() => {
         if (positionsQuery.isSuccess) {
@@ -152,6 +167,9 @@ const ThalesRoyal: React.FC = () => {
                     selectedSeason={selectedSeason}
                     setSelectedSeason={setSelectedSeason}
                     latestSeason={latestSeason}
+                    royalePassports={royalePassports}
+                    selectedRoyalePassport={selectedRoyalePassport}
+                    setSelectedRoyalePassport={setSelectedRoyalePassport}
                 />
                 <RoyaleArena
                     assetPrice={assetPrice}
@@ -160,6 +178,8 @@ const ThalesRoyal: React.FC = () => {
                     latestSeason={latestSeason}
                     selectedSeason={selectedSeason}
                     showBattle={selectedPage === 'royale'}
+                    royalePassports={royalePassports}
+                    selectedRoyalePassport={selectedRoyalePassport}
                 />
                 <FooterV2
                     assetPrice={assetPrice}
@@ -170,6 +190,9 @@ const ThalesRoyal: React.FC = () => {
                     setSelectedPage={setSelectedPage}
                     selectedSeason={selectedSeason}
                     setSelectedSeason={setSelectedSeason}
+                    royalePassports={royalePassports}
+                    selectedRoyalePassport={selectedRoyalePassport}
+                    setSelectedRoyalePassport={setSelectedRoyalePassport}
                 />
             </Wrapper>
 

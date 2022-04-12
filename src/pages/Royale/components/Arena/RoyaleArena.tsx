@@ -1,35 +1,34 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import addSeconds from 'date-fns/addSeconds';
-import format from 'date-fns/format';
-import differenceInSeconds from 'date-fns/differenceInSeconds';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import { useSelector } from 'react-redux';
-import { BigNumber } from 'ethers';
-import winnerCard from 'assets/images/royale/winner-card.svg';
 import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
 import winnerCardS3 from 'assets/images/royale/winner-card-s3.svg';
 import winnerCardS4 from 'assets/images/royale/winner-card-s4.svg';
 import winnerCardS5 from 'assets/images/royale/winner-card-s5.svg';
-import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
-import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
-import { Positions } from '../../Queries/usePositionsQuery';
-import { FooterData } from '../../Queries/useRoyaleFooterQuery';
-import { RootState } from 'redux/rootReducer';
+import winnerCard from 'assets/images/royale/winner-card.svg';
+import addSeconds from 'date-fns/addSeconds';
+import differenceInSeconds from 'date-fns/differenceInSeconds';
+import format from 'date-fns/format';
+import { BigNumber } from 'ethers';
+import useInterval from 'hooks/useInterval';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import snxJSConnector from 'utils/snxJSConnector';
-import { dispatchMarketNotification } from 'utils/options';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, Wrapper } from 'theme/common';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { getIsOVM } from 'utils/network';
-import useInterval from 'hooks/useInterval';
-import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import useRoundsQuery from './queries/useRoundsQuery';
-import useRoyalePasportQuery from 'pages/Royale/Queries/usePassportQuery';
-import usePlayerHistoricalPositionsQuery from './queries/usePlayerHistoricalPositionsQuery';
+import { dispatchMarketNotification } from 'utils/options';
+import snxJSConnector from 'utils/snxJSConnector';
+import { Positions } from '../../Queries/usePositionsQuery';
+import { FooterData } from '../../Queries/useRoyaleFooterQuery';
 import useUserRoyalQuery, { AnonimUser } from '../Scoreboard/queries/useUserRoyalQuery';
+import usePlayerHistoricalPositionsQuery from './queries/usePlayerHistoricalPositionsQuery';
+import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
+import useRoundsQuery from './queries/useRoundsQuery';
+import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
 
 type RoyaleArenaProps = {
     assetPrice: string;
@@ -38,6 +37,8 @@ type RoyaleArenaProps = {
     latestSeason: number;
     selectedSeason: number;
     showBattle: boolean;
+    royalePassports: any[];
+    selectedRoyalePassport: any;
 };
 
 const renderRounds = (
@@ -289,6 +290,8 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     assetPrice,
     positions,
     royaleFooterData,
+    royalePassports,
+    selectedRoyalePassport,
 }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -303,13 +306,15 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
 
     const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
-    const royalePassportQuery = useRoyalePasportQuery(walletAddress ?? '', networkId, selectedSeason, {
-        enabled: isL2 && isWalletConnected,
-    });
-    const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
-    const passportID = royalePassports.length > 0 ? '' + parseInt('' + royalePassports[0].id, 16) : '';
+    // const royalePassportQuery = useRoyalePasportQuery(walletAddress ?? '', networkId, selectedSeason, {
+    //     enabled: isL2 && isWalletConnected,
+    // });
+    // const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
+    const [passportID, setPassportID] = useState(
+        royalePassports.length > 0 ? '' + parseInt('' + selectedRoyalePassport, 16) : ''
+    );
 
-    const userQuery = useUserRoyalQuery(walletAddress as any, networkId, selectedSeason, {
+    const userQuery = useUserRoyalQuery(walletAddress as any, selectedRoyalePassport, networkId, selectedSeason, {
         enabled: isL2 && isAppReady && networkId === 10 && selectedSeason <= 5,
     });
 
@@ -353,6 +358,10 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
             setIsHistoricalPlayerWinner(false);
         }
     }, [user, selectedSeason, royaleData]);
+
+    useEffect(() => {
+        setPassportID(royalePassports.length > 0 ? '' + parseInt('' + selectedRoyalePassport, 16) : '');
+    }, [selectedRoyalePassport]);
 
     const {
         roundInASeasonStartTime,
