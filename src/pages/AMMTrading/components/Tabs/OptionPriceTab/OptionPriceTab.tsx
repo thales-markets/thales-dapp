@@ -35,7 +35,7 @@ const OptionPriceTab: React.FC = () => {
         enabled: isAppReady && !!optionsMarket,
     });
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
         enabled: isAppReady && !!optionsMarket,
     });
 

@@ -56,3 +56,20 @@ export const OPTIMISM_OPTIONS = [
 
 export const POLYGON_MUMBAI_ID = 80001;
 export const POLYGON_ID = 137;
+
+export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
+    [POLYGON_ID]: {
+        chainId: '0x89',
+        chainName: 'Polygon Mainnet',
+        rpcUrls: ['https://polygon-rpc.com'],
+        blockExplorerUrls: ['https://explorer.matic.network/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+    },
+    [POLYGON_MUMBAI_ID]: {
+        chainId: '0x13881',
+        chainName: 'Optimism Kovan',
+        rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
+        blockExplorerUrls: ['https://mumbai-explorer.matic.today/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+    },
+};

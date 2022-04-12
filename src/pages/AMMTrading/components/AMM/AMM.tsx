@@ -27,7 +27,7 @@ import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLim
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
@@ -112,7 +112,7 @@ const AMM: React.FC = () => {
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
         enabled: isAppReady && !!optionsMarket?.address,
     });
     const ammMaxLimits =
@@ -153,7 +153,7 @@ const AMM: React.FC = () => {
         const marketAddress = optionsMarket?.address;
         const side = SIDE[optionSide];
         const parsedAmount = ethers.utils.parseEther(amount.toString());
-        const parsedTotal = ethers.utils.parseEther(total.toString());
+        const parsedTotal = stableCoinParser(total.toString(), networkId);
         const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
         return { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage };
     };
@@ -308,15 +308,17 @@ const AMM: React.FC = () => {
                         ? ammContractWithSigner.buyPriceImpact(optionsMarket.address, SIDE[optionSide], parsedAmount)
                         : ammContractWithSigner.sellPriceImpact(optionsMarket.address, SIDE[optionSide], parsedAmount),
                 ]);
-                const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
+
+                const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(amount);
+
                 setPrice(ammPrice);
-                setTotal(bigNumberFormatter(ammQuote));
+                setTotal(stableCoinFormatter(ammQuote, networkId));
                 setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - MIN_SCEW_IMPACT : 0);
                 setPotentialReturn(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
                 setIsPotentialReturnAvailable(isBuy);
 
                 const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
-                const isQuoteChanged = ammPrice !== price || total !== bigNumberFormatter(ammQuote);
+                const isQuoteChanged = ammPrice !== price || total !== stableCoinFormatter(ammQuote, networkId);
 
                 if (isSubmit) {
                     latestGasLimit = await fetchGasLimit(
@@ -329,7 +331,7 @@ const AMM: React.FC = () => {
                 } else {
                     if (
                         ammPrice > 0 &&
-                        bigNumberFormatter(ammQuote) > 0 &&
+                        stableCoinFormatter(ammQuote, networkId) > 0 &&
                         isSlippageValid &&
                         isQuoteChanged &&
                         hasAllowance
@@ -588,8 +590,8 @@ const AMM: React.FC = () => {
                     suggestedAmount
                 );
 
-                const ammPrice = bigNumberFormatter(ammQuote) / Number(_suggestedAmount);
-                const sUSDDifference = bigNumberFormatter(ammQuote) - sUSDBalance;
+                const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(_suggestedAmount);
+                const sUSDDifference = stableCoinFormatter(ammQuote, networkId) - sUSDBalance;
 
                 _suggestedAmount = Number(sUSDBalance) / Number(ammPrice);
 

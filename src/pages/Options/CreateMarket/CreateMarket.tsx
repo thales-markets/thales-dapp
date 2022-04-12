@@ -55,7 +55,7 @@ import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
-import { POLYGON_ID, ZERO_ADDRESS } from '../../../constants/network';
+import { ZERO_ADDRESS } from '../../../constants/network';
 import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
@@ -165,12 +165,9 @@ export const CreateMarket: React.FC = () => {
             initialFundingAmount === '';
 
         const formatCreateMarketArguments = () => {
-            const initialMint = ethers.utils.parseUnits(
-                initialFundingAmount.toString(),
-                networkId === POLYGON_ID ? 6 : 18
-            );
+            const initialMint = ethers.utils.parseEther(initialFundingAmount.toString());
             const oracleKey = bytesFormatter((currencyKey as CurrencyKeyOptionType).value);
-            const price = ethers.utils.parseUnits(strikePrice.toString(), networkId === POLYGON_ID ? 6 : 18);
+            const price = ethers.utils.parseEther(strikePrice.toString());
             const maturity = Math.round((maturityDate as Date).getTime() / 1000);
             return { oracleKey, price, maturity, initialMint };
         };
@@ -180,14 +177,10 @@ export const CreateMarket: React.FC = () => {
             const {
                 contracts: { SynthsUSD },
             } = snxJSConnector.snxJS as any;
-
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
             const getAllowanceForCurrentWallet = async () => {
                 try {
-                    const initialMint = ethers.utils.parseUnits(
-                        initialFundingAmount.toString(),
-                        networkId === POLYGON_ID ? 6 : 18
-                    );
+                    const initialMint = ethers.utils.parseEther(Number(initialFundingAmount).toString());
                     const allowance = await checkAllowance(
                         initialMint,
                         SynthsUSD,

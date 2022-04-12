@@ -22,6 +22,37 @@ export const NetworkSwitch: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
+    // const switchOrAddPolygonNetwork = async () => {
+    //     const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? NetworkId['Mainnet-Ovm'];
+    //     const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
+    //
+    //     if (typeof window.ethereum !== 'undefined') {
+    //         try {
+    //             await (window.ethereum as any).request({
+    //                 method: 'wallet_switchEthereumChain',
+    //                 params: [{ chainId: optimismNetworkParms.chainId }],
+    //             });
+    //         } catch (switchError: any) {
+    //             if (switchError.code === 4902) {
+    //                 try {
+    //                     await (window.ethereum as any).request({
+    //                         method: 'wallet_addEthereumChain',
+    //                         params: [optimismNetworkParms],
+    //                     });
+    //                     await (window.ethereum as any).request({
+    //                         method: 'wallet_switchEthereumChain',
+    //                         params: [{ chainId: optimismNetworkParms.chainId }],
+    //                     });
+    //                 } catch (addError) {
+    //                     console.log(addError);
+    //                 }
+    //             } else {
+    //                 console.log(switchError);
+    //             }
+    //         }
+    //     }
+    // };
+
     const switchOrAddOptimismNetwork = async () => {
         const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? NetworkId['Mainnet-Ovm'];
         const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];

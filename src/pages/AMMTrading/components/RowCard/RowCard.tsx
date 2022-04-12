@@ -8,7 +8,7 @@ import { useMarketContext } from '../../contexts/MarketContext';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
@@ -26,6 +26,7 @@ const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
     const { t } = useTranslation();
     const isBuy = useSelector((state: RootState) => getIsBuyState(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     let optBalances = {
         long: 0,
@@ -39,7 +40,7 @@ const RowCard: React.FC = () => {
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketInfo.address, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(marketInfo.address, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(marketInfo.address, networkId, {
         enabled: isAppReady,
     });
 
