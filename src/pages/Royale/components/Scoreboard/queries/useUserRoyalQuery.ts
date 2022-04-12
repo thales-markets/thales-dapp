@@ -40,12 +40,13 @@ const BASE_URL = 'https://api.thales.market/royale-user/';
 
 const useUserRoyalQuery = (
     walletAddress: string,
+    passportId: number,
     networkId: NetworkId,
     selectedSeason: number,
     options?: UseQueryOptions<User>
 ) => {
     return useQuery<User>(
-        QUERY_KEYS.Royale.User(walletAddress),
+        QUERY_KEYS.Royale.User(walletAddress, passportId),
         async () => {
             if (walletAddress) {
                 const royalePlayersDataUrl = BASE_URL + walletAddress;
@@ -59,6 +60,7 @@ const useUserRoyalQuery = (
                               address: walletAddress,
                           })
                         : await thalesData.binaryOptions.thalesRoyalePassportPlayers({
+                              id: passportId,
                               season: selectedSeason,
                               network: networkId,
                               owner: walletAddress,

@@ -8,7 +8,6 @@ import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
-import useRoyalePasportQuery from 'pages/Royale/Queries/usePassportQuery';
 import { Positions } from 'pages/Royale/Queries/usePositionsQuery';
 import { FooterData } from 'pages/Royale/Queries/useRoyaleFooterQuery';
 import useRoyalePassIdQuery from 'pages/Royale/Queries/useRoyalePassIdQuery';
@@ -40,6 +39,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import useLatestRoyaleForUserInfo from '../queries/useLastRoyaleForUserInfo';
 import { User, UserStatus } from '../queries/useRoyalePlayersQuery';
 import useUserRoyalQuery, { AnonimUser } from '../queries/useUserRoyalQuery';
+import ShowRoyalePassportsDialog from './ShowRoyalePassportsDialog/ShowRoyalePassportsDialog';
 import UserEditRoyaleDataDialog from './UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
 
 type UserCardProps = {
@@ -47,6 +47,9 @@ type UserCardProps = {
     positions: Positions;
     royaleFooterData: FooterData | undefined;
     selectedSeason: number;
+    royalePassports: any[];
+    selectedRoyalePassport: any;
+    setSelectedRoyalePassport: (pasport: any) => void;
 };
 export enum PositionsEnum {
     NONE = 0,
@@ -59,14 +62,22 @@ export enum BuyInCollateralEnum {
     SUSD = 'susd',
 }
 
-export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, assetPrice, positions }) => {
+export const UserCard: React.FC<UserCardProps> = ({
+    selectedSeason,
+    royaleFooterData,
+    assetPrice,
+    positions,
+    royalePassports,
+    selectedRoyalePassport,
+    setSelectedRoyalePassport,
+}) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
-    const userQuery = useUserRoyalQuery(walletAddress as any, networkId, selectedSeason, {
+    const userQuery = useUserRoyalQuery(walletAddress as any, selectedRoyalePassport, networkId, selectedSeason, {
         enabled: isL2 && isAppReady,
     });
     const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
@@ -81,13 +92,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
     const royalePassId = royalePassIdQuery.isSuccess ? royalePassIdQuery.data : {};
 
-    const royalePassportQuery = useRoyalePasportQuery(walletAddress, networkId, selectedSeason, {
-        enabled: isL2 && isWalletConnected,
-    });
-    const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
-
-    const [selectedRoyalePassport, setSelectedRoyalePassport] = useState<number | null>(null);
-
     const [allowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
@@ -97,8 +101,11 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     const [isBuyingIn, setIsBuyingIn] = useState<boolean>(false);
     const [allPositionsUp, setAllPositionsUp] = useState<boolean>(true);
     const [showSelectDropdown, setShowSelectDropdown] = useState<boolean>(false);
+    const [openPassportsDialog, setOpenPassportsDialog] = useState<boolean>(false);
 
     const [defaultPositions, setDefaultPositions] = useState([2, 1, 2, 1, 2, 1]);
+
+    const [royalePassportIds, setRoyalePassportIds] = useState([] as any);
 
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
@@ -154,13 +161,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         if (user && user.defaultPositions && user.status !== UserStatus.NOTSIGNED) {
             setDefaultPositions(user.defaultPositions);
         }
-    }, [walletAddress, user]);
+    }, [walletAddress, user, selectedRoyalePassport]);
 
     useEffect(() => {
         if (user && royalePassports.length > 0) {
-            setSelectedRoyalePassport(royalePassports[0]?.id);
+            setRoyalePassportIds(royalePassports.map((passport) => passport.id));
         }
-    }, [walletAddress, user, royalePassports]);
+    }, [walletAddress, user, royalePassports, selectedRoyalePassport]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
@@ -409,6 +416,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     user={user}
                     walletAddress={walletAddress}
                 ></UserEditRoyaleDataDialog>
+
+                {!openPassportsDialog ?? (
+                    <OverlayForDropDown
+                        onClick={() => {
+                            if (openPassportsDialog) setOpenPassportsDialog(false);
+                        }}
+                    ></OverlayForDropDown>
+                )}
+
+                <ShowRoyalePassportsDialog
+                    open={openPassportsDialog}
+                    handleClose={setOpenPassportsDialog.bind(this, false)}
+                    royalePassportIds={royalePassportIds}
+                ></ShowRoyalePassportsDialog>
                 <FlexDivSpaceBetween>
                     <FlexDiv style={{ alignItems: 'center' }}>
                         {user?.avatar ? <UserAvatar src={user.avatar} style={{ marginRight: 14 }} /> : getAvatar(user)}
@@ -434,6 +455,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                 whiteSpace: 'pre',
                                 fontSize: 15,
                             }}
+                            onClick={() => setOpenPassportsDialog(true)}
                         >
                             Show my Passports
                         </Button>
