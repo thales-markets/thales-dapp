@@ -40,10 +40,15 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
 
     const [selectedPassport, setSelectedPassport] = useState<number>(0);
 
+    const closeDialog = () => {
+        setSelectedPassport(0);
+        handleClose();
+    };
+
     return (
         <Modal
             open={open}
-            onClose={handleClose}
+            onClose={closeDialog}
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
         >
@@ -54,7 +59,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                     <Text className="text-m font-sansation">
                         {t('options.royale.my-passports-dialog.passport-amount', { amount: royalePassportIds.length })}
                     </Text>
-                    <XButton onClick={() => handleClose()} />
+                    <XButton onClick={() => closeDialog()} />
                 </Header>
                 <PassportsWrapper>
                     {royalePassportIds.map((passportId: number, key: number) => (
