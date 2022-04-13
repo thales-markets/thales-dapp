@@ -10,6 +10,7 @@ import queryString from 'query-string';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from '../../Queries/useRoyaleFooterQuery';
 import { useLocation } from 'react-router-dom';
+import PassportDropdown from '../PassportDropdown/PassportDropdown';
 
 type ScoreboardProps = {
     assetPrice: string;
@@ -44,7 +45,6 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
     const location = useLocation();
     const [showStats, setShowStats] = useState(true);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
-    const [showPassportDropdown, setShowPassportDropdown] = useState(false);
 
     const allSeasons = useMemo(() => {
         const seasons = [];
@@ -183,51 +183,15 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                 >
                     ✖
                 </CloseStats>
+                {selectedPage === 'royale' && (
+                    <PassportDropdown
+                        selectedRoyalePassport={selectedRoyalePassport}
+                        setSelectedRoyalePassport={setSelectedRoyalePassport}
+                        royalePassports={royalePassports}
+                    />
+                )}
                 {royaleData?.seasonFinished ? (
                     <>
-                        {' '}
-                        {selectedPage === 'royale' && (
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <span>{t('options.royale.scoreboard.passport-id')}</span>
-                                <Selector
-                                    className={royalePassports.length < 2 ? 'disabled' : ''}
-                                    isOpen={showPassportDropdown}
-                                >
-                                    {royalePassports.length === 0 ? (
-                                        <Text>N/A</Text>
-                                    ) : royalePassports.length === 1 ? (
-                                        <Text>{parseInt(royalePassports[0].id as any, 16)}</Text>
-                                    ) : (
-                                        <Text
-                                            onClick={
-                                                royalePassports.length > 1
-                                                    ? setShowPassportDropdown.bind(this, !showPassportDropdown)
-                                                    : undefined
-                                            }
-                                        >
-                                            {parseInt(selectedRoyalePassport as any, 16)}
-                                            <Arrow isAbsolute={true} className="icon icon--arrow-down" />
-                                        </Text>
-                                    )}
-
-                                    {showPassportDropdown &&
-                                        royalePassports
-                                            .filter((passport) => passport.id !== selectedRoyalePassport)
-                                            .map((passport: any, key: number) => (
-                                                <Text
-                                                    onClick={() => {
-                                                        setSelectedRoyalePassport(passport.id);
-                                                        setShowPassportDropdown(false);
-                                                    }}
-                                                    key={key}
-                                                >
-                                                    {parseInt(passport.id as any, 16)}
-                                                </Text>
-                                            ))}
-                                </Selector>
-                                {showPassportDropdown && <Overlay onClick={() => setShowPassportDropdown(false)} />}
-                            </div>
-                        )}
                         <div style={{ textAlign: 'center' }}>
                             <span>{t('options.royale.footer.season-finished', { season: selectedSeason })}</span>
                         </div>
@@ -241,48 +205,6 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                     </>
                 ) : (
                     <>
-                        {selectedPage === 'royale' && (
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <span>{t('options.royale.scoreboard.passport-id')}</span>
-                                <Selector
-                                    className={royalePassports.length < 2 ? 'disabled' : ''}
-                                    isOpen={showPassportDropdown}
-                                >
-                                    {royalePassports.length === 0 ? (
-                                        <Text>N/A</Text>
-                                    ) : royalePassports.length === 1 ? (
-                                        <Text>{parseInt(royalePassports[0].id as any, 16)}</Text>
-                                    ) : (
-                                        <Text
-                                            onClick={
-                                                royalePassports.length > 1
-                                                    ? setShowPassportDropdown.bind(this, !showPassportDropdown)
-                                                    : undefined
-                                            }
-                                        >
-                                            {parseInt(selectedRoyalePassport as any, 16)}
-                                            <Arrow isAbsolute={true} className="icon icon--arrow-down" />
-                                        </Text>
-                                    )}
-
-                                    {showPassportDropdown &&
-                                        royalePassports
-                                            .filter((passport) => passport.id !== selectedRoyalePassport)
-                                            .map((passport: any, key: number) => (
-                                                <Text
-                                                    onClick={() => {
-                                                        setSelectedRoyalePassport(passport.id);
-                                                        setShowPassportDropdown(false);
-                                                    }}
-                                                    key={key}
-                                                >
-                                                    {parseInt(passport.id as any, 16)}
-                                                </Text>
-                                            ))}
-                                </Selector>
-                                {showPassportDropdown && <Overlay onClick={() => setShowPassportDropdown(false)} />}
-                            </div>
-                        )}
                         <div>
                             <span>{t('options.royale.footer.current-positions')}:</span>
                             <span>{t('options.royale.footer.up')}</span>
@@ -527,32 +449,4 @@ const Overlay = styled.div`
     left: 0;
     right: 0;
     z-index: 4;
-`;
-
-const Selector = styled.div<{ isOpen: boolean }>`
-    position: relative;
-    width: 200px;
-    height: ${(props) => (props.isOpen ? 'content' : '28px')};
-    border: 2px solid var(--color);
-    box-sizing: border-box;
-    border-radius: 19.5349px;
-    white-space: nowrap;
-    overflow: hidden;
-    font-family: Sansation !important;
-    font-style: normal;
-    font-size: 20px;
-    line-height: 26px;
-    text-align: center;
-    letter-spacing: -0.4px;
-    color: var(--color);
-    cursor: pointer;
-    z-index: 5;
-    background: var(--color-background);
-    &.disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-    @media (max-width: 1024px) {
-        width: 150px;
-    }
 `;

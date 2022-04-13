@@ -9,6 +9,7 @@ import differenceInSeconds from 'date-fns/differenceInSeconds';
 import format from 'date-fns/format';
 import { BigNumber } from 'ethers';
 import useInterval from 'hooks/useInterval';
+import { sortBy } from 'lodash';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -24,6 +25,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from '../../Queries/useRoyaleFooterQuery';
+import PassportDropdown from '../PassportDropdown/PassportDropdown';
 import useUserRoyalQuery, { AnonimUser } from '../Scoreboard/queries/useUserRoyalQuery';
 import usePlayerHistoricalPositionsQuery from './queries/usePlayerHistoricalPositionsQuery';
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
@@ -39,6 +41,7 @@ type RoyaleArenaProps = {
     showBattle: boolean;
     royalePassports: any[];
     selectedRoyalePassport: any;
+    setSelectedRoyalePassport: any;
 };
 
 const renderRounds = (
@@ -69,7 +72,7 @@ const renderRounds = (
         enabled: networkId !== undefined && isAppReady && networkId === 10 && selectedSeason > 0 && selectedSeason <= 5,
     });
 
-    const positions = positionsQuery.isSuccess ? positionsQuery.data : [];
+    const positions = positionsQuery.isSuccess ? sortBy(positionsQuery.data, ['round']) : [];
 
     const historicalPositions = historicalPositionsQuery.isSuccess ? historicalPositionsQuery.data : [];
 
@@ -292,6 +295,7 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     royaleFooterData,
     royalePassports,
     selectedRoyalePassport,
+    setSelectedRoyalePassport,
 }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -471,6 +475,12 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                     </ScrollWrapper>
                 </CardWrapper>
                 <InfoSection>
+                    <PassportDropdown
+                        selectedRoyalePassport={selectedRoyalePassport}
+                        setSelectedRoyalePassport={setSelectedRoyalePassport}
+                        royalePassports={royalePassports}
+                    />
+
                     {royaleFooterData?.seasonFinished ? (
                         <>
                             <div style={{ textAlign: 'center' }}>

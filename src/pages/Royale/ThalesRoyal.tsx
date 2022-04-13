@@ -180,6 +180,7 @@ const ThalesRoyal: React.FC = () => {
                     showBattle={selectedPage === 'royale'}
                     royalePassports={royalePassports}
                     selectedRoyalePassport={selectedRoyalePassport}
+                    setSelectedRoyalePassport={setSelectedRoyalePassport}
                 />
                 <FooterV2
                     assetPrice={assetPrice}
