@@ -1032,7 +1032,9 @@
                 "competition-period": "Выбранный период",
                 "disqualified": "Дисквалифицирован",
                 "current-rank": "Ваше текущее звание",
-                "unverified": "Непроверенный"
+                "unverified": "Непроверенный",
+                "percentage-profit-competition": "Процент прибыли",
+                "net-profit-competition": "Чистая прибыль"
             },
             "board": {
                 "tab-title": "Таблица лидеров"
@@ -1107,7 +1109,8 @@
                     }
                 }
             },
-            "balance": "Баланс долларов США"
+            "balance": "Баланс долларов США",
+            "avatar": "Аватар"
         },
         "common": {
             "time-remaining": {

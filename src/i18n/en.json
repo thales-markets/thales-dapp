@@ -1008,6 +1008,7 @@
             "verify": "Verify",
             "display-name": "Display Name",
             "address": "Address",
+            "avatar": "Avatar",
             "twitter-account": "My twitter account",
             "my-info": "My info",
             "balance": "sUSD balance",
@@ -1028,7 +1029,9 @@
                 "competition-period": "Selected period",
                 "disqualified": "Disqualified",
                 "unverified": "Unverified",
-                "current-rank": "Your current rank"
+                "current-rank": "Your current rank",
+                "net-profit-competition": "Net profit",
+                "percentage-profit-competition": "Percentage profit"
             },
             "board": {
                 "tab-title": "Leaderboard"
