@@ -41,8 +41,8 @@ const Row = styled.div<{ leaderboardRank?: number }>`
     align-items: center;
     border-bottom: 1px solid var(--table-border-color);
     ${(_props) => (_props?.leaderboardRank == 1 ? 'height: 130px !important;' : '')};
-    ${(_props) => (_props?.leaderboardRank == 2 ? 'height: 130px !important;' : '')};
-    ${(_props) => (_props?.leaderboardRank == 3 ? 'height: 130px !important;' : '')};
+    ${(_props) => (_props?.leaderboardRank == 2 ? 'height: 66px !important;' : '')};
+    ${(_props) => (_props?.leaderboardRank == 3 ? 'height: 66px !important;' : '')};
     ${(_props) =>
         _props?.leaderboardRank
             ? _props?.leaderboardRank < 4
