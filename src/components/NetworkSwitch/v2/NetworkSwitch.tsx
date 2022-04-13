@@ -1,142 +1,111 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-
-import SwitchInput from 'components/SwitchInput/SwitchInput';
-import { FlexDivRow, UserCardSectionHeader } from 'theme/common';
+import { FlexDivColumn, UserCardSectionHeader } from 'theme/common';
 
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsOVM } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
-import { hexStripZeros } from '@ethersproject/bytes';
-import { BigNumber } from '@ethersproject/bignumber';
 
-import { NetworkId } from '@synthetixio/contracts-interface';
-
-import { L1_TO_L2_NETWORK_MAPPER, L2_TO_L1_NETWORK_MAPPER, OPTIMISM_NETWORKS } from 'constants/network';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 export const NetworkSwitch: React.FC = () => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
-
-    // const switchOrAddPolygonNetwork = async () => {
-    //     const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? NetworkId['Mainnet-Ovm'];
-    //     const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
-    //
-    //     if (typeof window.ethereum !== 'undefined') {
-    //         try {
-    //             await (window.ethereum as any).request({
-    //                 method: 'wallet_switchEthereumChain',
-    //                 params: [{ chainId: optimismNetworkParms.chainId }],
-    //             });
-    //         } catch (switchError: any) {
-    //             if (switchError.code === 4902) {
-    //                 try {
-    //                     await (window.ethereum as any).request({
-    //                         method: 'wallet_addEthereumChain',
-    //                         params: [optimismNetworkParms],
-    //                     });
-    //                     await (window.ethereum as any).request({
-    //                         method: 'wallet_switchEthereumChain',
-    //                         params: [{ chainId: optimismNetworkParms.chainId }],
-    //                     });
-    //                 } catch (addError) {
-    //                     console.log(addError);
-    //                 }
-    //             } else {
-    //                 console.log(switchError);
-    //             }
-    //         }
-    //     }
-    // };
-
-    const switchOrAddOptimismNetwork = async () => {
-        const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? NetworkId['Mainnet-Ovm'];
-        const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
-
-        if (typeof window.ethereum !== 'undefined') {
-            try {
-                await (window.ethereum as any).request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: optimismNetworkParms.chainId }],
-                });
-            } catch (switchError: any) {
-                if (switchError.code === 4902) {
-                    try {
-                        await (window.ethereum as any).request({
-                            method: 'wallet_addEthereumChain',
-                            params: [optimismNetworkParms],
-                        });
-                        await (window.ethereum as any).request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: optimismNetworkParms.chainId }],
-                        });
-                    } catch (addError) {
-                        console.log(addError);
-                    }
-                } else {
-                    console.log(switchError);
-                }
-            }
-        }
-    };
-
-    const switchToL1 = async () => {
-        const formattedChainId = hexStripZeros(BigNumber.from(L2_TO_L1_NETWORK_MAPPER[networkId]).toHexString());
-
-        if (typeof window.ethereum !== 'undefined') {
-            try {
-                await (window.ethereum as any).request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: formattedChainId }],
-                });
-            } catch (switchError: any) {
-                console.log(switchError);
-            }
-        }
-    };
-
+    // TODO: add support for testnets
+    const selectedNetwork = useMemo(
+        () => SUPPORTED_MAINNET_NETWORK_IDS_MAP[networkId] || SUPPORTED_MAINNET_NETWORK_IDS_MAP[10],
+        [networkId]
+    );
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     return (
         <NetworkSwitchContainer>
             <SectionHeader>{t('common.user-info-card.network')}</SectionHeader>
-            <SwitchContainer>
-                <NetworkIcon active={isL2} className="sidebar-icon icon--optimism" />
-                <SwitchInput
-                    value={!isL2 ? true : false}
-                    clickEventHandler={async () => (isL2 ? await switchToL1() : await switchOrAddOptimismNetwork())}
-                />
-                <NetworkIcon active={!isL2} style={{ marginRight: '0px' }} className="sidebar-icon icon--ethereum" />
-            </SwitchContainer>
+            <RelativeContainer>
+                <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
+                    <SelectedNetworkContainer dropdownOpen={isDropdownOpen}>
+                        {!isDropdownOpen ? (
+                            <NetworkItem onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                                {React.createElement(selectedNetwork.icon)}
+                                {selectedNetwork.name}
+                            </NetworkItem>
+                        ) : (
+                            Object.keys(SUPPORTED_MAINNET_NETWORK_IDS_MAP).map((id) => (
+                                <NetworkItem
+                                    dropdownOpen={isDropdownOpen}
+                                    key={id}
+                                    onClick={() => {
+                                        setIsDropdownOpen(!isDropdownOpen);
+                                        SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].changeNetwork(+id);
+                                    }}
+                                >
+                                    {React.createElement(SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].icon, {
+                                        height: '18px',
+                                        width: '18px',
+                                    })}
+                                    {SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].name}
+                                </NetworkItem>
+                            ))
+                        )}
+                    </SelectedNetworkContainer>
+                </OutsideClickHandler>
+            </RelativeContainer>
         </NetworkSwitchContainer>
     );
 };
 
-const NetworkSwitchContainer = styled(FlexDivRow)`
+const NetworkSwitchContainer = styled(FlexDivColumn)`
     width: 100%;
     align-items: center;
     margin: 16px 0px;
-    justify-content: flex-start;
+    svg {
+        margin-right: 5px;
+    }
 `;
 
 const SectionHeader = styled(UserCardSectionHeader)`
-    display: inline-block;
-    margin-right: 65px;
+    align-self: self-start;
 `;
 
-const NetworkIcon = styled.i<{ active: boolean }>`
-    font-size: 17px;
-    display: inline;
-    color: ${(props: any) => (props.active ? 'var(--icon-color)' : '#8181ac')};
-    margin-right: 5px;
-    margin-left: 5px;
-`;
-
-const SwitchContainer = styled.div`
+const SelectedNetworkContainer = styled.div<{ dropdownOpen: boolean }>`
+    position: ${(props) => (props.dropdownOpen ? 'absolute' : 'relative')};
+    left: 0;
+    right: 0;
+    background-color: var(--background);
     display: flex;
     align-items: center;
+    justify-content: center;
+    max-width: 135px;
+    width: 135px;
+    margin: 9px auto;
+    border: 2px solid var(--icon-color);
+    color: var(--icon-color);
+    border-radius: 20px;
+    cursor: pointer;
+    flex-direction: column;
+    z-index: 1;
+    @media (max-width: 1024px) {
+        flex: 1;
+        width: auto;
+        max-width: 400px;
+        margin: 0;
+        margin-right: 10px;
+    }
+`;
+
+const NetworkItem = styled.div<{ dropdownOpen?: boolean }>`
+    font-family: 'Sansation' !important;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 6px 22px;
+    font-size: 14px;
+`;
+
+const RelativeContainer = styled.div`
+    height: 30px;
 `;
 
 export default NetworkSwitch;
