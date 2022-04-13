@@ -58,7 +58,10 @@ export const formatPercentageWithSign = (value: NumericValue, decimals = DEFAULT
 
 // TODO: use a library for this, because the sign does not always appear on the left. (perhaps something like number.toLocaleString)
 export const formatCurrencyWithSign = (sign: string | null | undefined, value: NumericValue, decimals?: number) =>
-    `${sign ? sign + ' ' : ''}${formatCurrency(value, decimals || getPrecision(value))}`;
+    `${value < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
+        typeof value == 'number' ? Math.abs(value) : value,
+        decimals || getPrecision(value)
+    )}`;
 
 export const formatCurrencyWithKey = (
     currencyKey: CurrencyKey,
