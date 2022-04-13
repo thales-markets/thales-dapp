@@ -430,7 +430,7 @@ export const UserCard: React.FC<UserCardProps> = ({
                     handleClose={setOpenPassportsDialog.bind(this, false)}
                     royalePassportIds={royalePassportIds}
                 ></ShowRoyalePassportsDialog>
-                <FlexDivSpaceBetween>
+                <FlexDivSpaceBetween style={{ flexWrap: 'wrap', gap: 14 }}>
                     <FlexDiv style={{ alignItems: 'center' }}>
                         {user?.avatar ? <UserAvatar src={user.avatar} style={{ marginRight: 14 }} /> : getAvatar(user)}
 
@@ -517,14 +517,16 @@ export const UserCard: React.FC<UserCardProps> = ({
                             <UserLabel>{t('options.royale.scoreboard.passports-in-wallet')}</UserLabel>
                             <InputWrapper
                                 style={{
-                                    maxWidth: 140,
+                                    maxWidth: 240,
                                 }}
                             >
                                 {royalePassports.length}
                             </InputWrapper>
                         </FlexDivSpaceBetween>
                         <FlexDivSpaceBetween style={{ marginTop: 10, position: 'relative' }}>
-                            <UserLabel>{t('options.royale.scoreboard.passport-id')}</UserLabel>
+                            <UserLabel style={{ alignSelf: 'flex-start', marginTop: 4 }}>
+                                {t('options.royale.scoreboard.passport-id')}
+                            </UserLabel>
                             <Selector
                                 className={royalePassports.length < 2 ? 'disabled' : ''}
                                 isOpen={showSelectDropdown}
@@ -537,7 +539,7 @@ export const UserCard: React.FC<UserCardProps> = ({
                                     <Text
                                         onClick={
                                             royalePassports.length > 1
-                                                ? setShowSelectDropdown.bind(this, true)
+                                                ? setShowSelectDropdown.bind(this, !showSelectDropdown)
                                                 : undefined
                                         }
                                     >
@@ -1223,6 +1225,7 @@ const SupText = styled.sup`
 
 const Selector = styled.div<{ isOpen: boolean }>`
     width: 240px;
+    position: relative;
     height: ${(props) => (props.isOpen ? 'content' : '28px')};
     border: 2px solid var(--color-background);
     box-sizing: border-box;
