@@ -1269,7 +1269,8 @@
                 "shuffle-positions": "Перемешать позиции",
                 "passports-in-wallet": "Passports в кошельке:",
                 "choose-default-positions": "Выберите позиции по умолчанию для всех раундов для выбранного идентификатора Royale Passport:",
-                "all-down": "Все ВНИЗ"
+                "all-down": "Все ВНИЗ",
+                "my-passports": "Покажи мои паспорта"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",
@@ -1297,6 +1298,11 @@
                 "avatar-tip": "Введите действительный URL, оканчивающийся на .jpg, .jpeg, .png, .svg или .gif.",
                 "name-validation-msg": "Пожалуйста, введите отображаемое имя без специальных символов",
                 "avatar-validation-msg": "Пожалуйста, введите действительный URL аватара"
+            },
+            "my-passports-dialog": {
+                "passport-id": "Номер паспорта:",
+                "passport-amount": "Мои паспорта ({{сумма}})",
+                "sell-passport": "Продать мой паспорт"
             }
         },
         "amm-mining": {

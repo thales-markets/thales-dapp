@@ -166,6 +166,8 @@ export const UserCard: React.FC<UserCardProps> = ({
     useEffect(() => {
         if (user && royalePassports.length > 0) {
             setRoyalePassportIds(royalePassports.map((passport) => passport.id));
+        } else {
+            setRoyalePassportIds([]);
         }
     }, [walletAddress, user, royalePassports, selectedRoyalePassport]);
 
@@ -445,19 +447,18 @@ export const UserCard: React.FC<UserCardProps> = ({
                         </UserLabel>
                     </FlexDiv>
                     <FlexDiv>
-                        {' '}
                         <Button
-                            // disabled={royalePassports.length === 0}
-                            // className={royalePassports.length === 0 ? 'disabled' : ''}
+                            disabled={royalePassports.length === 0}
+                            className={royalePassports.length === 0 ? 'disabled' : ''}
                             style={{
-                                // display: royalePassports.length === 0 ? 'none' : '',
-                                // cursor: royalePassports.length === 0 ? 'not-allowed' : '',
+                                display: royalePassports.length === 0 ? 'none' : '',
+                                cursor: royalePassports.length === 0 ? 'not-allowed' : '',
                                 whiteSpace: 'pre',
                                 fontSize: 15,
                             }}
                             onClick={() => setOpenPassportsDialog(true)}
                         >
-                            Show my Passports
+                            {t('options.royale.scoreboard.my-passports')}
                         </Button>
                     </FlexDiv>
                 </FlexDivSpaceBetween>
@@ -1133,6 +1134,7 @@ const StyledInfoIcon = styled(InfoIcon)`
 
 const RoyalePassContainer = styled(FlexContainer)`
     margin: 25px 0px;
+    border-top: 2px dashed var(--color);
     border-bottom: 2px dashed var(--color);
     @media (max-width: 600px) {
         flex-direction: column;

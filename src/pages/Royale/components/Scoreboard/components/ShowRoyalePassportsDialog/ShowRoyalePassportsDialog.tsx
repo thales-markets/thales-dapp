@@ -1,14 +1,15 @@
 import { Modal } from '@material-ui/core';
 import { Theme } from 'pages/Royale/ThalesRoyal';
-import React from 'react';
-// import { useTranslation } from 'react-i18next';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
 import Cookies from 'universal-cookie';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, NetworkId } from 'utils/network';
+import snxJSConnector from 'utils/snxJSConnector';
 import useRoyalePassportsURIsQuery from '../../queries/useRoyalePassportsURIsQuery';
 import './media.scss';
 
@@ -25,7 +26,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
     handleClose,
     royalePassportIds,
 }) => {
-    // const { t } = useTranslation();
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isL2 = getIsOVM(networkId);
@@ -36,6 +37,8 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : {};
 
     const theme = Number(cookies.get('theme') === 0 ? Theme.Light : Theme.Dark);
+
+    const [selectedPassport, setSelectedPassport] = useState<number>(0);
 
     return (
         <Modal
@@ -48,25 +51,56 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                 className={'royale-passports-modal ' + (theme === Theme.Light ? 'light-theme' : 'dark-theme')}
             >
                 <Header>
-                    <Text className="text-m font-sansation">My royale passports ({royalePassportIds.length})</Text>
+                    <Text className="text-m font-sansation">
+                        {t('options.royale.my-passports-dialog.passport-amount', { amount: royalePassportIds.length })}
+                    </Text>
                     <XButton onClick={() => handleClose()} />
                 </Header>
                 <PassportsWrapper>
                     {royalePassportIds.map((passportId: number, key: number) => (
                         <FlexDiv key={key} style={{ flexDirection: 'column', gap: 5 }}>
                             <UserLabel>
-                                Passport ID:{' '}
+                                {t('options.royale.my-passports-dialog.passport-id')}
                                 <Text style={{ display: 'contents' }} className="bold font-sansation">
                                     {parseInt(passportId as any, 16)}
                                 </Text>
                             </UserLabel>
-                            <NftImage src={(royalePassports as any).nfts?.get(passportId)} />
+                            <ImageWrapper
+                                className={selectedPassport === parseInt(passportId as any, 16) ? 'selected' : ''}
+                                onClick={() => {
+                                    selectedPassport === passportId
+                                        ? setSelectedPassport(0)
+                                        : setSelectedPassport(parseInt(passportId as any, 16));
+                                }}
+                            >
+                                <NftImage src={(royalePassports as any).nfts?.get(passportId)} />
+                            </ImageWrapper>
                         </FlexDiv>
                     ))}
                 </PassportsWrapper>
+                <Link
+                    onClick={(e) => (selectedPassport === 0 ? e.preventDefault() : '')}
+                    href={getQuixoticLink(networkId, selectedPassport)}
+                    className={selectedPassport === 0 ? 'disabled' : ''}
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    {t('options.royale.my-passports-dialog.sell-passport')}
+                </Link>
             </ModalWrapper>
         </Modal>
     );
+};
+
+export const getQuixoticLink = (networkId: NetworkId, nftId: number) => {
+    const { thalesRoyalePassportContract } = snxJSConnector;
+    if (networkId === 10) {
+        const baseURL = 'https://quixotic.io';
+        return `${baseURL}/asset/${thalesRoyalePassportContract?.address}/${nftId}`;
+    }
+
+    const baseURL = 'https://testnet.quixotic.io';
+    return `${baseURL}/asset/${thalesRoyalePassportContract?.address}/${nftId}`;
 };
 
 const ModalWrapper = styled(FlexDivColumn)`
@@ -97,7 +131,6 @@ const PassportsWrapper = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    height: 295px;
     width: 100%;
     padding: 34px 70px;
     background: var(--color-wrapper);
@@ -106,15 +139,13 @@ const PassportsWrapper = styled.div`
     border-radius: 5px;
     margin-top: 14px;
     margin-bottom: 50px;
-    @media (max-width: 1024px) {
-        padding: 15px;
-        height: auto;
-    }
+    height: auto;
 `;
 
 const NftImage = styled(Image)`
     width: 130px;
     height: 170px;
+    margin: 10px 0px;
 `;
 
 const UserLabel = styled.p`
@@ -123,6 +154,47 @@ const UserLabel = styled.p`
     font-size: 15px;
     color: var(--color);
     align-self: center;
+`;
+
+const ImageWrapper = styled(FlexDiv)`
+    background: var(--background-color);
+    border: 2px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 5px;
+    cursor: pointer;
+    &.selected {
+        background: var(--color);
+        border: 2px solid var(--color-low);
+    }
+`;
+
+const Link = styled.a`
+    position: absolute;
+    bottom: 0;
+    right: 0px;
+    margin: 20px 30px;
+    width: fit-content;
+    padding: 10px;
+    cursor: pointer;
+    border: 1.30233px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 19.5349px;
+    height: 28px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 6px;
+    text-align: center;
+    letter-spacing: -0.4px;
+    background: var(--color);
+    color: var(--color-wrapper);
+    text-overflow: ellipsis;
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
 `;
 
 export default ShowRoyalePassportsDialog;
