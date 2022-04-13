@@ -92,6 +92,7 @@ const getTitle = (t: any) => {
     if (location.pathname.includes(ROUTES.Governance.Home)) return t('common.sidebar.governance-label');
     if (location.pathname === ROUTES.Options.Token) return t('common.sidebar.earn-label');
     if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
+    if (location.pathname === ROUTES.Options.Leaderboard) return t('options.leaderboard.leaderboard-title');
 };
 
 const Container = styled.div`
