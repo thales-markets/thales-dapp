@@ -65,7 +65,7 @@ const renderRounds = (
     const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
     const positionsQuery = usePlayerPositionsQuery(selectedSeason, networkId, tokenId ?? '', {
-        enabled: networkId !== undefined && isAppReady && tokenId !== '' && selectedSeason > 0,
+        enabled: networkId !== undefined && isAppReady && selectedSeason > 0,
     });
 
     const historicalPositionsQuery = usePlayerHistoricalPositionsQuery(selectedSeason, networkId, walletAddress ?? '', {
@@ -132,12 +132,11 @@ const renderRounds = (
                 : selectedSeason <= 5 && networkId === 10
                 ? Number(historicalPositions[index - 1]?.position)
                 : Number(positions[index - 1]?.position);
-
         index === roundInASeason
             ? cards.push(
                   <CurrentRound id={`round${index}`} key={index}>
                       <LongButton
-                          selected={selectedPosition === 2}
+                          selected={isPlayerAlive && selectedPosition === 2}
                           onClick={vote(2)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
                           notSelected={selectedPosition === 1}
@@ -171,13 +170,13 @@ const renderRounds = (
                           </CurrentRoundText>
                       </div>
                       <ShortButton
-                          selected={selectedPosition === 1}
+                          selected={isPlayerAlive && selectedPosition === 1}
                           onClick={vote(1)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
                           notSelected={selectedPosition === 2}
                       >
                           <Circle
-                              selected={selectedPosition === 1}
+                              selected={isPlayerAlive && selectedPosition === 1}
                               disabled={!timeLeftForPositioning || !isPlayerAlive}
                           />
                       </ShortButton>
@@ -310,10 +309,6 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
 
     const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
-    // const royalePassportQuery = useRoyalePasportQuery(walletAddress ?? '', networkId, selectedSeason, {
-    //     enabled: isL2 && isWalletConnected,
-    // });
-    // const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
     const [passportID, setPassportID] = useState(
         royalePassports.length > 0 ? '' + parseInt('' + selectedRoyalePassport, 16) : ''
     );

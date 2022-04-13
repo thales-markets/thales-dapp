@@ -68,6 +68,8 @@ const ThalesRoyal: React.FC = () => {
     useEffect(() => {
         if (royalePassports.length > 0) {
             setSelectedRoyalePassport(royalePassports[0]?.id);
+        } else {
+            setSelectedRoyalePassport(null);
         }
     }, [walletAddress, royalePassports]);
 

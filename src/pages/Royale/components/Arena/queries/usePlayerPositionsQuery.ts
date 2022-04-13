@@ -22,11 +22,13 @@ const usePlayerPositionsQuery = (
     return useQuery<GraphPosition[]>(
         QUERY_KEYS.Royale.PlayerPositions(networkId, selectedSeason, tokenId),
         async () => {
+            if (tokenId === '') return [];
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
                 const positions = await thalesData.binaryOptions.thalesRoyalePassportPositions({
                     tokenPlayer: tokenId,
                     network: networkId,
+                    season: selectedSeason,
                 });
                 return positions;
             }

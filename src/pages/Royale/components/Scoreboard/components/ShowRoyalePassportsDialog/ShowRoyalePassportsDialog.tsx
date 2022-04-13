@@ -31,7 +31,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isL2 = getIsOVM(networkId);
 
-    const royalePassportQuery = useRoyalePassportsURIsQuery(royalePassportIds, {
+    const royalePassportQuery = useRoyalePassportsURIsQuery([30, 31, 32, 33, 34], {
         enabled: isL2 && isWalletConnected,
     });
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : {};
@@ -45,6 +45,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
         handleClose();
     };
 
+    console.log(royalePassportIds);
     return (
         <Modal
             open={open}
@@ -57,12 +58,14 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
             >
                 <Header>
                     <Text className="text-m font-sansation">
-                        {t('options.royale.my-passports-dialog.passport-amount', { amount: royalePassportIds.length })}
+                        {t('options.royale.my-passports-dialog.passport-amount', {
+                            amount: [30, 31, 32, 33, 34].length,
+                        })}
                     </Text>
                     <XButton onClick={() => closeDialog()} />
                 </Header>
                 <PassportsWrapper>
-                    {royalePassportIds.map((passportId: number, key: number) => (
+                    {[30, 31, 32, 33, 34].map((passportId: number, key: number) => (
                         <FlexDiv key={key} style={{ flexDirection: 'column', gap: 5 }}>
                             <UserLabel>
                                 {t('options.royale.my-passports-dialog.passport-id')}
@@ -145,6 +148,9 @@ const PassportsWrapper = styled.div`
     margin-top: 14px;
     margin-bottom: 50px;
     height: auto;
+    @media (max-width: 1024px) {
+        justify-content: center;
+    }
 `;
 
 const NftImage = styled(Image)`
@@ -168,8 +174,8 @@ const ImageWrapper = styled(FlexDiv)`
     border-radius: 5px;
     cursor: pointer;
     &.selected {
-        background: var(--color);
-        border: 2px solid var(--color-low);
+        box-sizing: border-box;
+        box-shadow: 0px 0px 35.6889px var(--color);
     }
 `;
 
@@ -199,6 +205,12 @@ const Link = styled.a`
     &.disabled {
         opacity: 0.7;
         cursor: not-allowed;
+    }
+    @media (max-width: 1024px) {
+        position: relative;
+        display: block;
+        margin: 20px auto;
+        line-height: 0px;
     }
 `;
 
