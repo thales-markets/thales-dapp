@@ -16,6 +16,7 @@ import { Image } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
 import Tooltip from 'components/Tooltip';
+import SearchField from 'pages/Markets/components/Input/SearchField';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -33,6 +34,7 @@ const CompetitionTabs = [
 const Leaderboard: React.FC = () => {
     const { t } = useTranslation();
     const [competitionType, setCompetitionType] = useState<Competition>('byNetProfit');
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const query = useLeaderboardQuery(networkId, { enabled: isAppReady });
@@ -50,15 +52,24 @@ const Leaderboard: React.FC = () => {
             }
             users.forEach((user, index) => (user['rank'] = index + 1));
 
+            if (searchQuery !== '') {
+                users = users.filter((user) => {
+                    return user?.walletAddress.includes(searchQuery) || user?.name?.toLowerCase().includes(searchQuery);
+                });
+            }
+
             return users;
         }
 
         return [];
-    }, [query.isSuccess, competitionType]);
+    }, [query.isSuccess, competitionType, searchQuery]);
 
     return (
         <>
             <Wrapper>
+                <FormContainer>
+                    <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
+                </FormContainer>
                 <Container.Main justifyContent="flex-start">
                     <Container.Main.Item
                         noStrech={true}
@@ -98,15 +109,18 @@ const Leaderboard: React.FC = () => {
                                         )}
                                     </IconHolder>
                                 ),
+                                disableSortBy: true,
                             },
                             {
                                 Header: t('options.leaderboard.avatar'),
                                 accessor: 'avatar',
                                 Cell: (cellProps: any) => <UserAvatar src={cellProps.cell.value} />,
+                                disableSortBy: true,
                             },
                             {
                                 Header: t('options.leaderboard.display-name'),
                                 accessor: 'name',
+                                disableSortBy: true,
                             },
                             {
                                 Header: t('options.leaderboard.table.netprofit-col'),
@@ -116,8 +130,6 @@ const Leaderboard: React.FC = () => {
                                         {formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}
                                     </Gain>
                                 ),
-                                sortType: 'basic',
-                                sortable: true,
                             },
                             {
                                 Header: t('options.leaderboard.table.gain-col'),
@@ -127,12 +139,11 @@ const Leaderboard: React.FC = () => {
                                         {formatPercentage(cellProps.cell.value)}
                                     </Gain>
                                 ),
-                                sortType: 'basic',
-                                sortable: true,
                             },
                             {
                                 Header: t('options.leaderboard.table.trades-col'),
                                 accessor: 'trades',
+                                disableSortBy: true,
                             },
                             {
                                 Header: t('options.leaderboard.table.volume-col'),
@@ -140,7 +151,7 @@ const Leaderboard: React.FC = () => {
                                 Cell: (cellProps: any) => (
                                     <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
                                 ),
-                                sortable: false,
+                                disableSortBy: true,
                             },
                             {
                                 Header: t('options.leaderboard.table.investment-col'),
@@ -148,6 +159,7 @@ const Leaderboard: React.FC = () => {
                                 Cell: (cellProps: any) => (
                                     <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
                                 ),
+                                disableSortBy: true,
                             },
                         ]}
                         leaderboardView={true}
@@ -160,6 +172,16 @@ const Leaderboard: React.FC = () => {
 
 const Wrapper = styled.div`
     width: auto;
+`;
+
+const FormContainer = styled.div`
+    color: #64d9fe;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @media (max-width: 1250px) {
+        display: none;
+    }
 `;
 
 const IconHolder = styled.div`
