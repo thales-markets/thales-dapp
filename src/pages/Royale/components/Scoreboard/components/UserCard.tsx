@@ -319,7 +319,7 @@ export const UserCard: React.FC<UserCardProps> = ({
                                     }
                                     onClick={() => {
                                         setIsBuyingIn(true);
-                                        signUpWithWithPassWithPosition(
+                                        signUpWithPassWithPosition(
                                             (royalePassId as any).id,
                                             defaultPositions,
                                             setIsBuyingIn
@@ -861,7 +861,7 @@ export const signUpWithPosition = async (positions: number[], setIsBuyingIn: any
     }
 };
 
-export const signUpWithWithPassWithPosition = async (royalePassId: number, positions: number[], setIsBuyingIn: any) => {
+export const signUpWithPassWithPosition = async (royalePassId: number, positions: number[], setIsBuyingIn: any) => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
         const royaleContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
