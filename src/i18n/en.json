@@ -1239,7 +1239,13 @@
                 "default-position-none": "NONE",
                 "default-position-down": "DOWN",
                 "default-position-up": "UP",
-                "default-position-info": "Before the game starts, you can choose a default position applied to all 6 rounds. You can change your position again once the positioning period for each round starts.",
+                "default-position-info": "Before the game starts, you can choose a default positions applied to all 6 rounds. You can change your position again once the positioning period for each round starts.",
+                "choose-default-positions": "Choose default positions for all rounds for selected Royale Passport ID:",
+                "passports-in-wallet": "Passports in wallet:",
+                "passport-id": "Passport ID:",
+                "shuffle-positions": "Shuffle positions",
+                "all-up": "All UP",
+                "all-down": "All DOWN",
                 "buy-in-collateral-susd": "sUSD",
                 "buy-in-collateral-pass": "Royale Pass",
                 "buy-in-collateral-pass-mobile": "NFT",
@@ -1273,7 +1279,8 @@
                 "royale-pass-2": "Royale Passes",
                 "mint-royale-pass": "Mint Royale Pass",
                 "approve-royale-pass": "Approve for Royale Pass",
-                "buy-in-royale-pass": "Buy in with Royale Pass"
+                "buy-in-royale-pass": "Buy in with Royale Pass",
+                "my-passports": "Show my Passports"
             },
             "redirect-dialog": {
                 "title": "You are on Optimism Kovan Network",
@@ -1301,6 +1308,11 @@
                 "enter-display-name": "Enter Display Name",
                 "name-validation-msg": "Please enter Display Name without special characters",
                 "avatar-validation-msg": "Please enter valid Avatar URL"
+            },
+            "my-passports-dialog": {
+                "passport-amount": "My Passports ({{amount}})",
+                "passport-id": "Passport ID:",
+                "sell-passport": "Sell my Passport"
             }
         },
         "amm-mining": {

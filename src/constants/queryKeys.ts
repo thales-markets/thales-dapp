@@ -166,7 +166,7 @@ export const QUERY_KEYS = {
     },
     Royale: {
         Data: (walletAddress: string) => ['royale', 'data', walletAddress],
-        User: (walletAddress: string) => ['royale', 'user', walletAddress],
+        User: (walletAddress: string, passportId: number) => ['royale', 'user', walletAddress, passportId],
         Players: () => ['royale', 'players'],
         Rounds: (networkId: NetworkId, season?: number) => ['royale', 'rounds', networkId, season],
         Seasons: (networkId: NetworkId) => ['royale', 'Seasons', networkId],
@@ -177,8 +177,22 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        RoyalePassport: (walletAddress: string, networkId: NetworkId, season: number) => [
+            'royale',
+            'royalePassport',
+            walletAddress,
+            networkId,
+            season,
+        ],
         Positions: (season: number, networkId: NetworkId) => ['royale', 'positions', season, networkId],
-        PlayerPositions: (networkId: NetworkId, season: number, address: string) => [
+        PlayerPositions: (networkId: NetworkId, season: number, tokenId: string) => [
+            'royale',
+            'positions',
+            networkId,
+            season,
+            tokenId,
+        ],
+        PlayerHistoricalPositions: (networkId: NetworkId, season: number, address: string) => [
             'royale',
             'positions',
             networkId,
@@ -187,18 +201,21 @@ export const QUERY_KEYS = {
         ],
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
         EthPrice: () => ['royale', 'ethPrice'],
-        SnxPrice: () => ['royale', 'snxPrice'],
+        RoyaleAssetPriceQuery: (royaleAsset: string) => ['royale', 'assetPrice', royaleAsset],
         LatestRoyaleData: () => ['royale', 'latestRoyaleData'],
         LatestRoyaleDataForUserCard: (season: number) => ['royale', 'LatestRoyaleDataForUserCard', season],
         LatestSeason: () => ['royale', 'latestSeason'],
-        RoyaleArenaContract: (season: number, walletAddress: string) => [
+        RoyaleArenaContract: (networkId: NetworkId, season: number, walletAddress: string, tokenId: string) => [
             'royale',
             'royaleArenaContract',
+            networkId,
             season,
             walletAddress,
+            tokenId,
         ],
         RoyaleDataForScoreboard: (season: number) => ['royale', 'royaleDataForScoreboad', season],
         FooterData: (season: number) => ['royale', 'footerData', season],
+        RoyalePassportsURIs: (tokenIds: number[]) => ['royale', 'royalePassportsURIs', tokenIds],
     },
     Governance: {
         Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],

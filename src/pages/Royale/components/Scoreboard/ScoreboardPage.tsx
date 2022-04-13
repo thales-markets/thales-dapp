@@ -13,6 +13,9 @@ type Properties = {
     selectedSeason: number;
     setSelectedSeason: (season: number) => void;
     latestSeason: number;
+    royalePassports: any[];
+    selectedRoyalePassport: any;
+    setSelectedRoyalePassport: (pasport: any) => void;
 };
 
 export const ScoreboardPage: React.FC<Properties> = ({
@@ -22,6 +25,9 @@ export const ScoreboardPage: React.FC<Properties> = ({
     latestSeason,
     setSelectedSeason,
     selectedSeason,
+    royalePassports,
+    selectedRoyalePassport,
+    setSelectedRoyalePassport,
 }) => {
     return (
         <Wrapper className="scoreboard">
@@ -33,6 +39,9 @@ export const ScoreboardPage: React.FC<Properties> = ({
                     positions={positions}
                     royaleFooterData={royaleFooterData}
                     selectedSeason={selectedSeason === 0 ? latestSeason : selectedSeason}
+                    royalePassports={royalePassports}
+                    selectedRoyalePassport={selectedRoyalePassport}
+                    setSelectedRoyalePassport={setSelectedRoyalePassport}
                 />
                 <ScoreboardV2
                     selectedSeason={selectedSeason === 0 ? latestSeason : selectedSeason}
