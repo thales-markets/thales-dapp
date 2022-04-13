@@ -31,7 +31,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isL2 = getIsOVM(networkId);
 
-    const royalePassportQuery = useRoyalePassportsURIsQuery([30, 31, 32, 33, 34], {
+    const royalePassportQuery = useRoyalePassportsURIsQuery(royalePassportIds, {
         enabled: isL2 && isWalletConnected,
     });
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : {};
@@ -45,7 +45,6 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
         handleClose();
     };
 
-    console.log(royalePassportIds);
     return (
         <Modal
             open={open}
@@ -59,13 +58,13 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                 <Header>
                     <Text className="text-m font-sansation">
                         {t('options.royale.my-passports-dialog.passport-amount', {
-                            amount: [30, 31, 32, 33, 34].length,
+                            amount: royalePassportIds.length,
                         })}
                     </Text>
                     <XButton onClick={() => closeDialog()} />
                 </Header>
                 <PassportsWrapper>
-                    {[30, 31, 32, 33, 34].map((passportId: number, key: number) => (
+                    {royalePassportIds.map((passportId: number, key: number) => (
                         <FlexDiv key={key} style={{ flexDirection: 'column', gap: 5 }}>
                             <UserLabel>
                                 {t('options.royale.my-passports-dialog.passport-id')}
