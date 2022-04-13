@@ -1,32 +1,36 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import addSeconds from 'date-fns/addSeconds';
-import format from 'date-fns/format';
-import differenceInSeconds from 'date-fns/differenceInSeconds';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import { useSelector } from 'react-redux';
-import { BigNumber } from 'ethers';
-import winnerCard from 'assets/images/royale/winner-card.svg';
 import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
 import winnerCardS3 from 'assets/images/royale/winner-card-s3.svg';
 import winnerCardS4 from 'assets/images/royale/winner-card-s4.svg';
 import winnerCardS5 from 'assets/images/royale/winner-card-s5.svg';
-import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
-import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
-import { Positions } from '../../Queries/usePositionsQuery';
-import { FooterData } from '../../Queries/useRoyaleFooterQuery';
-import { RootState } from 'redux/rootReducer';
+import winnerCard from 'assets/images/royale/winner-card.svg';
+import addSeconds from 'date-fns/addSeconds';
+import differenceInSeconds from 'date-fns/differenceInSeconds';
+import format from 'date-fns/format';
+import { BigNumber } from 'ethers';
+import useInterval from 'hooks/useInterval';
+import { sortBy } from 'lodash';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import snxJSConnector from 'utils/snxJSConnector';
-import { dispatchMarketNotification } from 'utils/options';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, Wrapper } from 'theme/common';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { getIsOVM } from 'utils/network';
-import useInterval from 'hooks/useInterval';
-import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
+import { dispatchMarketNotification } from 'utils/options';
+import snxJSConnector from 'utils/snxJSConnector';
+import { Positions } from '../../Queries/usePositionsQuery';
+import { FooterData } from '../../Queries/useRoyaleFooterQuery';
+import PassportDropdown from '../PassportDropdown/PassportDropdown';
+import useUserRoyalQuery, { AnonimUser } from '../Scoreboard/queries/useUserRoyalQuery';
+import usePlayerHistoricalPositionsQuery from './queries/usePlayerHistoricalPositionsQuery';
+import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
 import useRoundsQuery from './queries/useRoundsQuery';
+import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
 
 type RoyaleArenaProps = {
     assetPrice: string;
@@ -35,14 +39,19 @@ type RoyaleArenaProps = {
     latestSeason: number;
     selectedSeason: number;
     showBattle: boolean;
+    royalePassports: any[];
+    selectedRoyalePassport: any;
+    setSelectedRoyalePassport: any;
 };
 
 const renderRounds = (
     royaleData: RoyaleArenaData,
+    tokenId: string,
     timeLeftForPositioning: Date | null,
     timeLeftInRound: Date | null,
     selectedSeason: number,
-    latestSeason: number
+    latestSeason: number,
+    isHistoricalPlayerWinner: boolean
 ) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -55,18 +64,29 @@ const renderRounds = (
 
     const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
-    const positionsQuery = usePlayerPositionsQuery(selectedSeason, networkId, walletAddress ?? '', {
-        enabled: networkId !== undefined && isAppReady,
+    const positionsQuery = usePlayerPositionsQuery(selectedSeason, networkId, tokenId ?? '', {
+        enabled: networkId !== undefined && isAppReady && selectedSeason > 0,
     });
-    const positions = positionsQuery.isSuccess ? positionsQuery.data : [];
 
-    const roundsInformation = useMemo(
-        () =>
-            roundsGraphInfo.map((r) => {
-                return { ...r, position: positions.find((p) => p.round === r.round)?.position || 0 };
-            }),
-        [positions, roundsGraphInfo]
-    );
+    const historicalPositionsQuery = usePlayerHistoricalPositionsQuery(selectedSeason, networkId, walletAddress ?? '', {
+        enabled: networkId !== undefined && isAppReady && networkId === 10 && selectedSeason > 0 && selectedSeason <= 5,
+    });
+
+    const positions = positionsQuery.isSuccess ? sortBy(positionsQuery.data, ['round']) : [];
+
+    const historicalPositions = historicalPositionsQuery.isSuccess ? historicalPositionsQuery.data : [];
+
+    const roundsInformation = useMemo(() => {
+        return roundsGraphInfo.map((r) => {
+            return { ...r, position: positions.find((p: any) => p.round === r.round)?.position || 0 };
+        });
+    }, [positions, roundsGraphInfo]);
+
+    const historicalRoundsInformation = useMemo(() => {
+        return roundsGraphInfo.map((r) => {
+            return { ...r, position: historicalPositions.find((p: any) => p.round === r.round)?.position || 0 };
+        });
+    }, [historicalPositions, roundsGraphInfo]);
 
     const vote = (option: number) => async () => {
         if (option === roundsInformation[roundInASeason - 1]?.position) {
@@ -76,7 +96,7 @@ const renderRounds = (
         if (thalesRoyaleContract) {
             const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
 
-            const tx = await RoyalContract.takeAPosition(BigNumber.from(option));
+            const tx = await RoyalContract.takeAPosition(tokenId, BigNumber.from(option));
 
             const txResult = await tx.wait();
 
@@ -103,18 +123,20 @@ const renderRounds = (
         }
     };
 
-    const isWinner = isPlayerAlive && royaleData.seasonFinished;
+    const isWinner = (isHistoricalPlayerWinner || isPlayerAlive) && royaleData.seasonFinished;
 
     for (let index = 1; index <= rounds; index++) {
         const selectedPosition =
             index === roundInASeason && selectedSeason === latestSeason
                 ? position
-                : roundsInformation[index - 1]?.position;
+                : selectedSeason <= 5 && networkId === 10
+                ? Number(historicalPositions[index - 1]?.position)
+                : Number(positions[index - 1]?.position);
         index === roundInASeason
             ? cards.push(
                   <CurrentRound id={`round${index}`} key={index}>
                       <LongButton
-                          selected={selectedPosition === 2}
+                          selected={isPlayerAlive && selectedPosition === 2}
                           onClick={vote(2)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
                           notSelected={selectedPosition === 1}
@@ -148,13 +170,13 @@ const renderRounds = (
                           </CurrentRoundText>
                       </div>
                       <ShortButton
-                          selected={selectedPosition === 1}
+                          selected={isPlayerAlive && selectedPosition === 1}
                           onClick={vote(1)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
                           notSelected={selectedPosition === 2}
                       >
                           <Circle
-                              selected={selectedPosition === 1}
+                              selected={isPlayerAlive && selectedPosition === 1}
                               disabled={!timeLeftForPositioning || !isPlayerAlive}
                           />
                       </ShortButton>
@@ -174,8 +196,16 @@ const renderRounds = (
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
                           <CurrentRoundText>
                               {token !== 'ETH'
-                                  ? `$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(4)}`
-                                  : `$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(2)}`}
+                                  ? `$${
+                                        networkId === 10 && selectedSeason <= 5
+                                            ? Number(historicalRoundsInformation[index - 1]?.strikePrice).toFixed(4)
+                                            : Number(roundsInformation[index - 1]?.strikePrice).toFixed(4)
+                                    }`
+                                  : `$${
+                                        networkId === 10 && selectedSeason <= 5
+                                            ? Number(historicalRoundsInformation[index - 1]?.strikePrice).toFixed(2)
+                                            : Number(roundsInformation[index - 1]?.strikePrice).toFixed(2)
+                                    }`}
                           </CurrentRoundText>
                       </div>
                       <RoundHistoryInfo>
@@ -183,14 +213,28 @@ const renderRounds = (
                               <PrevRoundTitle>{`${token} ${t('options.royale.battle.was')}`}</PrevRoundTitle>
                               <PrevRoundText>
                                   {token !== 'ETH'
-                                      ? `$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(4)}`
-                                      : `$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(2)}`}
+                                      ? `$${
+                                            networkId === 10 && selectedSeason <= 5
+                                                ? Number(historicalRoundsInformation[index - 1]?.finalPrice).toFixed(4)
+                                                : Number(roundsInformation[index - 1]?.finalPrice).toFixed(4)
+                                        }`
+                                      : `$${
+                                            networkId === 10 && selectedSeason <= 5
+                                                ? Number(historicalRoundsInformation[index - 1]?.finalPrice).toFixed(2)
+                                                : Number(roundsInformation[index - 1]?.finalPrice).toFixed(2)
+                                        }`}
                               </PrevRoundText>
                           </FlexDiv>
                           <FlexDiv>
                               <PrevRoundTitle>{`${t('options.royale.battle.eliminated')}`}</PrevRoundTitle>
-                              <PrevRoundText>{`${roundsInformation[index - 1]?.eliminatedPerRoundPerSeason || 0}/${
-                                  roundsInformation[index - 1]?.totalPlayersPerRoundPerSeason || 0
+                              <PrevRoundText>{`${
+                                  networkId === 10 && selectedSeason <= 5
+                                      ? historicalRoundsInformation[index - 1]?.eliminatedPerRoundPerSeason || 0
+                                      : roundsInformation[index - 1]?.eliminatedPerRoundPerSeason || 0
+                              }/${
+                                  networkId === 10 && selectedSeason <= 5
+                                      ? historicalRoundsInformation[index - 1]?.totalPlayersPerRoundPerSeason || 0
+                                      : roundsInformation[index - 1]?.totalPlayersPerRoundPerSeason || 0
                               } ${t('options.royale.battle.players')}`}</PrevRoundText>
                           </FlexDiv>
                       </RoundHistoryInfo>
@@ -248,6 +292,9 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
     assetPrice,
     positions,
     royaleFooterData,
+    royalePassports,
+    selectedRoyalePassport,
+    setSelectedRoyalePassport,
 }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -262,7 +309,19 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
 
     const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
-    const royaleDataQuery = useRoyaleArenaContractQuery(memoizedSelectedSeason, walletAddress ?? '', {
+    const [passportID, setPassportID] = useState(
+        royalePassports.length > 0 ? '' + parseInt('' + selectedRoyalePassport, 16) : ''
+    );
+
+    const userQuery = useUserRoyalQuery(walletAddress as any, selectedRoyalePassport, networkId, selectedSeason, {
+        enabled: isL2 && isAppReady && networkId === 10 && selectedSeason <= 5,
+    });
+
+    const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
+
+    const [isHistoricalPlayerWinner, setIsHistoricalPlayerWinner] = useState<boolean>(false);
+
+    const royaleDataQuery = useRoyaleArenaContractQuery(networkId, selectedSeason, walletAddress ?? '', passportID, {
         enabled: isAppReady && isL2,
     });
 
@@ -283,9 +342,25 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                 token: '',
                 targetPrice: '',
                 position: 0,
+                round: 0,
             };
         }
     }, [royaleDataQuery.isSuccess, royaleDataQuery.data]);
+
+    useEffect(() => {
+        const isUserAWinner =
+            (user.isAlive && royaleData.seasonFinished) ||
+            (user.deathRound !== '' && Number(user.deathRound) === royaleData.round && royaleData.seasonFinished);
+        if (isUserAWinner) {
+            setIsHistoricalPlayerWinner(true);
+        } else {
+            setIsHistoricalPlayerWinner(false);
+        }
+    }, [user, selectedSeason, royaleData]);
+
+    useEffect(() => {
+        setPassportID(royalePassports.length > 0 ? '' + parseInt('' + selectedRoyalePassport, 16) : '');
+    }, [selectedRoyalePassport]);
 
     const {
         roundInASeasonStartTime,
@@ -305,7 +380,10 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
             (roundInASeasonEndTime.getTime() - roundInASeasonStartTime.getTime()) / 1000
         )
     );
-    const isWinner = useMemo(() => royaleData.isPlayerAlive && royaleData.seasonFinished, [royaleData]);
+    const isWinner = useMemo(
+        () => (isHistoricalPlayerWinner || royaleData.isPlayerAlive) && royaleData.seasonFinished,
+        [royaleData]
+    );
 
     useInterval(async () => {
         setTimeLeftForPositioning(getTimeLeft(roundInASeasonStartTime, roundChoosingLength));
@@ -337,7 +415,7 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
         if (thalesRoyaleContract) {
             const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
 
-            const tx = await RoyalContract.claimRewardForSeason(memoizedSelectedSeason);
+            const tx = await RoyalContract.claimRewardForSeason(memoizedSelectedSeason, passportID);
 
             const txResult = await tx.wait();
 
@@ -379,10 +457,12 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                         {royaleData ? (
                             renderRounds(
                                 royaleData,
+                                passportID,
                                 timeLeftForPositioning,
                                 timeLeftInRound,
                                 memoizedSelectedSeason,
-                                latestSeason
+                                latestSeason,
+                                isHistoricalPlayerWinner
                             )
                         ) : (
                             <></>
@@ -390,31 +470,70 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                     </ScrollWrapper>
                 </CardWrapper>
                 <InfoSection>
-                    <div>
-                        <span>{t('options.royale.footer.up')}</span>
-                        <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
-                        <span>{t('options.royale.footer.down')}</span>
-                    </div>
-                    <div>
-                        <span>
-                            {t('options.royale.footer.current')} {royaleFooterData?.seasonAsset}{' '}
-                            {t('options.royale.footer.price')}:
-                        </span>
-                        <span>
-                            $
-                            {royaleFooterData?.seasonAsset !== 'ETH'
-                                ? Number(assetPrice).toFixed(4)
-                                : Number(assetPrice).toFixed(2)}
-                        </span>
-                    </div>
-                    <div>
-                        <span>{t('options.royale.footer.reward-per-player')}:</span>
-                        <span>{royaleFooterData?.reward.toFixed(2)} sUSD</span>
-                    </div>
-                    <div>
-                        <span>{t('options.royale.footer.players-alive')}:</span>
-                        <span>{royaleFooterData?.playersAlive}</span>
-                    </div>
+                    <PassportDropdown
+                        selectedRoyalePassport={selectedRoyalePassport}
+                        setSelectedRoyalePassport={setSelectedRoyalePassport}
+                        royalePassports={royalePassports}
+                    />
+
+                    {royaleFooterData?.seasonFinished ? (
+                        <>
+                            <div style={{ textAlign: 'center' }}>
+                                <span style={{ margin: 'auto' }}>
+                                    {t('options.royale.footer.season-finished', { season: selectedSeason })}
+                                </span>
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                                <span style={{ margin: 'auto' }}>
+                                    {t('options.royale.footer.season-token', {
+                                        token: royaleFooterData?.seasonAsset,
+                                    })}
+                                </span>
+                            </div>
+                            <div>
+                                <span>{t('options.royale.footer.current-reward-per-winner')}:</span>
+                                <span>{(royaleFooterData?.rewardPerWinnerPerSeason).toFixed(2)} sUSD</span>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div>
+                                <span>{t('options.royale.footer.current-positions')}:</span>
+                                <span>{t('options.royale.footer.up')}</span>
+                                <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
+                                <span>{t('options.royale.footer.down')}</span>
+                            </div>
+                            <div>
+                                <span>
+                                    {t('options.royale.footer.current')} {royaleFooterData?.seasonAsset}{' '}
+                                    {t('options.royale.footer.price')}:
+                                </span>
+                                <span>
+                                    $
+                                    {royaleFooterData?.seasonAsset !== 'ETH'
+                                        ? Number(assetPrice).toFixed(4)
+                                        : Number(assetPrice).toFixed(2)}
+                                </span>
+                                <InfoIconContainer>
+                                    <RoyaleTooltip
+                                        title={t('options.royale.footer.price-source', {
+                                            token: royaleFooterData?.seasonAsset,
+                                        })}
+                                    >
+                                        <StyledInfoIcon />
+                                    </RoyaleTooltip>
+                                </InfoIconContainer>
+                            </div>
+                            <div>
+                                <span>{t('options.royale.footer.current-reward-per-player')}:</span>
+                                <span>{royaleFooterData?.reward.toFixed(2)} sUSD</span>
+                            </div>
+                            <div>
+                                <span>{t('options.royale.footer.players-alive')}:</span>
+                                <span>{royaleFooterData?.playersAlive}</span>
+                            </div>
+                        </>
+                    )}
                 </InfoSection>
                 <ArrowRight
                     onMouseDown={() =>
@@ -430,7 +549,9 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                             claimReward().finally(() => synthsWalletBalancesQuery.refetch());
                         }}
                     >
-                        {t('options.royale.battle.claim-reward', { reward: royaleFooterData?.reward.toFixed(2) })}
+                        {t('options.royale.battle.claim-reward', {
+                            reward: royaleFooterData?.rewardPerWinnerPerSeason.toFixed(2),
+                        })}
                     </Button>
                 ) : (
                     <Button
@@ -769,4 +890,9 @@ const InfoSection = styled.div`
     @media (min-width: 1025px) {
         display: none;
     }
+`;
+
+const InfoIconContainer = styled.span`
+    display: inline-flex;
+    align-items: center;
 `;

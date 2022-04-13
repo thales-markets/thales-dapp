@@ -111,7 +111,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
             if (searchString !== '') {
                 usersToShow = usersToShow.filter((user: any) => {
                     return (
-                        user.name.toLowerCase().includes(searchString.toLowerCase()) ||
+                        user.name?.toLowerCase().includes(searchString.toLowerCase()) ||
                         user.number.toString().toLowerCase().includes(searchString.toLowerCase())
                     );
                 });
