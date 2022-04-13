@@ -35,7 +35,7 @@ import onboardConnector from 'utils/onboardConnector';
 import { AccountMarketInfo, OrderSide, OptionSide } from 'types/options';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
-import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
@@ -90,6 +90,7 @@ const AMM: React.FC = () => {
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket?.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!optionsMarket?.address,
@@ -239,6 +240,24 @@ const AMM: React.FC = () => {
                 setGasLimit(MAX_L2_GAS_LIMIT);
                 setL1Fee(l1FeeInWei);
                 return MAX_L2_GAS_LIMIT;
+            } else if (isPolygon) {
+                const gasLimit = isBuy
+                    ? await ammContractWithSigner.estimateGas.buyFromAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage
+                      )
+                    : await ammContractWithSigner.estimateGas.sellToAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage
+                      );
+
+                setGasLimit(gasLimit);
             } else {
                 setGasLimit(MAX_L2_GAS_LIMIT);
                 return MAX_L2_GAS_LIMIT;
