@@ -1192,6 +1192,7 @@
                 "scoreboard": "Scoreboard",
                 "stats": "Stats",
                 "price-source": "Source: Optimism Chainlink {{token}} feed",
+                "price-source-twap": "Asset {{token}} uses a TWAP Price Feed from Uniswap V3 pool pair.",
                 "select-position": "Please select default position for the 1st round"
             },
             "battle": {

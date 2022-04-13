@@ -1197,7 +1197,8 @@
                 "current-reward-per-winner": "每位获胜者的奖励",
                 "season-finished": "第 {{season}} 季结束",
                 "select-position": "请选择第一轮的默认位置",
-                "season-token": "赛季代币：{{token}}"
+                "season-token": "赛季代币：{{token}}",
+                "price-source-twap": "资产 {{token}} 使用来自 Uniswap V3 池对的 TWAP 价格馈送。"
             },
             "battle": {
                 "round": "轮次",
