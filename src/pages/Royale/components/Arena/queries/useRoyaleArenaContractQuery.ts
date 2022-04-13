@@ -51,49 +51,89 @@ const getFromContract = async (
     tokenId: string | null
 ): Promise<RoyaleArenaData> => {
     const roundInASeason = await RoyaleContract.roundInASeason(season);
-    const [
-        isPlayerAlive,
-        roundInASeasonStartTime,
-        roundInASeasonEndTime,
-        roundChoosingLength,
-        canCloseRound,
-        seasonFinished,
-        rewardCollectedPerSeason,
-        rounds,
-        token,
-        targetPrice,
-        position,
-        round,
-    ] = await Promise.all([
-        RoyaleContract.isTokenAliveInASpecificSeason(tokenId, season),
-        RoyaleContract.roundInASeasonStartTime(season),
-        RoyaleContract.roundInSeasonEndTime(season),
-        RoyaleContract.roundChoosingLength(),
-        RoyaleContract.canCloseRound(),
-        RoyaleContract.seasonFinished(season),
-        RoyaleContract.tokenRewardCollectedPerSeason(tokenId),
-        RoyaleContract.rounds(),
-        RoyaleContract.oracleKeyPerSeason(season),
-        RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
-        RoyaleContract.tokenPositionInARoundPerSeason(tokenId, roundInASeason),
-        RoyaleContract.roundInASeason(season),
-    ]);
+    if (tokenId !== '') {
+        const [
+            isPlayerAlive,
+            roundInASeasonStartTime,
+            roundInASeasonEndTime,
+            roundChoosingLength,
+            canCloseRound,
+            seasonFinished,
+            rewardCollectedPerSeason,
+            rounds,
+            token,
+            targetPrice,
+            position,
+            round,
+        ] = await Promise.all([
+            RoyaleContract.isTokenAliveInASpecificSeason(tokenId, season),
+            RoyaleContract.roundInASeasonStartTime(season),
+            RoyaleContract.roundInSeasonEndTime(season),
+            RoyaleContract.roundChoosingLength(),
+            RoyaleContract.canCloseRound(),
+            RoyaleContract.seasonFinished(season),
+            RoyaleContract.tokenRewardCollectedPerSeason(tokenId),
+            RoyaleContract.rounds(),
+            RoyaleContract.oracleKeyPerSeason(season),
+            RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
+            RoyaleContract.tokenPositionInARoundPerSeason(tokenId, roundInASeason),
+            RoyaleContract.roundInASeason(season),
+        ]);
 
-    return {
-        roundChoosingLength: Number(roundChoosingLength),
-        roundInASeasonStartTime: new Date(Number(roundInASeasonStartTime) * 1000),
-        roundInASeasonEndTime: new Date(Number(roundInASeasonEndTime) * 1000),
-        roundInASeason: Number(roundInASeason),
-        canCloseRound,
-        isPlayerAlive,
-        seasonFinished,
-        rewardCollectedPerSeason,
-        rounds: Number(rounds),
-        token: parseBytes32String(token),
-        targetPrice: ethers.utils.formatEther(targetPrice),
-        position: Number(position),
-        round,
-    };
+        return {
+            roundChoosingLength: Number(roundChoosingLength),
+            roundInASeasonStartTime: new Date(Number(roundInASeasonStartTime) * 1000),
+            roundInASeasonEndTime: new Date(Number(roundInASeasonEndTime) * 1000),
+            roundInASeason: Number(roundInASeason),
+            canCloseRound,
+            isPlayerAlive,
+            seasonFinished,
+            rewardCollectedPerSeason,
+            rounds: Number(rounds),
+            token: parseBytes32String(token),
+            targetPrice: ethers.utils.formatEther(targetPrice),
+            position: Number(position),
+            round,
+        };
+    } else {
+        const [
+            roundInASeasonStartTime,
+            roundInASeasonEndTime,
+            roundChoosingLength,
+            canCloseRound,
+            seasonFinished,
+            rounds,
+            token,
+            targetPrice,
+            round,
+        ] = await Promise.all([
+            RoyaleContract.roundInASeasonStartTime(season),
+            RoyaleContract.roundInSeasonEndTime(season),
+            RoyaleContract.roundChoosingLength(),
+            RoyaleContract.canCloseRound(),
+            RoyaleContract.seasonFinished(season),
+            RoyaleContract.rounds(),
+            RoyaleContract.oracleKeyPerSeason(season),
+            RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
+            0,
+            RoyaleContract.roundInASeason(season),
+        ]);
+        return {
+            roundChoosingLength: Number(roundChoosingLength),
+            roundInASeasonStartTime: new Date(Number(roundInASeasonStartTime) * 1000),
+            roundInASeasonEndTime: new Date(Number(roundInASeasonEndTime) * 1000),
+            roundInASeason: Number(roundInASeason),
+            canCloseRound,
+            isPlayerAlive: false,
+            seasonFinished,
+            rewardCollectedPerSeason: false,
+            rounds: Number(rounds),
+            token: parseBytes32String(token),
+            targetPrice: ethers.utils.formatEther(targetPrice),
+            position: 0,
+            round,
+        };
+    }
 };
 
 const getHistoricalDataFromContract = async (
