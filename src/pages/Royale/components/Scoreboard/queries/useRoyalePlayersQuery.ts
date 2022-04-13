@@ -55,10 +55,9 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
             }
 
             const users: User[] = [];
-
             data.map((player: any) => {
                 const isAlive = player.isAlive;
-                const address = player.owner;
+                const address = networkId === 10 && selectedSeason <= 5 ? player.address : player.owner;
                 const number = player.number;
                 const season = player.season;
                 const deathRound = player.deathRound;
