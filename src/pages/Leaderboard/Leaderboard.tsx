@@ -15,6 +15,7 @@ import Container from 'pages/AMMTrading/components//TabContainer/styled-componen
 import { Image } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
+import Tooltip from 'components/Tooltip';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -83,7 +84,20 @@ const Leaderboard: React.FC = () => {
                             {
                                 Header: t('options.leaderboard.table.rank-col'),
                                 accessor: 'rank',
-                                Cell: (cellProps: any) => <Position position={cellProps?.cell?.value} />,
+                                Cell: (cellProps: any) => (
+                                    <IconHolder>
+                                        <Position position={cellProps?.cell?.value} />
+                                        {Number(cellProps?.cell?.value) < 51 && (
+                                            <Tooltip
+                                                message={getRewardsTooltipMessage(
+                                                    cellProps?.cell?.value,
+                                                    competitionType
+                                                )}
+                                                type={'moneyBag'}
+                                            />
+                                        )}
+                                    </IconHolder>
+                                ),
                             },
                             {
                                 Header: t('options.leaderboard.avatar'),
@@ -148,6 +162,13 @@ const Wrapper = styled.div`
     width: auto;
 `;
 
+const IconHolder = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+`;
+
 const UserAvatar = styled(Image)<{ winner?: boolean }>`
     width: 44px;
     height: 44px;
@@ -189,6 +210,69 @@ const Position: React.FC<{ position: number }> = ({ position }) => {
             {position > 3 && <span>{position}</span>}
         </>
     );
+};
+
+const getRewardsTooltipMessage = (position: number, competitionType: Competition) => {
+    if (position == 1) {
+        if (competitionType == 'byNetProfit') {
+            return '7500 THALES and 2500 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '6000 THALES and 2500 MATIC';
+        }
+    }
+    if (position == 2) {
+        if (competitionType == 'byNetProfit') {
+            return '4750 THALES and 1250 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '3750 THALES and 1250 MATIC';
+        }
+    }
+
+    if (position == 3) {
+        if (competitionType == 'byNetProfit') {
+            return '2500 THALES and 1000 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '2000 THALES and 1000 MATIC';
+        }
+    }
+
+    if (position == 4) {
+        if (competitionType == 'byNetProfit') {
+            return '1375 THALES and 625 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '1200 THALES and 500 MATIC';
+        }
+    }
+
+    if (position >= 5 && position <= 20) {
+        if (competitionType == 'byNetProfit') {
+            return '350 THALES and 55 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '250 THALES and 50 MATIC';
+        }
+    }
+
+    if (position >= 21 && position <= 32) {
+        if (competitionType == 'percetangeGain') {
+            return '200 THALES and 50 MATIC';
+        }
+    }
+
+    if (position > 21 && position <= 50) {
+        if (competitionType == 'byNetProfit') {
+            return '200 THALES and 50 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '162.5 THALES and 37.5 MATIC';
+        }
+    }
+
+    return '';
 };
 
 export default Leaderboard;
