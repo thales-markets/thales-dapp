@@ -2,15 +2,19 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
+import notSigned from 'assets/images/royale/not-signed.svg';
 
 dotenv.config();
 
 type User = {
     walletAddress: string;
+    avatar?: string;
+    name?: string;
     trades: number;
     volume: number;
     profit: number;
     investment: number;
+    rank?: number;
     gain: number;
 };
 
@@ -22,14 +26,32 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Use
     return useQuery<User[]>(
         QUERY_KEYS.BinaryOptions.Leaderboard(networkId),
         async () => {
+            const royaleAPIRoute = 'https://api.thales.market/royale-users/';
+            const royaleResponse = await fetch(royaleAPIRoute);
+            const royalePlayers = await royaleResponse.json();
+
+            const royalePlayersDataMap = new Map<string, any>(royalePlayers);
+
             const baseUrl = 'https://api.thales.market/leaderboard/' + networkId;
             const response = await fetch(baseUrl);
-            const result = JSON.parse(await response.text());
-            console.log(result);
-            if (result === 'Bad Request') {
+            const leaderboardData = await response.json();
+
+            if (leaderboardData?.length) {
+                leaderboardData.forEach((user: User, index: number) => {
+                    leaderboardData[index]['avatar'] = royalePlayersDataMap.get(user.walletAddress)?.avatar
+                        ? royalePlayersDataMap.get(user.walletAddress)?.avatar
+                        : notSigned;
+                    leaderboardData[index]['name'] = royalePlayersDataMap.get(user.walletAddress)?.name
+                        ? royalePlayersDataMap.get(user.walletAddress)?.name
+                        : '-';
+                });
+            }
+
+            if (!leaderboardData?.length) {
                 return [];
             }
-            return result;
+
+            return leaderboardData;
         },
         options
     );
