@@ -471,31 +471,64 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                     </ScrollWrapper>
                 </CardWrapper>
                 <InfoSection>
-                    <div>
-                        <span>{t('options.royale.footer.up')}</span>
-                        <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
-                        <span>{t('options.royale.footer.down')}</span>
-                    </div>
-                    <div>
-                        <span>
-                            {t('options.royale.footer.current')} {royaleFooterData?.seasonAsset}{' '}
-                            {t('options.royale.footer.price')}:
-                        </span>
-                        <span>
-                            $
-                            {royaleFooterData?.seasonAsset !== 'ETH'
-                                ? Number(assetPrice).toFixed(4)
-                                : Number(assetPrice).toFixed(2)}
-                        </span>
-                    </div>
-                    <div>
-                        <span>{t('options.royale.footer.reward-per-player')}:</span>
-                        <span>{royaleFooterData?.reward.toFixed(2)} sUSD</span>
-                    </div>
-                    <div>
-                        <span>{t('options.royale.footer.players-alive')}:</span>
-                        <span>{royaleFooterData?.playersAlive}</span>
-                    </div>
+                    {royaleFooterData?.seasonFinished ? (
+                        <>
+                            <div style={{ textAlign: 'center' }}>
+                                <span style={{ margin: 'auto' }}>
+                                    {t('options.royale.footer.season-finished', { season: selectedSeason })}
+                                </span>
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                                <span style={{ margin: 'auto' }}>
+                                    {t('options.royale.footer.season-token', {
+                                        token: royaleFooterData?.seasonAsset,
+                                    })}
+                                </span>
+                            </div>
+                            <div>
+                                <span>{t('options.royale.footer.current-reward-per-winner')}:</span>
+                                <span>{(royaleFooterData?.rewardPerWinnerPerSeason).toFixed(2)} sUSD</span>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div>
+                                <span>{t('options.royale.footer.current-positions')}:</span>
+                                <span>{t('options.royale.footer.up')}</span>
+                                <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
+                                <span>{t('options.royale.footer.down')}</span>
+                            </div>
+                            <div>
+                                <span>
+                                    {t('options.royale.footer.current')} {royaleFooterData?.seasonAsset}{' '}
+                                    {t('options.royale.footer.price')}:
+                                </span>
+                                <span>
+                                    $
+                                    {royaleFooterData?.seasonAsset !== 'ETH'
+                                        ? Number(assetPrice).toFixed(4)
+                                        : Number(assetPrice).toFixed(2)}
+                                </span>
+                                <InfoIconContainer>
+                                    <RoyaleTooltip
+                                        title={t('options.royale.footer.price-source', {
+                                            token: royaleFooterData?.seasonAsset,
+                                        })}
+                                    >
+                                        <StyledInfoIcon />
+                                    </RoyaleTooltip>
+                                </InfoIconContainer>
+                            </div>
+                            <div>
+                                <span>{t('options.royale.footer.current-reward-per-player')}:</span>
+                                <span>{royaleFooterData?.reward.toFixed(2)} sUSD</span>
+                            </div>
+                            <div>
+                                <span>{t('options.royale.footer.players-alive')}:</span>
+                                <span>{royaleFooterData?.playersAlive}</span>
+                            </div>
+                        </>
+                    )}
                 </InfoSection>
                 <ArrowRight
                     onMouseDown={() =>
@@ -852,4 +885,9 @@ const InfoSection = styled.div`
     @media (min-width: 1025px) {
         display: none;
     }
+`;
+
+const InfoIconContainer = styled.span`
+    display: inline-flex;
+    align-items: center;
 `;

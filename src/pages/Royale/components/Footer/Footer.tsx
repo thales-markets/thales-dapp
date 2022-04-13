@@ -44,6 +44,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
     const location = useLocation();
     const [showStats, setShowStats] = useState(true);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+    const [showPassportDropdown, setShowPassportDropdown] = useState(false);
 
     const allSeasons = useMemo(() => {
         const seasons = [];
@@ -190,7 +191,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                 <span>{t('options.royale.scoreboard.passport-id')}</span>
                                 <Selector
                                     className={royalePassports.length < 2 ? 'disabled' : ''}
-                                    isOpen={showSelectDropdown}
+                                    isOpen={showPassportDropdown}
                                 >
                                     {royalePassports.length === 0 ? (
                                         <Text>N/A</Text>
@@ -200,23 +201,23 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                         <Text
                                             onClick={
                                                 royalePassports.length > 1
-                                                    ? setShowSelectDropdown.bind(this, true)
+                                                    ? setShowPassportDropdown.bind(this, !showPassportDropdown)
                                                     : undefined
                                             }
                                         >
                                             {parseInt(selectedRoyalePassport as any, 16)}
-                                            <Arrow className="icon icon--arrow-down" />
+                                            <Arrow isAbsolute={true} className="icon icon--arrow-down" />
                                         </Text>
                                     )}
 
-                                    {showSelectDropdown &&
+                                    {showPassportDropdown &&
                                         royalePassports
                                             .filter((passport) => passport.id !== selectedRoyalePassport)
                                             .map((passport: any, key: number) => (
                                                 <Text
                                                     onClick={() => {
                                                         setSelectedRoyalePassport(passport.id);
-                                                        setShowSelectDropdown(false);
+                                                        setShowPassportDropdown(false);
                                                     }}
                                                     key={key}
                                                 >
@@ -224,7 +225,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                                 </Text>
                                             ))}
                                 </Selector>
-                                {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
+                                {showPassportDropdown && <Overlay onClick={() => setShowPassportDropdown(false)} />}
                             </div>
                         )}
                         <div style={{ textAlign: 'center' }}>
@@ -245,7 +246,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                 <span>{t('options.royale.scoreboard.passport-id')}</span>
                                 <Selector
                                     className={royalePassports.length < 2 ? 'disabled' : ''}
-                                    isOpen={showSelectDropdown}
+                                    isOpen={showPassportDropdown}
                                 >
                                     {royalePassports.length === 0 ? (
                                         <Text>N/A</Text>
@@ -255,23 +256,23 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                         <Text
                                             onClick={
                                                 royalePassports.length > 1
-                                                    ? setShowSelectDropdown.bind(this, true)
+                                                    ? setShowPassportDropdown.bind(this, !showPassportDropdown)
                                                     : undefined
                                             }
                                         >
                                             {parseInt(selectedRoyalePassport as any, 16)}
-                                            <Arrow className="icon icon--arrow-down" />
+                                            <Arrow isAbsolute={true} className="icon icon--arrow-down" />
                                         </Text>
                                     )}
 
-                                    {showSelectDropdown &&
+                                    {showPassportDropdown &&
                                         royalePassports
                                             .filter((passport) => passport.id !== selectedRoyalePassport)
                                             .map((passport: any, key: number) => (
                                                 <Text
                                                     onClick={() => {
                                                         setSelectedRoyalePassport(passport.id);
-                                                        setShowSelectDropdown(false);
+                                                        setShowPassportDropdown(false);
                                                     }}
                                                     key={key}
                                                 >
@@ -279,7 +280,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                                 </Text>
                                             ))}
                                 </Selector>
-                                {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
+                                {showPassportDropdown && <Overlay onClick={() => setShowPassportDropdown(false)} />}
                             </div>
                         )}
                         <div>
@@ -508,12 +509,15 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     }
 `;
 
-const Arrow = styled.i`
+const Arrow = styled.i<{ isAbsolute?: boolean }>`
     font-size: 12px;
     line-height: 8px;
     display: inline-block;
     padding-bottom: 3px;
     margin-left: 20px;
+    position: ${(props) => (props.isAbsolute ? 'absolute' : 'relative')};
+    top: ${(props) => (props.isAbsolute ? '9px' : '')};
+    right: ${(props) => (props.isAbsolute ? '19px' : '')};
 `;
 
 const Overlay = styled.div`
@@ -526,6 +530,7 @@ const Overlay = styled.div`
 `;
 
 const Selector = styled.div<{ isOpen: boolean }>`
+    position: relative;
     width: 200px;
     height: ${(props) => (props.isOpen ? 'content' : '28px')};
     border: 2px solid var(--color);
@@ -536,7 +541,7 @@ const Selector = styled.div<{ isOpen: boolean }>`
     font-family: Sansation !important;
     font-style: normal;
     font-size: 20px;
-    line-height: 29px;
+    line-height: 26px;
     text-align: center;
     letter-spacing: -0.4px;
     color: var(--color);
