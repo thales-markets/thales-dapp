@@ -45,16 +45,21 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
             aria-describedby="simple-modal-description"
         >
             <ModalWrapper
-                className={'user-info-royale-modal ' + (theme === Theme.Light ? 'light-theme' : 'dark-theme')}
+                className={'royale-passports-modal ' + (theme === Theme.Light ? 'light-theme' : 'dark-theme')}
             >
                 <Header>
-                    <Text className="text-m bold font-sansation">My royale passports ({royalePassportIds.length})</Text>
+                    <Text className="text-m font-sansation">My royale passports ({royalePassportIds.length})</Text>
                     <XButton onClick={() => handleClose()} />
                 </Header>
                 <PassportsWrapper>
                     {royalePassportIds.map((passportId: number, key: number) => (
-                        <FlexDiv key={key}>
-                            <Text>Royale Passport ID:{parseInt(passportId as any, 16)}</Text>
+                        <FlexDiv key={key} style={{ flexDirection: 'column', gap: 5 }}>
+                            <UserLabel>
+                                Passport ID:{' '}
+                                <Text style={{ display: 'contents' }} className="bold font-sansation">
+                                    {parseInt(passportId as any, 16)}
+                                </Text>
+                            </UserLabel>
                             <NftImage src={(royalePassports as any).nfts?.get(passportId)} />
                         </FlexDiv>
                     ))}
@@ -90,12 +95,13 @@ const Header = styled(FlexDiv)`
 
 const PassportsWrapper = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     height: 295px;
     width: 100%;
     padding: 34px 70px;
     background: var(--color-wrapper);
-
+    gap: 20px;
     box-sizing: border-box;
     border-radius: 5px;
     margin-top: 14px;
@@ -107,8 +113,16 @@ const PassportsWrapper = styled.div`
 `;
 
 const NftImage = styled(Image)`
-    width: 600px;
-    height: 800px;
+    width: 130px;
+    height: 170px;
+`;
+
+const UserLabel = styled.p`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 15px;
+    color: var(--color);
+    align-self: center;
 `;
 
 export default ShowRoyalePassportsDialog;
