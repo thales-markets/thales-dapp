@@ -13,6 +13,7 @@ type TableProps = {
     hidePagination?: boolean;
     resultsPerPage?: Array<number>;
     containerStyle?: CSSProperties;
+    leaderboardView?: boolean;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -22,6 +23,7 @@ const Table: React.FC<TableProps> = ({
     hidePagination,
     resultsPerPage,
     containerStyle,
+    leaderboardView,
 }) => {
     const { t } = useTranslation();
     useEffect(() => {
@@ -103,13 +105,23 @@ const Table: React.FC<TableProps> = ({
                                 </TableView.Row>
                             ))}
                         </TableView.Header>
-                        <TableView.Body {...getTableBodyProps()}>
+                        <TableView.Body {...getTableBodyProps()} leaderboardView={leaderboardView}>
                             {page.map((row: any, index: number) => {
                                 prepareRow(row);
                                 if (row.original.link) {
                                     return (
                                         <SPAAnchor href={row.original.link}>
-                                            <TableView.Row key={index} {...row.getRowProps()}>
+                                            <TableView.Row
+                                                key={index}
+                                                {...row.getRowProps()}
+                                                leaderboardRank={
+                                                    leaderboardView
+                                                        ? row?.values?.rank
+                                                            ? row?.values?.rank
+                                                            : undefined
+                                                        : undefined
+                                                }
+                                            >
                                                 {row.cells.map((cell: any, cellIndex: number) => {
                                                     return (
                                                         <TableView.Cell
@@ -126,7 +138,17 @@ const Table: React.FC<TableProps> = ({
                                     );
                                 } else {
                                     return (
-                                        <TableView.Row key={index} {...row.getRowProps()}>
+                                        <TableView.Row
+                                            key={index}
+                                            {...row.getRowProps()}
+                                            leaderboardRank={
+                                                leaderboardView
+                                                    ? row?.values?.rank
+                                                        ? row?.values?.rank
+                                                        : undefined
+                                                    : undefined
+                                            }
+                                        >
                                             {row.cells.map((cell: any, cellIndex: number) => {
                                                 return (
                                                     <TableView.Cell
