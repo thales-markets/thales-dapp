@@ -67,9 +67,6 @@ const Leaderboard: React.FC = () => {
     return (
         <>
             <Wrapper>
-                <FormContainer>
-                    <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
-                </FormContainer>
                 <Container.Main justifyContent="flex-start">
                     <Container.Main.Item
                         noStrech={true}
@@ -87,6 +84,9 @@ const Leaderboard: React.FC = () => {
                     >
                         {t(CompetitionTabs[1].i18Label)}
                     </Container.Main.Item>
+                    <FormContainer>
+                        <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
+                    </FormContainer>
                 </Container.Main>
                 <Container.Tab>
                     <Table
@@ -179,6 +179,8 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-left: auto;
+    align-self: center;
     @media (max-width: 1250px) {
         display: none;
     }
