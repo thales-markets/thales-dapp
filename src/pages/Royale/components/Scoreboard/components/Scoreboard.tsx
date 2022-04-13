@@ -97,8 +97,8 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                 case 3:
                     usersToShow = usersToShow.sort((a: any, b: any) => {
                         return orderDirection === OrderDirection.ASC
-                            ? a.name.localeCompare(b.name)
-                            : b.name.localeCompare(a.name);
+                            ? a.name?.localeCompare(b?.name)
+                            : b.name?.localeCompare(a?.name);
                     });
                     break;
 
