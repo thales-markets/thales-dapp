@@ -166,7 +166,10 @@ const AMM: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const parsedSellAmount = ethers.utils.parseEther(Number(sellAmount).toString());
+                const parsedSellAmount =
+                    isPolygon && isBuy
+                        ? ethers.utils.parseUnits(Number(sellAmount).toString(), 6)
+                        : ethers.utils.parseEther(Number(sellAmount).toString());
                 const allowance = await checkAllowance(
                     parsedSellAmount,
                     erc20Instance,
@@ -279,11 +282,13 @@ const AMM: React.FC = () => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
         const { ammContract } = snxJSConnector;
         const addressToApprove = ammContract ? ammContract.address : '';
+        const amountToApprove =
+            isPolygon && isBuy ? ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6) : approveAmount;
 
         try {
             setIsAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
-            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, amountToApprove);
+            const tx = (await erc20Instance.approve(addressToApprove, amountToApprove, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
