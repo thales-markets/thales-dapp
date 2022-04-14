@@ -41,6 +41,14 @@ const DappHeader: React.FC = () => {
                         label={t('common.sidebar.markets')}
                     />
 
+                    {isPolygon && (
+                        <DappHeaderItem
+                            className={location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''}
+                            href={buildHref(ROUTES.Options.Leaderboard)}
+                            iconName="leaderboard"
+                            label={t('common.sidebar.leaderboard-label')}
+                        />
+                    )}
                     <Divider />
                     {!isPolygon && (
                         <DappHeaderItem
