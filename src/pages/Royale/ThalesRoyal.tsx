@@ -227,6 +227,7 @@ export const RoyaleBackground = styled(Background)`
             display: none;
         }
     }
+    overflow-y: auto;
     @media (max-width: 1024px) {
         overflow-y: auto;
         max-height: 100vh;

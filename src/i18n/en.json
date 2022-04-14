@@ -1259,6 +1259,7 @@
                     "status": "Status",
                     "avatar": "Avatar",
                     "name": "Display name",
+                    "token": "Passport / Name",
                     "number": "Player <sans>№<sans>"
                 },
                 "search": "Search player / Number",

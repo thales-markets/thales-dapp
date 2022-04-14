@@ -19,6 +19,7 @@ export type User = {
     avatar: string;
     status: UserStatus;
     season: number;
+    tokenId?: number;
     deathRound?: string;
 };
 const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
@@ -77,6 +78,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                         number,
                         season,
                         deathRound,
+                        tokenId: parseInt(player.id as any, 16),
                         name: discordUser.name,
                         avatar: discordUser.avatar,
                         status: UserStatus.RDY,
@@ -89,6 +91,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                         number,
                         season,
                         deathRound,
+                        tokenId: parseInt(player.id as any, 16),
                         name:
                             truncateAddress(
                                 address as any,

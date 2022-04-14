@@ -1238,7 +1238,8 @@
                     "status": "状态",
                     "avatar": "头像",
                     "name": "名称",
-                    "number": "玩家编号"
+                    "number": "玩家编号",
+                    "token": "护照/姓名"
                 },
                 "search": "搜索玩家/号码",
                 "verification": "完成验证",

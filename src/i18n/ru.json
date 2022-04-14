@@ -1219,7 +1219,8 @@
                     "status": "Положение дел",
                     "number": "Игрок <sans> № <sans>",
                     "avatar": "Аватар",
-                    "name": "Отображаемое имя"
+                    "name": "Отображаемое имя",
+                    "token": "Паспорт / Имя"
                 },
                 "position-period": "Время, оставшееся до места в Раунде",
                 "placeholder": "! verify <Ваш адрес Ethereum>",

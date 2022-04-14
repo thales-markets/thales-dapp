@@ -99,7 +99,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
     );
 };
 
-export const getQuixoticLink = (networkId: NetworkId, nftId: number) => {
+export const getQuixoticLink = (networkId: NetworkId, nftId?: number) => {
     const { thalesRoyalePassportContract } = snxJSConnector;
     if (networkId === 10) {
         const baseURL = 'https://quixotic.io';
