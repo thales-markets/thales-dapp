@@ -790,7 +790,7 @@ const AMM: React.FC = () => {
             <NetworkFees gasLimit={gasLimit} disabled={formDisabled} l1Fee={l1Fee} />
             {openApprovalModal && (
                 <ApprovalModal
-                    defaultAmount={+sellAmount + 0.03 * +sellAmount}
+                    defaultAmount={+(+sellAmount + 0.03 * +sellAmount).toFixed(2)}
                     tokenSymbol={sellTokenCurrencyKey}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
