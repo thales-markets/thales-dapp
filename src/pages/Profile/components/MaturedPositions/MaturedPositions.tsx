@@ -302,7 +302,7 @@ const Container = styled.div`
 `;
 
 const TableText = styled.span`
-    font-family: Roboto !imporant;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;

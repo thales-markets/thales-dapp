@@ -11,8 +11,8 @@ type CellProps = {
 
 type Children = {
     Header: StyledComponent<'div', any>;
-    Body: StyledComponent<'div', any>;
-    Row: StyledComponent<'div', any>;
+    Body: StyledComponent<'div', any, { leaderboardView?: boolean }>;
+    Row: StyledComponent<'div', any, { leaderboardRank?: number }>;
     Cell: StyledComponent<'div', any, CellProps>;
     Arrow: StyledComponent<'i', any>;
 };
@@ -34,16 +34,54 @@ const Cell = styled.div<CellProps>`
     flex: 1 !important;
 `;
 
-const Body = styled.div`
-    width: 100%;
-`;
-
-const Row = styled.div`
+const Row = styled.div<{ leaderboardRank?: number }>`
     display: flex;
     height: 43px;
     width: 100%;
     align-items: center;
     border-bottom: 1px solid var(--table-border-color);
+    ${(_props) => (_props?.leaderboardRank == 1 ? 'height: 130px !important;' : '')};
+    ${(_props) => (_props?.leaderboardRank == 2 ? 'height: 66px !important;' : '')};
+    ${(_props) => (_props?.leaderboardRank == 3 ? 'height: 66px !important;' : '')};
+    ${(_props) =>
+        _props?.leaderboardRank
+            ? _props?.leaderboardRank < 4
+                ? 'border: 2px solid var(--input-border-color) !important;'
+                : ''
+            : ''};
+    ${(_props) => (_props?.leaderboardRank ? (_props.leaderboardRank < 4 ? 'border-radius: 15px;' : '') : '')};
+    ${(_props) => (_props?.leaderboardRank == 1 ? 'margin: 15px 0px !important;' : '')};
+    ${(_props) => (_props?.leaderboardRank == 2 ? 'margin: 15px 0px !important;' : '')};
+    ${(_props) => (_props?.leaderboardRank == 3 ? 'margin: 15px 0px 0px 0px !important;' : '')};
+`;
+
+const Body = styled.div<{ leaderboardView?: boolean }>`
+    width: 100%;
+    ${Row} {
+        ${(_props) => (_props?.leaderboardView ? `height: 60px;` : '')};
+        ${(_props) => (_props?.leaderboardView ? `font-size: 20px;` : '')};
+    }
+    ${Cell} {
+        ${(_props) => (_props?.leaderboardView ? `font-size: 16px;` : '')};
+    }
+    /* ${Row}:first-child {
+        margin: 15px 0px;
+        height: 130px;
+        border: 2px solid var(--table-border-color);
+        border-radius: 15px;
+    }
+    ${Row}:nth-child(2) {
+        margin: 15px 0px;
+        height: 66px;
+        border: 2px solid var(--table-border-color);
+        border-radius: 15px;
+    }
+    ${Row}:nth-child(3) {
+        margin: 15px 0px 0px 0px;
+        height: 66px;
+        border: 2px solid var(--table-border-color);
+        border-radius: 15px;
+    } */
 `;
 
 const Header = styled(FlexDiv)`

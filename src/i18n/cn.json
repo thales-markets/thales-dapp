@@ -1032,7 +1032,9 @@
                 "competition-period": "选定时间",
                 "disqualified": "不合格",
                 "current-rank": "您当前的等级",
-                "unverified": "未验证"
+                "unverified": "未验证",
+                "net-profit-competition": "净利",
+                "percentage-profit-competition": "利润百分比"
             },
             "board": {
                 "tab-title": "排行榜"
@@ -1107,7 +1109,8 @@
                     }
                 }
             },
-            "balance": "美元余额"
+            "balance": "美元余额",
+            "avatar": "阿凡达"
         },
         "common": {
             "time-remaining": {
