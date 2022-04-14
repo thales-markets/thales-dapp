@@ -38,7 +38,7 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
     const data = [
-        { name: 'sUSD', value: sUSDBalance, color: '#8208FC' },
+        { name: getStableCoinForNetwork(network.networkId), value: sUSDBalance, color: '#8208FC' },
         { name: 'claimable', value: claimable, color: '#50CE99' },
     ];
 
@@ -47,7 +47,7 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
             {isWalletConnected && claimable !== undefined && (
                 <ChartContainer>
                     <BalanceInfoContainer>
-                        <Header>sUSD in Wallet:</Header>
+                        <Header>{getStableCoinForNetwork(network.networkId)} in Wallet:</Header>
                         <SubHeader>
                             {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), sUSDBalance, 2)}
                         </SubHeader>
