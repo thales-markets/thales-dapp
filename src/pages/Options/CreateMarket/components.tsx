@@ -84,10 +84,10 @@ export const TooltipDollarIcon: React.FC<TooltipIconProps> = ({ title, iconProps
     </LightTooltip>
 );
 
-export const TooltipAssetIcon: React.FC<TooltipIconProps> = ({ title }) => (
+export const TooltipAssetIcon: React.FC<any> = ({ title, styleProps }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <AssetIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1, ...styleProps }}
             width="12"
             height="12"
             className="tooltip-icon"

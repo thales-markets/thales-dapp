@@ -15,8 +15,8 @@ import Container from 'pages/AMMTrading/components//TabContainer/styled-componen
 import { Image } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
-import Tooltip from 'components/Tooltip';
 import SearchField from 'pages/Markets/components/Input/SearchField';
+import { TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -116,17 +116,31 @@ const Leaderboard: React.FC = () => {
                                 Cell: (cellProps: any) => (
                                     <IconHolder>
                                         <Position position={cellProps?.cell?.value} />
-                                        {Number(cellProps?.cell?.value) < 51 && (
-                                            <Tooltip
-                                                message={getRewardsTooltipMessage(
-                                                    cellProps?.cell?.value,
-                                                    competitionType
-                                                )}
-                                                type={'moneyBag'}
-                                            />
-                                        )}
                                     </IconHolder>
                                 ),
+                                disableSortBy: true,
+                            },
+                            {
+                                Header: t('options.leaderboard.table.rewards-col'),
+                                accessor: 'rewards',
+                                Cell: (cellProps: any) => {
+                                    if (Number(cellProps?.cell?.row.original.rank) < 51) {
+                                        return (
+                                            <IconHolder>
+                                                <TooltipAssetIcon
+                                                    title={getRewardsTooltipMessage(
+                                                        cellProps?.cell?.row.original.rank,
+                                                        competitionType
+                                                    )}
+                                                    styleProps={{ width: 40, height: 40 }}
+                                                ></TooltipAssetIcon>
+                                            </IconHolder>
+                                        );
+                                    } else {
+                                        return <></>;
+                                    }
+                                },
+
                                 disableSortBy: true,
                             },
                             {
@@ -235,7 +249,7 @@ const IconHolder = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 `;
 
 const UserAvatar = styled(Image)<{ winner?: boolean }>`
