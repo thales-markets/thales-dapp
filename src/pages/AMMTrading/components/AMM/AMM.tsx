@@ -291,12 +291,15 @@ const AMM: React.FC = () => {
                     ? ethers.constants.MaxUint256
                     : ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6)
                 : approveAmount;
+        const gasPrice = await snxJSConnector.provider?.getGasPrice();
+        const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
 
         try {
             setIsAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, amountToApprove);
             const tx = (await erc20Instance.approve(addressToApprove, amountToApprove, {
                 gasLimit: formatGasLimit(gasEstimate, networkId),
+                gasPrice: ethers.utils.parseUnits(Math.floor(+gasInGwei + +gasInGwei * 0.2).toString(), 'gwei'),
             })) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
@@ -411,7 +414,9 @@ const AMM: React.FC = () => {
 
             const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
             const gasPrice = await snxJSConnector.provider?.getGasPrice();
+
             const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
+
             const providerOptions = isPolygon
                 ? {
                       gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
