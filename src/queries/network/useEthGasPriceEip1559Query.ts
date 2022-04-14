@@ -71,7 +71,7 @@ const useEthGasPriceEip1559Query = (networkId: NetworkId, options?: UseQueryOpti
             };
         },
         {
-            refetchInterval: 1000,
+            refetchInterval: 2500,
             ...options,
         }
     );
