@@ -260,7 +260,10 @@ const AMM: React.FC = () => {
                           parsedSlippage
                       );
 
-                setGasLimit(gasLimit);
+                const gasLimitNumber = ethers.utils.formatUnits(gasLimit, 0);
+                const safeGasLimit = Math.round(+gasLimitNumber + 0.2 * +gasLimitNumber);
+                setGasLimit(safeGasLimit);
+                return safeGasLimit;
             } else {
                 setGasLimit(MAX_L2_GAS_LIMIT);
                 return MAX_L2_GAS_LIMIT;
@@ -283,7 +286,11 @@ const AMM: React.FC = () => {
         const { ammContract } = snxJSConnector;
         const addressToApprove = ammContract ? ammContract.address : '';
         const amountToApprove =
-            isPolygon && isBuy ? ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6) : approveAmount;
+            isPolygon && isBuy
+                ? approveAmount === ethers.constants.MaxUint256
+                    ? ethers.constants.MaxUint256
+                    : ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6)
+                : approveAmount;
 
         try {
             setIsAllowing(true);
@@ -778,7 +785,7 @@ const AMM: React.FC = () => {
             <NetworkFees gasLimit={gasLimit} disabled={formDisabled} l1Fee={l1Fee} />
             {openApprovalModal && (
                 <ApprovalModal
-                    defaultAmount={sellAmount}
+                    defaultAmount={+sellAmount + 0.03 * +sellAmount}
                     tokenSymbol={sellTokenCurrencyKey}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
