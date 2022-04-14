@@ -132,12 +132,39 @@ const Leaderboard: React.FC = () => {
                             {
                                 Header: t('options.leaderboard.avatar'),
                                 accessor: 'avatar',
-                                Cell: (cellProps: any) => <UserAvatar src={cellProps.cell.value} />,
+                                Cell: (cellProps: any) => {
+                                    return (
+                                        <a
+                                            href={
+                                                'https://polygonscan.com/address/' +
+                                                cellProps.cell.row.original.walletAddress
+                                            }
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            <UserAvatar src={cellProps.cell.value} />
+                                        </a>
+                                    );
+                                },
                                 disableSortBy: true,
                             },
                             {
                                 Header: t('options.leaderboard.display-name'),
                                 accessor: 'name',
+                                Cell: (cellProps: any) => {
+                                    return (
+                                        <a
+                                            href={
+                                                'https://polygonscan.com/address/' +
+                                                cellProps.cell.row.original.walletAddress
+                                            }
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            <p style={{ color: 'var(--color)' }}>{cellProps.cell.value}</p>
+                                        </a>
+                                    );
+                                },
                                 disableSortBy: true,
                             },
                             {
