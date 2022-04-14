@@ -22,12 +22,14 @@ import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMar
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
 import { useTranslation } from 'react-i18next';
+import { getIsPolygon } from '../../../../../utils/network';
 
 const OptionPriceTab: React.FC = () => {
     const optionsMarket = useMarketContext();
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isPolygon = getIsPolygon(networkId);
     const longOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket?.longAddress, {
         enabled: isAppReady && !!optionsMarket,
     });
@@ -58,15 +60,20 @@ const OptionPriceTab: React.FC = () => {
     const chartData = useMemo(() => {
         const data = orderBy(
             tradesQuery.data
-                ? tradesQuery.data.map((trade) => ({
-                      timestamp: trade.timestamp,
-                      longPrice:
-                          trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp),
-                      shortPrice:
+                ? tradesQuery.data.map((trade) => {
+                      const longPrice =
+                          trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp);
+                      const shortPrice =
                           trade.side === 'short'
                               ? trade.price
-                              : getLastPrice(tradesQuery.data, 'short', trade.timestamp),
-                  }))
+                              : getLastPrice(tradesQuery.data, 'short', trade.timestamp);
+
+                      return {
+                          timestamp: trade.timestamp,
+                          upPrice: isPolygon ? (longPrice || 0) * 1e12 : longPrice,
+                          downPrice: isPolygon ? (shortPrice || 0) * 1e12 : shortPrice,
+                      };
+                  })
                 : [],
             'timestamp',
             'desc'
@@ -75,7 +82,7 @@ const OptionPriceTab: React.FC = () => {
             return [...data].reverse().slice(0, 8);
         }
         return [];
-    }, [tradesQuery.data]);
+    }, [tradesQuery.data, isPolygon]);
 
     const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
         if (sellOrders.length > 0 && buyOrders.length > 0) {

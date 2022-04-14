@@ -410,7 +410,16 @@ const AMM: React.FC = () => {
             const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
             const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
-
+            const gasPrice = await snxJSConnector.provider?.getGasPrice();
+            const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
+            const providerOptions = isPolygon
+                ? {
+                      gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
+                      gasPrice: ethers.utils.parseUnits(Math.floor(+gasInGwei + +gasInGwei * 0.2).toString(), 'gwei'),
+                  }
+                : {
+                      gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
+                  };
             const tx = (isBuy
                 ? await ammContractWithSigner.buyFromAMM(
                       marketAddress,
@@ -418,9 +427,7 @@ const AMM: React.FC = () => {
                       parsedAmount,
                       parsedTotal,
                       parsedSlippage,
-                      {
-                          gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
-                      }
+                      providerOptions
                   )
                 : await ammContractWithSigner.sellToAMM(
                       marketAddress,
@@ -428,9 +435,7 @@ const AMM: React.FC = () => {
                       parsedAmount,
                       parsedTotal,
                       parsedSlippage,
-                      {
-                          gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
-                      }
+                      providerOptions
                   )) as ethers.ContractTransaction;
             const txResult = await tx.wait();
 
