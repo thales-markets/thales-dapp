@@ -27,8 +27,8 @@ import { L2_EXERCISE_GAS_LIMIT } from 'constants/options';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 // import { dispatchMarketNotification } from 'utils/options';
 import { formatCurrency } from 'utils/formatters/number';
-import { SYNTHS_MAP } from 'constants/currency';
 import { toast } from 'react-toastify';
+import { getStableCoinForNetwork } from '../../../../utils/currency';
 
 const Maturity: React.FC = () => {
     const { t } = useTranslation();
@@ -185,7 +185,7 @@ const Maturity: React.FC = () => {
                 title={t('options.market.trade-card.maturity.payout-amount-label')}
                 value={formatCurrency(isLongResult ? longAmount : shortAmount)}
                 valueEditDisable={true}
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
             />
             <Input
                 title={'Time left to exercise'}
