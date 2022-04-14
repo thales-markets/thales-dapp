@@ -112,6 +112,7 @@ const Table: React.FC<TableProps> = ({
                                     return (
                                         <SPAAnchor href={row.original.link}>
                                             <TableView.Row
+                                                isUser={leaderboardView ? row.original.isUser : false}
                                                 key={index}
                                                 {...row.getRowProps()}
                                                 leaderboardRank={
@@ -139,6 +140,7 @@ const Table: React.FC<TableProps> = ({
                                 } else {
                                     return (
                                         <TableView.Row
+                                            isUser={leaderboardView ? row.original.isUser : false}
                                             key={index}
                                             {...row.getRowProps()}
                                             leaderboardRank={

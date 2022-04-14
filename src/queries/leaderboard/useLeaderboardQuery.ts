@@ -17,6 +17,7 @@ type User = {
     investment: number;
     rank?: number;
     gain: number;
+    isUser?: boolean;
 };
 
 export interface Leaderboard {

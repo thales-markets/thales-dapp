@@ -12,7 +12,7 @@ type CellProps = {
 type Children = {
     Header: StyledComponent<'div', any>;
     Body: StyledComponent<'div', any, { leaderboardView?: boolean }>;
-    Row: StyledComponent<'div', any, { leaderboardRank?: number }>;
+    Row: StyledComponent<'div', any, { leaderboardRank?: number; isUser?: boolean }>;
     Cell: StyledComponent<'div', any, CellProps>;
     Arrow: StyledComponent<'i', any>;
 };
@@ -34,7 +34,7 @@ const Cell = styled.div<CellProps>`
     flex: 1 !important;
 `;
 
-const Row = styled.div<{ leaderboardRank?: number }>`
+const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean }>`
     display: flex;
     height: 43px;
     width: 100%;
@@ -53,6 +53,15 @@ const Row = styled.div<{ leaderboardRank?: number }>`
     ${(_props) => (_props?.leaderboardRank == 1 ? 'margin: 15px 0px !important;' : '')};
     ${(_props) => (_props?.leaderboardRank == 2 ? 'margin: 15px 0px !important;' : '')};
     ${(_props) => (_props?.leaderboardRank == 3 ? 'margin: 15px 0px 0px 0px !important;' : '')};
+    ${(_props) =>
+        _props?.isUser
+            ? `
+     margin-top: 14px;
+     box-shadow: var(--shadow);
+     border-radius: 15px;
+     border: 2px solid var(--input-border-color) !important;
+     `
+            : ''}
 `;
 
 const Body = styled.div<{ leaderboardView?: boolean }>`

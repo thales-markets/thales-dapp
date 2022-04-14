@@ -6,7 +6,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
@@ -37,6 +37,7 @@ const Leaderboard: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const query = useLeaderboardQuery(networkId, { enabled: isAppReady });
 
     const data = useMemo(() => {
@@ -50,12 +51,29 @@ const Leaderboard: React.FC = () => {
             if (competitionType == 'percetangeGain') {
                 users = orderBy(users, ['gain'], ['desc']);
             }
-            users.forEach((user, index) => (user['rank'] = index + 1));
+
+            let signInUser;
+
+            users.forEach((user, index) => {
+                user['rank'] = index + 1;
+                if (walletAddress && user.walletAddress.toLowerCase() === walletAddress?.toLowerCase()) {
+                    signInUser = JSON.parse(JSON.stringify(user));
+                    signInUser.name = 'Your current rank';
+                    signInUser.isUser = true;
+                }
+            });
 
             if (searchQuery !== '') {
                 users = users.filter((user) => {
-                    return user?.walletAddress.includes(searchQuery) || user?.name?.toLowerCase().includes(searchQuery);
+                    return (
+                        user?.walletAddress.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        user?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
                 });
+            }
+
+            if (signInUser) {
+                users.unshift(signInUser);
             }
 
             return users;
