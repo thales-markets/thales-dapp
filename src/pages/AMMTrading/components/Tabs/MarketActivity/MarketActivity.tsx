@@ -20,6 +20,8 @@ import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { COLORS_NEW } from 'constants/ui';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { getIsPolygon } from '../../../../../utils/network';
+import { getStableCoinForNetwork } from '../../../../../utils/currency';
 
 const MarketActivity: React.FC = () => {
     const { t } = useTranslation();
@@ -27,6 +29,7 @@ const MarketActivity: React.FC = () => {
     const optionsMarket = useMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isPolygon = getIsPolygon(networkId);
 
     const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(optionsMarket?.address, networkId, {
         enabled: isAppReady && !!optionsMarket?.address,
@@ -116,7 +119,10 @@ const MarketActivity: React.FC = () => {
                             <p>
                                 {cellProps.cell.row.original.type === 'buy' ||
                                 cellProps.cell.row.original.type === 'sell'
-                                    ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value ?? 0)
+                                    ? formatCurrencyWithKey(
+                                          getStableCoinForNetwork(networkId),
+                                          (isPolygon ? cellProps.cell.value * 1e12 : cellProps.cell.value) ?? 0
+                                      )
                                     : EMPTY_VALUE}
                             </p>
                         ),

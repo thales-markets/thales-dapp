@@ -2,6 +2,7 @@ import { formatCurrency } from '../../../../../utils/formatters/number';
 import { formatShortDate } from '../../../../../utils/formatters/date';
 import { buildOptionsMarketLink } from '../../../../../utils/routes';
 import { TFunction } from 'i18next';
+import { getIsPolygon } from '../../../../../utils/network';
 
 const WIN_COLOR = '#50CE99';
 const LOSE_COLOR = '#C3244A';
@@ -25,7 +26,8 @@ const generateDateKey = (date: Date) => {
 
 const getOptionSideLabel = (optionSide: string) => (optionSide.toLowerCase() === 'short' ? 'down' : 'up');
 
-const generateRows = (data: any[], translator: TFunction) => {
+const generateRows = (data: any[], translator: TFunction, networkId: number) => {
+    const isPolygon = getIsPolygon(networkId);
     const dateMap: Record<string, any> = {};
 
     data.forEach((trade) => {
@@ -48,6 +50,8 @@ const generateRows = (data: any[], translator: TFunction) => {
         }
         const marketExpired = d.marketItem.result;
         const isLong = d.optionSide === 'long';
+        const optionPrice = d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
+        const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;
 
         return {
             dotColor: marketExpired ? (isLong ? WIN_COLOR : LOSE_COLOR) : '',
@@ -64,11 +68,7 @@ const generateRows = (data: any[], translator: TFunction) => {
                 },
                 {
                     title: translator('options.trading-profile.history.price'),
-                    value:
-                        '$' +
-                        formatCurrency(
-                            d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount
-                        ),
+                    value: '$' + formatCurrency(isPolygon ? optionPrice * 1e12 : optionPrice),
                 },
                 {
                     title: translator('options.trading-profile.history.amount'),
@@ -78,7 +78,7 @@ const generateRows = (data: any[], translator: TFunction) => {
                 },
                 {
                     title: translator('options.trading-profile.history.paid'),
-                    value: '$' + formatCurrency(d.orderSide == 'sell' ? d.makerAmount : d.takerAmount),
+                    value: '$' + formatCurrency(isPolygon ? paidAmount * 1e12 : paidAmount),
                 },
                 {
                     title: marketExpired

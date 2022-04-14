@@ -21,6 +21,7 @@ import { USD_SIGN } from 'constants/currency';
 import { formatHoursAndMinutesFromTimestamp, formatShortDateFromTimestamp } from 'utils/formatters/date';
 
 import { OptionsMarketInfo } from 'types/options';
+import { getIsPolygon } from '../../../../../utils/network';
 
 type Activity = {
     timestamp: number;
@@ -42,6 +43,7 @@ const UserActivity: React.FC = () => {
 
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isPolygon = getIsPolygon(networkId);
 
     const marketTransactionsQuery = useBinaryOptionsUserTransactionsQuery(
         marketInfo?.address,
@@ -76,7 +78,9 @@ const UserActivity: React.FC = () => {
                         },
                         {
                             title: t('options.market.your-activity.paid'),
-                            value: item.paid ? formatCurrencyWithSign(USD_SIGN, item.paid) : 'N/A',
+                            value: item.paid
+                                ? formatCurrencyWithSign(USD_SIGN, isPolygon ? item.paid * 1e12 : item.paid)
+                                : 'N/A',
                         },
                         {
                             title: t('options.market.your-activity.amount'),
