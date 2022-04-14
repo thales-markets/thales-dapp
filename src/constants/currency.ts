@@ -348,6 +348,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sDOT]: 'polkadot',
     [SYNTHS_MAP.sRUNE]: 'thorchain',
     [SYNTHS_MAP.sYFI]: 'yearn-finance',
+    [CRYPTO_CURRENCY_MAP.MATIC]: 'matic-network',
 };
 
 export const currencyKeyToDataFeedSourceMap = {
@@ -480,6 +481,10 @@ export const currencyKeyToDataFeedSourceMap = {
         link: 'https://optimistic.etherscan.io/address/0xF334F6104A179207DdaCfb41FA3567FEea8595C2',
     },
     [CRYPTO_CURRENCY_MAP.LUNA]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.MATIC]: {
         source: 'CHAINLINK',
         link: '',
     },
