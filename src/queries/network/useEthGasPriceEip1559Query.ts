@@ -55,10 +55,10 @@ const useEthGasPriceEip1559Query = (networkId: NetworkId, options?: UseQueryOpti
                     const { result } = response.data;
 
                     return {
-                        baseFee: Number(result.suggestBaseFee) < 5 ? 0.0000001 : Number(result.suggestBaseFee),
-                        safeGasPrice: Number(result.SafeGasPrice) < 5 ? 30 : Number(result.SafeGasPrice),
-                        proposeGasPrice: Number(result.ProposeGasPrice) < 5 ? 40 : Number(result.ProposeGasPrice),
-                        fastGasPrice: Number(result.FastGasPrice) < 5 ? 50 : Number(result.FastGasPrice),
+                        baseFee: Number(result.suggestBaseFee),
+                        safeGasPrice: Number(result.SafeGasPrice),
+                        proposeGasPrice: Number(result.ProposeGasPrice),
+                        fastGasPrice: Number(result.FastGasPrice),
                     };
                 } catch (e) {}
             }
