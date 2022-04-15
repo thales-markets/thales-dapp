@@ -106,7 +106,7 @@ const MarketActivity: React.FC = () => {
                                       )
                                     : cellProps.cell.row.original.type === 'mint'
                                     ? formatCurrency(cellProps.cell.value)
-                                    : formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value)}
+                                    : formatCurrencyWithKey(getStableCoinForNetwork(networkId), cellProps.cell.value)}
                             </p>
                         ),
                         sortable: true,

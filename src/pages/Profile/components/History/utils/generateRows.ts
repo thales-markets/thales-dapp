@@ -78,7 +78,7 @@ const generateRows = (data: any[], translator: TFunction, networkId: number) => 
                 },
                 {
                     title: translator('options.trading-profile.history.paid'),
-                    value: '$' + formatCurrency(isPolygon ? paidAmount * 1e12 : paidAmount),
+                    value: '$' + formatCurrency(paidAmount),
                 },
                 {
                     title: marketExpired
