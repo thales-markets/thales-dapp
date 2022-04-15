@@ -1,8 +1,10 @@
 import styled, { StyledComponent } from 'styled-components';
 import { CardContainer } from 'theme/common';
+import { UI_COLORS } from '../../../../../../constants/ui';
 
 type ValueChildren = {
     Liquidity: StyledComponent<'span', any, { shortLiqFlag?: boolean }>;
+    OutOfLiquidity: StyledComponent<'span', any>;
 };
 
 type SubContainerChildren = {
@@ -141,7 +143,12 @@ const Liquidity = styled.span<{ shortLiqFlag?: boolean }>`
     color: ${(_props) => (_props?.shortLiqFlag ? '#C3244A' : '#50CE99')};
 `;
 
+const OutOfLiquidity = styled.span`
+    color: ${UI_COLORS.YELLOW};
+`;
+
 Value.Liquidity = Liquidity;
+Value.OutOfLiquidity = OutOfLiquidity;
 
 SubContainer.Header = Header;
 SubContainer.Value = Value;
