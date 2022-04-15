@@ -135,13 +135,7 @@ const Profile: React.FC = () => {
                         <Wrapper.Row>
                             <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
                             <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
-                                {formatCurrencyWithSign(
-                                    USD_SIGN,
-                                    isPolygon && DataForUi?.userData.profit
-                                        ? DataForUi?.userData.profit * 1e12
-                                        : DataForUi?.userData.profit,
-                                    2
-                                )}
+                                {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.profit, 2)}
                             </Wrapper.Value>
                         </Wrapper.Row>
                         <Wrapper.Row>
@@ -163,13 +157,7 @@ const Profile: React.FC = () => {
                         <Wrapper.Row>
                             <Wrapper.Label>{t('options.leaderboard.table.investment-col')}: </Wrapper.Label>
                             <Wrapper.Value>
-                                {formatCurrencyWithSign(
-                                    USD_SIGN,
-                                    isPolygon && DataForUi?.userData.investment
-                                        ? DataForUi?.userData.investment * 1e12
-                                        : DataForUi?.userData.investment,
-                                    2
-                                )}
+                                {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.investment, 2)}
                             </Wrapper.Value>
                         </Wrapper.Row>
                         {!isPolygon && (
