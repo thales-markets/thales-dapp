@@ -258,13 +258,14 @@ const Wrapper = styled.div`
 const WrapperForText = styled.div`
     width: auto;
     max-width: 700px;
+    padding-left: 10px;
 `;
 
 const TradingCompText = styled.p`
     font-size: 20px;
     font-family: 'Roboto' !important;
     color: var(--primary-color);
-    margin: 20px 0;
+    line-height: 30px;
 `;
 
 const FormContainer = styled.div`
