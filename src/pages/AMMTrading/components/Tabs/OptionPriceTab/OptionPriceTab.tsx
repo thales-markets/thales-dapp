@@ -22,14 +22,12 @@ import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMar
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
 import { useTranslation } from 'react-i18next';
-import { getIsPolygon } from '../../../../../utils/network';
 
 const OptionPriceTab: React.FC = () => {
     const optionsMarket = useMarketContext();
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isPolygon = getIsPolygon(networkId);
     const longOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket?.longAddress, {
         enabled: isAppReady && !!optionsMarket,
     });
@@ -70,8 +68,8 @@ const OptionPriceTab: React.FC = () => {
 
                       return {
                           timestamp: trade.timestamp,
-                          upPrice: isPolygon ? (longPrice || 0) * 1e12 : longPrice,
-                          downPrice: isPolygon ? (shortPrice || 0) * 1e12 : shortPrice,
+                          upPrice: longPrice,
+                          downPrice: shortPrice,
                       };
                   })
                 : [],
@@ -82,7 +80,7 @@ const OptionPriceTab: React.FC = () => {
             return [...data].reverse().slice(0, 8);
         }
         return [];
-    }, [tradesQuery.data, isPolygon]);
+    }, [tradesQuery.data]);
 
     const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
         if (sellOrders.length > 0 && buyOrders.length > 0) {

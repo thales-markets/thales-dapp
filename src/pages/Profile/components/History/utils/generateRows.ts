@@ -2,7 +2,6 @@ import { formatCurrency } from '../../../../../utils/formatters/number';
 import { formatShortDate } from '../../../../../utils/formatters/date';
 import { buildOptionsMarketLink } from '../../../../../utils/routes';
 import { TFunction } from 'i18next';
-import { getIsPolygon } from '../../../../../utils/network';
 
 const WIN_COLOR = '#50CE99';
 const LOSE_COLOR = '#C3244A';
@@ -26,8 +25,7 @@ const generateDateKey = (date: Date) => {
 
 const getOptionSideLabel = (optionSide: string) => (optionSide.toLowerCase() === 'short' ? 'down' : 'up');
 
-const generateRows = (data: any[], translator: TFunction, networkId: number) => {
-    const isPolygon = getIsPolygon(networkId);
+const generateRows = (data: any[], translator: TFunction) => {
     const dateMap: Record<string, any> = {};
 
     data.forEach((trade) => {
@@ -68,7 +66,7 @@ const generateRows = (data: any[], translator: TFunction, networkId: number) => 
                 },
                 {
                     title: translator('options.trading-profile.history.price'),
-                    value: '$' + formatCurrency(isPolygon ? optionPrice * 1e12 : optionPrice),
+                    value: '$' + formatCurrency(optionPrice),
                 },
                 {
                     title: translator('options.trading-profile.history.amount'),
