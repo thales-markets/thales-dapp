@@ -51,7 +51,8 @@ const renderRounds = (
     timeLeftInRound: Date | null,
     selectedSeason: number,
     latestSeason: number,
-    isHistoricalPlayerWinner: boolean
+    isHistoricalPlayerWinner: boolean,
+    userDeathRound: number
 ) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -185,7 +186,7 @@ const renderRounds = (
             : index < roundInASeason
             ? cards.push(
                   <PrevRound id={`round${index}`} key={index}>
-                      <LongButton selected={selectedPosition === 2} disabled={true}>
+                      <LongButton selected={userDeathRound >= index && selectedPosition === 2} disabled={true}>
                           △
                       </LongButton>
                       <div>
@@ -238,9 +239,9 @@ const renderRounds = (
                               } ${t('options.royale.battle.players')}`}</PrevRoundText>
                           </FlexDiv>
                       </RoundHistoryInfo>
-                      <ShortButton selected={selectedPosition === 1} disabled={true}>
+                      <ShortButton selected={userDeathRound >= index && selectedPosition === 1} disabled={true}>
                           <Circle
-                              selected={selectedPosition === 1}
+                              selected={userDeathRound >= index && selectedPosition === 1}
                               disabled={!timeLeftForPositioning || !isPlayerAlive}
                           />
                       </ShortButton>
@@ -462,7 +463,8 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                                 timeLeftInRound,
                                 memoizedSelectedSeason,
                                 latestSeason,
-                                isHistoricalPlayerWinner
+                                isHistoricalPlayerWinner,
+                                Number(user.deathRound)
                             )
                         ) : (
                             <></>
