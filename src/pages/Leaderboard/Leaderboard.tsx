@@ -2,56 +2,360 @@ import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
 
 import useLeaderboardQuery from 'queries/leaderboard/useLeaderboardQuery';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import Container from 'pages/AMMTrading/components//TabContainer/styled-components/Container';
+
+import { Image } from 'theme/common';
+import { UI_COLORS } from 'constants/ui';
+import { orderBy } from 'lodash';
+import SearchField from 'pages/Markets/components/Input/SearchField';
+import { TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
+
+type Competition = 'byNetProfit' | 'percetangeGain';
+
+const CompetitionTabs = [
+    {
+        type: 'byNetProfit',
+        i18Label: 'options.leaderboard.trading-competition.net-profit-competition',
+    },
+    {
+        type: 'percetangeGain',
+        i18Label: 'options.leaderboard.trading-competition.percentage-profit-competition',
+    },
+];
 
 const Leaderboard: React.FC = () => {
     const { t } = useTranslation();
+    const [competitionType, setCompetitionType] = useState<Competition>('byNetProfit');
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const query = useLeaderboardQuery(networkId, { enabled: isAppReady });
-    const data = query.isSuccess ? query.data : [];
-    return (
-        <Table
-            data={data}
-            columns={[
-                {
-                    Header: t('options.leaderboard.address'),
-                    accessor: 'walletAddress',
-                },
-                {
-                    Header: t('options.leaderboard.table.trades-col'),
-                    accessor: 'trades',
-                },
 
-                {
-                    Header: t('options.leaderboard.table.volume-col'),
-                    accessor: 'volume',
-                    Cell: (cellProps: any) => <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>,
-                },
-                {
-                    Header: t('options.leaderboard.table.netprofit-col'),
-                    accessor: 'profit',
-                    Cell: (cellProps: any) => <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>,
-                },
-                {
-                    Header: t('options.leaderboard.table.investment-col'),
-                    accessor: 'investment',
-                    Cell: (cellProps: any) => <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>,
-                },
-                {
-                    Header: t('options.leaderboard.table.gain-col'),
-                    accessor: 'gain',
-                    Cell: (cellProps: any) => <p>{formatPercentage(cellProps.cell.value)}</p>,
-                },
-            ]}
-        />
+    const data = useMemo(() => {
+        if (query.isSuccess) {
+            let users = query?.data?.length ? query.data : [];
+
+            if (competitionType == 'byNetProfit') {
+                users = orderBy(users, ['profit'], ['desc']);
+            }
+
+            if (competitionType == 'percetangeGain') {
+                users = orderBy(users, ['gain'], ['desc']);
+            }
+
+            let signInUser;
+
+            users.forEach((user, index) => {
+                user['rank'] = index + 1;
+                if (walletAddress && user.walletAddress.toLowerCase() === walletAddress?.toLowerCase()) {
+                    signInUser = JSON.parse(JSON.stringify(user));
+                    signInUser.name = 'Your current rank';
+                    signInUser.isUser = true;
+                }
+            });
+
+            if (searchQuery !== '') {
+                users = users.filter((user) => {
+                    return (
+                        user?.walletAddress.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        user?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                });
+            }
+
+            if (signInUser) {
+                users.unshift(signInUser);
+            }
+
+            return users;
+        }
+
+        return [];
+    }, [query.isSuccess, competitionType, searchQuery]);
+
+    return (
+        <>
+            <Wrapper>
+                <Container.Main justifyContent="flex-start">
+                    <Container.Main.Item
+                        noStrech={true}
+                        padding={'20px 30px'}
+                        active={CompetitionTabs[0].type == competitionType}
+                        onClick={() => setCompetitionType(CompetitionTabs[0].type as Competition)}
+                    >
+                        {t(CompetitionTabs[0].i18Label)}
+                    </Container.Main.Item>
+                    <Container.Main.Item
+                        noStrech={true}
+                        padding={'20px 30px'}
+                        active={CompetitionTabs[1].type == competitionType}
+                        onClick={() => setCompetitionType(CompetitionTabs[1].type as Competition)}
+                    >
+                        {t(CompetitionTabs[1].i18Label)}
+                    </Container.Main.Item>
+                    <FormContainer>
+                        <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
+                    </FormContainer>
+                </Container.Main>
+                <Container.Tab>
+                    <Table
+                        data={data}
+                        columns={[
+                            {
+                                Header: t('options.leaderboard.table.rank-col'),
+                                accessor: 'rank',
+                                Cell: (cellProps: any) => (
+                                    <IconHolder>
+                                        <Position position={cellProps?.cell?.value} />
+                                    </IconHolder>
+                                ),
+                                disableSortBy: true,
+                            },
+                            {
+                                Header: t('options.leaderboard.table.rewards-col'),
+                                accessor: 'rewards',
+                                Cell: (cellProps: any) => {
+                                    if (Number(cellProps?.cell?.row.original.rank) < 51) {
+                                        return (
+                                            <IconHolder>
+                                                <TooltipAssetIcon
+                                                    title={getRewardsTooltipMessage(
+                                                        cellProps?.cell?.row.original.rank,
+                                                        competitionType
+                                                    )}
+                                                    styleProps={{ width: 40, height: 40 }}
+                                                ></TooltipAssetIcon>
+                                            </IconHolder>
+                                        );
+                                    } else {
+                                        return <></>;
+                                    }
+                                },
+
+                                disableSortBy: true,
+                            },
+                            {
+                                Header: t('options.leaderboard.avatar'),
+                                accessor: 'avatar',
+                                Cell: (cellProps: any) => {
+                                    return (
+                                        <a
+                                            href={
+                                                'https://polygonscan.com/address/' +
+                                                cellProps.cell.row.original.walletAddress
+                                            }
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            <UserAvatar src={cellProps.cell.value} />
+                                        </a>
+                                    );
+                                },
+                                disableSortBy: true,
+                            },
+                            {
+                                Header: t('options.leaderboard.display-name'),
+                                accessor: 'name',
+                                Cell: (cellProps: any) => {
+                                    return (
+                                        <a
+                                            href={
+                                                'https://polygonscan.com/address/' +
+                                                cellProps.cell.row.original.walletAddress
+                                            }
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            <p style={{ color: 'var(--color)' }}>{cellProps.cell.value}</p>
+                                        </a>
+                                    );
+                                },
+                                disableSortBy: true,
+                            },
+                            {
+                                Header: t('options.leaderboard.table.netprofit-col'),
+                                accessor: 'profit',
+                                Cell: (cellProps: any) => (
+                                    <Gain color={cellProps.cell.value > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}>
+                                        {formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}
+                                    </Gain>
+                                ),
+                            },
+                            {
+                                Header: t('options.leaderboard.table.gain-col'),
+                                accessor: 'gain',
+                                Cell: (cellProps: any) => (
+                                    <Gain color={cellProps.cell.value > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}>
+                                        {formatPercentage(cellProps.cell.value)}
+                                    </Gain>
+                                ),
+                            },
+                            {
+                                Header: t('options.leaderboard.table.trades-col'),
+                                accessor: 'trades',
+                                disableSortBy: true,
+                            },
+                            {
+                                Header: t('options.leaderboard.table.volume-col'),
+                                accessor: 'volume',
+                                Cell: (cellProps: any) => (
+                                    <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                ),
+                                disableSortBy: true,
+                            },
+                            {
+                                Header: t('options.leaderboard.table.investment-col'),
+                                accessor: 'investment',
+                                Cell: (cellProps: any) => (
+                                    <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                ),
+                                disableSortBy: true,
+                            },
+                        ]}
+                        leaderboardView={true}
+                    />
+                </Container.Tab>
+            </Wrapper>
+        </>
     );
+};
+
+const Wrapper = styled.div`
+    width: auto;
+`;
+
+const FormContainer = styled.div`
+    color: #64d9fe;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    align-self: center;
+    @media (max-width: 1250px) {
+        display: none;
+    }
+`;
+
+const IconHolder = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+`;
+
+const UserAvatar = styled(Image)<{ winner?: boolean }>`
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin: 5px 0px;
+    border: ${(props) => (props.winner ? '2px solid #FFE489' : 'none')};
+    filter: ${(props) => (props.winner ? 'drop-shadow(0px 0px 15px rgba(255, 232, 155, 0.7))' : 'none')};
+    @media (max-width: 1024px) {
+        width: 40px;
+        height: 40px;
+    }
+`;
+
+const Gain = styled.p<{ color?: string }>`
+    color: ${(_props) => (_props?.color ? _props.color : '')};
+`;
+
+const Position: React.FC<{ position: number }> = ({ position }) => {
+    return (
+        <>
+            {position == 1 && (
+                <i
+                    style={{ color: 'var(--input-border-color)', fontSize: '50px' }}
+                    className="sidebar-icon icon--first-place"
+                />
+            )}
+            {position == 2 && (
+                <i
+                    style={{ color: 'var(--input-border-color)', fontSize: '50px' }}
+                    className="sidebar-icon icon--second-place"
+                />
+            )}
+            {position == 3 && (
+                <i
+                    style={{ color: 'var(--input-border-color)', fontSize: '50px' }}
+                    className="sidebar-icon icon--third-place"
+                />
+            )}
+            {position > 3 && <span>{position}</span>}
+        </>
+    );
+};
+
+const getRewardsTooltipMessage = (position: number, competitionType: Competition) => {
+    if (position == 1) {
+        if (competitionType == 'byNetProfit') {
+            return '7500 THALES and 2500 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '6000 THALES and 2500 MATIC';
+        }
+    }
+    if (position == 2) {
+        if (competitionType == 'byNetProfit') {
+            return '4750 THALES and 1250 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '3750 THALES and 1250 MATIC';
+        }
+    }
+
+    if (position == 3) {
+        if (competitionType == 'byNetProfit') {
+            return '2500 THALES and 1000 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '2000 THALES and 1000 MATIC';
+        }
+    }
+
+    if (position == 4) {
+        if (competitionType == 'byNetProfit') {
+            return '1375 THALES and 625 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '1200 THALES and 500 MATIC';
+        }
+    }
+
+    if (position >= 5 && position <= 20) {
+        if (competitionType == 'byNetProfit') {
+            return '350 THALES and 55 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '250 THALES and 50 MATIC';
+        }
+    }
+
+    if (position >= 21 && position <= 32) {
+        if (competitionType == 'percetangeGain') {
+            return '200 THALES and 50 MATIC';
+        }
+    }
+
+    if (position > 21 && position <= 50) {
+        if (competitionType == 'byNetProfit') {
+            return '200 THALES and 50 MATIC';
+        }
+        if (competitionType == 'percetangeGain') {
+            return '162.5 THALES and 37.5 MATIC';
+        }
+    }
+
+    return '';
 };
 
 export default Leaderboard;

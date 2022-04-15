@@ -85,3 +85,15 @@
 .icon--dark-mode:before {
     content: '\0052';
 }
+
+.icon--first-place:before {
+    content: '\0047';
+}
+
+.icon--second-place:before {
+    content: '\0048';
+}
+
+.icon--third-place:before {
+    content: '\0049';
+}

@@ -9,7 +9,14 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
-import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei, isNetworkSupported } from 'utils/network';
+import {
+    checkAllowance,
+    formatGasLimit,
+    getIsOVM,
+    getIsPolygon,
+    getL1FeeInWei,
+    isNetworkSupported,
+} from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -53,7 +60,7 @@ import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
-import { getSynthName } from 'utils/currency';
+import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
 import { createOneInchLimitOrder } from 'utils/1inch';
 import ApprovalModal from 'components/ApprovalModal';
 
@@ -119,6 +126,7 @@ export const CreateMarket: React.FC = () => {
         const [l1Fee, setL1Fee] = useState<number | null>(null);
         const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
         const isL2 = getIsOVM(networkId);
+        const isPolygon = getIsPolygon(networkId);
 
         const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
@@ -211,7 +219,7 @@ export const CreateMarket: React.FC = () => {
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
                 if (txResult && txResult.events) {
-                    const rawData = txResult.events[txResult.events?.length - 1];
+                    const rawData = txResult.events[txResult.events?.length - (isPolygon ? 2 : 1)];
                     if (rawData && rawData.decode) {
                         const goodData = rawData.decode(rawData.data);
                         setMarket(goodData.market);
@@ -273,6 +281,7 @@ export const CreateMarket: React.FC = () => {
                         setUserHasEnoughFunds(true);
                         setL1Fee(l1FeeInWei);
                     } else {
+                        console.log('dadssd', oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS);
                         const gasEstimate = await BOMMContractWithSigner.estimateGas.createMarket(
                             oracleKey,
                             price,
@@ -281,6 +290,7 @@ export const CreateMarket: React.FC = () => {
                             false,
                             ZERO_ADDRESS
                         );
+                        console.log('122222');
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setUserHasEnoughFunds(true);
                     }
@@ -313,7 +323,9 @@ export const CreateMarket: React.FC = () => {
             const {
                 contracts: { SynthsUSD },
             } = snxJSConnector.snxJS as any;
+
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
+
             try {
                 setIsAllowing(true);
                 const gasEstimate = await SynthsUSD.estimateGas.approve(
@@ -452,10 +464,10 @@ export const CreateMarket: React.FC = () => {
                     <FlexDivColumn style={{ flex: 1 }}>
                         <div className="create-market-content__info">
                             <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
-                                {t('options.create-market.subtitle')}
+                                {t('options.create-market.subtitle', { token: getStableCoinForNetwork(networkId) })}
                             </Text>
                             <Text className="text-s pale-grey lh24" style={{ margin: '30px 2px' }}>
-                                {t('options.create-market.note')}
+                                {t('options.create-market.note', { token: getStableCoinForNetwork(networkId) })}
                             </Text>
                         </div>
                         <InputsWrapper className="create-market-content__wrapper">
@@ -701,7 +713,7 @@ export const CreateMarket: React.FC = () => {
                                         readOnly={isCreatingMarket || isMarketCreated}
                                     />
                                     <InputLabel>{t('options.create-market.details.funding-amount.label')}</InputLabel>
-                                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                                    <CurrencyLabel>{getStableCoinForNetwork(networkId)}</CurrencyLabel>
                                     <Text
                                         className="text-xxxs grey"
                                         style={{
@@ -711,7 +723,9 @@ export const CreateMarket: React.FC = () => {
                                             bottom: -40,
                                         }}
                                     >
-                                        {t('options.create-market.details.funding-amount.desc')}
+                                        {t('options.create-market.details.funding-amount.desc', {
+                                            token: getStableCoinForNetwork(networkId),
+                                        })}
                                     </Text>
 
                                     <ErrorMessage
@@ -798,7 +812,7 @@ export const CreateMarket: React.FC = () => {
                                         </InputLabel>
                                     )}
                                     <CurrencyLabel className={!sellLong ? 'disabled' : ''}>
-                                        {SYNTHS_MAP.sUSD}
+                                        {getStableCoinForNetwork(networkId)}
                                     </CurrencyLabel>
                                     <FieldValidationMessage
                                         showValidation={!isLongPriceValid}
@@ -902,7 +916,7 @@ export const CreateMarket: React.FC = () => {
                                         </InputLabel>
                                     )}
                                     <CurrencyLabel className={!sellShort ? 'disabled' : ''}>
-                                        {SYNTHS_MAP.sUSD}
+                                        {getStableCoinForNetwork(networkId)}
                                     </CurrencyLabel>
                                     <FieldValidationMessage
                                         showValidation={!isShortPriceValid}
@@ -1016,7 +1030,7 @@ export const CreateMarket: React.FC = () => {
                 {openApprovalModal && (
                     <ApprovalModal
                         defaultAmount={initialFundingAmount}
-                        tokenSymbol={SYNTHS_MAP.sUSD}
+                        tokenSymbol={getStableCoinForNetwork(networkId)}
                         isAllowing={isAllowing}
                         onSubmit={handleAllowance}
                         onClose={() => setOpenApprovalModal(false)}

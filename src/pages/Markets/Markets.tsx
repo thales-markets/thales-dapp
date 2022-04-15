@@ -16,6 +16,8 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
+import { POLYGON_ID } from '../../constants/network';
+import { CONVERT_TO_6_DECIMALS } from '../../constants/token';
 
 // const MAX_HOT_MARKETS = 6;
 
@@ -31,18 +33,26 @@ const Markets: React.FC = () => {
             return openOrdersQuery.data;
         }
     }, [openOrdersQuery]);
+
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
                 ? marketsQuery.data.map((m) => {
                       const apiData = (openOrdersMap as any).get(m.address.toLowerCase());
+
                       return {
                           ...m,
                           openOrders: apiData?.ordersCount ?? 0,
                           availableLongs: apiData?.availableLongs ?? 0,
                           availableShorts: apiData?.availableShorts ?? 0,
-                          longPrice: apiData?.longPrice ?? 0,
-                          shortPrice: apiData?.shortPrice ?? 0,
+                          longPrice:
+                              +(networkId === POLYGON_ID
+                                  ? apiData?.longPrice * CONVERT_TO_6_DECIMALS
+                                  : apiData?.longPrice) ?? 0,
+                          shortPrice:
+                              +(networkId === POLYGON_ID
+                                  ? apiData?.shortPrice * CONVERT_TO_6_DECIMALS
+                                  : apiData?.shortPrice) ?? 0,
                           ammLiquidity: Number(apiData?.availableLongs ?? 0) + Number(apiData?.availableShorts ?? 0),
                       };
                   })
@@ -50,12 +60,13 @@ const Markets: React.FC = () => {
             return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery]);
+    }, [marketsQuery, openOrdersMap]);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
     });
+
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
     const hotMarkets = useMemo(

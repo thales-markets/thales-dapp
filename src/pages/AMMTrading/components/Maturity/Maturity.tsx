@@ -17,7 +17,7 @@ import { useBOMContractContext } from 'pages/AMMTrading/contexts/BOMContractCont
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
 import { AccountMarketInfo } from 'types/options';
 import { BINARY_OPTIONS_EVENTS } from 'constants/events';
@@ -27,8 +27,9 @@ import { L2_EXERCISE_GAS_LIMIT } from 'constants/options';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 // import { dispatchMarketNotification } from 'utils/options';
 import { formatCurrency } from 'utils/formatters/number';
-import { SYNTHS_MAP } from 'constants/currency';
 import { toast } from 'react-toastify';
+import { getStableCoinForNetwork } from '../../../../utils/currency';
+import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
 
 const Maturity: React.FC = () => {
     const { t } = useTranslation();
@@ -43,6 +44,7 @@ const Maturity: React.FC = () => {
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     let accountMarketInfo = {
         long: 0,
@@ -116,9 +118,23 @@ const Maturity: React.FC = () => {
         try {
             setIsExercising(true);
             const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-            const tx = (await BOMContractWithSigner.exerciseOptions({
-                gasLimit,
-            })) as ethers.ContractTransaction;
+
+            const gasPrice = await snxJSConnector.provider?.getGasPrice();
+            const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
+
+            const providerOptions = isPolygon
+                ? {
+                      gasLimit,
+                      gasPrice: ethers.utils.parseUnits(
+                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
+                          'gwei'
+                      ),
+                  }
+                : {
+                      gasLimit,
+                  };
+
+            const tx = (await BOMContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
 
             dispatch(
                 addOptionsPendingTransaction({
@@ -185,7 +201,7 @@ const Maturity: React.FC = () => {
                 title={t('options.market.trade-card.maturity.payout-amount-label')}
                 value={formatCurrency(isLongResult ? longAmount : shortAmount)}
                 valueEditDisable={true}
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
             />
             <Input
                 title={'Time left to exercise'}

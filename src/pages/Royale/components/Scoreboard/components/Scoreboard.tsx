@@ -13,7 +13,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Image, LoaderContainer, Text } from 'theme/common';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 import useRoyaleDataForScoreboard from '../queries/useRoyaleDataForScoreboard';
 import useRoyalePlayersQuery, { User, UserStatus } from '../queries/useRoyalePlayersQuery';
 import { getQuixoticLink } from './ShowRoyalePassportsDialog/ShowRoyalePassportsDialog';
@@ -43,6 +43,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     const { t } = useTranslation();
     const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
         ? i18n.language
@@ -56,11 +57,11 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
     const [showPerPage, setShowPerPage] = useState(15);
     const [searchString, setSearchString] = useState('');
     const royaleDataQuery = useRoyaleDataForScoreboard(selectedSeason, {
-        enabled: isL2 && isAppReady,
+        enabled: (isL2 || isPolygon) && isAppReady,
     });
 
     const usersQuery = useRoyalePlayersQuery(networkId, selectedSeason, {
-        enabled: isL2 && isAppReady,
+        enabled: (isL2 || isPolygon) && isAppReady,
     });
     const users = usersQuery.isSuccess ? usersQuery.data : [];
 

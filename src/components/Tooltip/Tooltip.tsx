@@ -6,7 +6,7 @@ import { UI_COLORS } from 'constants/ui';
 import { withStyles } from '@material-ui/styles';
 import Fade from '@material-ui/core/Fade';
 
-type Tooltips = 'info' | 'warning' | 'success';
+type Tooltips = 'info' | 'warning' | 'success' | 'moneyBag';
 
 type CustomTooltipProps = {
     message: string;
@@ -52,6 +52,10 @@ const icons = {
     },
     success: {
         className: 'v2-icon v2-icon--info',
+        color: 'var(--primary-color)',
+    },
+    moneyBag: {
+        className: 'v2-icon v2-icon--dollar',
         color: 'var(--primary-color)',
     },
 };

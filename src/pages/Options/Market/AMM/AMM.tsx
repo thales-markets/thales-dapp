@@ -141,7 +141,7 @@ const AMM: React.FC = () => {
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket.address, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket.address, networkId, {
         enabled: isAppReady,
     });
     const ammMaxLimits =

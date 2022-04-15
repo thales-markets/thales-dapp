@@ -7,7 +7,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 
 type OptionPriceChartProps = {
-    data: Array<{ timestamp: number; longPrice: number | undefined; shortPrice: number | undefined }> | [];
+    data: Array<{ timestamp: number; upPrice: number | undefined; downPrice: number | undefined }> | [];
 };
 
 const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data }) => {
@@ -50,8 +50,8 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data }) => {
                         }}
                     />
                 )}
-                <Line type="linear" dataKey="shortPrice" strokeWidth={3} stroke="#C3244A" dot={{ strokeWidth: 8 }} />
-                <Line type="linear" dataKey="longPrice" strokeWidth={3} stroke="#50CE99" dot={{ strokeWidth: 8 }} />
+                <Line type="linear" dataKey="downPrice" strokeWidth={3} stroke="#C3244A" dot={{ strokeWidth: 8 }} />
+                <Line type="linear" dataKey="upPrice" strokeWidth={3} stroke="#50CE99" dot={{ strokeWidth: 8 }} />
             </LineChart>
         </ResponsiveContainer>
     );

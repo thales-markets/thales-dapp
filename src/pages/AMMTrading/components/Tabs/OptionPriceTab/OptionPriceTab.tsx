@@ -35,7 +35,7 @@ const OptionPriceTab: React.FC = () => {
         enabled: isAppReady && !!optionsMarket,
     });
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
         enabled: isAppReady && !!optionsMarket,
     });
 
@@ -58,15 +58,20 @@ const OptionPriceTab: React.FC = () => {
     const chartData = useMemo(() => {
         const data = orderBy(
             tradesQuery.data
-                ? tradesQuery.data.map((trade) => ({
-                      timestamp: trade.timestamp,
-                      longPrice:
-                          trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp),
-                      shortPrice:
+                ? tradesQuery.data.map((trade) => {
+                      const longPrice =
+                          trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp);
+                      const shortPrice =
                           trade.side === 'short'
                               ? trade.price
-                              : getLastPrice(tradesQuery.data, 'short', trade.timestamp),
-                  }))
+                              : getLastPrice(tradesQuery.data, 'short', trade.timestamp);
+
+                      return {
+                          timestamp: trade.timestamp,
+                          upPrice: longPrice,
+                          downPrice: shortPrice,
+                      };
+                  })
                 : [],
             'timestamp',
             'desc'

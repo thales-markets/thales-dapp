@@ -35,6 +35,7 @@ import Divider from 'pages/AMMTrading/components/AMM/styled-components/Divider';
 import NetworkFees from 'pages/AMMTrading/components/AMM/components/NetworkFees';
 import ApprovalModal from 'components/ApprovalModal';
 import { toast } from 'react-toastify';
+import { getStableCoinForNetwork } from '../../../../../../../../utils/currency';
 
 const Mint: React.FC = () => {
     const { t } = useTranslation();
@@ -525,11 +526,13 @@ const Mint: React.FC = () => {
                     setAmount(value);
                 }}
                 borderColor={isAmountValid ? '' : UI_COLORS.RED}
-                subValue={actionInProgress ? '' : SYNTHS_MAP.sUSD}
+                subValue={actionInProgress ? '' : getStableCoinForNetwork(networkId)}
                 disabled={actionInProgress}
                 displayTooltip={!isAmountValid}
                 container={{ margin: '19px 0 0 0' }}
-                tooltipText={t(`common.errors.insufficient-balance-wallet`, { currencyKey: SYNTHS_MAP.sUSD })}
+                tooltipText={t(`common.errors.insufficient-balance-wallet`, {
+                    currencyKey: getStableCoinForNetwork(networkId),
+                })}
             />
             <RowContainer>
                 <Checkbox
@@ -562,7 +565,7 @@ const Mint: React.FC = () => {
                     value={longPrice}
                     valueChange={(value) => setLongPrice(value)}
                     valueType={'number'}
-                    subValue={SYNTHS_MAP.sUSD}
+                    subValue={getStableCoinForNetwork(networkId)}
                     disabled={!sellLong || actionInProgress}
                     borderColor={isLongPriceValid ? undefined : UI_COLORS.RED}
                     displayTooltip={!isLongPriceValid}
@@ -620,7 +623,7 @@ const Mint: React.FC = () => {
                     value={shortPrice}
                     valueChange={(value) => setShortPrice(value)}
                     valueType={'number'}
-                    subValue={SYNTHS_MAP.sUSD}
+                    subValue={getStableCoinForNetwork(networkId)}
                     disabled={!sellShort || actionInProgress}
                     borderColor={isShortPriceValid ? undefined : UI_COLORS.RED}
                     displayTooltip={!isShortPriceValid}
@@ -671,7 +674,7 @@ const Mint: React.FC = () => {
             {openApprovalModal && (
                 <ApprovalModal
                     defaultAmount={amount}
-                    tokenSymbol={SYNTHS_MAP.sUSD}
+                    tokenSymbol={getStableCoinForNetwork(networkId)}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}

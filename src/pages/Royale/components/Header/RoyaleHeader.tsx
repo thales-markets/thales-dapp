@@ -4,7 +4,7 @@ import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import Swap from 'components/Swap/Swap';
-import { OP_sUSD, OP_KOVAN_SUSD } from 'components/Swap/tokens';
+import { OP_sUSD, OP_KOVAN_SUSD, POLYGON_USDC } from 'components/Swap/tokens';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
@@ -21,7 +21,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import { erc20Contract } from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
-import { checkAllowance, getIsOVM } from 'utils/network';
+import { checkAllowance, getIsOVM, getIsPolygon } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -62,6 +62,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     const [openUserInfo, setOpenUserInfo] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
@@ -71,14 +72,18 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const balanceQuery = useEthBalanceQuery(walletAddress, { enabled: walletAddress !== null });
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
-    const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected && isAppReady });
+    const royalePassQuery = useRoyalePassQuery(walletAddress, {
+        enabled: (isL2 || isPolygon) && isWalletConnected && isAppReady,
+    });
     const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, {
-        enabled: isL2 && isAppReady,
+        enabled: (isL2 || isPolygon) && isAppReady,
     });
-    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
+    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, {
+        enabled: (isL2 || isPolygon) && isWalletConnected,
+    });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
-    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
+    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : isPolygon ? POLYGON_USDC : '';
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,

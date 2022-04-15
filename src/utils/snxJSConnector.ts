@@ -19,6 +19,8 @@ import { gelatoContract } from './contracts/gelatoContract';
 import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
 import thalesRoyalePassportContract from './contracts/thalesRoyalePassportContract';
 import bridgeContract from './contracts/bridgeContract';
+import usdcContract from './contracts/usdcContract';
+import { getIsPolygon } from './network';
 import unclaimedRetroAirdropContract from './contracts/unclaimedRetroAirdrop';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 
@@ -57,7 +59,17 @@ const snxJSConnector: SnxJSConnector = {
 
     setContractSettings: function (contractSettings: Config) {
         this.initialized = true;
-        this.snxJS = synthetix(contractSettings);
+        if (!getIsPolygon(contractSettings.networkId || 10)) {
+            this.snxJS = synthetix(contractSettings);
+        } else {
+            // @ts-ignore
+            this.snxJS = {
+                contracts: {
+                    // @ts-ignore
+                    SynthsUSD: initializeContract(usdcContract, contractSettings).connect(contractSettings.signer),
+                },
+            };
+        }
         this.signer = contractSettings.signer;
         this.provider = contractSettings.provider;
         this.binaryOptionsMarketDataContract = initializeContract(binaryOptionsMarketDataContract, contractSettings);

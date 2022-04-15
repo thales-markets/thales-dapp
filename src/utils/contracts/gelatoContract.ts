@@ -1,4 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
+import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const GELATO_POOL_ADDRESS = '0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5'; // thales/WETH
 const GELATO_POOL_ABI = [
@@ -126,5 +127,7 @@ export const gelatoContract = {
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: GELATO_POOL_ADDRESS,
         [NetworkId['Kovan-Ovm']]: 'TBD',
+        [POLYGON_MUMBAI_ID]: 'TBD',
+        [POLYGON_ID]: 'TBD',
     },
 };

@@ -20,6 +20,7 @@ import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery'
 import useStakingThalesQuery from '../../queries/staking/useStakingThalesQuery';
 import useEscrowThalesQuery from '../../queries/staking/useEscrowThalesQuery';
 import makeBlockie from 'ethereum-blockies-base64';
+import { getStableCoinForNetwork } from '../../utils/currency';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -84,7 +85,9 @@ const UserInfo: React.FC = () => {
     return (
         <>
             <UserInfoWrapper className="dapp-header__userInfo" onClick={setOpen.bind(this, true)}>
-                <SUSDBalance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</SUSDBalance>
+                <SUSDBalance>
+                    {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), sUSDBalance)}
+                </SUSDBalance>
                 <NetworkWrapper>
                     {!hideAddress && (
                         <AddressWrapper>

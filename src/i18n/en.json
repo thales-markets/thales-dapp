@@ -636,7 +636,7 @@
         "create-market": {
             "title": "Create a new Binary Options market",
             "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
-            "note": "* Note: The amount of sUSD deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 sUSD mints 1,000 UP and 1,000 DOWN options tokens for this market.",
+            "note": "* Note: The amount of {{token}} deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN options tokens for this market.",
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
@@ -644,7 +644,7 @@
                 "market-maturity-time-label": "time (UTC):",
                 "funding-amount": {
                     "label": "market funding amount:",
-                    "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
+                    "desc": "Note: your {{token}} will be locked up in this contract until the market maturity date"
                 }
             },
             "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
@@ -847,12 +847,12 @@
                     },
                     "table": {
                         "type-col": "Type",
-                        "price-col": "PRICE (sUSD)",
+                        "price-col": "PRICE ({{token}})",
                         "amount-col": "AMOUNT ({{currencyKey}})",
                         "filled-col": "FILLED (%)",
                         "return-col": "RETURN",
                         "return-col-tooltip": "Potential return if this option wins",
-                        "total-col": "TOTAL (sUSD)",
+                        "total-col": "TOTAL ({{token}})",
                         "time-remaining-col": "TIME REMAINING",
                         "cancel-col-tooltip": "Click to cancel your order"
                     }
@@ -1008,6 +1008,7 @@
             "verify": "Verify",
             "display-name": "Display Name",
             "address": "Address",
+            "avatar": "Avatar",
             "twitter-account": "My twitter account",
             "my-info": "My info",
             "balance": "sUSD balance",
@@ -1028,7 +1029,9 @@
                 "competition-period": "Selected period",
                 "disqualified": "Disqualified",
                 "unverified": "Unverified",
-                "current-rank": "Your current rank"
+                "current-rank": "Your current rank",
+                "net-profit-competition": "Net profit",
+                "percentage-profit-competition": "Percentage profit"
             },
             "board": {
                 "tab-title": "Leaderboard"
@@ -1150,14 +1153,14 @@
             "ratio": "Ratio"
         },
         "swap": {
-            "button-text": "Get sUSD",
+            "button-text": "Get {{token}}",
             "select-token": "Select a token",
             "enter-amount": "Enter amount",
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
             "not-supported": " Swap is not supported on Test networks",
-            "tx-success": "Successfully bought sUSD",
+            "tx-success": "Successfully bought {{token}}",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",
             "approval-success": "Approval successful",

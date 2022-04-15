@@ -1,6 +1,6 @@
 import ApprovalModal from 'components/ApprovalModal';
 import SimpleLoader from 'components/SimpleLoader';
-import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { BigNumber, ethers } from 'ethers';
 import { get } from 'lodash';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
@@ -16,15 +16,32 @@ import { RootState } from 'redux/rootReducer';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { checkAllowance, getIsOVM, getTransactionPrice } from 'utils/network';
+import { checkAllowance, getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
 import { refetchUserBalance } from 'utils/queryConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
 import SwapDialog from './styled-components';
-import { ETH_Dai, ETH_Eth, ETH_sUSD, ETH_USDC, ETH_USDT, OP_Dai, OP_Eth, OP_sUSD, OP_USDC, OP_USDT } from './tokens';
+import {
+    ETH_Dai,
+    ETH_Eth,
+    ETH_sUSD,
+    ETH_USDC,
+    ETH_USDT,
+    OP_Dai,
+    OP_Eth,
+    OP_sUSD,
+    OP_USDC,
+    OP_USDT,
+    POLYGON_Dai,
+    POLYGON_ETH,
+    POLYGON_MATIC,
+    POLYGON_USDC,
+    POLYGON_USDT,
+} from './tokens';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { getStableCoinForNetwork } from '../../utils/currency';
 
 const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const { t } = useTranslation();
@@ -34,10 +51,11 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const theme = useSelector((state: RootState) => getTheme(state));
     const [preLoadTokens, setPreLoadTokens] = useState([] as any);
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
     const signer = provider.getSigner();
-    const [fromToken, _setFromToken] = useState(isL2 ? OP_Eth : ETH_Eth);
-    const [toToken, _setToToken] = useState(isL2 ? OP_sUSD : ETH_sUSD);
+    const [fromToken, _setFromToken] = useState(isL2 ? OP_Eth : isPolygon ? POLYGON_MATIC : ETH_Eth);
+    const [toToken, _setToToken] = useState(isL2 ? OP_sUSD : isPolygon ? POLYGON_USDC : ETH_sUSD);
     const [amount, setAmount] = useState('');
     const [previewData, setPreviewData] = useState(undefined);
     const [allowance, setAllowance] = useState(false);
@@ -52,7 +70,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
 
     const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
+    const ethRate = get(exchangeRates, isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : SYNTHS_MAP.sETH, null);
 
     const approveSpenderQuery = useApproveSpender(networkId, {
         enabled: false,
@@ -96,6 +114,8 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     useEffect(() => {
         isL2
             ? (setPreLoadTokens([OP_Eth, OP_Dai, OP_USDC, OP_USDT]), _setToToken(OP_sUSD))
+            : isPolygon
+            ? (setPreLoadTokens([POLYGON_MATIC, POLYGON_USDT, POLYGON_ETH, POLYGON_Dai]), _setToToken(POLYGON_USDC))
             : (setPreLoadTokens([ETH_Eth, ETH_Dai, ETH_USDC, ETH_USDT]), _setToToken(ETH_sUSD));
     }, [networkId]);
 
@@ -105,7 +125,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
 
     const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
-            if (token === ETH_Eth || token === OP_Eth) {
+            if (token === ETH_Eth || token === OP_Eth || token === POLYGON_MATIC) {
                 setAllowance(true);
                 signer
                     .getBalance()
@@ -177,7 +197,10 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                 await tx.wait();
                 refetchUserBalance(walletAddress as any, networkId);
                 setLoading(false);
-                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success')));
+                toast.update(
+                    id,
+                    getSuccessToastOptions(t('options.swap.tx-success', { token: getStableCoinForNetwork(networkId) }))
+                );
                 return {
                     data: (data as any).tx.data,
                     from: (data as any).tx.from,
@@ -245,7 +268,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
 
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, false)}>
-            {networkId !== 1 && networkId !== 10 ? (
+            {networkId !== 1 && networkId !== 10 && networkId !== 137 ? (
                 <SwapDialog
                     royaleTheme={royaleTheme}
                     contentType="unsupported"

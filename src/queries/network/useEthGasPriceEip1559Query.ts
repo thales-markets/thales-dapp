@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { formatGwei, getIsOVM, NetworkId } from 'utils/network';
+import { formatGwei, getIsOVM, getIsPolygon, NetworkId } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const ETHERSCAN_GAS_TRACKER_API_URL =
     'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=6C4GRA8EBI2FCFDEMFASF1MTRW1SNBJTM5';
+const POLYGONSCAN_GAS_TRACKER_API_URL =
+    'https://api.polygonscan.com/api?module=gastracker&action=gasoracle&apikey=9GFTKKJ6U41Q5QJZ35E48DP7ISWPCQA2KR';
 
 type EtherscanGasTrackerResponse = {
     status: string;
@@ -31,6 +33,7 @@ const useEthGasPriceEip1559Query = (networkId: NetworkId, options?: UseQueryOpti
         QUERY_KEYS.Network.EthGasPriceEip1559(networkId),
         async () => {
             const isL2 = getIsOVM(networkId);
+            const isPolygon = getIsPolygon(networkId);
 
             if (isL2) {
                 try {
@@ -46,14 +49,16 @@ const useEthGasPriceEip1559Query = (networkId: NetworkId, options?: UseQueryOpti
                 }
             } else {
                 try {
-                    const response = await axios.get<EtherscanGasTrackerResponse>(ETHERSCAN_GAS_TRACKER_API_URL);
+                    const response = await axios.get<EtherscanGasTrackerResponse>(
+                        isPolygon ? POLYGONSCAN_GAS_TRACKER_API_URL : ETHERSCAN_GAS_TRACKER_API_URL
+                    );
                     const { result } = response.data;
 
                     return {
-                        baseFee: Number(result.suggestBaseFee),
-                        safeGasPrice: Number(result.SafeGasPrice),
-                        proposeGasPrice: Number(result.ProposeGasPrice),
-                        fastGasPrice: Number(result.FastGasPrice),
+                        baseFee: Number(result.suggestBaseFee) < 5 ? 0.0000001 : Number(result.suggestBaseFee),
+                        safeGasPrice: Number(result.SafeGasPrice) < 5 ? 30 : Number(result.SafeGasPrice),
+                        proposeGasPrice: Number(result.ProposeGasPrice) < 5 ? 40 : Number(result.ProposeGasPrice),
+                        fastGasPrice: Number(result.FastGasPrice) < 5 ? 50 : Number(result.FastGasPrice),
                     };
                 } catch (e) {}
             }
@@ -66,7 +71,7 @@ const useEthGasPriceEip1559Query = (networkId: NetworkId, options?: UseQueryOpti
             };
         },
         {
-            refetchInterval: 1000,
+            refetchInterval: 2500,
             ...options,
         }
     );

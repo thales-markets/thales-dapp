@@ -1,7 +1,21 @@
+import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
+import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
+import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
+import { FunctionComponent, SVGProps } from 'react';
+import { NetworkId as SnxNetworkId } from '@synthetixio/contracts-interface/build/node/src/types';
+import { hexStripZeros } from '@ethersproject/bytes';
+import { BigNumber } from 'ethers';
+
 export const GWEI_UNIT = 1000000000;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const POLYGON_GWEI_INCREASE_PERCENTAGE = 0.2;
 
 export type NetworkMapper = Record<number, number>;
+export type DropdownNetwork = {
+    name: string;
+    icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+    changeNetwork: (networkId: number) => void;
+};
 
 export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
     1: 10,
@@ -53,3 +67,112 @@ export const OPTIMISM_OPTIONS = [
         link: 'https://www.optimism.io/',
     },
 ];
+
+export const POLYGON_MUMBAI_ID = 80001;
+export const POLYGON_ID = 137;
+
+export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
+    [POLYGON_ID]: {
+        chainId: '0x89',
+        chainName: 'Polygon Mainnet',
+        rpcUrls: ['https://polygon-rpc.com'],
+        blockExplorerUrls: ['https://explorer.matic.network/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+    },
+    [POLYGON_MUMBAI_ID]: {
+        chainId: '0x13881',
+        chainName: 'Optimism Kovan',
+        rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
+        blockExplorerUrls: ['https://mumbai-explorer.matic.today/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+    },
+};
+
+export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> = {
+    10: {
+        name: 'Optimism',
+        icon: OpLogo,
+        changeNetwork: async (networkId: number) => {
+            const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? SnxNetworkId['Mainnet-Ovm'];
+            const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
+
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await (window.ethereum as any).request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: optimismNetworkParms.chainId }],
+                    });
+                } catch (switchError: any) {
+                    if (switchError.code === 4902) {
+                        try {
+                            await (window.ethereum as any).request({
+                                method: 'wallet_addEthereumChain',
+                                params: [optimismNetworkParms],
+                            });
+                            await (window.ethereum as any).request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: optimismNetworkParms.chainId }],
+                            });
+                        } catch (addError) {
+                            console.log(addError);
+                        }
+                    } else {
+                        console.log(switchError);
+                    }
+                }
+            }
+        },
+    },
+    137: {
+        name: 'Polygon',
+        icon: PolygonLogo,
+        changeNetwork: async (networkId: number) => {
+            // const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? SnxNetworkId['Mainnet-Ovm'];
+            const polygonNetworkParams = POLYGON_NETWORKS[networkId];
+
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await (window.ethereum as any).request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: polygonNetworkParams.chainId }],
+                    });
+                } catch (switchError: any) {
+                    if (switchError.code === 4902) {
+                        try {
+                            await (window.ethereum as any).request({
+                                method: 'wallet_addEthereumChain',
+                                params: [polygonNetworkParams],
+                            });
+                            await (window.ethereum as any).request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: polygonNetworkParams.chainId }],
+                            });
+                        } catch (addError) {
+                            console.log(addError);
+                        }
+                    } else {
+                        console.log(switchError);
+                    }
+                }
+            }
+        },
+    },
+    1: {
+        name: 'Mainnet',
+        icon: EthereumLogo,
+        changeNetwork: async (networkId: number) => {
+            const formattedChainId = hexStripZeros(BigNumber.from(networkId).toHexString());
+
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await (window.ethereum as any).request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: formattedChainId }],
+                    });
+                } catch (switchError: any) {
+                    console.log(switchError);
+                }
+            }
+        },
+    },
+};

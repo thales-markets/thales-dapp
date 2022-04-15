@@ -24,7 +24,7 @@ import useFlippeningQuery from 'queries/options/useFlippeningQuery';
 import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
 import { getSynthName } from 'utils/currency';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -36,6 +36,9 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [flippening, setFlippening] = useState<Flippening | undefined>(undefined);
     const [ethBurned, setEthBurned] = useState<ETHBurned | undefined>(undefined);
+
+    const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const flippeningQuery = useFlippeningQuery({
         enabled: isAppReady,
@@ -202,7 +205,7 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                 </FlexDivRowCentered>
                 <FlexDivRowCentered style={{ marginTop: 16 }}>
                     <FlexDivColumnCentered>
-                        {getIsOVM(networkId) ? (
+                        {isL2 || isPolygon ? (
                             <>
                                 <Title>{t('options.market.overview.amm-liquidity')}</Title>
                                 <Content>

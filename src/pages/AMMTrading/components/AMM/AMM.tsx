@@ -27,7 +27,7 @@ import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLim
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
@@ -35,14 +35,18 @@ import onboardConnector from 'utils/onboardConnector';
 import { AccountMarketInfo, OrderSide, OptionSide } from 'types/options';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
-import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
+import { getStableCoinForNetwork } from '../../../../utils/currency';
+import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
+
+const THREE_PERCENT = 0.03;
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -89,6 +93,7 @@ const AMM: React.FC = () => {
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket?.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!optionsMarket?.address,
@@ -111,7 +116,7 @@ const AMM: React.FC = () => {
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
         enabled: isAppReady && !!optionsMarket?.address,
     });
     const ammMaxLimits =
@@ -146,13 +151,13 @@ const AMM: React.FC = () => {
 
     const sellToken = isBuy ? SynthsUSD.address : isLong ? optionsMarket?.longAddress : optionsMarket?.shortAddress;
     const sellAmount = isBuy ? total : amount;
-    const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
+    const sellTokenCurrencyKey = isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide];
 
     const formatBuySellArguments = () => {
         const marketAddress = optionsMarket?.address;
         const side = SIDE[optionSide];
         const parsedAmount = ethers.utils.parseEther(amount.toString());
-        const parsedTotal = ethers.utils.parseEther(total.toString());
+        const parsedTotal = stableCoinParser(total.toString(), networkId);
         const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
         return { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage };
     };
@@ -164,7 +169,10 @@ const AMM: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const parsedSellAmount = ethers.utils.parseEther(Number(sellAmount).toString());
+                const parsedSellAmount =
+                    isPolygon && isBuy
+                        ? ethers.utils.parseUnits(Number(sellAmount).toString(), 6)
+                        : ethers.utils.parseEther(Number(sellAmount).toString());
                 const allowance = await checkAllowance(
                     parsedSellAmount,
                     erc20Instance,
@@ -238,6 +246,27 @@ const AMM: React.FC = () => {
                 setGasLimit(MAX_L2_GAS_LIMIT);
                 setL1Fee(l1FeeInWei);
                 return MAX_L2_GAS_LIMIT;
+            } else if (isPolygon) {
+                const gasLimit = isBuy
+                    ? await ammContractWithSigner.estimateGas.buyFromAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage
+                      )
+                    : await ammContractWithSigner.estimateGas.sellToAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage
+                      );
+
+                const gasLimitNumber = ethers.utils.formatUnits(gasLimit, 0);
+                const safeGasLimit = Math.round(+gasLimitNumber + 0.2 * +gasLimitNumber);
+                setGasLimit(safeGasLimit);
+                return safeGasLimit;
             } else {
                 setGasLimit(MAX_L2_GAS_LIMIT);
                 return MAX_L2_GAS_LIMIT;
@@ -259,13 +288,35 @@ const AMM: React.FC = () => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
         const { ammContract } = snxJSConnector;
         const addressToApprove = ammContract ? ammContract.address : '';
+        const amountToApprove =
+            isPolygon && isBuy
+                ? approveAmount === ethers.constants.MaxUint256
+                    ? ethers.constants.MaxUint256
+                    : ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6)
+                : approveAmount;
+        const gasPrice = await snxJSConnector.provider?.getGasPrice();
+        const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
 
         try {
             setIsAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
-            const tx = (await erc20Instance.approve(addressToApprove, approveAmount, {
-                gasLimit: formatGasLimit(gasEstimate, networkId),
-            })) as ethers.ContractTransaction;
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, amountToApprove);
+            const providerOptions = isPolygon
+                ? {
+                      gasLimit: formatGasLimit(gasEstimate, networkId),
+                      gasPrice: ethers.utils.parseUnits(
+                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
+                          'gwei'
+                      ),
+                  }
+                : {
+                      gasLimit: formatGasLimit(gasEstimate, networkId),
+                  };
+
+            const tx = (await erc20Instance.approve(
+                addressToApprove,
+                amountToApprove,
+                providerOptions
+            )) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
@@ -307,15 +358,17 @@ const AMM: React.FC = () => {
                         ? ammContractWithSigner.buyPriceImpact(optionsMarket.address, SIDE[optionSide], parsedAmount)
                         : ammContractWithSigner.sellPriceImpact(optionsMarket.address, SIDE[optionSide], parsedAmount),
                 ]);
-                const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
+
+                const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(amount);
+
                 setPrice(ammPrice);
-                setTotal(bigNumberFormatter(ammQuote));
+                setTotal(stableCoinFormatter(ammQuote, networkId));
                 setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - MIN_SCEW_IMPACT : 0);
                 setPotentialReturn(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
                 setIsPotentialReturnAvailable(isBuy);
 
                 const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
-                const isQuoteChanged = ammPrice !== price || total !== bigNumberFormatter(ammQuote);
+                const isQuoteChanged = ammPrice !== price || total !== stableCoinFormatter(ammQuote, networkId);
 
                 if (isSubmit) {
                     latestGasLimit = await fetchGasLimit(
@@ -328,7 +381,7 @@ const AMM: React.FC = () => {
                 } else {
                     if (
                         ammPrice > 0 &&
-                        bigNumberFormatter(ammQuote) > 0 &&
+                        stableCoinFormatter(ammQuote, networkId) > 0 &&
                         isSlippageValid &&
                         isQuoteChanged &&
                         hasAllowance
@@ -376,7 +429,21 @@ const AMM: React.FC = () => {
             const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
             const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
+            const gasPrice = await snxJSConnector.provider?.getGasPrice();
 
+            const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
+
+            const providerOptions = isPolygon
+                ? {
+                      gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
+                      gasPrice: ethers.utils.parseUnits(
+                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
+                          'gwei'
+                      ),
+                  }
+                : {
+                      gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
+                  };
             const tx = (isBuy
                 ? await ammContractWithSigner.buyFromAMM(
                       marketAddress,
@@ -384,9 +451,7 @@ const AMM: React.FC = () => {
                       parsedAmount,
                       parsedTotal,
                       parsedSlippage,
-                      {
-                          gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
-                      }
+                      providerOptions
                   )
                 : await ammContractWithSigner.sellToAMM(
                       marketAddress,
@@ -394,9 +459,7 @@ const AMM: React.FC = () => {
                       parsedAmount,
                       parsedTotal,
                       parsedSlippage,
-                      {
-                          gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
-                      }
+                      providerOptions
                   )) as ethers.ContractTransaction;
             const txResult = await tx.wait();
 
@@ -587,8 +650,8 @@ const AMM: React.FC = () => {
                     suggestedAmount
                 );
 
-                const ammPrice = bigNumberFormatter(ammQuote) / Number(_suggestedAmount);
-                const sUSDDifference = bigNumberFormatter(ammQuote) - sUSDBalance;
+                const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(_suggestedAmount);
+                const sUSDDifference = stableCoinFormatter(ammQuote, networkId) - sUSDBalance;
 
                 _suggestedAmount = Number(sUSDBalance) / Number(ammPrice);
 
@@ -658,7 +721,7 @@ const AMM: React.FC = () => {
                 tooltipText={t(
                     !isAmountValid ? 'common.errors.insufficient-balance-wallet' : 'common.errors.max-limit-exceeded',
                     {
-                        currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                        currencyKey: isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide],
                     }
                 )}
             >
@@ -692,13 +755,13 @@ const AMM: React.FC = () => {
                         ? formatCurrency(Number(price) > 0 ? price : basePrice, 4)
                         : '-'
                 }
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={true}
             />
             <Input
                 title={t(`amm.total-${orderSide.value}-label`)}
                 value={isGettingQuote ? '...' : Number(price) > 0 ? formatCurrency(total, 4) : '-'}
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={true}
             />
             <Input
@@ -708,7 +771,10 @@ const AMM: React.FC = () => {
                         ? '...'
                         : Number(price) > 0
                         ? isPotentialReturnAvailable
-                            ? `${formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(potentialReturn) * Number(total))}`
+                            ? `${formatCurrencyWithKey(
+                                  getStableCoinForNetwork(networkId),
+                                  Number(potentialReturn) * Number(total)
+                              )}`
                             : '-'
                         : '-'
                 }
@@ -748,7 +814,8 @@ const AMM: React.FC = () => {
             <NetworkFees gasLimit={gasLimit} disabled={formDisabled} l1Fee={l1Fee} />
             {openApprovalModal && (
                 <ApprovalModal
-                    defaultAmount={sellAmount}
+                    // add three percent to approval amount to take into account price changes
+                    defaultAmount={+(+sellAmount + THREE_PERCENT * +sellAmount).toFixed(2)}
                     tokenSymbol={sellTokenCurrencyKey}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}

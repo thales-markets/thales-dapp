@@ -48,6 +48,8 @@ const generateRows = (data: any[], translator: TFunction) => {
         }
         const marketExpired = d.marketItem.result;
         const isLong = d.optionSide === 'long';
+        const optionPrice = d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
+        const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;
 
         return {
             dotColor: marketExpired ? (isLong ? WIN_COLOR : LOSE_COLOR) : '',
@@ -64,11 +66,7 @@ const generateRows = (data: any[], translator: TFunction) => {
                 },
                 {
                     title: translator('options.trading-profile.history.price'),
-                    value:
-                        '$' +
-                        formatCurrency(
-                            d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount
-                        ),
+                    value: '$' + formatCurrency(optionPrice),
                 },
                 {
                     title: translator('options.trading-profile.history.amount'),
@@ -78,7 +76,7 @@ const generateRows = (data: any[], translator: TFunction) => {
                 },
                 {
                     title: translator('options.trading-profile.history.paid'),
-                    value: '$' + formatCurrency(d.orderSide == 'sell' ? d.makerAmount : d.takerAmount),
+                    value: '$' + formatCurrency(paidAmount),
                 },
                 {
                     title: marketExpired
