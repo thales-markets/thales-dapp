@@ -636,7 +636,7 @@
         "create-market": {
             "title": "Create a new Binary Options market",
             "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
-            "note": "* Note: The amount of sUSD deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 sUSD mints 1,000 UP and 1,000 DOWN options tokens for this market.",
+            "note": "* Note: The amount of {{token}} deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN options tokens for this market.",
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
@@ -644,7 +644,7 @@
                 "market-maturity-time-label": "time (UTC):",
                 "funding-amount": {
                     "label": "market funding amount:",
-                    "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
+                    "desc": "Note: your {{token}} will be locked up in this contract until the market maturity date"
                 }
             },
             "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",

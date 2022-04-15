@@ -60,7 +60,7 @@ import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
-import { getSynthName } from 'utils/currency';
+import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
 import { createOneInchLimitOrder } from 'utils/1inch';
 import ApprovalModal from 'components/ApprovalModal';
 
@@ -464,10 +464,10 @@ export const CreateMarket: React.FC = () => {
                     <FlexDivColumn style={{ flex: 1 }}>
                         <div className="create-market-content__info">
                             <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
-                                {t('options.create-market.subtitle')}
+                                {t('options.create-market.subtitle', { token: getStableCoinForNetwork(networkId) })}
                             </Text>
                             <Text className="text-s pale-grey lh24" style={{ margin: '30px 2px' }}>
-                                {t('options.create-market.note')}
+                                {t('options.create-market.note', { token: getStableCoinForNetwork(networkId) })}
                             </Text>
                         </div>
                         <InputsWrapper className="create-market-content__wrapper">
@@ -713,7 +713,7 @@ export const CreateMarket: React.FC = () => {
                                         readOnly={isCreatingMarket || isMarketCreated}
                                     />
                                     <InputLabel>{t('options.create-market.details.funding-amount.label')}</InputLabel>
-                                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                                    <CurrencyLabel>{getStableCoinForNetwork(networkId)}</CurrencyLabel>
                                     <Text
                                         className="text-xxxs grey"
                                         style={{
@@ -723,7 +723,9 @@ export const CreateMarket: React.FC = () => {
                                             bottom: -40,
                                         }}
                                     >
-                                        {t('options.create-market.details.funding-amount.desc')}
+                                        {t('options.create-market.details.funding-amount.desc', {
+                                            token: getStableCoinForNetwork(networkId),
+                                        })}
                                     </Text>
 
                                     <ErrorMessage
@@ -810,7 +812,7 @@ export const CreateMarket: React.FC = () => {
                                         </InputLabel>
                                     )}
                                     <CurrencyLabel className={!sellLong ? 'disabled' : ''}>
-                                        {SYNTHS_MAP.sUSD}
+                                        {getStableCoinForNetwork(networkId)}
                                     </CurrencyLabel>
                                     <FieldValidationMessage
                                         showValidation={!isLongPriceValid}
@@ -914,7 +916,7 @@ export const CreateMarket: React.FC = () => {
                                         </InputLabel>
                                     )}
                                     <CurrencyLabel className={!sellShort ? 'disabled' : ''}>
-                                        {SYNTHS_MAP.sUSD}
+                                        {getStableCoinForNetwork(networkId)}
                                     </CurrencyLabel>
                                     <FieldValidationMessage
                                         showValidation={!isShortPriceValid}
@@ -1028,7 +1030,7 @@ export const CreateMarket: React.FC = () => {
                 {openApprovalModal && (
                     <ApprovalModal
                         defaultAmount={initialFundingAmount}
-                        tokenSymbol={SYNTHS_MAP.sUSD}
+                        tokenSymbol={getStableCoinForNetwork(networkId)}
                         isAllowing={isAllowing}
                         onSubmit={handleAllowance}
                         onClose={() => setOpenApprovalModal(false)}
