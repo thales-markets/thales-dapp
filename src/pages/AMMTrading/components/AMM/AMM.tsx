@@ -28,7 +28,7 @@ import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuer
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
+import { refetchAmmData, refetchTrades, refetchUserBalance, refetchUserTrades } from 'utils/queryConnector';
 import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
@@ -475,6 +475,7 @@ const AMM: React.FC = () => {
                 refetchAmmData(walletAddress, optionsMarket?.address, networkId);
                 refetchTrades(optionsMarket?.address);
                 refetchUserTrades(optionsMarket?.address, walletAddress);
+                refetchUserBalance(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');

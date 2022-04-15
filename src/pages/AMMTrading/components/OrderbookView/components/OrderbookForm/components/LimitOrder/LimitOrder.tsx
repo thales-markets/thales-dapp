@@ -30,7 +30,7 @@ import { getErrorToastOptions, getSuccessToastOptions, UI_COLORS } from 'constan
 
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
+import { refetchOrderbook, refetchOrders, refetchUserBalance } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import onboardConnector from 'utils/onboardConnector';
@@ -268,6 +268,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
             );
             refetchOrderbook(baseToken);
             refetchOrders(networkId);
+            refetchUserBalance(walletAddress, networkId);
             resetForm();
             onPlaceOrder && onPlaceOrder();
         } catch (e) {
