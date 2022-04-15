@@ -186,7 +186,10 @@ const renderRounds = (
             : index < roundInASeason
             ? cards.push(
                   <PrevRound id={`round${index}`} key={index}>
-                      <LongButton selected={userDeathRound >= index && selectedPosition === 2} disabled={true}>
+                      <LongButton
+                          selected={(isPlayerAlive || userDeathRound >= index) && selectedPosition === 2}
+                          disabled={true}
+                      >
                           △
                       </LongButton>
                       <div>
@@ -239,9 +242,12 @@ const renderRounds = (
                               } ${t('options.royale.battle.players')}`}</PrevRoundText>
                           </FlexDiv>
                       </RoundHistoryInfo>
-                      <ShortButton selected={userDeathRound >= index && selectedPosition === 1} disabled={true}>
+                      <ShortButton
+                          selected={(isPlayerAlive || userDeathRound >= index) && selectedPosition === 1}
+                          disabled={true}
+                      >
                           <Circle
-                              selected={userDeathRound >= index && selectedPosition === 1}
+                              selected={(isPlayerAlive || userDeathRound >= index) && selectedPosition === 1}
                               disabled={!timeLeftForPositioning || !isPlayerAlive}
                           />
                       </ShortButton>
