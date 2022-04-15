@@ -556,7 +556,7 @@ const RoyaleArena: React.FC<RoyaleArenaProps> = ({
                 ) : (
                     <Button
                         style={{ zIndex: 1000, marginBottom: '1em' }}
-                        disabled={!canCloseRound}
+                        disabled={!canCloseRound || royaleData.seasonFinished}
                         onClick={closeRound}
                     >
                         <RoyaleTooltip title={t('options.royale.battle.optimism-timestamp-message')}>

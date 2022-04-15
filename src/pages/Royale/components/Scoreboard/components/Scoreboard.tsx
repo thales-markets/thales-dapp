@@ -284,11 +284,14 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                                                     href={getQuixoticLink(networkId, user.tokenId)}
                                                     target="_blank"
                                                     rel="noreferrer"
+                                                    winner={isUserAWinner}
                                                 >
-                                                    {user.tokenId} / {user.name}
+                                                    {user.tokenId?.toString().padStart(10, '0')}
+                                                    <span style={{ display: 'block', fontSize: 15 }}>
+                                                        {t('options.royale.scoreboard.owned-by', { player: user.name })}
+                                                    </span>
                                                 </Link>
                                             </span>
-                                            {/* <span style={{ display: 'block', fontSize: 15 }}>owned by {user.name}</span> */}
                                         </>
                                     )}
                                 </HeadCellUi>
@@ -640,11 +643,11 @@ const Overlay = styled.div`
     z-index: 4;
 `;
 
-const Link = styled.a`
+const Link = styled.a<{ winner?: boolean }>`
     font-family: Sansation !important;
-    color: var(--color);
+    color: ${(props) => (props.winner ? '#FFE489' : 'var(--color)')};
     &:visited {
-        color: var(--color);
+        color: ${(props) => (props.winner ? '#FFE489' : 'var(--color)')};
     }
 `;
 export default ScoreboardV2;

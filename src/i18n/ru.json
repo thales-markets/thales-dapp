@@ -1220,7 +1220,7 @@
                     "number": "Игрок <sans> № <sans>",
                     "avatar": "Аватар",
                     "name": "Отображаемое имя",
-                    "token": "Паспорт / Имя"
+                    "token": "Заграничный пасспорт"
                 },
                 "position-period": "Время, оставшееся до места в Раунде",
                 "placeholder": "! verify <Ваш адрес Ethereum>",
@@ -1287,7 +1287,8 @@
                 "passports-in-wallet": "Passports в кошельке:",
                 "choose-default-positions": "Выберите позиции по умолчанию для всех раундов для выбранного идентификатора Royale Passport:",
                 "all-down": "Все ВНИЗ",
-                "my-passports": "Покажи мои паспорта"
+                "my-passports": "Покажи мои паспорта",
+                "owned-by": "принадлежит: {{player}}"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",

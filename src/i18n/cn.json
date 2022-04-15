@@ -1239,7 +1239,7 @@
                     "avatar": "头像",
                     "name": "名称",
                     "number": "玩家编号",
-                    "token": "护照/姓名"
+                    "token": "护照"
                 },
                 "search": "搜索玩家/号码",
                 "verification": "完成验证",
@@ -1287,7 +1287,8 @@
                 "shuffle-positions": "洗牌位置",
                 "passports-in-wallet": "钱包中的皇家护照：",
                 "choose-default-positions": "为选定的 Royale Passport ID 选择所有回合的默认位置：",
-                "my-passports": "出示我的护照"
+                "my-passports": "出示我的护照",
+                "owned-by": "拥有者：{{玩家}}"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",
