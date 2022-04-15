@@ -81,7 +81,7 @@ export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
     },
     [POLYGON_MUMBAI_ID]: {
         chainId: '0x13881',
-        chainName: 'Optimism Kovan',
+        chainName: 'Polygon Mumbai',
         rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
         blockExplorerUrls: ['https://mumbai-explorer.matic.today/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],

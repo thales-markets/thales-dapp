@@ -4,6 +4,7 @@ import coin from 'assets/images/only_coin.gif';
 import angry from 'assets/images/angry_thales.gif';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
+import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { CircularProgress } from '@material-ui/core';
 import { FlexDivRowCentered, Image } from 'theme/common';
 import { history } from 'utils/routes';
@@ -12,6 +13,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { isNetworkSupported } from 'utils/network';
 import { useTranslation } from 'react-i18next';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
 
 type LoaderProps = {
     hideMainnet?: boolean;
@@ -38,13 +40,30 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                             ? t(`common.unsupported-network.description2`)
                             : t(`common.unsupported-network.description`)}
                     </ExplanationText>
-                    <FlexDivRowCentered style={hideMainnet ? { justifyContent: 'center' } : {}}>
-                        <NetworkButton onClick={switchNetwork.bind(this, '0xA')}>
+                    <FlexDivRowCentered style={{ justifyContent: 'space-around' }}>
+                        <NetworkButton
+                            margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[10].changeNetwork.bind(this, 10)}
+                        >
                             <OpLogo />
                             <span>{t(`common.unsupported-network.button.optimism`)}</span>
                         </NetworkButton>
+                        <NetworkButton
+                            margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(this, 137)}
+                        >
+                            <PolygonLogo />
+                            <span>{t(`common.unsupported-network.button.polygon`)}</span>
+                        </NetworkButton>
+                    </FlexDivRowCentered>
+                    <FlexDivRowCentered
+                        style={hideMainnet ? { justifyContent: 'center' } : { justifyContent: 'space-around' }}
+                    >
                         {!hideMainnet && (
-                            <NetworkButton onClick={switchNetwork.bind(this, '0x1')}>
+                            <NetworkButton
+                                margin="20px 0 40px 0"
+                                onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[1].changeNetwork.bind(this, 1)}
+                            >
                                 <EthereumLogo />
                                 <span>{t(`common.unsupported-network.button.mainnet`)}</span>
                             </NetworkButton>
@@ -60,20 +79,6 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
             )}
         </Wrapper>
     );
-};
-
-const switchNetwork = async (networkId: any) => {
-    if (typeof window.ethereum !== 'undefined') {
-        try {
-            await (window.ethereum as any).request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: networkId }],
-            });
-            location.reload();
-        } catch (switchError) {
-            console.log(switchError);
-        }
-    }
 };
 
 const Wrapper = styled.div`
@@ -124,7 +129,7 @@ const ExplanationText = styled.p`
     text-align: center;
 `;
 
-const NetworkButton = styled.button`
+const NetworkButton = styled.button<{ margin: string }>`
     display: flex;
     font-family: 'Sansation' !important;
     background: #04045a;
@@ -135,7 +140,7 @@ const NetworkButton = styled.button`
     color: #f6f6fe !important;
     align-items: center;
     padding: 6px;
-    margin: 40px 0px;
+    margin: ${(props) => props.margin};
     & > span {
         font-family: 'Sansation' !important;
         margin-left: 6px;
