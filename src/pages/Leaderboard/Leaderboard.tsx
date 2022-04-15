@@ -17,6 +17,7 @@ import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
 import SearchField from 'pages/Markets/components/Input/SearchField';
 import { TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
+import UserInfoTradingCompetition from './components/UserInfoTradingCompetition';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -85,6 +86,7 @@ const Leaderboard: React.FC = () => {
     return (
         <>
             <Wrapper>
+                <UserInfoTradingCompetition></UserInfoTradingCompetition>
                 <Container.Main justifyContent="flex-start">
                     <Container.Main.Item
                         noStrech={true}

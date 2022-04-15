@@ -70,7 +70,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
 
     const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: open });
 
-    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
+    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.user.name : '';
 
     useEffect(() => {
         if (currentDisplayName !== '') {
