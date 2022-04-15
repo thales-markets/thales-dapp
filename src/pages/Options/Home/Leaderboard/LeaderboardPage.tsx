@@ -108,7 +108,7 @@ const LeaderboardPage: React.FC = () => {
 
     const displayNameQuery = useDisplayNameQuery(walletAddress);
 
-    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
+    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.user.name : '';
 
     useEffect(() => {
         if (currentDisplayName !== '') {

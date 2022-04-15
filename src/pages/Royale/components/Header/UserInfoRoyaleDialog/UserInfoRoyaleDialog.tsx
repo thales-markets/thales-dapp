@@ -29,7 +29,7 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
 
     const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: open });
 
-    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
+    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.user.name : '';
 
     return (
         <Modal

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import Web3 from 'web3';
 import axios from 'axios';
 
-import { UserCardSectionHeader } from 'theme/common';
+import { FlexDiv, UserCardSectionHeader } from 'theme/common';
 
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +12,9 @@ import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
+
+const DISPLAY_NAME_REGEX = /^[a-zA-Z0-9 ]+$/;
+const AVATAR_LINK_REGEX = /^(.*?)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF|webp)$/;
 
 const ethEnabled = () => {
     if (window.ethereum) {
@@ -25,44 +28,73 @@ const DisplayNameForm: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: true });
-    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
+    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.user.name : '';
+    const currentAvatar = displayNameQuery.isSuccess ? displayNameQuery.data.user.avatar : '';
 
     const [displayName, setDisplayName] = useState(currentDisplayName);
+    const [avatar, setAvatar] = useState(currentAvatar);
 
-    const dispatchDisplayName = async (walletAddress: string, displayName: string) => {
-        if (!ethEnabled()) {
-            alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
+    const isNameValid = useMemo(() => {
+        if (avatar !== currentAvatar || displayName !== currentDisplayName) {
+            return (
+                AVATAR_LINK_REGEX.test(avatar) &&
+                avatar !== '' &&
+                DISPLAY_NAME_REGEX.test(displayName) &&
+                displayName !== ''
+            );
         }
+    }, [displayName, avatar]);
 
-        (window.web3?.eth as any).personal.sign(displayName, walletAddress, async (_test: any, signature: any) => {
-            try {
-                await axios.post('https://api.thales.market/display-name', {
-                    walletAddress,
-                    displayName,
-                    signature,
-                });
-                displayNameQuery.refetch();
-            } catch (e) {
-                console.log(e);
+    const dispatchDisplayName = async (walletAddress: string, avatar: string, name: string) => {
+        if (window.ethereum) {
+            window.web3 = new Web3(Web3.givenProvider) as any;
+
+            if (!ethEnabled()) {
+                alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
             }
-        });
+
+            (window.web3?.eth as any).personal.sign(name, walletAddress, async (_test: any, signature: any) => {
+                try {
+                    await axios.post('https://api.thales.market/royale-user-data', {
+                        walletAddress,
+                        name,
+                        avatar,
+                        signature,
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            });
+        }
     };
 
     useEffect(() => {
         setDisplayName(currentDisplayName);
     }, [currentDisplayName]);
 
+    useEffect(() => {
+        setAvatar(currentAvatar);
+    }, [currentAvatar]);
+
     const { t } = useTranslation();
 
     return (
         <Wrapper>
+            <UserCardSectionHeader> {t('options.royale.edit-user-data-dialog.avatar')}</UserCardSectionHeader>
+            <FlexDiv style={{ margin: 10, gap: 20 }}>
+                {avatar ? (
+                    <UserAvatar src={avatar} style={{ width: 44, height: 44 }} />
+                ) : (
+                    <i className="icon icon--user-avatar" style={{ fontSize: 44 }} />
+                )}
+                <DisplayNameInput value={avatar} onChange={(event) => setAvatar(event.target.value)} />
+            </FlexDiv>
+
             <UserCardSectionHeader>{t('common.user-info-card.display-name')}</UserCardSectionHeader>
+
             <DisplayNameInput value={displayName} onChange={(event) => setDisplayName(event.target.value)} />
-            <Button
-                disabled={displayName === '' || displayName === currentDisplayName}
-                onClick={() => dispatchDisplayName(walletAddress, displayName)}
-            >
-                {t('common.user-info-card.change-display-name')}
+            <Button disabled={!isNameValid} onClick={() => dispatchDisplayName(walletAddress, avatar, displayName)}>
+                {t('options.royale.edit-user-data-dialog.change-display-name')}
             </Button>
         </Wrapper>
     );
@@ -70,6 +102,15 @@ const DisplayNameForm: React.FC = () => {
 
 const Wrapper = styled.div`
     margin: 20px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+`;
+
+const UserAvatar = styled.img`
+    width: 44px;
+    height: 44px;
+    border-radius: 50%50%;
 `;
 
 const DisplayNameInput = styled.input`

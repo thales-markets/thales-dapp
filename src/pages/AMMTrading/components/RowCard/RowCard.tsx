@@ -217,13 +217,21 @@ const RowCard: React.FC = () => {
                                     />
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
-                                    <Container.SubContainer.Value.Liquidity>
-                                        {ammData ? ammData.maxUp?.toFixed(1) : '0'}
-                                    </Container.SubContainer.Value.Liquidity>
-                                    {' / '}
-                                    <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
-                                        {ammData ? ammData.maxDown?.toFixed(1) : '0'}
-                                    </Container.SubContainer.Value.Liquidity>
+                                    {(ammData && ammData.maxUp > 0) || (ammData && ammData.maxDown > 0) ? (
+                                        <>
+                                            <Container.SubContainer.Value.Liquidity>
+                                                {ammData ? ammData.maxUp?.toFixed(1) : '0'}
+                                            </Container.SubContainer.Value.Liquidity>
+                                            {' / '}
+                                            <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
+                                                {ammData ? ammData.maxDown?.toFixed(1) : '0'}
+                                            </Container.SubContainer.Value.Liquidity>
+                                        </>
+                                    ) : (
+                                        <Container.SubContainer.Value.OutOfLiquidity>
+                                            {ammData ? t('options.home.markets-table.out-of-liquidity') : ''}
+                                        </Container.SubContainer.Value.OutOfLiquidity>
+                                    )}
                                 </Container.SubContainer.Value>
                             </Container.SubContainer>
                             <Container.SubContainer>

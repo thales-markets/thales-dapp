@@ -27,8 +27,8 @@ const getOptionSideLabel = (optionSide: string) => (optionSide.toLowerCase() ===
 
 const generateRows = (data: any[], translator: TFunction) => {
     const dateMap: Record<string, any> = {};
-
-    data.forEach((trade) => {
+    const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
+    sortedData.forEach((trade) => {
         const tradeDateKey = generateDateKey(new Date(trade.timestamp));
         if (!dateMap[tradeDateKey]) {
             dateMap[tradeDateKey] = [];
