@@ -3,7 +3,7 @@ import TileTable from 'components/TileTable';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getWalletAddress } from 'redux/modules/wallet';
 import generateRows from './utils/generateRows';
 import { OptionsMarkets } from 'types/options';
 import { keyBy } from 'lodash';
@@ -20,7 +20,6 @@ type HistoryProps = {
 const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoading }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const rows = useMemo(() => {
         if (trades.length > 0 && markets) {
@@ -38,8 +37,7 @@ const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoadin
                         } ${currencyKeyToNameMap[trade?.marketItem?.asset?.toUpperCase()]}`.toLowerCase();
                         return !searchText || tradeValue.includes(search);
                     }),
-                t,
-                networkId
+                t
             );
         }
         return [];
