@@ -18,7 +18,7 @@ import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 
 import { COLORS_NEW } from 'constants/ui';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { getIsPolygon } from '../../../../../utils/network';
 import { getStableCoinForNetwork } from '../../../../../utils/currency';
