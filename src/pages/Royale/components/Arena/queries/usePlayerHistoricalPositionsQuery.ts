@@ -1,36 +1,36 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
-import snxJSConnector from 'utils/snxJSConnector';
 import thalesData from 'thales-data';
+import snxJSConnector from 'utils/snxJSConnector';
 
 export type GraphPosition = {
     season: string;
     id: string;
-    tokenPlayer: string;
+    player: string;
     position: number;
     round: number;
     timestamp: number;
 };
 
-const usePlayerPositionsQuery = (
+const usePlayerHistoricalPositionsQuery = (
     selectedSeason: number,
     networkId: NetworkId,
-    tokenId: string,
+    address: string,
     options?: UseQueryOptions<GraphPosition[]>
 ) => {
     return useQuery<GraphPosition[]>(
-        QUERY_KEYS.Royale.PlayerPositions(networkId, selectedSeason, tokenId),
+        QUERY_KEYS.Royale.PlayerPositions(networkId, selectedSeason, address),
         async () => {
-            if (tokenId === '') return [];
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
-                const positions = await thalesData.binaryOptions.thalesRoyalePassportPositions({
-                    tokenPlayer: tokenId,
-                    network: networkId,
+                const positions = await thalesData.binaryOptions.thalesRoyalePositions({
                     season: selectedSeason,
+                    network: networkId,
                 });
-                return positions;
+                return positions.filter((position: GraphPosition) => {
+                    return position.player.toLowerCase() === address.toLowerCase();
+                });
             }
         },
         {
@@ -40,4 +40,4 @@ const usePlayerPositionsQuery = (
     );
 };
 
-export default usePlayerPositionsQuery;
+export default usePlayerHistoricalPositionsQuery;

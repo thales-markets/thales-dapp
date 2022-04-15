@@ -1200,7 +1200,8 @@
                 "current-reward-per-winner": "每位获胜者的奖励",
                 "season-finished": "第 {{season}} 季结束",
                 "select-position": "请选择第一轮的默认位置",
-                "season-token": "赛季代币：{{token}}"
+                "season-token": "赛季代币：{{token}}",
+                "price-source-twap": "资产 {{token}} 使用来自 Uniswap V3 池对的 TWAP 价格馈送。"
             },
             "battle": {
                 "round": "轮次",
@@ -1240,7 +1241,8 @@
                     "status": "状态",
                     "avatar": "头像",
                     "name": "名称",
-                    "number": "玩家编号"
+                    "number": "玩家编号",
+                    "token": "护照"
                 },
                 "search": "搜索玩家/号码",
                 "verification": "完成验证",
@@ -1281,7 +1283,15 @@
                 "royale-pass-2": "皇家通行证",
                 "choose-colateral": "选择抵押品买入",
                 "default-position-info": "游戏开始前，您可以选择一个适用于所有 6 个回合的默认位置。一旦每轮的定位期开始，您可以再次更改您的位置。",
-                "default-position": "在所有回合中选择默认位置"
+                "default-position": "在所有回合中选择默认位置",
+                "passport-id": "护照ID：",
+                "all-down": "全部关闭",
+                "all-up": "全部向上",
+                "shuffle-positions": "洗牌位置",
+                "passports-in-wallet": "钱包中的皇家护照：",
+                "choose-default-positions": "为选定的 Royale Passport ID 选择所有回合的默认位置：",
+                "my-passports": "出示我的护照",
+                "owned-by": "拥有者：{{玩家}}"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",
@@ -1309,6 +1319,11 @@
                 "avatar-tip": "请输入以 .jpg、.jpeg、.png、.svg 或 .gif 结尾的有效 URL",
                 "avatar-validation-msg": "请输入有效的头像网址",
                 "name-validation-msg": "请输入不带特殊字符的显示名称"
+            },
+            "my-passports-dialog": {
+                "passport-id": "护照ID：",
+                "passport-amount": "我的护照 ({{amount}})",
+                "sell-passport": "卖掉我的护照"
             }
         },
         "amm-mining": {

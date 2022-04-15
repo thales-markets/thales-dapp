@@ -13,13 +13,17 @@ const limitBlogMeta = (text: string, limit: number) => {
 };
 
 const formatDate = (timestamp: Date) => {
-    return timestamp.toString().split(' ')[0];
+    const date = new Date(timestamp);
+    return date.toLocaleDateString();
 };
 
 const BlogPosts: React.FC = () => {
     const blogPostsQuery = mediumPostsQuery({ enabled: true });
     const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
-    const blogPosts = blogPostsQuery.isSuccess ? blogPostsQuery.data.slice(blogPostsCount - 3, blogPostsCount) : [];
+    const blogPosts =
+        blogPostsQuery.isSuccess && blogPostsQuery?.data?.length
+            ? blogPostsQuery.data.slice(blogPostsCount - 3, blogPostsCount)
+            : [];
 
     const carouselChangeHandler = (change: number) => {
         if (change < 0) {
@@ -45,7 +49,7 @@ const BlogPosts: React.FC = () => {
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
                         <BlogTitle>{limitBlogMeta(blog.title, 50)}</BlogTitle>
                         <BlogDescription>
-                            <p>{limitBlogMeta(blog.description, 200)}</p>
+                            <p>{limitBlogMeta(blog['content:encoded'], 200)}</p>
                         </BlogDescription>
                         <MediumDate>{formatDate(blog.pubDate)}</MediumDate>
                         <MediumIcon className="icon-home icon-home--medium" />

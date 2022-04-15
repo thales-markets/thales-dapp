@@ -54,6 +54,7 @@
         "recharts": "^2.1.8",
         "redux": "^4.0.5",
         "remarkable": "^2.0.1",
+        "rss-parser": "^3.12.0",
         "styled-components": "^5.2.3",
         "thales-data": "^1.0.33",
         "three": "^0.129.0",

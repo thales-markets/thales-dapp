@@ -19,7 +19,7 @@ type User = {
     status: UserStatus;
     season: number;
     deathRound?: string;
-    defaultPosition?: number;
+    defaultPositions?: number[];
 };
 
 export const AnonimUser: User = {
@@ -40,22 +40,31 @@ const BASE_URL = 'https://api.thales.market/royale-user/';
 
 const useUserRoyalQuery = (
     walletAddress: string,
+    passportId: number,
     networkId: NetworkId,
     selectedSeason: number,
     options?: UseQueryOptions<User>
 ) => {
     return useQuery<User>(
-        QUERY_KEYS.Royale.User(walletAddress),
+        QUERY_KEYS.Royale.User(walletAddress, passportId),
         async () => {
             if (walletAddress) {
                 const royalePlayersDataUrl = BASE_URL + walletAddress;
                 const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
                 const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
-                const royalePlayerFromGraph = await thalesData.binaryOptions.thalesRoyalePlayers({
-                    season: selectedSeason,
-                    network: networkId,
-                    address: walletAddress,
-                });
+                const royalePlayerFromGraph =
+                    networkId === 10 && selectedSeason <= 5
+                        ? await thalesData.binaryOptions.thalesRoyalePlayers({
+                              season: selectedSeason,
+                              network: networkId,
+                              address: walletAddress,
+                          })
+                        : await thalesData.binaryOptions.thalesRoyalePassportPlayers({
+                              id: passportId,
+                              season: selectedSeason,
+                              network: networkId,
+                              owner: walletAddress,
+                          });
                 if (royalePlayerFromGraph.length > 0) {
                     const userFromGraph = royalePlayerFromGraph[0];
                     const user: User = {
@@ -73,7 +82,7 @@ const useUserRoyalQuery = (
                         status: UserStatus.RDY,
                         season: selectedSeason,
                         deathRound: userFromGraph.deathRound,
-                        defaultPosition: userFromGraph.defaultPosition,
+                        defaultPositions: userFromGraph.defaultPositions,
                     };
                     return user;
                 } else {
@@ -86,7 +95,7 @@ const useUserRoyalQuery = (
                         status: UserStatus.NOTSIGNED,
                         season: selectedSeason,
                         deathRound: '',
-                        defaultPosition: 0,
+                        defaultPositions: [],
                     };
                     return user;
                 }

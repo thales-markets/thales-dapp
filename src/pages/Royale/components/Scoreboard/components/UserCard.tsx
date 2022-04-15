@@ -1,11 +1,9 @@
 import { Modal } from '@material-ui/core';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import AlertMessage from 'components/AlertMessage';
-import { AlertMessageTypeEnum } from 'components/AlertMessage/AlertMessage';
 import ApprovalModal from 'components/ApprovalModal';
 import SimpleLoader from 'components/SimpleLoader';
 import Swap from 'components/Swap';
-import { OP_KOVAN_SUSD, OP_sUSD, POLYGON_USDC } from 'components/Swap/tokens';
+import { OP_KOVAN_SUSD, OP_sUSD } from 'components/Swap/tokens';
 import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
@@ -22,17 +20,26 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, LoaderContainer, Text } from 'theme/common';
+import {
+    FlexDiv,
+    FlexDivCentered,
+    FlexDivColumn,
+    FlexDivSpaceBetween,
+    Image,
+    LoaderContainer,
+    Text,
+} from 'theme/common';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
-import { checkAllowance, getIsOVM, getIsPolygon } from 'utils/network';
+import { checkAllowance, getIsOVM } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import useLatestRoyaleForUserInfo from '../queries/useLastRoyaleForUserInfo';
 import { User, UserStatus } from '../queries/useRoyalePlayersQuery';
 import useUserRoyalQuery, { AnonimUser } from '../queries/useUserRoyalQuery';
+import ShowRoyalePassportsDialog from './ShowRoyalePassportsDialog/ShowRoyalePassportsDialog';
 import UserEditRoyaleDataDialog from './UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
 
 type UserCardProps = {
@@ -40,11 +47,14 @@ type UserCardProps = {
     positions: Positions;
     royaleFooterData: FooterData | undefined;
     selectedSeason: number;
+    royalePassports: any[];
+    selectedRoyalePassport: any;
+    setSelectedRoyalePassport: (pasport: any) => void;
 };
 export enum PositionsEnum {
-    NONE = 'none',
-    UP = 'up',
-    DOWN = 'down',
+    NONE = 0,
+    UP = 1,
+    DOWN = 2,
 }
 
 export enum BuyInCollateralEnum {
@@ -52,53 +62,55 @@ export enum BuyInCollateralEnum {
     SUSD = 'susd',
 }
 
-export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, assetPrice, positions }) => {
+export const UserCard: React.FC<UserCardProps> = ({
+    selectedSeason,
+    royaleFooterData,
+    assetPrice,
+    positions,
+    royalePassports,
+    selectedRoyalePassport,
+    setSelectedRoyalePassport,
+}) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
-    const isPolygon = getIsPolygon(networkId);
-    const userQuery = useUserRoyalQuery(walletAddress as any, networkId, selectedSeason, {
-        enabled: (isL2 || isPolygon) && isAppReady,
+    const userQuery = useUserRoyalQuery(walletAddress as any, selectedRoyalePassport, networkId, selectedSeason, {
+        enabled: isL2 && isAppReady,
     });
     const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
     const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, {
-        enabled: (isL2 || isPolygon) && isAppReady,
+        enabled: isL2 && isAppReady,
     });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
-    const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: (isL2 || isPolygon) && isWalletConnected });
+    const royalePassQuery = useRoyalePassQuery(walletAddress, { enabled: isL2 && isWalletConnected });
     const royalePassData = royalePassQuery.isSuccess ? royalePassQuery.data : {};
 
-    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, {
-        enabled: (isL2 || isPolygon) && isWalletConnected,
-    });
+    const royalePassIdQuery = useRoyalePassIdQuery(walletAddress, networkId, { enabled: isL2 && isWalletConnected });
     const royalePassId = royalePassIdQuery.isSuccess ? royalePassIdQuery.data : {};
 
-    const [allowance, setAllowance] = useState(false);
+    const [allowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [balance, setBalance] = useState('0');
-    const [openEditDialog, setOpenEditDialog] = useState(false);
-    const [showSwap, setShowSwap] = useState(false);
-    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
-    const [showDefaultPositionWarning, setShowDefaultPositionWarning] = useState(false);
-    const [isBuyingIn, setIsBuyingIn] = useState(false);
+    const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+    const [showSwap, setShowSwap] = useState<boolean>(false);
+    const [isBuyingIn, setIsBuyingIn] = useState<boolean>(false);
+    const [allPositionsUp, setAllPositionsUp] = useState<boolean>(true);
+    const [showSelectDropdown, setShowSelectDropdown] = useState<boolean>(false);
+    const [openPassportsDialog, setOpenPassportsDialog] = useState<boolean>(false);
 
-    const [defaultPosition, setDefaultPosition] = useState(
-        user.defaultPosition === 0
-            ? PositionsEnum.NONE
-            : user.defaultPosition === 1
-            ? PositionsEnum.DOWN
-            : PositionsEnum.UP
-    );
+    const [defaultPositions, setDefaultPositions] = useState([2, 1, 2, 1, 2, 1]);
 
-    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : isPolygon ? POLYGON_USDC : '';
+    const [royalePassportIds, setRoyalePassportIds] = useState([] as any);
+
+    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
     const [selectedBuyInCollateral, setSelectedBuyInCollateral] = useState(BuyInCollateralEnum.PASS);
-    const [showSelectBuyInDropdown, setShowSelectBuyInDropdown] = useState(false);
+    const [showSelectBuyInDropdown, setShowSelectBuyInDropdown] = useState<boolean>(false);
 
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
@@ -146,16 +158,18 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }, [walletAddress]);
 
     useEffect(() => {
-        if (user) {
-            setDefaultPosition(
-                user.defaultPosition === 0
-                    ? PositionsEnum.NONE
-                    : user.defaultPosition === 1
-                    ? PositionsEnum.DOWN
-                    : PositionsEnum.UP
-            );
+        if (user && user.defaultPositions && user.status !== UserStatus.NOTSIGNED) {
+            setDefaultPositions(user.defaultPositions);
         }
-    }, [walletAddress, user]);
+    }, [walletAddress, user, selectedRoyalePassport]);
+
+    useEffect(() => {
+        if (user && royalePassports.length > 0) {
+            setRoyalePassportIds(royalePassports.map((passport) => passport.id));
+        } else {
+            setRoyalePassportIds([]);
+        }
+    }, [walletAddress, user, royalePassports, selectedRoyalePassport]);
 
     const updateAllowance = async (token: any) => {
         if (token) {
@@ -215,6 +229,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         }
     };
 
+    const randomizePositions = () => {
+        const positions = [];
+        for (let i = 0; i < 6; i++) {
+            positions.push(Math.round(Math.random()) === 0 ? 1 : 2);
+        }
+        setDefaultPositions(positions);
+    };
+
+    const switchSinglePosition = (key: number) => {
+        const positions = defaultPositions;
+        positions[key] === 1 ? (positions[key] = 2) : (positions[key] = 1);
+        setDefaultPositions(positions);
+    };
+
     const getFooter = (user: User | undefined, royaleData: any) => {
         if (!royaleData) return;
         if (!user) return;
@@ -258,27 +286,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             {selectedBuyInCollateral === BuyInCollateralEnum.SUSD ? (
                                 allowance ? (
                                     <Button
-                                        className={
-                                            showDefaultPositionWarning || isBuyingIn || buyInAmount > Number(balance)
-                                                ? 'disabled'
-                                                : ''
-                                        }
-                                        disabled={
-                                            showDefaultPositionWarning || isBuyingIn || buyInAmount > Number(balance)
-                                        }
+                                        className={isBuyingIn || buyInAmount > Number(balance) ? 'disabled' : ''}
+                                        disabled={isBuyingIn || buyInAmount > Number(balance)}
                                         onClick={() => {
-                                            if (defaultPosition === PositionsEnum.NONE) {
-                                                setShowDefaultPositionWarning(true);
-                                            } else {
-                                                setIsBuyingIn(true);
-
-                                                signUpWithPosition(
-                                                    defaultPosition === PositionsEnum.DOWN ? 1 : 2,
-                                                    setIsBuyingIn
-                                                ).finally(() => {
-                                                    synthsWalletBalancesQuery.refetch();
-                                                });
-                                            }
+                                            setIsBuyingIn(true);
+                                            signUpWithPosition(defaultPositions, setIsBuyingIn).finally(() => {
+                                                synthsWalletBalancesQuery.refetch();
+                                            });
                                         }}
                                     >
                                         {t('options.royale.scoreboard.buy-in')}
@@ -298,33 +312,23 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             ) : (royalePassData as any).balance > 0 ? (
                                 <Button
                                     className={
-                                        showDefaultPositionWarning ||
-                                        !(royalePassId as any).id ||
-                                        isBuyingIn ||
-                                        (royalePassData as any).balance === 0
+                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
                                             ? 'disabled'
                                             : ''
                                     }
                                     disabled={
-                                        showDefaultPositionWarning ||
-                                        !(royalePassId as any).id ||
-                                        isBuyingIn ||
-                                        (royalePassData as any).balance === 0
+                                        !(royalePassId as any).id || isBuyingIn || (royalePassData as any).balance === 0
                                     }
                                     onClick={() => {
-                                        if (defaultPosition === PositionsEnum.NONE) {
-                                            setShowDefaultPositionWarning(true);
-                                        } else {
-                                            setIsBuyingIn(true);
-                                            signUpWithWithPassWithPosition(
-                                                (royalePassId as any).id,
-                                                defaultPosition === PositionsEnum.DOWN ? 1 : 2,
-                                                setIsBuyingIn
-                                            ).finally(() => {
-                                                royalePassQuery.refetch();
-                                                royalePassIdQuery.refetch();
-                                            });
-                                        }
+                                        setIsBuyingIn(true);
+                                        signUpWithPassWithPosition(
+                                            (royalePassId as any).id,
+                                            defaultPositions,
+                                            setIsBuyingIn
+                                        ).finally(() => {
+                                            royalePassQuery.refetch();
+                                            royalePassIdQuery.refetch();
+                                        });
                                     }}
                                 >
                                     {t('options.royale.scoreboard.buy-in-royale-pass')}
@@ -338,13 +342,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                     {t('options.royale.scoreboard.buy-in-royale-pass')}
                                 </Button>
                             )}
-                            <AlertMessage
-                                message={t('options.royale.footer.select-position')}
-                                type={AlertMessageTypeEnum.ERROR}
-                                isRoyale={true}
-                                hideCloseButton={true}
-                                showMessage={showDefaultPositionWarning}
-                            ></AlertMessage>
                         </FlexContainer>
                     );
                 }
@@ -399,7 +396,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     if ((royaleData as any).season !== selectedSeason) {
         return (
             <UserWrapper style={{ height: 420 }}>
-                <LoaderContainer style={{ top: 'calc(50% + 120px)', left: '50%', display: 'relative' }}>
+                <LoaderContainer style={{ top: 'calc(50% + 140px)', left: '50%', display: 'relative' }}>
                     <SimpleLoader />
                 </LoaderContainer>
             </UserWrapper>
@@ -421,19 +418,50 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     user={user}
                     walletAddress={walletAddress}
                 ></UserEditRoyaleDataDialog>
-                <FlexDiv style={{ alignItems: 'center' }}>
-                    {user?.avatar ? <UserAvatar src={user.avatar} style={{ marginRight: 14 }} /> : getAvatar(user)}
 
-                    <UserLabel>
-                        <Trans
-                            i18nKey="options.royale.scoreboard.player-no"
-                            components={{ sans: <span style={{ fontFamily: 'sans-serif !important' }} /> }}
-                        />
+                {!openPassportsDialog ?? (
+                    <OverlayForDropDown
+                        onClick={() => {
+                            if (openPassportsDialog) setOpenPassportsDialog(false);
+                        }}
+                    ></OverlayForDropDown>
+                )}
 
-                        {' #'}
-                        {user?.number}
-                    </UserLabel>
-                </FlexDiv>
+                <ShowRoyalePassportsDialog
+                    open={openPassportsDialog}
+                    handleClose={setOpenPassportsDialog.bind(this, false)}
+                    royalePassportIds={royalePassportIds}
+                ></ShowRoyalePassportsDialog>
+                <FlexDivSpaceBetween style={{ flexWrap: 'wrap', gap: 14 }}>
+                    <FlexDiv style={{ alignItems: 'center' }}>
+                        {user?.avatar ? <UserAvatar src={user.avatar} style={{ marginRight: 14 }} /> : getAvatar(user)}
+
+                        <UserLabel>
+                            <Trans
+                                i18nKey="options.royale.scoreboard.player-no"
+                                components={{ sans: <span style={{ fontFamily: 'sans-serif !important' }} /> }}
+                            />
+
+                            {' #'}
+                            {user?.number}
+                        </UserLabel>
+                    </FlexDiv>
+                    <FlexDiv>
+                        <Button
+                            disabled={royalePassports.length === 0}
+                            className={royalePassports.length === 0 ? 'disabled' : ''}
+                            style={{
+                                display: royalePassports.length === 0 ? 'none' : '',
+                                cursor: royalePassports.length === 0 ? 'not-allowed' : '',
+                                whiteSpace: 'pre',
+                                fontSize: 15,
+                            }}
+                            onClick={() => setOpenPassportsDialog(true)}
+                        >
+                            {t('options.royale.scoreboard.my-passports')}
+                        </Button>
+                    </FlexDiv>
+                </FlexDivSpaceBetween>
                 <FlexDivColumn style={{ margin: '20px 0' }}>
                     <FlexContainer>
                         <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
@@ -485,6 +513,60 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             <NftImage src="https://thales-protocol.s3.eu-north-1.amazonaws.com/THALES_ROYALE_PASS.gif" />
                         </ImageWrapper>
                     </RoyalePassContainer>
+                    <RoyalePassportContainer>
+                        <FlexDivSpaceBetween>
+                            <UserLabel>{t('options.royale.scoreboard.passports-in-wallet')}</UserLabel>
+                            <InputWrapper
+                                style={{
+                                    maxWidth: 240,
+                                }}
+                            >
+                                {royalePassports.length}
+                            </InputWrapper>
+                        </FlexDivSpaceBetween>
+                        <FlexDivSpaceBetween style={{ marginTop: 10, position: 'relative' }}>
+                            <UserLabel style={{ alignSelf: 'flex-start', marginTop: 4 }}>
+                                {t('options.royale.scoreboard.passport-id')}
+                            </UserLabel>
+                            <Selector
+                                className={royalePassports.length < 2 ? 'disabled' : ''}
+                                isOpen={showSelectDropdown}
+                            >
+                                {royalePassports.length === 0 ? (
+                                    <Text>N/A</Text>
+                                ) : royalePassports.length === 1 ? (
+                                    <Text>{parseInt(royalePassports[0].id as any, 16)}</Text>
+                                ) : (
+                                    <Text
+                                        onClick={
+                                            royalePassports.length > 1
+                                                ? setShowSelectDropdown.bind(this, !showSelectDropdown)
+                                                : undefined
+                                        }
+                                    >
+                                        {parseInt(selectedRoyalePassport as any, 16)}
+                                        <Arrow className="icon icon--arrow-down" />
+                                    </Text>
+                                )}
+
+                                {showSelectDropdown &&
+                                    royalePassports
+                                        .filter((passport) => passport.id !== selectedRoyalePassport)
+                                        .map((passport: any, key: number) => (
+                                            <Text
+                                                onClick={() => {
+                                                    setSelectedRoyalePassport(passport.id);
+                                                    setShowSelectDropdown(false);
+                                                }}
+                                                key={key}
+                                            >
+                                                {parseInt(passport.id as any, 16)}
+                                            </Text>
+                                        ))}
+                            </Selector>
+                            {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
+                        </FlexDivSpaceBetween>
+                    </RoyalePassportContainer>
                     <FlexContainer
                         style={{
                             position: 'relative',
@@ -496,65 +578,112 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                                     : '',
                             borderBottom: '2px dashed var(--color)',
                             margin: 'margin: 0 0 7px 0',
+                            flexDirection: 'column',
                         }}
                     >
                         <UserLabel
                             style={{
-                                width: window.innerWidth < 400 ? 125 : 150,
-                                marginTop: '-25px',
+                                width: window.innerWidth < 400 ? '100%' : '',
                                 padding: '15px 0px',
+                                whiteSpace: 'break-spaces',
+                                textAlign: 'initial',
                             }}
                         >
-                            {t('options.royale.scoreboard.default-position')}:
+                            {t('options.royale.scoreboard.choose-default-positions')}
                             <RoyaleTooltip title={t('options.royale.scoreboard.default-position-info')}>
                                 <StyledInfoIcon />
                             </RoyaleTooltip>
                         </UserLabel>
-                        <Selector
-                            className={user.status === UserStatus.RDY || isBuyingIn ? 'disabled' : ''}
-                            isOpen={showSelectDropdown}
-                            style={{ border: showDefaultPositionWarning ? '2px solid #FF615F' : '' }}
+                        <PositionalButtonsContainer>
+                            {defaultPositions.map((roundPosition: number, key: number) => (
+                                <FlexDiv key={key}>
+                                    <SupText>{key + 1}.</SupText>
+                                    <PositionButton
+                                        currentRound={
+                                            (royaleData as any).currentRound === key + 1 &&
+                                            !(royaleData as any).seasonFinished
+                                        }
+                                        disabled={
+                                            isBuyingIn ||
+                                            user.status === UserStatus.RDY ||
+                                            (royaleData as any).signUpPeriod < new Date()
+                                        }
+                                        long={Number(roundPosition) === 2}
+                                        onClick={() => switchSinglePosition(key)}
+                                    >
+                                        {Number(roundPosition) === 2 ? (
+                                            '△'
+                                        ) : (
+                                            <Circle
+                                                currentRound={
+                                                    (royaleData as any).currentRound === key + 1 &&
+                                                    !(royaleData as any).seasonFinished
+                                                }
+                                                disabled={(royaleData as any).signUpPeriod < new Date()}
+                                            />
+                                        )}
+                                    </PositionButton>
+                                </FlexDiv>
+                            ))}
+                        </PositionalButtonsContainer>
+                        <FlexContainer
+                            style={{
+                                padding: '15px 0px',
+                                width: '100%',
+                                display:
+                                    user.status === UserStatus.RDY ||
+                                    (user.status === UserStatus.NOTSIGNED &&
+                                        (royaleData as any).signUpPeriod < new Date()) ||
+                                    !isWalletConnected
+                                        ? 'none'
+                                        : '',
+                            }}
                         >
-                            {defaultPosition !== PositionsEnum.NONE && user.status === UserStatus.RDY ? (
-                                <Text>{t('options.royale.scoreboard.default-position-' + defaultPosition)}</Text>
-                            ) : (
-                                <Text
-                                    onClick={
-                                        user.status !== UserStatus.RDY && !isBuyingIn
-                                            ? setShowSelectDropdown.bind(this, true)
-                                            : undefined
-                                    }
-                                >
-                                    {defaultPosition === PositionsEnum.NONE
-                                        ? 'SELECT'
-                                        : t('options.royale.scoreboard.default-position-' + defaultPosition)}
-                                    <Arrow className="icon icon--arrow-down" />
-                                </Text>
-                            )}
-
-                            {showSelectDropdown &&
-                                Object.keys(PositionsEnum)
-                                    .filter(
-                                        (position) =>
-                                            position.toLowerCase() !== defaultPosition.toLowerCase() &&
-                                            position.toLowerCase() !== PositionsEnum.NONE
-                                    )
-                                    .map((position: any, key: number) => (
-                                        <Text
-                                            onClick={() => {
-                                                setDefaultPosition(
-                                                    PositionsEnum[position as keyof typeof PositionsEnum]
-                                                );
-                                                setShowSelectDropdown(false);
-                                                setShowDefaultPositionWarning(false);
-                                            }}
-                                            key={key}
-                                        >
-                                            {t('options.royale.scoreboard.default-position-' + position.toLowerCase())}
-                                        </Text>
-                                    ))}
-                        </Selector>
-                        {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
+                            <Button
+                                disabled={isBuyingIn || user.status === UserStatus.RDY}
+                                className={isBuyingIn || user.status === UserStatus.RDY ? 'disabled' : ''}
+                                style={{
+                                    display:
+                                        user.status === UserStatus.RDY ||
+                                        (user.status === UserStatus.NOTSIGNED &&
+                                            (royaleData as any).signUpPeriod < new Date()) ||
+                                        !isWalletConnected
+                                            ? 'none'
+                                            : '',
+                                    cursor: isBuyingIn || user.status === UserStatus.RDY ? 'not-allowed' : '',
+                                    whiteSpace: 'pre',
+                                }}
+                                onClick={randomizePositions}
+                            >
+                                {t('options.royale.scoreboard.shuffle-positions')}
+                            </Button>
+                            <Button
+                                className={isBuyingIn || user.status === UserStatus.RDY ? 'disabled' : ''}
+                                disabled={isBuyingIn || user.status === UserStatus.RDY}
+                                style={{
+                                    justifyContent: 'center',
+                                    display:
+                                        user.status === UserStatus.RDY ||
+                                        (user.status === UserStatus.NOTSIGNED &&
+                                            (royaleData as any).signUpPeriod < new Date()) ||
+                                        !isWalletConnected
+                                            ? 'none'
+                                            : '',
+                                    cursor: isBuyingIn || user.status === UserStatus.RDY ? 'not-allowed' : '',
+                                    whiteSpace: 'pre',
+                                }}
+                                onClick={() => {
+                                    allPositionsUp
+                                        ? setDefaultPositions([2, 2, 2, 2, 2, 2])
+                                        : setDefaultPositions([1, 1, 1, 1, 1, 1]);
+                                    setAllPositionsUp(!allPositionsUp);
+                                }}
+                            >
+                                {allPositionsUp
+                                    ? t('options.royale.scoreboard.all-up')
+                                    : t('options.royale.scoreboard.all-down')}
+                            </Button>
+                        </FlexContainer>
                     </FlexContainer>
                     <FlexContainer
                         style={{
@@ -635,32 +764,66 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                     </FlexContainer>
 
                     <InfoSection>
-                        <div>
-                            <span>{t('options.royale.footer.up')}</span>
-                            <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
-                            <span>{t('options.royale.footer.down')}</span>
-                        </div>
-                        <div>
-                            <span>
-                                {t('options.royale.footer.current')}
-                                {royaleFooterData?.seasonAsset} {t('options.royale.footer.price')}:
-                            </span>
-                            <span>
-                                {' '}
-                                $
-                                {royaleFooterData?.seasonAsset !== 'ETH'
-                                    ? Number(assetPrice).toFixed(4)
-                                    : Number(assetPrice).toFixed(2)}
-                            </span>
-                        </div>
-                        <div>
-                            <span>{t('options.royale.footer.reward-per-player')}:</span>
-                            <span>{royaleFooterData?.reward.toFixed(2)} sUSD</span>
-                        </div>
-                        <div>
-                            <span>{t('options.royale.footer.players-alive')}:</span>
-                            <span>{royaleFooterData?.playersAlive}</span>
-                        </div>
+                        {royaleFooterData?.seasonFinished ? (
+                            <>
+                                <div style={{ textAlign: 'center' }}>
+                                    <span style={{ margin: 'auto' }}>
+                                        {t('options.royale.footer.season-finished', { season: selectedSeason })}
+                                    </span>
+                                </div>
+                                <div style={{ textAlign: 'center' }}>
+                                    <span style={{ margin: 'auto' }}>
+                                        {t('options.royale.footer.season-token', {
+                                            token: royaleFooterData?.seasonAsset,
+                                        })}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>{t('options.royale.footer.current-reward-per-winner')}:</span>
+                                    <span>{(royaleFooterData?.rewardPerWinnerPerSeason).toFixed(2)} sUSD</span>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div>
+                                    <span>{t('options.royale.footer.current-positions')}:</span>
+                                    <span>{t('options.royale.footer.up')}</span>
+                                    <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${
+                                        positions?.down
+                                    }`}</span>
+                                    <span>{t('options.royale.footer.down')}</span>
+                                </div>
+                                <div>
+                                    <span>
+                                        {t('options.royale.footer.current')} {royaleFooterData?.seasonAsset}{' '}
+                                        {t('options.royale.footer.price')}:
+                                    </span>
+                                    <span>
+                                        $
+                                        {royaleFooterData?.seasonAsset !== 'ETH'
+                                            ? Number(assetPrice).toFixed(4)
+                                            : Number(assetPrice).toFixed(2)}
+                                    </span>
+                                    <InfoIconContainer>
+                                        <RoyaleTooltip
+                                            title={t('options.royale.footer.price-source', {
+                                                token: royaleFooterData?.seasonAsset,
+                                            })}
+                                        >
+                                            <StyledInfoIcon />
+                                        </RoyaleTooltip>
+                                    </InfoIconContainer>
+                                </div>
+                                <div>
+                                    <span>{t('options.royale.footer.current-reward-per-player')}:</span>
+                                    <span>{royaleFooterData?.reward.toFixed(2)} sUSD</span>
+                                </div>
+                                <div>
+                                    <span>{t('options.royale.footer.players-alive')}:</span>
+                                    <span>{royaleFooterData?.playersAlive}</span>
+                                </div>
+                            </>
+                        )}
                     </InfoSection>
                 </FlexDivColumn>
                 {getFooter(user, royaleData)}
@@ -679,12 +842,17 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     }
 };
 
-export const signUpWithPosition = async (position: number, setIsBuyingIn: any) => {
+const InfoIconContainer = styled.span`
+    display: inline-flex;
+    align-items: center;
+`;
+
+export const signUpWithPosition = async (positions: number[], setIsBuyingIn: any) => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
         const royaleContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
         try {
-            const tx = await royaleContract.signUpWithPosition(position);
+            const tx = await royaleContract.signUpWithPosition(positions);
             await tx.wait();
             dispatchMarketNotification('Successfully Signed Up With Position');
         } catch (e) {
@@ -694,12 +862,12 @@ export const signUpWithPosition = async (position: number, setIsBuyingIn: any) =
     }
 };
 
-export const signUpWithWithPassWithPosition = async (royalePassId: number, position: number, setIsBuyingIn: any) => {
+export const signUpWithPassWithPosition = async (royalePassId: number, positions: number[], setIsBuyingIn: any) => {
     const { thalesRoyaleContract } = snxJSConnector;
     if (thalesRoyaleContract) {
         const royaleContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
         try {
-            const tx = await royaleContract.signUpWithPassWithPosition(royalePassId, position);
+            const tx = await royaleContract.signUpWithPassWithPosition(royalePassId, positions);
             await tx.wait();
             dispatchMarketNotification('Successfully Signed Up With Royale Pass And With Position');
         } catch (e) {
@@ -767,6 +935,7 @@ const UserLabel = styled.p`
     font-style: normal;
     font-size: 20px;
     color: var(--color);
+    white-space: pre;
 `;
 
 const Button = styled.button`
@@ -867,36 +1036,6 @@ const ImageWrapper = styled(InputWrapper)`
     }
 `;
 
-const Selector = styled.div<{ isOpen: boolean }>`
-    position: absolute;
-    right: 0;
-    top: 6px;
-    width: 240px;
-    height: ${(props) => (props.isOpen ? 'content' : '28px')};
-    border: 2px solid var(--color-background);
-    box-sizing: border-box;
-    border-radius: 19.5349px;
-    white-space: nowrap;
-    overflow: hidden;
-    font-family: Sansation !important;
-    font-style: normal;
-    font-size: 20px;
-    line-height: 29px;
-    text-align: center;
-    letter-spacing: -0.4px;
-    color: var(--color-background);
-    cursor: pointer;
-    z-index: 5;
-    background: var(--color);
-    &.disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-    @media (max-width: 1024px) {
-        width: 150px;
-    }
-`;
-
 const ToggleWrapper = styled.div`
     width: 240px;
     border: 1.30233px solid var(--color);
@@ -967,17 +1106,6 @@ const InfoSection = styled.div`
     }
 `;
 
-const Arrow = styled.i`
-    font-size: 12px;
-    line-height: 12px;
-    display: inline-block;
-    padding-bottom: 3px;
-    position: absolute;
-    color: var(--color-wrapper);
-    top: 9px;
-    left: ${() => (window.innerWidth < 1024 ? '75%' : '67%')};
-`;
-
 const Overlay = styled.div`
     position: fixed;
     top: 0;
@@ -1014,4 +1142,124 @@ const RoyalePassContainer = styled(FlexContainer)`
             margin-top: 10px;
         }
     }
+`;
+
+const RoyalePassportContainer = styled.div`
+    padding-bottom: 25px;
+    margin-bottom: 20px;
+    border-bottom: 2px dashed var(--color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    & > div {
+        width: 100%;
+    }
+`;
+
+const PositionalButtonsContainer = styled(FlexContainer)`
+    padding: 15px 0px;
+    width: 100%;
+    @media (max-width: 600px) {
+        flex-wrap: wrap;
+        gap: 10px 20px;
+        justify-content: center;
+    }
+`;
+
+const PositionButton = styled.button<{ long?: boolean; currentRound?: boolean }>`
+    transition: all 0.1s ease-in-out;
+    width: ${(props) => (props.currentRound ? '60px' : '45px')};
+    height: ${(props) => (props.currentRound ? '60px' : '45px')};
+    border-radius: 50px;
+    background: ${(props) => (props.long ? '#59CDA3' : '#8e1d38')};
+    border: 3px solid #e5e5e5;
+    box-sizing: border-box;
+    box-shadow: ${(props) => (props.currentRound && props.long ? 'inset 0px 4px 30px #137B9B' : '')};
+    color: #e5e5e5;
+    font-size: ${(props) => (props.currentRound ? '45px' : '30px')};
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:disabled {
+        background: ${(props) => (props.currentRound ? '' : props.long ? '#b9c7c2' : '#977980')};
+        box-shadow: ${(props) => (props.long ? 'inset 0px 4px 30px #137B9B' : '')};
+        cursor: not-allowed;
+    }
+    &:nth-child(6n-4) {
+        margin-left: ${(props) => (props.currentRound ? '-7px' : '')};
+        margin-right: ${(props) => (props.currentRound ? '-8px' : '')};
+    }
+    &:nth-child(6n) {
+        margin-left: ${(props) => (props.currentRound ? '-7px' : '')};
+        margin-right: ${(props) => (props.currentRound ? '-8px' : '')};
+    }
+    &:nth-child(6n-2) {
+        margin-left: ${(props) => (props.currentRound ? '-7px' : '')};
+        margin-right: ${(props) => (props.currentRound ? '-7px' : '')};
+    }
+`;
+
+const Circle = styled.div<{ currentRound?: boolean; disabled: boolean }>`
+    width: ${(props) => (props.currentRound ? '40px' : '25px')};
+    height: ${(props) => (props.currentRound ? '40px' : '25px')};
+    border-radius: 50px;
+    background: transparent;
+    box-sizing: border-box;
+    border: 2px solid #e5e5e5;
+`;
+
+const SupText = styled.sup`
+    font-family: Sansation !important;
+    font-style: normal;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    margin-bottom: 30px;
+    margin-left: 5px;
+    @media (max-width: 600px) {
+        width: 10px;
+        display: flex;
+        margin-left: 0px;
+        margin-right: 5px;
+    }
+`;
+
+const Selector = styled.div<{ isOpen: boolean }>`
+    width: 240px;
+    position: relative;
+    height: ${(props) => (props.isOpen ? 'content' : '28px')};
+    border: 2px solid var(--color-background);
+    box-sizing: border-box;
+    border-radius: 19.5349px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 29px;
+    text-align: center;
+    letter-spacing: -0.4px;
+    color: var(--color-background);
+    cursor: pointer;
+    z-index: 5;
+    background: var(--color);
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    @media (max-width: 1024px) {
+        width: 150px;
+    }
+`;
+
+const Arrow = styled.i`
+    font-size: 12px;
+    line-height: 12px;
+    display: inline-block;
+    padding-bottom: 3px;
+    position: absolute;
+    color: var(--color-wrapper);
+    top: 9px;
+    left: ${() => (window.innerWidth < 1024 ? '75%' : '67%')};
 `;

@@ -10,6 +10,7 @@ import queryString from 'query-string';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { FooterData } from '../../Queries/useRoyaleFooterQuery';
 import { useLocation } from 'react-router-dom';
+import PassportDropdown from '../PassportDropdown/PassportDropdown';
 
 type ScoreboardProps = {
     assetPrice: string;
@@ -20,6 +21,9 @@ type ScoreboardProps = {
     setSelectedPage: (page: string) => void;
     selectedSeason: number;
     setSelectedSeason: (season: number) => void;
+    royalePassports: any[];
+    selectedRoyalePassport: any;
+    setSelectedRoyalePassport: (pasport: any) => void;
 };
 
 let showStatsUserSelection = true;
@@ -33,6 +37,9 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
     selectedSeason,
     setSelectedSeason,
     latestSeason,
+    royalePassports,
+    selectedRoyalePassport,
+    setSelectedRoyalePassport,
 }) => {
     const { t } = useTranslation();
     const location = useLocation();
@@ -176,6 +183,13 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                 >
                     ✖
                 </CloseStats>
+                {selectedPage === 'royale' && (
+                    <PassportDropdown
+                        selectedRoyalePassport={selectedRoyalePassport}
+                        setSelectedRoyalePassport={setSelectedRoyalePassport}
+                        royalePassports={royalePassports}
+                    />
+                )}
                 {royaleData?.seasonFinished ? (
                     <>
                         <div style={{ textAlign: 'center' }}>
@@ -210,7 +224,15 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                             </span>
                             <InfoIconContainer>
                                 <RoyaleTooltip
-                                    title={t('options.royale.footer.price-source', { token: royaleData?.seasonAsset })}
+                                    title={
+                                        royaleData?.seasonAsset !== 'LYRA'
+                                            ? t('options.royale.footer.price-source', {
+                                                  token: royaleData?.seasonAsset,
+                                              })
+                                            : t('options.royale.footer.price-source-twap', {
+                                                  token: royaleData?.seasonAsset,
+                                              })
+                                    }
                                 >
                                     <StyledInfoIcon />
                                 </RoyaleTooltip>
@@ -417,12 +439,15 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     }
 `;
 
-const Arrow = styled.i`
+const Arrow = styled.i<{ isAbsolute?: boolean }>`
     font-size: 12px;
     line-height: 8px;
     display: inline-block;
     padding-bottom: 3px;
     margin-left: 20px;
+    position: ${(props) => (props.isAbsolute ? 'absolute' : 'relative')};
+    top: ${(props) => (props.isAbsolute ? '9px' : '')};
+    right: ${(props) => (props.isAbsolute ? '19px' : '')};
 `;
 
 const Overlay = styled.div`

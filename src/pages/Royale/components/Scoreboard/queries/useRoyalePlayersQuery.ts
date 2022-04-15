@@ -19,6 +19,7 @@ export type User = {
     avatar: string;
     status: UserStatus;
     season: number;
+    tokenId?: number;
     deathRound?: string;
 };
 const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
@@ -40,29 +41,44 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
             const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
 
             const royalePlayersDataMap = new Map<string, any>(royalePlayersDataResult);
+            let data: any[];
 
-            const data = await thalesData.binaryOptions.thalesRoyalePlayers({
-                season,
-                network: networkId,
-            });
+            if (networkId === 10 && selectedSeason <= 5) {
+                data = await thalesData.binaryOptions.thalesRoyalePlayers({
+                    season,
+                    network: networkId,
+                });
+            } else {
+                data = await thalesData.binaryOptions.thalesRoyalePassportPlayers({
+                    season,
+                    network: networkId,
+                });
+            }
 
             const users: User[] = [];
-
             data.map((player: any) => {
                 const isAlive = player.isAlive;
-                const address = player.address;
+                const address = networkId === 10 && selectedSeason <= 5 ? player.address : player.owner;
                 const number = player.number;
                 const season = player.season;
                 const deathRound = player.deathRound;
 
-                if (royalePlayersDataMap.has(player.address.toLowerCase())) {
-                    const discordUser: any = royalePlayersDataMap.get(player.address.toLowerCase());
+                const hasOwnerOrAddress =
+                    networkId === 10 && selectedSeason <= 5
+                        ? royalePlayersDataMap.has(player.address.toLowerCase())
+                        : royalePlayersDataMap.has(player.owner.toLowerCase());
+                if (hasOwnerOrAddress) {
+                    const discordUser: any =
+                        networkId === 10 && selectedSeason <= 5
+                            ? royalePlayersDataMap.get(player.address.toLowerCase())
+                            : royalePlayersDataMap.get(player.owner.toLowerCase());
                     const user = {
                         isAlive,
                         address,
                         number,
                         season,
                         deathRound,
+                        tokenId: parseInt(player.id as any, 16),
                         name: discordUser.name,
                         avatar: discordUser.avatar,
                         status: UserStatus.RDY,
@@ -75,6 +91,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                         number,
                         season,
                         deathRound,
+                        tokenId: parseInt(player.id as any, 16),
                         name:
                             truncateAddress(
                                 address as any,
@@ -87,7 +104,6 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                     users.push(user);
                 }
             });
-
             return users;
         },
         {

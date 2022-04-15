@@ -3,15 +3,15 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { ethers } from 'ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 
-const useSnxPriceQuery = (options?: UseQueryOptions<any>) => {
+const useRoyaleAssetPriceQuery = (royaleAsset: string, options?: UseQueryOptions<any>) => {
     return useQuery<any>(
-        QUERY_KEYS.Royale.SnxPrice(),
+        QUERY_KEYS.Royale.RoyaleAssetPriceQuery(royaleAsset),
         async () => {
             const { priceFeedContract } = snxJSConnector;
 
             if (priceFeedContract) {
                 return ethers.utils.formatEther(
-                    await priceFeedContract.rateForCurrency(snxJSConnector.snxJS?.toBytes32('SNX'))
+                    await priceFeedContract.rateForCurrency(snxJSConnector.snxJS?.toBytes32(royaleAsset))
                 );
             }
         },
@@ -22,4 +22,4 @@ const useSnxPriceQuery = (options?: UseQueryOptions<any>) => {
     );
 };
 
-export default useSnxPriceQuery;
+export default useRoyaleAssetPriceQuery;

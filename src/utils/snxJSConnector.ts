@@ -17,6 +17,7 @@ import lpStakingRewardsContract from './contracts/lpStakingRewardsContract';
 import { synthetix, SynthetixJS, Config } from '@synthetixio/contracts-interface';
 import { gelatoContract } from './contracts/gelatoContract';
 import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
+import thalesRoyalePassportContract from './contracts/thalesRoyalePassportContract';
 import bridgeContract from './contracts/bridgeContract';
 import usdcContract from './contracts/usdcContract';
 import { getIsPolygon } from './network';
@@ -41,6 +42,7 @@ type SnxJSConnector = {
     ammContract?: ethers.Contract;
     thalesRoyaleContract?: ethers.Contract;
     thalesRoyalePassContract?: ethers.Contract;
+    thalesRoyalePassportContract?: ethers.Contract;
     thalesExchangerContract?: ethers.Contract;
     opThalesTokenContract?: ethers.Contract;
     lpStakingRewardsContract?: ethers.Contract;
@@ -89,6 +91,10 @@ const snxJSConnector: SnxJSConnector = {
         this.ammContract = conditionalInitializeContract(ammContract, contractSettings);
         this.thalesRoyaleContract = conditionalInitializeContract(thalesRoyaleContract, contractSettings);
         this.thalesRoyalePassContract = conditionalInitializeContract(thalesRoyalePassContract, contractSettings);
+        this.thalesRoyalePassportContract = conditionalInitializeContract(
+            thalesRoyalePassportContract,
+            contractSettings
+        );
         this.thalesExchangerContract = conditionalInitializeContract(thalesExchangerContract, contractSettings);
         this.opThalesTokenContract = conditionalInitializeContract(opThalesContract, contractSettings);
         this.lpStakingRewardsContract = conditionalInitializeContract(lpStakingRewardsContract, contractSettings);

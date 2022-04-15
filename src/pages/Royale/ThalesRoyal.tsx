@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Wrapper } from 'theme/common';
@@ -14,11 +14,11 @@ import FooterV2 from './components/Footer/Footer';
 import Header from './components/Header';
 import ScoreboardPage from './components/Scoreboard/ScoreboardPage';
 import WrongNetworkDialog from './components/WrongNetworkDialog/WrongNetworkDialog';
-import useEthPriceQuery from './Queries/useEthPriceQuery';
 import useLatestSeasonQuery from './Queries/useLatestSeasonQuery';
 import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
 import useRoyaleFooterQuery, { FooterData } from './Queries/useRoyaleFooterQuery';
-import useSnxPriceQuery from './Queries/useSnxPriceQuery';
+import useRoyaleAssetPriceQuery from './Queries/useRoyaleAssetPriceQuery';
+import useRoyalePasportQuery from './Queries/usePassportQuery';
 
 export enum Theme {
     Light,
@@ -33,14 +33,13 @@ const ThalesRoyal: React.FC = () => {
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const latestSeasonQuery = useLatestSeasonQuery({
         enabled: isAppReady && (isL2 || isPolygon),
     });
     const [selectedSeason, setSelectedSeason] = useState(0);
     const [royaleFooterData, setRoyaleStatsData] = useState<FooterData>();
-    const [ethPrice, setEthPrice] = useState<string>('');
-    const [snxPrice, setSnxPrice] = useState<string>('');
     const [assetPrice, setAssetPrice] = useState<string>('');
 
     const [positions, setPositions] = useState<Positions>({ up: 0, down: 0 });
@@ -48,8 +47,9 @@ const ThalesRoyal: React.FC = () => {
     const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
 
     const royaleFooterQuery = useRoyaleFooterQuery(selectedSeason, { enabled: isAppReady });
-    const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
-    const snxPriceQuery = useSnxPriceQuery({ enabled: isAppReady });
+    const royaleAssetPriceQuery = useRoyaleAssetPriceQuery(royaleFooterQuery.data?.seasonAsset, {
+        enabled: isAppReady,
+    });
     const positionsQuery = usePositionsQuery(selectedSeason, networkId, {
         enabled: networkId !== undefined && isAppReady,
     });
@@ -59,6 +59,21 @@ const ThalesRoyal: React.FC = () => {
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
 
+    const royalePassportQuery = useRoyalePasportQuery(walletAddress, networkId, selectedSeason, {
+        enabled: isL2 && isWalletConnected,
+    });
+    const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : [];
+
+    const [selectedRoyalePassport, setSelectedRoyalePassport] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (royalePassports.length > 0) {
+            setSelectedRoyalePassport(royalePassports[0]?.id);
+        } else {
+            setSelectedRoyalePassport(null);
+        }
+    }, [walletAddress, royalePassports]);
+
     useEffect(() => {
         if (positionsQuery.isSuccess) {
             setPositions(positionsQuery.data);
@@ -66,16 +81,15 @@ const ThalesRoyal: React.FC = () => {
     }, [positionsQuery.isSuccess, positionsQuery.data]);
 
     useEffect(() => {
-        if (ethPriceQuery.isSuccess) {
-            setEthPrice(ethPriceQuery.data);
+        if (royaleAssetPriceQuery.isSuccess) {
+            setAssetPrice(royaleAssetPriceQuery.data);
         }
-    }, [ethPriceQuery.isSuccess, ethPriceQuery.data]);
-
-    useEffect(() => {
-        if (snxPriceQuery.isSuccess) {
-            setSnxPrice(snxPriceQuery.data);
-        }
-    }, [snxPriceQuery.isSuccess, snxPriceQuery.data]);
+    }, [
+        royaleAssetPriceQuery.isSuccess,
+        royaleAssetPriceQuery.data,
+        royaleFooterQuery.isSuccess,
+        royaleFooterQuery.data,
+    ]);
 
     useEffect(() => {
         if (royaleFooterQuery.isSuccess) {
@@ -92,12 +106,6 @@ const ThalesRoyal: React.FC = () => {
     useEffect(() => {
         setSelectedSeason(latestSeasonQuery.data || 0);
     }, [latestSeasonQuery.isSuccess, latestSeasonQuery.data]);
-
-    useEffect(() => {
-        if (royaleFooterQuery.isSuccess) {
-            royaleFooterQuery.data.seasonAsset === 'ETH' ? setAssetPrice(ethPrice) : setAssetPrice(snxPrice);
-        }
-    }, [ethPrice, snxPrice, royaleFooterQuery.isSuccess, royaleFooterQuery.data]);
 
     useEffect(() => {
         const selectedPageParameter = queryString.parse(location.search).page;
@@ -164,6 +172,9 @@ const ThalesRoyal: React.FC = () => {
                     selectedSeason={selectedSeason}
                     setSelectedSeason={setSelectedSeason}
                     latestSeason={latestSeason}
+                    royalePassports={royalePassports}
+                    selectedRoyalePassport={selectedRoyalePassport}
+                    setSelectedRoyalePassport={setSelectedRoyalePassport}
                 />
                 <RoyaleArena
                     assetPrice={assetPrice}
@@ -172,6 +183,9 @@ const ThalesRoyal: React.FC = () => {
                     latestSeason={latestSeason}
                     selectedSeason={selectedSeason}
                     showBattle={selectedPage === 'royale'}
+                    royalePassports={royalePassports}
+                    selectedRoyalePassport={selectedRoyalePassport}
+                    setSelectedRoyalePassport={setSelectedRoyalePassport}
                 />
                 <FooterV2
                     assetPrice={assetPrice}
@@ -182,6 +196,9 @@ const ThalesRoyal: React.FC = () => {
                     setSelectedPage={setSelectedPage}
                     selectedSeason={selectedSeason}
                     setSelectedSeason={setSelectedSeason}
+                    royalePassports={royalePassports}
+                    selectedRoyalePassport={selectedRoyalePassport}
+                    setSelectedRoyalePassport={setSelectedRoyalePassport}
                 />
             </Wrapper>
 
@@ -213,6 +230,7 @@ export const RoyaleBackground = styled(Background)`
             display: none;
         }
     }
+    overflow-y: auto;
     @media (max-width: 1024px) {
         overflow-y: auto;
         max-height: 100vh;
