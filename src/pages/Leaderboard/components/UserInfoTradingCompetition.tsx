@@ -8,10 +8,14 @@ import { RootState } from 'redux/rootReducer';
 const UserInfoTradingCompetition: React.FC<any> = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    return (
+    return isWalletConnected ? (
         <Wrapper style={{ maxWidth: 320, margin: 0 }}>
-            <Wrapper.Row>{isWalletConnected && <DisplayNameForm />}</Wrapper.Row>
+            <Wrapper.Row>
+                <DisplayNameForm />
+            </Wrapper.Row>
         </Wrapper>
+    ) : (
+        <></>
     );
 };
 

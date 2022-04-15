@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import Container from 'pages/AMMTrading/components//TabContainer/styled-components/Container';
 
-import { Image } from 'theme/common';
+import { FlexDivSpaceBetween, Image } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
 import SearchField from 'pages/Markets/components/Input/SearchField';
@@ -86,7 +86,16 @@ const Leaderboard: React.FC = () => {
     return (
         <>
             <Wrapper>
-                <UserInfoTradingCompetition></UserInfoTradingCompetition>
+                <FlexDivSpaceBetween style={{ gap: 20 }}>
+                    <WrapperForText>
+                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle')}</TradingCompText>
+                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-2')}</TradingCompText>
+                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-3')}</TradingCompText>
+                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-4')}</TradingCompText>
+                    </WrapperForText>
+                    <UserInfoTradingCompetition></UserInfoTradingCompetition>
+                </FlexDivSpaceBetween>
+
                 <Container.Main justifyContent="flex-start">
                     <Container.Main.Item
                         noStrech={true}
@@ -233,6 +242,19 @@ const Leaderboard: React.FC = () => {
 
 const Wrapper = styled.div`
     width: auto;
+    max-width: 1200px;
+`;
+
+const WrapperForText = styled.div`
+    width: auto;
+    max-width: 700px;
+`;
+
+const TradingCompText = styled.p`
+    font-size: 20px;
+    font-family: 'Roboto' !important;
+    color: var(--primary-color);
+    margin: 20px 0;
 `;
 
 const FormContainer = styled.div`
