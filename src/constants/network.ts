@@ -8,6 +8,7 @@ import { BigNumber } from 'ethers';
 
 export const GWEI_UNIT = 1000000000;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const POLYGON_GWEI_INCREASE_PERCENTAGE = 0.2;
 
 export type NetworkMapper = Record<number, number>;
 export type DropdownNetwork = {

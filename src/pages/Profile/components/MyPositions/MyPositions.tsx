@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
 import { getNetworkId } from '../../../../redux/modules/wallet';
 import { getIsPolygon } from '../../../../utils/network';
+import { CONVERT_TO_6_DECIMALS } from '../../../../constants/token';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -46,7 +47,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     modifiedValue.balances.type = 'UP';
                     modifiedValue.balances.value =
                         isPolygon && value.balances.longValue
-                            ? value.balances.longValue * 1e12
+                            ? value.balances.longValue * CONVERT_TO_6_DECIMALS
                             : value.balances.longValue;
                     modifiedValue.balances.priceDiff = getPercentageDifference(
                         exchangeRates?.[modifiedValue.market?.currencyKey] || 0,
@@ -61,7 +62,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     newValue.balances.type = 'DOWN';
                     newValue.balances.value =
                         isPolygon && value.balances.shortValue
-                            ? value.balances.shortValue * 1e12
+                            ? value.balances.shortValue * CONVERT_TO_6_DECIMALS
                             : value.balances.shortValue;
                     newValue.balances.priceDiff = getPercentageDifference(
                         exchangeRates?.[newValue.market?.currencyKey] || 0,

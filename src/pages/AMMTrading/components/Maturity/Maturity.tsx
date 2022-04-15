@@ -29,6 +29,7 @@ import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } f
 import { formatCurrency } from 'utils/formatters/number';
 import { toast } from 'react-toastify';
 import { getStableCoinForNetwork } from '../../../../utils/currency';
+import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
 
 const Maturity: React.FC = () => {
     const { t } = useTranslation();
@@ -124,7 +125,10 @@ const Maturity: React.FC = () => {
             const providerOptions = isPolygon
                 ? {
                       gasLimit,
-                      gasPrice: ethers.utils.parseUnits(Math.floor(+gasInGwei + +gasInGwei * 0.2).toString(), 'gwei'),
+                      gasPrice: ethers.utils.parseUnits(
+                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
+                          'gwei'
+                      ),
                   }
                 : {
                       gasLimit,

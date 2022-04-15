@@ -42,8 +42,11 @@ import WalletBalance from './components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
 import { getStableCoinForNetwork } from '../../../../utils/currency';
+import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
+
+const THREE_PERCENT = 0.03;
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -300,7 +303,10 @@ const AMM: React.FC = () => {
             const providerOptions = isPolygon
                 ? {
                       gasLimit: formatGasLimit(gasEstimate, networkId),
-                      gasPrice: ethers.utils.parseUnits(Math.floor(+gasInGwei + +gasInGwei * 0.2).toString(), 'gwei'),
+                      gasPrice: ethers.utils.parseUnits(
+                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
+                          'gwei'
+                      ),
                   }
                 : {
                       gasLimit: formatGasLimit(gasEstimate, networkId),
@@ -430,7 +436,10 @@ const AMM: React.FC = () => {
             const providerOptions = isPolygon
                 ? {
                       gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
-                      gasPrice: ethers.utils.parseUnits(Math.floor(+gasInGwei + +gasInGwei * 0.2).toString(), 'gwei'),
+                      gasPrice: ethers.utils.parseUnits(
+                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
+                          'gwei'
+                      ),
                   }
                 : {
                       gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
@@ -805,7 +814,8 @@ const AMM: React.FC = () => {
             <NetworkFees gasLimit={gasLimit} disabled={formDisabled} l1Fee={l1Fee} />
             {openApprovalModal && (
                 <ApprovalModal
-                    defaultAmount={+(+sellAmount + 0.03 * +sellAmount).toFixed(2)}
+                    // add three percent to approval amount to take into account price changes
+                    defaultAmount={+(+sellAmount + THREE_PERCENT * +sellAmount).toFixed(2)}
                     tokenSymbol={sellTokenCurrencyKey}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}

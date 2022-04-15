@@ -17,6 +17,7 @@ import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
 import { POLYGON_ID } from '../../constants/network';
+import { CONVERT_TO_6_DECIMALS } from '../../constants/token';
 
 // const MAX_HOT_MARKETS = 6;
 
@@ -38,15 +39,20 @@ const Markets: React.FC = () => {
             const markets = openOrdersMap
                 ? marketsQuery.data.map((m) => {
                       const apiData = (openOrdersMap as any).get(m.address.toLowerCase());
-                      console.log(apiData);
+
                       return {
                           ...m,
                           openOrders: apiData?.ordersCount ?? 0,
                           availableLongs: apiData?.availableLongs ?? 0,
                           availableShorts: apiData?.availableShorts ?? 0,
-                          longPrice: +(networkId === POLYGON_ID ? apiData?.longPrice * 1e12 : apiData?.longPrice) ?? 0,
+                          longPrice:
+                              +(networkId === POLYGON_ID
+                                  ? apiData?.longPrice * CONVERT_TO_6_DECIMALS
+                                  : apiData?.longPrice) ?? 0,
                           shortPrice:
-                              +(networkId === POLYGON_ID ? apiData?.shortPrice * 1e12 : apiData?.shortPrice) ?? 0,
+                              +(networkId === POLYGON_ID
+                                  ? apiData?.shortPrice * CONVERT_TO_6_DECIMALS
+                                  : apiData?.shortPrice) ?? 0,
                           ammLiquidity: Number(apiData?.availableLongs ?? 0) + Number(apiData?.availableShorts ?? 0),
                       };
                   })
