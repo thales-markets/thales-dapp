@@ -56,6 +56,7 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean }>`
     ${(_props) =>
         _props?.isUser
             ? `
+     background-color: #3498db;
      margin-top: 14px;
      box-shadow: var(--shadow);
      border-radius: 15px;
