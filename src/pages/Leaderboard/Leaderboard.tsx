@@ -53,14 +53,11 @@ const Leaderboard: React.FC = () => {
                 users = orderBy(users, ['gain'], ['desc']);
             }
 
-            let signInUser;
-
             users.forEach((user, index) => {
                 user['rank'] = index + 1;
                 if (walletAddress && user.walletAddress.toLowerCase() === walletAddress?.toLowerCase()) {
-                    signInUser = JSON.parse(JSON.stringify(user));
-                    signInUser.name = 'Your current rank';
-                    signInUser.isUser = true;
+                    user['sticky'] = true;
+                    user['name'] = 'Your current rank';
                 }
             });
 
@@ -73,15 +70,24 @@ const Leaderboard: React.FC = () => {
                 });
             }
 
-            if (signInUser) {
-                users.unshift(signInUser);
-            }
-
             return users;
         }
 
         return [];
     }, [query.isSuccess, competitionType, searchQuery]);
+
+    const customLeaderboardSort = useMemo(
+        () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
+            if (desc) {
+                return rowA.values[columnId] - rowB.values[columnId];
+            } else {
+                return rowA.values[columnId] - rowB.values[columnId];
+            }
+        },
+        [walletAddress]
+    );
+
+    console.log('Data ', data);
 
     return (
         <>
@@ -151,7 +157,6 @@ const Leaderboard: React.FC = () => {
                                         return <IconHolder>NGMI</IconHolder>;
                                     }
                                 },
-
                                 disableSortBy: true,
                             },
                             {
@@ -200,6 +205,7 @@ const Leaderboard: React.FC = () => {
                                         {formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}
                                     </Gain>
                                 ),
+                                sortType: customLeaderboardSort,
                             },
                             {
                                 Header: t('options.leaderboard.table.gain-col'),
@@ -209,6 +215,7 @@ const Leaderboard: React.FC = () => {
                                         {formatPercentage(cellProps.cell.value)}
                                     </Gain>
                                 ),
+                                sortType: customLeaderboardSort,
                             },
                             {
                                 Header: t('options.leaderboard.table.trades-col'),
@@ -233,6 +240,9 @@ const Leaderboard: React.FC = () => {
                             },
                         ]}
                         leaderboardView={true}
+                        hasStickyRow={true}
+                        resultsPerPage={[10, 20, 50, 100]}
+                        defaultPage={50}
                     />
                 </Container.Tab>
             </Wrapper>
