@@ -991,15 +991,16 @@
         "competition-quick-trading": {
             "title": "Competition quick trading"
         },
+
         "leaderboard": {
             "leaderboard-title": "Leaderboard",
             "leaderboard-subtitle": "This is Thales' overall leaderboard.",
             "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
             "trading-comp-title": "Trading Competition",
             "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
-            "trading-comp-subtitle-2": "The competition has officially started on Oct 11 2021 | 10 AM UTC and ended on Nov 01 2021 | 11 AM UTC",
+            "trading-comp-subtitle-2": "The competition officially starts on April 18th 2022 | 3 PM UTC and ends on May 9th 2022 | 3 PM UTC",
             "trading-comp-subtitle-3": "Click here to see markets eligible for the trading competition",
-            "trading-comp-subtitle-4": "For more information and a guide on how to participate, please visit: ",
+            "trading-comp-subtitle-4": "For more information, competition rules, and a guide on how to participate, please visit: (link to be added) ",
             "profile-subtitle": "This tab shows you all of your transactions, as well as the transactions of other users.",
             "trading-comp-countdown": "Countdown until the end of the competition: ",
             "profile-title": "Profile",
