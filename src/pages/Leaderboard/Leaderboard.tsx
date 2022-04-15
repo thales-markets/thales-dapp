@@ -8,16 +8,27 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import Container from 'pages/AMMTrading/components//TabContainer/styled-components/Container';
 
-import { FlexDivSpaceBetween, Image } from 'theme/common';
+import { FlexDivSpaceBetween } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
 import SearchField from 'pages/Markets/components/Input/SearchField';
 import { TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 import UserInfoTradingCompetition from './components/UserInfoTradingCompetition';
+import Tooltip from 'components/Tooltip';
+import {
+    CustomTableHeader,
+    FormContainer,
+    Gain,
+    IconHolder,
+    TradingCompText,
+    UserAvatar,
+    Wrapper,
+    WrapperForText,
+} from './styled-components';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -198,7 +209,20 @@ const Leaderboard: React.FC = () => {
                                 disableSortBy: true,
                             },
                             {
-                                Header: t('options.leaderboard.table.netprofit-col'),
+                                Header: () => {
+                                    return (
+                                        <CustomTableHeader>
+                                            <Tooltip
+                                                message={t('options.leaderboard.table.netprofit-col-tooltip')}
+                                                type={'info'}
+                                                iconColor={'var(--primary-color)'}
+                                                container={{ width: '15px' }}
+                                                interactive={true}
+                                            />
+                                            {t('options.leaderboard.table.netprofit-col')}
+                                        </CustomTableHeader>
+                                    );
+                                },
                                 accessor: 'profit',
                                 Cell: (cellProps: any) => (
                                     <Gain color={cellProps.cell.value > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}>
@@ -249,60 +273,6 @@ const Leaderboard: React.FC = () => {
         </>
     );
 };
-
-const Wrapper = styled.div`
-    width: auto;
-    max-width: 1200px;
-`;
-
-const WrapperForText = styled.div`
-    width: auto;
-    max-width: 700px;
-    padding-left: 10px;
-`;
-
-const TradingCompText = styled.p`
-    font-size: 20px;
-    font-family: 'Roboto' !important;
-    color: var(--primary-color);
-    line-height: 30px;
-`;
-
-const FormContainer = styled.div`
-    color: #64d9fe;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: auto;
-    align-self: center;
-    @media (max-width: 1250px) {
-        display: none;
-    }
-`;
-
-const IconHolder = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-`;
-
-const UserAvatar = styled(Image)<{ winner?: boolean }>`
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    margin: 5px 0px;
-    border: ${(props) => (props.winner ? '2px solid #FFE489' : 'none')};
-    filter: ${(props) => (props.winner ? 'drop-shadow(0px 0px 15px rgba(255, 232, 155, 0.7))' : 'none')};
-    @media (max-width: 1024px) {
-        width: 40px;
-        height: 40px;
-    }
-`;
-
-const Gain = styled.p<{ color?: string }>`
-    color: ${(_props) => (_props?.color ? _props.color : '')};
-`;
 
 const Position: React.FC<{ position: number }> = ({ position }) => {
     return (
