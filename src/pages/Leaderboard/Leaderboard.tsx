@@ -139,7 +139,7 @@ const Leaderboard: React.FC = () => {
                                             </IconHolder>
                                         );
                                     } else {
-                                        return <></>;
+                                        return <IconHolder>NGMI</IconHolder>;
                                     }
                                 },
 
