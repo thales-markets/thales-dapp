@@ -16,6 +16,7 @@ import { Image, LoaderContainer, Text } from 'theme/common';
 import { getIsOVM } from 'utils/network';
 import useRoyaleDataForScoreboard from '../queries/useRoyaleDataForScoreboard';
 import useRoyalePlayersQuery, { User, UserStatus } from '../queries/useRoyalePlayersQuery';
+import { getQuixoticLink } from './ShowRoyalePassportsDialog/ShowRoyalePassportsDialog';
 
 const PerPageOption = [15, 25, 50, 100];
 
@@ -133,7 +134,16 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
     const HeadCells: HeadCell[] = [
         { id: 1, text: <Trans i18nKey="options.royale.scoreboard.table-header.status" />, sortable: true },
         { id: 2, text: <Trans i18nKey="options.royale.scoreboard.table-header.avatar" />, sortable: false },
-        { id: 3, text: <Trans i18nKey="options.royale.scoreboard.table-header.name" />, sortable: true },
+        {
+            id: 3,
+            text:
+                networkId === 10 && selectedSeason <= 5 ? (
+                    <Trans i18nKey="options.royale.scoreboard.table-header.name" />
+                ) : (
+                    <Trans i18nKey="options.royale.scoreboard.table-header.token" />
+                ),
+            sortable: true,
+        },
         {
             id: 4,
             text: (
@@ -265,7 +275,25 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                                         textOverflow: 'ellipsis',
                                     }}
                                 >
-                                    {user.name}
+                                    {networkId === 10 && selectedSeason <= 5 ? (
+                                        user.name
+                                    ) : (
+                                        <>
+                                            <span>
+                                                <Link
+                                                    href={getQuixoticLink(networkId, user.tokenId)}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    winner={isUserAWinner}
+                                                >
+                                                    {user.tokenId?.toString().padStart(10, '0')}
+                                                    <span style={{ display: 'block', fontSize: 15 }}>
+                                                        {t('options.royale.scoreboard.owned-by', { player: user.name })}
+                                                    </span>
+                                                </Link>
+                                            </span>
+                                        </>
+                                    )}
                                 </HeadCellUi>
                                 <HeadCellUi winner={isUserAWinner} style={{ marginLeft: 6 }}>
                                     #{user.number}
@@ -602,7 +630,7 @@ const HeadCellUi = styled(Text)<{ winner?: boolean }>`
     font-size: 20px;
     color: ${(props) => (props.winner ? '#FFE489' : 'var(--color)')};
     @media (max-width: 1024px) {
-        font-size: 15px;
+        font-size: 14px;
     }
 `;
 
@@ -615,4 +643,11 @@ const Overlay = styled.div`
     z-index: 4;
 `;
 
+const Link = styled.a<{ winner?: boolean }>`
+    font-family: Sansation !important;
+    color: ${(props) => (props.winner ? '#FFE489' : 'var(--color)')};
+    &:visited {
+        color: ${(props) => (props.winner ? '#FFE489' : 'var(--color)')};
+    }
+`;
 export default ScoreboardV2;

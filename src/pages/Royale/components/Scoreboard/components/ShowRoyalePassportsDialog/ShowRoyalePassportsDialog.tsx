@@ -35,7 +35,6 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
         enabled: isL2 && isWalletConnected,
     });
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : {};
-
     const theme = Number(cookies.get('theme') === 0 ? Theme.Light : Theme.Dark);
 
     const [selectedPassport, setSelectedPassport] = useState<number>(0);
@@ -68,8 +67,10 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                         <FlexDiv key={key} style={{ flexDirection: 'column', gap: 5 }}>
                             <UserLabel>
                                 {t('options.royale.my-passports-dialog.passport-id')}
-                                <Text style={{ display: 'contents' }} className="bold font-sansation">
-                                    {parseInt(passportId as any, 16)}
+                                <Text className="bold font-sansation">
+                                    {parseInt(passportId as any, 16)
+                                        .toString()
+                                        .padStart(10, '0')}
                                 </Text>
                             </UserLabel>
                             <ImageWrapper
@@ -99,7 +100,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
     );
 };
 
-export const getQuixoticLink = (networkId: NetworkId, nftId: number) => {
+export const getQuixoticLink = (networkId: NetworkId, nftId?: number) => {
     const { thalesRoyalePassportContract } = snxJSConnector;
     if (networkId === 10) {
         const baseURL = 'https://quixotic.io';
@@ -164,6 +165,7 @@ const UserLabel = styled.p`
     font-size: 15px;
     color: var(--color);
     align-self: center;
+    text-align: center;
 `;
 
 const ImageWrapper = styled(FlexDiv)`

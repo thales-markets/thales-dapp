@@ -1259,8 +1259,10 @@
                     "status": "Status",
                     "avatar": "Avatar",
                     "name": "Display name",
+                    "token": "Passport",
                     "number": "Player <sans>№<sans>"
                 },
+                "owned-by": "owned by: {{player}}",
                 "search": "Search player / Number",
                 "verification": "To Complete Verification!",
                 "go-to": "Go to Thales discord channel ",

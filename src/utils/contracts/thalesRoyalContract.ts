@@ -2089,3 +2089,6 @@ export const thalesRoyaleContract = {
 };
 
 export default thalesRoyaleContract;
+};
+
+export default thalesRoyaleContract;
