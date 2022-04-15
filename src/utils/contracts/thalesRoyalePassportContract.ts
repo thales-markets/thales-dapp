@@ -1,4 +1,5 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
+import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
 
 export const thalesRoyalePassportContract = {
     addresses: {
@@ -10,6 +11,8 @@ export const thalesRoyalePassportContract = {
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0xf534848023ba851c6265e8F99a919c4d5fd05CD0',
         [NetworkId['Kovan-Ovm']]: '0x8363a01892dE85BC871005570B481c374f2aB3e6',
+        [POLYGON_MUMBAI_ID]: '0xF28fb48647bAa9dc434187bded9433D3436c2621',
+        [POLYGON_ID]: 'TBD',
     },
     abi: [
         {
