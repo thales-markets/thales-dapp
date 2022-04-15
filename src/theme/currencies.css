@@ -1,0 +1,11 @@
+.currency-icon {
+    display: inline-block;
+    font-family: Currencies !important;
+    vertical-align: middle;
+    font-size: 24px;
+    color: var(--color);
+}
+
+.icon--polygon:before {
+    content: '\004D';
+}

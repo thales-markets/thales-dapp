@@ -216,7 +216,8 @@
             "description": "您在钱包中选择了错误的网络。 要继续，请切换到以太坊主网或乐观网络。",
             "button": {
                 "mainnet": "切换到主网",
-                "optimism": "转为乐观"
+                "optimism": "转为乐观",
+                "polygon": "切换到多边形"
             },
             "description2": "您在钱包中选择了错误的网络。要继续，请切换到 Optimism 网络。"
         },
