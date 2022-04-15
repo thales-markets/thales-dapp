@@ -297,10 +297,20 @@ const AMM: React.FC = () => {
         try {
             setIsAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, amountToApprove);
-            const tx = (await erc20Instance.approve(addressToApprove, amountToApprove, {
-                gasLimit: formatGasLimit(gasEstimate, networkId),
-                gasPrice: ethers.utils.parseUnits(Math.floor(+gasInGwei + +gasInGwei * 0.2).toString(), 'gwei'),
-            })) as ethers.ContractTransaction;
+            const providerOptions = isPolygon
+                ? {
+                      gasLimit: formatGasLimit(gasEstimate, networkId),
+                      gasPrice: ethers.utils.parseUnits(Math.floor(+gasInGwei + +gasInGwei * 0.2).toString(), 'gwei'),
+                  }
+                : {
+                      gasLimit: formatGasLimit(gasEstimate, networkId),
+                  };
+
+            const tx = (await erc20Instance.approve(
+                addressToApprove,
+                amountToApprove,
+                providerOptions
+            )) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {

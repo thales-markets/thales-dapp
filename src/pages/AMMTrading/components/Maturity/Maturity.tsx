@@ -17,7 +17,7 @@ import { useBOMContractContext } from 'pages/AMMTrading/contexts/BOMContractCont
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
 import { AccountMarketInfo } from 'types/options';
 import { BINARY_OPTIONS_EVENTS } from 'constants/events';
@@ -43,6 +43,7 @@ const Maturity: React.FC = () => {
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     let accountMarketInfo = {
         long: 0,
@@ -116,9 +117,20 @@ const Maturity: React.FC = () => {
         try {
             setIsExercising(true);
             const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-            const tx = (await BOMContractWithSigner.exerciseOptions({
-                gasLimit,
-            })) as ethers.ContractTransaction;
+
+            const gasPrice = await snxJSConnector.provider?.getGasPrice();
+            const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
+
+            const providerOptions = isPolygon
+                ? {
+                      gasLimit,
+                      gasPrice: ethers.utils.parseUnits(Math.floor(+gasInGwei + +gasInGwei * 0.2).toString(), 'gwei'),
+                  }
+                : {
+                      gasLimit,
+                  };
+
+            const tx = (await BOMContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
 
             dispatch(
                 addOptionsPendingTransaction({
