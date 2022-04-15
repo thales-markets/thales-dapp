@@ -36,23 +36,27 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
 
             tradesMaker.map((tx: any) => {
                 trades += 1;
-                volume += tx.makerAmount;
+
                 if (tx.orderSide === 'sell') {
                     profit += tx.makerAmount;
+                    volume += tx.makerAmount;
                 } else {
                     profit -= tx.takerAmount;
                     investment += tx.takerAmount;
+                    volume += tx.takerAmount;
                 }
             });
 
             tradesTaker.map((tx: any) => {
                 trades += 1;
-                volume += tx.makerAmount;
+
                 if (tx.orderSide === 'sell') {
                     profit += tx.makerAmount;
+                    volume += tx.makerAmount;
                 } else {
                     profit -= tx.takerAmount;
                     investment += tx.takerAmount;
+                    volume += tx.takerAmount;
                 }
             });
 
