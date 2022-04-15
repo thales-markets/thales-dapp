@@ -13,6 +13,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { isNetworkSupported } from 'utils/network';
 import { useTranslation } from 'react-i18next';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
 
 type LoaderProps = {
     hideMainnet?: boolean;
@@ -42,14 +43,14 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                     <FlexDivRowCentered style={{ justifyContent: 'space-around' }}>
                         <NetworkButton
                             margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
-                            onClick={switchNetwork.bind(this, '0xA')}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[10].changeNetwork.bind(this, 10)}
                         >
                             <OpLogo />
                             <span>{t(`common.unsupported-network.button.optimism`)}</span>
                         </NetworkButton>
                         <NetworkButton
                             margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
-                            onClick={switchNetwork.bind(this, '0x89')}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(this, 137)}
                         >
                             <PolygonLogo />
                             <span>{t(`common.unsupported-network.button.polygon`)}</span>
@@ -59,7 +60,10 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                         style={hideMainnet ? { justifyContent: 'center' } : { justifyContent: 'space-around' }}
                     >
                         {!hideMainnet && (
-                            <NetworkButton margin="20px 0 40px 0" onClick={switchNetwork.bind(this, '0x1')}>
+                            <NetworkButton
+                                margin="20px 0 40px 0"
+                                onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[1].changeNetwork.bind(this, 1)}
+                            >
                                 <EthereumLogo />
                                 <span>{t(`common.unsupported-network.button.mainnet`)}</span>
                             </NetworkButton>
@@ -75,20 +79,6 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
             )}
         </Wrapper>
     );
-};
-
-const switchNetwork = async (networkId: any) => {
-    if (typeof window.ethereum !== 'undefined') {
-        try {
-            await (window.ethereum as any).request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: networkId }],
-            });
-            location.reload();
-        } catch (switchError) {
-            console.log(switchError);
-        }
-    }
 };
 
 const Wrapper = styled.div`
