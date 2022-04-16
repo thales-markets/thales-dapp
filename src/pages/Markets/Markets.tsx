@@ -16,8 +16,12 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
-import { POLYGON_ID } from '../../constants/network';
+import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
 import { CONVERT_TO_6_DECIMALS } from '../../constants/token';
+import InfoBanner from '../../components/InfoBanner';
+import styled from 'styled-components';
+import { FlexDiv } from '../../theme/common';
+import { Trans } from 'react-i18next';
 
 // const MAX_HOT_MARKETS = 6;
 
@@ -79,11 +83,56 @@ const Markets: React.FC = () => {
 
     return (
         <>
+            <BannerContainer>
+                <InfoBanner>
+                    <Trans
+                        i18nKey="options.home.polygon-trading-competition-1"
+                        components={{
+                            bold: (
+                                <strong
+                                    onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(this, 137)}
+                                />
+                            ),
+                        }}
+                    />
+                    ,
+                    <Trans
+                        i18nKey="options.home.polygon-trading-competition-2"
+                        components={{
+                            bold: (
+                                <a
+                                    href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                    rel="noreferrer"
+                                    target="_blank"
+                                >
+                                    <strong />
+                                </a>
+                            ),
+                        }}
+                    />
+                </InfoBanner>
+            </BannerContainer>
             <HotMarkets optionsMarkets={hotMarkets} />
             <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>
     );
 };
+
+const BannerContainer = styled(FlexDiv)`
+    width: 90% !important;
+    padding-bottom: 50px;
+    strong {
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 0.2em;
+    }
+    a {
+        display: contents;
+        font-weight: bold;
+        cursor: pointer;
+        color: #ffffff;
+    }
+`;
 
 export default Markets;
