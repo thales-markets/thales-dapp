@@ -3,7 +3,7 @@ import { USD_SIGN } from 'constants/currency';
 
 import useLeaderboardQuery from 'queries/leaderboard/useLeaderboardQuery';
 import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -29,6 +29,8 @@ import {
     Wrapper,
     WrapperForText,
 } from './styled-components';
+import { buildHref, navigateTo } from '../../utils/routes';
+import ROUTES from '../../constants/routes';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -107,8 +109,34 @@ const Leaderboard: React.FC = () => {
                     <WrapperForText>
                         <TradingCompText>{t('options.leaderboard.trading-comp-subtitle')}</TradingCompText>
                         <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-2')}</TradingCompText>
-                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-3')}</TradingCompText>
-                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-4')}</TradingCompText>
+                        <TradingCompText>
+                            <Trans
+                                i18nKey="options.leaderboard.trading-comp-subtitle-3"
+                                components={{
+                                    bold: (
+                                        <strong
+                                            onClick={() => {
+                                                navigateTo(buildHref(ROUTES.Options.Home));
+                                            }}
+                                        />
+                                    ),
+                                }}
+                            />
+                        </TradingCompText>
+                        <TradingCompText>
+                            <Trans
+                                i18nKey="options.leaderboard.trading-comp-subtitle-4"
+                                components={{
+                                    bold: (
+                                        <a
+                                            href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                            rel="noreferrer"
+                                            target="_blank"
+                                        />
+                                    ),
+                                }}
+                            />
+                        </TradingCompText>
                     </WrapperForText>
                     <UserInfoTradingCompetition></UserInfoTradingCompetition>
                 </FlexDivSpaceBetween>

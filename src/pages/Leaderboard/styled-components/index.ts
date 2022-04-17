@@ -17,6 +17,16 @@ export const TradingCompText = styled.p`
     font-family: 'Roboto' !important;
     color: var(--primary-color);
     line-height: 30px;
+    strong {
+        font-weight: bold;
+        cursor: pointer;
+    }
+    a {
+        display: contents;
+        font-weight: bold;
+        cursor: pointer;
+        color: inherit;
+    }
 `;
 
 export const FormContainer = styled.div`

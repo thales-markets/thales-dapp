@@ -108,9 +108,7 @@ const Markets: React.FC = () => {
                                     href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
                                     rel="noreferrer"
                                     target="_blank"
-                                >
-                                    <strong />
-                                </a>
+                                />
                             ),
                         }}
                     />
