@@ -35,6 +35,7 @@ import Token from '../LandingPage/articles/Token';
 import Governance from '../LandingPage/articles/Governance';
 import Whitepaper from '../LandingPage/articles/Whitepaper';
 import DappLayout from 'layouts/DappLayout';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../LandingPage/Home'));
@@ -47,6 +48,7 @@ const App = () => {
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const { trackPageView } = useMatomo();
 
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
@@ -180,6 +182,10 @@ const App = () => {
         return () => {
             document.removeEventListener('market-notification', handler);
         };
+    }, []);
+
+    useEffect(() => {
+        trackPageView();
     }, []);
 
     return (
