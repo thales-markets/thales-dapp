@@ -43,14 +43,14 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                     <FlexDivRowCentered style={{ justifyContent: 'space-around' }}>
                         <NetworkButton
                             margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
-                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[10].changeNetwork.bind(this, 10)}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[10].changeNetwork.bind(this, 10, undefined)}
                         >
                             <OpLogo />
                             <span>{t(`common.unsupported-network.button.optimism`)}</span>
                         </NetworkButton>
                         <NetworkButton
                             margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
-                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(this, 137)}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(this, 137, undefined)}
                         >
                             <PolygonLogo />
                             <span>{t(`common.unsupported-network.button.polygon`)}</span>
@@ -62,7 +62,7 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                         {!hideMainnet && (
                             <NetworkButton
                                 margin="20px 0 40px 0"
-                                onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[1].changeNetwork.bind(this, 1)}
+                                onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[1].changeNetwork.bind(this, 1, undefined)}
                             >
                                 <EthereumLogo />
                                 <span>{t(`common.unsupported-network.button.mainnet`)}</span>

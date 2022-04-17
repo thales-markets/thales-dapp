@@ -289,7 +289,7 @@
             "trade-type": "Trade type"
         },
         "home": {
-            "polygon-trading-competition-1": "Thales incentivized trading competition is live on <bold> Polygon</bold>",
+            "polygon-trading-competition-1": "Thales incentivized trading competition is live on<bold>Polygon</bold>",
             "polygon-trading-competition-2": " click <bold>here</bold> to learn more",
             "market-card": {
                 "current-asset-price": "Current asset price",

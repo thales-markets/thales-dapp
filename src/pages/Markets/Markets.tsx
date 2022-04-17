@@ -90,7 +90,11 @@ const Markets: React.FC = () => {
                         components={{
                             bold: (
                                 <strong
-                                    onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(this, 137)}
+                                    onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(
+                                        this,
+                                        137,
+                                        undefined
+                                    )}
                                 />
                             ),
                         }}

@@ -14,7 +14,7 @@ export type NetworkMapper = Record<number, number>;
 export type DropdownNetwork = {
     name: string;
     icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-    changeNetwork: (networkId: number) => void;
+    changeNetwork: (networkId: number, callback?: VoidFunction) => void;
 };
 
 export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
@@ -126,7 +126,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     137: {
         name: 'Polygon',
         icon: PolygonLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             // const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? SnxNetworkId['Mainnet-Ovm'];
             const polygonNetworkParams = POLYGON_NETWORKS[networkId];
 
@@ -136,6 +136,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: polygonNetworkParams.chainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     if (switchError.code === 4902) {
                         try {
@@ -147,6 +148,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                                 method: 'wallet_switchEthereumChain',
                                 params: [{ chainId: polygonNetworkParams.chainId }],
                             });
+                            callback && callback();
                         } catch (addError) {
                             console.log(addError);
                         }
