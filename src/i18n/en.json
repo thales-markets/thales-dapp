@@ -289,6 +289,8 @@
             "trade-type": "Trade type"
         },
         "home": {
+            "polygon-trading-competition-1": "Thales incentivized trading competition is live on<bold>Polygon</bold>",
+            "polygon-trading-competition-2": " click <bold>here</bold> to learn more",
             "market-card": {
                 "current-asset-price": "Current asset price",
                 "pool-size": "Pool size",
@@ -998,9 +1000,9 @@
             "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
             "trading-comp-title": "Trading Competition",
             "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
-            "trading-comp-subtitle-2": "The competition officially starts on April 18th 2022 | 3 PM UTC and ends on May 9th 2022 | 3 PM UTC",
-            "trading-comp-subtitle-3": "Click here to see markets eligible for the trading competition",
-            "trading-comp-subtitle-4": "For more information, competition rules, and a guide on how to participate, please visit: (link to be added) ",
+            "trading-comp-subtitle-2": "The competition officially starts on April 18th 2022 | 3 PM UTC and ends on May 9th 2022 | 3 PM UTC.",
+            "trading-comp-subtitle-3": "Click <bold>here</bold> to see markets eligible for the trading competition",
+            "trading-comp-subtitle-4": "For more information, competition rules, and a guide on how to participate, please visit <bold>this</bold> link.",
             "profile-subtitle": "This tab shows you all of your transactions, as well as the transactions of other users.",
             "trading-comp-countdown": "Countdown until the end of the competition: ",
             "profile-title": "Profile",

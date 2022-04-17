@@ -27,11 +27,13 @@ const Table: StyledComponent<'div', any> & Children = styled.div`
 `;
 
 const Cell = styled.div<CellProps>`
-    text-align: ${(_props) => (_props.justifyContent ? _props.justifyContent : 'center')};
+    justify-content: ${(_props) => (_props.justifyContent ? _props.justifyContent : 'center')};
     align-items: ${(_props) => (_props.alignItems ? _props.alignItems : 'center')};
     font-weight: ${(_props) => (_props.defaultFontWeight ? _props.defaultFontWeight : '300')};
     font-size: ${(_props) => (_props.defaultFontSize ? _props.defaultFontSize : '12px')};
     flex: 1 !important;
+    display: flex;
+    flex-direction: row;
 `;
 
 const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean }>`
@@ -56,6 +58,7 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean }>`
     ${(_props) =>
         _props?.isUser
             ? `
+     background-color: #3498db;
      margin-top: 14px;
      box-shadow: var(--shadow);
      border-radius: 15px;

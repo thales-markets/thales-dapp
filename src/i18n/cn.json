@@ -355,7 +355,9 @@
             },
             "hot-markets": {
                 "tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买当前具有最高潜在利润的位置代币。"
-            }
+            },
+            "polygon-trading-competition-2": " 点击<bold>这里</bold>了解更多",
+            "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播"
         },
         "earn": {
             "snx-stakers": {

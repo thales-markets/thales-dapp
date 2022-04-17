@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import GridLayout from './components/GridLayout';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import Cookies from 'universal-cookie';
 import BlogPosts from './components/BlogPosts';
 import Footer from './components/Footer';
 import ROUTES from 'constants/routes';
-import { buildHref } from 'utils/routes';
+import { buildHref, navigateTo } from 'utils/routes';
 import SPAAnchor from 'components/SPAAnchor';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
 
 export enum Theme {
     Light,
@@ -31,6 +32,37 @@ const Home: React.FC = () => {
 
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
+            <Info>
+                <Trans
+                    i18nKey="options.home.polygon-trading-competition-1"
+                    components={{
+                        bold: (
+                            <strong
+                                onClick={() => {
+                                    SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork(137, () => {
+                                        navigateTo(buildHref(ROUTES.Options.Home));
+                                    });
+                                }}
+                            />
+                        ),
+                    }}
+                />
+                ,
+                <Trans
+                    i18nKey="options.home.polygon-trading-competition-2"
+                    components={{
+                        bold: (
+                            <a
+                                href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                rel="noreferrer"
+                                target="_blank"
+                            >
+                                <strong />
+                            </a>
+                        ),
+                    }}
+                />
+            </Info>
             <GridLayout theme={theme} setTheme={setTheme} />
             <FlexWrapper>
                 <Title> {t('landing-page.initiatives')}</Title>
@@ -260,5 +292,28 @@ const FaqAnswer = styled.p`
             margin-bottom: 30px;
             padding-bottom: 24px;
         }
+    }
+`;
+
+const Info = styled.div`
+    width: 100%;
+    color: var(--color);
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    background-color: var(--background);
+    box-shadow: 0px 0px 20px rgb(0 0 0 / 40%);
+    z-index: 2;
+    position: absolute;
+    strong {
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 0.2em;
+    }
+    a {
+        display: contents;
+        font-weight: bold;
+        cursor: pointer;
+        color: inherit;
     }
 `;

@@ -642,8 +642,13 @@ const AMM: React.FC = () => {
             const calcPrice = !price ? basePrice : price;
 
             if (calcPrice) {
-                let _suggestedAmount = Number(sUSDBalance) / Number(calcPrice);
-                const suggestedAmount = ethers.utils.parseEther(_suggestedAmount.toString());
+                let tmpSuggestedAmount = Number(sUSDBalance) / Number(calcPrice);
+                const suggestedAmount = ethers.utils.parseEther(tmpSuggestedAmount.toString());
+
+                if (tmpSuggestedAmount > maxLimit) {
+                    setAmount(truncToDecimals(maxLimit));
+                    return;
+                }
 
                 const ammQuote = await ammContractWithSigner.buyFromAmmQuote(
                     optionsMarket.address,
@@ -651,16 +656,16 @@ const AMM: React.FC = () => {
                     suggestedAmount
                 );
 
-                const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(_suggestedAmount);
+                const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(tmpSuggestedAmount);
                 const sUSDDifference = stableCoinFormatter(ammQuote, networkId) - sUSDBalance;
 
-                _suggestedAmount = Number(sUSDBalance) / Number(ammPrice);
+                tmpSuggestedAmount = Number(sUSDBalance) / Number(ammPrice);
 
                 if (sUSDDifference < 0) {
-                    _suggestedAmount -= Math.abs(Number(sUSDDifference) / Number(ammPrice));
+                    tmpSuggestedAmount -= Math.abs(Number(sUSDDifference) / Number(ammPrice));
                 }
 
-                setAmount(truncToDecimals(_suggestedAmount));
+                setAmount(truncToDecimals(tmpSuggestedAmount));
             }
         } else {
             setAmount(truncToDecimals(tokenBalance));

@@ -3,21 +3,34 @@ import { USD_SIGN } from 'constants/currency';
 
 import useLeaderboardQuery from 'queries/leaderboard/useLeaderboardQuery';
 import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import Container from 'pages/AMMTrading/components//TabContainer/styled-components/Container';
 
-import { FlexDivSpaceBetween, Image } from 'theme/common';
+import { FlexDivSpaceBetween } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
 import SearchField from 'pages/Markets/components/Input/SearchField';
 import { TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 import UserInfoTradingCompetition from './components/UserInfoTradingCompetition';
+import Tooltip from 'components/Tooltip';
+import {
+    CustomTableHeader,
+    FormContainer,
+    Gain,
+    IconHolder,
+    TradingCompText,
+    UserAvatar,
+    Wrapper,
+    WrapperForText,
+} from './styled-components';
+import { buildHref, navigateTo } from '../../utils/routes';
+import ROUTES from '../../constants/routes';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -53,14 +66,11 @@ const Leaderboard: React.FC = () => {
                 users = orderBy(users, ['gain'], ['desc']);
             }
 
-            let signInUser;
-
             users.forEach((user, index) => {
                 user['rank'] = index + 1;
                 if (walletAddress && user.walletAddress.toLowerCase() === walletAddress?.toLowerCase()) {
-                    signInUser = JSON.parse(JSON.stringify(user));
-                    signInUser.name = 'Your current rank';
-                    signInUser.isUser = true;
+                    user['sticky'] = true;
+                    user['name'] = 'Your current rank';
                 }
             });
 
@@ -73,15 +83,24 @@ const Leaderboard: React.FC = () => {
                 });
             }
 
-            if (signInUser) {
-                users.unshift(signInUser);
-            }
-
             return users;
         }
 
         return [];
     }, [query.isSuccess, competitionType, searchQuery]);
+
+    const customLeaderboardSort = useMemo(
+        () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
+            if (desc) {
+                return rowA.values[columnId] - rowB.values[columnId];
+            } else {
+                return rowA.values[columnId] - rowB.values[columnId];
+            }
+        },
+        [walletAddress]
+    );
+
+    console.log('Data ', data);
 
     return (
         <>
@@ -90,8 +109,34 @@ const Leaderboard: React.FC = () => {
                     <WrapperForText>
                         <TradingCompText>{t('options.leaderboard.trading-comp-subtitle')}</TradingCompText>
                         <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-2')}</TradingCompText>
-                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-3')}</TradingCompText>
-                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-4')}</TradingCompText>
+                        <TradingCompText>
+                            <Trans
+                                i18nKey="options.leaderboard.trading-comp-subtitle-3"
+                                components={{
+                                    bold: (
+                                        <strong
+                                            onClick={() => {
+                                                navigateTo(buildHref(ROUTES.Options.Home));
+                                            }}
+                                        />
+                                    ),
+                                }}
+                            />
+                        </TradingCompText>
+                        <TradingCompText>
+                            <Trans
+                                i18nKey="options.leaderboard.trading-comp-subtitle-4"
+                                components={{
+                                    bold: (
+                                        <a
+                                            href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                            rel="noreferrer"
+                                            target="_blank"
+                                        />
+                                    ),
+                                }}
+                            />
+                        </TradingCompText>
                     </WrapperForText>
                     <UserInfoTradingCompetition></UserInfoTradingCompetition>
                 </FlexDivSpaceBetween>
@@ -151,7 +196,6 @@ const Leaderboard: React.FC = () => {
                                         return <IconHolder>NGMI</IconHolder>;
                                     }
                                 },
-
                                 disableSortBy: true,
                             },
                             {
@@ -193,13 +237,27 @@ const Leaderboard: React.FC = () => {
                                 disableSortBy: true,
                             },
                             {
-                                Header: t('options.leaderboard.table.netprofit-col'),
+                                Header: () => {
+                                    return (
+                                        <CustomTableHeader>
+                                            <Tooltip
+                                                message={t('options.leaderboard.table.netprofit-col-tooltip')}
+                                                type={'info'}
+                                                iconColor={'var(--primary-color)'}
+                                                container={{ width: '15px' }}
+                                                interactive={true}
+                                            />
+                                            {t('options.leaderboard.table.netprofit-col')}
+                                        </CustomTableHeader>
+                                    );
+                                },
                                 accessor: 'profit',
                                 Cell: (cellProps: any) => (
                                     <Gain color={cellProps.cell.value > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}>
                                         {formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}
                                     </Gain>
                                 ),
+                                sortType: customLeaderboardSort,
                             },
                             {
                                 Header: t('options.leaderboard.table.gain-col'),
@@ -209,6 +267,7 @@ const Leaderboard: React.FC = () => {
                                         {formatPercentage(cellProps.cell.value)}
                                     </Gain>
                                 ),
+                                sortType: customLeaderboardSort,
                             },
                             {
                                 Header: t('options.leaderboard.table.trades-col'),
@@ -233,65 +292,15 @@ const Leaderboard: React.FC = () => {
                             },
                         ]}
                         leaderboardView={true}
+                        hasStickyRow={true}
+                        resultsPerPage={[10, 20, 50, 100]}
+                        defaultPage={50}
                     />
                 </Container.Tab>
             </Wrapper>
         </>
     );
 };
-
-const Wrapper = styled.div`
-    width: auto;
-    max-width: 1200px;
-`;
-
-const WrapperForText = styled.div`
-    width: auto;
-    max-width: 700px;
-`;
-
-const TradingCompText = styled.p`
-    font-size: 20px;
-    font-family: 'Roboto' !important;
-    color: var(--primary-color);
-    margin: 20px 0;
-`;
-
-const FormContainer = styled.div`
-    color: #64d9fe;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: auto;
-    align-self: center;
-    @media (max-width: 1250px) {
-        display: none;
-    }
-`;
-
-const IconHolder = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-`;
-
-const UserAvatar = styled(Image)<{ winner?: boolean }>`
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    margin: 5px 0px;
-    border: ${(props) => (props.winner ? '2px solid #FFE489' : 'none')};
-    filter: ${(props) => (props.winner ? 'drop-shadow(0px 0px 15px rgba(255, 232, 155, 0.7))' : 'none')};
-    @media (max-width: 1024px) {
-        width: 40px;
-        height: 40px;
-    }
-`;
-
-const Gain = styled.p<{ color?: string }>`
-    color: ${(_props) => (_props?.color ? _props.color : '')};
-`;
 
 const Position: React.FC<{ position: number }> = ({ position }) => {
     return (

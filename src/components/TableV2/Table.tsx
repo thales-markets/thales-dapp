@@ -12,8 +12,10 @@ type TableProps = {
     searchQuery?: string;
     hidePagination?: boolean;
     resultsPerPage?: Array<number>;
+    defaultPage?: number;
     containerStyle?: CSSProperties;
     leaderboardView?: boolean;
+    hasStickyRow?: boolean;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -22,8 +24,10 @@ const Table: React.FC<TableProps> = ({
     searchQuery,
     hidePagination,
     resultsPerPage,
+    defaultPage,
     containerStyle,
     leaderboardView,
+    hasStickyRow,
 }) => {
     const { t } = useTranslation();
     useEffect(() => {
@@ -35,6 +39,7 @@ const Table: React.FC<TableProps> = ({
         getTableBodyProps,
         headerGroups,
         page,
+        rows,
         prepareRow,
         state,
         setGlobalFilter,
@@ -70,7 +75,7 @@ const Table: React.FC<TableProps> = ({
     };
 
     useEffect(() => {
-        setPageSize(20);
+        setPageSize(defaultPage ? defaultPage : resultsPerPage?.length ? resultsPerPage[0] : 20);
     }, []);
 
     return (
@@ -106,15 +111,15 @@ const Table: React.FC<TableProps> = ({
                             ))}
                         </TableView.Header>
                         <TableView.Body {...getTableBodyProps()} leaderboardView={leaderboardView}>
-                            {page.map((row: any, index: number) => {
-                                prepareRow(row);
-                                if (row.original.link) {
-                                    return (
-                                        <SPAAnchor href={row.original.link}>
+                            {hasStickyRow &&
+                                rows.map((row: any, index: number) => {
+                                    prepareRow(row);
+                                    if (row?.original?.sticky) {
+                                        return (
                                             <TableView.Row
-                                                isUser={leaderboardView ? row.original.isUser : false}
-                                                key={index}
                                                 {...row.getRowProps()}
+                                                key={index}
+                                                isUser={leaderboardView ? row.original.sticky : false}
                                                 leaderboardRank={
                                                     leaderboardView
                                                         ? row?.values?.rank
@@ -135,36 +140,42 @@ const Table: React.FC<TableProps> = ({
                                                     );
                                                 })}
                                             </TableView.Row>
-                                        </SPAAnchor>
-                                    );
-                                } else {
-                                    return (
-                                        <TableView.Row
-                                            isUser={leaderboardView ? row.original.isUser : false}
-                                            key={index}
-                                            {...row.getRowProps()}
-                                            leaderboardRank={
-                                                leaderboardView
+                                        );
+                                    }
+                                })}
+                            {page.map((row: any, index: number) => {
+                                prepareRow(row);
+                                const rowComponent = (
+                                    <TableView.Row
+                                        key={index}
+                                        {...row.getRowProps()}
+                                        leaderboardRank={
+                                            leaderboardView
+                                                ? row?.values?.rank
                                                     ? row?.values?.rank
-                                                        ? row?.values?.rank
-                                                        : undefined
                                                     : undefined
-                                            }
-                                        >
-                                            {row.cells.map((cell: any, cellIndex: number) => {
-                                                return (
-                                                    <TableView.Cell
-                                                        defaultFontWeight={'bold'}
-                                                        key={cellIndex}
-                                                        {...cell.getCellProps()}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableView.Cell>
-                                                );
-                                            })}
-                                        </TableView.Row>
-                                    );
+                                                : undefined
+                                        }
+                                    >
+                                        {row.cells.map((cell: any, cellIndex: number) => {
+                                            return (
+                                                <TableView.Cell
+                                                    defaultFontWeight={'bold'}
+                                                    key={cellIndex}
+                                                    {...cell.getCellProps()}
+                                                >
+                                                    {cell.render('Cell')}
+                                                </TableView.Cell>
+                                            );
+                                        })}
+                                    </TableView.Row>
+                                );
+
+                                if (row.original.link) {
+                                    return <SPAAnchor href={row.original.link}>{rowComponent}</SPAAnchor>;
                                 }
+
+                                return rowComponent;
                             })}
                         </TableView.Body>
                     </TableView>
