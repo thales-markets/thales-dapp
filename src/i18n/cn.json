@@ -213,13 +213,13 @@
         },
         "unsupported-network": {
             "title": "哎呀！你在错的网络上！",
-            "description": "您在钱包中选择了错误的网络。 要继续，请切换到以太坊主网或乐观网络。",
             "button": {
                 "mainnet": "切换到主网",
                 "optimism": "转为乐观",
                 "polygon": "切换到多边形"
             },
-            "description2": "您在钱包中选择了错误的网络。要继续，请切换到 Optimism 网络。"
+            "description": "您在钱包中选择了错误的网络。要继续，请切换到支持的网络之一。",
+            "description2": "您在钱包中选择了错误的网络。要继续，请切换到支持的网络之一。"
         },
         "user-info-card": {
             "network": "网络",
@@ -1004,10 +1004,6 @@
             "leaderboard-subtitle": "这是泰勒斯的整体排行榜.",
             "leaderboard-subtitle-2": "它考虑了泰勒斯平台内的所有交易",
             "trading-comp-title": "交易竞赛",
-            "trading-comp-subtitle": "这是泰勒斯第一次交易竞赛的排行榜.",
-            "trading-comp-subtitle-2": "比赛于2021年10月11日正式开始| UTC 时间上午 10 点，并于 2021 年 11 月 1 日结束 | 世界标准时间上午 11 点",
-            "trading-comp-subtitle-3": "单击此处查看符合交易竞赛条件的市场",
-            "trading-comp-subtitle-4": "有关如何参与的更多信息和指南，请访问： ",
             "profile-subtitle": "选项卡显示您的所有交易以及其他用户的交易",
             "trading-comp-countdown": "竞赛结束前的倒计时：",
             "profile-title": "个人资料",
@@ -1114,7 +1110,11 @@
                 }
             },
             "balance": "美元余额",
-            "avatar": "阿凡达"
+            "avatar": "阿凡达",
+            "trading-comp-subtitle-4": "如需更多信息、竞赛规则和参与指南，请访问<bold>此</bold>链接。",
+            "trading-comp-subtitle-3": "点击<bold>这里</bold>查看有资格参加交易竞赛的市场",
+            "trading-comp-subtitle": "这是泰雷兹首届 Polygon 交易大赛排行榜。",
+            "trading-comp-subtitle-2": "比赛于2022年4月18日正式开始|世界标准时间下午 3 点，于 2022 年 5 月 9 日结束 |世界标准时间下午 3 点。"
         },
         "common": {
             "time-remaining": {
