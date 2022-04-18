@@ -149,7 +149,14 @@ const Leaderboard: React.FC = () => {
                             <Trans
                                 i18nKey="options.leaderboard.trading-comp-subtitle-4"
                                 components={{
-                                    bold: (
+                                    link1: (
+                                        <a
+                                            href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                            rel="noreferrer"
+                                            target="_blank"
+                                        />
+                                    ),
+                                    link2: (
                                         <a
                                             href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
                                             rel="noreferrer"
@@ -159,6 +166,21 @@ const Leaderboard: React.FC = () => {
                                 }}
                             />
                         </TradingCompText>
+                        <TradingCompText>
+                            <Trans
+                                i18nKey="options.leaderboard.trading-comp-subtitle-5"
+                                components={{
+                                    bold: (
+                                        <a
+                                            href="https://docs.thalesmarket.io/using-thales/thales-amm"
+                                            rel="noreferrer"
+                                            target="_blank"
+                                        />
+                                    ),
+                                }}
+                            />
+                        </TradingCompText>
+                        <TradingCompText>{t('options.leaderboard.trading-comp-subtitle-6')}</TradingCompText>
                     </WrapperForText>
                     <UserInfoTradingCompetition></UserInfoTradingCompetition>
                 </FlexDivSpaceBetween>

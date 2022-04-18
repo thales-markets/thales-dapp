@@ -1111,9 +1111,11 @@
             },
             "balance": "美元余额",
             "avatar": "阿凡达",
-            "trading-comp-subtitle-4": "如需更多信息、竞赛规则和参与指南，请访问<bold>此</bold>链接。",
-            "trading-comp-subtitle-3": "点击<bold>这里</bold>查看有资格参加交易竞赛的市场",
+            "trading-comp-subtitle-6": "请注意，此排行榜只是一个参考，在比赛结束时由泰雷兹团队进行全面审查后才能确定。",
+            "trading-comp-subtitle-3": "点击<bold>这里</bold>查看有资格参加交易竞赛的市场。",
             "trading-comp-subtitle": "这是泰雷兹首届 Polygon 交易大赛排行榜。",
+            "trading-comp-subtitle-5": "要了解如何在 Thales AMM 上进行交易，请查看<bold>本指南</bold>。",
+            "trading-comp-subtitle-4": "如需更多信息、奖品和竞赛规则，请访问以下链接：<link1>官方博文</link1>（长版）、<link2>文档</link2>（短版）。",
             "trading-comp-subtitle-2": "比赛于2022年4月18日正式开始|世界标准时间下午 3 点，于 2022 年 5 月 9 日结束 |世界标准时间下午 3 点。"
         },
         "common": {
