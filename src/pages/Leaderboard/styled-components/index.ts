@@ -19,19 +19,20 @@ export const WrapperForText = styled.div`
 `;
 
 export const TradingCompText = styled.p`
-    font-size: 20px;
+    font-size: 18px;
     font-family: 'Roboto' !important;
     color: var(--primary-color);
-    line-height: 30px;
+    line-height: 25px;
     strong {
         font-weight: bold;
         cursor: pointer;
+        color: #00f9ff;
     }
     a {
         display: contents;
         font-weight: bold;
         cursor: pointer;
-        color: inherit;
+        color: #00f9ff;
     }
 `;
 
