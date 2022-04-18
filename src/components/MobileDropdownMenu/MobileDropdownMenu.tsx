@@ -20,7 +20,6 @@ type DropdownMenuProps = {
 };
 
 const processSort = (item: ItemProps) => {
-    console.log('Ulazi item', item);
     if (item?.sortableIndex == 0) {
         item.sortableIndex = 1;
         item.onClick(undefined);
