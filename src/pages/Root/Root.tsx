@@ -9,8 +9,8 @@ import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 const instance = createInstance({
     urlBase: 'https://matomo.thalesmarket.io',
     siteId: 2,
-    trackerUrl: '/js', // optional, default value: `${urlBase}matomo.php`
-    srcUrl: '/js', //
+    trackerUrl: 'https://matomo.thalesmarket.io/matomo.php', // optional, default value: `${urlBase}matomo.php`
+    srcUrl: 'https://matomo.thalesmarket.io/matomo.js', //
     configurations: {
         // optional, default value: {}
         // any valid matomo configuration, all below are optional
