@@ -63,7 +63,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         };
 
         fetchMarketData();
-    }, [marketQuery.isSuccess, marketAddress]);
+    }, [marketQuery.isSuccess, marketAddress, networkId]);
 
     useEffect(() => {
         optionMarket?.phase == 'maturity' ? setMaturityPhase(true) : setMaturityPhase(false);

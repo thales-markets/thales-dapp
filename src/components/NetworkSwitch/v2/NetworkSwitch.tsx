@@ -10,7 +10,11 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
 
-export const NetworkSwitch: React.FC = () => {
+type Properties = {
+    setShowCard: (showCard: boolean) => void;
+};
+
+export const NetworkSwitch: React.FC<Properties> = ({ setShowCard }) => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -38,7 +42,9 @@ export const NetworkSwitch: React.FC = () => {
                                     key={id}
                                     onClick={() => {
                                         setIsDropdownOpen(!isDropdownOpen);
-                                        SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].changeNetwork(+id);
+                                        SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].changeNetwork(+id, () => {
+                                            setShowCard(false);
+                                        });
                                     }}
                                 >
                                     {React.createElement(SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].icon, {

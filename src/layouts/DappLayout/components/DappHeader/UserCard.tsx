@@ -48,7 +48,7 @@ export const UserCard: React.FC = () => {
                             <ThalesLogo className="icon icon--logo" />
                         </LogoContainer>
                         <UserWalletExpanded />
-                        {isWalletConnected && <NetworkSwitchSection />}
+                        {isWalletConnected && <NetworkSwitchSection setShowCard={setShowCard} />}
                         <Container>
                             {isWalletConnected && <PieChartUserBalance />}
                             {isWalletConnected && !isPolygon && <ThalesBalance />}
