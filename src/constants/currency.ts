@@ -48,6 +48,7 @@ import { ReactComponent as KNCIcon } from 'assets/currencies/crypto/KNC.svg';
 import { ReactComponent as sSOLIcon } from 'assets/synths/sSOL.svg';
 import { ReactComponent as LYRAIcon } from 'assets/currencies/crypto/LYRA.svg';
 import { ReactComponent as LUNAIcon } from 'assets/currencies/crypto/LUNA.svg';
+import { ReactComponent as MATICIcon } from 'assets/currencies/crypto/MATIC.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -141,6 +142,7 @@ export const CRYPTO_CURRENCY = [
     'UNI',
     'CRV',
     'AAVE',
+    'MATIC',
     'LYRA',
     'LUNA',
 ];
@@ -219,6 +221,7 @@ export const currencyKeyToAssetIconMap = {
     [SYNTHS_MAP.sSOL]: sSOLIcon,
     [CRYPTO_CURRENCY_MAP.LYRA]: LYRAIcon,
     [CRYPTO_CURRENCY_MAP.LUNA]: LUNAIcon,
+    [CRYPTO_CURRENCY_MAP.MATIC]: MATICIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -345,6 +348,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sDOT]: 'polkadot',
     [SYNTHS_MAP.sRUNE]: 'thorchain',
     [SYNTHS_MAP.sYFI]: 'yearn-finance',
+    [CRYPTO_CURRENCY_MAP.MATIC]: 'matic-network',
 };
 
 export const currencyKeyToDataFeedSourceMap = {
@@ -477,6 +481,10 @@ export const currencyKeyToDataFeedSourceMap = {
         link: 'https://optimistic.etherscan.io/address/0xF334F6104A179207DdaCfb41FA3567FEea8595C2',
     },
     [CRYPTO_CURRENCY_MAP.LUNA]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.MATIC]: {
         source: 'CHAINLINK',
         link: '',
     },

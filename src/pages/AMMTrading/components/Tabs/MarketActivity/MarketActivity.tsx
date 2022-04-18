@@ -18,8 +18,9 @@ import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 
 import { COLORS_NEW } from 'constants/ui';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { getStableCoinForNetwork } from '../../../../../utils/currency';
 
 const MarketActivity: React.FC = () => {
     const { t } = useTranslation();
@@ -103,7 +104,7 @@ const MarketActivity: React.FC = () => {
                                       )
                                     : cellProps.cell.row.original.type === 'mint'
                                     ? formatCurrency(cellProps.cell.value)
-                                    : formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value)}
+                                    : formatCurrencyWithKey(getStableCoinForNetwork(networkId), cellProps.cell.value)}
                             </p>
                         ),
                         sortable: true,
@@ -116,7 +117,10 @@ const MarketActivity: React.FC = () => {
                             <p>
                                 {cellProps.cell.row.original.type === 'buy' ||
                                 cellProps.cell.row.original.type === 'sell'
-                                    ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value ?? 0)
+                                    ? formatCurrencyWithKey(
+                                          getStableCoinForNetwork(networkId),
+                                          cellProps.cell.value ?? 0
+                                      )
                                     : EMPTY_VALUE}
                             </p>
                         ),

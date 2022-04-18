@@ -11,7 +11,7 @@ import { ReactComponent as DQ } from 'assets/images/leaderboard/warning_red.svg'
 import { ReactComponent as DollarIcon } from 'assets/images/dollar.svg';
 import { ReactComponent as AssetIcon } from 'assets/images/asset.svg';
 import { FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
-import { COLORS } from 'constants/ui';
+import { COLORS, UI_COLORS } from 'constants/ui';
 
 type TooltipIconProps = {
     title: React.ReactNode;
@@ -20,12 +20,18 @@ type TooltipIconProps = {
 
 const LightTooltip = withStyles(() => ({
     arrow: {
-        color: '#748BC6',
+        color: '#04045a',
+        fontSize: 10,
+        '&:before': {
+            border: `1px solid ${UI_COLORS.GREEN}`,
+        },
     },
     tooltip: {
-        backgroundColor: '#748BC6',
-        border: '1px solid #748BC6',
-        padding: 10,
+        backgroundColor: '#04045a',
+        maxWidth: 220,
+        border: `1px solid ${UI_COLORS.GREEN}`,
+        borderRadius: '5px',
+        color: 'white',
     },
 }))(Tooltip);
 
@@ -84,10 +90,10 @@ export const TooltipDollarIcon: React.FC<TooltipIconProps> = ({ title, iconProps
     </LightTooltip>
 );
 
-export const TooltipAssetIcon: React.FC<TooltipIconProps> = ({ title }) => (
-    <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
+export const TooltipAssetIcon: React.FC<any> = ({ title, styleProps }) => (
+    <LightTooltip title={<span className="text-xxxs">{title}</span>} placement="top" arrow={true}>
         <AssetIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            style={{ border: '1px solid #04045A', borderRadius: '50%', cursor: 'pointer', padding: 1, ...styleProps }}
             width="12"
             height="12"
             className="tooltip-icon"

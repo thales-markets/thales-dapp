@@ -109,6 +109,7 @@ const Wrapper = styled.div`
         width: 100vw;
         padding: 0 40px;
         z-index: 10;
+        margin-top: 50px;
     }
 `;
 

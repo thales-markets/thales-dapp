@@ -7,6 +7,10 @@ import styled from 'styled-components';
 import './media.scss';
 import { useTranslation } from 'react-i18next';
 import { SYNTHS_MAP } from 'constants/currency';
+import { getStableCoinForNetwork } from '../../../../utils/currency';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux/rootReducer';
+import { getNetworkId } from '../../../../redux/modules/wallet';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;
@@ -23,6 +27,7 @@ type ProgressTrackerProps = {
 
 const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     return (
         <Wrapper>
@@ -37,7 +42,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 <Line className={props.isWalletAccessEnabled ? 'fill' : ''}></Line>
                 <Label className="text-s pale-grey" style={{ left: -36 }}>
                     {t('options.create-market.progress-tracker.approving', {
-                        currencyKey: SYNTHS_MAP.sUSD,
+                        currencyKey: getStableCoinForNetwork(networkId),
                     })}
                 </Label>
             </FlexDiv>

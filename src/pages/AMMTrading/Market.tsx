@@ -20,6 +20,8 @@ import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import Loader from 'components/Loader';
 import { setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
+import { getIsPolygon } from '../../utils/network';
+import { getNetworkId } from '../../redux/modules/wallet';
 
 type MarketProps = {
     marketAddress: string;
@@ -36,6 +38,7 @@ const TradingTypes = [
 
 const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
     const [tradingType, setTradingType] = useState<TradingType>(TradingTypes[1].value as TradingType);
@@ -60,7 +63,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         };
 
         fetchMarketData();
-    }, [marketQuery.isSuccess, marketAddress]);
+    }, [marketQuery.isSuccess, marketAddress, networkId]);
 
     useEffect(() => {
         optionMarket?.phase == 'maturity' ? setMaturityPhase(true) : setMaturityPhase(false);
@@ -72,6 +75,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 <HeaderContainer>
                     <Switch
                         active={tradingType == 'AMM'}
+                        disabled={getIsPolygon(networkId)}
                         width={'94px'}
                         height={'32px'}
                         dotSize={'22px'}

@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 
 import Currency from 'components/Currency/v2';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -46,7 +46,7 @@ type MarketsTableProps = {
 
 const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
+    const isL2OrPolygon = getIsOVM(networkId) || getIsPolygon(networkId);
 
     const { t } = useTranslation();
 
@@ -178,13 +178,18 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     return <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />;
                 },
             },
-            ...(isL2
+            ...(isL2OrPolygon
                 ? [
                       {
                           Header: t(`options.home.markets-table.amm-size-col`),
                           accessor: (row: any) => {
                               if (Number(row.availableLongs) > 0 || Number(row.availableShorts) > 0) {
-                                  return <RatioText green={row.availableLongs} red={row.availableShorts} />;
+                                  return (
+                                      <RatioText
+                                          green={Number(row.availableLongs).toFixed(1)}
+                                          red={Number(row.availableShorts).toFixed(1)}
+                                      />
+                                  );
                               }
                               return (
                                   <YellowText>
@@ -198,7 +203,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                       },
                   ]
                 : []),
-            ...(isL2
+            ...(isL2OrPolygon
                 ? [
                       {
                           Header: t(`options.home.markets-table.price-up-down-col`),

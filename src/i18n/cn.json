@@ -213,12 +213,13 @@
         },
         "unsupported-network": {
             "title": "哎呀！你在错的网络上！",
-            "description": "您在钱包中选择了错误的网络。 要继续，请切换到以太坊主网或乐观网络。",
             "button": {
                 "mainnet": "切换到主网",
-                "optimism": "转为乐观"
+                "optimism": "转为乐观",
+                "polygon": "切换到多边形"
             },
-            "description2": "您在钱包中选择了错误的网络。要继续，请切换到 Optimism 网络。"
+            "description": "您在钱包中选择了错误的网络。要继续，请切换到支持的网络之一。",
+            "description2": "您在钱包中选择了错误的网络。要继续，请切换到支持的网络之一。"
         },
         "user-info-card": {
             "network": "网络",
@@ -290,7 +291,8 @@
             "trade-type": "交易类型",
             "search-placeholder-for-mining": "试试地址",
             "search-placeholder-for-reporting": "尝试市场",
-            "all-markets": "所有市场"
+            "all-markets": "所有市场",
+            "sort-menu": "排序菜单"
         },
         "home": {
             "market-card": {
@@ -354,7 +356,9 @@
             },
             "hot-markets": {
                 "tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买当前具有最高潜在利润的位置代币。"
-            }
+            },
+            "polygon-trading-competition-2": " 点击<bold>这里</bold>了解更多",
+            "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播"
         },
         "earn": {
             "snx-stakers": {
@@ -836,12 +840,12 @@
                     },
                     "table": {
                         "type-col": "类型",
-                        "price-col": "价格（sUSD）",
+                        "price-col": "价格({{token}})",
                         "amount-col": "金额（{{currencyKey}}）",
                         "filled-col": "填充（%）",
                         "return-col": "返回",
                         "return-col-tooltip": "如果此选项获胜，则可能返回",
-                        "total-col": "总计（sUSD）",
+                        "total-col": "总计({{token}})",
                         "time-remaining-col": "剩余时间",
                         "cancel-col-tooltip": "单击以取消订单"
                     }
@@ -1000,10 +1004,6 @@
             "leaderboard-subtitle": "这是泰勒斯的整体排行榜.",
             "leaderboard-subtitle-2": "它考虑了泰勒斯平台内的所有交易",
             "trading-comp-title": "交易竞赛",
-            "trading-comp-subtitle": "这是泰勒斯第一次交易竞赛的排行榜.",
-            "trading-comp-subtitle-2": "比赛于2021年10月11日正式开始| UTC 时间上午 10 点，并于 2021 年 11 月 1 日结束 | 世界标准时间上午 11 点",
-            "trading-comp-subtitle-3": "单击此处查看符合交易竞赛条件的市场",
-            "trading-comp-subtitle-4": "有关如何参与的更多信息和指南，请访问： ",
             "profile-subtitle": "选项卡显示您的所有交易以及其他用户的交易",
             "trading-comp-countdown": "竞赛结束前的倒计时：",
             "profile-title": "个人资料",
@@ -1032,7 +1032,9 @@
                 "competition-period": "选定时间",
                 "disqualified": "不合格",
                 "current-rank": "您当前的等级",
-                "unverified": "未验证"
+                "unverified": "未验证",
+                "net-profit-competition": "净利",
+                "percentage-profit-competition": "利润百分比"
             },
             "board": {
                 "tab-title": "排行榜"
@@ -1107,7 +1109,14 @@
                     }
                 }
             },
-            "balance": "美元余额"
+            "balance": "美元余额",
+            "avatar": "阿凡达",
+            "trading-comp-subtitle-6": "请注意，此排行榜只是一个参考，在比赛结束时由泰雷兹团队进行全面审查后才能确定。",
+            "trading-comp-subtitle-3": "点击<bold>这里</bold>查看有资格参加交易竞赛的市场。",
+            "trading-comp-subtitle": "这是泰雷兹首届 Polygon 交易大赛排行榜。",
+            "trading-comp-subtitle-5": "要了解如何在 Thales AMM 上进行交易，请查看<bold>本指南</bold>。",
+            "trading-comp-subtitle-4": "如需更多信息、奖品和竞赛规则，请访问以下链接：<link1>官方博文</link1>（长版）、<link2>文档</link2>（短版）。",
+            "trading-comp-subtitle-2": "比赛于2022年4月18日正式开始|世界标准时间下午 3 点，于 2022 年 5 月 9 日结束 |世界标准时间下午 3 点。"
         },
         "common": {
             "time-remaining": {
@@ -1155,7 +1164,7 @@
             "ratio": "比率"
         },
         "swap": {
-            "button-text": "获取 sUSD",
+            "button-text": "获取 {{token}}",
             "select-token": "选取代币",
             "enter-amount": "输入数量",
             "approve": "授予交易{{currency}}的权限}",

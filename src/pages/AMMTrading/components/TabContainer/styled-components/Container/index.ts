@@ -16,14 +16,17 @@ type MenuContainerChild = {
 };
 
 type ContainerChild = {
-    Main: StyledComponent<'div', any, { justifyContent?: string }> & MenuContainerChild;
+    Main: StyledComponent<'div', any, { justifyContent?: string; hide?: boolean }> & MenuContainerChild;
     Tab: StyledComponent<'div', any>;
 };
 
 // @ts-ignore
-const MenuContainer: StyledComponent<'div', any, { justifyContent?: string }> & MenuContainerChild = styled(FlexDiv)<{
+const MenuContainer: StyledComponent<'div', any, { justifyContent?: string; hide?: boolean }> &
+    MenuContainerChild = styled(FlexDiv)<{
     justifyContent?: string;
+    hide?: boolean;
 }>`
+    ${(_props) => (_props?.hide ? 'display: none;' : '')}
     width: 100%;
     flex-direction: row;
     justify-content: ${(_props) => (_props?.justifyContent ? _props.justifyContent : 'stretch')};

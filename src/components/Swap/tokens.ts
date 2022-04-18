@@ -88,3 +88,51 @@ export const OP_KOVAN_SUSD = {
     symbol: 'sUSD',
     synth: true,
 };
+
+export const POLYGON_USDC = {
+    symbol: 'USDC',
+    name: 'USD Coin',
+    address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    decimals: 6,
+    logoURI: 'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
+};
+
+export const POLYGON_USDT = {
+    symbol: 'USDT',
+    name: 'Tether USD',
+    address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+    decimals: 6,
+    logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
+};
+
+export const POLYGON_MATIC = {
+    symbol: 'MATIC',
+    name: 'Matic',
+    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    decimals: 18,
+    logoURI: 'https://tokens.1inch.io/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0.png',
+};
+
+export const POLYGON_ETH = {
+    symbol: 'ETH',
+    name: 'Ethereum',
+    address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    decimals: 18,
+    logoURI: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
+};
+
+export const POLYGON_Dai = {
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+    decimals: 18,
+    address: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
+    logoURI: 'https://tokens.1inch.io/0x6b175474e89094c44da98b954eedeac495271d0f.png',
+};
+
+export const POLYGON_MUMBAI_USDC = {
+    symbol: 'USDC',
+    name: 'USD Coin',
+    address: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',
+    decimals: 18,
+    logoURI: 'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
+};

@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { getSynthName } from 'utils/currency';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 import { history } from 'utils/routes';
 import SearchMarket from '../SearchMarket';
 import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
@@ -65,6 +65,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     const { t } = useTranslation();
     const [showDropdownPhase, setShowDropwodnPhase] = useState(false);
     const [showDropdownUserFilters, setShowDropwodnUserFilters] = useState(false);
@@ -319,12 +320,12 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                             .filter((key) => isNaN(Number(SortByEnum[key as keyof typeof SortByEnum])))
                             .map((key) => {
                                 if (
-                                    getIsOVM(networkId) &&
+                                    (isL2 || isPolygon) &&
                                     SortByEnum[key as keyof typeof SortByEnum] === SortByEnum.Pool_Size
                                 )
                                     return <></>;
                                 if (
-                                    !getIsOVM(networkId) &&
+                                    !(isL2 || isPolygon) &&
                                     SortByEnum[key as keyof typeof SortByEnum] === SortByEnum.Amm_Size
                                 )
                                     return <></>;
@@ -378,6 +379,9 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
 };
 
 const mapOrderByToEnum = (data: number, networkId: number) => {
+    const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
+
     switch (data) {
         case 1:
         case 2:
@@ -387,7 +391,7 @@ const mapOrderByToEnum = (data: number, networkId: number) => {
         case 4:
             return SortByEnum.Strike_Price;
         case 5:
-            return getIsOVM(networkId) ? SortByEnum.Amm_Size : SortByEnum.Pool_Size;
+            return isL2 || isPolygon ? SortByEnum.Amm_Size : SortByEnum.Pool_Size;
         case 6:
             return SortByEnum.Time_Remaining;
         case 7:
@@ -398,6 +402,9 @@ const mapOrderByToEnum = (data: number, networkId: number) => {
 };
 
 const revertOrderToEnum = (data: SortByEnum, networkId: number) => {
+    const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
+
     switch (data) {
         case SortByEnum.Asset:
             return 2;
@@ -405,7 +412,7 @@ const revertOrderToEnum = (data: SortByEnum, networkId: number) => {
             return 3;
         case SortByEnum.Strike_Price:
             return 4;
-        case getIsOVM(networkId) ? SortByEnum.Amm_Size : SortByEnum.Pool_Size:
+        case isL2 || isPolygon ? SortByEnum.Amm_Size : SortByEnum.Pool_Size:
             return 5;
         case SortByEnum.Time_Remaining:
             return 6;

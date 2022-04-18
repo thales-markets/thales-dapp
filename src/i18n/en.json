@@ -211,11 +211,12 @@
         },
         "unsupported-network": {
             "title": "Oops! You are on the wrong network!",
-            "description": "You have selected the wrong network in your wallet. To continue, please switch to Ethereum mainnet or Optimism network.",
-            "description2": "You have selected the wrong network in your wallet. To continue, please switch to Optimism network.",
+            "description": "You have selected the wrong network in your wallet. To continue, please switch to one of the supported networks.",
+            "description2": "You have selected the wrong network in your wallet. To continue, please switch to one of the supported networks.",
             "button": {
                 "mainnet": "Switch to Mainnet",
-                "optimism": "Switch to Optimism"
+                "optimism": "Switch to Optimism",
+                "polygon": "Switch to Polygon"
             }
         },
         "user-info-card": {
@@ -256,6 +257,7 @@
             "sell": "Sell"
         },
         "filters-labels": {
+            "sort-menu": "Sorting menu",
             "category": "Category",
             "discover": "Discover",
             "sort-by": "Sort by (always latest)",
@@ -288,6 +290,8 @@
             "trade-type": "Trade type"
         },
         "home": {
+            "polygon-trading-competition-1": "Thales incentivized trading competition is live on<bold>Polygon</bold>",
+            "polygon-trading-competition-2": " click <bold>here</bold> to learn more",
             "market-card": {
                 "current-asset-price": "Current asset price",
                 "pool-size": "Pool size",
@@ -636,7 +640,7 @@
         "create-market": {
             "title": "Create a new Binary Options market",
             "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
-            "note": "* Note: The amount of sUSD deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 sUSD mints 1,000 UP and 1,000 DOWN options tokens for this market.",
+            "note": "* Note: The amount of {{token}} deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN options tokens for this market.",
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
@@ -644,7 +648,7 @@
                 "market-maturity-time-label": "time (UTC):",
                 "funding-amount": {
                     "label": "market funding amount:",
-                    "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
+                    "desc": "Note: your {{token}} will be locked up in this contract until the market maturity date"
                 }
             },
             "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
@@ -847,12 +851,12 @@
                     },
                     "table": {
                         "type-col": "Type",
-                        "price-col": "PRICE (sUSD)",
+                        "price-col": "PRICE ({{token}})",
                         "amount-col": "AMOUNT ({{currencyKey}})",
                         "filled-col": "FILLED (%)",
                         "return-col": "RETURN",
                         "return-col-tooltip": "Potential return if this option wins",
-                        "total-col": "TOTAL (sUSD)",
+                        "total-col": "TOTAL ({{token}})",
                         "time-remaining-col": "TIME REMAINING",
                         "cancel-col-tooltip": "Click to cancel your order"
                     }
@@ -990,15 +994,18 @@
         "competition-quick-trading": {
             "title": "Competition quick trading"
         },
+
         "leaderboard": {
             "leaderboard-title": "Leaderboard",
             "leaderboard-subtitle": "This is Thales' overall leaderboard.",
             "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
             "trading-comp-title": "Trading Competition",
-            "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
-            "trading-comp-subtitle-2": "The competition has officially started on Oct 11 2021 | 10 AM UTC and ended on Nov 01 2021 | 11 AM UTC",
-            "trading-comp-subtitle-3": "Click here to see markets eligible for the trading competition",
-            "trading-comp-subtitle-4": "For more information and a guide on how to participate, please visit: ",
+            "trading-comp-subtitle": "This is the leaderboard for Thales' first Polygon trading competition.",
+            "trading-comp-subtitle-2": "The competition officially starts on April 18th 2022 | 3 PM UTC and ends on May 9th 2022 | 3 PM UTC.",
+            "trading-comp-subtitle-3": "Click <bold>here</bold> to see markets eligible for the trading competition.",
+            "trading-comp-subtitle-4": "For more information, prizes, and competition rules visit these links: <link1>Official blog post</link1> (long version), <link2>Documentation</link2> (shorter version).",
+            "trading-comp-subtitle-5": "To learn how to trade on Thales AMM please check <bold>this guide</bold>.",
+            "trading-comp-subtitle-6": "Please take into account that this leaderboard is just a reference and not definitive until complete review by Thales team at the end of the competition.",
             "profile-subtitle": "This tab shows you all of your transactions, as well as the transactions of other users.",
             "trading-comp-countdown": "Countdown until the end of the competition: ",
             "profile-title": "Profile",
@@ -1008,6 +1015,7 @@
             "verify": "Verify",
             "display-name": "Display Name",
             "address": "Address",
+            "avatar": "Avatar",
             "twitter-account": "My twitter account",
             "my-info": "My info",
             "balance": "sUSD balance",
@@ -1028,7 +1036,9 @@
                 "competition-period": "Selected period",
                 "disqualified": "Disqualified",
                 "unverified": "Unverified",
-                "current-rank": "Your current rank"
+                "current-rank": "Your current rank",
+                "net-profit-competition": "Net profit",
+                "percentage-profit-competition": "Percentage profit"
             },
             "board": {
                 "tab-title": "Leaderboard"
@@ -1150,14 +1160,14 @@
             "ratio": "Ratio"
         },
         "swap": {
-            "button-text": "Get sUSD",
+            "button-text": "Get {{token}}",
             "select-token": "Select a token",
             "enter-amount": "Enter amount",
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
             "insufficient-balance": "Insufficient balance",
             "not-supported": " Swap is not supported on Test networks",
-            "tx-success": "Successfully bought sUSD",
+            "tx-success": "Successfully bought {{token}}",
             "tx-failed": "Transaction failed",
             "tx-user-rejected": "User rejected transaction",
             "approval-success": "Approval successful",

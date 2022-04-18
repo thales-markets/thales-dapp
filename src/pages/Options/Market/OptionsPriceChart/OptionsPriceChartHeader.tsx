@@ -29,7 +29,7 @@ const OptionsPriceChartHeader: React.FC<OptionsPriceChartContentProps> = ({ opti
         enabled: isAppReady,
     });
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket.address, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket.address, networkId, {
         enabled: isAppReady,
     });
 

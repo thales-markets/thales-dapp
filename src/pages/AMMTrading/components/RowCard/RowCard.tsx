@@ -8,7 +8,7 @@ import { useMarketContext } from '../../contexts/MarketContext';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
@@ -26,6 +26,7 @@ const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
     const { t } = useTranslation();
     const isBuy = useSelector((state: RootState) => getIsBuyState(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     let optBalances = {
         long: 0,
@@ -39,7 +40,7 @@ const RowCard: React.FC = () => {
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketInfo.address, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(marketInfo.address, {
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(marketInfo.address, networkId, {
         enabled: isAppReady,
     });
 
@@ -216,13 +217,21 @@ const RowCard: React.FC = () => {
                                     />
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
-                                    <Container.SubContainer.Value.Liquidity>
-                                        {ammData ? ammData.maxUp?.toFixed(1) : '0'}
-                                    </Container.SubContainer.Value.Liquidity>
-                                    {' / '}
-                                    <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
-                                        {ammData ? ammData.maxDown?.toFixed(1) : '0'}
-                                    </Container.SubContainer.Value.Liquidity>
+                                    {(ammData && ammData.maxUp > 0) || (ammData && ammData.maxDown > 0) ? (
+                                        <>
+                                            <Container.SubContainer.Value.Liquidity>
+                                                {ammData ? ammData.maxUp?.toFixed(1) : '0'}
+                                            </Container.SubContainer.Value.Liquidity>
+                                            {' / '}
+                                            <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
+                                                {ammData ? ammData.maxDown?.toFixed(1) : '0'}
+                                            </Container.SubContainer.Value.Liquidity>
+                                        </>
+                                    ) : (
+                                        <Container.SubContainer.Value.OutOfLiquidity>
+                                            {ammData ? t('options.home.markets-table.out-of-liquidity') : ''}
+                                        </Container.SubContainer.Value.OutOfLiquidity>
+                                    )}
                                 </Container.SubContainer.Value>
                             </Container.SubContainer>
                             <Container.SubContainer>

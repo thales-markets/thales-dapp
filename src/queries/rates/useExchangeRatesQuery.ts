@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { CurrencyKey } from 'constants/currency';
 import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getIsOVM, NetworkId } from 'utils/network';
+import { getIsOVM, getIsPolygon, NetworkId } from 'utils/network';
 export type Rates = Record<CurrencyKey, number>;
 
 const useExchangeRatesQuery = (networkId: NetworkId, options?: UseQueryOptions<Rates>) => {
@@ -11,9 +11,10 @@ const useExchangeRatesQuery = (networkId: NetworkId, options?: UseQueryOptions<R
         QUERY_KEYS.Rates.ExchangeRates(networkId),
         async () => {
             const isL2 = getIsOVM(networkId);
+            const isPolygon = getIsPolygon(networkId);
             const exchangeRates: Rates = {};
 
-            if (isL2) {
+            if (isL2 || isPolygon) {
                 if (snxJSConnector.priceFeedContract) {
                     const [currencies, rates] = await Promise.all([
                         snxJSConnector.priceFeedContract.getCurrencies(),

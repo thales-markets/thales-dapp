@@ -11,6 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { getStableCoinForNetwork } from '../../../../utils/currency';
 
 export const UserSwap: React.FC = () => {
     const { t } = useTranslation();
@@ -34,14 +35,18 @@ export const UserSwap: React.FC = () => {
     const [buttonText, setButtonText] = useState(sUSDBalance);
 
     useEffect(() => {
-        setButtonText(formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance, 2));
+        setButtonText(formatCurrencyWithKey(getStableCoinForNetwork(networkId), sUSDBalance, 2));
     }, [sUSDBalance]);
 
     return (
         <>
             <SwapButton
-                onMouseOver={() => setButtonText(t('options.swap.button-text'))}
-                onMouseOut={() => setButtonText(formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance, 2))}
+                onMouseOver={() =>
+                    setButtonText(t('options.swap.button-text', { token: getStableCoinForNetwork(networkId) }))
+                }
+                onMouseOut={() =>
+                    setButtonText(formatCurrencyWithKey(getStableCoinForNetwork(networkId), sUSDBalance, 2))
+                }
                 onClick={() => setShowSwap(true)}
             >
                 <SwapButtonIcon className="v2-icon v2-icon--dollar" />

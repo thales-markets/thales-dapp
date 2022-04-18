@@ -2,18 +2,22 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
-
-import thalesData from 'thales-data';
+import notSigned from 'assets/images/royale/not-signed.svg';
+import { truncateAddress } from 'utils/formatters/string';
 
 dotenv.config();
 
 type User = {
     walletAddress: string;
+    avatar?: string;
+    name?: string;
     trades: number;
     volume: number;
     profit: number;
     investment: number;
+    rank?: number;
     gain: number;
+    sticky?: boolean;
 };
 
 export interface Leaderboard {
@@ -24,79 +28,32 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Use
     return useQuery<User[]>(
         QUERY_KEYS.BinaryOptions.Leaderboard(networkId),
         async () => {
-            const map = new Map<string, User>();
-            const marketTx = await thalesData.binaryOptions.optionTransactions({
-                network: networkId,
-            });
+            const royaleAPIRoute = 'https://api.thales.market/royale-users/';
+            const royaleResponse = await fetch(royaleAPIRoute);
+            const royalePlayers = await royaleResponse.json();
 
-            marketTx.map((tx: any) => {
-                let [profit, volume, trades, gain, investment] = [0, 0, 0, 0, 0];
-                if (map.has(tx.account)) {
-                    const user: User = map.get(tx.account) as any;
-                    [profit, volume, trades, gain, investment] = [
-                        user.profit,
-                        user.volume,
-                        user.trades,
-                        user.gain,
-                        user.investment,
-                    ];
-                }
+            const royalePlayersDataMap = new Map<string, any>(royalePlayers);
 
-                if (tx.type === 'mint') {
-                    volume += tx.amount / 2;
-                    profit -= tx.amount / 2;
-                    investment += tx.amount / 2;
-                } else {
-                    profit += tx.amount;
-                }
-                gain = profit / investment;
-                map.set(tx.account, { walletAddress: tx.account, trades, gain, profit, volume, investment });
-            });
+            const baseUrl = 'https://api.thales.market/leaderboard/' + networkId;
+            const response = await fetch(baseUrl);
+            const leaderboardData = await response.json();
 
-            const trades = await thalesData.binaryOptions.trades({
-                network: networkId,
-            });
+            if (leaderboardData?.length) {
+                leaderboardData.forEach((user: User, index: number) => {
+                    leaderboardData[index]['avatar'] = royalePlayersDataMap.get(user.walletAddress)?.avatar
+                        ? royalePlayersDataMap.get(user.walletAddress)?.avatar
+                        : notSigned;
+                    leaderboardData[index]['name'] = royalePlayersDataMap.get(user.walletAddress)?.name
+                        ? royalePlayersDataMap.get(user.walletAddress)?.name
+                        : truncateAddress(user.walletAddress, 5);
+                });
+            }
 
-            trades.map((tx: any) => {
-                let [profit, volume, trades, gain, investment] = [0, 0, 0, 0, 0];
+            if (!leaderboardData?.length) {
+                return [];
+            }
 
-                if (tx.orderSide === 'buy') {
-                    if (map.has(tx.taker)) {
-                        const user: User = map.get(tx.taker) as any;
-                        [profit, volume, trades, gain, investment] = [
-                            user.profit,
-                            user.volume,
-                            user.trades,
-                            user.gain,
-                            user.investment,
-                        ];
-                    }
-                    trades += 1;
-                    volume += tx.takerAmount;
-                    profit -= tx.takerAmount;
-                    investment += tx.takerAmount;
-                    gain = profit / investment;
-                    map.set(tx.taker, { walletAddress: tx.taker, trades, gain, profit, volume, investment });
-                } else {
-                    if (map.has(tx.maker)) {
-                        const user: User = map.get(tx.maker) as any;
-                        [profit, volume, trades, gain, investment] = [
-                            user.profit,
-                            user.volume,
-                            user.trades,
-                            user.gain,
-                            user.investment,
-                        ];
-                    }
-                    trades += 1;
-                    volume += tx.makerAmount;
-                    profit += tx.makerAmount;
-                    gain = profit / investment;
-                    map.set(tx.maker, { walletAddress: tx.maker, trades, gain, profit, volume, investment });
-                }
-            });
-
-            return Array.from(map, ([name, value]) => ({ ...value, walletAddress: name }));
+            return leaderboardData;
         },
         options
     );

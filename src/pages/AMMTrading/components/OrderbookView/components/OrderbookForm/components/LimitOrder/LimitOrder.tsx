@@ -30,7 +30,7 @@ import { getErrorToastOptions, getSuccessToastOptions, UI_COLORS } from 'constan
 
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
+import { refetchOrderbook, refetchOrders, refetchUserBalance } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import onboardConnector from 'utils/onboardConnector';
@@ -42,6 +42,7 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import RangeSlider from 'components/RangeSlider';
 import { FlexDivCentered } from 'theme/common';
 import { toast } from 'react-toastify';
+import { getStableCoinForNetwork } from '../../../../../../../../utils/currency';
 
 type LimitOrderProps = {
     optionSide: OptionSide;
@@ -113,7 +114,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
 
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
     const makerAmount = isBuy ? Number(price) * Number(amount) : amount;
-    const makerTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
+    const makerTokenCurrencyKey = isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide];
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const addressToApprove = ONE_INCH_CONTRACTS[networkId] || '';
 
@@ -267,6 +268,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
             );
             refetchOrderbook(baseToken);
             refetchOrders(networkId);
+            refetchUserBalance(walletAddress, networkId);
             resetForm();
             onPlaceOrder && onPlaceOrder();
         } catch (e) {
@@ -414,7 +416,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
                     setPrice(value);
                 }}
                 valueType={'number'}
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={isSubmitting}
                 borderColor={!isPriceValid ? UI_COLORS.RED : ''}
                 displayTooltip={!isPriceValid}
@@ -481,7 +483,7 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
             <Input
                 title={t('options.market.trade-options.place-order.total-label-susd')}
                 value={formatCurrency(Number(price) * Number(amount))}
-                subValue={SYNTHS_MAP.sUSD}
+                subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={true}
             />
             {openApprovalModal && (

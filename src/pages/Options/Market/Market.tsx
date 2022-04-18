@@ -49,7 +49,7 @@ import { MarketOverviewMobile } from './components/MarketOverview/MarketOverview
 import MarketMobile from './MarketMobile';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import AMM from './AMM';
-import { getIsOVM, NetworkId } from 'utils/network';
+import { getIsOVM, getIsPolygon, NetworkId } from 'utils/network';
 import { BetaBadge } from './components';
 import { buildHref, navigateTo } from '../../../utils/routes';
 
@@ -74,6 +74,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     const [currentNetwork, setCurrentNetwork] = useState<null | NetworkId>(null);
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
@@ -206,7 +207,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 isWalletConnected,
                 false,
                 ammSelected,
-                isL2
+                isL2 || isPolygon
             )
         ) {
             widgets.push(
@@ -324,7 +325,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         ) : (
                             <MarketOverview optionsMarket={optionsMarket} />
                         )}
-                        {optionsMarket.phase === 'trading' && isL2 && (
+                        {optionsMarket.phase === 'trading' && (isL2 || isPolygon) && (
                             <SwitchWrapper>
                                 <SwitchOption
                                     onClick={() => {
@@ -352,7 +353,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                             </SwitchWrapper>
                         )}
                         <MainContentContainer className="market__container">
-                            {optionsMarket.phase === 'trading' && (!ammSelected || !isL2) && (
+                            {optionsMarket.phase === 'trading' && (!ammSelected || !(isL2 || isPolygon)) && (
                                 <OptionsTabContainer className="market__container__tabs">
                                     {optionsTabContent.map((tab) => (
                                         <OptionsTab

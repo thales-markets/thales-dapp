@@ -9,18 +9,21 @@ import React, { useEffect, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getTheme } from 'redux/modules/ui';
-import { getIsWalletConnected } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import DisplayNameForm from './DisplayNameForm';
 import UserSwap from './UserSwap';
 import UserWalletExpanded from './UserWalletExpanded';
+import { getIsPolygon } from '../../../../utils/network';
 
 export const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const theme = useSelector((state: RootState) => getTheme(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isPolygon = getIsPolygon(networkId);
 
     useEffect(() => {
         document.getElementsByTagName('body')[0]?.style.setProperty('overflow', showCard ? 'hidden' : 'auto');
@@ -45,10 +48,10 @@ export const UserCard: React.FC = () => {
                             <ThalesLogo className="icon icon--logo" />
                         </LogoContainer>
                         <UserWalletExpanded />
-                        {isWalletConnected && <NetworkSwitchSection />}
+                        {isWalletConnected && <NetworkSwitchSection setShowCard={setShowCard} />}
                         <Container>
                             {isWalletConnected && <PieChartUserBalance />}
-                            {isWalletConnected && <ThalesBalance />}
+                            {isWalletConnected && !isPolygon && <ThalesBalance />}
                         </Container>
 
                         <PriceChart currencyKey={'THALES'} showHeading={true} />

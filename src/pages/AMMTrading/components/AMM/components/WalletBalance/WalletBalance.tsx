@@ -14,6 +14,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { SYNTHS_MAP } from 'constants/currency';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { UI_COLORS } from 'constants/ui';
+import { getStableCoinForNetwork } from '../../../../../../utils/currency';
 
 type WalletBalancePropsType = {
     type: OptionSide;
@@ -55,7 +56,7 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
         <Wrapper>
             <BalanceContainer>
                 <WalletIcon className="sidebar-icon icon--wallet" />
-                <Balance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</Balance>
+                <Balance>{formatCurrencyWithKey(getStableCoinForNetwork(networkId), sUSDBalance)}</Balance>
             </BalanceContainer>
             {tokenBalance > 0 && (
                 <BalanceContainer>

@@ -3,6 +3,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { TableRow, TableCell } from './OrderbookTable';
+import { getStableCoinForNetwork } from '../../../../../../../../utils/currency';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../../../../redux/rootReducer';
+import { getNetworkId } from '../../../../../../../../redux/modules/wallet';
 
 type OrderbookTableHeaderProps = {
     optionsCurrencyKey: string;
@@ -10,6 +14,8 @@ type OrderbookTableHeaderProps = {
 
 const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurrencyKey }) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
     const columns = [
         {
             header: <></>,
@@ -17,7 +23,13 @@ const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurr
             justifyContent: 'left',
         },
         {
-            header: <p style={{ marginLeft: 14 }}>{t('options.market.trade-options.orderbook.table.price-col')}</p>,
+            header: (
+                <p style={{ marginLeft: 14 }}>
+                    {t('options.market.trade-options.orderbook.table.price-col', {
+                        token: getStableCoinForNetwork(networkId),
+                    })}
+                </p>
+            ),
             width: 300,
             justifyContent: 'left',
         },
@@ -29,7 +41,13 @@ const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurr
             justifyContent: 'left',
         },
         {
-            header: <>{t('options.market.trade-options.orderbook.table.total-col')}</>,
+            header: (
+                <>
+                    {t('options.market.trade-options.orderbook.table.total-col', {
+                        token: getStableCoinForNetwork(networkId),
+                    })}
+                </>
+            ),
             width: 300,
             justifyContent: 'left',
         },

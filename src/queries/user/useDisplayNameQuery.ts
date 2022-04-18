@@ -1,16 +1,29 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 export interface DisplayName {
-    name: string;
+    user: {
+        name: string;
+        avatar: string;
+    };
 }
+
+const BASE_URL = 'https://api.thales.market/royale-user/';
 
 const useDisplayNameQuery = (walletAddress: string, options?: UseQueryOptions<DisplayName>) => {
     return useQuery<DisplayName>(
         QUERY_KEYS.User.DisplayName(walletAddress),
         async () => {
-            const baseUrl = 'https://api.thales.market/display-name/' + walletAddress.toLowerCase();
+            const baseUrl = BASE_URL + walletAddress.toLowerCase();
             const response = await fetch(baseUrl);
             const result = await response.text();
+            if (result === '{}') {
+                return {
+                    user: {
+                        name: '',
+                        avatar: '',
+                    },
+                };
+            }
 
             return JSON.parse(result);
         },

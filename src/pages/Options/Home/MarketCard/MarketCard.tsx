@@ -16,7 +16,7 @@ import arrowUp from '../../../../assets/images/arrow-up.svg';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
 import SPAAnchor from '../../../../components/SPAAnchor';
 import { getSynthName } from 'utils/currency';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, getIsPolygon } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -31,6 +31,8 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const currentAssetPrice = exchangeRates?.[optionMarket?.currencyKey] || 0;
     const strikeAndAssetPriceDifference = getPercentageDifference(currentAssetPrice, optionMarket?.strikePrice);
+    const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     return (
         <>
             {optionMarket && (
@@ -111,7 +113,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             </GradientBorderWrapper>
                             <GradientBorderWrapper>
                                 <MarketInfo>
-                                    {getIsOVM(networkId) ? (
+                                    {isL2 || isPolygon ? (
                                         <>
                                             <MarketInfoTitle>
                                                 {t('options.home.market-card.amm-liquidity')}:

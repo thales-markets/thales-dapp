@@ -4,6 +4,7 @@
     "private": true,
     "dependencies": {
         "@1inch/limit-order-protocol": "^1.5.0",
+        "@datapunt/matomo-tracker-react": "^0.5.1",
         "@eth-optimism/contracts": "^0.5.6",
         "@google-cloud/translate": "^6.3.0",
         "@material-ui/core": "^4.11.3",
@@ -56,7 +57,7 @@
         "remarkable": "^2.0.1",
         "rss-parser": "^3.12.0",
         "styled-components": "^5.2.3",
-        "thales-data": "^1.0.27",
+        "thales-data": "^1.0.33",
         "three": "^0.129.0",
         "typescript": "^4.2.2",
         "universal-cookie": "^4.0.4",

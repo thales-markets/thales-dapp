@@ -3,6 +3,7 @@ import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
 import winnerCardS3 from 'assets/images/royale/winner-card-s3.svg';
 import winnerCardS4 from 'assets/images/royale/winner-card-s4.svg';
 import winnerCardS5 from 'assets/images/royale/winner-card-s5.svg';
+import winnerCardS6 from 'assets/images/royale/winner-card-s6.svg';
 import winnerCard from 'assets/images/royale/winner-card.svg';
 import addSeconds from 'date-fns/addSeconds';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
@@ -119,8 +120,10 @@ const renderRounds = (
                 return winnerCardS4;
             case 5:
                 return winnerCardS5;
+            case 6:
+                return winnerCardS6;
             default:
-                return winnerCardS5;
+                return winnerCardS6;
         }
     };
 

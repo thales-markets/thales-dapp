@@ -26,7 +26,11 @@ const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, h
                     onClick={(event) => {
                         event.preventDefault();
                         onClick && onClick(event);
-                        navigateTo(href);
+                        if (!href.includes('http')) {
+                            navigateTo(href);
+                        } else {
+                            window.open(href);
+                        }
                     }}
                 >
                     {children}
