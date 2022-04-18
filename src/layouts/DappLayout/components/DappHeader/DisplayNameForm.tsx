@@ -35,13 +35,19 @@ const DisplayNameForm: React.FC = () => {
     const [avatar, setAvatar] = useState(currentAvatar);
 
     const isNameValid = useMemo(() => {
-        if (avatar !== currentAvatar || displayName !== currentDisplayName) {
+        if (avatar !== currentAvatar && displayName !== currentDisplayName) {
             return (
                 AVATAR_LINK_REGEX.test(avatar) &&
                 avatar !== '' &&
                 DISPLAY_NAME_REGEX.test(displayName) &&
                 displayName !== ''
             );
+        }
+        if (displayName !== currentDisplayName) {
+            return DISPLAY_NAME_REGEX.test(displayName) && displayName !== '';
+        }
+        if (avatar !== currentAvatar) {
+            return AVATAR_LINK_REGEX.test(avatar) && avatar !== '';
         }
     }, [displayName, avatar]);
 
