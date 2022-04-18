@@ -222,6 +222,8 @@ const Table: React.FC<TableProps> = ({
                                         return <SPAAnchor href={row.original.link}>{rowComponent}</SPAAnchor>;
                                     }
 
+                                    if (row.original.sticky) return;
+
                                     return rowComponent;
                                 })}
                             </TableView.Body>
@@ -315,6 +317,8 @@ const Table: React.FC<TableProps> = ({
                                 if (row.original.link) {
                                     return <SPAAnchor href={row.original.link}>{rowComponent}</SPAAnchor>;
                                 }
+
+                                if (row.original.sticky) return;
 
                                 return rowComponent;
                             })}
