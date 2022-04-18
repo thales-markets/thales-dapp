@@ -94,6 +94,11 @@ const Home: React.FC = () => {
                         <OPTIMISM className="icon-home icon-home--optimism" />
                     </a>
                 </FlexDiv>
+                <FlexDiv>
+                    <a target="_blank" rel="noreferrer" href="https://polygon.technology/">
+                        <OPTIMISM className="icon-home icon-home--polygon" />
+                    </a>
+                </FlexDiv>
                 <Title style={{ marginTop: 100 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
                 <Title id="faq-section" style={{ marginTop: 50 }}>

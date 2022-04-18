@@ -90,6 +90,10 @@
     content: '\0053';
 }
 
+.icon-home--polygon:before {
+    content: '\0054';
+}
+
 .icon--triangle:before {
     content: '\0034';
 }
