@@ -151,7 +151,7 @@ const Leaderboard: React.FC = () => {
                                 components={{
                                     link1: (
                                         <a
-                                            href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                            href="https://thalesmarket.medium.com/thales-goes-to-polygon-and-celebrates-with-a-trading-competition-634449d7f23d"
                                             rel="noreferrer"
                                             target="_blank"
                                         />
