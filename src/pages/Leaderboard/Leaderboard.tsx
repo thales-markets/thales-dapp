@@ -100,8 +100,6 @@ const Leaderboard: React.FC = () => {
         [walletAddress]
     );
 
-    console.log('Data ', data);
-
     return (
         <>
             <Wrapper>

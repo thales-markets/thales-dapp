@@ -21,6 +21,7 @@ import { USD_SIGN } from 'constants/currency';
 import { formatHoursAndMinutesFromTimestamp, formatShortDateFromTimestamp } from 'utils/formatters/date';
 
 import { OptionsMarketInfo } from 'types/options';
+import { getEtherscanTxLink } from '../../../../../utils/etherscan';
 
 type Activity = {
     timestamp: number;
@@ -31,6 +32,7 @@ type Activity = {
     side: string;
     type: string;
     timeRemaining: number;
+    link: string;
 };
 
 const UserActivity: React.FC = () => {
@@ -65,7 +67,7 @@ const UserActivity: React.FC = () => {
         if (data?.length) {
             const rows: TileRow[] = data.map((item: Activity) => {
                 return {
-                    asset: { currencyKey: item.currencyKey, displayInRow: true },
+                    asset: { currencyKey: item.currencyKey, displayInRow: true, hideFullName: true },
                     cells: [
                         {
                             value: item.timestamp,
@@ -87,6 +89,7 @@ const UserActivity: React.FC = () => {
                             value: item.type,
                         },
                     ],
+                    link: item.link,
                 };
             });
 
@@ -108,6 +111,7 @@ const UserActivity: React.FC = () => {
                     side: trade.side == 'short' ? 'down' : 'up',
                     type: trade.type,
                     timeRemaining: marketInfo.timeRemaining,
+                    link: getEtherscanTxLink(networkId, trade.hash),
                 };
             });
 
@@ -121,6 +125,7 @@ const UserActivity: React.FC = () => {
                     side: transaction.side == 'short' ? 'down' : 'up',
                     type: transaction.type,
                     timeRemaining: marketInfo.timeRemaining,
+                    link: getEtherscanTxLink(networkId, transaction.hash),
                 };
             });
 

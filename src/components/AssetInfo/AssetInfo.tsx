@@ -11,6 +11,7 @@ export type AssetInfoProps = {
     assetNameFontSize?: string;
     currencyKeyFontSize?: string;
     displayInRow?: boolean;
+    hideFullName?: boolean;
 };
 
 const AssetInfo: React.FC<AssetInfoProps> = ({
@@ -19,6 +20,7 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
     assetNameFontSize,
     currencyKeyFontSize,
     displayInRow,
+    hideFullName,
 }) => {
     const isMobile = window.innerWidth < 768;
 
@@ -35,7 +37,7 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
                 height={logoSize}
             />
             <AssetNameContainer displayInRow={displayInRow}>
-                <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>
+                {!hideFullName && <AssetName fontSize={assetNameFontSize}>{getSynthName(currencyKey)}</AssetName>}
                 <CurrencyKey fontSize={currencyKeyFontSize}>{currencyKey}</CurrencyKey>
             </AssetNameContainer>
         </AssetContainer>
