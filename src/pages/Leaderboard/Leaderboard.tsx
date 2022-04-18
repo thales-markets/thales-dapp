@@ -69,11 +69,14 @@ const Leaderboard: React.FC = () => {
                 users = orderBy(users, ['gain'], ['desc']);
             }
 
+            let stickyUser = null;
+
             users.forEach((user, index) => {
                 user['rank'] = index + 1;
                 if (walletAddress && user.walletAddress.toLowerCase() === walletAddress?.toLowerCase()) {
-                    user['sticky'] = true;
-                    user['name'] = 'Your current rank';
+                    stickyUser = JSON.parse(JSON.stringify(user));
+                    stickyUser['sticky'] = true;
+                    stickyUser['name'] = 'Your current rank';
                 }
             });
 
@@ -85,6 +88,8 @@ const Leaderboard: React.FC = () => {
                     );
                 });
             }
+
+            if (stickyUser) users.push(stickyUser);
 
             return users;
         }
