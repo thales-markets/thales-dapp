@@ -257,6 +257,7 @@
             "sell": "Sell"
         },
         "filters-labels": {
+            "sort-menu": "Sorting menu",
             "category": "Category",
             "discover": "Discover",
             "sort-by": "Sort by (always latest)",
