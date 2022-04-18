@@ -6,6 +6,12 @@ export const Wrapper = styled.div`
     max-width: 1200px;
 `;
 
+export const MobileButtonsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+`;
+
 export const WrapperForText = styled.div`
     width: auto;
     max-width: 700px;
@@ -68,4 +74,5 @@ export const Gain = styled.p<{ color?: string }>`
 export const CustomTableHeader = styled.div`
     display: flex;
     flex-direction: row;
+    justify-content: center;
 `;

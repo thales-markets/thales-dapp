@@ -2,8 +2,8 @@ import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
 
 import useLeaderboardQuery from 'queries/leaderboard/useLeaderboardQuery';
-import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -24,6 +24,7 @@ import {
     FormContainer,
     Gain,
     IconHolder,
+    MobileButtonsContainer,
     TradingCompText,
     UserAvatar,
     Wrapper,
@@ -31,6 +32,7 @@ import {
 } from './styled-components';
 import { buildHref, navigateTo } from '../../utils/routes';
 import ROUTES from '../../constants/routes';
+import MobileDropdownMenu from 'components/MobileDropdownMenu';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -49,6 +51,7 @@ const Leaderboard: React.FC = () => {
     const { t } = useTranslation();
     const [competitionType, setCompetitionType] = useState<Competition>('byNetProfit');
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [isMobile, setIsMobile] = useState<boolean>(false);
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -100,7 +103,21 @@ const Leaderboard: React.FC = () => {
         [walletAddress]
     );
 
-    console.log('Data ', data);
+    const handleResize = () => {
+        if (window.innerWidth <= 9 * 150 * 0.9) {
+            setIsMobile(true);
+        } else {
+            setIsMobile(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
         <>
@@ -141,7 +158,27 @@ const Leaderboard: React.FC = () => {
                     <UserInfoTradingCompetition></UserInfoTradingCompetition>
                 </FlexDivSpaceBetween>
 
-                <Container.Main justifyContent="flex-start">
+                {isMobile && (
+                    <MobileButtonsContainer>
+                        <MobileDropdownMenu
+                            buttonTitle={'Filters'}
+                            dropdownTitle={'Filters'}
+                            items={[
+                                {
+                                    active: CompetitionTabs[0].type == competitionType,
+                                    onClick: () => setCompetitionType(CompetitionTabs[0].type as Competition),
+                                    title: t(CompetitionTabs[0].i18Label),
+                                },
+                                {
+                                    active: CompetitionTabs[1].type == competitionType,
+                                    onClick: () => setCompetitionType(CompetitionTabs[1].type as Competition),
+                                    title: t(CompetitionTabs[1].i18Label),
+                                },
+                            ]}
+                        />
+                    </MobileButtonsContainer>
+                )}
+                <Container.Main justifyContent="flex-start" hide={isMobile}>
                     <Container.Main.Item
                         noStrech={true}
                         padding={'20px 30px'}
