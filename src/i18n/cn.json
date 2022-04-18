@@ -291,7 +291,8 @@
             "trade-type": "交易类型",
             "search-placeholder-for-mining": "试试地址",
             "search-placeholder-for-reporting": "尝试市场",
-            "all-markets": "所有市场"
+            "all-markets": "所有市场",
+            "sort-menu": "排序菜单"
         },
         "home": {
             "market-card": {

@@ -291,7 +291,8 @@
             "trade-type": "Тип торговли",
             "search-placeholder-for-mining": "Попробуйте адрес",
             "search-placeholder-for-reporting": "Попробуйте рынок",
-            "all-markets": "Все рынки"
+            "all-markets": "Все рынки",
+            "sort-menu": "Меню сортировки"
         },
         "home": {
             "market-card": {
