@@ -6,9 +6,11 @@ dotenv.config();
 import App from './App';
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 
+console.log('Site ID: ', process.env.REACT_APP_SITE_ID);
+
 const instance = createInstance({
     urlBase: 'https://data.thalesmarket.io',
-    siteId: 2,
+    siteId: process.env.REACT_APP_SITE_ID ? Number(process.env.REACT_APP_SITE_ID) : 1,
     trackerUrl: 'https://data.thalesmarket.io/p.php', // optional, default value: `${urlBase}matomo.php`
     srcUrl: 'https://data.thalesmarket.io/p.js', //
     configurations: {
