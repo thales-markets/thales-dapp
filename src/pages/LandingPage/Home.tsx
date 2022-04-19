@@ -314,11 +314,12 @@ const Info = styled.div`
         font-weight: bold;
         cursor: pointer;
         margin-left: 0.2em;
+        color: #91bced;
     }
     a {
         display: contents;
         font-weight: bold;
         cursor: pointer;
-        color: inherit;
+        color: #91bced;
     }
 `;

@@ -49,6 +49,7 @@ import { ReactComponent as sSOLIcon } from 'assets/synths/sSOL.svg';
 import { ReactComponent as LYRAIcon } from 'assets/currencies/crypto/LYRA.svg';
 import { ReactComponent as LUNAIcon } from 'assets/currencies/crypto/LUNA.svg';
 import { ReactComponent as MATICIcon } from 'assets/currencies/crypto/MATIC.svg';
+import { ReactComponent as PERPIcon } from 'assets/currencies/crypto/PERP.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -145,6 +146,7 @@ export const CRYPTO_CURRENCY = [
     'MATIC',
     'LYRA',
     'LUNA',
+    'PERP',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -222,6 +224,7 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.LYRA]: LYRAIcon,
     [CRYPTO_CURRENCY_MAP.LUNA]: LUNAIcon,
     [CRYPTO_CURRENCY_MAP.MATIC]: MATICIcon,
+    [CRYPTO_CURRENCY_MAP.PERP]: PERPIcon,
 };
 
 export const currencyKeyToNameMap = {
