@@ -601,7 +601,8 @@ export const UserCard: React.FC<UserCardProps> = ({
                                     <PositionButton
                                         currentRound={
                                             (royaleData as any).currentRound === key + 1 &&
-                                            !(royaleData as any).seasonFinished
+                                            !(royaleData as any).seasonFinished &&
+                                            user.isAlive
                                         }
                                         disabled={
                                             isBuyingIn ||

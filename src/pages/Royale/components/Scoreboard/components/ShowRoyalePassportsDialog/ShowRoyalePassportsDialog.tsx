@@ -31,7 +31,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isL2 = getIsOVM(networkId);
 
-    const royalePassportQuery = useRoyalePassportsURIsQuery(royalePassportIds, {
+    const royalePassportQuery = useRoyalePassportsURIsQuery([30, 31, 32], {
         enabled: isL2 && isWalletConnected,
     });
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : {};
@@ -43,6 +43,8 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
         setSelectedPassport(0);
         handleClose();
     };
+
+    console.log(royalePassportIds);
 
     return (
         <Modal
@@ -57,13 +59,13 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                 <Header>
                     <Text className="text-m font-sansation">
                         {t('options.royale.my-passports-dialog.passport-amount', {
-                            amount: royalePassportIds.length,
+                            amount: [30, 31, 32].length,
                         })}
                     </Text>
                     <XButton onClick={() => closeDialog()} />
                 </Header>
                 <PassportsWrapper>
-                    {royalePassportIds.map((passportId: number, key: number) => (
+                    {[30, 31, 32].map((passportId: number, key: number) => (
                         <FlexDiv key={key} style={{ flexDirection: 'column', gap: 5 }}>
                             <UserLabel>
                                 {t('options.royale.my-passports-dialog.passport-id')}
@@ -87,7 +89,14 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                     ))}
                 </PassportsWrapper>
                 <Link
-                    onClick={(e) => (selectedPassport === 0 ? e.preventDefault() : '')}
+                    onClick={(event) => {
+                        if (selectedPassport === 0) {
+                            event.preventDefault();
+                        } else {
+                            event.preventDefault();
+                            window.open(getQuixoticLink(networkId, selectedPassport));
+                        }
+                    }}
                     href={getQuixoticLink(networkId, selectedPassport)}
                     className={selectedPassport === 0 ? 'disabled' : ''}
                     target="_blank"

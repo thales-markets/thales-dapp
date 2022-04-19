@@ -217,7 +217,9 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                         </RoyaleTooltip>
                                     </>
                                 )}
-                                <Button onClick={() => setShowSwap(true)}>{t('options.swap.button-text')}</Button>
+                                <Button onClick={() => setShowSwap(true)}>
+                                    {t('options.swap.button-text', { token: SYNTHS_MAP.sUSD })}
+                                </Button>
                                 <Balances>
                                     <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</span>{' '}
                                     <span>
