@@ -265,7 +265,7 @@ export const UserCard: React.FC<UserCardProps> = ({
                                             setShowSwap(true);
                                         }}
                                     >
-                                        {t('options.swap.button-text')}
+                                        {t('options.swap.button-text', { token: SYNTHS_MAP.sUSD })}
                                     </Button>
                                     <Modal
                                         open={showSwap}
@@ -448,11 +448,11 @@ export const UserCard: React.FC<UserCardProps> = ({
                     </FlexDiv>
                     <FlexDiv>
                         <Button
-                            disabled={royalePassports.length === 0}
-                            className={royalePassports.length === 0 ? 'disabled' : ''}
+                            // disabled={royalePassports.length === 0}
+                            // className={royalePassports.length === 0 ? 'disabled' : ''}
                             style={{
-                                display: royalePassports.length === 0 ? 'none' : '',
-                                cursor: royalePassports.length === 0 ? 'not-allowed' : '',
+                                // display: royalePassports.length === 0 ? 'none' : '',
+                                // cursor: royalePassports.length === 0 ? 'not-allowed' : '',
                                 whiteSpace: 'pre',
                                 fontSize: 15,
                             }}
