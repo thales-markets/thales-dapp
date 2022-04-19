@@ -128,12 +128,13 @@ const BannerContainer = styled(FlexDiv)`
         font-weight: bold;
         cursor: pointer;
         margin-left: 0.2em;
+        color: var(--input-border-color);
     }
     a {
         display: contents;
         font-weight: bold;
         cursor: pointer;
-        color: #ffffff;
+        color: var(--input-border-color);
     }
 `;
 

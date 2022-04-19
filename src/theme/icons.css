@@ -94,6 +94,10 @@
     content: '\0054';
 }
 
+.icon-home--telegram:before {
+    content: '\0055';
+}
+
 .icon--triangle:before {
     content: '\0034';
 }

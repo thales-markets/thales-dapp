@@ -19,7 +19,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, width, 
     };
     const AssetIcon = getAssetIcon(currencyKey);
 
-    if (currencyKey == 'LYRA' || currencyKey == 'LUNA' || currencyKey == 'MATIC') {
+    if (currencyKey == 'LYRA' || currencyKey == 'LUNA' || currencyKey == 'MATIC' || currencyKey == 'PERP') {
         synthIconStyle = {
             ...synthIconStyle,
             padding: '3px',

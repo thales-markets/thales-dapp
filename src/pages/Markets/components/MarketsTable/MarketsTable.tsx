@@ -286,7 +286,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
 
                     return 0;
                 })
-                .slice(0, 10)
+                .slice(0, 11)
         );
 
         setAllAssets(result);

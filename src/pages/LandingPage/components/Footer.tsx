@@ -75,6 +75,9 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                     <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
                         <FooterIcon className="icon-home icon-home--twitter" />
                     </IconLink>
+                    <IconLink target="_blank" rel="noreferrer" href="https://t.me/thalesprotocol/">
+                        <FooterIcon className="icon-home icon-home--telegram" />
+                    </IconLink>
                     <IconLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                         <FooterIcon className="icon-home icon-home--docs" />
                     </IconLink>
