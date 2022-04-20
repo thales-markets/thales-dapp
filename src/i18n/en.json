@@ -310,12 +310,14 @@
                 "rip": "RIP"
             },
             "hot-market-card": {
+                "strike-price": "Strike price",
                 "price-per-option": "Price",
                 "time-left": "Time left",
                 "potential-profit": "Potential profit"
             },
             "hot-markets": {
-                "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor."
+                "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
+                "most-profitable-markets": "Most profitable markets"
             },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets"

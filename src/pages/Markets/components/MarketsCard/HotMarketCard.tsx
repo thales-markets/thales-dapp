@@ -19,6 +19,7 @@ export type HotMarket = {
     currencyKey: string;
     assetName: string;
     pricePerOption: number;
+    strikePrice: number;
     timeRemaining: number;
     potentialProfit: string;
     address: string;
@@ -28,6 +29,7 @@ const HotMarketCard: React.FC<HotMarket> = ({
     currencyKey,
     assetName,
     pricePerOption,
+    strikePrice,
     timeRemaining,
     potentialProfit,
     address,
@@ -49,6 +51,10 @@ const HotMarketCard: React.FC<HotMarket> = ({
                     </AssetNameContainer>
                 </AssetInfo>
                 <SectionContainer>
+                    <Header>{t('options.home.hot-market-card.strike-price')}</Header>
+                    <SubHeader>{formatCurrencyWithSign(USD_SIGN, strikePrice, 2)}</SubHeader>
+                </SectionContainer>
+                <SectionContainer>
                     <Header>{t('options.home.hot-market-card.price-per-option')}</Header>
                     <SubHeader>
                         {pricePerOption != 0 ? formatCurrencyWithSign(USD_SIGN, pricePerOption, 2) : 'N/A'}
@@ -68,7 +74,7 @@ const HotMarketCard: React.FC<HotMarket> = ({
 };
 
 const Card = styled(MarketCardContainer)<{ address?: string }>`
-    padding: 20px;
+    padding: 15px 20px;
     width: 195px;
     height: 316px;
     display: flex;
@@ -89,7 +95,7 @@ const SectionContainer = styled.div`
 const AssetInfo = styled.div`
     display: flex;
     flex-direction: row;
-    margin-bottom: 32px;
+    margin-bottom: 12px;
     margin-right: -5px;
     margin-left: -5px;
 `;
