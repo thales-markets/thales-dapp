@@ -283,10 +283,12 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                                             <span>
                                                 <Link
                                                     onClick={(event) => {
-                                                        event.preventDefault();
-                                                        window.location.replace(
-                                                            getQuixoticLink(networkId, user.tokenId)
-                                                        );
+                                                        if (window.innerWidth < 1024) {
+                                                            event.preventDefault();
+                                                            window.location.replace(
+                                                                getQuixoticLink(networkId, user.tokenId)
+                                                            );
+                                                        }
                                                     }}
                                                     href={getQuixoticLink(networkId, user.tokenId)}
                                                     target="_blank"

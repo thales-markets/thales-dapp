@@ -31,7 +31,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isL2 = getIsOVM(networkId);
 
-    const royalePassportQuery = useRoyalePassportsURIsQuery([30, 31, 32], {
+    const royalePassportQuery = useRoyalePassportsURIsQuery(royalePassportIds, {
         enabled: isL2 && isWalletConnected,
     });
     const royalePassports = royalePassportQuery.isSuccess ? royalePassportQuery.data : {};
@@ -43,8 +43,6 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
         setSelectedPassport(0);
         handleClose();
     };
-
-    console.log(royalePassportIds);
 
     return (
         <Modal
@@ -59,13 +57,13 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                 <Header>
                     <Text className="text-m font-sansation">
                         {t('options.royale.my-passports-dialog.passport-amount', {
-                            amount: [30, 31, 32].length,
+                            amount: royalePassportIds.length,
                         })}
                     </Text>
                     <XButton onClick={() => closeDialog()} />
                 </Header>
                 <PassportsWrapper>
-                    {[30, 31, 32].map((passportId: number, key: number) => (
+                    {royalePassportIds.map((passportId: number, key: number) => (
                         <FlexDiv key={key} style={{ flexDirection: 'column', gap: 5 }}>
                             <UserLabel>
                                 {t('options.royale.my-passports-dialog.passport-id')}
@@ -93,8 +91,10 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                         if (selectedPassport === 0) {
                             event.preventDefault();
                         } else {
-                            event.preventDefault();
-                            window.open(getQuixoticLink(networkId, selectedPassport));
+                            if (window.innerWidth < 1024) {
+                                event.preventDefault();
+                                window.open(getQuixoticLink(networkId, selectedPassport));
+                            }
                         }
                     }}
                     href={getQuixoticLink(networkId, selectedPassport)}

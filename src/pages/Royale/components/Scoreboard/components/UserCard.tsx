@@ -448,11 +448,11 @@ export const UserCard: React.FC<UserCardProps> = ({
                     </FlexDiv>
                     <FlexDiv>
                         <Button
-                            // disabled={royalePassports.length === 0}
-                            // className={royalePassports.length === 0 ? 'disabled' : ''}
+                            disabled={royalePassports.length === 0}
+                            className={royalePassports.length === 0 ? 'disabled' : ''}
                             style={{
-                                // display: royalePassports.length === 0 ? 'none' : '',
-                                // cursor: royalePassports.length === 0 ? 'not-allowed' : '',
+                                display: royalePassports.length === 0 ? 'none' : '',
+                                cursor: royalePassports.length === 0 ? 'not-allowed' : '',
                                 whiteSpace: 'pre',
                                 fontSize: 15,
                             }}
@@ -618,7 +618,8 @@ export const UserCard: React.FC<UserCardProps> = ({
                                             <Circle
                                                 currentRound={
                                                     (royaleData as any).currentRound === key + 1 &&
-                                                    !(royaleData as any).seasonFinished
+                                                    !(royaleData as any).seasonFinished &&
+                                                    user.isAlive
                                                 }
                                                 disabled={(royaleData as any).signUpPeriod < new Date()}
                                             />
