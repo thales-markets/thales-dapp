@@ -268,11 +268,13 @@ const App = () => {
                             </Route>
                         )}
 
-                        <Route exact path={ROUTES.Options.Leaderboard}>
-                            <DappLayout>
-                                <Leaderboard />
-                            </DappLayout>
-                        </Route>
+                        {isPolygon && (
+                            <Route exact path={ROUTES.Options.Leaderboard}>
+                                <DappLayout>
+                                    <Leaderboard />
+                                </DappLayout>
+                            </Route>
+                        )}
 
                         <Route
                             exact
