@@ -702,7 +702,8 @@
                 "strike-price": "Strike price",
                 "paid": "Paid",
                 "amount": "Amount",
-                "activity": "Activity"
+                "activity": "Activity",
+                "tx-status": "TX Status"
             },
             "row-card": {
                 "views": "Views",
