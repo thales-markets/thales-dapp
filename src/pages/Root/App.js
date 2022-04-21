@@ -19,7 +19,13 @@ import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
 import { setTheme } from 'redux/modules/ui';
-import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import {
+    getEthereumNetwork,
+    getIsOVM,
+    getIsPolygon,
+    isNetworkSupported,
+    SUPPORTED_NETWORKS_NAMES,
+} from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
@@ -48,6 +54,7 @@ const App = () => {
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
     const { trackPageView } = useMatomo();
 
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
@@ -193,11 +200,13 @@ const App = () => {
             <Suspense fallback={<Loader />}>
                 <Router history={history}>
                     <Switch>
-                        <Route exact path={ROUTES.Options.Royal}>
-                            <MainLayout>
-                                <ThalesRoyal />
-                            </MainLayout>
-                        </Route>
+                        {!isPolygon && (
+                            <Route exact path={ROUTES.Options.Royal}>
+                                <MainLayout>
+                                    <ThalesRoyal />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <DappLayout>
@@ -251,17 +260,21 @@ const App = () => {
                                 </DappLayout>
                             </Route>
                         )}
-                        <Route exact path={ROUTES.Options.Token}>
-                            <DappLayout>
-                                <TokenPage />
-                            </DappLayout>
-                        </Route>
+                        {!isPolygon && (
+                            <Route exact path={ROUTES.Options.Token}>
+                                <DappLayout>
+                                    <TokenPage />
+                                </DappLayout>
+                            </Route>
+                        )}
 
-                        <Route exact path={ROUTES.Options.Leaderboard}>
-                            <DappLayout>
-                                <Leaderboard />
-                            </DappLayout>
-                        </Route>
+                        {isPolygon && (
+                            <Route exact path={ROUTES.Options.Leaderboard}>
+                                <DappLayout>
+                                    <Leaderboard />
+                                </DappLayout>
+                            </Route>
+                        )}
 
                         <Route
                             exact

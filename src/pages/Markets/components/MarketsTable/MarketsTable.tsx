@@ -284,6 +284,9 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     if (a === 'LINK' || a === 'sLINK') return -1;
                     if (b === 'LINK' || b === 'sLINK') return 1;
 
+                    if (a < b) return -1;
+                    if (a > b) return 1;
+
                     return 0;
                 })
                 .slice(0, 11)

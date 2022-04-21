@@ -4,6 +4,8 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { formatCurrency } from 'utils/formatters/number';
 
+const LP_STAKING_WEEKLY_REWARDS = 45000;
+
 export interface Balance {
     totalInUSD: number;
     apr: string;
@@ -45,7 +47,9 @@ const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
                 const totalInUSD = Number(
                     (weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd).toFixed(2)
                 );
-                const apr = ((100 * (30000 * ratesResults.thales.usd * 52)) / totalInUSD).toFixed(0);
+                const apr = ((100 * (LP_STAKING_WEEKLY_REWARDS * ratesResults.thales.usd * 52)) / totalInUSD).toFixed(
+                    0
+                );
 
                 return { totalInUSD, apr: formatCurrency(apr) + '%' };
             } catch (e) {

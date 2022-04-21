@@ -285,6 +285,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.LYRA]: 'Lyra',
     [CRYPTO_CURRENCY_MAP.LUNA]: 'Luna',
     [SYNTHS_MAP.sSOL]: 'Solana',
+    [CRYPTO_CURRENCY_MAP.PERP]: 'Perpetual Protocol',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
@@ -352,6 +353,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sRUNE]: 'thorchain',
     [SYNTHS_MAP.sYFI]: 'yearn-finance',
     [CRYPTO_CURRENCY_MAP.MATIC]: 'matic-network',
+    [CRYPTO_CURRENCY_MAP.PERP]: 'perpetual-protocol',
 };
 
 export const currencyKeyToDataFeedSourceMap = {

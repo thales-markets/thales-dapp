@@ -41,6 +41,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.long}`,
                 pricePerOption: market.longPrice,
+                strikePrice: market.strikePrice,
                 timeRemaining: market.timeRemaining,
                 potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.longPrice)),
                 address: market.address,
@@ -51,6 +52,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.short}`,
                 pricePerOption: market.shortPrice,
+                strikePrice: market.strikePrice,
                 timeRemaining: market.timeRemaining,
                 potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.shortPrice)),
                 address: market.address,
@@ -100,7 +102,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     return (
         <>
             <Title>
-                {'Most profitable markets'}
+                {t('options.home.hot-markets.most-profitable-markets')}
                 <Tooltip
                     message={t('options.home.hot-markets.tooltip-text')}
                     type={'info'}
@@ -118,6 +120,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                                 fullAssetName={market.fullAssetName}
                                 currencyKey={market.currencyKey}
                                 assetName={market.assetName}
+                                strikePrice={market.strikePrice}
                                 pricePerOption={market.pricePerOption}
                                 timeRemaining={market.timeRemaining}
                                 potentialProfit={market.potentialProfit}

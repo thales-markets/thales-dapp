@@ -87,7 +87,16 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                     ))}
                 </PassportsWrapper>
                 <Link
-                    onClick={(e) => (selectedPassport === 0 ? e.preventDefault() : '')}
+                    onClick={(event) => {
+                        if (selectedPassport === 0) {
+                            event.preventDefault();
+                        } else {
+                            if (window.innerWidth < 1024) {
+                                event.preventDefault();
+                                window.open(getQuixoticLink(networkId, selectedPassport));
+                            }
+                        }
+                    }}
                     href={getQuixoticLink(networkId, selectedPassport)}
                     className={selectedPassport === 0 ? 'disabled' : ''}
                     target="_blank"

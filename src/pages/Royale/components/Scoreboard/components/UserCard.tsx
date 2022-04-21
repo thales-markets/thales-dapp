@@ -265,7 +265,7 @@ export const UserCard: React.FC<UserCardProps> = ({
                                             setShowSwap(true);
                                         }}
                                     >
-                                        {t('options.swap.button-text')}
+                                        {t('options.swap.button-text', { token: SYNTHS_MAP.sUSD })}
                                     </Button>
                                     <Modal
                                         open={showSwap}
@@ -601,7 +601,8 @@ export const UserCard: React.FC<UserCardProps> = ({
                                     <PositionButton
                                         currentRound={
                                             (royaleData as any).currentRound === key + 1 &&
-                                            !(royaleData as any).seasonFinished
+                                            !(royaleData as any).seasonFinished &&
+                                            user.isAlive
                                         }
                                         disabled={
                                             isBuyingIn ||
@@ -617,7 +618,8 @@ export const UserCard: React.FC<UserCardProps> = ({
                                             <Circle
                                                 currentRound={
                                                     (royaleData as any).currentRound === key + 1 &&
-                                                    !(royaleData as any).seasonFinished
+                                                    !(royaleData as any).seasonFinished &&
+                                                    user.isAlive
                                                 }
                                                 disabled={(royaleData as any).signUpPeriod < new Date()}
                                             />

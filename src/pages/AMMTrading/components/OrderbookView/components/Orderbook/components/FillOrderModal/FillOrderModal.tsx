@@ -19,7 +19,6 @@ import { SubmitButtonContainer, SummaryItem, SummaryLabel, SummaryContent, Light
 import { CloseIconContainer, ModalContainer, ModalTitle, StyledModal, ModalHeader } from '../components';
 import ApprovalModal from 'components/ApprovalModal';
 import WalletBalance from 'pages/AMMTrading/components/AMM/components/WalletBalance';
-import ValidationMessage from 'components/ValidationMessage';
 import Divider from 'pages/AMMTrading/components/AMM/styled-components/Divider';
 
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -57,7 +56,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         truncToDecimals(order.displayOrder.fillableAmount, DEFAULT_OPTIONS_DECIMALS)
     );
     const [isFilling, setIsFilling] = useState<boolean>(false);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
@@ -203,7 +201,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     };
 
     const handleFillOrder = async () => {
-        setTxErrorMessage(null);
         setIsFilling(true);
         const id = toast.loading(t('options.market.trade-options.fill-order.progress'));
         try {
@@ -216,7 +213,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             onClose();
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             toast.update(
                 id,
                 getErrorToastOptions(
@@ -365,11 +361,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                 <Divider />
                 <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
             </ModalContainer>
             {openApprovalModal && (
                 <ApprovalModal
