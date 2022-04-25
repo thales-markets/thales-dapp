@@ -966,7 +966,8 @@
                 "paid": "有薪酬的",
                 "strike-price": "行使价",
                 "time-date": "时间/日期",
-                "name": "资产名称"
+                "name": "资产名称",
+                "tx-status": "发送状态"
             },
             "row-card": {
                 "views": "意见",
