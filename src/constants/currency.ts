@@ -50,6 +50,9 @@ import { ReactComponent as LYRAIcon } from 'assets/currencies/crypto/LYRA.svg';
 import { ReactComponent as LUNAIcon } from 'assets/currencies/crypto/LUNA.svg';
 import { ReactComponent as MATICIcon } from 'assets/currencies/crypto/MATIC.svg';
 import { ReactComponent as PERPIcon } from 'assets/currencies/crypto/PERP.svg';
+import { ReactComponent as APEIcon } from 'assets/currencies/crypto/APE.svg';
+import { ReactComponent as CVXIcon } from 'assets/currencies/crypto/CVX.svg';
+import { ReactComponent as OHMIcon } from 'assets/currencies/crypto/OHM.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -147,6 +150,9 @@ export const CRYPTO_CURRENCY = [
     'LYRA',
     'LUNA',
     'PERP',
+    'APE',
+    'CVX',
+    'OHM',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -225,6 +231,9 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.LUNA]: LUNAIcon,
     [CRYPTO_CURRENCY_MAP.MATIC]: MATICIcon,
     [CRYPTO_CURRENCY_MAP.PERP]: PERPIcon,
+    [CRYPTO_CURRENCY_MAP.APE]: APEIcon,
+    [CRYPTO_CURRENCY_MAP.CVX]: CVXIcon,
+    [CRYPTO_CURRENCY_MAP.OHM]: OHMIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -286,6 +295,9 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.LUNA]: 'Luna',
     [SYNTHS_MAP.sSOL]: 'Solana',
     [CRYPTO_CURRENCY_MAP.PERP]: 'Perpetual Protocol',
+    [CRYPTO_CURRENCY_MAP.APE]: 'Apecoin',
+    [CRYPTO_CURRENCY_MAP.CVX]: 'Convex Finance',
+    [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
@@ -354,6 +366,9 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [SYNTHS_MAP.sYFI]: 'yearn-finance',
     [CRYPTO_CURRENCY_MAP.MATIC]: 'matic-network',
     [CRYPTO_CURRENCY_MAP.PERP]: 'perpetual-protocol',
+    [CRYPTO_CURRENCY_MAP.APE]: 'apecoin',
+    [CRYPTO_CURRENCY_MAP.CVX]: 'convex-finance',
+    [CRYPTO_CURRENCY_MAP.OHM]: 'olympus',
 };
 
 export const currencyKeyToDataFeedSourceMap = {
@@ -490,6 +505,18 @@ export const currencyKeyToDataFeedSourceMap = {
         link: '',
     },
     [CRYPTO_CURRENCY_MAP.MATIC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.APE]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.CVX]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.OHM]: {
         source: 'CHAINLINK',
         link: '',
     },
