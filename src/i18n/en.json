@@ -703,7 +703,8 @@
                 "paid": "Paid",
                 "amount": "Amount",
                 "activity": "Activity",
-                "tx-status": "TX Status"
+                "tx-status": "TX Status",
+                "tx-status-mobile": "TX"
             },
             "row-card": {
                 "views": "Views",

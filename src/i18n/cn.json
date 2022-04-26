@@ -967,7 +967,8 @@
                 "strike-price": "行使价",
                 "time-date": "时间/日期",
                 "name": "资产名称",
-                "tx-status": "发送状态"
+                "tx-status": "发送状态",
+                "tx-status-mobile": "德克萨斯州"
             },
             "row-card": {
                 "views": "意见",
