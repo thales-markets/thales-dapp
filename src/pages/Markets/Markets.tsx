@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import MarketsTable from './components/MarketsTable';
 
 import HotMarkets from './components/HotMarkets';
 
 import { RootState } from 'redux/rootReducer';
-import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
@@ -22,12 +22,30 @@ import InfoBanner from '../../components/InfoBanner';
 import styled from 'styled-components';
 import { FlexDiv } from '../../theme/common';
 import { Trans } from 'react-i18next';
+import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 
 // const MAX_HOT_MARKETS = 6;
 
 const Markets: React.FC = () => {
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!isWalletConnected && window.ethereum) {
+            (window.ethereum as any).on('chainChanged', (chainId: any) => {
+                const networkIdInt = Number(chainId) as NetworkId;
+
+                dispatch(
+                    updateNetworkSettings({
+                        networkId: networkIdInt,
+                        networkName: SUPPORTED_NETWORKS_NAMES[networkIdInt]?.toLowerCase(),
+                    })
+                );
+            });
+        }
+    }, []);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
