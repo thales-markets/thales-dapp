@@ -27,10 +27,10 @@ const DappHeader: React.FC = () => {
             <UserCard />
             <Sidebar>
                 <ItemsContainer>
-                    <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Home)}>
+                    <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Options.Home)}>
                         <LogoIcon width="38" height="42" src={logoSmallIcon} />
                     </SPAAnchor>
-                    <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Home)}>
+                    <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Options.Home)}>
                         <LogoIcon height="42" src={logoIcon} />
                     </SPAAnchor>
 
