@@ -201,7 +201,8 @@
             "amm-mining-label": "Награды AMM",
             "amm-reporting-label": "Отчетность AMM",
             "markets": "Рынки",
-            "profile-label": "Профиль"
+            "profile-label": "Профиль",
+            "exotic-markets-label": "Экзотические рынки"
         },
         "coming-soon": "Скоро...",
         "of": "из",
