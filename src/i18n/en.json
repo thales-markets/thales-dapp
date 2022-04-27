@@ -199,7 +199,8 @@
             "profile-label": "Profile",
             "trade-history-label": "Trading history",
             "amm-mining-label": "AMM rewards",
-            "amm-reporting-label": "AMM reporting"
+            "amm-reporting-label": "AMM reporting",
+            "exotic-markets-label": "Exotic markets"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -455,14 +456,14 @@
                     "weekly-bonus-rewards": "Maximum bonus rewards on top of base rewards",
                     "thales-staking-label": "Thales staking",
                     "snx-staking-label": "SNX staking",
-                    "amm-label": "AMM",
+                    "amm-label": "Protocol volume",
                     "thales-royale-label": "Thales Royale",
                     "max-reward-label": "Max reward: {{max}}",
                     "bonus-info": {
                         "current-snx-staking-label": "Current SNX staked",
                         "additional-snx-staking-label": "Additional SNX to stake for max bonus",
-                        "current-amm-label": "Current AMM volume",
-                        "additional-amm-label": "Additional AMM volume for max bonus",
+                        "current-amm-label": "Current protocol volume",
+                        "additional-amm-label": "Additional protocol volume for max bonus",
                         "current-thales-royale-label": "Current participation",
                         "thales-royale-participation-yes": "YES",
                         "thales-royale-participation-no": "NO",
@@ -476,8 +477,8 @@
                     "bonus-tooltip": {
                         "snx-staking-title": "SNX staking bonus",
                         "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{snxVolumeRewardsMultiplier}} SNX staked per THALES he would receive as base reward. If the staker has less SNX staked, he/she gets a bonus percentage multiplier based on the formula:",
-                        "amm-title": "AMM bonus",
-                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{ammVolumeRewardsMultiplier}} sUSD AMM volume in last 4 periods per THALES he gets as base reward. If the staked did less volume, he/she gets a bonus percentage multiplier based on the formula:",
+                        "amm-title": "Protocol volume bonus",
+                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker has at least {{ammVolumeRewardsMultiplier}} sUSD AMM or exotic markets volume in last 4 periods per THALES he gets as base reward. If the staker did less volume, he/she gets a bonus percentage multiplier based on the formula:",
                         "thales-royale-title": "Thales Royale bonus",
                         "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
                     },
@@ -640,9 +641,9 @@
             }
         },
         "create-market": {
-            "title": "Create a new Binary Options market",
-            "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
-            "note": "* Note: The amount of {{token}} deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN options tokens for this market.",
+            "title": "Create a new positions market",
+            "subtitle": "To create a new positions market select an asset, a strike price, and the market expiry date. You'll also have to select how many positions tokens you will mint",
+            "note": "* Note: The amount of {{token}} deposited will dictate how many up and down positions tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN positions tokens for this market.",
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
@@ -655,7 +656,7 @@
             },
             "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
             "insufficient-amount": "Please ensure your wallet has sufficient sUSD.",
-            "sellOptions": "Sell minted UP/DOWN options",
+            "sellOptions": "Sell minted UP/DOWN positions",
             "summary": {
                 "title": "Market Summary",
                 "strikePrice": "Strike price",
@@ -703,7 +704,8 @@
                 "paid": "Paid",
                 "amount": "Amount",
                 "activity": "Activity",
-                "tx-status": "TX Status"
+                "tx-status": "TX Status",
+                "tx-status-mobile": "TX"
             },
             "row-card": {
                 "views": "Views",
@@ -1486,6 +1488,7 @@
         "amm-disabled": "AMM trading disabled",
         "beta": "BETA",
         "max-amount": "Max amount {{amount}}",
+        "max-button-tooltip": "Use all available collateral minus the buffer equivalent to the slippage tolerance",
         "price-changed-warning": "Price changed, please review",
         "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more up options are being bought from the AMM than downs, it will add a skew price impact to the up option pricing, while offering down options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market with calculated odds via BlackScholes above 10% and below 90% and up to 24 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
     },

@@ -19,6 +19,7 @@ type ContainerChildren = {
         any,
         { leftBorder?: boolean; minWidth?: string; alignItems?: string; currency?: boolean; priceChart?: boolean }
     >;
+    ColumnAnchorSubContainer: StyledComponent<'a', any>;
     SubContainer: StyledComponent<'div', any, { hidden?: boolean }> & SubContainerChildren;
     Divider: StyledComponent<'div', any>;
     Icon: StyledComponent<'i', any, { color?: string }>;
@@ -47,6 +48,10 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled(CardCo
 const ChartContainer = styled.div`
     width: 100%;
     justify-content: space-around;
+`;
+
+const ColumnAnchorSubContainer = styled.a`
+    display: contents;
 `;
 
 // @ts-ignore
@@ -82,6 +87,7 @@ const ColumnContainer = styled.div<{
     }
     min-width: ${(_props) => (_props?.minWidth ? _props.minWidth : '')};
     ${(_props) => (_props?.leftBorder ? 'border-left: 2px solid var(--card-border-color)' : '')};
+    cursor: ${(_props) => (_props?.currency ? 'pointer' : '')};
 `;
 
 const Divider = styled.div`
@@ -157,6 +163,7 @@ Container.ChartContainer = ChartContainer;
 Container.Divider = Divider;
 Container.Icon = Icon;
 Container.ColumnContainer = ColumnContainer;
+Container.ColumnAnchorSubContainer = ColumnAnchorSubContainer;
 Container.SubContainer = SubContainer;
 
 export default Container;

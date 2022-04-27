@@ -89,7 +89,10 @@ const UserActivity: React.FC = () => {
                             value: item.type,
                         },
                         {
-                            title: t('options.market.your-activity.tx-status'),
+                            title:
+                                window.innerWidth < 767
+                                    ? t('options.market.your-activity.tx-status-mobile')
+                                    : t('options.market.your-activity.tx-status'),
                             value: item.link,
                         },
                     ],
@@ -157,7 +160,6 @@ const UserActivity: React.FC = () => {
 
 const FirstColumn: React.FC<{ value: TileRow | string }> = ({ value }) => {
     if (typeof value !== 'string') {
-        console.log('Value ', value);
         return (
             <DateTimeContainer>
                 <DateTimeContainer.Date>

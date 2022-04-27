@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import { getIsBuyState } from 'redux/modules/marketWidgets';
 import Tooltip from 'components/Tooltip';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 
 const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
@@ -91,33 +92,39 @@ const RowCard: React.FC = () => {
             {marketInfo && (
                 <Container>
                     <Container.ColumnContainer currency={true} alignItems={'center'}>
-                        <Container.SubContainer>
-                            <CurrencyIcon
-                                synthIconStyle={{
-                                    height: '51px',
-                                    width: '51px',
-                                    marginRight: '0px !important',
-                                }}
-                                currencyKey={marketInfo.currencyKey}
-                                width={'51px'}
-                                height={'51px'}
-                            />
-                        </Container.SubContainer>
-                        <Container.SubContainer>
-                            <Container.SubContainer.Value>
-                                {marketInfo.currencyKey}
-                                {currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.source == 'TWAP' && (
-                                    <Tooltip
-                                        message={t('options.home.markets-table.twap-tooltip')}
-                                        link={currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.link}
-                                        type={'info'}
-                                        iconColor={'var(--primary-color)'}
-                                        container={{ width: '15px' }}
-                                        interactive={true}
-                                    />
-                                )}
-                            </Container.SubContainer.Value>
-                        </Container.SubContainer>
+                        <Container.ColumnAnchorSubContainer
+                            href={getEtherscanAddressLink(networkId, marketInfo.address)}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <Container.SubContainer>
+                                <CurrencyIcon
+                                    synthIconStyle={{
+                                        height: '51px',
+                                        width: '51px',
+                                        marginRight: '0px !important',
+                                    }}
+                                    currencyKey={marketInfo.currencyKey}
+                                    width={'51px'}
+                                    height={'51px'}
+                                />
+                            </Container.SubContainer>
+                            <Container.SubContainer>
+                                <Container.SubContainer.Value>
+                                    {marketInfo.currencyKey}
+                                    {currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.source == 'TWAP' && (
+                                        <Tooltip
+                                            message={t('options.home.markets-table.twap-tooltip')}
+                                            link={currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.link}
+                                            type={'info'}
+                                            iconColor={'var(--primary-color)'}
+                                            container={{ width: '15px' }}
+                                            interactive={true}
+                                        />
+                                    )}
+                                </Container.SubContainer.Value>
+                            </Container.SubContainer>
+                        </Container.ColumnAnchorSubContainer>
                     </Container.ColumnContainer>
                     <Container.ColumnContainer>
                         <Container.SubContainer>

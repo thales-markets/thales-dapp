@@ -43,6 +43,7 @@ import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, U
 import { toast } from 'react-toastify';
 import { getStableCoinForNetwork } from '../../../../utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
+import Tooltip from 'components/Tooltip';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -657,13 +658,8 @@ const AMM: React.FC = () => {
                 );
 
                 const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(tmpSuggestedAmount);
-                const sUSDDifference = stableCoinFormatter(ammQuote, networkId) - sUSDBalance;
 
-                tmpSuggestedAmount = Number(sUSDBalance) / Number(ammPrice);
-
-                if (sUSDDifference < 0) {
-                    tmpSuggestedAmount -= Math.abs(Number(sUSDDifference) / Number(ammPrice));
-                }
+                tmpSuggestedAmount = (Number(sUSDBalance) / Number(ammPrice)) * ((100 - Number(slippage)) / 100);
 
                 setAmount(truncToDecimals(tmpSuggestedAmount));
             }
@@ -731,12 +727,15 @@ const AMM: React.FC = () => {
                     }
                 )}
             >
-                <MaxButton
-                    onClick={() => onMaxClick(isBuy)}
-                    disabled={formDisabled || insufficientLiquidity || isGettingQuote}
-                >
-                    {t('common.max')}
-                </MaxButton>
+                <MaxButtonContainer>
+                    <MaxButton
+                        onClick={() => onMaxClick(isBuy)}
+                        disabled={formDisabled || insufficientLiquidity || isGettingQuote}
+                    >
+                        {t('common.max')}
+                    </MaxButton>
+                    <Tooltip message={t('amm.max-button-tooltip')} type={'info'} />
+                </MaxButtonContainer>
             </Input>
             <RangeSlider
                 min={1}
@@ -833,6 +832,15 @@ const AMM: React.FC = () => {
     );
 };
 
+const MaxButtonContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    position: absolute;
+    top: 5px;
+    right: 2px;
+`;
+
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -856,9 +864,9 @@ const ButtonWrapper = styled.div`
 `;
 
 export const MaxButton = styled.button`
-    position: absolute;
-    top: 5px;
-    right: 10px;
+    /* position: absolute; */
+    /* top: 5px; */
+    /* right: 10px; */
     padding: 1px 8px;
     font-weight: 700;
     font-size: 10px;

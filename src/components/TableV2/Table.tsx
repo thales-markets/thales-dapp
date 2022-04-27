@@ -327,7 +327,7 @@ const Table: React.FC<TableProps> = ({
                     {!hidePagination && (
                         <Pagination
                             rowsPerPageOptions={resultsPerPage ? resultsPerPage : [5, 10, 20, 25]}
-                            count={data.length}
+                            count={leaderboardView ? data.length - 1 : data.length}
                             rowsPerPage={pageSize}
                             page={pageIndex}
                             onPageChange={handleChangePage}

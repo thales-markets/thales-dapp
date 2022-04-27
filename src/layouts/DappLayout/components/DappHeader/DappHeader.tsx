@@ -27,10 +27,10 @@ const DappHeader: React.FC = () => {
             <UserCard />
             <Sidebar>
                 <ItemsContainer>
-                    <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Home)}>
+                    <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Options.Home)}>
                         <LogoIcon width="38" height="42" src={logoSmallIcon} />
                     </SPAAnchor>
-                    <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Home)}>
+                    <SPAAnchor className="sidebar-logoBig" href={buildHref(ROUTES.Options.Home)}>
                         <LogoIcon height="42" src={logoIcon} />
                     </SPAAnchor>
 
@@ -89,6 +89,12 @@ const DappHeader: React.FC = () => {
                             label={t('common.sidebar.profile-label')}
                         />
                     )}
+                    <Divider />
+                    <DappHeaderItem
+                        href="https://exoticmarkets.xyz/"
+                        iconName="exotic-markets"
+                        label={t('common.sidebar.exotic-markets-label')}
+                    />
                 </ItemsContainer>
             </Sidebar>
         </Container>

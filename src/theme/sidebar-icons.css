@@ -15,7 +15,7 @@
 }
 
 .icon--governance:before {
-    content: '\0046';
+    content: '\0071';
 }
 
 .icon--markets-overview:before {
@@ -96,4 +96,8 @@
 
 .icon--third-place:before {
     content: '\0049';
+}
+
+.icon--exotic-markets:before {
+    content: '\0070';
 }

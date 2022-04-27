@@ -17,7 +17,7 @@ import { uniqBy, orderBy } from 'lodash';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 
-import { COLORS_NEW } from 'constants/ui';
+import { UI_COLORS } from 'constants/ui';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { getStableCoinForNetwork } from '../../../../../utils/currency';
@@ -56,9 +56,9 @@ const MarketActivity: React.FC = () => {
     const getCellColor = (type: string) => {
         switch (type) {
             case 'buy':
-                return COLORS_NEW.LONG;
+                return UI_COLORS.GREEN;
             case 'sell':
-                return COLORS_NEW.SHORT;
+                return UI_COLORS.RED;
             default:
                 return 'var(--primary-color)';
         }

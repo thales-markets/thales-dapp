@@ -62,8 +62,8 @@ const Maturity: React.FC = () => {
     const { result } = optionsMarket;
     const longAmount = accountMarketInfo.long;
     const shortAmount = accountMarketInfo.short;
-    const nothingToExercise = !longAmount && !shortAmount;
     const isLongResult = result === 'long';
+    const nothingToExercise = (isLongResult && !longAmount) || (!isLongResult && !shortAmount);
     const isButtonDisabled = isExercising || !isWalletConnected || nothingToExercise || !gasLimit;
 
     useEffect(() => {
@@ -184,7 +184,7 @@ const Maturity: React.FC = () => {
                 <Input
                     container={{ height: '60px', margin: '0 10px 0 0' }}
                     value={longAmount}
-                    disabled={!longAmount}
+                    disabled={!isLongResult || !longAmount}
                     borderColor={UI_COLORS.GREEN}
                     valueEditDisable={true}
                     subValue={<Icon className="v2-icon v2-icon--up" color={UI_COLORS.GREEN} />}
@@ -192,7 +192,7 @@ const Maturity: React.FC = () => {
                 <Input
                     container={{ height: '60px' }}
                     value={shortAmount}
-                    disabled={!shortAmount}
+                    disabled={isLongResult || !shortAmount}
                     borderColor={UI_COLORS.RED}
                     valueEditDisable={true}
                     subValue={<Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />}
