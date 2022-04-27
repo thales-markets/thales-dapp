@@ -89,6 +89,12 @@ const DappHeader: React.FC = () => {
                             label={t('common.sidebar.profile-label')}
                         />
                     )}
+                    <Divider />
+                    <DappHeaderItem
+                        href="https://exoticmarkets.xyz/"
+                        iconName="exotic-markets"
+                        label={t('common.sidebar.exotic-markets-label')}
+                    />
                 </ItemsContainer>
             </Sidebar>
         </Container>

@@ -199,7 +199,8 @@
             "profile-label": "Profile",
             "trade-history-label": "Trading history",
             "amm-mining-label": "AMM rewards",
-            "amm-reporting-label": "AMM reporting"
+            "amm-reporting-label": "AMM reporting",
+            "exotic-markets-label": "Exotic markets"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
