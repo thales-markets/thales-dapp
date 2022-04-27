@@ -6,7 +6,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import formatDuration from 'date-fns/formatDuration';
 import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
-import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
 import {
@@ -842,9 +842,7 @@ export const CreateMarket: React.FC = () => {
                                             })}
                                         </InputLabel>
                                     )}
-                                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>
-                                        {SYNTHS_MAP.sLONG}
-                                    </CurrencyLabel>
+                                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>UP</CurrencyLabel>
                                     <FieldValidationMessage
                                         showValidation={!isLongAmountValid}
                                         message={t(
@@ -946,9 +944,7 @@ export const CreateMarket: React.FC = () => {
                                             })}
                                         </InputLabel>
                                     )}
-                                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>
-                                        {SYNTHS_MAP.sSHORT}
-                                    </CurrencyLabel>
+                                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>DOWN</CurrencyLabel>
                                     <FieldValidationMessage
                                         showValidation={!isShortAmountValid}
                                         message={t(

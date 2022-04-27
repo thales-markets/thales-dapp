@@ -641,9 +641,9 @@
             }
         },
         "create-market": {
-            "title": "Create a new Binary Options market",
-            "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
-            "note": "* Note: The amount of {{token}} deposited will dictate how many up and down options tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN options tokens for this market.",
+            "title": "Create a new positions market",
+            "subtitle": "To create a new positions market select an asset, a strike price, and the market expiry date. You'll also have to select how many positions tokens you will mint",
+            "note": "* Note: The amount of {{token}} deposited will dictate how many up and down positions tokens will be minted. For example, depositing 1,000 {{token}} mints 1,000 UP and 1,000 DOWN positions tokens for this market.",
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
@@ -656,7 +656,7 @@
             },
             "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
             "insufficient-amount": "Please ensure your wallet has sufficient sUSD.",
-            "sellOptions": "Sell minted UP/DOWN options",
+            "sellOptions": "Sell minted UP/DOWN positions",
             "summary": {
                 "title": "Market Summary",
                 "strikePrice": "Strike price",
