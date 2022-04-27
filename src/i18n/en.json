@@ -456,14 +456,14 @@
                     "weekly-bonus-rewards": "Maximum bonus rewards on top of base rewards",
                     "thales-staking-label": "Thales staking",
                     "snx-staking-label": "SNX staking",
-                    "amm-label": "AMM",
+                    "amm-label": "Protocol volume",
                     "thales-royale-label": "Thales Royale",
                     "max-reward-label": "Max reward: {{max}}",
                     "bonus-info": {
                         "current-snx-staking-label": "Current SNX staked",
                         "additional-snx-staking-label": "Additional SNX to stake for max bonus",
-                        "current-amm-label": "Current AMM volume",
-                        "additional-amm-label": "Additional AMM volume for max bonus",
+                        "current-amm-label": "Current protocol volume",
+                        "additional-amm-label": "Additional protocol volume for max bonus",
                         "current-thales-royale-label": "Current participation",
                         "thales-royale-participation-yes": "YES",
                         "thales-royale-participation-no": "NO",
@@ -477,8 +477,8 @@
                     "bonus-tooltip": {
                         "snx-staking-title": "SNX staking bonus",
                         "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{snxVolumeRewardsMultiplier}} SNX staked per THALES he would receive as base reward. If the staker has less SNX staked, he/she gets a bonus percentage multiplier based on the formula:",
-                        "amm-title": "AMM bonus",
-                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{ammVolumeRewardsMultiplier}} sUSD AMM volume in last 4 periods per THALES he gets as base reward. If the staked did less volume, he/she gets a bonus percentage multiplier based on the formula:",
+                        "amm-title": "Protocol volume bonus",
+                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker has at least {{ammVolumeRewardsMultiplier}} sUSD AMM or exotic markets volume in last 4 periods per THALES he gets as base reward. If the staker did less volume, he/she gets a bonus percentage multiplier based on the formula:",
                         "thales-royale-title": "Thales Royale bonus",
                         "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
                     },
