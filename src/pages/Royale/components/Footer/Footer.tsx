@@ -225,7 +225,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                             <InfoIconContainer>
                                 <RoyaleTooltip
                                     title={
-                                        royaleData?.seasonAsset !== 'LYRA'
+                                        royaleData?.seasonAsset !== 'LYRA' && royaleData?.seasonAsset !== 'PERP'
                                             ? t('options.royale.footer.price-source', {
                                                   token: royaleData?.seasonAsset,
                                               })
