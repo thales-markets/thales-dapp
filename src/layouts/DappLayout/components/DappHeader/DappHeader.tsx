@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useLocation } from 'react-router-dom';
 import { getIsPolygon } from '../../../../utils/network';
+import { LINKS } from 'constants/links';
 
 const DappHeader: React.FC = () => {
     const { t } = useTranslation();
@@ -91,9 +92,18 @@ const DappHeader: React.FC = () => {
                     )}
                     <Divider />
                     <DappHeaderItem
-                        href="https://exoticmarkets.xyz/"
+                        href={LINKS.ExoticMarkets}
                         iconName="exotic-markets"
                         label={t('common.sidebar.exotic-markets-label')}
+                        onClick={(event: any) => {
+                            if (window.innerWidth <= 767) {
+                                event.preventDefault();
+                                window.location.replace(LINKS.ExoticMarkets);
+                            } else {
+                                window.open(LINKS.ExoticMarkets);
+                            }
+                        }}
+                        simpleOnClick={true}
                     />
                 </ItemsContainer>
             </Sidebar>

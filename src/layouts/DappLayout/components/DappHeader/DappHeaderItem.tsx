@@ -7,11 +7,21 @@ type MenuItem = {
     href?: string;
     iconName: string;
     label: string;
+    onClick?: any;
+    simpleOnClick?: boolean;
 };
 
 type DappHeaderItemProps = MenuItem & { submenuItems?: MenuItem[] };
 
-const DappHeaderItem: React.FC<DappHeaderItemProps> = ({ href, className, iconName, label, submenuItems }) => {
+const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
+    href,
+    className,
+    iconName,
+    label,
+    submenuItems,
+    onClick,
+    simpleOnClick,
+}) => {
     const [showSubmenu, setShowSubmenu] = useState(false);
 
     if (submenuItems) {
@@ -37,7 +47,7 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({ href, className, iconNa
         );
     }
     return (
-        <SPAAnchor href={href || ''}>
+        <SPAAnchor href={href || ''} onClick={onClick} simpleOnClick={simpleOnClick}>
             <MenuItem className={className}>
                 <i className={`sidebar-icon icon--${iconName}`} />
                 <Text>{label}</Text>
