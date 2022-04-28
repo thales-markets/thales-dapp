@@ -32,4 +32,5 @@ export const LINKS = {
     AMM: {
         Tip: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-11.md',
     },
+    ExoticMarkets: 'https://exoticmarkets.xyz/',
 };

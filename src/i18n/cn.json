@@ -1239,7 +1239,6 @@
                 "info2": "泰勒斯鱿鱼游戏是一款<bold>预测标的价格涨跌的游戏</bold>，分6轮进行。",
                 "info3": "报名结束后，参与者将收到标的资产的目标价格。他们需要预测本轮结束时<bold>标的资产的市场价格会高于(△)还是低于(◯)目标价格</bold>。",
                 "info4": "预测正确的玩家晋级，预测错误的玩家被淘汰，连续6轮预测正确的玩家将成为最后的赢家。",
-                "info5": "游戏的报名费用为<bold>30 sUSD</bold>。最终获胜的玩家将会分享总奖池，包括所有参赛者的报名费用以及额外的保底奖金 <bold>1000 sUSD</bold>和 <bold>1000 THALES</bold>。",
                 "info6": "如果想了解游戏的更多细节，请阅读: ",
                 "info7": "<italic>祝你好运，让战斗开始吧！</italic>",
                 "blog": "《泰勒斯鱿鱼游戏指南》",
@@ -1302,7 +1301,8 @@
                 "passports-in-wallet": "钱包中的皇家护照：",
                 "choose-default-positions": "为选定的 Royale Passport ID 选择所有回合的默认位置：",
                 "my-passports": "出示我的护照",
-                "owned-by": "拥有者：{{玩家}}"
+                "owned-by": "拥有者：{{玩家}}",
+                "info5": "当前买入为 <bold>30 sUSD</bold>。获胜者将分享一个奖池，该奖池由所有参与者的参赛金加上当前奖励 <bold>1000 THALES</bold> 组成，作为额外奖励。"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

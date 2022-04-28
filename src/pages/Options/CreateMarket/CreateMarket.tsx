@@ -82,6 +82,11 @@ datePickerMaxDate.setFullYear(datePickerMaxDate.getFullYear() + 2);
 
 export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
 
+export enum PositionType {
+    UP = 'UP',
+    DOWN = 'DOWN',
+}
+
 export const CreateMarket: React.FC = () => {
     try {
         const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -842,7 +847,9 @@ export const CreateMarket: React.FC = () => {
                                             })}
                                         </InputLabel>
                                     )}
-                                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>UP</CurrencyLabel>
+                                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>
+                                        {PositionType.UP}
+                                    </CurrencyLabel>
                                     <FieldValidationMessage
                                         showValidation={!isLongAmountValid}
                                         message={t(
@@ -944,7 +951,9 @@ export const CreateMarket: React.FC = () => {
                                             })}
                                         </InputLabel>
                                     )}
-                                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>DOWN</CurrencyLabel>
+                                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>
+                                        {PositionType.DOWN}
+                                    </CurrencyLabel>
                                     <FieldValidationMessage
                                         showValidation={!isShortAmountValid}
                                         message={t(

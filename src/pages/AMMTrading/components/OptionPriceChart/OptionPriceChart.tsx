@@ -13,7 +13,7 @@ type OptionPriceChartProps = {
 const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data }) => {
     return (
         <ResponsiveContainer width={'100%'} height={'100%'}>
-            <LineChart data={data} margin={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <LineChart data={data} margin={{ top: 10, bottom: 10, left: 10, right: -10 }}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
                 <YAxis
                     domain={[0, 1]}
