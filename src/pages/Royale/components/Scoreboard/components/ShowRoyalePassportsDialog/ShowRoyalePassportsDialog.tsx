@@ -93,7 +93,7 @@ const ShowRoyalePassportsDialog: React.FC<ShowRoyalePassportsDialogProps> = ({
                         } else {
                             if (window.innerWidth < 1024) {
                                 event.preventDefault();
-                                window.open(getQuixoticLink(networkId, selectedPassport));
+                                window.location.replace(getQuixoticLink(networkId, selectedPassport));
                             }
                         }
                     }}

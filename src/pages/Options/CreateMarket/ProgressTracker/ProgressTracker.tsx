@@ -6,11 +6,11 @@ import stateEmpty from 'assets/images/state-empty.svg';
 import styled from 'styled-components';
 import './media.scss';
 import { useTranslation } from 'react-i18next';
-import { SYNTHS_MAP } from 'constants/currency';
 import { getStableCoinForNetwork } from '../../../../utils/currency';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
 import { getNetworkId } from '../../../../redux/modules/wallet';
+import { PositionType } from '../CreateMarket';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;
@@ -83,7 +83,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                     {props.showShortProcess && <Line className={props.isLongSubmitted ? 'fill' : ''}></Line>}
                     <Label className="text-s pale-grey">
                         {t('options.create-market.progress-tracker.submitting', {
-                            currencyKey: SYNTHS_MAP.sLONG,
+                            currencyKey: PositionType.UP,
                         })}
                     </Label>
                 </FlexDiv>
@@ -106,7 +106,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                     ></Image>
                     <Label className="text-s pale-grey">
                         {t('options.create-market.progress-tracker.submitting', {
-                            currencyKey: SYNTHS_MAP.sSHORT,
+                            currencyKey: PositionType.DOWN,
                         })}
                     </Label>
                 </FlexDiv>

@@ -36,6 +36,10 @@ const PriceContainer: StyledComponent<'div', any> & PriceChildren = styled.div<{
     font-family: Roboto !important;
     font-size: 25px;
     margin-top: 50px;
+    @media (max-width: 768px) {
+        font-size: 20px;
+        margin-top: 40px;
+    }
 `;
 
 const Price = styled.span`
