@@ -10,6 +10,7 @@ import escrowThales from './contracts/escrowThales';
 import priceFeedContract from './contracts/priceFeedContract';
 import limitOrderProtocol1inchContract from './contracts/limitOrderProtocol1inchContract';
 import ammContract from './contracts/ammContract';
+import rangedMarketAMMContract from './contracts/rangedMarketsAMM';
 import thalesRoyaleContract from './contracts/thalesRoyalContract';
 import thalesExchangerContract from './contracts/thalesExchangerContract';
 import opThalesContract from './contracts/opThalesContract';
@@ -40,6 +41,7 @@ type SnxJSConnector = {
     priceFeedContract?: ethers.Contract;
     limitOrderProtocol1inchContract?: ethers.Contract;
     ammContract?: ethers.Contract;
+    rangedMarketAMMContract?: ethers.Contract;
     thalesRoyaleContract?: ethers.Contract;
     thalesRoyalePassContract?: ethers.Contract;
     thalesRoyalePassportContract?: ethers.Contract;
@@ -89,6 +91,7 @@ const snxJSConnector: SnxJSConnector = {
             contractSettings
         );
         this.ammContract = conditionalInitializeContract(ammContract, contractSettings);
+        this.rangedMarketAMMContract = conditionalInitializeContract(rangedMarketAMMContract, contractSettings);
         this.thalesRoyaleContract = conditionalInitializeContract(thalesRoyaleContract, contractSettings);
         this.thalesRoyalePassContract = conditionalInitializeContract(thalesRoyalePassContract, contractSettings);
         this.thalesRoyalePassportContract = conditionalInitializeContract(
