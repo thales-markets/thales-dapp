@@ -6,7 +6,7 @@ export type Phase = 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';
 
-export type OptionType = 'up' | 'down';
+export type OptionType = 'up' | 'down' | 'in' | 'out';
 
 export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
@@ -74,6 +74,32 @@ export type HistoricalOptionsMarketInfo = {
     outcome?: string;
     finalPrice?: number;
     ammLiquidity?: number;
+};
+
+export type RangedMarket = {
+    address: string;
+    timestamp: number;
+    currencyKey: CurrencyKey;
+    maturityDate: number;
+    leftPrice: number;
+    rightPrice: number;
+    inAddress: string;
+    outAddress: string;
+    leftMarket: {
+        id: string;
+        creator: string;
+        longAddress: string;
+        shortAddress: string;
+    };
+    rightMarket: {
+        id: string;
+        creator: string;
+        longAddress: string;
+        shortAddress: string;
+    };
+    isOpen: boolean;
+    result: OptionType;
+    finalPrice: number;
 };
 
 export type OptionsMarketInfo = {
