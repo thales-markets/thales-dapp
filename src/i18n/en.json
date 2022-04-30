@@ -697,6 +697,9 @@
                 "orderbook": "Order book",
                 "amm": "AMM"
             },
+            "ranged-markets": {
+                "strike-range": "Strike range"
+            },
             "your-activity": {
                 "time-date": "Time/Date",
                 "name": "Asset Name",
@@ -1143,6 +1146,8 @@
             },
             "long": "up",
             "short": "down",
+            "in": "in",
+            "out": "out",
             "amount-long": "{{amount}} up",
             "amount-short": "{{amount}} down",
             "long-price": "Up price",

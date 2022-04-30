@@ -974,6 +974,9 @@
             "row-card": {
                 "views": "意见",
                 "current-view": "视图：{{ currentView }}"
+            },
+            "ranged-markets": {
+                "strike-range": "打击范围"
             }
         },
         "quick-trading": {
@@ -1166,7 +1169,9 @@
                 "label": "使用传统签名",
                 "tooltip": "如果下单时遇到问题，请选中此选项以尝试旧版签名。某些钱包（如Trezor）在签名时遇到问题，选择此选项可以解决此问题。"
             },
-            "ratio": "比率"
+            "ratio": "比率",
+            "in": "在",
+            "out": "出去"
         },
         "swap": {
             "button-text": "获取 {{token}}",
