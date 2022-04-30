@@ -1,7 +1,7 @@
 import React, { FC, createContext, useContext } from 'react';
 import { RangedMarketData } from 'types/options';
 
-const MarketContext = createContext<RangedMarketData | null>(null);
+const RangedMarketContext = createContext<RangedMarketData | null>(null);
 
 type RangedMarketContextProps = {
     children: React.ReactNode;
@@ -9,7 +9,7 @@ type RangedMarketContextProps = {
 };
 
 export const RangedMarketProvider: FC<RangedMarketContextProps> = ({ children, rangedMarket }) => (
-    <MarketContext.Provider value={rangedMarket}>{children}</MarketContext.Provider>
+    <RangedMarketContext.Provider value={rangedMarket}>{children}</RangedMarketContext.Provider>
 );
 
-export const useMarketContext = () => useContext(MarketContext) as RangedMarketData;
+export const useRangedMarketContext = () => useContext(RangedMarketContext) as RangedMarketData;
