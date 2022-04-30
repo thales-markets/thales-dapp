@@ -173,6 +173,11 @@ export type AccountMarketInfo = {
     short: number;
 };
 
+export type RangedMarketBalanceInfo = {
+    in: number;
+    out: number;
+};
+
 export type OptionsMarkets = HistoricalOptionsMarketInfo[];
 export type OptionsMarketsMap = Record<string, HistoricalOptionsMarketInfo>;
 
