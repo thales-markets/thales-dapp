@@ -1,4 +1,4 @@
-import { Phase, OptionSide, OrderSide } from '../types/options';
+import { Phase, OptionSide, OrderSide, RangedMarketPositionType } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
     trading: 0,
@@ -11,6 +11,13 @@ export const SIDE: Record<OptionSide | number, number | OptionSide> = {
     short: 1,
     0: 'long',
     1: 'short',
+};
+
+export const RANGE_SIDE: Record<RangedMarketPositionType | number, number | RangedMarketPositionType> = {
+    in: 0,
+    out: 1,
+    0: 'in',
+    1: 'out',
 };
 
 export const orderSideOptions = [

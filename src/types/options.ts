@@ -8,6 +8,8 @@ export type OptionSide = 'long' | 'short';
 
 export type OptionType = 'up' | 'down' | 'in' | 'out';
 
+export type RangedMarketPositionType = 'in' | 'out';
+
 export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
 export type OrderSideOptionType = { value: OrderSide; label?: string; i18nLabel?: string };
@@ -100,6 +102,32 @@ export type RangedMarket = {
     isOpen: boolean;
     result: OptionType;
     finalPrice: number;
+};
+
+export type RangedMarketData = {
+    isResolved: boolean;
+    address: string;
+    currencyKey: CurrencyKey;
+    asset: string;
+    currentPrice: number;
+    finalPrice: number;
+    leftPrice: number;
+    rightPrice: number;
+    maturityDate: number;
+    expiryDate: number;
+    phase: Phase;
+    timeRemaining: number;
+    result: RangedMarketPositionType;
+    availablePositions: {
+        toBuyIn: number;
+        toBuyOut: number;
+        toSellIn: number;
+        toSellOut: number;
+    };
+    inAddress: string;
+    outAddress: string;
+    leftMarketAddress: string;
+    rightMarketAddress: string;
 };
 
 export type OptionsMarketInfo = {

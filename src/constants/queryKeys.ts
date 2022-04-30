@@ -50,6 +50,7 @@ export const QUERY_KEYS = {
         RangedMarkets: (networkId: NetworkId) => ['binaryOptions', 'rangedMarkets', networkId],
         SynthsMap: (networkId: NetworkId) => ['binaryOptions', 'synthsMap', networkId],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
+        RangedMarket: (marketAddress: string) => ['positionalMarkets', 'market', marketAddress],
         MarketFlippening: () => ['binaryOptions', 'marketFlippening'],
         ETHBTCMarketCapRatioHistory: () => ['binaryOptions', 'ETHBTCMarketCapRatioHistory'],
         EthBurnedCount: () => ['binaryOptions', 'ethBurnedCount'],
