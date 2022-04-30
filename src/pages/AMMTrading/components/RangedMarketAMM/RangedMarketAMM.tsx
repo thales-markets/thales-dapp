@@ -25,6 +25,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import useRangedAMMMaxLimitsQuery, {
     RangeAmmMaxLimits,
 } from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
+import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
@@ -33,7 +34,7 @@ import { refetchAmmData, refetchTrades, refetchUserBalance, refetchUserTrades } 
 import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
-import { OrderSide, RangedMarketPositionType } from 'types/options';
+import { OrderSide, RangedMarketBalanceInfo, RangedMarketPositionType } from 'types/options';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, RANGE_SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
@@ -96,16 +97,23 @@ const AMM: React.FC = () => {
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
 
-    // const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket?.address, walletAddress, {
-    //     enabled: isAppReady && isWalletConnected && !!optionsMarket?.address,
-    // });
-    const optBalances = {
+    const positionBalanceQuery = useBinaryOptionsAccountMarketInfoQuery(
+        rangedMarketData?.address,
+        walletAddress,
+        networkId,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+
+    let optBalances = {
         in: 0,
         out: 0,
     };
-    // if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
-    //     optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
-    // }
+
+    if (isWalletConnected && positionBalanceQuery.isSuccess && positionBalanceQuery.data) {
+        optBalances = positionBalanceQuery.data as RangedMarketBalanceInfo;
+    }
     const tokenBalance = rangeSide === 'in' ? optBalances.in : optBalances.out;
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {

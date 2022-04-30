@@ -26,6 +26,13 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        Positions: (walletAddress: string, marketAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'positions',
+            walletAddress,
+            marketAddress,
+            networkId,
+        ],
     },
     Rates: {
         ExchangeRates: (networkId: NetworkId) => ['rates', 'exchangeRates', networkId],
