@@ -22,7 +22,9 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 
-import useRangedAMMMaxLimitsQuery, { RangeAmmMaxLimits } from 'queries/options/useRangedAMMMaxLimitsQuery';
+import useRangedAMMMaxLimitsQuery, {
+    RangeAmmMaxLimits,
+} from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';

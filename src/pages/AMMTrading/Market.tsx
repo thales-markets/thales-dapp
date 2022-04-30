@@ -16,7 +16,7 @@ import TabContainerRangedMarket from './components/TabContainer/TabContainerRang
 import { MarketProvider } from './contexts/MarketContext';
 
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
-import useRangedMarketQuery from 'queries/options/useRangedMarketQuery';
+import useRangedMarketQuery from 'queries/options/rangedMarkets/useRangedMarketQuery';
 
 import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { TradingType } from 'types/options';

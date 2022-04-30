@@ -12,7 +12,9 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import useRangedAMMMaxLimitsQuery, { RangeAmmMaxLimits } from 'queries/options/useRangedAMMMaxLimitsQuery';
+import useRangedAMMMaxLimitsQuery, {
+    RangeAmmMaxLimits,
+} from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
 
 import { AccountMarketInfo } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
