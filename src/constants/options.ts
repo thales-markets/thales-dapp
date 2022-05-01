@@ -1,9 +1,16 @@
-import { Phase, OptionSide, OrderSide, RangedMarketPositionType } from '../types/options';
+import { Phase, OptionSide, OrderSide, RangedMarketPositionType, MarketType } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
     trading: 0,
     maturity: 1,
     expiry: 2,
+};
+
+export const MARKET_TYPE: Record<MarketType | number, number | MarketType> = {
+    ranged: 1,
+    0: 'positional',
+    1: 'ranged',
+    positional: 0,
 };
 
 export const SIDE: Record<OptionSide | number, number | OptionSide> = {

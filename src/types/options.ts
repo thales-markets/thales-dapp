@@ -18,6 +18,8 @@ export type TooltipType = 'error' | 'success' | 'info';
 
 export type TradingType = 'AMM' | 'Orderbook';
 
+export type MarketType = 'positional' | 'ranged';
+
 export type OptionsTransaction = {
     hash: string;
     type: OptionsTransactionType;
