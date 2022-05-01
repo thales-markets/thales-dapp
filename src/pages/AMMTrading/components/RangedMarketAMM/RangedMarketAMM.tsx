@@ -40,7 +40,7 @@ import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, RANGE_SIDE, SLIPPAGE_PERCENTAG
 import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
-// import WalletBalance from '../AMM/components/WalletBalance';
+import WalletBalance from '../AMM/components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
 import { getStableCoinForNetwork } from '../../../../utils/currency';
@@ -114,6 +114,8 @@ const AMM: React.FC = () => {
     if (isWalletConnected && positionBalanceQuery.isSuccess && positionBalanceQuery.data) {
         optBalances = positionBalanceQuery.data as RangedMarketBalanceInfo;
     }
+
+    console.log('optBalances ', optBalances);
 
     const tokenBalance = rangeSide === 'in' ? optBalances.in : optBalances.out;
 
@@ -687,7 +689,7 @@ const AMM: React.FC = () => {
     const formDisabled = isSubmitting || isAmmTradingDisabled;
     return (
         <Wrapper>
-            {/* <WalletBalance type={rangeSide} /> */}
+            <WalletBalance type={rangeSide} />
             <Switch
                 active={orderSide.value !== 'buy'}
                 width={'94px'}

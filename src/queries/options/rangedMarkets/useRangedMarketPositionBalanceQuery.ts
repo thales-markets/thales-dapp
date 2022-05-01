@@ -8,7 +8,7 @@ import { ethers } from 'ethers';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import erc20Contract from 'utils/contracts/usdcContract';
 
-const useBinaryOptionsAccountMarketInfoQuery = (
+const useRangedMarketPositionBalanceQuery = (
     marketAddress: string,
     walletAddress: string,
     networkId: NetworkId,
@@ -56,4 +56,4 @@ const useBinaryOptionsAccountMarketInfoQuery = (
     );
 };
 
-export default useBinaryOptionsAccountMarketInfoQuery;
+export default useRangedMarketPositionBalanceQuery;
