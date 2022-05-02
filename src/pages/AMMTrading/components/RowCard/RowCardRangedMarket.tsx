@@ -146,9 +146,9 @@ const RowCardRangedMarket: React.FC = () => {
                                 {t('options.market.ranged-markets.strike-range')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
-                                {formatCurrencyWithSign(USD_SIGN, marketInfo.leftPrice)}
-                                {'/'}
-                                {formatCurrencyWithSign(USD_SIGN, marketInfo.rightPrice)}
+                                {`> ${formatCurrencyWithSign(USD_SIGN, marketInfo.leftPrice)}`}
+                                <br />
+                                {`< ${formatCurrencyWithSign(USD_SIGN, marketInfo.rightPrice)}`}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                     </Container.ColumnContainer>
