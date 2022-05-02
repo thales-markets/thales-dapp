@@ -100,8 +100,24 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
                     <Balance>{formatCurrency(tokenBalance)}</Balance>
                     <TokenIcon
                         // Temporary same icons for in and long positions
-                        className={`v2-icon ${type == 'long' || type == 'in' ? 'v2-icon--up' : 'v2-icon--down'}`}
-                        color={type == 'long' || type == 'in' ? UI_COLORS.GREEN : UI_COLORS.RED}
+                        className={`v2-icon ${
+                            marketType == MARKET_TYPE[0]
+                                ? type == 'long'
+                                    ? 'v2-icon--up'
+                                    : 'v2-icon--down'
+                                : type == 'in'
+                                ? 'v2-icon--in'
+                                : 'v2-icon--out'
+                        }`}
+                        color={
+                            marketType == MARKET_TYPE[0]
+                                ? type == 'long'
+                                    ? UI_COLORS.GREEN
+                                    : UI_COLORS.RED
+                                : type == 'in'
+                                ? UI_COLORS.IN_COLOR
+                                : UI_COLORS.OUT_COLOR
+                        }
                     />
                 </BalanceContainer>
             )}

@@ -181,12 +181,12 @@ const RowCardRangedMarket: React.FC = () => {
                             <Container.SubContainer.Value>
                                 {optBalances?.in > 0 && `${formatCurrency(optBalances?.in)}`}
                                 {optBalances?.in > 0 && (
-                                    <Container.Icon className="v2-icon v2-icon--up" color={UI_COLORS.GREEN} />
+                                    <Container.Icon className="v2-icon v2-icon--in" color={UI_COLORS.IN_COLOR} />
                                 )}
                                 {optBalances?.in > 0 && optBalances?.out > 0 && ' / '}
                                 {optBalances?.out > 0 && `${formatCurrency(optBalances?.out)}`}
                                 {optBalances?.out > 0 && (
-                                    <Container.Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />
+                                    <Container.Icon className="v2-icon v2-icon--out" color={UI_COLORS.OUT_COLOR} />
                                 )}
                                 {optBalances?.in == 0 && optBalances?.out == 0 && 'N/A'}
                             </Container.SubContainer.Value>
