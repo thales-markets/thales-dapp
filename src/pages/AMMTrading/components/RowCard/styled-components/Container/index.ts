@@ -146,14 +146,10 @@ const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?
 `;
 
 const Liquidity = styled.span<{ shortLiqFlag?: boolean; inLiqFlag?: boolean }>`
-    color: ${(_props) =>
-        _props?.shortLiqFlag
-            ? _props.shortLiqFlag == true
-                ? UI_COLORS.RED
-                : UI_COLORS.GREEN
-            : _props?.inLiqFlag
-            ? UI_COLORS.IN_COLOR
-            : UI_COLORS.OUT_COLOR};
+    ${(_props) => (_props?.shortLiqFlag == true ? `color: ${UI_COLORS.RED}` : '')};
+    ${(_props) => (_props?.shortLiqFlag == false ? `color: ${UI_COLORS.GREEN}` : '')};
+    ${(_props) => (_props?.inLiqFlag == true ? `color: ${UI_COLORS.IN_COLOR}` : '')};
+    ${(_props) => (_props?.inLiqFlag == false ? `color: ${UI_COLORS.OUT_COLOR}` : '')};
 `;
 
 const OutOfLiquidity = styled.span`

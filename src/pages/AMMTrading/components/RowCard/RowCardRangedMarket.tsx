@@ -226,7 +226,7 @@ const RowCardRangedMarket: React.FC = () => {
                                                 {ammData ? ammData.maxIn?.toFixed(1) : '0'}
                                             </Container.SubContainer.Value.Liquidity>
                                             {' / '}
-                                            <Container.SubContainer.Value.Liquidity>
+                                            <Container.SubContainer.Value.Liquidity inLiqFlag={false}>
                                                 {ammData ? ammData.maxOut?.toFixed(1) : '0'}
                                             </Container.SubContainer.Value.Liquidity>
                                         </>
@@ -246,7 +246,7 @@ const RowCardRangedMarket: React.FC = () => {
                                         {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceIn, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                     {' / '}
-                                    <Container.SubContainer.Value.Liquidity>
+                                    <Container.SubContainer.Value.Liquidity inLiqFlag={false}>
                                         {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceOut, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                 </Container.SubContainer.Value>
