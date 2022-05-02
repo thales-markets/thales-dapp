@@ -115,8 +115,6 @@ const AMM: React.FC = () => {
         optBalances = positionBalanceQuery.data as RangedMarketBalanceInfo;
     }
 
-    console.log('optBalances ', optBalances);
-
     const tokenBalance = rangeSide === 'in' ? optBalances.in : optBalances.out;
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {

@@ -11,12 +11,11 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 
-import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useRangedAMMMaxLimitsQuery, {
     RangeAmmMaxLimits,
 } from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
 
-import { AccountMarketInfo } from 'types/options';
+import { RangedMarketBalanceInfo, RangedMarketData } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +23,7 @@ import { UI_COLORS } from 'constants/ui';
 import { getIsBuyState } from 'redux/modules/marketWidgets';
 import Tooltip from 'components/Tooltip';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 
 const RowCardRangedMarket: React.FC = () => {
     const marketInfo = useRangedMarketContext();
@@ -32,23 +32,28 @@ const RowCardRangedMarket: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     let optBalances = {
-        long: 0,
-        short: 0,
+        in: 0,
+        out: 0,
     };
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketInfo.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
-    });
+    const rangedMarketPositionBalance = useRangedMarketPositionBalanceQuery(
+        marketInfo.address,
+        walletAddress,
+        networkId,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
     const ammMaxLimitsQuery = useRangedAMMMaxLimitsQuery(marketInfo.address, networkId, {
         enabled: isAppReady,
     });
 
-    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
-        optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
+    if (isWalletConnected && rangedMarketPositionBalance.isSuccess && rangedMarketPositionBalance.data) {
+        optBalances = rangedMarketPositionBalance.data as RangedMarketBalanceInfo;
     }
 
     const ammMaxLimits =
@@ -67,22 +72,22 @@ const RowCardRangedMarket: React.FC = () => {
         };
     }, [ammMaxLimits, isBuy]);
 
-    // const positionCurrentValue = useMemo(() => {
-    //     if (ammMaxLimitsQuery?.isSuccess && (optBalances?.long > 0 || optBalances?.short > 0)) {
-    //         const inPosition = ammMaxLimitsQuery?.data?.in;
-    //         const outPosition = ammMaxLimitsQuery?.data?.out;
-    //         return {
-    //             longPositionValue:
-    //                 inPosition.sellPrice && inPosition.sellPrice > 0 && optBalances?.long > 0
-    //                     ? inPosition.sellPrice * optBalances?.long
-    //                     : null,
-    //             shortPositionValue:
-    //                 outPosition.sellPrice && outPosition.sellPrice > 0 && optBalances?.short > 0
-    //                     ? outPosition.sellPrice * optBalances?.short
-    //                     : null,
-    //         };
-    //     }
-    // }, [ammMaxLimitsQuery.isLoading, optBalances?.long, optBalances?.short]);
+    const positionCurrentValue = useMemo(() => {
+        if (ammMaxLimitsQuery?.isSuccess && (optBalances?.in > 0 || optBalances?.out > 0)) {
+            const inPosition = ammMaxLimitsQuery?.data?.in;
+            const outPosition = ammMaxLimitsQuery?.data?.out;
+            return {
+                inPositionValue:
+                    inPosition.sellPrice && inPosition.sellPrice > 0 && optBalances?.in > 0
+                        ? inPosition.sellPrice * optBalances?.in
+                        : null,
+                outPositionValue:
+                    outPosition.sellPrice && outPosition.sellPrice > 0 && optBalances?.out > 0
+                        ? outPosition.sellPrice * optBalances?.out
+                        : null,
+            };
+        }
+    }, [ammMaxLimitsQuery.isLoading, optBalances?.in, optBalances?.out]);
 
     return (
         <>
@@ -174,19 +179,19 @@ const RowCardRangedMarket: React.FC = () => {
                                     : t('options.market.overview.my-position')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
-                                {optBalances?.long > 0 && `${formatCurrency(optBalances?.long)}`}
-                                {optBalances?.long > 0 && (
+                                {optBalances?.in > 0 && `${formatCurrency(optBalances?.in)}`}
+                                {optBalances?.in > 0 && (
                                     <Container.Icon className="v2-icon v2-icon--up" color={UI_COLORS.GREEN} />
                                 )}
-                                {optBalances?.long > 0 && optBalances?.short > 0 && ' / '}
-                                {optBalances?.short > 0 && `${formatCurrency(optBalances?.short)}`}
-                                {optBalances?.short > 0 && (
+                                {optBalances?.in > 0 && optBalances?.out > 0 && ' / '}
+                                {optBalances?.out > 0 && `${formatCurrency(optBalances?.out)}`}
+                                {optBalances?.out > 0 && (
                                     <Container.Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />
                                 )}
-                                {optBalances?.long == 0 && optBalances?.short == 0 && 'N/A'}
+                                {optBalances?.in == 0 && optBalances?.out == 0 && 'N/A'}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
-                        {/* <Container.SubContainer>
+                        <Container.SubContainer>
                             <Container.SubContainer.Header>
                                 {marketInfo?.phase !== 'maturity'
                                     ? t('options.market.overview.positions-value')
@@ -199,7 +204,7 @@ const RowCardRangedMarket: React.FC = () => {
                                     optBalances={optBalances}
                                 />
                             </Container.SubContainer.Value>
-                        </Container.SubContainer> */}
+                        </Container.SubContainer>
                     </Container.ColumnContainer>
                     <Container.Divider />
                     {marketInfo.phase == 'trading' && (
@@ -217,11 +222,11 @@ const RowCardRangedMarket: React.FC = () => {
                                 <Container.SubContainer.Value>
                                     {(ammData && ammData.maxIn > 0) || (ammData && ammData.maxOut > 0) ? (
                                         <>
-                                            <Container.SubContainer.Value.Liquidity>
+                                            <Container.SubContainer.Value.Liquidity inLiqFlag={true}>
                                                 {ammData ? ammData.maxIn?.toFixed(1) : '0'}
                                             </Container.SubContainer.Value.Liquidity>
                                             {' / '}
-                                            <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
+                                            <Container.SubContainer.Value.Liquidity>
                                                 {ammData ? ammData.maxOut?.toFixed(1) : '0'}
                                             </Container.SubContainer.Value.Liquidity>
                                         </>
@@ -237,11 +242,11 @@ const RowCardRangedMarket: React.FC = () => {
                                     {t('options.market.overview.amm-price')}
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
-                                    <Container.SubContainer.Value.Liquidity>
+                                    <Container.SubContainer.Value.Liquidity inLiqFlag={true}>
                                         {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceIn, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                     {' / '}
-                                    <Container.SubContainer.Value.Liquidity shortLiqFlag={true}>
+                                    <Container.SubContainer.Value.Liquidity>
                                         {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceOut, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                 </Container.SubContainer.Value>
@@ -275,37 +280,37 @@ const RowCardRangedMarket: React.FC = () => {
     );
 };
 
-// type PositionPriceProps = {
-//     marketInfo: OptionsMarketInfo;
-//     optBalances: {
-//         long: number;
-//         short: number;
-//     };
-//     positionCurrentValue:
-//         | undefined
-//         | {
-//               longPositionValue: number | null;
-//               shortPositionValue: number | null;
-//           };
-// };
+type PositionPriceProps = {
+    marketInfo: RangedMarketData;
+    optBalances: {
+        in: number;
+        out: number;
+    };
+    positionCurrentValue:
+        | undefined
+        | {
+              inPositionValue: number | null;
+              outPositionValue: number | null;
+          };
+};
 
-// const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue }) => {
-//     if (marketInfo?.phase == 'maturity' && marketInfo?.result) {
-//         return <>{`${formatCurrencyWithSign(USD_SIGN, optBalances[marketInfo?.result])}`}</>;
-//     }
+const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue }) => {
+    if (marketInfo?.phase == 'maturity' && marketInfo?.result) {
+        return <>{`${formatCurrencyWithSign(USD_SIGN, optBalances[marketInfo?.result])}`}</>;
+    }
 
-//     return (
-//         <>
-//             {optBalances.long > 0 &&
-//                 positionCurrentValue?.longPositionValue &&
-//                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.longPositionValue)}`}
-//             {optBalances.long > 0 && optBalances.short > 0 && ' / '}
-//             {optBalances.short > 0 &&
-//                 positionCurrentValue?.shortPositionValue &&
-//                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
-//             {!positionCurrentValue?.shortPositionValue && !positionCurrentValue?.longPositionValue && 'N/A'}
-//         </>
-//     );
-// };
+    return (
+        <>
+            {optBalances.in > 0 &&
+                positionCurrentValue?.inPositionValue &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.inPositionValue)}`}
+            {optBalances.in > 0 && optBalances.out > 0 && ' / '}
+            {optBalances.out > 0 &&
+                positionCurrentValue?.outPositionValue &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.outPositionValue)}`}
+            {!positionCurrentValue?.outPositionValue && !positionCurrentValue?.inPositionValue && 'N/A'}
+        </>
+    );
+};
 
 export default RowCardRangedMarket;
