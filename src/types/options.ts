@@ -26,7 +26,7 @@ export type OptionsTransaction = {
     account?: string;
     currencyKey?: CurrencyKey;
     timestamp: number;
-    side: OptionSide;
+    side: OptionSide | RangedMarketPositionType;
     amount: number | string;
     market: string;
     status?: 'pending' | 'confirmed';

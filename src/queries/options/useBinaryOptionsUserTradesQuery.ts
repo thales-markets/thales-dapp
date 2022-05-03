@@ -1,13 +1,21 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
-import { OptionsTransactions, OptionsTransaction, Trades, Trade } from 'types/options';
+import {
+    OptionsTransactions,
+    OptionsTransaction,
+    Trades,
+    Trade,
+    RangedMarketPositionType,
+    MarketType,
+} from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { OptionSide, OrderSide } from 'types/options';
+import { MARKET_TYPE } from 'constants/options';
 
 const mapToOptionTransactions = (
     trades: Trades,
-    optionSide: OptionSide,
+    optionSide: OptionSide | RangedMarketPositionType,
     orderSide: OrderSide,
     marketAddress: string,
     walletAddress: string
@@ -42,10 +50,11 @@ const filterTrades = (trades: Trades, walletAddress: string): Trades =>
 
 const useBinaryOptionsUserTradesQuery = (
     marketAddress: string,
-    longAddress: string,
-    shortAddress: string,
+    firstPositionAddress: string,
+    secondPositionAddress: string,
     networkId: number,
     walletAddress: string,
+    marketType: MarketType,
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
     const {
@@ -55,24 +64,24 @@ const useBinaryOptionsUserTradesQuery = (
     return useQuery<OptionsTransactions>(
         QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress),
         async () => {
-            const [longBuys, longSells, shortBuys, shortSells] = await Promise.all([
+            const [firstPositionBuys, firstPositionSells, secondPositionBuys, secondPositionSells] = await Promise.all([
                 thalesData.binaryOptions.trades({
                     makerToken: SynthsUSD.address,
-                    takerToken: longAddress,
+                    takerToken: firstPositionAddress,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
-                    makerToken: longAddress,
+                    makerToken: firstPositionAddress,
                     takerToken: SynthsUSD.address,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
                     makerToken: SynthsUSD.address,
-                    takerToken: shortAddress,
+                    takerToken: secondPositionAddress,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
-                    makerToken: shortAddress,
+                    makerToken: secondPositionAddress,
                     takerToken: SynthsUSD.address,
                     network: networkId,
                 }),
@@ -80,29 +89,29 @@ const useBinaryOptionsUserTradesQuery = (
 
             const trades = [
                 ...mapToOptionTransactions(
-                    filterTrades(longBuys, walletAddress),
-                    'long',
+                    filterTrades(firstPositionBuys, walletAddress),
+                    marketType == MARKET_TYPE[0] ? 'long' : 'in',
                     'buy',
                     marketAddress,
                     walletAddress
                 ),
                 ...mapToOptionTransactions(
-                    filterTrades(longSells, walletAddress),
-                    'long',
+                    filterTrades(firstPositionSells, walletAddress),
+                    marketType == MARKET_TYPE[0] ? 'long' : 'in',
                     'sell',
                     marketAddress,
                     walletAddress
                 ),
                 ...mapToOptionTransactions(
-                    filterTrades(shortBuys, walletAddress),
-                    'short',
+                    filterTrades(secondPositionBuys, walletAddress),
+                    marketType == MARKET_TYPE[0] ? 'short' : 'out',
                     'buy',
                     marketAddress,
                     walletAddress
                 ),
                 ...mapToOptionTransactions(
-                    filterTrades(shortSells, walletAddress),
-                    'short',
+                    filterTrades(secondPositionSells, walletAddress),
+                    marketType == MARKET_TYPE[0] ? 'short' : 'out',
                     'sell',
                     marketAddress,
                     walletAddress
