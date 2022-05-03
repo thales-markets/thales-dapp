@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 // import Orderbook from '../OrderbookView/components/Orderbook';
 // import OptionPriceTab from '../Tabs/OptionPriceTab';
-// import UserActivity from '../Tabs/UserActivity';
+import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
 // import MarketActivity from '../Tabs/MarketActivity';
 // import SimilarMarkets from '../Tabs/SimilarMarkets';
@@ -12,9 +12,10 @@ import RowCardRangedMarket from '../RowCard/RowCardRangedMarket';
 
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
-import { OptionSide } from 'types/options';
+import { MarketType, OptionSide } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { MARKET_TYPE } from 'constants/options';
 
 type TabContainerProps = {
     optionSide?: OptionSide;
@@ -131,7 +132,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                 <Container.Tab>
                     {currentTab == 1 && <TradingView />}
                     {/* {currentTab == 2 && <OptionPriceTab />} */}
-                    {/* {currentTab == 3 && <UserActivity />} */}
+                    {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[1] as MarketType} />}
                     {/* {currentTab == 4 && <MarketActivity />} */}
                     {/* {currentTab == 5 && <SimilarMarkets />} */}
                 </Container.Tab>

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { OptionsMarketInfo } from 'types/options';
+import { MarketType, OptionsMarketInfo } from 'types/options';
 import useBinaryOptionsUserTransactionsQuery from 'queries/options/useBinaryOptionsUserTransactionsQuery';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -13,6 +13,7 @@ import TransactionsWithFilters from '../components/TransactionsWithFilters';
 import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
 import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
+import { MARKET_TYPE } from 'constants/options';
 
 type YourTransactionsProps = {
     marketAddress: OptionsMarketInfo['address'];
@@ -37,6 +38,7 @@ const YourTransactions: React.FC<YourTransactionsProps> = ({ marketAddress, wall
         optionsMarket.shortAddress,
         networkId,
         walletAddress,
+        MARKET_TYPE[0] as MarketType,
         { enabled: isAppReady && isTradingEnabled }
     );
 

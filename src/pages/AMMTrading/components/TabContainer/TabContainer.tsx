@@ -12,9 +12,10 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import SimilarMarkets from '../Tabs/SimilarMarkets';
 import RowCard from '../RowCard';
 
-import { OptionSide } from 'types/options';
+import { MarketType, OptionSide } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { MARKET_TYPE } from 'constants/options';
 
 type TabContainerProps = {
     optionSide?: OptionSide;
@@ -132,7 +133,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                     {currentTab == 0 && (optionSide ? <Orderbook optionSide={optionSide} /> : <></>)}
                     {currentTab == 1 && <TradingView />}
                     {currentTab == 2 && <OptionPriceTab />}
-                    {currentTab == 3 && <UserActivity />}
+                    {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[0] as MarketType} />}
                     {currentTab == 4 && <MarketActivity />}
                     {currentTab == 5 && <SimilarMarkets />}
                 </Container.Tab>
