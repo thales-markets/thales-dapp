@@ -50,24 +50,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
         if (positions.length > 0) {
             positions.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
-                modifiedValue.claimed = false;
-                if (value.balances.long > 0) {
-                    const modifiedValue: any = JSON.parse(JSON.stringify(value));
-                    modifiedValue.claimed = false;
-                    modifiedValue.balances.amount = value.balances.long;
-                    modifiedValue.balances.type = 'UP';
-                    modifiedValue.claimable = value.market.result === 'long';
-                    modifiedValue.link = buildOptionsMarketLink(value.market.address);
-                    newArray.push(modifiedValue);
-                }
-                if (value.balances.short > 0) {
-                    const newValue: any = JSON.parse(JSON.stringify(value));
-                    newValue.balances.amount = value.balances.short;
-                    newValue.balances.type = 'DOWN';
-                    newValue.claimable = value.market.result === 'short';
-                    newValue.link = buildOptionsMarketLink(value.market.address);
-                    newArray.push(newValue);
-                }
+                newArray.push(modifiedValue);
             });
         }
 
