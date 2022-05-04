@@ -88,6 +88,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
         <>
             <Table
                 data={transactions}
+                defaultPage={10}
                 columns={[
                     {
                         Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
