@@ -1143,7 +1143,8 @@
                 "days-short": "d",
                 "hours-short": "h",
                 "minutes-short": "м",
-                "seconds-short": "с"
+                "seconds-short": "с",
+                "months-short": "мо"
             },
             "long": "лонг",
             "short": "шорт",
