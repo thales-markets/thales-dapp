@@ -186,7 +186,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             },
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),
-                accessor: 'maturityDate',
+                accessor: 'timeRemaining',
                 Cell: (_props: any) => {
                     return <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />;
                 },

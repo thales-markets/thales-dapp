@@ -1139,7 +1139,8 @@
                 "days-short": "d",
                 "hours-short": "h",
                 "minutes-short": "m",
-                "seconds-short": "s"
+                "seconds-short": "s",
+                "months-short": "mo"
             },
             "long": "up",
             "short": "down",
