@@ -41,7 +41,6 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                 newArray.push(modifiedValue);
             });
         }
-        console.log('this is what we need: ', newArray);
 
         return orderBy(newArray, ['balances.value', 'balances.priceDiff'], ['desc', 'asc']);
     }, [positions]);
