@@ -65,7 +65,15 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
         switch (type) {
             case 'buy':
                 return UI_COLORS.GREEN;
+            case 'long':
+                return UI_COLORS.GREEN;
+            case 'up':
+                return UI_COLORS.GREEN;
             case 'sell':
+                return UI_COLORS.RED;
+            case 'short':
+                return UI_COLORS.RED;
+            case 'down':
                 return UI_COLORS.RED;
             case 'in':
                 return UI_COLORS.IN_COLOR;
