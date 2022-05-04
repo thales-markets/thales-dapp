@@ -34,8 +34,8 @@ import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
 import Leaderboard from 'pages/Leaderboard';
-import TradeHistory from 'pages/Options/TradeHistory';
-import AmmReporting from '../Options/AmmReporting';
+// import TradeHistory from 'pages/Options/TradeHistory';
+// import AmmReporting from '../Options/AmmReporting';
 import Cookies from 'universal-cookie';
 import Token from '../LandingPage/articles/Token';
 import Governance from '../LandingPage/articles/Governance';
@@ -217,18 +217,6 @@ const App = () => {
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
                                 <QuickTradingPage />
-                            </MainLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Options.TradeHistory}>
-                            <MainLayout>
-                                <TradeHistory />
-                            </MainLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Options.AmmReporting}>
-                            <MainLayout>
-                                <AmmReporting />
                             </MainLayout>
                         </Route>
 

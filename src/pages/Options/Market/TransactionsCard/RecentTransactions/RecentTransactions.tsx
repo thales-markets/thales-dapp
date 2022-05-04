@@ -1,5 +1,5 @@
 import React from 'react';
-import { OptionsMarketInfo } from 'types/options';
+import { MarketType, OptionsMarketInfo } from 'types/options';
 import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
 import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
 import { uniqBy } from 'lodash';
+import { MARKET_TYPE } from 'constants/options';
 
 type RecentTransactionsProps = {
     marketAddress: OptionsMarketInfo['address'];
@@ -30,6 +31,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress }
         optionsMarket.longAddress,
         optionsMarket.shortAddress,
         networkId,
+        MARKET_TYPE[0] as MarketType,
         { enabled: isAppReady }
     );
 

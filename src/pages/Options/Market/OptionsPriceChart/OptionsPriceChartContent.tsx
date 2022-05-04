@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import SimpleLoader from 'components/SimpleLoader';
-import { OptionsMarketInfo, OptionsTransactions } from 'types/options';
+import { MarketType, OptionsMarketInfo, OptionsTransactions } from 'types/options';
 import styled from 'styled-components';
 import { GridDivCenteredRow } from 'theme/common';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
@@ -16,6 +16,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import { orderBy, maxBy } from 'lodash';
 import { COLORS } from 'constants/ui';
+import { MARKET_TYPE } from 'constants/options';
 
 type OptionsPriceChartContentProps = {
     optionsMarket: OptionsMarketInfo;
@@ -31,6 +32,7 @@ const OptionsPriceChartContent: React.FC<OptionsPriceChartContentProps> = ({ opt
         optionsMarket.longAddress,
         optionsMarket.shortAddress,
         networkId,
+        MARKET_TYPE[0] as MarketType,
         { enabled: isAppReady }
     );
 

@@ -132,9 +132,9 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                 <Container.Tab>
                     {currentTab == 0 && (optionSide ? <Orderbook optionSide={optionSide} /> : <></>)}
                     {currentTab == 1 && <TradingView />}
-                    {currentTab == 2 && <OptionPriceTab />}
+                    {currentTab == 2 && <OptionPriceTab marketType={MARKET_TYPE[0] as MarketType} />}
                     {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[0] as MarketType} />}
-                    {currentTab == 4 && <MarketActivity />}
+                    {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[0] as MarketType} />}
                     {currentTab == 5 && <SimilarMarkets />}
                 </Container.Tab>
             </Container>

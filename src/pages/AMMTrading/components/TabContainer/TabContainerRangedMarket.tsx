@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 // import OptionPriceTab from '../Tabs/OptionPriceTab';
 import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
-// import MarketActivity from '../Tabs/MarketActivity';
+import MarketActivity from '../Tabs/MarketActivity';
 // import SimilarMarkets from '../Tabs/SimilarMarkets';
 import Container from './styled-components/Container';
 import RowCardRangedMarket from '../RowCard/RowCardRangedMarket';
@@ -133,7 +133,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                     {currentTab == 1 && <TradingView />}
                     {/* {currentTab == 2 && <OptionPriceTab />} */}
                     {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[1] as MarketType} />}
-                    {/* {currentTab == 4 && <MarketActivity />} */}
+                    {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[1] as MarketType} />}
                     {/* {currentTab == 5 && <SimilarMarkets />} */}
                 </Container.Tab>
             </Container>
