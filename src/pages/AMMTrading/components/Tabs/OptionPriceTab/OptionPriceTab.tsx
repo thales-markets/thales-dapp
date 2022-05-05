@@ -10,41 +10,66 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 
-import { mean, maxBy, orderBy } from 'lodash';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { EMPTY_VALUE } from 'constants/placeholder';
-import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-import { USD_SIGN } from 'constants/currency';
+import { maxBy, orderBy } from 'lodash';
+// import { formatCurrencyWithSign } from 'utils/formatters/number';
+// import { EMPTY_VALUE } from 'constants/placeholder';
+// import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
+// import { USD_SIGN } from 'constants/currency';
 
-import { OptionsTransactions, Orders } from 'types/options';
+import { MarketType, OptionsMarketInfo, OptionsTransactions, RangedMarketData } from 'types/options';
 
-import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
-import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+// import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
+import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
+import { MARKET_TYPE } from 'constants/options';
+import useRangedAMMMaxLimitsQuery from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
 
-const OptionPriceTab: React.FC = () => {
-    const optionsMarket = useMarketContext();
-    const { t } = useTranslation();
+const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
+    const optionsMarket: OptionsMarketInfo | RangedMarketData =
+        marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
+    // const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const longOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket?.longAddress, {
-        enabled: isAppReady && !!optionsMarket,
-    });
-    const shortOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket?.shortAddress, {
-        enabled: isAppReady && !!optionsMarket,
-    });
+
+    // const longOrderbookQuery = useBinaryOptionsMarketOrderbook(
+    //     networkId,
+    //     (optionsMarket as OptionsMarketInfo)?.longAddress,
+    //     {
+    //         enabled: isAppReady && marketType == MARKET_TYPE[0],
+    //     }
+    // );
+    // const shortOrderbookQuery = useBinaryOptionsMarketOrderbook(
+    //     networkId,
+    //     (optionsMarket as OptionsMarketInfo)?.shortAddress,
+    //     {
+    //         enabled: isAppReady && marketType == MARKET_TYPE[0],
+    //     }
+    // );
 
     const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
-        enabled: isAppReady && !!optionsMarket,
+        enabled: isAppReady && marketType == MARKET_TYPE[0],
     });
+
+    const rangedAMMLimitsQuery = useRangedAMMMaxLimitsQuery(optionsMarket?.address, networkId, {
+        enabled: isAppReady && marketType == MARKET_TYPE[1],
+    });
+
+    console.log('ammMaxLimitsQuery ', ammMaxLimitsQuery);
+    console.log('rangedAMMLimitsQuery ', rangedAMMLimitsQuery);
 
     const tradesQuery = useBinaryOptionsTradesQuery(
         optionsMarket?.address,
-        optionsMarket?.longAddress,
-        optionsMarket?.shortAddress,
+        marketType == MARKET_TYPE[0]
+            ? (optionsMarket as OptionsMarketInfo).longAddress
+            : (optionsMarket as RangedMarketData)?.inAddress,
+        marketType == MARKET_TYPE[0]
+            ? (optionsMarket as OptionsMarketInfo).shortAddress
+            : (optionsMarket as RangedMarketData)?.outAddress,
         networkId,
-        { enabled: isAppReady && !!optionsMarket }
+        marketType,
+        { enabled: isAppReady && !!marketType }
     );
 
     const getLastPrice = (data: OptionsTransactions, side: string, timestamp: number) => {
@@ -56,106 +81,131 @@ const OptionPriceTab: React.FC = () => {
     };
 
     const chartData = useMemo(() => {
-        const data = orderBy(
-            tradesQuery.data
-                ? tradesQuery.data.map((trade) => {
-                      const longPrice =
-                          trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp);
-                      const shortPrice =
-                          trade.side === 'short'
-                              ? trade.price
-                              : getLastPrice(tradesQuery.data, 'short', trade.timestamp);
+        let trades: any = [];
 
-                      return {
-                          timestamp: trade.timestamp,
-                          upPrice: longPrice,
-                          downPrice: shortPrice,
-                      };
-                  })
-                : [],
-            'timestamp',
-            'desc'
-        );
+        if (marketType == MARKET_TYPE[0] && tradesQuery?.data) {
+            trades = tradesQuery.data.map((trade) => {
+                const longPrice =
+                    trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp);
+                const shortPrice =
+                    trade.side === 'short' ? trade.price : getLastPrice(tradesQuery.data, 'short', trade.timestamp);
+                return {
+                    timestamp: trade.timestamp,
+                    upPrice: longPrice,
+                    downPrice: shortPrice,
+                };
+            });
+        }
+
+        if (marketType == MARKET_TYPE[1] && tradesQuery?.data) {
+            trades = tradesQuery.data.map((trade) => {
+                const longPrice =
+                    trade.side === 'in' ? trade.price : getLastPrice(tradesQuery.data, 'in', trade.timestamp);
+                const shortPrice =
+                    trade.side === 'out' ? trade.price : getLastPrice(tradesQuery.data, 'out', trade.timestamp);
+                return {
+                    timestamp: trade.timestamp,
+                    upPrice: longPrice,
+                    downPrice: shortPrice,
+                };
+            });
+        }
+
+        const data = orderBy(trades ? trades : [], 'timestamp', 'desc');
         if (data.length) {
             return [...data].reverse().slice(0, 8);
         }
         return [];
     }, [tradesQuery.data]);
 
-    const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
-        if (sellOrders.length > 0 && buyOrders.length > 0) {
-            const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
-            const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
-            const marketPrice = mean([lowestSellOrderPrice, highestBuyOrderPrice]);
-            return marketPrice;
-        }
-        if (sellOrders.length > 0) {
-            const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
-            return lowestSellOrderPrice;
-        }
-        if (buyOrders.length > 0) {
-            const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
-            return highestBuyOrderPrice;
-        }
+    console.log('chartData ', chartData);
 
-        return EMPTY_VALUE;
-    };
+    // const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
+    //     if (sellOrders.length > 0 && buyOrders.length > 0) {
+    //         const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
+    //         const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
+    //         const marketPrice = mean([lowestSellOrderPrice, highestBuyOrderPrice]);
+    //         return marketPrice;
+    //     }
+    //     if (sellOrders.length > 0) {
+    //         const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
+    //         return lowestSellOrderPrice;
+    //     }
+    //     if (buyOrders.length > 0) {
+    //         const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
+    //         return highestBuyOrderPrice;
+    //     }
 
-    const longMarketPrice = useMemo(() => {
-        const sellOrders =
-            shortOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.sellOrders : [];
-        const buyOrders =
-            longOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.buyOrders : [];
-        const ammMaxLimits =
-            ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data
-                ? (ammMaxLimitsQuery.data as AmmMaxLimits)
-                : undefined;
+    //     return EMPTY_VALUE;
+    // };
 
-        const marketPrice =
-            ammMaxLimits && ammMaxLimits.isMarketInAmmTrading
-                ? mean([ammMaxLimits.buyLongPrice, ammMaxLimits.sellLongPrice])
-                : getMarketPrice(sellOrders, buyOrders);
-        return formatCurrencyWithSign(USD_SIGN, marketPrice, DEFAULT_OPTIONS_DECIMALS);
-    }, [longOrderbookQuery.data, ammMaxLimitsQuery.data]);
+    // const firstPositionPrice = useMemo(() => {
+    //     const sellOrders =
+    //         shortOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.sellOrders : [];
+    //     const buyOrders =
+    //         longOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.buyOrders : [];
+    //     const ammMaxLimits =
+    //         ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data
+    //             ? (ammMaxLimitsQuery.data as AmmMaxLimits)
+    //             : undefined;
+    //     const rangedAMMLimits =
+    //         rangedAMMLimitsQuery.isSuccess && rangedAMMLimitsQuery.data
+    //             ? (rangedAMMLimitsQuery.data as RangeAmmMaxLimits)
+    //             : undefined;
 
-    const shortMarketPrice = useMemo(() => {
-        const sellOrders =
-            shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.sellOrders : [];
-        const buyOrders =
-            shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.buyOrders : [];
-        const ammMaxLimits =
-            ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data
-                ? (ammMaxLimitsQuery.data as AmmMaxLimits)
-                : undefined;
+    //     let marketPrice = undefined;
 
-        const marketPrice =
-            ammMaxLimits && ammMaxLimits.isMarketInAmmTrading
-                ? mean([ammMaxLimits.buyShortPrice, ammMaxLimits.sellShortPrice])
-                : getMarketPrice(sellOrders, buyOrders);
-        return formatCurrencyWithSign(USD_SIGN, marketPrice, DEFAULT_OPTIONS_DECIMALS);
-    }, [shortOrderbookQuery.data, ammMaxLimitsQuery.data]);
+    //     if (ammMaxLimits && marketType == MARKET_TYPE[0]) {
+    //         marketPrice = ammMaxLimits.isMarketInAmmTrading
+    //             ? mean([ammMaxLimits.buyLongPrice, ammMaxLimits.sellLongPrice])
+    //             : getMarketPrice(sellOrders, buyOrders);
+    //     }
+
+    //     if (rangedAMMLimits && marketType == MARKET_TYPE[1]) {
+    //         marketPrice = rangedAMMLimits
+    //             ? mean([rangedAMMLimits.in.buyPrice, rangedAMMLimits.in.sellPrice])
+    //             : getMarketPrice(sellOrders, buyOrders);
+    //     }
+
+    //     return formatCurrencyWithSign(USD_SIGN, Number(marketPrice), DEFAULT_OPTIONS_DECIMALS);
+    // }, [longOrderbookQuery.data, ammMaxLimitsQuery.data, rangedAMMLimitsQuery.isLoading]);
+
+    // const secondPositionPrice = useMemo(() => {
+    //     const sellOrders =
+    //         shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.sellOrders : [];
+    //     const buyOrders =
+    //         shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.buyOrders : [];
+    //     const ammMaxLimits =
+    //         ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data
+    //             ? (ammMaxLimitsQuery.data as AmmMaxLimits)
+    //             : undefined;
+    //     const rangedAMMLimits =
+    //         rangedAMMLimitsQuery.isSuccess && rangedAMMLimitsQuery.data
+    //             ? (rangedAMMLimitsQuery.data as RangeAmmMaxLimits)
+    //             : undefined;
+
+    //     let marketPrice = undefined;
+
+    //     if (ammMaxLimits && marketType == MARKET_TYPE[0]) {
+    //         marketPrice = ammMaxLimits.isMarketInAmmTrading
+    //             ? mean([ammMaxLimits.buyShortPrice, ammMaxLimits.sellShortPrice])
+    //             : getMarketPrice(sellOrders, buyOrders);
+    //     }
+
+    //     if (rangedAMMLimits && marketType == MARKET_TYPE[1]) {
+    //         marketPrice = rangedAMMLimits
+    //             ? mean([rangedAMMLimits.out.buyPrice, rangedAMMLimits.out.sellPrice])
+    //             : getMarketPrice(sellOrders, buyOrders);
+    //     }
+
+    //     return formatCurrencyWithSign(USD_SIGN, Number(marketPrice), DEFAULT_OPTIONS_DECIMALS);
+    // }, [shortOrderbookQuery.data, ammMaxLimitsQuery.data, rangedAMMLimitsQuery.isLoading]);
 
     return (
         <Container>
             <ChartContainer>
                 <OptionPriceChart data={chartData} />
             </ChartContainer>
-            <Container.Footer>
-                <Container.Footer.PriceContainer>
-                    <Container.Footer.PriceContainer.Price>{shortMarketPrice}</Container.Footer.PriceContainer.Price>
-                    {' | '}
-                    <Container.Footer.PriceContainer.Position>
-                        {t('common.short')}
-                    </Container.Footer.PriceContainer.Position>
-                </Container.Footer.PriceContainer>
-                <Container.Footer.PriceContainer long={true}>
-                    <Container.Footer.PriceContainer.Price>{longMarketPrice}</Container.Footer.PriceContainer.Price>
-                    {' | '}
-                    <Container.Footer.PriceContainer.Position>
-                        {t('common.long')}
-                    </Container.Footer.PriceContainer.Position>
-                </Container.Footer.PriceContainer>
-            </Container.Footer>
         </Container>
     );
 };

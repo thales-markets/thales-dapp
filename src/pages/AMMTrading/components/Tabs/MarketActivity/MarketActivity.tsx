@@ -43,7 +43,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
         marketType == MARKET_TYPE[0]
             ? (optionsMarket as OptionsMarketInfo)?.longAddress
             : (optionsMarket as RangedMarketData)?.inAddress,
-        marketType == MARKET_TYPE[1]
+        marketType == MARKET_TYPE[0]
             ? (optionsMarket as OptionsMarketInfo)?.shortAddress
             : (optionsMarket as RangedMarketData)?.outAddress,
         networkId,
