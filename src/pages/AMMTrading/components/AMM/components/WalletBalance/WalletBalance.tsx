@@ -76,9 +76,6 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
             ? optBalances.in
             : optBalances.out;
 
-    console.log('TokenBalance ', tokenBalance);
-    console.log('marketType == MARKET_TYPE[0] ', marketType == MARKET_TYPE[0]);
-    console.log('type == in', type == 'in');
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
