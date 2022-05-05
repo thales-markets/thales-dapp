@@ -91,22 +91,22 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                     trade.side === 'short' ? trade.price : getLastPrice(tradesQuery.data, 'short', trade.timestamp);
                 return {
                     timestamp: trade.timestamp,
-                    upPrice: longPrice,
-                    downPrice: shortPrice,
+                    firstPositionPrice: longPrice,
+                    secondPositionPrice: shortPrice,
                 };
             });
         }
 
         if (marketType == MARKET_TYPE[1] && tradesQuery?.data) {
             trades = tradesQuery.data.map((trade) => {
-                const longPrice =
+                const inPrice =
                     trade.side === 'in' ? trade.price : getLastPrice(tradesQuery.data, 'in', trade.timestamp);
-                const shortPrice =
+                const outPrice =
                     trade.side === 'out' ? trade.price : getLastPrice(tradesQuery.data, 'out', trade.timestamp);
                 return {
                     timestamp: trade.timestamp,
-                    upPrice: longPrice,
-                    downPrice: shortPrice,
+                    firstPositionPrice: inPrice,
+                    secondPositionPrice: outPrice,
                 };
             });
         }
@@ -117,8 +117,6 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
         }
         return [];
     }, [tradesQuery.data]);
-
-    console.log('chartData ', chartData);
 
     // const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
     //     if (sellOrders.length > 0 && buyOrders.length > 0) {
@@ -204,7 +202,7 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     return (
         <Container>
             <ChartContainer>
-                <OptionPriceChart data={chartData} />
+                <OptionPriceChart data={chartData} marketType={marketType} />
             </ChartContainer>
         </Container>
     );
