@@ -46,6 +46,7 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../LandingPage/Home'));
 const Markets = lazy(() => import('../Markets'));
+const RangeMarkets = lazy(() => import('../RangeMarkets'));
 const AMMTrading = lazy(() => import('../AMMTrading'));
 // const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
@@ -277,6 +278,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.Home}>
                             <DappLayout>
                                 <Markets />
+                            </DappLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.RangeMarkets}>
+                            <DappLayout>
+                                <RangeMarkets />
                             </DappLayout>
                         </Route>
 
