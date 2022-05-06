@@ -80,7 +80,7 @@ const RangeMarkets: React.FC = () => {
                       };
                   })
                 : marketsQuery.data;
-            return sortOptionsMarkets(markets);
+            return sortOptionsMarkets(markets as any);
         }
         return [];
     }, [marketsQuery, openOrdersMap]);
