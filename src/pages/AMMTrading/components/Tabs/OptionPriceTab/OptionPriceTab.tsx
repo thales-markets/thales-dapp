@@ -20,11 +20,11 @@ import { MarketType, OptionsMarketInfo, OptionsTransactions, RangedMarketData } 
 
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 // import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
-import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
+// import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
 // import { useTranslation } from 'react-i18next';
 import { MARKET_TYPE } from 'constants/options';
-import useRangedAMMMaxLimitsQuery from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
+// import useRangedAMMMaxLimitsQuery from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
 
 const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     const optionsMarket: OptionsMarketInfo | RangedMarketData =
@@ -48,16 +48,13 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     //     }
     // );
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
-        enabled: isAppReady && marketType == MARKET_TYPE[0],
-    });
+    // const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
+    //     enabled: isAppReady && marketType == MARKET_TYPE[0],
+    // });
 
-    const rangedAMMLimitsQuery = useRangedAMMMaxLimitsQuery(optionsMarket?.address, networkId, {
-        enabled: isAppReady && marketType == MARKET_TYPE[1],
-    });
-
-    console.log('ammMaxLimitsQuery ', ammMaxLimitsQuery);
-    console.log('rangedAMMLimitsQuery ', rangedAMMLimitsQuery);
+    // const rangedAMMLimitsQuery = useRangedAMMMaxLimitsQuery(optionsMarket?.address, networkId, {
+    //     enabled: isAppReady && marketType == MARKET_TYPE[1],
+    // });
 
     const tradesQuery = useBinaryOptionsTradesQuery(
         optionsMarket?.address,
