@@ -80,7 +80,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
-                            <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>
+                            <SPAAnchor href={buildOptionsMarketLink(data.market.id)}>
                                 <Card.Wrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
                                     <Card>
                                         <Card.Column style={{ flex: 1 }}>
