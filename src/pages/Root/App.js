@@ -275,6 +275,16 @@ const App = () => {
                             )}
                         />
 
+                        <Route
+                            exact
+                            path={ROUTES.Options.RangeMarketMatch}
+                            render={(routeProps) => (
+                                <DappLayout>
+                                    <AMMTrading {...routeProps} />
+                                </DappLayout>
+                            )}
+                        />
+
                         <Route exact path={ROUTES.Options.Home}>
                             <DappLayout>
                                 <Markets />

@@ -9,7 +9,7 @@ import { BOMContractProvider } from './contexts/BOMContractContext';
 import Market from './Market';
 import Loader from 'components/Loader';
 import { navigateTo } from 'utils/routes';
-import { determineIfPositionalMarket, determineIfRangedMarket } from 'utils/options';
+// import { determineIfPositionalMarket, determineIfRangedMarket } from 'utils/options';
 
 type MarketContainerProps = RouteComponentProps<{
     marketAddress: string;
@@ -20,50 +20,41 @@ const MarketContainer: React.FC<MarketContainerProps> = (props) => {
     const [rangedMarketFlag, setRangedMarketFlag] = useState<boolean>(false);
 
     useEffect(() => {
-        const determineMarketType = async (marketAddress: string) => {
-            if (!marketAddress) {
-                navigateTo(ROUTES.Options.Home);
+        const { params } = props.match;
+
+        if (!params?.marketAddress) {
+            if (props?.location?.pathname?.includes('range-markets')) {
+                navigateTo(ROUTES.Options.RangeMarkets);
                 return;
             }
+            navigateTo(ROUTES.Options.Home);
+        }
 
-            const positionalMarket = new ethers.Contract(
-                marketAddress,
-                binaryOptionMarketContract.abi,
-                (snxJSConnector as any).provider
-            );
+        let contract: ethers.Contract | undefined = undefined;
 
-            const rangedMarket = new ethers.Contract(
-                marketAddress,
+        if (props?.location?.pathname?.includes('range-markets')) {
+            setRangedMarketFlag(true);
+            contract = new ethers.Contract(
+                params?.marketAddress,
                 rangedMarketContract.abi,
                 (snxJSConnector as any).provider
             );
+        } else {
+            setRangedMarketFlag(false);
+            contract = new ethers.Contract(
+                params?.marketAddress,
+                binaryOptionMarketContract.abi,
+                (snxJSConnector as any).provider
+            );
+        }
 
-            const flagPositionalMarket = await determineIfPositionalMarket(positionalMarket);
-            const flagRangedMarket = await determineIfRangedMarket(rangedMarket);
-            let contract: ethers.Contract | undefined = undefined;
-
-            if (flagPositionalMarket) contract = positionalMarket;
-            if (flagRangedMarket) {
-                setRangedMarketFlag(true);
-                contract = rangedMarket;
-            }
-
-            if (contract) {
-                contract.resolvedAddress
-                    .then(() => {
-                        setBOMContract(contract);
-                    })
-                    .catch(() => {
-                        navigateTo(ROUTES.Options.Home);
-                    });
-            } else {
+        contract.resolvedAddress
+            .then(() => {
+                setBOMContract(contract);
+            })
+            .catch(() => {
                 navigateTo(ROUTES.Options.Home);
-            }
-        };
-
-        const { params } = props.match;
-
-        determineMarketType(params?.marketAddress);
+            });
     }, [props.match]);
 
     return BOMContract ? (
