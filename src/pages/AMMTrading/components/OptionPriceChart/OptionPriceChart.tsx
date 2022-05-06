@@ -59,6 +59,7 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                 <Line
                     type="linear"
                     dataKey="secondPositionPrice"
+                    name={marketType == MARKET_TYPE[0] ? 'DOWN' : 'OUT'}
                     strokeWidth={3}
                     stroke={marketType == MARKET_TYPE[1] ? UI_COLORS.RED : UI_COLORS.OUT_COLOR}
                     dot={{ strokeWidth: 8 }}
@@ -67,6 +68,7 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                     type="linear"
                     dataKey="firstPositionPrice"
                     strokeWidth={3}
+                    name={marketType == MARKET_TYPE[0] ? 'UP' : 'IN'}
                     stroke={marketType == MARKET_TYPE[0] ? UI_COLORS.GREEN : UI_COLORS.IN_COLOR}
                     dot={{ strokeWidth: 8 }}
                 />
