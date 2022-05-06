@@ -95,6 +95,7 @@ export const QUERY_KEYS = {
         Competition: (networkId: NetworkId) => ['binaryOptions', 'competition', networkId],
         Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
         OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
+        RangedLiquidity: (networkId: NetworkId) => ['binaryOptions', 'rangedLiquidity', networkId],
         AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
     },
     User: {
