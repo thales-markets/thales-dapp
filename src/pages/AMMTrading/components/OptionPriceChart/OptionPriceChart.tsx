@@ -61,7 +61,7 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                     dataKey="secondPositionPrice"
                     name={marketType == MARKET_TYPE[0] ? 'DOWN' : 'OUT'}
                     strokeWidth={3}
-                    stroke={marketType == MARKET_TYPE[1] ? UI_COLORS.RED : UI_COLORS.OUT_COLOR}
+                    stroke={marketType == MARKET_TYPE[0] ? UI_COLORS.RED : UI_COLORS.OUT_COLOR}
                     dot={{ strokeWidth: 8 }}
                 />
                 <Line
