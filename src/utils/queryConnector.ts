@@ -29,6 +29,21 @@ export const refetchMarketQueries = (
     }
 };
 
+export const refetchRangeMarketQueries = (
+    walletAddress: string,
+    BOMContractAddress: string,
+    marketAddress: string,
+    networkId: NetworkId
+) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.RangedMarket(BOMContractAddress));
+
+    if (walletAddress) {
+        queryConnector.queryClient.invalidateQueries(
+            QUERY_KEYS.WalletBalances.Positions(marketAddress, walletAddress, networkId)
+        );
+    }
+};
+
 export const refetchOrderbook = (optionsTokenAddress: string) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress));
 };

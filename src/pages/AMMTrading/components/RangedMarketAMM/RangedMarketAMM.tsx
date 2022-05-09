@@ -25,7 +25,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import useRangedAMMMaxLimitsQuery, {
     RangeAmmMaxLimits,
 } from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
-import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
@@ -46,6 +45,7 @@ import { toast } from 'react-toastify';
 import { getStableCoinForNetwork } from '../../../../utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
 import Tooltip from 'components/Tooltip';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -97,7 +97,7 @@ const AMM: React.FC = () => {
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
 
-    const positionBalanceQuery = useBinaryOptionsAccountMarketInfoQuery(
+    const positionBalanceQuery = useRangedMarketPositionBalanceQuery(
         rangedMarketData?.address,
         walletAddress,
         networkId,

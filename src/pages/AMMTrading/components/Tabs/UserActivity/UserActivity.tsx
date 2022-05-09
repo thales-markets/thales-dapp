@@ -55,7 +55,7 @@ const UserActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
         walletAddress,
         networkId,
         {
-            enabled: isAppReady && marketType && isWalletConnected,
+            enabled: isAppReady && marketType !== MARKET_TYPE[1] && isWalletConnected,
         }
     );
 
@@ -128,35 +128,43 @@ const UserActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     };
 
     const userTransactionAndTradeList = useMemo(() => {
-        if (tradesQuery.isSuccess && marketTransactionsQuery.isSuccess && marketInfo?.address) {
-            const trades: Activity[] = tradesQuery?.data.map((trade) => {
-                return {
-                    timestamp: trade.timestamp,
-                    currencyKey: marketInfo.currencyKey,
-                    paid: Number(trade.amount) * Number(trade.price),
-                    price: trade?.price ? trade.price : null,
-                    amount: Number(trade.amount),
-                    side: marketType == MARKET_TYPE[0] ? (trade.side == 'short' ? 'down' : 'up') : trade.side,
-                    type: trade.type,
-                    timeRemaining: marketInfo.timeRemaining,
-                    link: <ViewEtherscanLink hash={trade.hash} />,
-                };
-            });
+        if ((tradesQuery.isSuccess || marketTransactionsQuery.isSuccess) && marketInfo?.address) {
+            const trades: Activity[] = tradesQuery?.data
+                ? tradesQuery?.data.map((trade) => {
+                      return {
+                          timestamp: trade.timestamp,
+                          currencyKey: marketInfo.currencyKey,
+                          paid: Number(trade.amount) * Number(trade.price),
+                          price: trade?.price ? trade.price : null,
+                          amount: Number(trade.amount),
+                          side: marketType == MARKET_TYPE[0] ? (trade.side == 'short' ? 'down' : 'up') : trade.side,
+                          type: trade.type,
+                          timeRemaining: marketInfo.timeRemaining,
+                          link: <ViewEtherscanLink hash={trade.hash} />,
+                      };
+                  })
+                : [];
 
-            const transactions: Activity[] = marketTransactionsQuery?.data.map((transaction) => {
-                return {
-                    timestamp: transaction.timestamp,
-                    currencyKey: marketInfo.currencyKey,
-                    paid: null,
-                    price: null,
-                    amount: Number(transaction.amount),
-                    side:
-                        marketType == MARKET_TYPE[0] ? (transaction.side == 'short' ? 'down' : 'up') : transaction.side,
-                    type: transaction.type,
-                    timeRemaining: marketInfo.timeRemaining,
-                    link: <ViewEtherscanLink hash={transaction.hash} />,
-                };
-            });
+            const transactions: Activity[] = marketTransactionsQuery?.data
+                ? marketTransactionsQuery?.data.map((transaction) => {
+                      return {
+                          timestamp: transaction.timestamp,
+                          currencyKey: marketInfo.currencyKey,
+                          paid: null,
+                          price: null,
+                          amount: Number(transaction.amount),
+                          side:
+                              marketType == MARKET_TYPE[0]
+                                  ? transaction.side == 'short'
+                                      ? 'down'
+                                      : 'up'
+                                  : transaction.side,
+                          type: transaction.type,
+                          timeRemaining: marketInfo.timeRemaining,
+                          link: <ViewEtherscanLink hash={transaction.hash} />,
+                      };
+                  })
+                : [];
 
             return orderBy([...trades, ...transactions], ['timestamp'], ['desc']);
         }
