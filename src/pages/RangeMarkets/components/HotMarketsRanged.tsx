@@ -33,7 +33,7 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets }) =
         const markets: HotMarket[] = [];
 
         optionsMarkets?.forEach((market: any) => {
-            if (market.longPrice == 0 || market.shortPrice == 0) return;
+            if (market.outPrice == 0 || market.inPrice == 0) return;
             markets.push({
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
