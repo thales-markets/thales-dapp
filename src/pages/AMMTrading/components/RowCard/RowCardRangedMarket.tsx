@@ -232,7 +232,7 @@ const RowCardRangedMarket: React.FC = () => {
                                         </>
                                     ) : (
                                         <Container.SubContainer.Value.OutOfLiquidity>
-                                            {ammData ? t('options.home.markets-table.out-of-liquidity') : ''}
+                                            {!ammData ? t('options.home.markets-table.out-of-liquidity') : ''}
                                         </Container.SubContainer.Value.OutOfLiquidity>
                                     )}
                                 </Container.SubContainer.Value>
@@ -253,7 +253,7 @@ const RowCardRangedMarket: React.FC = () => {
                             </Container.SubContainer>
                         </Container.ColumnContainer>
                     )}
-                    {/* {marketInfo?.phase == 'maturity' && (
+                    {marketInfo?.phase == 'maturity' && (
                         <Container.ColumnContainer>
                             <Container.SubContainer>
                                 <Container.SubContainer.Header>
@@ -262,9 +262,9 @@ const RowCardRangedMarket: React.FC = () => {
                                 <Container.SubContainer.Value>
                                     <Container.Icon
                                         className={`v2-icon ${
-                                            marketInfo.result == 'long' ? 'v2-icon--up' : 'v2-icon--down'
+                                            marketInfo.result == 'in' ? 'v2-icon--in' : 'v2-icon--out'
                                         }`}
-                                        color={marketInfo.result == 'long' ? UI_COLORS.GREEN : UI_COLORS.RED}
+                                        color={marketInfo.result == 'out' ? UI_COLORS.OUT_COLOR : UI_COLORS.IN_COLOR}
                                     />
                                 </Container.SubContainer.Value>
                             </Container.SubContainer>
@@ -273,7 +273,7 @@ const RowCardRangedMarket: React.FC = () => {
                                 <Container.SubContainer.Value>{'Hidden'}</Container.SubContainer.Value>
                             </Container.SubContainer>
                         </Container.ColumnContainer>
-                    )} */}
+                    )}
                 </Container>
             )}
         </>
@@ -304,7 +304,11 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
             {optBalances.in > 0 &&
                 positionCurrentValue?.inPositionValue &&
                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.inPositionValue)}`}
-            {optBalances.in > 0 && optBalances.out > 0 && ' / '}
+            {positionCurrentValue?.outPositionValue &&
+                positionCurrentValue?.outPositionValue > 0 &&
+                positionCurrentValue?.inPositionValue &&
+                positionCurrentValue?.inPositionValue > 0 &&
+                ' / '}
             {optBalances.out > 0 &&
                 positionCurrentValue?.outPositionValue &&
                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.outPositionValue)}`}
