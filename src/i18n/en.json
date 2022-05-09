@@ -346,6 +346,7 @@
                 "amm-size-col": "AMM liquidity",
                 "out-of-liquidity": "Out Of Liquidity",
                 "price-up-down-col": "Price UP/DOWN",
+                "price-in-out-col": "Price IN/OUT",
                 "time-remaining-col": "Time remaining",
                 "status-col": "Status",
                 "maturity-date-col": "Maturity Date",

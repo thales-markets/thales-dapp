@@ -219,7 +219,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
             ...(isL2OrPolygon
                 ? [
                       {
-                          Header: t(`options.home.markets-table.price-up-down-col`),
+                          Header: t(`options.home.markets-table.price-in-out-col`),
                           accessor: (row: any) => <RatioText green={row.inPrice} red={row.outPrice} />,
                           sortType: ammPriceSort,
                       },
@@ -560,11 +560,11 @@ const Text = styled.span`
 `;
 
 const GreenText = styled(Text)`
-    color: #50ce99;
+    color: #b0ffe7;
 `;
 
 const RedText = styled(Text)`
-    color: #c3244a;
+    color: #bf7eff;
 `;
 
 const YellowText = styled(Text)`
