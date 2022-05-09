@@ -202,7 +202,8 @@
             "amm-reporting-label": "Отчетность AMM",
             "markets": "Рынки",
             "profile-label": "Профиль",
-            "exotic-markets-label": "Экзотические рынки"
+            "exotic-markets-label": "Экзотические рынки",
+            "ranged-markets": "Диапазонные рынки"
         },
         "coming-soon": "Скоро...",
         "of": "из",
@@ -348,7 +349,8 @@
                 "status-col": "Положение дел",
                 "maturity-date-col": "Дата погашения",
                 "out-of-liquidity": "Из ликвидности",
-                "twap-tooltip": "Этот актив использует ценовой поток TWAP из этой пары пулов Uniswap V3:"
+                "twap-tooltip": "Этот актив использует ценовой поток TWAP из этой пары пулов Uniswap V3:",
+                "price-in-out-col": "Цена входа/выхода"
             },
             "hot-market-card": {
                 "time-left": "Осталось времени",

@@ -190,17 +190,17 @@ const RangeMaturity: React.FC = () => {
                     container={{ height: '60px', margin: '0 10px 0 0' }}
                     value={inAmount}
                     disabled={!isInResult || !inAmount}
-                    borderColor={UI_COLORS.GREEN}
+                    borderColor={UI_COLORS.IN_COLOR}
                     valueEditDisable={true}
-                    subValue={<Icon className="v2-icon v2-icon--in" color={UI_COLORS.GREEN} />}
+                    subValue={<Icon className="v2-icon v2-icon--in" color={UI_COLORS.IN_COLOR} />}
                 />
                 <Input
                     container={{ height: '60px' }}
                     value={outAmount}
                     disabled={isInResult || !outAmount}
-                    borderColor={UI_COLORS.RED}
+                    borderColor={UI_COLORS.OUT_COLOR}
                     valueEditDisable={true}
-                    subValue={<Icon className="v2-icon v2-icon--out" color={UI_COLORS.RED} />}
+                    subValue={<Icon className="v2-icon v2-icon--out" color={UI_COLORS.OUT_COLOR} />}
                 />
             </OptionsContainer>
             <Input
@@ -210,7 +210,7 @@ const RangeMaturity: React.FC = () => {
                 subValue={getStableCoinForNetwork(networkId)}
             />
             <Input
-                title={'Time left to exercise'}
+                title={t('options.market.trade-card.maturity.end-label')}
                 valueAsComponent={true}
                 value={
                     <TimeRemaining
