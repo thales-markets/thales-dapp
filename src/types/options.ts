@@ -106,6 +106,42 @@ export type RangedMarket = {
     finalPrice: number;
 };
 
+export type RangedMarketInfo = {
+    address: string;
+    timestamp: number;
+    timeRemaining: number;
+    asset: CurrencyKey;
+    currencyKey: CurrencyKey;
+    maturityDate: number;
+    expiryDate: number;
+    leftPrice: number;
+    rightPrice: number;
+    inAddress: string;
+    outAddress: string;
+    leftMarket: {
+        id: string;
+        creator: string;
+        longAddress: string;
+        shortAddress: string;
+    };
+    rightMarket: {
+        id: string;
+        creator: string;
+        longAddress: string;
+        shortAddress: string;
+    };
+    isOpen: boolean;
+    result: OptionType;
+    finalPrice: number;
+    availableIn: number;
+    availableOut: number;
+    inPrice: number;
+    outPrice: number;
+    phase: string;
+    phaseNum: number;
+    range: string;
+};
+
 export type RangedMarketData = {
     isResolved: boolean;
     address: string;

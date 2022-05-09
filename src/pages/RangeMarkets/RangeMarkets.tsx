@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
 
-import MarketsTable from '../Markets/components/MarketsTable';
-
 import HotMarkets from '../Markets/components/HotMarkets';
 
 import { RootState } from 'redux/rootReducer';
@@ -23,6 +21,7 @@ import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
+import RangeMarketsTable from './components/RangeMarketsTable';
 
 // const MAX_HOT_MARKETS = 6;
 
@@ -50,7 +49,6 @@ const RangeMarkets: React.FC = () => {
     const marketsQuery = useRangedMarketsQuery(networkId);
 
     const rangeLiquidity = useRangedMarketsLiquidity(networkId);
-    console.log(rangeLiquidity);
 
     const openOrdersMap = useMemo(() => {
         if (rangeLiquidity.isSuccess) {
@@ -66,17 +64,18 @@ const RangeMarkets: React.FC = () => {
 
                       return {
                           ...m,
-                          availableLongs: apiData?.availableIn ?? 0,
-                          availableShorts: apiData?.availableOut ?? 0,
-                          longPrice:
+                          availableIn: apiData?.availableIn ?? 0,
+                          availableOut: apiData?.availableOut ?? 0,
+                          inPrice:
                               +(networkId === POLYGON_ID
                                   ? apiData?.inPrice * CONVERT_TO_6_DECIMALS
                                   : apiData?.inPrice) ?? 0,
-                          shortPrice:
+                          outPrice:
                               +(networkId === POLYGON_ID
                                   ? apiData?.outPrice * CONVERT_TO_6_DECIMALS
                                   : apiData?.outPrice) ?? 0,
                           ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
+                          range: m.leftPrice + ' - ' + m.rightPrice,
                       };
                   })
                 : marketsQuery.data;
@@ -134,7 +133,7 @@ const RangeMarkets: React.FC = () => {
                 </InfoBanner>
             </BannerContainer>
             <HotMarkets optionsMarkets={hotMarkets as any} />
-            <MarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
+            <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>
     );
