@@ -26,7 +26,7 @@ import Tooltip from 'components/Tooltip';
 
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
-import { buildOptionsMarketLink } from 'utils/routes';
+import { buildRangeMarketLink } from 'utils/routes';
 
 import { getSynthName } from 'utils/currency';
 
@@ -481,7 +481,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                             {page.map((row: any, index: number) => {
                                 prepareRow(row);
                                 return (
-                                    <SPAAnchor href={buildOptionsMarketLink(row.original.address)}>
+                                    <SPAAnchor href={buildRangeMarketLink(row.original.address)}>
                                         <tr key={index} {...row.getRowProps()}>
                                             {row.cells.map((cell: any) => {
                                                 return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;

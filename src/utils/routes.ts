@@ -16,6 +16,9 @@ export const navigateTo = (path: string, replacePath = false, scrollToTop = fals
 export const buildOptionsMarketLink = (marketAddress: string, option?: string) =>
     `${ifIpfsDeployment ? '#' : ''}${ROUTES.Options.Home}/${marketAddress}${option ? `?option=${option}` : ''}`;
 
+export const buildRangeMarketLink = (marketAddress: string, option?: string) =>
+    `${ifIpfsDeployment ? '#' : ''}${ROUTES.Options.RangeMarkets}/${marketAddress}${option ? `?option=${option}` : ''}`;
+
 export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${route}`;
 
 export const navigateToOptionsMarket = (marketAddress: string, option?: string, replacePath = false) =>
