@@ -27,6 +27,7 @@ import { setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
 import { getIsPolygon } from '../../utils/network';
 import { getNetworkId } from '../../redux/modules/wallet';
 import { RangedMarketProvider } from './contexts/RangedMarketContext';
+import RangeMaturity from './components/Maturity/RangeMaturity';
 
 type MarketProps = {
     marketAddress: string;
@@ -121,7 +122,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
             {isRangedMarket && (
                 <RangedMarketProvider rangedMarket={rangedMarket}>
                     <MainContainer>
-                        {inMaturityPhase ? <Maturity /> : <RangedMarketAMM />}
+                        {inMaturityPhase ? <RangeMaturity /> : <RangedMarketAMM />}
                         <TabContainerRangedMarket />
                     </MainContainer>
                 </RangedMarketProvider>
