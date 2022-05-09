@@ -15,6 +15,7 @@ export enum Theme {
     Dark,
 }
 
+const INFORMATION_BANNER_ACTIVE = false;
 const cookies = new Cookies();
 
 const Home: React.FC = () => {
@@ -32,37 +33,39 @@ const Home: React.FC = () => {
 
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <Info>
-                <Trans
-                    i18nKey="options.home.polygon-trading-competition-1"
-                    components={{
-                        bold: (
-                            <strong
-                                onClick={() => {
-                                    SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork(137, () => {
-                                        navigateTo(buildHref(ROUTES.Options.Home));
-                                    });
-                                }}
-                            />
-                        ),
-                    }}
-                />
-                ,
-                <Trans
-                    i18nKey="options.home.polygon-trading-competition-2"
-                    components={{
-                        bold: (
-                            <a
-                                href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
-                                rel="noreferrer"
-                                target="_blank"
-                            >
-                                <strong />
-                            </a>
-                        ),
-                    }}
-                />
-            </Info>
+            {INFORMATION_BANNER_ACTIVE && (
+                <Info>
+                    <Trans
+                        i18nKey="options.home.polygon-trading-competition-1"
+                        components={{
+                            bold: (
+                                <strong
+                                    onClick={() => {
+                                        SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork(137, () => {
+                                            navigateTo(buildHref(ROUTES.Options.Home));
+                                        });
+                                    }}
+                                />
+                            ),
+                        }}
+                    />
+                    ,
+                    <Trans
+                        i18nKey="options.home.polygon-trading-competition-2"
+                        components={{
+                            bold: (
+                                <a
+                                    href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                    rel="noreferrer"
+                                    target="_blank"
+                                >
+                                    <strong />
+                                </a>
+                            ),
+                        }}
+                    />
+                </Info>
+            )}
             <GridLayout theme={theme} setTheme={setTheme} />
             <FlexWrapper>
                 <Title> {t('landing-page.initiatives')}</Title>
