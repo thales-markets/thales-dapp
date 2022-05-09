@@ -186,10 +186,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),
                 accessor: 'timeRemaining',
-                Cell: (_props: any) => {
-                    console.log(_props?.cell?.value);
-                    return <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />;
-                },
+                Cell: (_props: any) => <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />,
             },
             ...(isL2OrPolygon
                 ? [
@@ -256,6 +253,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         const set: Set<string> = new Set();
         const processedMarkets = optionsMarkets
             .map((market) => {
+                set.add(market.currencyKey);
                 return {
                     address: market.address,
                     asset: market.asset,
@@ -368,10 +366,6 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     useEffect(() => {
         gotoPage(0);
     }, [globalFilter, showOnlyLiquid, assetFilters]);
-
-    // useEffect(() => {
-    //     setDataCount(data.length);
-    // }, [data?.length, showOnlyLiquid, assetFilters, globalFilter]);
 
     useEffect(() => {
         setPageSize(20);

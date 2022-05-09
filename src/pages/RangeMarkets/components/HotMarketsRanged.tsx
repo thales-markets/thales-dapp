@@ -2,23 +2,21 @@ import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 
-// import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import { OptionsMarkets } from 'types/options';
-
-import HotMarketCard, { HotMarket } from '../MarketsCard/HotMarketCard';
-import HotMarketCardSceleton from '../MarketsCard/HotMarketCardSceleton';
 import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
 import Hammer from 'hammerjs';
 import Tooltip from 'components/Tooltip';
+import HotMarketCardSceleton from 'pages/Markets/components/MarketsCard/HotMarketCardSceleton';
+import HotMarketCard, { HotMarket } from 'pages/Markets/components/MarketsCard/HotMarketCard';
+import { RangedMarketUI } from '../RangeMarkets';
 
-type HotMarketsProps = {
-    optionsMarkets: OptionsMarkets;
+type HotMarketsRangedProps = {
+    optionsMarkets: RangedMarketUI[];
 };
 
 enum MarketType {
-    short = 'DOWN',
-    long = 'UP',
+    in = 'IN',
+    out = 'OUT',
 }
 
 const CARDS_TO_SHOW = 5;
@@ -27,34 +25,34 @@ const calculatePotentialProfit = (price: number) => {
     return ((1 - price) / price) * 100;
 };
 
-const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
+const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
 
-        optionsMarkets?.forEach((market) => {
+        optionsMarkets?.forEach((market: any) => {
             if (market.longPrice == 0 || market.shortPrice == 0) return;
             markets.push({
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
-                assetName: `${market.asset} ${MarketType.long}`,
-                pricePerOption: market.longPrice,
-                strikePrice: '$ ' + market.strikePrice,
+                assetName: `${market.asset} ${MarketType.out}`,
+                pricePerOption: market.outPrice,
+                strikePrice: market.range,
                 timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.longPrice)),
+                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.outPrice)),
                 address: market.address,
             });
 
             markets.push({
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
-                assetName: `${market.asset} ${MarketType.short}`,
-                pricePerOption: market.shortPrice,
-                strikePrice: '$ ' + market.strikePrice,
+                assetName: `${market.asset} ${MarketType.in}`,
+                pricePerOption: market.inPrice,
+                strikePrice: market.range,
                 timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.shortPrice)),
+                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.inPrice)),
                 address: market.address,
             });
         });
@@ -205,4 +203,4 @@ const Icon = styled.i<{ disabled?: boolean }>`
     pointer-events: ${(_props) => (_props?.disabled ? 'none' : 'auto')};
 `;
 
-export default HotMarkets;
+export default HotMarketsRanged;
