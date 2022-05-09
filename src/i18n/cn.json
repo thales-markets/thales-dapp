@@ -349,7 +349,8 @@
                 "status-col": "状态",
                 "maturity-date-col": "成人礼",
                 "out-of-liquidity": "流动性不足",
-                "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送："
+                "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送：",
+                "price-in-out-col": "价格进/出"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",
