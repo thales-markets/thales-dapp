@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
 
-import HotMarkets from '../Markets/components/HotMarkets';
-
 import { RootState } from 'redux/rootReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux/modules/wallet';
@@ -22,8 +20,21 @@ import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
 import RangeMarketsTable from './components/RangeMarketsTable';
+import HotMarketsRanged from './components/HotMarketsRanged';
+import { RangedMarket } from 'types/options';
 
 // const MAX_HOT_MARKETS = 6;
+
+export type RangedMarketUI = RangedMarket & {
+    availableIn: number;
+    availableOut: number;
+    inPrice: number;
+    outPrice: number;
+    ammLiquidity: string;
+    range: string;
+    phaseNum: number;
+    timeRemaining: number;
+};
 
 const RangeMarkets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -56,7 +67,7 @@ const RangeMarkets: React.FC = () => {
         }
     }, [rangeLiquidity]);
 
-    const optionsMarkets = useMemo(() => {
+    const optionsMarkets: RangedMarketUI[] = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
                 ? marketsQuery.data.map((m) => {
@@ -75,11 +86,11 @@ const RangeMarkets: React.FC = () => {
                                   ? apiData?.outPrice * CONVERT_TO_6_DECIMALS
                                   : apiData?.outPrice) ?? 0,
                           ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
-                          range: m.leftPrice + ' - ' + m.rightPrice,
+                          range: m.leftPrice.toFixed(2) + ' - ' + m.rightPrice.toFixed(2),
                       };
                   })
                 : marketsQuery.data;
-            return sortOptionsMarkets(markets as any);
+            return sortOptionsMarkets(markets as any) as any;
         }
         return [];
     }, [marketsQuery, openOrdersMap]);
@@ -132,7 +143,7 @@ const RangeMarkets: React.FC = () => {
                     />
                 </InfoBanner>
             </BannerContainer>
-            <HotMarkets optionsMarkets={hotMarkets as any} />
+            <HotMarketsRanged optionsMarkets={hotMarkets} />
             <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>
