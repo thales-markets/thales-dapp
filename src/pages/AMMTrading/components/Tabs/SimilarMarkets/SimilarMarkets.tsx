@@ -116,7 +116,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
                 : rangedMarketsQuery.data;
 
             markets = markets.filter((market: any) => market?.currencyKey == marketInfo?.currencyKey);
-            // markets = markets.filter((market: any) => market?.availableIn > 0 || market.availableOut > 0);
+            markets = markets.filter((market: any) => market?.availableIn > 0 || market.availableOut > 0);
             markets = markets.filter((market: any) => market?.maturityDate == marketInfo.maturityDate);
             markets = markets.filter((market: any) => market?.address !== marketInfo.address);
             markets = sortOptionsMarkets(markets as any) as any;
