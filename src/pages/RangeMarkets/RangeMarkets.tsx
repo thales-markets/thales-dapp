@@ -20,12 +20,13 @@ import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
 import RangeMarketsTable from './components/RangeMarketsTable';
-import HotMarketsRanged from './components/HotMarketsRanged';
+import HotMarketsRanged from './components/HotMarketsRanged/HotMarketsRanged';
 import { RangedMarket } from 'types/options';
 
 // const MAX_HOT_MARKETS = 6;
 
 export type RangedMarketUI = RangedMarket & {
+    asset: string;
     availableIn: number;
     availableOut: number;
     inPrice: number;
@@ -75,6 +76,7 @@ const RangeMarkets: React.FC = () => {
 
                       return {
                           ...m,
+                          asset: m.currencyKey,
                           availableIn: apiData?.availableIn ?? 0,
                           availableOut: apiData?.availableOut ?? 0,
                           inPrice:
@@ -143,7 +145,7 @@ const RangeMarkets: React.FC = () => {
                     />
                 </InfoBanner>
             </BannerContainer>
-            <HotMarketsRanged optionsMarkets={hotMarkets} />
+            <HotMarketsRanged optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />
             <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>

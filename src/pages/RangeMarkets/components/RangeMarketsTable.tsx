@@ -2,19 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-
 import { RangedMarketInfo } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { SortOption } from 'types/options';
-
 import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table';
 import { useTranslation } from 'react-i18next';
-
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM, getIsPolygon } from 'utils/network';
-
 import Currency from 'components/Currency/v2';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { FlexDivRow } from 'theme/common';
@@ -23,20 +19,17 @@ import { TablePagination } from '@material-ui/core';
 import SortingMenu from 'components/SortingMenu';
 import SPAAnchor from 'components/SPAAnchor';
 import Tooltip from 'components/Tooltip';
-
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
 import { buildRangeMarketLink } from 'utils/routes';
-
 import { getSynthName } from 'utils/currency';
-
 import './main.scss';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { UI_COLORS } from 'constants/ui';
 import TableGridSwitch from 'pages/Markets/components/Input/TableGridSwitch';
 import SearchField from 'pages/Markets/components/Input/SearchField';
 import PhaseComponent from 'pages/Markets/components/Phase/Phase';
-import MarketsGrid from 'pages/Markets/components/MarketsGrid';
+import GridViewRangedMarkets from './GridViewRangedMarkets';
 
 type RangeMarketsTableProps = {
     exchangeRates: Rates | null;
@@ -497,7 +490,11 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                 </>
             )}
             {!tableView && (
-                <MarketsGrid optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} filters={filters} />
+                <GridViewRangedMarkets
+                    optionsMarkets={optionsMarkets as any}
+                    exchangeRates={exchangeRates}
+                    filters={filters}
+                />
             )}
         </>
     );
