@@ -69,6 +69,7 @@ const RangeMarketCard: React.FC<RangeMarketCardProps> = ({ data, exchangeRates, 
                     }}
                     marketAddress={data?.address}
                     fontSize={12}
+                    maxWidth={65}
                 />
             </MiddleContrainer>
             <CardFooter>

@@ -1,5 +1,5 @@
 import { UI_COLORS } from 'constants/ui';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PointerIcon from 'assets/images/ranged-markets/RangedMarkets_point.svg';
 import LeftPriceIcon from 'assets/images/ranged-markets/RangedMarkets_A_tiengle.svg';
 import RightPriceIcon from 'assets/images/ranged-markets/RangedMarkets_B_triangle.svg';
@@ -23,150 +23,157 @@ type RangeIllustrationProps = {
 
 const RangeIllustration: React.FC<RangeIllustrationProps> = ({
     priceData,
-    marketAddress,
     outColor,
     inColor,
     hidePrice,
     fontSize = 20,
     maxWidth = 50,
 }) => {
+    const containerRef = useRef(null);
+
     useEffect(() => {
-        const c: HTMLCanvasElement = document.getElementById('range-canvas-' + marketAddress) as HTMLCanvasElement;
-        const ctx = c.getContext('2d');
-        ctx?.clearRect(0, 0, c.width, c.height);
-        if (ctx) {
-            const START_POINT = [19, 60];
-            const WIDTH_OF_IN_RANGE = 86;
-            const WIDTH_OF_OUT_RANGE = 86;
-            const HEIGHT = 7;
-            const HALF_WIDTH_OF_POINTER_ICON = 7;
-            // const POSITION_OF_LEFT_PRICE = WIDTH_OF_OUT_RANGE;
-            // const POSITION_OF_RIGHT_PRICE = WIDTH_OF_IN_RANGE + WIDTH_OF_IN_RANGE;
-            const { MIN_PRICE, MAX_PRICE } = calculateMinAndMaxPrice(priceData.left, priceData.right);
-            const CURRENT_PRICE_POSITION = calculatePositionForGivenPrice(
-                priceData.current,
-                [MIN_PRICE, MAX_PRICE],
-                [0, 2 * WIDTH_OF_OUT_RANGE + WIDTH_OF_IN_RANGE]
-            );
-            const CURRENT_PRICE_ICON_POSITION = [CURRENT_PRICE_POSITION, START_POINT[1] - 23];
+        if (containerRef !== null) {
+            const c: HTMLCanvasElement = containerRef.current as any;
 
-            // console.log('MIN_PRICE ', MIN_PRICE);
-            // console.log('MAX_PRICE ', MAX_PRICE);
-            // console.log('CURRENT_PRICE_POSITION ', CURRENT_PRICE_POSITION);
-
-            // Calculate points position
-
-            const START_POINT_OF_IN_RANGE = [START_POINT[0] + WIDTH_OF_OUT_RANGE, START_POINT[1]];
-            const START_POINT_OF_SECOND_OUT_RANGE = [
-                START_POINT_OF_IN_RANGE[0] + WIDTH_OF_IN_RANGE,
-                START_POINT_OF_IN_RANGE[1],
-            ];
-
-            // First out position
-            const firstOutPosition = new Path2D();
-            firstOutPosition.moveTo(START_POINT[0], START_POINT[1]);
-            firstOutPosition.lineTo(START_POINT[0] + WIDTH_OF_OUT_RANGE, START_POINT[1]);
-            firstOutPosition.lineTo(START_POINT[0] + WIDTH_OF_OUT_RANGE, START_POINT[1] + HEIGHT);
-            firstOutPosition.lineTo(START_POINT[0], START_POINT[1] + HEIGHT);
-            firstOutPosition.closePath();
-            ctx.fillStyle = outColor ? outColor : UI_COLORS.OUT_COLOR;
-            ctx.fill(firstOutPosition);
-
-            // Rectangle inside range
-            const inPosition = new Path2D();
-            inPosition.moveTo(START_POINT_OF_IN_RANGE[0], START_POINT_OF_IN_RANGE[1]);
-            inPosition.lineTo(START_POINT_OF_IN_RANGE[0] + WIDTH_OF_IN_RANGE, START_POINT_OF_IN_RANGE[1]);
-            inPosition.lineTo(START_POINT_OF_IN_RANGE[0] + WIDTH_OF_IN_RANGE, START_POINT_OF_IN_RANGE[1] + HEIGHT);
-            inPosition.lineTo(START_POINT_OF_IN_RANGE[0], START_POINT_OF_IN_RANGE[1] + HEIGHT);
-            inPosition.closePath();
-            ctx.fillStyle = inColor ? inColor : UI_COLORS.IN_COLOR;
-            ctx.fill(inPosition);
-
-            // Second out position
-            const secondOutPosition = new Path2D();
-            secondOutPosition.moveTo(START_POINT_OF_SECOND_OUT_RANGE[0], START_POINT_OF_SECOND_OUT_RANGE[1]);
-            secondOutPosition.lineTo(
-                START_POINT_OF_SECOND_OUT_RANGE[0] + WIDTH_OF_OUT_RANGE,
-                START_POINT_OF_SECOND_OUT_RANGE[1]
-            );
-            secondOutPosition.lineTo(
-                START_POINT_OF_SECOND_OUT_RANGE[0] + WIDTH_OF_OUT_RANGE,
-                START_POINT_OF_SECOND_OUT_RANGE[1] + HEIGHT
-            );
-            secondOutPosition.lineTo(START_POINT_OF_SECOND_OUT_RANGE[0], START_POINT_OF_SECOND_OUT_RANGE[1] + HEIGHT);
-            secondOutPosition.closePath();
-            ctx.fillStyle = outColor ? outColor : UI_COLORS.OUT_COLOR;
-            ctx.fill(secondOutPosition);
-
-            // Current price pointer svg
-            const pointerSVGImage = new Image();
-            pointerSVGImage.src = PointerIcon;
-            pointerSVGImage.onload = function () {
-                ctx.drawImage(
-                    pointerSVGImage,
-                    START_POINT[0] + CURRENT_PRICE_POSITION - HALF_WIDTH_OF_POINTER_ICON,
-                    CURRENT_PRICE_ICON_POSITION[1]
+            const ctx = c.getContext('2d');
+            ctx?.clearRect(0, 0, c.width, c.height);
+            if (ctx) {
+                const START_POINT = [19, 60];
+                const WIDTH_OF_IN_RANGE = 86;
+                const WIDTH_OF_OUT_RANGE = 86;
+                const HEIGHT = 7;
+                const HALF_WIDTH_OF_POINTER_ICON = 7;
+                // const POSITION_OF_LEFT_PRICE = WIDTH_OF_OUT_RANGE;
+                // const POSITION_OF_RIGHT_PRICE = WIDTH_OF_IN_RANGE + WIDTH_OF_IN_RANGE;
+                const { MIN_PRICE, MAX_PRICE } = calculateMinAndMaxPrice(priceData.left, priceData.right);
+                const CURRENT_PRICE_POSITION = calculatePositionForGivenPrice(
+                    priceData.current,
+                    [MIN_PRICE, MAX_PRICE],
+                    [0, 2 * WIDTH_OF_OUT_RANGE + WIDTH_OF_IN_RANGE]
                 );
-            };
+                const CURRENT_PRICE_ICON_POSITION = [CURRENT_PRICE_POSITION, START_POINT[1] - 23];
 
-            // Left Price Icon
-            const leftPriceIcon = new Image();
-            leftPriceIcon.src = LeftPriceIcon;
-            leftPriceIcon.onload = function () {
-                ctx.drawImage(leftPriceIcon, START_POINT_OF_IN_RANGE[0] - 11, START_POINT_OF_IN_RANGE[1] + HEIGHT);
-            };
+                // console.log('MIN_PRICE ', MIN_PRICE);
+                // console.log('MAX_PRICE ', MAX_PRICE);
+                // console.log('CURRENT_PRICE_POSITION ', CURRENT_PRICE_POSITION);
 
-            // Right Price Icon
-            const rightPriceIcon = new Image();
-            rightPriceIcon.src = RightPriceIcon;
-            rightPriceIcon.onload = function () {
-                ctx.drawImage(
-                    rightPriceIcon,
-                    START_POINT_OF_SECOND_OUT_RANGE[0] - 11,
+                // Calculate points position
+
+                const START_POINT_OF_IN_RANGE = [START_POINT[0] + WIDTH_OF_OUT_RANGE, START_POINT[1]];
+                const START_POINT_OF_SECOND_OUT_RANGE = [
+                    START_POINT_OF_IN_RANGE[0] + WIDTH_OF_IN_RANGE,
+                    START_POINT_OF_IN_RANGE[1],
+                ];
+
+                // First out position
+                const firstOutPosition = new Path2D();
+                firstOutPosition.moveTo(START_POINT[0], START_POINT[1]);
+                firstOutPosition.lineTo(START_POINT[0] + WIDTH_OF_OUT_RANGE, START_POINT[1]);
+                firstOutPosition.lineTo(START_POINT[0] + WIDTH_OF_OUT_RANGE, START_POINT[1] + HEIGHT);
+                firstOutPosition.lineTo(START_POINT[0], START_POINT[1] + HEIGHT);
+                firstOutPosition.closePath();
+                ctx.fillStyle = outColor ? outColor : UI_COLORS.OUT_COLOR;
+                ctx.fill(firstOutPosition);
+
+                // Rectangle inside range
+                const inPosition = new Path2D();
+                inPosition.moveTo(START_POINT_OF_IN_RANGE[0], START_POINT_OF_IN_RANGE[1]);
+                inPosition.lineTo(START_POINT_OF_IN_RANGE[0] + WIDTH_OF_IN_RANGE, START_POINT_OF_IN_RANGE[1]);
+                inPosition.lineTo(START_POINT_OF_IN_RANGE[0] + WIDTH_OF_IN_RANGE, START_POINT_OF_IN_RANGE[1] + HEIGHT);
+                inPosition.lineTo(START_POINT_OF_IN_RANGE[0], START_POINT_OF_IN_RANGE[1] + HEIGHT);
+                inPosition.closePath();
+                ctx.fillStyle = inColor ? inColor : UI_COLORS.IN_COLOR;
+                ctx.fill(inPosition);
+
+                // Second out position
+                const secondOutPosition = new Path2D();
+                secondOutPosition.moveTo(START_POINT_OF_SECOND_OUT_RANGE[0], START_POINT_OF_SECOND_OUT_RANGE[1]);
+                secondOutPosition.lineTo(
+                    START_POINT_OF_SECOND_OUT_RANGE[0] + WIDTH_OF_OUT_RANGE,
+                    START_POINT_OF_SECOND_OUT_RANGE[1]
+                );
+                secondOutPosition.lineTo(
+                    START_POINT_OF_SECOND_OUT_RANGE[0] + WIDTH_OF_OUT_RANGE,
                     START_POINT_OF_SECOND_OUT_RANGE[1] + HEIGHT
                 );
-            };
-
-            if (hidePrice !== true) {
-                // Left price label
-                ctx.font = 'normal small-caps bold ' + fontSize + 'px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillStyle = UI_COLORS.GREEN;
-                ctx.fillText(
-                    formatCurrencyWithSign(USD_SIGN, priceData.left),
-                    START_POINT_OF_IN_RANGE[0],
-                    START_POINT_OF_IN_RANGE[1] + 30 + fontSize,
-                    maxWidth
-                );
-
-                // Right price label
-                ctx.font = 'normal small-caps bold' + fontSize + 'px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillStyle = UI_COLORS.GREEN;
-                ctx.fillText(
-                    formatCurrencyWithSign(USD_SIGN, priceData.right),
+                secondOutPosition.lineTo(
                     START_POINT_OF_SECOND_OUT_RANGE[0],
-                    START_POINT_OF_SECOND_OUT_RANGE[1] + 30 + fontSize,
-                    maxWidth
+                    START_POINT_OF_SECOND_OUT_RANGE[1] + HEIGHT
                 );
+                secondOutPosition.closePath();
+                ctx.fillStyle = outColor ? outColor : UI_COLORS.OUT_COLOR;
+                ctx.fill(secondOutPosition);
 
-                // Current price element
-                ctx.font = 'normal small-caps bold' + fontSize + 'px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillStyle = UI_COLORS.GREEN;
-                ctx.fillText(
-                    formatCurrencyWithSign(USD_SIGN, priceData.current),
-                    START_POINT[0] + CURRENT_PRICE_POSITION,
-                    CURRENT_PRICE_ICON_POSITION[1] - 10,
-                    maxWidth
-                );
+                // Current price pointer svg
+                const pointerSVGImage = new Image();
+                pointerSVGImage.src = PointerIcon;
+                pointerSVGImage.onload = function () {
+                    ctx.drawImage(
+                        pointerSVGImage,
+                        START_POINT[0] + CURRENT_PRICE_POSITION - HALF_WIDTH_OF_POINTER_ICON,
+                        CURRENT_PRICE_ICON_POSITION[1]
+                    );
+                };
+
+                // Left Price Icon
+                const leftPriceIcon = new Image();
+                leftPriceIcon.src = LeftPriceIcon;
+                leftPriceIcon.onload = function () {
+                    ctx.drawImage(leftPriceIcon, START_POINT_OF_IN_RANGE[0] - 11, START_POINT_OF_IN_RANGE[1] + HEIGHT);
+                };
+
+                // Right Price Icon
+                const rightPriceIcon = new Image();
+                rightPriceIcon.src = RightPriceIcon;
+                rightPriceIcon.onload = function () {
+                    ctx.drawImage(
+                        rightPriceIcon,
+                        START_POINT_OF_SECOND_OUT_RANGE[0] - 11,
+                        START_POINT_OF_SECOND_OUT_RANGE[1] + HEIGHT
+                    );
+                };
+
+                if (hidePrice !== true) {
+                    // Left price label
+                    ctx.font = 'normal small-caps bold ' + fontSize + 'px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = UI_COLORS.GREEN;
+                    ctx.fillText(
+                        formatCurrencyWithSign(USD_SIGN, priceData.left),
+                        START_POINT_OF_IN_RANGE[0],
+                        START_POINT_OF_IN_RANGE[1] + 30 + fontSize,
+                        maxWidth
+                    );
+
+                    // Right price label
+                    ctx.font = 'normal small-caps bold' + fontSize + 'px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = UI_COLORS.GREEN;
+                    ctx.fillText(
+                        formatCurrencyWithSign(USD_SIGN, priceData.right),
+                        START_POINT_OF_SECOND_OUT_RANGE[0],
+                        START_POINT_OF_SECOND_OUT_RANGE[1] + 30 + fontSize,
+                        maxWidth
+                    );
+
+                    // Current price element
+                    ctx.font = 'normal small-caps bold' + fontSize + 'px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = UI_COLORS.GREEN;
+                    ctx.fillText(
+                        formatCurrencyWithSign(USD_SIGN, priceData.current),
+                        START_POINT[0] + CURRENT_PRICE_POSITION,
+                        CURRENT_PRICE_ICON_POSITION[1] - 10,
+                        maxWidth
+                    );
+                }
             }
         }
-    }, [priceData.left, priceData.right, priceData.current]);
+    }, [priceData.left, priceData.right, priceData.current, containerRef]);
 
     return (
         <>
-            <Container id={`range-canvas-${marketAddress}`} />
+            <Container ref={containerRef} />
         </>
     );
 };
