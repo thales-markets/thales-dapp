@@ -63,6 +63,8 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
                             current: currentAssetPrice,
                         }}
                         marketAddress={address}
+                        fontSize={24}
+                        maxWidth={65}
                     />
                 </StyledComponents.SectionContainer>
                 <StyledComponents.SectionContainer>

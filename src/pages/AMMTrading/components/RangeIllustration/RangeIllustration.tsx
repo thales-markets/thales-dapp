@@ -17,6 +17,8 @@ type RangeIllustrationProps = {
     outColor?: string;
     inColor?: string;
     hidePrice?: boolean;
+    fontSize?: number;
+    maxWidth?: number;
 };
 
 const RangeIllustration: React.FC<RangeIllustrationProps> = ({
@@ -25,6 +27,8 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
     outColor,
     inColor,
     hidePrice,
+    fontSize = 20,
+    maxWidth = 50,
 }) => {
     useEffect(() => {
         const c: HTMLCanvasElement = document.getElementById('range-canvas-' + marketAddress) as HTMLCanvasElement;
@@ -125,36 +129,36 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
 
             if (hidePrice !== true) {
                 // Left price label
-                ctx.font = '20px';
+                ctx.font = 'normal small-caps bold ' + fontSize + 'px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillStyle = UI_COLORS.GREEN;
                 ctx.fillText(
                     formatCurrencyWithSign(USD_SIGN, priceData.left),
                     START_POINT_OF_IN_RANGE[0],
-                    START_POINT_OF_IN_RANGE[1] + HEIGHT + 30,
-                    50
+                    START_POINT_OF_IN_RANGE[1] + 30 + fontSize,
+                    maxWidth
                 );
 
                 // Right price label
-                ctx.font = '20px';
+                ctx.font = 'normal small-caps bold' + fontSize + 'px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillStyle = UI_COLORS.GREEN;
                 ctx.fillText(
                     formatCurrencyWithSign(USD_SIGN, priceData.right),
                     START_POINT_OF_SECOND_OUT_RANGE[0],
-                    START_POINT_OF_SECOND_OUT_RANGE[1] + HEIGHT + 30,
-                    50
+                    START_POINT_OF_SECOND_OUT_RANGE[1] + 30 + fontSize,
+                    maxWidth
                 );
 
                 // Current price element
-                ctx.font = '20px';
+                ctx.font = 'normal small-caps bold' + fontSize + 'px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillStyle = UI_COLORS.GREEN;
                 ctx.fillText(
                     formatCurrencyWithSign(USD_SIGN, priceData.current),
                     START_POINT[0] + CURRENT_PRICE_POSITION,
                     CURRENT_PRICE_ICON_POSITION[1] - 10,
-                    50
+                    maxWidth
                 );
             }
         }
