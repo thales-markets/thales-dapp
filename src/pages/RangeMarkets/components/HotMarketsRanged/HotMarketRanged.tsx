@@ -8,7 +8,7 @@ import { formatTimeDifference, calculateDifference } from 'utils/formatters/date
 
 import { useTranslation } from 'react-i18next';
 import SPAAnchor from 'components/SPAAnchor';
-import { buildOptionsMarketLink } from 'utils/routes';
+import { buildRangeMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
 import { CurrencyKey } from 'pages/Markets/components/MarketsCard/MarketCard';
 import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
@@ -48,7 +48,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
 
     return (
         <StyledComponents.Card address={address}>
-            <SPAAnchor href={buildOptionsMarketLink(address)}>
+            <SPAAnchor href={buildRangeMarketLink(address)}>
                 <StyledComponents.AssetInfo>
                     <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
                     <StyledComponents.AssetNameContainer>

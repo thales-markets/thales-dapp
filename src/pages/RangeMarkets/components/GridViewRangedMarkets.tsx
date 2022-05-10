@@ -5,7 +5,7 @@ import { GridFilters } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { FlexDiv } from 'theme/common';
 import SPAAnchor from 'components/SPAAnchor';
-import { buildOptionsMarketLink } from 'utils/routes';
+import { buildRangeMarketLink } from 'utils/routes';
 import { RangedMarketUI } from '../RangeMarkets';
 import RangeMarketCard from 'pages/Markets/components/RangeMarketCard';
 import { PaginationWrapper } from './RangeMarketsTable';
@@ -75,7 +75,7 @@ const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exc
             {options &&
                 options.map((optionMarket, index) => {
                     return (
-                        <SPAAnchor key={index} href={buildOptionsMarketLink(optionMarket.address)}>
+                        <SPAAnchor key={index} href={buildRangeMarketLink(optionMarket.address)}>
                             <RangeMarketCard data={optionMarket} exchangeRates={exchangeRates} />{' '}
                         </SPAAnchor>
                     );
