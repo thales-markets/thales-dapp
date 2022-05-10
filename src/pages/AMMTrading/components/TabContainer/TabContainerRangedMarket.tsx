@@ -6,7 +6,7 @@ import OptionPriceTab from '../Tabs/OptionPriceTab';
 import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
 import MarketActivity from '../Tabs/MarketActivity';
-// import SimilarMarkets from '../Tabs/SimilarMarkets';
+import SimilarMarkets from '../Tabs/SimilarMarkets';
 import Container from './styled-components/Container';
 import RowCardRangedMarket from '../RowCard/RowCardRangedMarket';
 
@@ -16,6 +16,8 @@ import { MarketType, OptionSide } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { MARKET_TYPE } from 'constants/options';
+// import RangeIllustration from '../RangeIllustration';
+// import RangeMarketCard from 'pages/Markets/components/RangeMarketCard';
 
 type TabContainerProps = {
     optionSide?: OptionSide;
@@ -23,7 +25,7 @@ type TabContainerProps = {
 
 const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const marketInfo = useRangedMarketContext();
-    const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
+    const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 5);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
 
@@ -73,10 +75,14 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
             title: t('options.market.widgets.recent-transactions-widget'),
             index: 4,
         },
-        {
-            title: t('options.market.overview.similar-markets'),
-            index: 5,
-        },
+        ...(!inMaturity
+            ? [
+                  {
+                      title: t('options.market.overview.similar-markets'),
+                      index: 5,
+                  },
+              ]
+            : []),
     ];
 
     return (
@@ -134,7 +140,12 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                     {currentTab == 2 && <OptionPriceTab marketType={MARKET_TYPE[1] as MarketType} />}
                     {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[1] as MarketType} />}
                     {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[1] as MarketType} />}
-                    {/* {currentTab == 5 && <SimilarMarkets />} */}
+                    {currentTab == 5 && <SimilarMarkets marketType={MARKET_TYPE[1] as MarketType} />}
+                    {/* {currentTab == 5 && (
+                        <>
+                            <RangeMarketCard data={marketInfo} />
+                        </>
+                    )} */}
                 </Container.Tab>
             </Container>
         </>

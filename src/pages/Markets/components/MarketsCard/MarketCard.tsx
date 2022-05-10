@@ -97,7 +97,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates, mar
     );
 };
 
-const MarketCardWrapper = styled.div<{ maxWidth?: string; margin?: string }>`
+export const MarketCardWrapper = styled.div<{ maxWidth?: string; margin?: string }>`
     display: flex;
     flex-direction: column;
     max-width: ${(_props) => (_props?.maxWidth ? _props?.maxWidth : '390px')};
@@ -139,7 +139,7 @@ const RightContainer = styled.div`
     width: 50%;
 `;
 
-const AssetContainer = styled.div`
+export const AssetContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -176,7 +176,7 @@ export const CurrencyKey = styled.span<{ alignSelf?: string }>`
     font-weight: 700;
 `;
 
-const MarketStatus = styled.span`
+export const MarketStatus = styled.span`
     font-family: Roboto !important;
     font-style: normal;
     font-size: 7px;
@@ -184,7 +184,7 @@ const MarketStatus = styled.span`
     line-height: 18px;
 `;
 
-const LightHeaderText = styled.span`
+export const LightHeaderText = styled.span`
     display: flex;
     flex-direction: row;
     color: var(--primary-color);
@@ -194,7 +194,8 @@ const LightHeaderText = styled.span`
     font-size: 14px;
 `;
 
-const StrongHeaderText = styled(LightHeaderText)`
+export const StrongHeaderText = styled(LightHeaderText)<{ color?: string }>`
+    ${(_props) => (_props?.color ? `color: ${_props.color};` : '')}
     font-size: 25px;
     font-weight: 700;
 `;
