@@ -7,12 +7,13 @@ import { getSynthName } from 'utils/currency';
 import Hammer from 'hammerjs';
 import Tooltip from 'components/Tooltip';
 import HotMarketCardSceleton from 'pages/Markets/components/MarketsCard/HotMarketCardSceleton';
-import { HotMarket } from 'pages/Markets/components/MarketsCard/HotMarketCard';
 import { RangedMarketUI } from '../../RangeMarkets';
 import HotMarketRanged from './HotMarketRanged';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 type HotMarketsRangedProps = {
     optionsMarkets: RangedMarketUI[];
+    exchangeRates: Rates | null;
 };
 
 enum MarketType {
@@ -26,21 +27,22 @@ const calculatePotentialProfit = (price: number) => {
     return ((1 - price) / price) * 100;
 };
 
-const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets }) => {
+const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exchangeRates }) => {
     const { t } = useTranslation();
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
     const currentMarkets = useMemo(() => {
-        const markets: HotMarket[] = [];
-
-        console.log(optionsMarkets);
+        const markets: any[] = [];
 
         optionsMarkets?.forEach((market: any) => {
             if (market.outPrice == 0 || market.inPrice == 0) return;
+            console.log(market);
             markets.push({
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.out}`,
+                leftPrice: market.leftPrice,
+                rightPrice: market.rightPrice,
                 pricePerOption: market.outPrice,
                 strikePrice: market.range,
                 timeRemaining: market.timeRemaining,
@@ -53,6 +55,8 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets }) =
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.in}`,
                 pricePerOption: market.inPrice,
+                leftPrice: market.leftPrice,
+                rightPrice: market.rightPrice,
                 strikePrice: market.range,
                 timeRemaining: market.timeRemaining,
                 potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.inPrice)),
@@ -60,7 +64,7 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets }) =
             });
         });
 
-        return markets.sort((a: HotMarket, b: HotMarket) => a.pricePerOption - b.pricePerOption);
+        return markets.sort((a: any, b: any) => a.pricePerOption - b.pricePerOption);
     }, [optionsMarkets]);
 
     const moveLeft = () => {
@@ -126,6 +130,9 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets }) =
                                 timeRemaining={market.timeRemaining}
                                 potentialProfit={market.potentialProfit}
                                 address={market.address}
+                                leftPrice={market.leftPrice}
+                                rightPrice={market.rightPrice}
+                                currentAssetPrice={exchangeRates?.[market.currencyKey] || 0}
                             />
                         ))}
                         <Icon

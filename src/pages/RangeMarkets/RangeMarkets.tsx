@@ -145,7 +145,7 @@ const RangeMarkets: React.FC = () => {
                     />
                 </InfoBanner>
             </BannerContainer>
-            <HotMarketsRanged optionsMarkets={hotMarkets} />
+            <HotMarketsRanged optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />
             <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>

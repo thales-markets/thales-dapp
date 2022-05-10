@@ -11,27 +11,34 @@ import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
 import { CurrencyKey } from 'pages/Markets/components/MarketsCard/MarketCard';
+import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 
-export type HotMarket = {
+export type HotRangedMarket = {
     fullAssetName?: string;
     currencyKey: string;
     assetName: string;
     pricePerOption: number;
+    leftPrice: number;
+    rightPrice: number;
+    currentAssetPrice: number;
     strikePrice: string;
     timeRemaining: number;
     potentialProfit: string;
     address: string;
 };
 
-const HotMarketRanged: React.FC<HotMarket> = ({
+const HotMarketRanged: React.FC<HotRangedMarket> = ({
     currencyKey,
     assetName,
     pricePerOption,
-    strikePrice,
     timeRemaining,
     potentialProfit,
     address,
+    leftPrice,
+    rightPrice,
+    currentAssetPrice,
 }) => {
+    console.log('data: ', leftPrice, rightPrice, currentAssetPrice);
     const [time, setTime] = useState(formatTimeDifference(calculateDifference(timeRemaining)));
     const { t } = useTranslation();
 
@@ -49,8 +56,14 @@ const HotMarketRanged: React.FC<HotMarket> = ({
                     </StyledComponents.AssetNameContainer>
                 </StyledComponents.AssetInfo>
                 <StyledComponents.SectionContainer>
-                    <StyledComponents.Header>{t('options.home.hot-market-card.strike-price')}</StyledComponents.Header>
-                    <StyledComponents.SubHeader>{strikePrice}</StyledComponents.SubHeader>
+                    <RangeIllustration
+                        priceData={{
+                            left: leftPrice,
+                            right: rightPrice,
+                            current: currentAssetPrice,
+                        }}
+                        marketAddress={address}
+                    />
                 </StyledComponents.SectionContainer>
                 <StyledComponents.SectionContainer>
                     <StyledComponents.Header>
