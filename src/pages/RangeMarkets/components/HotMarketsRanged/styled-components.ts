@@ -41,12 +41,12 @@ const Header = styled(CardText)`
 `;
 
 const SubHeader = styled(CardText)`
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 400;
 `;
 
 const Percentage = styled(CardText)`
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 700;
     color: #50ce99;
 `;
