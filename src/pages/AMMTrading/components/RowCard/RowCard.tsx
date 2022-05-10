@@ -134,7 +134,7 @@ const RowCard: React.FC = () => {
                             <Container.SubContainer.Value>
                                 <MaturityDate
                                     maturityDateUnix={marketInfo.maturityDate}
-                                    timeRemainingUnix={marketInfo.timeRemaining}
+                                    // timeRemainingUnix={marketInfo.timeRemaining}
                                     showFullCounter={true}
                                 />
                             </Container.SubContainer.Value>

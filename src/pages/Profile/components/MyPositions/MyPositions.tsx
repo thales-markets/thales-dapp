@@ -17,11 +17,6 @@ import { buildOptionsMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import SimpleLoader from 'components/SimpleLoader';
 import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../redux/rootReducer';
-import { getNetworkId } from '../../../../redux/modules/wallet';
-import { getIsPolygon } from '../../../../utils/network';
-import { CONVERT_TO_6_DECIMALS } from '../../../../constants/token';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -33,43 +28,17 @@ type MyPositionsProps = {
 
 const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isSimpleView, searchText, isLoading }) => {
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isPolygon = getIsPolygon(networkId);
 
     const data = useMemo(() => {
         const newArray: any = [];
         if (positions.length > 0) {
             positions.map((value) => {
-                if (value.balances.long > 0) {
-                    const modifiedValue: any = JSON.parse(JSON.stringify(value));
-                    modifiedValue.link = buildOptionsMarketLink(value.market.address);
-                    modifiedValue.balances.amount = value.balances.long;
-                    modifiedValue.balances.type = 'UP';
-                    modifiedValue.balances.value =
-                        isPolygon && value.balances.longValue
-                            ? value.balances.longValue * CONVERT_TO_6_DECIMALS
-                            : value.balances.longValue;
-                    modifiedValue.balances.priceDiff = getPercentageDifference(
-                        exchangeRates?.[modifiedValue.market?.currencyKey] || 0,
-                        modifiedValue.market.strikePrice
-                    );
-                    newArray.push(modifiedValue);
-                }
-                if (value.balances.short > 0) {
-                    const newValue: any = JSON.parse(JSON.stringify(value));
-                    newValue.link = buildOptionsMarketLink(value.market.address);
-                    newValue.balances.amount = value.balances.short;
-                    newValue.balances.type = 'DOWN';
-                    newValue.balances.value =
-                        isPolygon && value.balances.shortValue
-                            ? value.balances.shortValue * CONVERT_TO_6_DECIMALS
-                            : value.balances.shortValue;
-                    newValue.balances.priceDiff = getPercentageDifference(
-                        exchangeRates?.[newValue.market?.currencyKey] || 0,
-                        newValue.market.strikePrice
-                    );
-                    newArray.push(newValue);
-                }
+                const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.balances.priceDiff = getPercentageDifference(
+                    exchangeRates?.[modifiedValue.market?.currencyKey] || 0,
+                    modifiedValue.market.strikePrice
+                );
+                newArray.push(modifiedValue);
             });
         }
 
@@ -99,7 +68,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
-                            <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>
+                            <SPAAnchor href={buildOptionsMarketLink(data.market.id)}>
                                 <Card.Wrapper>
                                     <Card>
                                         <Card.Column>

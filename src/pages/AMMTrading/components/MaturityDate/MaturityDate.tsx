@@ -9,7 +9,7 @@ import { formatShortDate, formattedDuration, formattedDurationFull } from 'utils
 
 type MaturityDateProps = {
     maturityDateUnix: number;
-    timeRemainingUnix: number;
+    // timeRemainingUnix: number;
     onEnded?: () => void;
     showFullCounter?: boolean;
     fontSize?: string;
@@ -20,7 +20,7 @@ const ONE_SECOND_IN_MS = 1000;
 
 const MaturityDate: React.FC<MaturityDateProps> = ({
     maturityDateUnix,
-    timeRemainingUnix,
+    // timeRemainingUnix,
     onEnded,
     showFullCounter,
     fontSize,
@@ -29,13 +29,13 @@ const MaturityDate: React.FC<MaturityDateProps> = ({
     const [showTimeRemaining, setTimeRemaningVisibility] = useState<boolean>(false);
 
     const now = Date.now();
-    const [timeElapsed, setTimeElapsed] = useState(now >= timeRemainingUnix);
-    const [weeksDiff, setWeekDiff] = useState(Math.abs(differenceInWeeks(now, timeRemainingUnix)));
+    const [timeElapsed, setTimeElapsed] = useState(now >= maturityDateUnix);
+    const [weeksDiff, setWeekDiff] = useState(Math.abs(differenceInWeeks(now, maturityDateUnix)));
     const [showRemainingInWeeks, setShowRemainingInWeeks] = useState(weeksDiff > 4);
     const [countdownDisabled, setCountdownDisabled] = useState(timeElapsed || showRemainingInWeeks);
 
     const [timeInterval, setTimeInterval] = useState<number | null>(countdownDisabled ? null : ONE_SECOND_IN_MS);
-    const [duration, setDuration] = useState<Duration>(intervalToDuration({ start: now, end: timeRemainingUnix }));
+    const [duration, setDuration] = useState<Duration>(intervalToDuration({ start: now, end: maturityDateUnix }));
     const { t } = useTranslation();
 
     const dateTimeTranslationMap = {
@@ -57,6 +57,7 @@ const MaturityDate: React.FC<MaturityDateProps> = ({
         'hours-short': t('options.common.time-remaining.hours-short'),
         'minutes-short': t('options.common.time-remaining.minutes-short'),
         'seconds-short': t('options.common.time-remaining.seconds-short'),
+        'months-short': t('options.common.time-remaining.months-short'),
     };
 
     useEffect(() => {
@@ -67,16 +68,16 @@ const MaturityDate: React.FC<MaturityDateProps> = ({
 
     useMemo(() => {
         const today = Date.now();
-        setTimeElapsed(today >= timeRemainingUnix);
-        setWeekDiff(Math.abs(differenceInWeeks(today, timeRemainingUnix)));
-        setShowRemainingInWeeks(Math.abs(differenceInWeeks(today, timeRemainingUnix)) > 4);
-        setCountdownDisabled(today >= timeRemainingUnix || Math.abs(differenceInWeeks(today, timeRemainingUnix)) > 4);
-        setDuration(intervalToDuration({ start: today, end: timeRemainingUnix }));
-    }, [timeRemainingUnix]);
+        setTimeElapsed(today >= maturityDateUnix);
+        setWeekDiff(Math.abs(differenceInWeeks(today, maturityDateUnix)));
+        setShowRemainingInWeeks(Math.abs(differenceInWeeks(today, maturityDateUnix)) > 4);
+        setCountdownDisabled(today >= maturityDateUnix || Math.abs(differenceInWeeks(today, maturityDateUnix)) > 4);
+        setDuration(intervalToDuration({ start: today, end: maturityDateUnix }));
+    }, [maturityDateUnix]);
 
     useInterval(() => {
-        if (now <= timeRemainingUnix) {
-            setDuration(intervalToDuration({ start: now, end: timeRemainingUnix }));
+        if (now <= maturityDateUnix) {
+            setDuration(intervalToDuration({ start: now, end: maturityDateUnix }));
         } else {
             setTimeElapsed(true);
             setTimeInterval(null);

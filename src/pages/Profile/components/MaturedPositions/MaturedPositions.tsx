@@ -50,24 +50,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
         if (positions.length > 0) {
             positions.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
-                modifiedValue.claimed = false;
-                if (value.balances.long > 0) {
-                    const modifiedValue: any = JSON.parse(JSON.stringify(value));
-                    modifiedValue.claimed = false;
-                    modifiedValue.balances.amount = value.balances.long;
-                    modifiedValue.balances.type = 'UP';
-                    modifiedValue.claimable = value.market.result === 'long';
-                    modifiedValue.link = buildOptionsMarketLink(value.market.address);
-                    newArray.push(modifiedValue);
-                }
-                if (value.balances.short > 0) {
-                    const newValue: any = JSON.parse(JSON.stringify(value));
-                    newValue.balances.amount = value.balances.short;
-                    newValue.balances.type = 'DOWN';
-                    newValue.claimable = value.market.result === 'short';
-                    newValue.link = buildOptionsMarketLink(value.market.address);
-                    newArray.push(newValue);
-                }
+                newArray.push(modifiedValue);
             });
         }
 
@@ -97,7 +80,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
-                            <SPAAnchor href={buildOptionsMarketLink(data.market.address)}>
+                            <SPAAnchor href={buildOptionsMarketLink(data.market.id)}>
                                 <Card.Wrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
                                     <Card>
                                         <Card.Column style={{ flex: 1 }}>

@@ -1148,7 +1148,8 @@
                 "days-short": "d",
                 "hours-short": "h",
                 "minutes-short": "m",
-                "seconds-short": "s"
+                "seconds-short": "s",
+                "months-short": "莫"
             },
             "long": "多",
             "short": "空",

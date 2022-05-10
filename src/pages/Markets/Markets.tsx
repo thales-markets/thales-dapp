@@ -25,6 +25,7 @@ import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 
 // const MAX_HOT_MARKETS = 6;
+const INFORMATION_BANNER_ACTIVE = false;
 
 const Markets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -105,37 +106,39 @@ const Markets: React.FC = () => {
 
     return (
         <>
-            <BannerContainer>
-                <InfoBanner>
-                    <Trans
-                        i18nKey="options.home.polygon-trading-competition-1"
-                        components={{
-                            bold: (
-                                <strong
-                                    onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(
-                                        this,
-                                        137,
-                                        undefined
-                                    )}
-                                />
-                            ),
-                        }}
-                    />
-                    ,
-                    <Trans
-                        i18nKey="options.home.polygon-trading-competition-2"
-                        components={{
-                            bold: (
-                                <a
-                                    href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
-                                    rel="noreferrer"
-                                    target="_blank"
-                                />
-                            ),
-                        }}
-                    />
-                </InfoBanner>
-            </BannerContainer>
+            {INFORMATION_BANNER_ACTIVE && (
+                <BannerContainer>
+                    <InfoBanner>
+                        <Trans
+                            i18nKey="options.home.polygon-trading-competition-1"
+                            components={{
+                                bold: (
+                                    <strong
+                                        onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(
+                                            this,
+                                            137,
+                                            undefined
+                                        )}
+                                    />
+                                ),
+                            }}
+                        />
+                        ,
+                        <Trans
+                            i18nKey="options.home.polygon-trading-competition-2"
+                            components={{
+                                bold: (
+                                    <a
+                                        href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
+                                        rel="noreferrer"
+                                        target="_blank"
+                                    />
+                                ),
+                            }}
+                        />
+                    </InfoBanner>
+                </BannerContainer>
+            )}
             <HotMarkets optionsMarkets={hotMarkets} />
             <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             {networkId === 1 && <Loader hideMainnet={true} />}

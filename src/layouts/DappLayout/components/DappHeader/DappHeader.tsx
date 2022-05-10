@@ -103,8 +103,8 @@ const DappHeader: React.FC = () => {
                         iconName="exotic-markets"
                         label={t('common.sidebar.exotic-markets-label')}
                         onClick={(event: any) => {
+                            event.preventDefault();
                             if (window.innerWidth <= 767) {
-                                event.preventDefault();
                                 window.location.replace(LINKS.ExoticMarkets);
                             } else {
                                 window.open(LINKS.ExoticMarkets);
