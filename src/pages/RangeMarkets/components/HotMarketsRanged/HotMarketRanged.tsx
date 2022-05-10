@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useInterval from 'hooks/useInterval';
-import { CurrencyKey } from './MarketCard';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
@@ -11,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
+import { CurrencyKey } from 'pages/Markets/components/MarketsCard/MarketCard';
 
 export type HotMarket = {
     fullAssetName?: string;
@@ -23,7 +23,7 @@ export type HotMarket = {
     address: string;
 };
 
-const HotMarketCard: React.FC<HotMarket> = ({
+const HotMarketRanged: React.FC<HotMarket> = ({
     currencyKey,
     assetName,
     pricePerOption,
@@ -75,4 +75,4 @@ const HotMarketCard: React.FC<HotMarket> = ({
     );
 };
 
-export default HotMarketCard;
+export default HotMarketRanged;

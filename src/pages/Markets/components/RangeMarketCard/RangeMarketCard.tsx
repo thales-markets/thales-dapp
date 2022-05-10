@@ -18,9 +18,10 @@ import { useTranslation } from 'react-i18next';
 import { formatShortDate } from 'utils/formatters/date';
 import { UI_COLORS } from 'constants/ui';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import { RangedMarketUI } from 'pages/RangeMarkets/RangeMarkets';
 
 type RangeMarketCardProps = {
-    data: RangedMarketData;
+    data: RangedMarketData | RangedMarketUI;
     exchangeRates: Rates | null;
     marketCardStyle?: {
         maxWidth?: string;

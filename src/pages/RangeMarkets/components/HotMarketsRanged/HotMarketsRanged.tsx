@@ -7,8 +7,9 @@ import { getSynthName } from 'utils/currency';
 import Hammer from 'hammerjs';
 import Tooltip from 'components/Tooltip';
 import HotMarketCardSceleton from 'pages/Markets/components/MarketsCard/HotMarketCardSceleton';
-import HotMarketCard, { HotMarket } from 'pages/Markets/components/MarketsCard/HotMarketCard';
-import { RangedMarketUI } from '../RangeMarkets';
+import { HotMarket } from 'pages/Markets/components/MarketsCard/HotMarketCard';
+import { RangedMarketUI } from '../../RangeMarkets';
+import HotMarketRanged from './HotMarketRanged';
 
 type HotMarketsRangedProps = {
     optionsMarkets: RangedMarketUI[];
@@ -31,6 +32,8 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets }) =
     const [hammerManager, setHammerManager] = useState<any>();
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
+
+        console.log(optionsMarkets);
 
         optionsMarkets?.forEach((market: any) => {
             if (market.outPrice == 0 || market.inPrice == 0) return;
@@ -113,7 +116,7 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets }) =
                     <>
                         <Icon onClick={moveLeft} disabled={firstHotIndex == 0} className={'icon icon--left'} />
                         {slicedMarkets.map((market, index) => (
-                            <HotMarketCard
+                            <HotMarketRanged
                                 key={index}
                                 fullAssetName={market.fullAssetName}
                                 currencyKey={market.currencyKey}
