@@ -36,9 +36,9 @@ import { RootState } from 'redux/rootReducer';
 import { FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
-import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
-import Pagination from '../../MarketsTable/Pagination';
+import { Arrow, ArrowsWrapper, TableHeaderLabel } from 'components/OldVersion/styled-components';
+import { PaginationWrapper } from 'components/OldVersion/styled-components';
+import Pagination from 'pages/Governance/components/Pagination';
 import './media.scss';
 import twitter from 'assets/images/twitter-blue-logo.svg';
 

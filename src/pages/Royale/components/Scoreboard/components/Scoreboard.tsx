@@ -3,7 +3,7 @@ import notSigned from 'assets/images/royale/not-signed.svg';
 import SimpleLoader from 'components/SimpleLoader';
 import i18n from 'i18n';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
-import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
+import { ArrowsWrapper } from 'components/OldVersion/styled-components';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';

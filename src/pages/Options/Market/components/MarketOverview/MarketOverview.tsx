@@ -6,7 +6,7 @@ import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/co
 import styled from 'styled-components';
 import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
-import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
+import { PhaseLabel } from 'components/OldVersion/styled-components';
 import { useTranslation } from 'react-i18next';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { COLORS } from 'constants/ui';
@@ -17,7 +17,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
-import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { countryToCountryCode, eventToIcon } from 'components/OldVersion/old-utils';
 import ReactCountryFlag from 'react-country-flag';
 import { getIsAppReady } from 'redux/modules/app';
 import useFlippeningQuery from 'queries/options/useFlippeningQuery';

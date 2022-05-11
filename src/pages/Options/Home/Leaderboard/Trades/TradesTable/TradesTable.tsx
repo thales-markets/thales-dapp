@@ -1,15 +1,11 @@
 import { Paper } from '@material-ui/core';
 import { Table, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
-import {
-    countryToCountryCode,
-    eventToIcon,
-    PaginationWrapper,
-    StyledTableRow,
-} from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'components/OldVersion/styled-components';
+import { PaginationWrapper, StyledTableRow } from 'components/OldVersion/styled-components';
+import { countryToCountryCode, eventToIcon } from 'components/OldVersion/old-utils';
 import { TableFooter } from '@material-ui/core';
-import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
+import Pagination from 'pages/Governance/components/Pagination';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { ExtendedTrade, ExtendedTrades } from 'types/options';

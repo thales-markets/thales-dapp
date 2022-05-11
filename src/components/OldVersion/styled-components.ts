@@ -1,6 +1,65 @@
-import { TableCell, withStyles } from '@material-ui/core';
+import { TableCell, TablePagination, TableRow, withStyles } from '@material-ui/core';
 import styled from 'styled-components';
 import { Button, Image } from 'theme/common';
+
+export const PaginationWrapper = styled(TablePagination)`
+    border: none !important;
+    display: flex;
+    .MuiToolbar-root {
+        color: #f6f6fe;
+        padding: 0;
+        margin-top: 16px;
+        display: flex;
+        .MuiSelect-icon {
+            color: #f6f6fe;
+        }
+        .MuiTablePagination-spacer {
+            display: none;
+        }
+    }
+    .MuiTablePagination-toolbar > .MuiTablePagination-caption:last-of-type {
+        display: none;
+    }
+    .MuiTablePagination-selectRoot {
+        @media (max-width: 767px) {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+    }
+`;
+
+export const StyledTableRow = withStyles(() => ({
+    root: {
+        background: '#04045a',
+        '&:last-child': {
+            borderBottomLeftRadius: '23px',
+            borderBottomRightRadius: '23px',
+        },
+        '&:last-child > td:first-child': {
+            borderBottomLeftRadius: '23px',
+        },
+        '&:last-child a:last-child td': {
+            borderBottomRightRadius: '23px',
+        },
+
+        '&:last-child td:last-child': {
+            borderBottomRightRadius: '23px',
+        },
+        '&.clickable': {
+            cursor: 'pointer',
+            '&:hover': {
+                background: '#0a0b52',
+            },
+        },
+    },
+}))(TableRow);
+
+export const CustomIcon = styled(Image)`
+    margin-bottom: -6px;
+    margin-right: 6px;
+    width: 24px;
+    height: 24px;
+`;
 
 export const Row = styled.tr`
     height: 1px;

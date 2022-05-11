@@ -13,7 +13,7 @@ import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { countryToCountryCode } from '../../MarketsTable/MarketsTable';
+import { countryToCountryCode } from 'components/OldVersion/old-utils';
 import ReactCountryFlag from 'react-country-flag';
 import basketball from 'assets/images/basketball.svg';
 import volleyball from 'assets/images/volleyball.svg';

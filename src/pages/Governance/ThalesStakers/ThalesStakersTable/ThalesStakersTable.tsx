@@ -1,10 +1,10 @@
 import { Paper } from '@material-ui/core';
 import { Table, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
-import { PaginationWrapper, StyledTableRow } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'components/OldVersion/styled-components';
+import { PaginationWrapper, StyledTableRow } from 'components/OldVersion/styled-components';
 import { TableFooter } from '@material-ui/core';
-import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
+import Pagination from '../../components/Pagination';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import down from 'assets/images/down.svg';

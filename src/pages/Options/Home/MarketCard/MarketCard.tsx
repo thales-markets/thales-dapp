@@ -10,7 +10,7 @@ import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { PhaseLabel } from '../MarketsTable/components';
+import { PhaseLabel } from 'components/OldVersion/styled-components';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import arrowUp from '../../../../assets/images/arrow-up.svg';
 import arrowDown from '../../../../assets/images/arrow-down.svg';

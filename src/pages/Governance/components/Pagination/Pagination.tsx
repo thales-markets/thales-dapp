@@ -96,7 +96,7 @@ const PageLabel = styled.p`
     font-weight: bold;
     text-align: center;
     color: #f6f6fe;
-    marginright: 4px;
+    margin-right: 4px;
     @media (max-width: 767px) {
         width: 44px;
     }

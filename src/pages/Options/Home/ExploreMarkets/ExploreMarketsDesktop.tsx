@@ -17,8 +17,7 @@ import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
+import { FilterButton, FlexDiv, FlexDivCentered } from 'theme/common';
 import { HistoricalOptionsMarketInfo, OptionsMarkets, OrderData } from 'types/options';
 import { getSynthName } from 'utils/currency';
 import { getIsOVM, getIsPolygon } from 'utils/network';
@@ -28,7 +27,6 @@ import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency'
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
-import MarketsTable from '../MarketsTable';
 // import { ExploreMarketsMobile } from './ExploreMarketsMobile';
 import './media.scss';
 import UserFilter from './UserFilters';
@@ -99,6 +97,9 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const searchFilter = useLocation();
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
+
+    console.log(typeof setOrderBy);
+    console.log(typeof setOrderDirection);
 
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -340,6 +341,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
+    console.log(typeof searchFilteredOptionsMarkets);
+
     const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
         const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
@@ -433,6 +436,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         setUserFilter(PrimaryFilters.all);
         setSecondLevelUserFilter(SecondaryFilters.all);
     };
+
+    console.log(resetFilters.length);
 
     return (
         <>
@@ -582,42 +587,10 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                         </div>
                     </div>
                 </FlexDiv>
-
-                <MarketsTable
-                    exchangeRates={exchangeRates}
-                    optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
-                    watchlistedMarkets={watchlistedMarkets}
-                    isLoading={false} // TODO put logic
-                    phase={phaseFilter}
-                    onChange={watchlistedMarketsQuery.refetch}
-                    orderBy={orderBy}
-                    setOrderBy={setOrderBy}
-                    orderDirection={orderDirection}
-                    setOrderDirection={setOrderDirection}
-                >
-                    <NoMarkets>
-                        <Text className="text-l bold pale-grey">
-                            {t('options.home.explore-markets.table.no-markets-found')}
-                        </Text>
-                        <Button className="primary" onClick={resetFilters}>
-                            {t('options.home.explore-markets.table.view-all-markets')}
-                        </Button>
-                    </NoMarkets>
-                </MarketsTable>
             </div>
         </>
     );
 };
-
-const NoMarkets = styled(FlexDivColumn)`
-    height: 500px;
-    background: #04045a;
-    justify-content: space-evenly;
-    align-items: center;
-    .primary {
-        align-self: center;
-    }
-`;
 
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 

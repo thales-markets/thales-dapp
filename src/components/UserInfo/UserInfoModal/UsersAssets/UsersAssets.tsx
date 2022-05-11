@@ -1,6 +1,6 @@
 import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
-import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { countryToCountryCode, eventToIcon } from 'components/OldVersion/old-utils';
 import useAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';

@@ -8,7 +8,7 @@ import { ExtendedTrades, ExtendedTrade, HistoricalOptionsMarketInfo, OptionSide 
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { countryToCountryCode, eventToIcon } from '../../MarketsTable/MarketsTable';
+import { countryToCountryCode, eventToIcon } from 'components/OldVersion/old-utils';
 import ReactCountryFlag from 'react-country-flag';
 import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import longIcon from 'assets/images/long_small.svg';
