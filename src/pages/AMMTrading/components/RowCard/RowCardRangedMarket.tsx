@@ -134,11 +134,7 @@ const RowCardRangedMarket: React.FC = () => {
                                 {t('options.market.overview.maturity-date')}
                             </Container.SubContainer.Header>
                             <Container.SubContainer.Value>
-                                <MaturityDate
-                                    maturityDateUnix={marketInfo.maturityDate}
-                                    timeRemainingUnix={marketInfo.timeRemaining}
-                                    showFullCounter={true}
-                                />
+                                <MaturityDate maturityDateUnix={marketInfo.maturityDate} showFullCounter={true} />
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                         <Container.SubContainer>
