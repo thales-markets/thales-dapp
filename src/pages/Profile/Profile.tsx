@@ -22,6 +22,7 @@ import { USD_SIGN } from 'constants/currency';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import Loader from '../../components/Loader';
 import { getIsPolygon } from '../../utils/network';
+import useRangedPositions from 'queries/user/useRangedPositions';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -49,6 +50,14 @@ const Profile: React.FC = () => {
 
     const positions = userPositionsQuery.isSuccess
         ? userPositionsQuery.data
+        : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
+
+    const userRangePositionsQuery = useRangedPositions(networkId, walletAddress as any, {
+        enabled: isAppReady && walletAddress !== null,
+    });
+
+    const userRangePositions = userRangePositionsQuery.isSuccess
+        ? userRangePositionsQuery.data
         : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
 
     const allTxAndDataQuery = useCalculateDataQuery(networkId, walletAddress as any, { enabled: isAppReady });
@@ -106,6 +115,7 @@ const Profile: React.FC = () => {
                                 isSimpleView={isSimpleView}
                                 exchangeRates={exchangeRates}
                                 positions={positions.live}
+                                rangedPositions={userRangePositions.live}
                                 searchText={searchText}
                                 isLoading={userPositionsQuery.isLoading}
                             />

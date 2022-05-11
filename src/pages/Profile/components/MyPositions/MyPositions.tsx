@@ -13,20 +13,30 @@ import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
-import { buildOptionsMarketLink } from 'utils/routes';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import SimpleLoader from 'components/SimpleLoader';
 import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
+import { UI_COLORS } from 'constants/ui';
+import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
     positions: UsersAssets[];
+    rangedPositions: any[];
     isSimpleView: boolean;
     searchText: string;
     isLoading?: boolean;
 };
 
-const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isSimpleView, searchText, isLoading }) => {
+const MyPositions: React.FC<MyPositionsProps> = ({
+    exchangeRates,
+    positions,
+    isSimpleView,
+    searchText,
+    isLoading,
+    rangedPositions,
+}) => {
     const { t } = useTranslation();
 
     const data = useMemo(() => {
@@ -44,6 +54,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
 
         return orderBy(newArray, ['balances.value', 'balances.priceDiff'], ['desc', 'asc']);
     }, [positions]);
+
+    console.log(rangedPositions);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -189,6 +201,115 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                         )}
                     </Content>
                 ))}
+
+            {!isLoading &&
+                isSimpleView &&
+                rangedPositions.length > 0 &&
+                rangedPositions.map((data: any, index: number) => (
+                    <Content key={index}>
+                        <SPAAnchor href={buildRangeMarketLink(data.market.id)}>
+                            <Card.Wrapper>
+                                <Card>
+                                    <Card.Column ranged={true}>
+                                        <Card.Row style={{ marginBottom: 10 }}>
+                                            <CurrencyIcon
+                                                width="36px"
+                                                height="36px"
+                                                currencyKey={data.market.currencyKey}
+                                            />
+
+                                            <Card.Section>
+                                                <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
+                                                <Card.RowTitle
+                                                    style={{
+                                                        color:
+                                                            data.balances.type === 'IN'
+                                                                ? UI_COLORS.IN_COLOR
+                                                                : UI_COLORS.OUT_COLOR,
+                                                    }}
+                                                >
+                                                    {data.balances.type}
+                                                </Card.RowTitle>
+                                            </Card.Section>
+                                        </Card.Row>
+                                        <Card.Section>
+                                            <Card.RowTitle>
+                                                {t(`options.home.markets-table.maturity-date-col`)}
+                                            </Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {formatShortDate(data.market.maturityDate)}
+                                            </Card.RowSubtitle>
+                                        </Card.Section>
+                                        <Card.Section>
+                                            <Card.RowTitle>
+                                                {t(`options.home.markets-table.time-remaining-col`)}
+                                            </Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                <TimeRemaining
+                                                    end={data.market.maturityDate}
+                                                    fontSize={20}
+                                                    showFullCounter={true}
+                                                />
+                                            </Card.RowSubtitle>
+                                        </Card.Section>
+                                    </Card.Column>
+                                    <Card.Column style={{ top: 10, position: 'relative' }} ranged={true}>
+                                        <RangeIllustration
+                                            priceData={{
+                                                left: data.market.leftPrice,
+                                                right: data.market.rightPrice,
+                                                current: exchangeRates?.[data.market?.currencyKey] || 0,
+                                            }}
+                                            marketAddress={data.market.id}
+                                            fontSize={16}
+                                            maxWidth={65}
+                                        />
+                                    </Card.Column>
+                                    <Card.Column ranged={true}>
+                                        <Card.Section>
+                                            <Card.RowTitle>
+                                                {t('options.leaderboard.trades.table.amount-col')}
+                                            </Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {data.balances.amount.toFixed(2)}
+
+                                                <Icon
+                                                    style={{
+                                                        color:
+                                                            data.balances.type === 'IN'
+                                                                ? UI_COLORS.IN_COLOR
+                                                                : UI_COLORS.OUT_COLOR,
+                                                        marginLeft: 6,
+                                                    }}
+                                                    className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
+                                                ></Icon>
+                                            </Card.RowSubtitle>
+                                        </Card.Section>
+                                        <Card.Section>
+                                            <Card.RowTitle>
+                                                {t('options.home.market-card.position-value')}
+                                            </Card.RowTitle>
+                                            <Card.RowSubtitle>
+                                                {formatCurrencyWithSign(USD_SIGN, data.balances.value.toFixed(2))}
+                                            </Card.RowSubtitle>
+                                        </Card.Section>
+                                        <Card.Section>
+                                            <PriceChart
+                                                containerStyle={{ margin: 'auto' }}
+                                                currencyKey={data.market.currencyKey}
+                                                height={30}
+                                                width={window.innerWidth > 400 ? 120 : 60}
+                                                footerFontSize="8px"
+                                                showFooter={window.innerWidth > 500}
+                                            />
+                                        </Card.Section>
+                                    </Card.Column>
+                                </Card>
+                            </Card.Wrapper>
+                        </SPAAnchor>
+                    </Content>
+                ))}
+
             {!isLoading && !isSimpleView && data.length > 0 && (
                 <Table
                     containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
