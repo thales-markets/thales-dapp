@@ -13,7 +13,6 @@ type RangeIllustrationProps = {
         right: number;
         current: number;
     };
-    marketAddress: string;
     outColor?: string;
     inColor?: string;
     hidePrice?: boolean;

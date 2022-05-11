@@ -141,11 +141,6 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                     {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[1] as MarketType} />}
                     {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[1] as MarketType} />}
                     {currentTab == 5 && <SimilarMarkets marketType={MARKET_TYPE[1] as MarketType} />}
-                    {/* {currentTab == 5 && (
-                        <>
-                            <RangeMarketCard data={marketInfo} />
-                        </>
-                    )} */}
                 </Container.Tab>
             </Container>
         </>
