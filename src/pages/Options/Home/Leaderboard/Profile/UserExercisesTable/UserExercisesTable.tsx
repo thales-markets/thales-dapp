@@ -4,15 +4,10 @@ import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { COLORS } from 'constants/ui';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
-import {
-    countryToCountryCode,
-    eventToIcon,
-    PaginationWrapper,
-    StyledTableRow,
-} from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { PaginationWrapper, StyledTableRow } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
 import { LightTooltip } from 'pages/Options/Market/components';
-import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
+// import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -20,8 +15,6 @@ import { FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
 import { OptionSide } from 'types/options';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { buildOptionsMarketLink } from 'utils/routes';
-import { marketHeading } from '../../Trades/Trades';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
 import downSelected from 'assets/images/down-selected.svg';
@@ -29,7 +22,6 @@ import upSelected from 'assets/images/up-selected.svg';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
 import { HeadCell, OrderDirection } from '../Profile';
-import ReactCountryFlag from 'react-country-flag';
 
 type UserExcersisesTableProps = {
     usersExercises: any[];
@@ -186,7 +178,7 @@ const UserExercisesTable: React.FC<UserExcersisesTableProps> = ({
                                                 currencyKey={market.currencyKey}
                                             />{' '}
                                             <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
-                                                <StyledLink
+                                                {/* <StyledLink
                                                     href={buildOptionsMarketLink(market.address, exercise.side)}
                                                 >
                                                     {countryToCountryCode(market.country as string) && (
@@ -208,7 +200,7 @@ const UserExercisesTable: React.FC<UserExcersisesTableProps> = ({
                                                             ></CustomIcon>
                                                         )}
                                                     <CryptoName>{marketHeading(market, exercise.side)}</CryptoName>
-                                                </StyledLink>
+                                                </StyledLink> */}
                                             </LightTooltip>
                                         </FlexDiv>
                                     </StyledTableCell>
@@ -323,8 +315,6 @@ const LoaderContainer = styled(FlexDivColumn)`
 const SideImage = styled.img`
     width: 38px;
 `;
-
-const CryptoName = styled.span``;
 
 const Cell = styled.span<{ orderSide: string }>`
     color: ${(props) => (props.orderSide === 'long' ? COLORS.BUY : COLORS.SELL)};

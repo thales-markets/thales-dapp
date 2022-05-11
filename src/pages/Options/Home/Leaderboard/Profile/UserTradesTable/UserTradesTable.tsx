@@ -10,25 +10,16 @@ import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { COLORS } from 'constants/ui';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
-import {
-    countryToCountryCode,
-    eventToIcon,
-    PaginationWrapper,
-    StyledTableRow,
-} from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { PaginationWrapper, StyledTableRow } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
 import { LightTooltip } from 'pages/Options/Market/components';
-import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
 import React, { useEffect, useMemo, useState } from 'react';
-import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
 import { OptionSide } from 'types/options';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { buildOptionsMarketLink } from 'utils/routes';
-import { marketHeading } from '../../Trades/Trades';
 import { HeadCell, OrderDirection } from '../Profile';
 
 type UserTradesTableProps = {
@@ -194,7 +185,7 @@ const UserTradesTable: React.FC<UserTradesTableProps> = ({
                                                 currencyKey={market.currencyKey}
                                             />{' '}
                                             <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
-                                                <StyledLink href={buildOptionsMarketLink(market.address, trade.side)}>
+                                                {/* <StyledLink href={buildOptionsMarketLink(market.address, trade.side)}>
                                                     {countryToCountryCode(market.country as string) && (
                                                         <ReactCountryFlag
                                                             countryCode={countryToCountryCode(market.country as string)}
@@ -214,7 +205,7 @@ const UserTradesTable: React.FC<UserTradesTableProps> = ({
                                                             ></CustomIcon>
                                                         )}
                                                     <CryptoName>{marketHeading(market, trade.side)}</CryptoName>
-                                                </StyledLink>
+                                                </StyledLink> */}
                                             </LightTooltip>
                                         </FlexDiv>
                                     </StyledTableCell>
@@ -336,8 +327,6 @@ const LoaderContainer = styled(FlexDivColumn)`
 const SideImage = styled.img`
     width: 38px;
 `;
-
-const CryptoName = styled.span``;
 
 const Cell = styled.span<{ orderSide: string }>`
     color: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};

@@ -8,7 +8,6 @@ import useLocalStorage from 'hooks/useLocalStorage';
 import TokenPage from 'pages/Token/Token.tsx';
 import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
 import Profile from 'pages/Profile/Profile.tsx';
-import QuickTradingPage from 'pages/Options/QuickTrading';
 import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
@@ -211,12 +210,6 @@ const App = () => {
                             <DappLayout>
                                 <OptionsCreateMarket />
                             </DappLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Options.QuickTrading}>
-                            <MainLayout>
-                                <QuickTradingPage />
-                            </MainLayout>
                         </Route>
 
                         <Route

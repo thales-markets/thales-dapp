@@ -208,7 +208,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor> */}
-                    <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
+                    {/* <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
                             imgSrcHoverSelected={tradeExerciseSelectedIcon}
@@ -217,7 +217,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
                         </SidebarItem>
-                    </SPAAnchor>
+                    </SPAAnchor> */}
                     {/* <SPAAnchor href={buildHref(ROUTES.Options.TradeHistory)}>
                         <SidebarItem
                             imgSrc={customMarketsDefaultIcon}

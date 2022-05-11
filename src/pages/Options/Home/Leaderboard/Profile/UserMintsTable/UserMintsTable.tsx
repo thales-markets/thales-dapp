@@ -7,17 +7,10 @@ import Currency from 'components/Currency';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { USD_SIGN } from 'constants/currency';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
-import {
-    countryToCountryCode,
-    eventToIcon,
-    PaginationWrapper,
-    StyledTableRow,
-} from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { PaginationWrapper, StyledTableRow } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
 import { LightTooltip } from 'pages/Options/Market/components';
-import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
 import React, { useEffect, useMemo, useState } from 'react';
-import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, Image, Text, FlexDivColumn } from 'theme/common';
@@ -25,7 +18,6 @@ import { HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
 import { getSynthName } from 'utils/currency';
 import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
-import { buildOptionsMarketLink } from 'utils/routes';
 import '../media.scss';
 import { HeadCell, OrderDirection } from '../Profile';
 
@@ -172,7 +164,7 @@ const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData, sor
                                                 currencyKey={market.currencyKey}
                                             />{' '}
                                             <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
-                                                <StyledLink
+                                                {/* <StyledLink
                                                     href={buildOptionsMarketLink(market.address, mint.optionSide)}
                                                 >
                                                     {countryToCountryCode(market.country as string) && (
@@ -196,7 +188,7 @@ const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData, sor
                                                     <CryptoName>
                                                         {marketHeadingMints(market, market.optionSide)}
                                                     </CryptoName>
-                                                </StyledLink>
+                                                </StyledLink> */}
                                             </LightTooltip>
                                         </FlexDiv>
                                     </StyledTableCell>
@@ -293,8 +285,6 @@ const LoaderContainer = styled(FlexDivColumn)`
     position: relative;
     border-radius: 23px;
 `;
-
-const CryptoName = styled.span``;
 
 const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
     const aMarket = marketHeadingMints(a, a.optionSide);

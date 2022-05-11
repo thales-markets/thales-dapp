@@ -8,23 +8,14 @@ import up from 'assets/images/up.svg';
 import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
-import {
-    countryToCountryCode,
-    eventToIcon,
-    PaginationWrapper,
-    StyledTableRow,
-} from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { PaginationWrapper, StyledTableRow } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
 import { LightTooltip } from 'pages/Options/Market/components';
-import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
 import React, { useEffect, useMemo, useState } from 'react';
-import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { buildOptionsMarketLink } from 'utils/routes';
-import { marketHeading } from '../../Trades/Trades';
 import { HeadCell, OrderDirection } from '../Profile';
 
 type UserUnclaimedTableProps = {
@@ -195,7 +186,7 @@ const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({
                                                         : t('options.quick-trading.view-market-tooltip')
                                                 }
                                             >
-                                                <StyledLink
+                                                {/* <StyledLink
                                                     href={buildOptionsMarketLink(market.address, unclaimed.side)}
                                                 >
                                                     {countryToCountryCode(market.country as string) && (
@@ -217,7 +208,7 @@ const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({
                                                             ></CustomIcon>
                                                         )}
                                                     <CryptoName>{marketHeading(market, unclaimed.side)}</CryptoName>
-                                                </StyledLink>
+                                                </StyledLink> */}
                                             </LightTooltip>
                                         </FlexDiv>
                                     </StyledTableCell>
@@ -317,8 +308,6 @@ const LoaderContainer = styled(FlexDivColumn)`
     position: relative;
     border-radius: 23px;
 `;
-
-const CryptoName = styled.span``;
 
 const SideImage = styled.img`
     width: 38px;
