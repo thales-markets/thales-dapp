@@ -8,12 +8,12 @@ import { CellProps, Row } from 'react-table';
 import OrderbookTable from '../../components/OrderbookTable';
 import CancelOrderModal from '../CancelOrderModal';
 import FillOrderModal from '../FillOrderModal';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 
 import { OrderbookFilterEnum } from 'constants/options';
 import { COLORS } from 'constants/ui';
-import { LightTooltip } from 'pages/Options/Market/components';
+import { LightTooltip } from 'pages/Token/components/components';
 import { USD_SIGN } from 'constants/currency';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { getWalletAddress } from 'redux/modules/wallet';
