@@ -21,8 +21,8 @@ import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
-import NumericInput from 'pages/Options/Market/components/NumericInput';
-import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from 'pages/Options/Market/components';
+import NumericInput from 'pages/Token/components/NumericInput';
+import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from 'pages/Token/components/components';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
@@ -34,9 +34,9 @@ import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import SimpleLoader from '../../components/SimpleLoader';
-import { GasLimit } from 'pages/Options/components/NetworkFees/NetworkFees';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import NetworkFees from 'pages/Options/components/NetworkFees';
+import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
+import TimeRemaining from 'pages/Token/components/TimeRemaining';
+import NetworkFees from 'pages/Token/components/NetworkFees';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 

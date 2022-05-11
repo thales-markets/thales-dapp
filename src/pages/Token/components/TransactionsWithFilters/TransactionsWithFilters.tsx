@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import TransactionsTable from '../TransactionsTable';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, Text } from 'theme/common';
-import { FilterButton } from 'pages/Options/Market/components';
+import { FilterButton } from '../components';
 import { TokenTransaction, TransactionFilterEnum } from 'types/token';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';

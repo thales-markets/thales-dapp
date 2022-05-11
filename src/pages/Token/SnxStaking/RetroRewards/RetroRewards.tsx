@@ -30,11 +30,11 @@ import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/query
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import NetworkFees from 'pages/Options/components/NetworkFees';
+import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import i18n from 'i18n';
-import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { DefaultSubmitButton } from 'pages/Token/components/components';
 import { GridContainer } from 'pages/Token/gridComponents';
 
 const initialVestingInfo = {

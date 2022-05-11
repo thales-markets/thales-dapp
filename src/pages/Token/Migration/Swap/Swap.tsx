@@ -7,8 +7,8 @@ import {
     InputContainer,
     InputLabel,
     SubmitButtonContainer,
-} from 'pages/Options/Market/components';
-import NumericInput from 'pages/Options/Market/components/NumericInput';
+} from 'pages/Token/components/components';
+import NumericInput from 'pages/Token/components/NumericInput';
 import React, { useEffect, useState } from 'react';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import { checkAllowance, formatGasLimit } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { LEGACY_THALES_CURRENCY, THALES_CURRENCY } from 'constants/currency';
-import NetworkFees from 'pages/Options/components/NetworkFees';
+import NetworkFees from 'pages/Token/components/NetworkFees';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 import { getIsAppReady } from 'redux/modules/app';

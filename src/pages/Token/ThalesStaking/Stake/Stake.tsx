@@ -10,8 +10,8 @@ import {
 } from '../../components';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import NumericInput from 'pages/Options/Market/components/NumericInput';
-import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from 'pages/Options/Market/components';
+import NumericInput from 'pages/Token/components/NumericInput';
+import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from 'pages/Token/components/components';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -21,7 +21,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import snxJSConnector from 'utils/snxJSConnector';
 import { BigNumber, ethers } from 'ethers';
 import ValidationMessage from 'components/ValidationMessage';
-import NetworkFees from 'pages/Options/components/NetworkFees';
+import NetworkFees from 'pages/Token/components/NetworkFees';
 import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';

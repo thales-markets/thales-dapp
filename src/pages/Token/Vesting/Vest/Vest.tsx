@@ -23,9 +23,9 @@ import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import styled from 'styled-components';
-import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { DefaultSubmitButton } from 'pages/Token/components/components';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
-import NetworkFees from 'pages/Options/components/NetworkFees';
+import NetworkFees from 'pages/Token/components/NetworkFees';
 
 const Vest: React.FC = () => {
     const { t } = useTranslation();
