@@ -5,7 +5,7 @@ import i18n from 'i18n';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
-import { LandingPageTooltip } from 'pages/Options/Market/components';
+import { LandingPageTooltip } from 'components/OldVersion/old-components';
 
 type LanguageSelectorProps = {
     isBurger?: boolean;

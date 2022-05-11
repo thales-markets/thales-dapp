@@ -4,7 +4,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import i18n from 'i18n';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import { ArrowsWrapper } from 'components/OldVersion/styled-components';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
+import { RoyaleTooltip } from 'components/OldVersion/old-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';

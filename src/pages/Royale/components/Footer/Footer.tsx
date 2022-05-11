@@ -1,6 +1,6 @@
 import ROUTES from 'constants/routes';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
+import { RoyaleTooltip } from 'components/OldVersion/old-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';

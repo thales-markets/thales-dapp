@@ -8,7 +8,7 @@ import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { RootState } from 'redux/rootReducer';
 import { getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
-import { SummaryContent, SummaryItem, SummaryLabel } from 'pages/Options/Market/components';
+import { SummaryContent, SummaryItem, SummaryLabel } from 'components/OldVersion/old-components';
 import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
 import { getNetworkId } from 'redux/modules/wallet';

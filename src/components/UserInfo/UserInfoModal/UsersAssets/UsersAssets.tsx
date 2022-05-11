@@ -14,7 +14,7 @@ import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number'
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow, Row } from '../UserInfoModal';
 import ReactCountryFlag from 'react-country-flag';
-import { LightTooltip } from '../../../../pages/Options/Market/components';
+import { LightTooltip } from 'components/OldVersion/old-components';
 import exerciseOptionIcon from '../../../../assets/images/exercise-option.svg';
 import { useTranslation } from 'react-i18next';
 
