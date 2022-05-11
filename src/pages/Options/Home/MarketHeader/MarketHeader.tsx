@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
@@ -16,13 +16,9 @@ import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-def
 import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
 import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
-import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
-import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
 import burger from 'assets/images/burger.svg';
 import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
 import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
-// import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-default.svg';
-// import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 
 import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
 import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
@@ -40,7 +36,6 @@ import SPAAnchor from '../../../../components/SPAAnchor';
 import { buildHref } from '../../../../utils/routes';
 import { Modal } from '@material-ui/core';
 import Swap from '../../../../components/Swap/Swap';
-import { getIsOVM } from 'utils/network';
 import NetworkSwitch from 'components/NetworkSwitch';
 
 import UserCard from 'layouts/DappLayout/components/DappHeader/UserCard';
@@ -69,8 +64,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [showSwap, setShowSwap] = useState(false);
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
+    // const networkId = useSelector((state: RootState) => getNetworkId(state));
+    // const isL2 = getIsOVM(networkId);
 
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
 
@@ -228,18 +223,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.trade-history-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor> */}
-                    {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
-                            <SidebarItem
-                                imgSrc={leaderboardDefaultIcon}
-                                imgSrcHoverSelected={leaderboardSelectedIcon}
-                                className={route === ROUTES.Options.Leaderboard ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
                     {phase === 'trading' && (
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
