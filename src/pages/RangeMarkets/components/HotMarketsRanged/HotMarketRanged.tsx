@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useInterval from 'hooks/useInterval';
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
+// import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -11,7 +11,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import { buildRangeMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
 import { CurrencyKey } from 'pages/Markets/components/MarketsCard/MarketCard';
-import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
+// import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 
 export type HotRangedMarket = {
     fullAssetName?: string;
@@ -38,7 +38,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
     rightPrice,
     currentAssetPrice,
 }) => {
-    console.log('data: ', leftPrice, rightPrice, currentAssetPrice);
+    console.log('data: ', currentAssetPrice, currencyKey);
     const [time, setTime] = useState(formatTimeDifference(calculateDifference(timeRemaining)));
     const { t } = useTranslation();
 
@@ -50,13 +50,19 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
         <StyledComponents.Card address={address}>
             <SPAAnchor href={buildRangeMarketLink(address)}>
                 <StyledComponents.AssetInfo>
-                    <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
+                    <StyledComponents.RangeIcon className={'v2-icon v2-icon--range'} />
                     <StyledComponents.AssetNameContainer>
                         <CurrencyKey alignSelf={'center'}>{assetName}</CurrencyKey>
                     </StyledComponents.AssetNameContainer>
                 </StyledComponents.AssetInfo>
                 <StyledComponents.SectionContainer>
-                    <RangeIllustration
+                    <StyledComponents.Header>{t('options.market.ranged-markets.strike-range')}</StyledComponents.Header>
+                    <StyledComponents.SubHeader>
+                        {`< ${formatCurrencyWithSign(USD_SIGN, rightPrice, 2)}`}
+                        <br />
+                        {`> ${formatCurrencyWithSign(USD_SIGN, leftPrice, 2)}`}
+                    </StyledComponents.SubHeader>
+                    {/* <RangeIllustration
                         priceData={{
                             left: leftPrice,
                             right: rightPrice,
@@ -65,7 +71,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
                         marketAddress={address}
                         fontSize={24}
                         maxWidth={65}
-                    />
+                    /> */}
                 </StyledComponents.SectionContainer>
                 <StyledComponents.SectionContainer>
                     <StyledComponents.Header>

@@ -1,3 +1,4 @@
+import { UI_COLORS } from 'constants/ui';
 import styled from 'styled-components';
 import { MarketCardContainer } from 'theme/common';
 
@@ -13,6 +14,12 @@ const Card = styled(MarketCardContainer)<{ address?: string }>`
     &:hover {
         box-shadow: var(--shadow);
     }
+`;
+
+const RangeIcon = styled.i<{ color?: string }>`
+    font-size: 45px;
+    margin-right: 8px;
+    color: ${(_props) => (_props?.color ? _props.color : UI_COLORS.OUT_COLOR)};
 `;
 
 const SectionContainer = styled.div`
@@ -70,6 +77,7 @@ const StyledComponents = {
     SubHeader,
     Percentage,
     AssetNameContainer,
+    RangeIcon,
 };
 
 export default StyledComponents;
