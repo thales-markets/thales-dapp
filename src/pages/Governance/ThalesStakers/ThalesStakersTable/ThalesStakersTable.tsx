@@ -21,7 +21,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import { FlexDiv } from 'theme/common';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { LightMediumTooltip } from 'pages/Options/Market/components';
+import { LightMediumTooltip } from 'pages/Token/components/components';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';

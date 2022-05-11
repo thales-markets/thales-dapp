@@ -16,7 +16,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM, getIsPolygon } from 'utils/network';
 
 import Currency from 'components/Currency/v2';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import MarketsGrid from '../MarketsGrid';
 import { FlexDivRow } from 'theme/common';
 import TableGridSwitch from '../Input/TableGridSwitch';

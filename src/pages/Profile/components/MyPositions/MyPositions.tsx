@@ -5,7 +5,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
 import { orderBy } from 'lodash';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

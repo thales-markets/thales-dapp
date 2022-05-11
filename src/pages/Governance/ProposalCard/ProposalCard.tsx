@@ -1,6 +1,6 @@
 import { SpaceKey, StatusEnum } from 'constants/governance';
 import { indexOf, max } from 'lodash';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';

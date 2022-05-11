@@ -23,7 +23,7 @@ import ValidationMessage from 'components/ValidationMessage';
 import voting from 'utils/voting';
 import pitches from '../pitches.json';
 import { Dialog, withStyles } from '@material-ui/core';
-import { CloseIconContainer } from '../../../../Options/Market/TradeOptions/Orderbook/components';
+import { CloseIconContainer } from 'pages/Token/components/components';
 import useProposalQuery from '../../../../../queries/governance/useProposalQuery';
 
 type WeightedVotingProps = {
