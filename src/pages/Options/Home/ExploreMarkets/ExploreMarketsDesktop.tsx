@@ -29,7 +29,7 @@ import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
 import MarketsTable from '../MarketsTable';
-import { ExploreMarketsMobile } from './ExploreMarketsMobile';
+// import { ExploreMarketsMobile } from './ExploreMarketsMobile';
 import './media.scss';
 import UserFilter from './UserFilters';
 
@@ -436,21 +436,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
     return (
         <>
-            <ExploreMarketsMobile
-                exchangeRates={exchangeRates}
-                userFilter={userFilter}
-                setUserFilter={setUserFilter}
-                secondLevelUserFilter={secondLevelUserFilter}
-                setSecondLevelUserFilter={setSecondLevelUserFilter}
-                phaseFilter={phaseFilter}
-                setPhaseFilter={setPhaseFilter}
-                assetSearch={assetSearch}
-                setAssetSearch={setAssetSearch}
-                allMarkets={filteredOptionsMarkets}
-                filteredMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
-                orderBy={orderBy}
-                setOrderBy={setOrderBy}
-            />
             <div id="explore-markets" className="markets-desktop" style={{ width: '100%' }}>
                 <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                     {Object.keys(PrimaryFilters)
