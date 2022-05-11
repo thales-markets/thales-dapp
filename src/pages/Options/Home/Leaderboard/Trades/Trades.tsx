@@ -12,7 +12,6 @@ import TradesTable from './TradesTable';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
 import { USD_SIGN } from 'constants/currency';
-import SearchMarket from '../../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import Checkbox from 'components/Checkbox';
@@ -116,7 +115,6 @@ const Trades: React.FC = () => {
                         label={t('options.leaderboard.trades.only-trading-competition-checkbox')}
                     />
                 </CheckboxContainer>
-                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
             </FlexDivRow>
             <InfoContainer>
                 <Info>

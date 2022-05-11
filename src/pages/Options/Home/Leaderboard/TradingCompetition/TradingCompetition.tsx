@@ -39,7 +39,6 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
 import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
-import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
 import twitter from 'assets/images/twitter-blue-logo.svg';
 
@@ -90,6 +89,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
+    console.log('setSearchString ', setSearchString.length);
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -253,7 +253,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 0' }}>
+                {/* <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"
@@ -261,7 +261,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         value={searchString}
                         placeholder={t('options.leaderboard.display-name')}
                     ></SearchInput>
-                </SearchWrapper>
+                </SearchWrapper> */}
                 <Text
                     className="text-s ls25 lh24 pale-grey"
                     style={{ alignItems: 'center', flex: 1, height: 44, display: 'flex', columnGap: 2.5 }}
@@ -330,49 +330,6 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
-                        {/* {filteredTwitterData.filter((leader: any) => leader === 'leader.walletAddress.toLowerCase()') // dirty fix for creating borders on the first row of table by creating empty row
-                            .length === 0 && ( // will be changed upon start of trading competition when everything is uncommented
-                            <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
-                        )}
-                        {filteredTwitterData.map((data: any, index: any) => {
-                            return (
-                                <StyledTableRow key={index}>
-                                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
-                                    <StyledTableCell>
-                                        <StyledLink
-                                            style={{ verticalAlign: 'text-top' }}
-                                            href={data[1].twitter}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            <img
-                                                style={{ width: 35, height: 35, borderRadius: '50%' }}
-                                                src={data[1].avatar}
-                                            ></img>
-                                            <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
-                                        </StyledLink>
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        style={{
-                                            fontWeight: 'bold',
-                                        }}
-                                    >
-                                        <StyledLink
-                                            href={getEtherscanAddressLink(networkId, data[0])}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            {displayNamesMap.get(data[0]) ? displayNamesMap.get(data[0]) : data[0]}
-                                        </StyledLink>
-                                    </StyledTableCell>
-                                    <StyledTableCell>N/A</StyledTableCell>
-                                    <StyledTableCell>N/A</StyledTableCell>
-                                    <StyledTableCell>N/A</StyledTableCell>
-                                    <StyledTableCell>N/A</StyledTableCell>
-                                    <StyledTableCell>N/A</StyledTableCell>
-                                </StyledTableRow>
-                            );
-                        })} */}
                         {userLeaderboardData.map((leader: any, index: any) => {
                             const cheater = cheaters.includes(leader.walletAddress);
                             const unverified = unverifiedWallets.has(leader.walletAddress);

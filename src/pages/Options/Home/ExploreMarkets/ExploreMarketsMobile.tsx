@@ -14,7 +14,6 @@ import { OptionsMarkets } from 'types/options';
 import { getSynthName } from 'utils/currency';
 import { getIsOVM, getIsPolygon } from 'utils/network';
 import { history } from 'utils/routes';
-import SearchMarket from '../SearchMarket';
 import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
 import { CategoryFilters, DropDown, DropDownWrapper } from './Mobile/CategoryFilters';
 import { MarketCardMobile } from './Mobile/MarketCardMobile';
@@ -55,7 +54,6 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
     userFilter,
     setUserFilter,
     assetSearch,
-    setAssetSearch,
     exchangeRates,
     setSecondLevelUserFilter,
     secondLevelUserFilter,
@@ -143,11 +141,6 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
 
     return (
         <div className="markets-mobile">
-            <SearchMarket
-                className="markets-mobile__search"
-                assetSearch={assetSearch}
-                setAssetSearch={setAssetSearch}
-            />
             <FlexDiv className="markets-mobile__filters">
                 <CategoryFilters
                     onClick={setShowDropwodnUserFilters.bind(this, !showDropdownUserFilters)}

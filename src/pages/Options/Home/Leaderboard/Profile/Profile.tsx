@@ -1,5 +1,4 @@
 import { Paper, TableContainer, TableRow, withStyles } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useProfilesQuery from 'queries/options/useProfilesQuery';
 import React, { useMemo, useState } from 'react';
@@ -10,7 +9,6 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
-import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import { marketHeading } from '../Trades/Trades';
 import './media.scss';
 import UserAllTxTable from './UserAllTxTable';
@@ -43,6 +41,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [userFilter, setUserFilter] = useState<string>('');
+    console.log('setUserFilter ', setUserFilter.length);
     const [filter, setFilter] = useState<string>(Filters.All);
     const [displayAddress, setDisplayAddress] = useState<string>(walletAddress);
 
@@ -65,6 +64,8 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
 
         return options;
     }, [profiles, displayNamesMap]);
+
+    console.log(displayNamesAndAdressesOptions.length);
 
     const invertedDisplayNamesMap = useMemo(() => {
         const invertedMap = new Map();
@@ -168,34 +169,6 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                         {displayAddress}
                     </Text>
                 </FlexDiv>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 450, margin: '22px 0' }}>
-                    <SearchAutoCompleteInput
-                        style={{ width: '100%' }}
-                        className="leaderboard__search"
-                        freeSolo
-                        options={displayNamesAndAdressesOptions}
-                        inputValue={userFilter}
-                        onInputChange={(_event, newFilter) => {
-                            setUserFilter(newFilter);
-                        }}
-                        renderInput={(params) => (
-                            <div ref={params.InputProps.ref}>
-                                <SearchInput
-                                    placeholder={t('options.leaderboard.profile.search-placeholder')}
-                                    className="leaderboard__search"
-                                    style={{
-                                        width: '100%',
-                                        paddingRight: 40,
-                                        paddingLeft: 0,
-                                        background: 'transparent',
-                                        margin: 0,
-                                    }}
-                                    {...params.inputProps}
-                                />
-                            </div>
-                        )}
-                    ></SearchAutoCompleteInput>
-                </SearchWrapper>
             </FlexDivRow>
             <FlexDivRow style={{ flexDirection: 'row' }}>
                 <FilterWrapper>
@@ -373,28 +346,6 @@ export const FilterButton = styled.button`
 const DataWrapper = styled(FlexDivColumn)`
     border-bottom-right-radius: 23px;
     border-bottom-left-radius: 23px;
-`;
-
-const SearchAutoCompleteInput = styled(Autocomplete)`
-    height: 40px;
-    width: 204px;
-    border-radius: 23px;
-    border: none !important;
-    outline: none !important;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    padding: 0 10px;
-    letter-spacing: 0.15px;
-    background: #04045a;
-    color: #f6f6fe;
-    padding-left: 20px;
-    margin: 2px;
-    &::placeholder {
-        font-size: 16px;
-        color: #f6f6f6;
-        opacity: 0.7;
-    }
 `;
 
 const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {

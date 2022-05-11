@@ -29,7 +29,6 @@ import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
 import MarketsTable from '../MarketsTable';
-import SearchMarket from '../SearchMarket';
 import { ExploreMarketsMobile } from './ExploreMarketsMobile';
 import './media.scss';
 import UserFilter from './UserFilters';
@@ -597,7 +596,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                 ))}
                         </div>
                     </div>
-                    <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
                 </FlexDiv>
 
                 <MarketsTable

@@ -29,7 +29,6 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
 import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
-import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
 
 enum OrderDirection {
@@ -60,6 +59,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
+    console.log('.setSearchString ', setSearchString.length);
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -195,7 +195,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 0' }}>
+                {/* <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"
@@ -203,7 +203,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
                         value={searchString}
                         placeholder={t('options.leaderboard.display-name')}
                     ></SearchInput>
-                </SearchWrapper>
+                </SearchWrapper> */}
             </FlexDivRow>
 
             <TableContainer
