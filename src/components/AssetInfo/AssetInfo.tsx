@@ -11,6 +11,7 @@ export type AssetInfoProps = {
     assetNameFontSize?: string;
     currencyKeyFontSize?: string;
     displayInRow?: boolean;
+    displayInRowMobile?: boolean;
     hideFullName?: boolean;
 };
 
@@ -21,16 +22,17 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
     currencyKeyFontSize,
     displayInRow,
     hideFullName,
+    displayInRowMobile,
 }) => {
     const isMobile = window.innerWidth < 768;
 
     return (
-        <AssetContainer>
+        <AssetContainer displayInRowMobile={displayInRowMobile}>
             <CurrencyIcon
                 synthIconStyle={{
                     marginRight: isMobile ? 0 : 7,
-                    height: isMobile ? '30px' : '24px',
-                    width: isMobile ? '30px' : '24px',
+                    height: isMobile ? '30px' : logoSize || '24px',
+                    width: isMobile ? '30px' : logoSize || '24px',
                 }}
                 currencyKey={currencyKey}
                 width={logoSize}
@@ -44,7 +46,7 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
     );
 };
 
-const AssetContainer = styled.div`
+const AssetContainer = styled.div<{ displayInRowMobile?: boolean }>`
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -52,8 +54,8 @@ const AssetContainer = styled.div`
     flex: 1;
     @media screen and (max-width: 767px) {
         min-height: 100%;
-        flex-direction: column;
-        justify-content: space-evenly;
+        flex-direction: ${(props) => (props.displayInRowMobile ? 'row' : 'column')};
+        justify-content: ${(props) => (props.displayInRowMobile ? 'flex-start' : 'space-evenly')};
     }
 `;
 

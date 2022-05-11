@@ -63,8 +63,6 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
             });
         }
 
-        console.log('Data ', data);
-
         setDataCount(data?.length || 0);
         data = data.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage);
 

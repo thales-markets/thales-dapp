@@ -4,6 +4,8 @@ import { CurrencyKey } from 'constants/currency';
 import styled from 'styled-components';
 import { UI_COLORS } from 'constants/ui';
 
+const NEW_CURRENCY_ICONS = ['LYRA', 'LUNA', 'MATIC', 'PERP', 'OHM', 'CVX', 'APE'];
+
 type CurrencyIconProps = {
     currencyKey: CurrencyKey;
     synthIconStyle?: CSSProperties;
@@ -35,7 +37,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
     };
     const AssetIcon = getAssetIcon(currencyKey);
 
-    if (currencyKey == 'LYRA' || currencyKey == 'LUNA' || currencyKey == 'MATIC' || currencyKey == 'PERP') {
+    if (NEW_CURRENCY_ICONS.includes(currencyKey)) {
         synthIconStyle = {
             ...synthIconStyle,
             padding: '3px',
@@ -45,8 +47,6 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
     if (!AssetIcon) {
         return null;
     }
-
-    console.log(iconType);
 
     return (
         <Content>
@@ -58,7 +58,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 };
 
 const Content = styled.div`
-    display: content;
+    display: contents;
     position: relative;
 `;
 
