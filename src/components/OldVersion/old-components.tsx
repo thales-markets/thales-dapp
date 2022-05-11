@@ -564,3 +564,8 @@ export const ModalContainer = styled.div`
         padding: 10px;
     }
 `;
+
+export const CheckboxContainer = styled.div`
+    margin-top: 21px;
+    margin-left: 5px;
+`;

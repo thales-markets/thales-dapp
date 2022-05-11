@@ -32,7 +32,6 @@ import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
 import Leaderboard from 'pages/Leaderboard';
-// import TradeHistory from 'pages/Options/TradeHistory';
 import Cookies from 'universal-cookie';
 import Token from '../LandingPage/articles/Token';
 import Governance from '../LandingPage/articles/Governance';
@@ -45,7 +44,6 @@ const Home = lazy(() => import('../LandingPage/Home'));
 const Markets = lazy(() => import('../Markets'));
 const RangeMarkets = lazy(() => import('../RangeMarkets'));
 const AMMTrading = lazy(() => import('../AMMTrading'));
-// const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
