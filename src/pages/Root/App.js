@@ -35,7 +35,6 @@ import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
 import Leaderboard from 'pages/Leaderboard';
 // import TradeHistory from 'pages/Options/TradeHistory';
-// import AmmReporting from '../Options/AmmReporting';
 import Cookies from 'universal-cookie';
 import Token from '../LandingPage/articles/Token';
 import Governance from '../LandingPage/articles/Governance';

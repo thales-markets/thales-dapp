@@ -19,7 +19,6 @@ export const ROUTES = {
         QuickTrading: '/markets/quick-trading',
         QuickTradingCompetition: '/markets/competition-orders',
         TradeHistory: '/markets/trade-history',
-        AmmReporting: '/markets/amm-reporting',
         Token: '/token',
         Royal: '/royale',
         Game: '/tale-of-thales',
