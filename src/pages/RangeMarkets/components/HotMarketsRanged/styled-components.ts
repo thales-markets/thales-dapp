@@ -16,8 +16,8 @@ const Card = styled(MarketCardContainer)<{ address?: string }>`
     }
 `;
 
-const RangeIcon = styled.i<{ color?: string }>`
-    font-size: 45px;
+export const RangeIcon = styled.i<{ color?: string; size?: string }>`
+    font-size: ${(_props) => (_props?.size ? _props.size : '45px')};
     margin-right: 8px;
     color: ${(_props) => (_props?.color ? _props.color : UI_COLORS.OUT_COLOR)};
 `;

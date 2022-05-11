@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM, getIsPolygon } from 'utils/network';
 import Currency from 'components/Currency/v2';
-import TimeRemaining from 'components/TimeRemaining';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { FlexDivRow } from 'theme/common';
 import PriceChart from 'components/Charts/PriceChart';
 import { TablePagination } from '@material-ui/core';
@@ -147,6 +147,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                                 currencyKey={row?.currencyKey}
                                 showIcon={true}
                                 hideAssetName={true}
+                                rangeMarket={true}
                                 iconProps={{ type: 'asset' }}
                                 synthIconStyle={{ width: 32, height: 32 }}
                                 spanStyle={{ float: 'left' }}
