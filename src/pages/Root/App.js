@@ -9,7 +9,6 @@ import TokenPage from 'pages/Token/Token.tsx';
 import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
 import Profile from 'pages/Profile/Profile.tsx';
 import QuickTradingPage from 'pages/Options/QuickTrading';
-import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
 import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
@@ -53,7 +52,7 @@ const App = () => {
     const isAppReady = useSelector((state) => getIsAppReady(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
+    // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const { trackPageView } = useMatomo();
 
@@ -220,13 +219,6 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.QuickTradingCompetition}>
-                                <MainLayout>
-                                    <QuickTradingCompetitionPage />
-                                </MainLayout>
-                            </Route>
-                        )}
                         <Route
                             exact
                             path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}

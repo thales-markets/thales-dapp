@@ -17,7 +17,6 @@ export const ROUTES = {
         RangeMarketMatch: '/range-markets/:marketAddress',
         Leaderboard: '/markets/leaderboard',
         QuickTrading: '/markets/quick-trading',
-        QuickTradingCompetition: '/markets/competition-orders',
         TradeHistory: '/markets/trade-history',
         Token: '/token',
         Royal: '/royale',
