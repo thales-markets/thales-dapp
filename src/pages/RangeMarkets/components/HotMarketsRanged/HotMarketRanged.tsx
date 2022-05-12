@@ -11,6 +11,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import { buildRangeMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
 import { CurrencyKey } from 'pages/Markets/components/MarketsCard/MarketCard';
+import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 // import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 
 export type HotRangedMarket = {
@@ -38,7 +39,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
     rightPrice,
     currentAssetPrice,
 }) => {
-    console.log('data: ', currentAssetPrice, currencyKey);
+    console.log('data: ', currentAssetPrice, currencyKey, assetName);
     const [time, setTime] = useState(formatTimeDifference(calculateDifference(timeRemaining)));
     const { t } = useTranslation();
 
@@ -50,7 +51,12 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
         <StyledComponents.Card address={address}>
             <SPAAnchor href={buildRangeMarketLink(address)}>
                 <StyledComponents.AssetInfo>
-                    <StyledComponents.RangeIcon className={'v2-icon v2-icon--range'} />
+                    <CurrencyIcon
+                        currencyKey={currencyKey}
+                        width="45px"
+                        height="45px"
+                        iconType={assetName.includes('IN') ? 1 : 2}
+                    />
                     <StyledComponents.AssetNameContainer>
                         <CurrencyKey alignSelf={'center'}>{assetName}</CurrencyKey>
                     </StyledComponents.AssetNameContainer>

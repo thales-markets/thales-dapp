@@ -40,26 +40,26 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
             markets.push({
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
-                assetName: `${market.asset} ${MarketType.out}`,
+                assetName: `${market.asset} ${MarketType.in}`,
                 leftPrice: market.leftPrice,
                 rightPrice: market.rightPrice,
                 pricePerOption: market.outPrice,
                 strikePrice: market.range,
                 timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.outPrice)),
+                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.inPrice)),
                 address: market.address,
             });
 
             markets.push({
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
-                assetName: `${market.asset} ${MarketType.in}`,
+                assetName: `${market.asset} ${MarketType.out}`,
                 pricePerOption: market.inPrice,
                 leftPrice: market.leftPrice,
                 rightPrice: market.rightPrice,
                 strikePrice: market.range,
                 timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.inPrice)),
+                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.outPrice)),
                 address: market.address,
             });
         });
