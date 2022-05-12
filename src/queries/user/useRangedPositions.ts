@@ -4,6 +4,7 @@ import thalesData from 'thales-data';
 import snxJSConnector from 'utils/snxJSConnector';
 import { getIsPolygon, NetworkId } from 'utils/network';
 import { ethers } from 'ethers';
+import { buildRangeMarketLink } from 'utils/routes';
 
 type RangedPositionData = {
     claimable: number;
@@ -53,6 +54,7 @@ const useRangedPositions = (
                     } catch {}
 
                     live.push({
+                        link: buildRangeMarketLink(balance.position.market.id),
                         market: {
                             ...balance.position.market,
                             currencyKey: hexToAscii(balance.position.market.currencyKey),
@@ -78,6 +80,7 @@ const useRangedPositions = (
                 claimable = isOptionClaimable(balance) ? claimable++ : claimable;
                 claimableAmount += isOptionClaimable(balance) ? Number(ethers.utils.formatEther(balance.amount)) : 0;
                 matured.push({
+                    link: buildRangeMarketLink(balance.position.market.id),
                     market: {
                         ...balance.position.market,
                         currencyKey: hexToAscii(balance.position.market.currencyKey),
