@@ -67,7 +67,6 @@ const RangeMarketCard: React.FC<RangeMarketCardProps> = ({ data, exchangeRates, 
                         right: data.rightPrice,
                         current: currentAssetPrice,
                     }}
-                    marketAddress={data?.address}
                     fontSize={12}
                     maxWidth={65}
                 />

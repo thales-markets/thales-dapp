@@ -258,7 +258,6 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                 right: data.market.rightPrice,
                                                 current: exchangeRates?.[data.market?.currencyKey] || 0,
                                             }}
-                                            marketAddress={data.market.id}
                                             fontSize={16}
                                             maxWidth={65}
                                         />

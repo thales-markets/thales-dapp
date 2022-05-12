@@ -25,7 +25,7 @@ type TabContainerProps = {
 
 const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const marketInfo = useRangedMarketContext();
-    const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 5);
+    const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
 
@@ -141,11 +141,6 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                     {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[1] as MarketType} />}
                     {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[1] as MarketType} />}
                     {currentTab == 5 && <SimilarMarkets marketType={MARKET_TYPE[1] as MarketType} />}
-                    {/* {currentTab == 5 && (
-                        <>
-                            <RangeMarketCard data={marketInfo} />
-                        </>
-                    )} */}
                 </Container.Tab>
             </Container>
         </>
