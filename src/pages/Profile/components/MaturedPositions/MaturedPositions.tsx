@@ -111,6 +111,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                     width="40px"
                                                     height="40px"
                                                     currencyKey={data.market.currencyKey}
+                                                    iconType={!data.range ? 0 : data.balances.type === 'IN' ? 1 : 2}
                                                 />
                                                 <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
                                             </Card.Section>
@@ -239,9 +240,15 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                         {
                             Header: t(`options.home.markets-table.strike-price-col`),
                             accessor: 'market.strikePrice',
-                            Cell: (_props: any) => (
-                                <TableText>{formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}</TableText>
-                            ),
+                            Cell: (_props: any) => {
+                                return (
+                                    <TableText>
+                                        {_props.cell.row.original.range
+                                            ? _props.cell.value
+                                            : formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}
+                                    </TableText>
+                                );
+                            },
                         },
                         {
                             Header: t(`options.home.markets-table.final-asset-price-col`),
