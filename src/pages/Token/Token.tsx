@@ -18,8 +18,6 @@ import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
 import { useSelector } from 'react-redux';
 import TokenNavFooter from './MobileFooter/TokenNavFooter';
-import Notice from './components/Notice';
-import { MigrateButton, MigrateText } from './components/MigrationNotice/MigrationNotice';
 import MigratedRewards from './MigratedRewards';
 
 const TokenPage: React.FC = () => {
@@ -95,20 +93,7 @@ const TokenPage: React.FC = () => {
                 <FlexDivColumn>
                     <TokenOverview />
                     {!isL2 && selectedTab !== 'migration' && <MigrationNotice />}
-                    {isL2 && (
-                        <Notice>
-                            <MigrateText>{t('options.earn.snx-stakers.olympus-notice')}</MigrateText>
-                            <FlexDivCentered>
-                                <MigrateButton
-                                    onClick={() =>
-                                        window.open('https://pro.olympusdao.finance/#/partners/Thales', '_blank')
-                                    }
-                                >
-                                    {t('options.earn.snx-stakers.olympus-button-text')}
-                                </MigrateButton>
-                            </FlexDivCentered>
-                        </Notice>
-                    )}
+
                     <MainContentContainer>
                         <OptionsTabContainer>
                             {optionsTabContent.map((tab, index) => (
