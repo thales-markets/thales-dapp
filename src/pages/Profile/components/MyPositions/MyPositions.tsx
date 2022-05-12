@@ -93,7 +93,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                         {data.balances.amount > 0 && (
                             <SPAAnchor
                                 href={
-                                    data.ragne
+                                    data.range
                                         ? buildRangeMarketLink(data.market.id)
                                         : buildOptionsMarketLink(data.market.id)
                                 }
