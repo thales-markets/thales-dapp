@@ -14,6 +14,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { LoaderContainer, NoDataContainer, NoDataText } from '../../../../theme/common';
 import SimpleLoader from '../../../../components/SimpleLoader';
 import { TFunction } from 'i18next';
+import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -32,7 +33,6 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     isLoading,
     rangedPositions,
 }) => {
-    console.log(rangedPositions);
     const { t } = useTranslation();
     const data = useMemo(() => {
         const newArray: any = [];
@@ -40,6 +40,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
         if (claimed.length > 0) {
             claimed.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.range = false;
                 modifiedValue.balances = {};
                 modifiedValue.balances.amount = value.tx.amount;
                 modifiedValue.balances.type = value.tx.side === 'short' ? 'DOWN' : 'UP';
@@ -53,6 +54,17 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
         if (positions.length > 0) {
             positions.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.range = false;
+                newArray.push(modifiedValue);
+            });
+        }
+
+        if (rangedPositions.length > 0) {
+            rangedPositions.map((value) => {
+                const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.balances.priceDiff = 0;
+                modifiedValue.market.strikePrice = value.market.leftPrice + ' - ' + value.market.rightPrice;
+                modifiedValue.range = true;
                 newArray.push(modifiedValue);
             });
         }
@@ -107,38 +119,53 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                             </Card.Section>
                                             <Card.Section>
                                                 <Card.RowTitle>
-                                                    {t(`options.home.markets-table.strike-price-col`)}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                        </Card.Column>
-                                        <Card.Column>
-                                            <Card.Section>
-                                                <Card.RowTitle>
                                                     {t(`options.home.markets-table.final-asset-price-col`)}
                                                 </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatCurrencyWithSign(USD_SIGN, data.market.finalPrice)}
                                                 </Card.RowSubtitle>
                                             </Card.Section>
-                                            <Card.Section>
-                                                <Card.RowTitle>
-                                                    {t('options.home.market-card.price-difference')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
-                                                    <PriceDifferenceInfo
-                                                        priceDiff={data.market.strikePrice < data.market.finalPrice}
-                                                    >
-                                                        {`${getPercentageDifference(
-                                                            data.market.finalPrice,
-                                                            data.market.strikePrice
-                                                        ).toFixed(2)}%`}
-                                                    </PriceDifferenceInfo>
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
                                         </Card.Column>
+                                        {data.range ? (
+                                            <Card.Column style={{ top: 10, position: 'relative' }} ranged={true}>
+                                                <RangeIllustration
+                                                    priceData={{
+                                                        left: data.market.leftPrice,
+                                                        right: data.market.rightPrice,
+                                                        current: data.market.finalPrice,
+                                                    }}
+                                                    fontSize={16}
+                                                    maxWidth={65}
+                                                />
+                                            </Card.Column>
+                                        ) : (
+                                            <Card.Column>
+                                                <Card.Section>
+                                                    <Card.RowTitle>
+                                                        {t(`options.home.markets-table.strike-price-col`)}
+                                                    </Card.RowTitle>
+                                                    <Card.RowSubtitle>
+                                                        {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
+                                                    </Card.RowSubtitle>
+                                                </Card.Section>
+                                                <Card.Section>
+                                                    <Card.RowTitle>
+                                                        {t('options.home.market-card.price-difference')}
+                                                    </Card.RowTitle>
+                                                    <Card.RowSubtitle>
+                                                        <PriceDifferenceInfo
+                                                            priceDiff={data.market.strikePrice < data.market.finalPrice}
+                                                        >
+                                                            {`${getPercentageDifference(
+                                                                data.market.finalPrice,
+                                                                data.market.strikePrice
+                                                            ).toFixed(2)}%`}
+                                                        </PriceDifferenceInfo>
+                                                    </Card.RowSubtitle>
+                                                </Card.Section>
+                                            </Card.Column>
+                                        )}
+
                                         <Card.Column>
                                             <Card.Section>
                                                 <Card.RowTitle>

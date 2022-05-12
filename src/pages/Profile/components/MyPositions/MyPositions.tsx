@@ -61,7 +61,6 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                 newArray.push(modifiedValue);
             });
         }
-        console.log(newArray);
 
         return orderBy(newArray, ['balances.value', 'balances.priceDiff'], ['desc', 'asc']);
     }, [positions, rangedPositions]);
@@ -80,8 +79,6 @@ const MyPositions: React.FC<MyPositionsProps> = ({
             </NoDataContainer>
         );
     }
-
-    console.log(filteredData);
 
     return (
         <Container>
