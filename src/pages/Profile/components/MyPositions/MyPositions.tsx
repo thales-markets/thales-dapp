@@ -55,8 +55,6 @@ const MyPositions: React.FC<MyPositionsProps> = ({
         return orderBy(newArray, ['balances.value', 'balances.priceDiff'], ['desc', 'asc']);
     }, [positions]);
 
-    console.log(rangedPositions);
-
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
         return data.filter((value) => {
@@ -64,7 +62,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
         });
     }, [searchText, data]);
 
-    if (!isLoading && !data.length) {
+    if (!isLoading && !data.length && !rangedPositions.length) {
         return (
             <NoDataContainer>
                 <NoDataText>{t('common.no-data-available')}</NoDataText>

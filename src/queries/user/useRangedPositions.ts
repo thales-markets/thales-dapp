@@ -40,14 +40,18 @@ const useRangedPositions = (
 
             await Promise.all(
                 livePosition.map(async (balance: any) => {
-                    const positionValue = ethers.utils.formatUnits(
-                        await (snxJSConnector as any).rangedMarketAMMContract.sellToAmmQuote(
-                            balance.position.market.id,
-                            balance.position.side === 'in' ? 0 : 1,
-                            balance.amount
-                        ),
-                        getIsPolygon(networkId) ? 6 : 18
-                    );
+                    let positionValue = '0';
+                    try {
+                        positionValue = ethers.utils.formatUnits(
+                            await (snxJSConnector as any).rangedMarketAMMContract.sellToAmmQuote(
+                                balance.position.market.id,
+                                balance.position.side === 'in' ? 0 : 1,
+                                balance.amount
+                            ),
+                            getIsPolygon(networkId) ? 6 : 18
+                        );
+                    } catch {}
+
                     live.push({
                         market: {
                             ...balance.position.market,
