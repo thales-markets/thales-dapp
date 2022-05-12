@@ -42,29 +42,31 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
 
             await Promise.all(
                 livePosition.map(async (balance: any) => {
-                    const positionValue = ethers.utils.formatUnits(
-                        await (snxJSConnector as any).ammContract.sellToAmmQuote(
-                            balance.position.market.id,
-                            balance.position.side === 'long' ? 0 : 1,
-                            balance.amount
-                        ),
-                        getIsPolygon(networkId) ? 6 : 18
-                    );
-                    live.push({
-                        link: buildOptionsMarketLink(balance.position.market.id),
-                        market: {
-                            ...balance.position.market,
-                            currencyKey: hexToAscii(balance.position.market.currencyKey),
-                            maturityDate: Number(balance.position.market.maturityDate) * 1000,
-                            expiryDate: Number(balance.position.market.expiryDate) * 1000,
-                            strikePrice: balance.position.market.strikePrice / 1e18,
-                        },
-                        balances: {
-                            amount: Number(ethers.utils.formatEther(balance.amount)),
-                            value: Number(positionValue),
-                            type: balance.position.side === 'long' ? 'UP' : 'DOWN',
-                        },
-                    });
+                    try {
+                        const positionValue = ethers.utils.formatUnits(
+                            await (snxJSConnector as any).ammContract.sellToAmmQuote(
+                                balance.position.market.id,
+                                balance.position.side === 'long' ? 0 : 1,
+                                balance.amount
+                            ),
+                            getIsPolygon(networkId) ? 6 : 18
+                        );
+                        live.push({
+                            link: buildOptionsMarketLink(balance.position.market.id),
+                            market: {
+                                ...balance.position.market,
+                                currencyKey: hexToAscii(balance.position.market.currencyKey),
+                                maturityDate: Number(balance.position.market.maturityDate) * 1000,
+                                expiryDate: Number(balance.position.market.expiryDate) * 1000,
+                                strikePrice: balance.position.market.strikePrice / 1e18,
+                            },
+                            balances: {
+                                amount: Number(ethers.utils.formatEther(balance.amount)),
+                                value: Number(positionValue),
+                                type: balance.position.side === 'long' ? 'UP' : 'DOWN',
+                            },
+                        });
+                    } catch {}
                 })
             );
 
