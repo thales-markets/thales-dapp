@@ -4,7 +4,7 @@ import TableGridSwitch from 'pages/Markets/components/Input/TableGridSwitch';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useAllPositions from 'queries/user/useAllPositions';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -67,6 +67,11 @@ const Profile: React.FC = () => {
     const [searchText, setSearchText] = useState('');
     const [view, setView] = useState(NavItems.MyPositions);
 
+    const claimable = useMemo(() => {
+        return positions.claimable + userRangePositions.claimable;
+    }, [positions, userRangePositions]);
+    console.log(positions, userRangePositions);
+
     return (
         <>
             <Container layout={isSimpleView}>
@@ -95,9 +100,9 @@ const Profile: React.FC = () => {
                             className={view === NavItems.MaturedPositions ? 'active' : ''}
                         >
                             {NavItems.MaturedPositions}
-                            {positions.claimable > 0 && (
+                            {claimable > 0 && (
                                 <>
-                                    <Notification> {positions.claimable} </Notification>
+                                    <Notification> {claimable} </Notification>
                                 </>
                             )}
                         </NavItem>

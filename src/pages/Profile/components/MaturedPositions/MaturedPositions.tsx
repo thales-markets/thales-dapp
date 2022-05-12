@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
-import { buildOptionsMarketLink } from 'utils/routes';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
 import { formatShortDate } from 'utils/formatters/date';
@@ -15,6 +15,7 @@ import { LoaderContainer, NoDataContainer, NoDataText } from '../../../../theme/
 import SimpleLoader from '../../../../components/SimpleLoader';
 import { TFunction } from 'i18next';
 import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
+import { UI_COLORS } from 'constants/ui';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -95,7 +96,13 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
-                            <SPAAnchor href={buildOptionsMarketLink(data.market.id)}>
+                            <SPAAnchor
+                                href={
+                                    data.range
+                                        ? buildRangeMarketLink(data.market.id)
+                                        : buildOptionsMarketLink(data.market.id)
+                                }
+                            >
                                 <Card.Wrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
                                     <Card>
                                         <Card.Column style={{ flex: 1 }}>
@@ -127,14 +134,17 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                             </Card.Section>
                                         </Card.Column>
                                         {data.range ? (
-                                            <Card.Column style={{ top: 10, position: 'relative' }} ranged={true}>
+                                            <Card.Column
+                                                style={{ top: 10, position: 'relative', maxWidth: 260, marginLeft: 10 }}
+                                                ranged={true}
+                                            >
                                                 <RangeIllustration
                                                     priceData={{
                                                         left: data.market.leftPrice,
                                                         right: data.market.rightPrice,
                                                         current: data.market.finalPrice,
                                                     }}
-                                                    fontSize={16}
+                                                    fontSize={24}
                                                     maxWidth={65}
                                                 />
                                             </Card.Column>
@@ -175,7 +185,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                     {data.balances.amount.toFixed(2)}
                                                     <Icon
                                                         style={{
-                                                            color: data.balances.type === 'UP' ? '#50CE99' : '#C3244A',
+                                                            color: getColor(data),
                                                             marginLeft: 6,
                                                         }}
                                                         className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
@@ -336,5 +346,12 @@ const Icon = styled.i`
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
     ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
 `;
+
+const getColor = (data: any) => {
+    if (data.range) {
+        return data.balances.type === 'IN' ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR;
+    }
+    return data.balances.type === 'UP' ? UI_COLORS.GREEN : UI_COLORS.RED;
+};
 
 export default MaturedPositions;

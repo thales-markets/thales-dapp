@@ -77,7 +77,7 @@ const useRangedPositions = (
             );
 
             maturedPositions.map((balance: any) => {
-                claimable = isOptionClaimable(balance) ? claimable++ : claimable;
+                claimable = isOptionClaimable(balance) ? claimable + 1 : claimable;
                 claimableAmount += isOptionClaimable(balance) ? Number(ethers.utils.formatEther(balance.amount)) : 0;
                 matured.push({
                     link: buildRangeMarketLink(balance.position.market.id),
@@ -125,10 +125,10 @@ const hexToAscii = (str: any) => {
 };
 
 const isOptionClaimable = (balance: any) => {
-    if (balance.position.side === 'long' && balance.position.market.result === 0) {
+    if (balance.position.side === 'in' && balance.position.market.result === 0) {
         return true;
     }
-    if (balance.position.side === 'short' && balance.position.market.result === 1) {
+    if (balance.position.side === 'out' && balance.position.market.result === 1) {
         return true;
     }
 
