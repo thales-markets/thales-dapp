@@ -70,21 +70,13 @@ const useRangedPositions = (
                 })
             );
 
-            const claimablePosition = rangedPositionBalances.filter((balance: any) => {
-                if (Number(balance.amount) !== 0 && balance.position.market.result !== null) {
-                    if (balance.position.side === 'in' && balance.position.market.result === 0) {
-                        return true;
-                    }
-                    if (balance.position.side === 'out' && balance.position.market.result === 1) {
-                        return true;
-                    }
-                }
-                return false;
-            });
+            const maturedPositions = rangedPositionBalances.filter(
+                (balance: any) => Number(balance.amount) !== 0 && balance.position.market.result !== null
+            );
 
-            claimablePosition.map((balance: any) => {
-                claimable++;
-                claimableAmount += Number(ethers.utils.formatEther(balance.amount));
+            maturedPositions.map((balance: any) => {
+                claimable = isOptionClaimable(balance) ? claimable++ : claimable;
+                claimableAmount += isOptionClaimable(balance) ? Number(ethers.utils.formatEther(balance.amount)) : 0;
                 matured.push({
                     market: {
                         ...balance.position.market,
@@ -100,7 +92,7 @@ const useRangedPositions = (
                         type: balance.position.side === 'in' ? 'IN' : 'OUT',
                     },
                     claimed: false,
-                    claimable: true,
+                    claimable: isOptionClaimable(balance),
                 });
             });
 
@@ -127,6 +119,17 @@ const hexToAscii = (str: any) => {
         }
     }
     return out;
+};
+
+const isOptionClaimable = (balance: any) => {
+    if (balance.position.side === 'long' && balance.position.market.result === 0) {
+        return true;
+    }
+    if (balance.position.side === 'short' && balance.position.market.result === 1) {
+        return true;
+    }
+
+    return false;
 };
 
 export default useRangedPositions;

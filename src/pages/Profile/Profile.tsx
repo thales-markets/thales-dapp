@@ -127,6 +127,7 @@ const Profile: React.FC = () => {
                                 claimed={positions.claimed}
                                 searchText={searchText}
                                 isLoading={userPositionsQuery.isLoading}
+                                rangedPositions={userRangePositions.matured}
                             />
                         )}
                         {view === NavItems.History && (

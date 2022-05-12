@@ -21,6 +21,7 @@ type MaturedPositionsProps = {
     isSimpleView?: boolean;
     searchText: string;
     isLoading?: boolean;
+    rangedPositions: any[];
 };
 
 const MaturedPositions: React.FC<MaturedPositionsProps> = ({
@@ -29,7 +30,9 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     claimed,
     searchText,
     isLoading,
+    rangedPositions,
 }) => {
+    console.log(rangedPositions);
     const { t } = useTranslation();
     const data = useMemo(() => {
         const newArray: any = [];
