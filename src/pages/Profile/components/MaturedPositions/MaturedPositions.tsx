@@ -277,7 +277,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         {row.balances.amount.toFixed(2)}
                                         <Icon
                                             style={{
-                                                color: row.balances.type === 'UP' ? '#50CE99' : '#C3244A',
+                                                color: getColor(row),
                                                 marginLeft: 6,
                                             }}
                                             className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
