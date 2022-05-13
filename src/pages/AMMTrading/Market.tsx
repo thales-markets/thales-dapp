@@ -81,8 +81,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     }, [marketQuery.isSuccess, rangedMarketQuery.isSuccess, marketAddress, networkId]);
 
     useEffect(() => {
-        !isRangedMarket && optionMarket?.phase == 'maturity' ? setMaturityPhase(true) : setMaturityPhase(false);
-        isRangedMarket && rangedMarket?.phase == 'maturity' ? setMaturityPhase(true) : setMaturityPhase(false);
+        if (!isRangedMarket && optionMarket?.phase == 'maturity') {
+            setMaturityPhase(true);
+        } else if (isRangedMarket && rangedMarket?.phase == 'maturity') {
+            setMaturityPhase(true);
+        } else {
+            setMaturityPhase(false);
+        }
     }, [optionMarket?.phase, rangedMarket?.phase]);
 
     return optionMarket || rangedMarket ? (
