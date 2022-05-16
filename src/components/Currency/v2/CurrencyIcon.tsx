@@ -27,6 +27,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
     height,
     synthIconStyle,
     iconType = IconType.NORMAL,
+
     ...rest
 }) => {
     const props = {
@@ -35,6 +36,9 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
         alt: currencyKey,
         ...rest,
     };
+
+    const badgeHeight = Number(props.height?.slice(0, props.height.indexOf('px'))) / 2;
+
     const AssetIcon = getAssetIcon(currencyKey);
 
     if (NEW_CURRENCY_ICONS.includes(currencyKey)) {
@@ -50,8 +54,12 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 
     return (
         <Content>
-            {iconType === IconType.IN && <Badge type={iconType} className="v2-icon v2-icon--in"></Badge>}
-            {iconType === IconType.OUT && <Badge type={iconType} className="v2-icon v2-icon--out"></Badge>}
+            {iconType === IconType.IN && (
+                <Badge height={badgeHeight} type={iconType} className="v2-icon v2-icon--in"></Badge>
+            )}
+            {iconType === IconType.OUT && (
+                <Badge height={badgeHeight} type={iconType} className="v2-icon v2-icon--out"></Badge>
+            )}
             <AssetIcon style={{ marginRight: 7, width: props.width, height: props.height, ...synthIconStyle }} />
         </Content>
     );
@@ -61,14 +69,14 @@ const Content = styled.div`
     position: relative;
 `;
 
-const Badge = styled.i<{ type: IconType }>`
+const Badge = styled.i<{ type: IconType; height: number }>`
     position: absolute;
     top: -2px;
     left: 0px;
-    font-size: 14px;
-    width: 14px;
+    font-size: ${(props) => props.height + 'px'};
+    width: ${(props) => props.height + 'px'};
     border-radius: 20px;
-    color: ${(props) => (props.type === 1 ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR)};
+    color: ${(props) => (props.type === IconType.IN ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR)};
     background: var(--background);
 `;
 
