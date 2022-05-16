@@ -40,6 +40,12 @@ export const rangedMarketContract = {
                     name: 'amount',
                     type: 'uint256',
                 },
+                {
+                    indexed: false,
+                    internalType: 'enum RangedMarket.Position',
+                    name: '_position',
+                    type: 'uint8',
+                },
             ],
             name: 'Exercised',
             type: 'event',
@@ -77,6 +83,12 @@ export const rangedMarketContract = {
                     internalType: 'enum RangedMarket.Position',
                     name: 'winningPosition',
                     type: 'uint8',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'finalPrice',
+                    type: 'uint256',
                 },
             ],
             name: 'Resolved',
@@ -121,6 +133,19 @@ export const rangedMarketContract = {
         {
             inputs: [],
             name: 'canExercisePositions',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'canResolve',
             outputs: [
                 {
                     internalType: 'bool',
@@ -249,6 +274,13 @@ export const rangedMarketContract = {
                 },
             ],
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'resolveMarket',
+            outputs: [],
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
