@@ -11,12 +11,18 @@ import { getNetworkId } from '../../../../redux/modules/wallet';
 const cookies = new Cookies();
 
 type AssetsDropdownProps = {
+    cookieKey: string;
     assets: string[];
     selectedAssets: string[];
     setSelectedAssets: (assets: string[]) => void;
 };
 
-export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({ assets, selectedAssets, setSelectedAssets }) => {
+export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
+    assets,
+    selectedAssets,
+    setSelectedAssets,
+    cookieKey,
+}) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     return (
@@ -31,11 +37,11 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({ assets, selected
                             if (checked) {
                                 const newSelectedAssets = [...selectedAssets, asset];
                                 setSelectedAssets(newSelectedAssets);
-                                cookies.set('selectedAssets' + networkId, newSelectedAssets);
+                                cookies.set(cookieKey + networkId, newSelectedAssets);
                             } else {
                                 const newSelectedAssets = selectedAssets.filter((a) => a !== asset);
                                 setSelectedAssets(newSelectedAssets);
-                                cookies.set('selectedAssets' + networkId, newSelectedAssets);
+                                cookies.set(cookieKey + networkId, newSelectedAssets);
                             }
                         }}
                     />

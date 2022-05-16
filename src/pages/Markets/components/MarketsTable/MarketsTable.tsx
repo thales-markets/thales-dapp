@@ -488,6 +488,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                             {assetsDropdownOpen && (
                                 <AssetsDropdown
                                     assets={[...(allAssets as any)]}
+                                    cookieKey={'selectedAssets'}
                                     selectedAssets={selectedAssets}
                                     setSelectedAssets={setSelectedAssets}
                                 />
