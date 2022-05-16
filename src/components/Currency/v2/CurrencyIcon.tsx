@@ -58,7 +58,6 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 };
 
 const Content = styled.div`
-    display: contents;
     position: relative;
 `;
 
