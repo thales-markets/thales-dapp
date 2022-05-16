@@ -88,7 +88,7 @@ const RangeMarkets: React.FC = () => {
                                   ? apiData?.outPrice * CONVERT_TO_6_DECIMALS
                                   : apiData?.outPrice) ?? 0,
                           ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
-                          range: m.leftPrice.toFixed(2) + ' - ' + m.rightPrice.toFixed(2),
+                          range: '$' + m.leftPrice.toFixed(2) + ' - ' + '$' + m.rightPrice.toFixed(2),
                       };
                   })
                 : marketsQuery.data;

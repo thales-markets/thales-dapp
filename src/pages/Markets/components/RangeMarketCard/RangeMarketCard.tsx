@@ -39,7 +39,7 @@ const RangeMarketCard: React.FC<RangeMarketCardProps> = ({ data, exchangeRates, 
         >
             <CardHeader>
                 <AssetContainer>
-                    <CurrencyIcon currencyKey={data?.currencyKey} width="50px" height="50px" />
+                    <CurrencyIcon iconType={3} currencyKey={data?.currencyKey} width="50px" height="50px" />
                     <AssetNameContainer>
                         <CurrencyKey>
                             {data.asset}

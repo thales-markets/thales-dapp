@@ -19,6 +19,7 @@ enum IconType {
     NORMAL,
     IN,
     OUT,
+    Range,
 }
 
 export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
@@ -59,6 +60,9 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
             )}
             {iconType === IconType.OUT && (
                 <Badge height={badgeHeight} type={iconType} className="v2-icon v2-icon--out"></Badge>
+            )}
+            {iconType === IconType.Range && (
+                <Badge height={badgeHeight} type={iconType} className="v2-icon v2-icon--range"></Badge>
             )}
             <AssetIcon style={{ marginRight: 7, width: props.width, height: props.height, ...synthIconStyle }} />
         </Content>

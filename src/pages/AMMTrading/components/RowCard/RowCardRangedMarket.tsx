@@ -106,6 +106,7 @@ const RowCardRangedMarket: React.FC = () => {
                                         width: '51px',
                                         marginRight: '0px !important',
                                     }}
+                                    iconType={3}
                                     currencyKey={marketInfo.currencyKey}
                                     width={'51px'}
                                     height={'51px'}

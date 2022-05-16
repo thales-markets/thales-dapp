@@ -2,7 +2,6 @@ import React, { CSSProperties } from 'react';
 import CurrencyIcon from './CurrencyIcon';
 import { CurrencyKey } from 'constants/currency';
 import { getSynthName } from 'utils/currency';
-import { RangeIcon } from 'pages/RangeMarkets/components/HotMarketsRanged/styled-components';
 
 type CurrencyNameProps = {
     currencyKey: CurrencyKey;
@@ -36,7 +35,15 @@ export const CurrencyName: React.FC<CurrencyNameProps> = ({
         {showIcon && !rangeMarket && (
             <CurrencyIcon currencyKey={currencyKey} synthIconStyle={synthIconStyle} {...iconProps} />
         )}
-        {showIcon && rangeMarket && <RangeIcon size={'24px'} className={'v2-icon v2-icon--range'} />}
+        {showIcon && rangeMarket && (
+            <CurrencyIcon
+                height={'32px'}
+                iconType={3}
+                currencyKey={currencyKey}
+                synthIconStyle={synthIconStyle}
+                {...iconProps}
+            />
+        )}
         {!hideAssetName && (
             <span style={{ fontWeight: 300, textTransform: 'uppercase' }}>{getSynthName(currencyKey)}</span>
         )}

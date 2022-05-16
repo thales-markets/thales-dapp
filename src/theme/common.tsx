@@ -440,7 +440,7 @@ export const UserCardSectionHeader = styled.span`
 `;
 
 export const MarketCardContainer = styled.div`
-    border: 2px solid rgb(100, 217, 254, 0.5);
+    border: 2px solid var(--card-border-color);
     :hover {
         transform: scale(1.02);
         border: 2px solid rgb(100, 217, 254, 1);
