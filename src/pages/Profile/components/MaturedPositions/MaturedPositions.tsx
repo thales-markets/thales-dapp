@@ -19,6 +19,7 @@ import { UI_COLORS } from 'constants/ui';
 
 type MaturedPositionsProps = {
     claimed: any[];
+    claimedRange: any[];
     positions: UsersAssets[];
     isSimpleView?: boolean;
     searchText: string;
@@ -33,6 +34,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     searchText,
     isLoading,
     rangedPositions,
+    claimedRange,
 }) => {
     const { t } = useTranslation();
     const data = useMemo(() => {
@@ -46,6 +48,20 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 modifiedValue.balances = {};
                 modifiedValue.balances.amount = value.tx.amount;
                 modifiedValue.balances.type = value.tx.side === 'short' ? 'DOWN' : 'UP';
+                modifiedValue.claimable = false;
+                modifiedValue.claimed = true;
+                modifiedValue.link = buildOptionsMarketLink(value.tx.market);
+                newArray.push(modifiedValue);
+            });
+        }
+        if (claimedRange.length > 0) {
+            claimedRange.map((value) => {
+                console.log(value);
+                const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.range = true;
+                modifiedValue.balances = {};
+                modifiedValue.balances.amount = value.tx.amount;
+                modifiedValue.balances.type = value.tx.side === 'in' ? 'IN' : 'OUT';
                 modifiedValue.claimable = false;
                 modifiedValue.claimed = true;
                 modifiedValue.link = buildOptionsMarketLink(value.tx.market);

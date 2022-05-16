@@ -132,7 +132,8 @@ const Profile: React.FC = () => {
                             <MaturedPositions
                                 isSimpleView={isSimpleView}
                                 positions={positions.matured}
-                                claimed={[...positions.claimed, ...userRangePositions.claimed]}
+                                claimed={positions.claimed}
+                                claimedRange={userRangePositions.claimed}
                                 searchText={searchText}
                                 isLoading={userPositionsQuery.isLoading}
                                 rangedPositions={userRangePositions.matured}
