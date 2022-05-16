@@ -5,11 +5,13 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { getIsPolygon, NetworkId } from 'utils/network';
 import { ethers } from 'ethers';
 import { buildRangeMarketLink } from 'utils/routes';
+import { RangedMarket } from 'types/options';
 
 type RangedPositionData = {
     claimable: number;
     claimableAmount: number;
     matured: any[];
+    claimed: any[];
     live: any[];
 };
 
@@ -32,8 +34,6 @@ const useRangedPositions = (
                 network: networkId,
                 account: walletAddress.toLowerCase(),
             });
-
-            console.log(rangedPositionBalances);
 
             const livePosition = rangedPositionBalances.filter(
                 (balance: any) => Number(balance.amount) !== 0 && balance.position.market.result === null
@@ -99,9 +99,40 @@ const useRangedPositions = (
                 });
             });
 
+            const marketTx = await thalesData.binaryOptions.optionTransactions({
+                account: walletAddress,
+                network: networkId,
+            });
+
+            const txMap = new Map();
+
+            marketTx.map((tx: any) => {
+                if (tx.type !== 'mint') {
+                    txMap.set(tx.market, tx);
+                }
+            });
+
+            const claimedMap = new Map();
+            console.log(txMap);
+
+            const optionsMarkets: RangedMarket[] = await thalesData.binaryOptions.rangedMarkets({
+                max: Infinity,
+                network: networkId,
+            });
+
+            optionsMarkets
+                .filter((market) => market.maturityDate <= +Date.now())
+                .map((market) => {
+                    if (txMap.has(market.address)) {
+                        claimedMap.set(market.address, { market, tx: txMap.get(market.address) });
+                    }
+                });
+
+            console.log('claimed map: ', claimedMap);
             const result = {
                 claimable,
                 claimableAmount,
+                claimed: Array.from(claimedMap.values()),
                 matured,
                 live,
             };

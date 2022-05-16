@@ -23,6 +23,7 @@ import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import Loader from '../../components/Loader';
 import { getIsPolygon } from '../../utils/network';
 import useRangedPositions from 'queries/user/useRangedPositions';
+import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -37,6 +38,8 @@ const Profile: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
     const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
+    const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
+    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : undefined;
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
         refetchInterval: false,
@@ -129,7 +132,7 @@ const Profile: React.FC = () => {
                             <MaturedPositions
                                 isSimpleView={isSimpleView}
                                 positions={positions.matured}
-                                claimed={positions.claimed}
+                                claimed={[...positions.claimed, ...userRangePositions.claimed]}
                                 searchText={searchText}
                                 isLoading={userPositionsQuery.isLoading}
                                 rangedPositions={userRangePositions.matured}
@@ -137,7 +140,7 @@ const Profile: React.FC = () => {
                         )}
                         {view === NavItems.History && (
                             <History
-                                markets={markets}
+                                markets={[...(markets as any), ...(rangedMarkets as any)]}
                                 trades={DataForUi ? DataForUi.trades : []}
                                 searchText={searchText}
                                 isLoading={allTxAndDataQuery.isLoading}
