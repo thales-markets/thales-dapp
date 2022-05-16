@@ -23,71 +23,97 @@ const generateDateKey = (date: Date) => {
     return `${monthName} ${dayOfTheMonth}, ${year}`;
 };
 
-const getOptionSideLabel = (optionSide: string) => (optionSide.toLowerCase() === 'short' ? 'down' : 'up');
+const getOptionSideLabel = (optionSide: string) => {
+    switch (optionSide.toLowerCase()) {
+        case 'short':
+            return 'down';
+        case 'long':
+            return 'up';
+        case 'in':
+            return 'in';
+        case 'out':
+            return 'out';
+    }
+    return optionSide.toLowerCase() === 'short' ? 'down' : 'up';
+};
+
+const generateStrike = (market: any) => {
+    console.log(market);
+    if (market.leftPrice) {
+        return market.leftPrice + ' - ' + market.rightPrice;
+    }
+    return '$' + formatCurrency(market.strikePrice);
+};
 
 const generateRows = (data: any[], translator: TFunction) => {
-    const dateMap: Record<string, any> = {};
-    const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
-    sortedData.forEach((trade) => {
-        const tradeDateKey = generateDateKey(new Date(trade.timestamp));
-        if (!dateMap[tradeDateKey]) {
-            dateMap[tradeDateKey] = [];
-        }
-        dateMap[tradeDateKey].push(trade);
-    });
+    try {
+        console.log(data);
+        const dateMap: Record<string, any> = {};
+        const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
+        sortedData.forEach((trade) => {
+            const tradeDateKey = generateDateKey(new Date(trade.timestamp));
+            if (!dateMap[tradeDateKey]) {
+                dateMap[tradeDateKey] = [];
+            }
+            dateMap[tradeDateKey].push(trade);
+        });
 
-    const rows = Object.keys(dateMap).reduce((prev: any[], curr: string) => {
-        prev.push(curr);
-        prev.push(...dateMap[curr]);
-        return prev;
-    }, []);
+        const rows = Object.keys(dateMap).reduce((prev: any[], curr: string) => {
+            prev.push(curr);
+            prev.push(...dateMap[curr]);
+            return prev;
+        }, []);
 
-    return rows.map((d) => {
-        if (typeof d === 'string') {
-            return d;
-        }
-        const marketExpired = d.marketItem.result;
-        const isLong = d.optionSide === 'long';
-        const optionPrice = d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
-        const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;
+        return rows.map((d) => {
+            if (typeof d === 'string') {
+                return d;
+            }
+            const marketExpired = d.marketItem.result;
+            const isLong = d.optionSide === 'long';
+            const optionPrice = d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
+            const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;
 
-        return {
-            dotColor: marketExpired ? (isLong ? WIN_COLOR : LOSE_COLOR) : '',
-            asset: {
-                currencyKey: d.marketItem.currencyKey,
-                assetNameFontSize: '12px',
-                currencyKeyFontSize: '12px',
-            },
-            cells: [
-                { title: d.orderSide, value: formatAMPM(new Date(d.timestamp)) },
-                {
-                    title: translator('options.trading-profile.history.strike'),
-                    value: '$' + formatCurrency(d.marketItem.strikePrice),
+            return {
+                dotColor: marketExpired ? (isLong ? WIN_COLOR : LOSE_COLOR) : '',
+                asset: {
+                    currencyKey: d.marketItem.currencyKey,
+                    assetNameFontSize: '12px',
+                    currencyKeyFontSize: '12px',
+                    iconType: d.optionSide === 'in' ? 1 : d.optionSide === 'out' ? 2 : 0,
                 },
-                {
-                    title: translator('options.trading-profile.history.price'),
-                    value: '$' + formatCurrency(optionPrice),
-                },
-                {
-                    title: translator('options.trading-profile.history.amount'),
-                    value: `${formatCurrency(
-                        d.orderSide == 'sell' ? d.takerAmount : d.makerAmount
-                    )} ${getOptionSideLabel(d.optionSide)}`,
-                },
-                {
-                    title: translator('options.trading-profile.history.paid'),
-                    value: '$' + formatCurrency(paidAmount),
-                },
-                {
-                    title: marketExpired
-                        ? translator('options.trading-profile.history.expired')
-                        : translator('options.trading-profile.history.expires'),
-                    value: formatShortDate(new Date(d.marketItem.maturityDate)),
-                },
-            ],
-            link: buildOptionsMarketLink(d.marketItem.address),
-        };
-    });
+                cells: [
+                    { title: d.orderSide, value: formatAMPM(new Date(d.timestamp)) },
+                    {
+                        title: translator('options.trading-profile.history.strike'),
+                        value: generateStrike(d.marketItem),
+                    },
+                    {
+                        title: translator('options.trading-profile.history.price'),
+                        value: '$' + formatCurrency(optionPrice),
+                    },
+                    {
+                        title: translator('options.trading-profile.history.amount'),
+                        value: `${formatCurrency(
+                            d.orderSide == 'sell' ? d.takerAmount : d.makerAmount
+                        )} ${getOptionSideLabel(d.optionSide)}`,
+                    },
+                    {
+                        title: translator('options.trading-profile.history.paid'),
+                        value: '$' + formatCurrency(paidAmount),
+                    },
+                    {
+                        title: marketExpired
+                            ? translator('options.trading-profile.history.expired')
+                            : translator('options.trading-profile.history.expires'),
+                        value: formatShortDate(new Date(d.marketItem.maturityDate)),
+                    },
+                ],
+                link: buildOptionsMarketLink(d.marketItem.address),
+            };
+        });
+    } catch (e) {
+        console.log(e);
+    }
 };
 
 export default generateRows;

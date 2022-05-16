@@ -11,8 +11,8 @@ import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
 import { formatShortDate } from 'utils/formatters/date';
-import { LoaderContainer, NoDataContainer, NoDataText } from '../../../../theme/common';
-import SimpleLoader from '../../../../components/SimpleLoader';
+import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
+import SimpleLoader from 'components/SimpleLoader';
 import { TFunction } from 'i18next';
 import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 import { UI_COLORS } from 'constants/ui';
@@ -40,6 +40,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
 
         if (claimed.length > 0) {
             claimed.map((value) => {
+                console.log(value);
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 modifiedValue.range = false;
                 modifiedValue.balances = {};

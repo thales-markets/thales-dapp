@@ -25,11 +25,6 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             let claimable = 0;
             let claimableAmount = 0;
 
-            const optionsMarkets: OptionsMarkets = await thalesData.binaryOptions.markets({
-                max: Infinity,
-                network: networkId,
-            });
-
             const positionBalances: any = await thalesData.binaryOptions.positionBalances({
                 max: Infinity,
                 network: networkId,
@@ -75,7 +70,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             );
 
             maturedPositions.map((balance: any) => {
-                claimable = isOptionClaimable(balance) ? claimable++ : claimable;
+                claimable = isOptionClaimable(balance) ? claimable + 1 : claimable;
                 claimableAmount += isOptionClaimable(balance) ? Number(ethers.utils.formatEther(balance.amount)) : 0;
                 matured.push({
                     link: buildOptionsMarketLink(balance.position.market.id),
@@ -109,18 +104,25 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                 }
             });
 
+            const claimedMap = new Map();
+
+            const optionsMarkets: OptionsMarkets = await thalesData.binaryOptions.markets({
+                max: Infinity,
+                network: networkId,
+            });
+
             optionsMarkets
                 .filter((market) => market.maturityDate <= +Date.now())
                 .map((market) => {
                     if (txMap.has(market.address)) {
-                        txMap.set(market.address, { market, tx: txMap.get(market.address) });
+                        claimedMap.set(market.address, { market, tx: txMap.get(market.address) });
                     }
                 });
 
             const result = {
                 claimable,
                 claimableAmount,
-                claimed: Array.from(txMap.values()),
+                claimed: Array.from(claimedMap.values()),
                 matured,
                 live,
             };
