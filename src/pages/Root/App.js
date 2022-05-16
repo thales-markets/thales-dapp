@@ -27,8 +27,8 @@ import {
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
-// import snxJSConnector from 'utils/snxJSConnector';
-import MainLayout from '../../components/MainLayout';
+import snxJSConnector from 'utils/snxJSConnector';
+// import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
 // import GovernancePage from 'pages/Governance';
 // import Leaderboard from 'pages/Leaderboard';
@@ -36,28 +36,29 @@ import Cookies from 'universal-cookie';
 // import Token from '../LandingPage/articles/Token';
 // import Governance from '../LandingPage/articles/Governance';
 // import Whitepaper from '../LandingPage/articles/Whitepaper';
-import DappLayout from 'layouts/DappLayout';
+// import DappLayout from 'layouts/DappLayout';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-const snxJSConnector = lazy(() => import('utils/snxJSConnector'));
+const DappLayout = lazy(() => import('layouts/DappLayout'));
+const MainLayout = lazy(() => import('../../components/MainLayout'));
 
-const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../LandingPage/Home'));
-const Governance = lazy(() => import('../LandingPage/articles/Governance'));
-const Whitepaper = lazy(() => import('../LandingPage/articles/Whitepaper'));
-const Token = lazy(() => import('../LandingPage/articles/Token'));
+const OptionsCreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../Options/CreateMarket'));
+const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage/Home'));
+const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
+const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
+const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
 
-const GovernancePage = lazy(() => import('../Governance'));
-const Leaderboard = lazy(() => import('../Leaderboard'));
+const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
+const Leaderboard = lazy(() => import(/* webpackChunkName: "Leaderboard" */ '../Leaderboard'));
 
-const Markets = lazy(() => import('../Markets'));
-const RangeMarkets = lazy(() => import('../RangeMarkets'));
-const AMMTrading = lazy(() => import('../AMMTrading'));
+const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Markets'));
+const RangeMarkets = lazy(() => import(/* webpackChunkName: "RangeMarkets" */ '../RangeMarkets'));
+const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 
-const TokenPage = lazy(() => import('../Token/Token'));
-const TaleOfThales = lazy(() => import('../TaleOfThales/TaleOfThales'));
-const Profile = lazy(() => import('../Profile/Profile'));
-const ThalesRoyal = lazy(() => import('../Royale/ThalesRoyal'));
+const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token/Token'));
+const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales/TaleOfThales'));
+const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
+const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
 // import TokenPage from 'pages/Token/Token.tsx';
 // import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
@@ -83,6 +84,7 @@ const App = () => {
             const { networkId, name } = await getEthereumNetwork();
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
+                console.log(snxJSConnector);
                 if (!snxJSConnector.initialized) {
                     const provider = loadProvider({
                         networkId,
