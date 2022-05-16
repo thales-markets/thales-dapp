@@ -42,7 +42,6 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
 
         if (claimed.length > 0) {
             claimed.map((value) => {
-                console.log(value);
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 modifiedValue.range = false;
                 modifiedValue.balances = {};
@@ -56,7 +55,6 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
         }
         if (claimedRange.length > 0) {
             claimedRange.map((value) => {
-                console.log(value);
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 modifiedValue.range = true;
                 modifiedValue.balances = {};

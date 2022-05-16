@@ -37,9 +37,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
     address,
     leftPrice,
     rightPrice,
-    currentAssetPrice,
 }) => {
-    console.log('data: ', currentAssetPrice, currencyKey, assetName);
     const [time, setTime] = useState(formatTimeDifference(calculateDifference(timeRemaining)));
     const { t } = useTranslation();
 

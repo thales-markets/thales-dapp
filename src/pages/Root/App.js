@@ -5,10 +5,10 @@ import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
-import TokenPage from 'pages/Token/Token.tsx';
-import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
-import Profile from 'pages/Profile/Profile.tsx';
-import ThalesRoyal from 'pages/Royale/ThalesRoyal';
+// import TokenPage from 'pages/Token/Token.tsx';
+// import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
+// import Profile from 'pages/Profile/Profile.tsx';
+// import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -27,23 +27,42 @@ import {
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
-import snxJSConnector from 'utils/snxJSConnector';
+// import snxJSConnector from 'utils/snxJSConnector';
 import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
-import GovernancePage from 'pages/Governance';
-import Leaderboard from 'pages/Leaderboard';
+// import GovernancePage from 'pages/Governance';
+// import Leaderboard from 'pages/Leaderboard';
 import Cookies from 'universal-cookie';
-import Token from '../LandingPage/articles/Token';
-import Governance from '../LandingPage/articles/Governance';
-import Whitepaper from '../LandingPage/articles/Whitepaper';
+// import Token from '../LandingPage/articles/Token';
+// import Governance from '../LandingPage/articles/Governance';
+// import Whitepaper from '../LandingPage/articles/Whitepaper';
 import DappLayout from 'layouts/DappLayout';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
+const snxJSConnector = lazy(() => import('utils/snxJSConnector'));
+
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../LandingPage/Home'));
+const Governance = lazy(() => import('../LandingPage/articles/Governance'));
+const Whitepaper = lazy(() => import('../LandingPage/articles/Whitepaper'));
+const Token = lazy(() => import('../LandingPage/articles/Token'));
+
+const GovernancePage = lazy(() => import('../Governance'));
+const Leaderboard = lazy(() => import('../Leaderboard'));
+
 const Markets = lazy(() => import('../Markets'));
 const RangeMarkets = lazy(() => import('../RangeMarkets'));
 const AMMTrading = lazy(() => import('../AMMTrading'));
+
+const TokenPage = lazy(() => import('../Token/Token'));
+const TaleOfThales = lazy(() => import('../TaleOfThales/TaleOfThales'));
+const Profile = lazy(() => import('../Profile/Profile'));
+const ThalesRoyal = lazy(() => import('../Royale/ThalesRoyal'));
+
+// import TokenPage from 'pages/Token/Token.tsx';
+// import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
+// import Profile from 'pages/Profile/Profile.tsx';
+// import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
@@ -81,8 +100,15 @@ const App = () => {
                 console.log(e);
             }
         };
-
-        init();
+        init().then(() => console.log('rdy'));
+        trackPageView();
+        const handler = (e) => {
+            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
+        };
+        document.addEventListener('market-notification', handler);
+        return () => {
+            document.removeEventListener('market-notification', handler);
+        };
     }, []);
 
     useEffect(() => {
@@ -176,20 +202,6 @@ const App = () => {
         }
         setSnackbarDetails({ ...snackbarDetails, type: 'success', isOpen: false });
     };
-
-    useEffect(() => {
-        const handler = (e) => {
-            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
-        };
-        document.addEventListener('market-notification', handler);
-        return () => {
-            document.removeEventListener('market-notification', handler);
-        };
-    }, []);
-
-    useEffect(() => {
-        trackPageView();
-    }, []);
 
     return (
         <QueryClientProvider client={queryConnector.queryClient}>
