@@ -9,7 +9,7 @@ export const rangedMarketAMMContract = {
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0x64cb6EF981e5E432d4362F6A561A31B22E328cC5',
+        [NetworkId['Mainnet-Ovm']]: '0x2d356b114cbCA8DEFf2d8783EAc2a5A5324fE1dF',
         [NetworkId['Kovan-Ovm']]: '0x0690F410FB54d76268e4fa97486CBD605e68dC62',
         [POLYGON_MUMBAI_ID]: 'TBD',
         [POLYGON_ID]: 'TBD',
