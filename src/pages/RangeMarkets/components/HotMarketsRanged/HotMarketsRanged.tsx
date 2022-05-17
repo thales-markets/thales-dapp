@@ -36,14 +36,14 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
 
         optionsMarkets?.forEach((market: any) => {
             if (market.outPrice == 0 || market.inPrice == 0) return;
-            console.log(market);
+            if (!market?.outPrice && !market?.inPrice) return;
             markets.push({
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.in}`,
                 leftPrice: market.leftPrice,
                 rightPrice: market.rightPrice,
-                pricePerOption: market.outPrice,
+                pricePerOption: market.inPrice,
                 strikePrice: market.range,
                 timeRemaining: market.timeRemaining,
                 potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.inPrice)),
@@ -54,7 +54,7 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.out}`,
-                pricePerOption: market.inPrice,
+                pricePerOption: market.outPrice,
                 leftPrice: market.leftPrice,
                 rightPrice: market.rightPrice,
                 strikePrice: market.range,
