@@ -16,8 +16,10 @@ export const navigateTo = (path: string, replacePath = false, scrollToTop = fals
 export const buildOptionsMarketLink = (marketAddress: string, option?: string) =>
     `${ifIpfsDeployment ? '#' : ''}${ROUTES.Options.Home}/${marketAddress}${option ? `?option=${option}` : ''}`;
 
-export const buildRangeMarketLink = (marketAddress: string, option?: string) =>
-    `${ifIpfsDeployment ? '#' : ''}${ROUTES.Options.RangeMarkets}/${marketAddress}${option ? `?option=${option}` : ''}`;
+export const buildRangeMarketLink = (marketAddress: string, side?: string, orderType?: string) =>
+    `${ifIpfsDeployment ? '#' : ''}${ROUTES.Options.RangeMarkets}/${marketAddress}${
+        side || orderType ? `?side=${side}&orderType=${orderType}` : ''
+    }`;
 
 export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${route}`;
 

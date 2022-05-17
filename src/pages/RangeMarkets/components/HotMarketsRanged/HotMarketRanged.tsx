@@ -47,7 +47,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
 
     return (
         <StyledComponents.Card address={address}>
-            <SPAAnchor href={buildRangeMarketLink(address)}>
+            <SPAAnchor href={buildRangeMarketLink(address, assetName.includes('IN') ? 'in' : 'out')}>
                 <StyledComponents.AssetInfo>
                     <CurrencyIcon
                         currencyKey={currencyKey}

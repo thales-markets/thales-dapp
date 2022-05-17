@@ -46,6 +46,8 @@ import { getStableCoinForNetwork } from '../../../../utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
 import Tooltip from 'components/Tooltip';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -96,6 +98,19 @@ const AMM: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
+
+    const rawParams = useLocation();
+    const queryParams = queryString.parse(rawParams?.search);
+
+    useEffect(() => {
+        if (queryParams?.side == 'in') {
+            setRangeSide('in');
+        }
+
+        if (queryParams?.side == 'out') {
+            setRangeSide('out');
+        }
+    }, [queryParams]);
 
     const positionBalanceQuery = useRangedMarketPositionBalanceQuery(
         rangedMarketData?.address,
