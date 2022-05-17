@@ -82,7 +82,7 @@ const AMM: React.FC = () => {
     const [potentialReturn, setPotentialReturn] = useState<number | string>('');
     const [potentialBaseReturn, setPotentialBaseReturn] = useState<number | string>('');
     const [isPotentialReturnAvailable, setIsPotentialReturnAvailable] = useState<boolean>(true);
-    const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
+    const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[2]);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isGettingQuote, setIsGettingQuote] = useState<boolean>(false);
