@@ -41,8 +41,8 @@ import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
-import { getStableCoinForNetwork } from '../../../../utils/currency';
-import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
+import { getStableCoinForNetwork } from 'utils/currency';
+import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };

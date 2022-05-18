@@ -16,11 +16,11 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
-import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
-import { CONVERT_TO_6_DECIMALS } from '../../constants/token';
-import InfoBanner from '../../components/InfoBanner';
+import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
+import { CONVERT_TO_6_DECIMALS } from 'constants/token';
+import InfoBanner from 'components/InfoBanner';
 import styled from 'styled-components';
-import { FlexDiv } from '../../theme/common';
+import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 

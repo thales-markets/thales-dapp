@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Checkbox from '../../../../components/Checkbox';
-import AssetInfo from '../../../../components/AssetInfo/AssetInfo';
-import { FlexDiv } from '../../../../theme/common';
+import Checkbox from 'components/Checkbox';
+import AssetInfo from 'components/AssetInfo/AssetInfo';
+import { FlexDiv } from 'theme/common';
 import Cookies from 'universal-cookie';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../redux/rootReducer';
-import { getNetworkId } from '../../../../redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
 
 const cookies = new Cookies();
 

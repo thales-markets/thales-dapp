@@ -16,11 +16,10 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM, getIsPolygon } from 'utils/network';
 
 import Currency from 'components/Currency/v2';
-import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import MarketsGrid from '../MarketsGrid';
 import { FlexDivRow } from 'theme/common';
-import TableGridSwitch from '../Input/TableGridSwitch';
-import SearchField from '../Input/SearchField';
+import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
+import SearchField from 'components/TableInputs/SearchField';
 import PriceChart from 'components/Charts/PriceChart';
 import { TablePagination } from '@material-ui/core';
 import SortingMenu from 'components/SortingMenu';
@@ -35,7 +34,7 @@ import { getSynthName } from 'utils/currency';
 
 import './main.scss';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
-import Phase from '../Phase/Phase';
+import Phase from 'components/Phase/Phase';
 import { UI_COLORS } from 'constants/ui';
 
 type MarketsTableProps = {
@@ -45,10 +44,11 @@ type MarketsTableProps = {
 };
 
 import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.svg';
-import AssetsDropdown from '../AssetsDropdown';
+import AssetsDropdown from '../../../../components/AssetsDropdown';
 import OutsideClickHandler from 'react-outside-click-handler';
 import Cookies from 'universal-cookie';
 import { isMobile } from '../../../../utils/device';
+import TimeRemaining from 'components/TimeRemaining';
 
 const FILTERS_LENGTH = 6;
 let scrolling: NodeJS.Timeout;

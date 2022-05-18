@@ -21,11 +21,11 @@ import { truncateAddress } from 'utils/formatters/string';
 import { FlexDiv } from 'theme/common';
 import { Network } from 'utils/network';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { LightMediumTooltip } from 'pages/Token/components/components';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
+import { LightMediumTooltip } from 'components/OldVersion/old-components';
 
 interface HeadCell {
     id: keyof Staker[];

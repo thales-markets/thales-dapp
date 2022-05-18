@@ -15,7 +15,7 @@ import Container from 'pages/AMMTrading/components//TabContainer/styled-componen
 import { FlexDivSpaceBetween } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
-import SearchField from 'pages/Markets/components/Input/SearchField';
+import SearchField from 'components/TableInputs/SearchField';
 import { TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 import UserInfoTradingCompetition from './components/UserInfoTradingCompetition';
 import Tooltip from 'components/Tooltip';

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildRangeMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
-import { CurrencyKey } from 'pages/Markets/components/MarketsCard/MarketCard';
+import { CurrencyKey } from 'components/AssetInfo/AssetInfo';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 // import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 
@@ -56,7 +56,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
                         iconType={assetName.includes('IN') ? 1 : 2}
                     />
                     <StyledComponents.AssetNameContainer>
-                        <CurrencyKey alignSelf={'center'}>{assetName}</CurrencyKey>
+                        <CurrencyKey>{assetName}</CurrencyKey>
                     </StyledComponents.AssetNameContainer>
                 </StyledComponents.AssetInfo>
                 <StyledComponents.SectionContainer>

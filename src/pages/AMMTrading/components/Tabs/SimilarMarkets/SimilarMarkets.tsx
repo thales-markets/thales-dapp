@@ -26,7 +26,7 @@ import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRang
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { CONVERT_TO_6_DECIMALS } from 'constants/token';
 import { POLYGON_ID } from 'constants/network';
-import RangeMarketCard from 'pages/Markets/components/RangeMarketCard';
+import RangeMarketCard from 'components/RangeMarketCard';
 
 const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) => {
     const marketInfo = marketType !== MARKET_TYPE[1] ? useMarketContext() : useRangedMarketContext();

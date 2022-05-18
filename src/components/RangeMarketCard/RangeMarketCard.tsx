@@ -1,7 +1,7 @@
 import { currencyKeyToDataFeedSourceMap } from 'constants/currency';
-import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
+import RangeIllustration from 'components/RangeIllustration';
 import React from 'react';
-import { RangedMarketData } from 'types/options';
+import { RangedMarketData, RangedMarketUI } from 'types/options';
 import {
     AssetContainer,
     AssetNameContainer,
@@ -9,7 +9,7 @@ import {
     LightHeaderText,
     MarketStatus,
     StrongHeaderText,
-} from '../MarketsCard/MarketCard';
+} from '../../pages/Markets/components/MarketsCard/MarketCard';
 import PhaseComponent from '../Phase/Phase';
 import { CardFooter, CardHeader, HeaderContainer, MiddleContrainer, Wrapper } from './styled-components';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
@@ -18,7 +18,6 @@ import { useTranslation } from 'react-i18next';
 import { formatShortDate } from 'utils/formatters/date';
 import { UI_COLORS } from 'constants/ui';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import { RangedMarketUI } from 'pages/RangeMarkets/RangeMarkets';
 
 type RangeMarketCardProps = {
     data: RangedMarketData | RangedMarketUI;

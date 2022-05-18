@@ -21,12 +21,12 @@ import { getEtherscanAddressLink } from 'utils/etherscan';
 import { Network } from 'utils/network';
 import { FIRST_COUNCIL_ELECTIONS_ID, ProposalTypeEnum } from 'constants/governance';
 import { useTranslation } from 'react-i18next';
-import { LightMediumTooltip } from 'pages/Token/components/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';
+import { LightMediumTooltip } from 'components/OldVersion/old-components';
 
 type HistoryProps = {
     proposal: Proposal;

@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
-import { GridFilters } from 'types/options';
+import { GridFilters, RangedMarketUI } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { FlexDiv } from 'theme/common';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildRangeMarketLink } from 'utils/routes';
-import { RangedMarketUI } from '../RangeMarkets';
-import RangeMarketCard from 'pages/Markets/components/RangeMarketCard';
+import RangeMarketCard from 'components/RangeMarketCard';
 import { PaginationWrapper } from './RangeMarketsTable';
 
 type MarketsGridProps = {

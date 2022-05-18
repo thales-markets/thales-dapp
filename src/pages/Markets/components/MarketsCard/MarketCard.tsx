@@ -14,7 +14,7 @@ import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatter
 import { formatShortDate } from 'utils/formatters/date';
 // import { getSynthName } from 'utils/currency';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
-import PhaseComponent from '../Phase/Phase';
+import PhaseComponent from 'components/Phase/Phase';
 import Tooltip from 'components/Tooltip';
 
 type MarketCardPros = {

@@ -5,7 +5,6 @@ import SPAAnchor from 'components/SPAAnchor';
 import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
 import { orderBy } from 'lodash';
-import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +17,8 @@ import Card from '../styled-components/Card';
 import SimpleLoader from 'components/SimpleLoader';
 import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
-import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
+import RangeIllustration from 'components/RangeIllustration';
+import TimeRemaining from 'components/TimeRemaining';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
