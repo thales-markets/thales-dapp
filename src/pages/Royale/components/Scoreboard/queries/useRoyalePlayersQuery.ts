@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { NetworkId } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { truncateAddress } from 'utils/formatters/string';
 

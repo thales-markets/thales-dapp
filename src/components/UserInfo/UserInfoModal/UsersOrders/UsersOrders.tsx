@@ -34,9 +34,7 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
+    const collateral = snxJSConnector.collateral;
 
     const ordersQuery = useUserOrdersQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -48,7 +46,7 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                 if (market.phase === 'trading' && Array.isArray(ordersQuery.data)) {
                     const userOrdersForMarket: [] = ordersQuery.data.reduce((temp: any, order: any) => {
                         const odrerData: OrderData = order.data;
-                        const isBuy: boolean = odrerData.makerAsset.toLowerCase() === SynthsUSD.address.toLowerCase();
+                        const isBuy: boolean = odrerData.makerAsset.toLowerCase() === collateral?.address.toLowerCase();
                         let isLong = false;
                         if (
                             (isBuy && market.longAddress.toLowerCase() === odrerData.takerAsset.toLowerCase()) ||

@@ -12,8 +12,6 @@
         "@metamask/detect-provider": "^1.2.0",
         "@reduxjs/toolkit": "^1.5.0",
         "@snapshot-labs/snapshot.js": "^0.3.0",
-        "@synthetixio/contracts-interface": "2.47.0-ovm.5",
-        "@synthetixio/providers": "2.47.0-ovm.5",
         "@testing-library/jest-dom": "^5.11.9",
         "@testing-library/react": "^11.2.5",
         "@testing-library/user-event": "^12.8.1",

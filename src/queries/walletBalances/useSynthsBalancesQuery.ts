@@ -48,11 +48,9 @@ const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, opt
                     usdBalance: totalBalanceResults ? bigNumberFormatter(totalBalanceResults) : 0,
                 };
             } else {
-                const {
-                    contracts: { SynthsUSD },
-                } = snxJSConnector.snxJS as any;
+                const collateral = snxJSConnector.collateral;
 
-                let usdBalance = await SynthsUSD.balanceOf(walletAddress);
+                let usdBalance = await collateral?.balanceOf(walletAddress);
 
                 usdBalance = Number(ethers.utils.formatUnits(usdBalance)) * (networkId === POLYGON_ID ? 10e11 : 1);
 

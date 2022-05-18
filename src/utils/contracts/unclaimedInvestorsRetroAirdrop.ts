@@ -1,18 +1,17 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
+import { Network } from 'utils/network';
 
 export const airdrop = {
     addresses: {
-        [NetworkId.Mainnet]: '0x4f896abE9E28C2Db248a8DdAC205ca1cf84A2771',
-        [NetworkId.Ropsten]: 'TBD',
-        [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x686525728323b10bF611C6d260604c02946792ab',
+        [Network.Mainnet]: '0x4f896abE9E28C2Db248a8DdAC205ca1cf84A2771',
+        [Network.Ropsten]: 'TBD',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: '0x686525728323b10bF611C6d260604c02946792ab',
         // added to resolve error with typings
-        [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: 'TBD',
-        [POLYGON_MUMBAI_ID]: 'TBD',
-        [POLYGON_ID]: 'TBD',
+        [Network.Goerli]: '', // TODO: goerli network remove or implement
+        [Network['Mainnet-Ovm']]: 'TBD',
+        [Network['Kovan-Ovm']]: 'TBD',
+        [Network['POLYGON-MUMBAI']]: 'TBD',
+        [Network['POLYGON-MAINNET']]: 'TBD',
     },
     abi: [
         {

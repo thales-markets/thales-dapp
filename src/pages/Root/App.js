@@ -1,6 +1,5 @@
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { loadProvider } from '@synthetixio/providers';
 import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
@@ -38,6 +37,7 @@ import Cookies from 'universal-cookie';
 // import Whitepaper from '../LandingPage/articles/Whitepaper';
 // import DappLayout from 'layouts/DappLayout';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { ethers } from 'ethers';
 
 const DappLayout = lazy(() => import('layouts/DappLayout'));
 const MainLayout = lazy(() => import('../../components/MainLayout'));
@@ -84,14 +84,15 @@ const App = () => {
             const { networkId, name } = await getEthereumNetwork();
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
-                console.log(snxJSConnector);
+
                 if (!snxJSConnector.initialized) {
                     const provider = loadProvider({
                         networkId,
                         infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
                         provider: window.ethereum,
                     });
-
+                    console.log(process.env.REACT_APP_INFURA_PROJECT_ID);
+                    console.log(provider);
                     const useOvm = getIsOVM(networkId);
 
                     snxJSConnector.setContractSettings({ networkId, provider, useOvm });
@@ -339,6 +340,12 @@ const App = () => {
             </Suspense>
         </QueryClientProvider>
     );
+};
+
+const loadProvider = ({ networkId = 1, infuraId, provider }) => {
+    if (!provider && !infuraId) throw new Error('No web3 provider');
+    if (provider) return new ethers.providers.Web3Provider(provider);
+    if (infuraId) return new ethers.providers.InfuraProvider(networkId, infuraId);
 };
 
 export default App;

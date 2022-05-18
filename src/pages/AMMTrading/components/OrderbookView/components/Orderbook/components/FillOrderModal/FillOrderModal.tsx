@@ -88,9 +88,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const tokenBalance = optionSide === 'long' ? optBalances.long : optBalances.short;
     const baseToken = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
+    const collateral = snxJSConnector.collateral;
 
     const isBuy = orderSide === 'buy';
 
@@ -102,7 +100,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const isButtonDisabled =
         !isAmountEntered || isFilling || !isWalletConnected || insufficientBalance || !hasAllowance;
 
-    const takerToken = isBuy ? baseToken : SynthsUSD.address;
+    const takerToken = isBuy ? baseToken : collateral?.address;
     const takerAmount = isBuy ? amount : Number(order.displayOrder.price) * Number(amount);
     const takerTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
     const addressToApprove = ONE_INCH_CONTRACTS[networkId] || '';

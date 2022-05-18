@@ -17,7 +17,7 @@ import {
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from '@ethersproject/bignumber';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'utils/network';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
@@ -39,7 +39,7 @@ export const NetworkSwitch: React.FC<NetworkSwitchProps> = ({ hideL2DropDown }) 
     };
 
     const switchOrAddOptimismNetwork = async () => {
-        const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? NetworkId['Mainnet-Ovm'];
+        const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network['Mainnet-Ovm'];
         const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
 
         if (typeof window.ethereum !== 'undefined') {

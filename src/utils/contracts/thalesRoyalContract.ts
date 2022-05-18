@@ -1,18 +1,17 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
+import { Network } from 'utils/network';
 
 export const thalesRoyaleContract = {
     addresses: {
-        [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: 'TBD',
-        [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: 'TBD',
+        [Network.Mainnet]: 'TBD',
+        [Network.Ropsten]: 'TBD',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: 'TBD',
         // added to resolve error with typings
-        [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0x3198ab211CdF3E4d13a698E1Fb819507BcA2e579',
-        [NetworkId['Kovan-Ovm']]: '0x5De27390C8280Db5732Ee6aA7f7aBC4e2a476B30',
-        [POLYGON_MUMBAI_ID]: 'TBD',
-        [POLYGON_ID]: 'TBD',
+        [Network.Goerli]: '', // TODO: goerli network remove or implement
+        [Network['Mainnet-Ovm']]: '0x3198ab211CdF3E4d13a698E1Fb819507BcA2e579',
+        [Network['Kovan-Ovm']]: '0x5De27390C8280Db5732Ee6aA7f7aBC4e2a476B30',
+        [Network['POLYGON-MUMBAI']]: 'TBD',
+        [Network['POLYGON-MAINNET']]: 'TBD',
     },
     abi: [
         {

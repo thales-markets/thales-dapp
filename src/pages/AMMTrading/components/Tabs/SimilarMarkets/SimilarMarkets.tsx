@@ -125,7 +125,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
         return [];
     }, [rangedMarketsQuery.isLoading]);
 
-    const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery({
         enabled: isAppReady && (optionsMarkets.length > 0 || rangedMarkets?.length > 0),
         refetchInterval: false,
     });

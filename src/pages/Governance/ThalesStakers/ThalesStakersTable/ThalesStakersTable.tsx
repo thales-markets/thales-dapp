@@ -19,7 +19,7 @@ import { ArrowIconMedium, Blockie, LoaderContainer, StyledLink } from 'pages/Gov
 import makeBlockie from 'ethereum-blockies-base64';
 import { truncateAddress } from 'utils/formatters/string';
 import { FlexDiv } from 'theme/common';
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'utils/network';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { LightMediumTooltip } from 'pages/Token/components/components';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -199,7 +199,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                                     <StakerRow key={index}>
                                         <StyledTableCell style={{ padding: `10px 10px 10px ${isMobile ? 10 : 30}px` }}>
                                             <StyledLink
-                                                href={getEtherscanAddressLink(NetworkId.Mainnet, staker.id)}
+                                                href={getEtherscanAddressLink(Network.Mainnet, staker.id)}
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
@@ -270,7 +270,7 @@ const StakerCell: React.FC<StakerCellProps> = ({ staker }) => {
             const stakerEns = await (snxJSConnector as any).provider.lookupAddress(staker.id);
             setStakerEns(stakerEns);
         };
-        if (networkId === NetworkId.Mainnet) {
+        if (networkId === Network.Mainnet) {
             fetchStakerEns();
         }
     }, [staker]);

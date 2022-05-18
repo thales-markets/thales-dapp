@@ -108,14 +108,12 @@ const LimitOrder: React.FC<LimitOrderProps> = ({
     const baseToken = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const isBuy = orderSide.value === 'buy';
 
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
+    const collateral = snxJSConnector.collateral;
 
-    const makerToken = isBuy ? SynthsUSD.address : baseToken;
+    const makerToken = isBuy ? collateral?.address : baseToken;
     const makerAmount = isBuy ? Number(price) * Number(amount) : amount;
     const makerTokenCurrencyKey = isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide];
-    const takerToken = isBuy ? baseToken : SynthsUSD.address;
+    const takerToken = isBuy ? baseToken : collateral?.address;
     const addressToApprove = ONE_INCH_CONTRACTS[networkId] || '';
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
