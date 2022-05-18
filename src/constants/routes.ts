@@ -14,7 +14,7 @@ export const ROUTES = {
         Overview: '/markets?anchor=overview',
         CreateMarket: '/markets/create-market',
         MarketMatch: '/markets/:marketAddress',
-        RangeMarketMatch: '/range-markets/:marketAddress',
+        RangeMarketMatch: '/ranged-markets/:marketAddress',
         Leaderboard: '/markets/leaderboard',
         TradeHistory: '/markets/trade-history',
         Token: '/token',

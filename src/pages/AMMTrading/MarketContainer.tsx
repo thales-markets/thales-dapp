@@ -23,7 +23,7 @@ const MarketContainer: React.FC<MarketContainerProps> = (props) => {
         const { params } = props.match;
 
         if (!params?.marketAddress) {
-            if (props?.location?.pathname?.includes('range-markets')) {
+            if (props?.location?.pathname?.includes('ranged-markets')) {
                 navigateTo(ROUTES.Options.RangeMarkets);
                 return;
             }
@@ -32,7 +32,7 @@ const MarketContainer: React.FC<MarketContainerProps> = (props) => {
 
         let contract: ethers.Contract | undefined = undefined;
 
-        if (props?.location?.pathname?.includes('range-markets')) {
+        if (props?.location?.pathname?.includes('ranged-markets')) {
             setRangedMarketFlag(true);
             contract = new ethers.Contract(
                 params?.marketAddress,
