@@ -4,10 +4,6 @@ import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
-// import TokenPage from 'pages/Token/Token.tsx';
-// import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
-// import Profile from 'pages/Profile/Profile.tsx';
-// import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -26,13 +22,13 @@ import {
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 import Cookies from 'universal-cookie';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { ethers } from 'ethers';
 
-const DappLayout = lazy(() => import('layouts/DappLayout'));
-const MainLayout = lazy(() => import('../../components/MainLayout'));
+const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
+const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
 
 const OptionsCreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../Options/CreateMarket'));
 const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage/Home'));

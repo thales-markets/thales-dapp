@@ -6,10 +6,10 @@ import stateEmpty from 'assets/images/state-empty.svg';
 import styled from 'styled-components';
 import './media.scss';
 import { useTranslation } from 'react-i18next';
-import { getStableCoinForNetwork } from '../../../../utils/currency';
+import { getStableCoinForNetwork } from 'utils/currency';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../redux/rootReducer';
-import { getNetworkId } from '../../../../redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
 import { PositionType } from '../CreateMarket';
 
 type ProgressTrackerProps = {

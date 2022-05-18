@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useInterval from 'hooks/useInterval';
-import { CurrencyKey } from './MarketCard';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
@@ -11,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
+import { CurrencyKey } from 'components/AssetInfo/AssetInfo';
 
 export type HotMarket = {
     fullAssetName?: string;
@@ -45,7 +45,7 @@ const HotMarketCard: React.FC<HotMarket> = ({
                 <StyledComponents.AssetInfo>
                     <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
                     <StyledComponents.AssetNameContainer>
-                        <CurrencyKey alignSelf={'center'}>{assetName}</CurrencyKey>
+                        <CurrencyKey>{assetName}</CurrencyKey>
                     </StyledComponents.AssetNameContainer>
                 </StyledComponents.AssetInfo>
                 <StyledComponents.SectionContainer>

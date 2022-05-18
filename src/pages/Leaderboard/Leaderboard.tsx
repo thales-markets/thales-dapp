@@ -10,16 +10,14 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
-import Container from 'pages/AMMTrading/components//TabContainer/styled-components/Container';
 
 import { FlexDivSpaceBetween } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import { orderBy } from 'lodash';
 import SearchField from 'components/TableInputs/SearchField';
-import { TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 import UserInfoTradingCompetition from './components/UserInfoTradingCompetition';
 import Tooltip from 'components/Tooltip';
-import {
+import Container, {
     CustomTableHeader,
     FormContainer,
     Gain,
@@ -33,6 +31,8 @@ import {
 import { buildHref, navigateTo } from '../../utils/routes';
 import ROUTES from '../../constants/routes';
 import MobileDropdownMenu from 'components/MobileDropdownMenu';
+import { LightTooltip } from 'components/OldVersion/old-components';
+import { ReactComponent as AssetIcon } from 'assets/images/asset.svg';
 
 type Competition = 'byNetProfit' | 'percetangeGain';
 
@@ -454,5 +454,16 @@ const getRewardsTooltipMessage = (position: number, competitionType: Competition
 
     return '';
 };
+
+const TooltipAssetIcon: React.FC<any> = ({ title, styleProps }) => (
+    <LightTooltip title={<span className="text-xxxs">{title}</span>}>
+        <AssetIcon
+            style={{ border: '1px solid #04045A', borderRadius: '50%', cursor: 'pointer', padding: 1, ...styleProps }}
+            width="12"
+            height="12"
+            className="tooltip-icon"
+        />
+    </LightTooltip>
+);
 
 export default Leaderboard;

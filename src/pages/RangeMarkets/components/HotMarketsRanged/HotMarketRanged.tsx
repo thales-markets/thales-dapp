@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useInterval from 'hooks/useInterval';
-// import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -12,7 +11,6 @@ import { buildRangeMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
 import { CurrencyKey } from 'components/AssetInfo/AssetInfo';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
-// import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 
 export type HotRangedMarket = {
     fullAssetName?: string;

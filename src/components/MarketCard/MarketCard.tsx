@@ -139,14 +139,14 @@ const RightContainer = styled.div`
     width: 50%;
 `;
 
-export const AssetContainer = styled.div`
+const AssetContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: start;
     // align-items: center;
 `;
 
-export const AssetNameContainer = styled.div`
+const AssetNameContainer = styled.div`
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -155,17 +155,7 @@ export const AssetNameContainer = styled.div`
     color: var(--primary-color) !important;
 `;
 
-export const AssetName = styled.span`
-    font-family: Roboto !important;
-    font-style: normal;
-    display: block;
-    font-weight: 300;
-    font-size: 15px;
-    text-transform: uppercase;
-    line-height: 110%;
-`;
-
-export const CurrencyKey = styled.span<{ alignSelf?: string }>`
+const CurrencyKey = styled.span<{ alignSelf?: string }>`
     display: flex;
     flex-direction: row;
     ${(_props) => (_props?.alignSelf ? `align-self: ${_props?.alignSelf}` : '')};
@@ -176,7 +166,7 @@ export const CurrencyKey = styled.span<{ alignSelf?: string }>`
     font-weight: 700;
 `;
 
-export const MarketStatus = styled.span`
+const MarketStatus = styled.span`
     font-family: Roboto !important;
     font-style: normal;
     font-size: 7px;
@@ -184,7 +174,7 @@ export const MarketStatus = styled.span`
     line-height: 18px;
 `;
 
-export const LightHeaderText = styled.span`
+const LightHeaderText = styled.span`
     display: flex;
     flex-direction: row;
     color: var(--primary-color);
@@ -194,7 +184,7 @@ export const LightHeaderText = styled.span`
     font-size: 14px;
 `;
 
-export const StrongHeaderText = styled(LightHeaderText)<{ color?: string }>`
+const StrongHeaderText = styled(LightHeaderText)<{ color?: string }>`
     ${(_props) => (_props?.color ? `color: ${_props.color};` : '')}
     font-size: 25px;
     font-weight: 700;

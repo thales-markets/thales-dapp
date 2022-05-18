@@ -19,7 +19,7 @@ import {
 } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
-import NetworkFees from '../components/NetworkFees';
+import NetworkFees from './NetworkFees';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import Currency from 'components/Currency';
