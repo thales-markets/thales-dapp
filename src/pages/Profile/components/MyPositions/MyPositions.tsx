@@ -106,7 +106,15 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     width="36px"
                                                     height="36px"
                                                     currencyKey={data.market.currencyKey}
-                                                    iconType={!data.range ? 0 : data.balances.type === 'IN' ? 1 : 2}
+                                                    iconType={
+                                                        !data.range
+                                                            ? data?.balances?.type === 'UP'
+                                                                ? 4
+                                                                : 5
+                                                            : data?.balances?.type === 'IN'
+                                                            ? 1
+                                                            : 2
+                                                    }
                                                 />
                                                 <Card.Section>
                                                     <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
