@@ -181,7 +181,7 @@
         },
         "sidebar": {
             "markets": "Markets",
-            "ranged-markets": "Range Markets",
+            "ranged-markets": "Ranged Markets",
             "trending-label": "Trending markets",
             "overview-label": "Markets overview",
             "olympics-label": "Olympics markets",
@@ -232,7 +232,9 @@
             "display-name": "Display Name",
             "change-display-name": "Change Display Name"
         },
-        "no-data-available": "No data available"
+        "no-data-available": "No data available",
+        "all": "All",
+        "none": "none"
     },
     "modals": {
         "gwei": {

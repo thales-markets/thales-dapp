@@ -36,6 +36,7 @@ import './main.scss';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import Phase from 'components/Phase/Phase';
 import { UI_COLORS } from 'constants/ui';
+import { sortCurrencies } from 'utils/currency';
 
 type MarketsTableProps = {
     exchangeRates: Rates | null;
@@ -107,6 +108,14 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         t(`options.home.markets-table.menu.only-liquid`),
         t(`options.home.markets-table.menu.all`),
     ];
+
+    const safeSetSelectedAssets = useCallback(
+        (assets) => {
+            setSelectedAssets(assets);
+            setAssetFilters(assetFilters.filter((filter) => assets.includes(filter)));
+        },
+        [setSelectedAssets, setAssetFilters, assetFilters]
+    );
 
     const updateSortOptions = (index: number) => {
         const newSortOptions = [...sortOptions];
@@ -297,26 +306,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 return market;
             });
 
-        const result = new Set(
-            Array.from(set)
-                .sort((a, b) => {
-                    if (a === 'BTC' || a === 'sBTC') return -1;
-                    if (b === 'BTC' || b === 'sETH') return 1;
-                    if (a === 'ETH' || a === 'sETH') return -1;
-                    if (b === 'ETH' || b === 'sETH') return 1;
-
-                    if (a === 'SNX' || a === 'sSNX') return -1;
-                    if (b === 'SNX' || b === 'sSNX') return 1;
-                    if (a === 'LINK' || a === 'sLINK') return -1;
-                    if (b === 'LINK' || b === 'sLINK') return 1;
-
-                    if (a < b) return -1;
-                    if (a > b) return 1;
-
-                    return 0;
-                })
-                .slice(0, 11)
-        );
+        const result = new Set(Array.from(set).sort(sortCurrencies).slice(0, 11));
 
         const selectedAssetsCookie = cookies.get('selectedAssets' + networkId);
 
@@ -447,12 +437,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                                         className={assetFilters.includes(value) ? 'active' : ''}
                                         onClick={() => {
                                             if (assetFilters.includes(value)) {
-                                                const array = [...assetFilters];
-                                                const index = array.indexOf(value);
-                                                if (index !== -1) {
-                                                    array.splice(index, 1);
-                                                }
-                                                setAssetFilters(array);
+                                                setAssetFilters(assetFilters.filter((asset) => asset !== value));
                                             } else {
                                                 setAssetFilters([...assetFilters, value]);
                                             }
@@ -490,7 +475,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                                     assets={[...(allAssets as any)]}
                                     cookieKey={'selectedAssets'}
                                     selectedAssets={selectedAssets}
-                                    setSelectedAssets={setSelectedAssets}
+                                    setSelectedAssets={safeSetSelectedAssets}
                                 />
                             )}
                         </AssetsDropdownContainer>
