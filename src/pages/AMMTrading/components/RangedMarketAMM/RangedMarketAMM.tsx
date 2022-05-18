@@ -158,11 +158,12 @@ const AMM: React.FC = () => {
     const isPriceEntered = Number(price) > 0;
     const isTotalEntered = Number(total) > 0;
     const isAmmTradingDisabled =
-        ammMaxLimits &&
-        !ammMaxLimits.in.maxBuy &&
-        !ammMaxLimits.in.maxSell &&
-        !ammMaxLimits.out.maxBuy &&
-        !ammMaxLimits.out.maxSell;
+        (ammMaxLimits &&
+            !ammMaxLimits.in.maxBuy &&
+            !ammMaxLimits.in.maxSell &&
+            !ammMaxLimits.out.maxBuy &&
+            !ammMaxLimits.out.maxSell) ||
+        !ammMaxLimits;
 
     const insufficientBalance = isBuy
         ? sUSDBalance < Number(total) || !sUSDBalance
