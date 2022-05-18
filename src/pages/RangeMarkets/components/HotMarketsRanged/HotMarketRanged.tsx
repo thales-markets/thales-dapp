@@ -62,9 +62,9 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
                 <StyledComponents.SectionContainer>
                     <StyledComponents.Header>{t('options.market.ranged-markets.strike-range')}</StyledComponents.Header>
                     <StyledComponents.SubHeader>
-                        {`< ${formatCurrencyWithSign(USD_SIGN, rightPrice, 2)}`}
-                        <br />
                         {`> ${formatCurrencyWithSign(USD_SIGN, leftPrice, 2)}`}
+                        <br />
+                        {`< ${formatCurrencyWithSign(USD_SIGN, rightPrice, 2)}`}
                     </StyledComponents.SubHeader>
                     {/* <RangeIllustration
                         priceData={{
