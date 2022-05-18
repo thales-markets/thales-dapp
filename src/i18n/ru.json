@@ -238,7 +238,9 @@
         "long": "длинная",
         "short": "короткая",
         "no-data-available": "Данные недоступны",
-        "select-deselect-all": "Выбрать/Отменить выбор всего"
+        "select-deselect-all": "Выбрать/Отменить выбор всего",
+        "all": "Все",
+        "none": "никто"
     },
     "modals": {
         "gwei": {
