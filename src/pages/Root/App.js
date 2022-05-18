@@ -26,16 +26,8 @@ import {
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
-import snxJSConnector from 'utils/snxJSConnector';
-// import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
-// import GovernancePage from 'pages/Governance';
-// import Leaderboard from 'pages/Leaderboard';
 import Cookies from 'universal-cookie';
-// import Token from '../LandingPage/articles/Token';
-// import Governance from '../LandingPage/articles/Governance';
-// import Whitepaper from '../LandingPage/articles/Whitepaper';
-// import DappLayout from 'layouts/DappLayout';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { ethers } from 'ethers';
 
@@ -60,10 +52,6 @@ const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '.
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
 const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
-// import TokenPage from 'pages/Token/Token.tsx';
-// import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
-// import Profile from 'pages/Profile/Profile.tsx';
-// import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
@@ -72,6 +60,7 @@ const App = () => {
     // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const { trackPageView } = useMatomo();
+    const [snxJSConnector, setSnxJSConnector] = useState();
 
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
@@ -85,19 +74,22 @@ const App = () => {
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
 
-                if (!snxJSConnector.initialized) {
-                    const provider = loadProvider({
-                        networkId,
-                        infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-                        provider: window.ethereum,
-                    });
-                    console.log(process.env.REACT_APP_INFURA_PROJECT_ID);
-                    console.log(provider);
-                    const useOvm = getIsOVM(networkId);
+                if (!snxJSConnector) {
+                    import('utils/snxJSConnector').then((snx) => {
+                        const provider = loadProvider({
+                            networkId,
+                            infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
+                            provider: window.ethereum,
+                        });
 
-                    snxJSConnector.setContractSettings({ networkId, provider, useOvm });
+                        const useOvm = getIsOVM(networkId);
+
+                        snx.default.setContractSettings({ networkId, provider, useOvm });
+
+                        setSnxJSConnector(snx.default);
+                        dispatch(setAppReady());
+                    });
                 }
-                dispatch(setAppReady());
             } catch (e) {
                 dispatch(setAppReady());
                 console.log(e);
