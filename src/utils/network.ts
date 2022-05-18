@@ -1,7 +1,9 @@
+import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
+import { serializeTransaction } from 'ethers/lib/utils';
 
 export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137;
 
@@ -116,23 +118,23 @@ export const formatGasLimit = (gasEstimate: ethers.BigNumber | number, networkId
 export const formatL2GasLimit = (gasEstimate: ethers.BigNumber | number): number =>
     normalizeL2GasLimit(Number(gasEstimate));
 
-export const getL1FeeInWei = async (_txRequest: any) => {
-    // const OVM_GasPriceOracle = getContractFactory('OVM_GasPriceOracle', (snxJSConnector as any).signer).attach(
-    //     predeploys.OVM_GasPriceOracle
-    // );
-    // const unsignedTx = (await (snxJSConnector as any).signer.populateTransaction(txRequest)) as UnsignedTransaction;
-    // if (unsignedTx) {
-    //     const serializedTx = serializeTransaction({
-    //         nonce: unsignedTx.nonce ? parseInt(unsignedTx.nonce.toString(10), 10) : 0,
-    //         value: unsignedTx.value,
-    //         gasPrice: unsignedTx.gasPrice,
-    //         gasLimit: unsignedTx.gasLimit,
-    //         to: unsignedTx.to,
-    //         data: unsignedTx.data,
-    //     });
-    //     const l1FeeInWei = await OVM_GasPriceOracle.getL1Fee(serializedTx);
-    //     return l1FeeInWei.toNumber();
-    // }
+export const getL1FeeInWei = async (txRequest: any, snxJSConnector: any) => {
+    const OVM_GasPriceOracle = getContractFactory('OVM_GasPriceOracle', (snxJSConnector as any).signer).attach(
+        predeploys.OVM_GasPriceOracle
+    );
+    const unsignedTx = (await (snxJSConnector as any).signer.populateTransaction(txRequest)) as UnsignedTransaction;
+    if (unsignedTx) {
+        const serializedTx = serializeTransaction({
+            nonce: unsignedTx.nonce ? parseInt(unsignedTx.nonce.toString(10), 10) : 0,
+            value: unsignedTx.value,
+            gasPrice: unsignedTx.gasPrice,
+            gasLimit: unsignedTx.gasLimit,
+            to: unsignedTx.to,
+            data: unsignedTx.data,
+        });
+        const l1FeeInWei = await OVM_GasPriceOracle.getL1Fee(serializedTx);
+        return l1FeeInWei.toNumber();
+    }
     return 1;
 };
 

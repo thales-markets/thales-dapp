@@ -135,7 +135,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                 fillOrderData.takerAmount,
                 fillOrderData.threshold
             );
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {

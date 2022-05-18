@@ -258,7 +258,7 @@ export const CreateMarket: React.FC = () => {
                     false,
                     ZERO_ADDRESS
                 );
-                return getL1FeeInWei(txRequest);
+                return getL1FeeInWei(txRequest, snxJSConnector);
             };
 
             const fetchGasLimit = async () => {

@@ -52,7 +52,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
     useEffect(() => {
         const fetchL1FeeUnstake = async (lpStakingRewardsContractWithSigner: any, amount: any) => {
             const txRequest = await lpStakingRewardsContractWithSigner.populateTransaction.withdraw(amount);
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {

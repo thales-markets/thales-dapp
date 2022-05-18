@@ -127,7 +127,7 @@ const Mint: React.FC = () => {
     useEffect(() => {
         const fetchL1Fee = async (BOMContractWithSigner: any, mintAmount: any) => {
             const txRequest = await BOMContractWithSigner.populateTransaction.mint(mintAmount);
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {
