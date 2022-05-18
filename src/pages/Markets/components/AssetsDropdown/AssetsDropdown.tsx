@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
 import { getNetworkId } from '../../../../redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
+import { sortCurrencies } from 'utils/currency';
 
 const cookies = new Cookies();
 
@@ -53,33 +54,38 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
                     </Selection>
                 </SelectAllRow>
             </StyledFlexDiv>
-            {assets.map((asset) => (
-                <StyledFlexDiv key={asset}>
-                    <Checkbox
-                        checked={selectedAssets.includes(asset)}
-                        value={''}
-                        onChange={(e: any) => {
-                            const checked = e.target.checked;
-                            if (checked) {
-                                const newSelectedAssets = [...selectedAssets, asset];
-                                setSelectedAssets(newSelectedAssets);
-                                cookies.set(cookieKey + networkId, newSelectedAssets);
-                            } else {
-                                const newSelectedAssets = selectedAssets.filter((a) => a !== asset);
-                                setSelectedAssets(newSelectedAssets);
-                                cookies.set(cookieKey + networkId, newSelectedAssets);
-                            }
-                        }}
-                    />
-                    <AssetInfo
-                        currencyKey={asset}
-                        displayInRow={true}
-                        hideFullName={true}
-                        logoSize={'40px'}
-                        displayInRowMobile={true}
-                    />
-                </StyledFlexDiv>
-            ))}
+            <AssetsContainer>
+                {assets.map((asset) => (
+                    <StyledFlexDiv key={asset}>
+                        <Checkbox
+                            checked={selectedAssets.includes(asset)}
+                            value={''}
+                            onChange={(e: any) => {
+                                const checked = e.target.checked;
+                                if (checked) {
+                                    const newSelectedAssets = [...selectedAssets, asset].sort(sortCurrencies);
+                                    setSelectedAssets(newSelectedAssets);
+                                    cookies.set(cookieKey + networkId, newSelectedAssets);
+                                } else {
+                                    const newSelectedAssets = selectedAssets
+                                        .filter((a) => a !== asset)
+                                        .sort(sortCurrencies);
+                                    setSelectedAssets(newSelectedAssets);
+                                    cookies.set(cookieKey + networkId, newSelectedAssets);
+                                }
+                            }}
+                        />
+                        <AssetInfo
+                            currencyKeyFontSize={'15px'}
+                            currencyKey={asset}
+                            displayInRow={true}
+                            hideFullName={true}
+                            logoSize={'40px'}
+                            displayInRowMobile={true}
+                        />
+                    </StyledFlexDiv>
+                ))}
+            </AssetsContainer>
         </Container>
     );
 };
@@ -110,13 +116,18 @@ const StyledFlexDiv = styled(FlexDiv)`
 const SelectAllRow = styled.span`
     width: 100%;
     text-transform: uppercase;
-    font-size: 14px;
+    font-size: 15px;
     padding-bottom: 10px;
 `;
 
 const Selection = styled.span`
     color: #64d9fe;
     cursor: pointer;
+`;
+
+const AssetsContainer = styled.div`
+    height: 250px;
+    overflow: auto;
 `;
 
 export default AssetsDropdown;
