@@ -44,7 +44,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 
     const AssetIcon = getAssetIcon(currencyKey);
 
-    let badgeColor = UI_COLORS.RANGE;
+    let badgeColor = UI_COLORS.OUT_COLOR;
 
     switch (iconType) {
         case IconType.IN:
@@ -54,7 +54,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
             badgeColor = UI_COLORS.OUT_COLOR;
             break;
         case IconType.Range:
-            badgeColor = UI_COLORS.RANGE;
+            badgeColor = UI_COLORS.OUT_COLOR;
             break;
         case IconType.UP:
             badgeColor = UI_COLORS.GREEN;

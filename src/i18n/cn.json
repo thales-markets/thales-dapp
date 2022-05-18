@@ -812,7 +812,8 @@
                         "success-label": "无需行权",
                         "confirmation-message": "已成功执行选项"
                     },
-                    "exercise-options": "您可以行使以下选项"
+                    "exercise-options": "您可以行使以下选项",
+                    "nothing-to-exercise": "你没有位置可以锻炼。"
                 }
             },
             "trade-options": {

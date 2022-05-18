@@ -812,7 +812,8 @@
                         "success-label": "Нечего исполнять",
                         "confirmation-message": "Опционы успешно исполненны"
                     },
-                    "exercise-options": "Вы можете использовать следующие варианты"
+                    "exercise-options": "Вы можете использовать следующие варианты",
+                    "nothing-to-exercise": "У вас нет позиций для упражнений."
                 }
             },
             "trade-options": {
