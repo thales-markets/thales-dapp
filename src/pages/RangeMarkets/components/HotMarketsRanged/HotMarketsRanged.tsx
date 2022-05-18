@@ -109,7 +109,7 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
             <Title>
                 {t('options.home.hot-markets.most-profitable-markets')}
                 <Tooltip
-                    message={t('options.home.hot-markets.tooltip-text')}
+                    message={t('options.home.hot-markets.range-markets-tooltip-text')}
                     type={'info'}
                     iconColor={'var(--table-header-text-color)'}
                     placement={'right'}

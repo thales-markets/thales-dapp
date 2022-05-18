@@ -361,7 +361,8 @@
             },
             "hot-markets": {
                 "tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买当前具有最高潜在利润的位置代币。",
-                "most-profitable-markets": "最赚钱的市场"
+                "most-profitable-markets": "最赚钱的市场",
+                "range-markets-tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买目前具有最高潜在利润的远程定位代币。"
             },
             "polygon-trading-competition-2": " 点击<bold>这里</bold>了解更多",
             "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播"
@@ -735,7 +736,8 @@
                 "final-result": "最后结果",
                 "position-value": "职位价值",
                 "amm-liquidity-tooltip": "当前可用数量的 UP 和 DOWN 代币。",
-                "no-similar-markets": "该资产没有市场且到期日相同。"
+                "no-similar-markets": "该资产没有市场且到期日相同。",
+                "range-amm-liquidity-tooltip": "当前可用数量的 IN 和 OUT 代币。"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
