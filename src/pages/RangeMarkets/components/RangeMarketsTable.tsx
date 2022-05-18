@@ -331,7 +331,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                 row?.original?.phase.includes(filterValue) ||
                 row?.original?.inPrice.includes(filterValue) ||
                 row?.original?.outPrice.includes(filterValue) ||
-                row?.original?.strikePrice.toFixed(2).includes(filterValue)
+                row?.original?.strikePrice.includes(filterValue)
         );
     }, []);
 
