@@ -85,15 +85,22 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
             asc: false,
         },
     ];
+
+    const showOnlyLiquidFromCookie = cookies.get('showOnlyLiquidRanged' + networkId);
+    const tableViewFromCookie = cookies.get('showTableViewRanged' + networkId);
+
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
     const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
     const [sortOptions, setSortOptions] = useState(GridSortFilters);
-    const [tableView, setTableView] = useState<boolean>(window.innerWidth > 1250);
+    const [tableView, setTableView] = useState<boolean>(
+        tableViewFromCookie !== undefined ? (tableViewFromCookie === 'false' ? false : true) : window.innerWidth > 1250
+    );
     const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
     const [assetFilters, setAssetFilters] = useState<string[]>([]);
-    const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(true);
+    const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(
+        showOnlyLiquidFromCookie !== undefined ? (showOnlyLiquidFromCookie === 'false' ? false : true) : true
+    );
     const [assetsDropdownOpen, setAssetsDropdownOpen] = useState<boolean>(false);
-    // const [dataCount, setDataCount] = useState<number>(0);
 
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
     const liquidSwitchLabels = [
@@ -310,6 +317,23 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         return processedMarkets;
     }, [optionsMarkets, showOnlyLiquid, assetFilters]);
 
+    // Get/Set asset and other filters in/from cookie
+    useEffect(() => {
+        const chosenAsset = cookies.get('chosenAssetRanged' + networkId);
+
+        if (assetFilters?.length && assetFilters !== chosenAsset) {
+            cookies.set('chosenAssetRanged' + networkId, assetFilters?.length ? assetFilters : '');
+        }
+
+        if (showOnlyLiquidFromCookie !== showOnlyLiquid || showOnlyLiquidFromCookie == undefined) {
+            cookies.set('showOnlyLiquidRanged' + networkId, showOnlyLiquid);
+        }
+
+        if (tableViewFromCookie !== tableView || tableViewFromCookie == undefined) {
+            cookies.set('showTableViewRanged' + networkId, tableView);
+        }
+    }, [assetFilters, showOnlyLiquid, tableView]);
+
     // Custom global search filter -> useTable
     const ourGlobalFilterFunction = useCallback((rows: any, _columnIds: string[], filterValue: any) => {
         if (!filterValue) return rows;
@@ -371,6 +395,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
 
     useEffect(() => {
         setPageSize(20);
+        const chosenAsset = cookies.get('chosenAssetRanged' + networkId);
+        chosenAsset ? setAssetFilters(chosenAsset) : '';
     }, []);
 
     const filters = useMemo(() => {
