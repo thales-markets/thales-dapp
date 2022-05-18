@@ -233,7 +233,8 @@
             "change-display-name": "Change Display Name"
         },
         "no-data-available": "No data available",
-        "select-deselect-all": "Select/Deselect All"
+        "all": "All",
+        "none": "none"
     },
     "modals": {
         "gwei": {

@@ -30,23 +30,28 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
     return (
         <Container>
             <StyledFlexDiv key={'select-all'}>
-                <Checkbox
-                    checked={assets.length === selectedAssets.length}
-                    value={''}
-                    onChange={(e: any) => {
-                        const checked = e.target.checked;
-                        if (checked) {
+                <SelectAllRow>
+                    {t('common.select')}{' '}
+                    <Selection
+                        onClick={() => {
                             const newSelectedAssets = [...assets];
                             setSelectedAssets(newSelectedAssets);
                             cookies.set(cookieKey + networkId, newSelectedAssets);
-                        } else {
+                        }}
+                    >
+                        {t('common.all')}
+                    </Selection>
+                    {' / '}
+                    <Selection
+                        onClick={() => {
                             const newSelectedAssets = [] as string[];
                             setSelectedAssets(newSelectedAssets);
                             cookies.set(cookieKey + networkId, newSelectedAssets);
-                        }
-                    }}
-                />
-                <SelectAllRow>{t('common.select-deselect-all')}</SelectAllRow>
+                        }}
+                    >
+                        {t('common.none')}
+                    </Selection>
+                </SelectAllRow>
             </StyledFlexDiv>
             {assets.map((asset) => (
                 <StyledFlexDiv key={asset}>
@@ -73,7 +78,6 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
                         logoSize={'40px'}
                         displayInRowMobile={true}
                     />
-                    {asset}
                 </StyledFlexDiv>
             ))}
         </Container>
@@ -89,6 +93,7 @@ const Container = styled.div`
     z-index: 2;
     padding: 20px;
     color: var(--primary-color) !important;
+    width: 200px;
     @media (max-width: 768px) {
         top: 0;
         right: 0;
@@ -104,10 +109,14 @@ const StyledFlexDiv = styled(FlexDiv)`
 
 const SelectAllRow = styled.span`
     width: 100%;
-    text-align: center;
-    @media (max-width: 768px) {
-        font-size: 15px;
-    }
+    text-transform: uppercase;
+    font-size: 14px;
+    padding-bottom: 10px;
+`;
+
+const Selection = styled.span`
+    color: #64d9fe;
+    cursor: pointer;
 `;
 
 export default AssetsDropdown;
