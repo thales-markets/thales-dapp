@@ -108,6 +108,14 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         t(`options.home.markets-table.menu.all`),
     ];
 
+    const safeSetSelectedAssets = useCallback(
+        (assets) => {
+            setSelectedAssets(assets);
+            setAssetFilters(assetFilters.filter((filter) => assets.includes(filter)));
+        },
+        [setSelectedAssets, setAssetFilters, assetFilters]
+    );
+
     const updateSortOptions = (index: number) => {
         const newSortOptions = [...sortOptions];
 
@@ -447,12 +455,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                                         className={assetFilters.includes(value) ? 'active' : ''}
                                         onClick={() => {
                                             if (assetFilters.includes(value)) {
-                                                const array = [...assetFilters];
-                                                const index = array.indexOf(value);
-                                                if (index !== -1) {
-                                                    array.splice(index, 1);
-                                                }
-                                                setAssetFilters(array);
+                                                setAssetFilters(assetFilters.filter((asset) => asset !== value));
                                             } else {
                                                 setAssetFilters([...assetFilters, value]);
                                             }
@@ -490,7 +493,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                                     assets={[...(allAssets as any)]}
                                     cookieKey={'selectedAssets'}
                                     selectedAssets={selectedAssets}
-                                    setSelectedAssets={setSelectedAssets}
+                                    setSelectedAssets={safeSetSelectedAssets}
                                 />
                             )}
                         </AssetsDropdownContainer>

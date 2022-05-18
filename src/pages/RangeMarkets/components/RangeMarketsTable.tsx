@@ -100,6 +100,14 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         t(`options.home.markets-table.menu.all`),
     ];
 
+    const safeSetSelectedAssets = useCallback(
+        (assets) => {
+            setSelectedAssets(assets);
+            setAssetFilters(assetFilters.filter((filter) => assets.includes(filter)));
+        },
+        [setSelectedAssets, setAssetFilters, assetFilters]
+    );
+
     const updateSortOptions = (index: number) => {
         const newSortOptions = [...sortOptions];
 
@@ -476,7 +484,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                                     assets={[...(allAssets as any)]}
                                     cookieKey={'selectedRangedAssets'}
                                     selectedAssets={selectedAssets}
-                                    setSelectedAssets={setSelectedAssets}
+                                    setSelectedAssets={safeSetSelectedAssets}
                                 />
                             )}
                         </AssetsDropdownContainer>
