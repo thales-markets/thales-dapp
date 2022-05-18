@@ -2,7 +2,14 @@ import styled, { StyledComponent } from 'styled-components';
 
 type Children = {
     Wrapper: any;
-    Column: StyledComponent<'div', any>;
+    Column: StyledComponent<
+        'div',
+        any,
+        {
+            ranged?: boolean | undefined;
+        },
+        never
+    >;
     Row: StyledComponent<'div', any>;
     RowTitle: StyledComponent<'span', any>;
     RowSubtitle: StyledComponent<'span', any>;
@@ -41,13 +48,13 @@ const Card: StyledComponent<'div', any> & Children = styled.div`
         padding: 16px 10px;
     }
 `;
-const CardColumn = styled.div`
+const CardColumn = styled.div<{ ranged?: boolean }>`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     height: 100%;
-    flex: 2;
+    flex: ${(_props) => (_props.ranged ? 'none' : '2')};
 `;
 
 const CardRow = styled.div`

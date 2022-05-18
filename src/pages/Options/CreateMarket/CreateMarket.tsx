@@ -40,10 +40,10 @@ import {
     ShortInputContainer,
     SliderContainer,
     SliderRange,
-} from '../Market/components';
+    CheckboxContainer,
+} from 'components/OldVersion/old-components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
-import NumericInput from '../Market/components/NumericInput';
-import { CheckboxContainer } from '../Market/TradeOptions/MintOptions/MintOptions';
+import NumericInput from 'components/NumericInput';
 import { COLORS } from 'constants/ui';
 import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';

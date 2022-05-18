@@ -1,4 +1,4 @@
-import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { DefaultSubmitButton } from '../components';
 import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';

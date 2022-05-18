@@ -202,7 +202,8 @@
             "amm-reporting-label": "AMM报告",
             "markets": "市场",
             "profile-label": "轮廓",
-            "exotic-markets-label": "异国市场"
+            "exotic-markets-label": "异国市场",
+            "ranged-markets": "范围市场"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -236,7 +237,8 @@
         "no-data": "没有任何数据可显示",
         "long": "长",
         "short": "短的",
-        "no-data-available": "无可用数据"
+        "no-data-available": "无可用数据",
+        "select-deselect-all": "全选/取消全选"
     },
     "modals": {
         "gwei": {
@@ -348,7 +350,8 @@
                 "status-col": "状态",
                 "maturity-date-col": "成人礼",
                 "out-of-liquidity": "流动性不足",
-                "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送："
+                "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送：",
+                "price-in-out-col": "价格进/出"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",
@@ -974,6 +977,9 @@
             "row-card": {
                 "views": "意见",
                 "current-view": "视图：{{ currentView }}"
+            },
+            "ranged-markets": {
+                "strike-range": "打击范围"
             }
         },
         "quick-trading": {
@@ -1167,7 +1173,9 @@
                 "label": "使用传统签名",
                 "tooltip": "如果下单时遇到问题，请选中此选项以尝试旧版签名。某些钱包（如Trezor）在签名时遇到问题，选择此选项可以解决此问题。"
             },
-            "ratio": "比率"
+            "ratio": "比率",
+            "in": "在",
+            "out": "出去"
         },
         "swap": {
             "button-text": "获取 {{token}}",

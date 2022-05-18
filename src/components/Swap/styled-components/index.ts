@@ -1,5 +1,5 @@
-import { ReactSelect } from 'pages/Options/Market/components';
-import NumericInput from 'pages/Options/Market/components/NumericInput';
+import { ReactSelect } from 'components/OldVersion/old-components';
+import NumericInput from 'components/NumericInput';
 import styled, { StyledComponent } from 'styled-components';
 import { FlexDivColumn, XButton } from 'theme/common';
 

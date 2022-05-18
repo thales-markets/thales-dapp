@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow, FlexDivCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { StatusEnum } from 'constants/governance';
-import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { DefaultSubmitButton } from 'pages/Token/components/components';
 
 export const SidebarTitle = styled(FlexDivCentered)`
     font-weight: 500;

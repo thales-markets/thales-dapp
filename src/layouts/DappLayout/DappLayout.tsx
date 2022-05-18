@@ -36,29 +36,30 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
 const Background = styled.section`
     &.light {
-        background-color: #f7f7f7;
-        --background: #f7f7f7;
+        background-color: #f9f9f9;
+        --background: #f9f9f9;
         --icon-color: #04045a;
         --shadow: 0px 0px 50px rgba(4, 4, 90, 0.4);
         --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
         --primary-color: #04045a;
-        --input-border-color: #04045a;
-        --table-border-color: #64d9fe;
-        --table-header-text-color: #64d9fe;
+        --input-border-color: #21448b;
+        --table-border-color: #21448b;
+        --table-border-hover-color: rgba(33, 68, 139, 0.5);
+        --table-header-text-color: #21448b;
         --disabled-item: #8181ac;
         --enabled-item: #04045a;
         --primary-filter-menu-active: #04045a;
-        --hotmarket-arrow-enabled: #64d9fe;
+        --hotmarket-arrow-enabled: #21448b;
         --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
         --color-wrapper: #4673bd;
         --scrollbar-width: 12px;
-        --button-bg-active: #64d9fe;
+        --button-bg-active: #21448b;
         --button-text-active: #04045a;
         --button-bg-inactive: transparent;
-        --button-text-inactive: #64d9fe;
-        --notice-text: #04045a;
+        --button-text-inactive: #21448b;
+        --notice-text: #21448b;
         --amm-switch-circle: #04045a;
-        --card-border-color: rgba(100, 217, 254, 0.5);
+        --card-border-color: rgba(33, 68, 139, 0.3);
     }
     &.dark {
         background-color: #04045a;
@@ -86,7 +87,7 @@ const Background = styled.section`
         --button-text-inactive: #64d9fe;
         --notice-text: #64d9fe;
         --amm-switch-circle: #f7f7f7;
-        --card-border-color: rgba(100, 217, 254, 0.5);
+        --card-border-color: rgba(100, 217, 254, 0.3);
     }
 `;
 

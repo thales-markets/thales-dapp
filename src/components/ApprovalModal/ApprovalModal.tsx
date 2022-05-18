@@ -8,14 +8,9 @@ import {
     DefaultSubmitButton,
     InputContainer,
     SubmitButtonContainer,
-} from 'pages/Options/Market/components';
-import NumericInput from 'pages/Options/Market/components/NumericInput';
-import {
-    ModalContainer,
-    ModalHeader,
-    ModalTitle,
-    StyledModal,
-} from 'pages/Options/Market/TradeOptions/Orderbook/components';
+} from 'components/OldVersion/old-components';
+import NumericInput from 'pages/Token/components/NumericInput';
+import { ModalContainer, ModalHeader, ModalTitle, StyledModal } from 'components/OldVersion/old-components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';

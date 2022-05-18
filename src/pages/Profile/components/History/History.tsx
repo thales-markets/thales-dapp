@@ -43,7 +43,7 @@ const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoadin
         return [];
     }, [trades, walletAddress, markets, searchText]);
 
-    return <TileTable rows={rows} isLoading={isLoading} />;
+    return <TileTable rows={rows as any} isLoading={isLoading} />;
 };
 
 export default History;

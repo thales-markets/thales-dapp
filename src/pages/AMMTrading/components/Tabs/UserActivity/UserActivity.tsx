@@ -20,14 +20,16 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { formatHoursAndMinutesFromTimestamp, formatShortDateFromTimestamp } from 'utils/formatters/date';
 
-import { OptionsMarketInfo } from 'types/options';
+import { MarketType, OptionsMarketInfo, RangedMarketData } from 'types/options';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import { MARKET_TYPE } from 'constants/options';
 
 type Activity = {
     timestamp: number;
     currencyKey: string;
     paid: number | null;
-    price: number | null;
+    price: number | null | string;
     amount: number;
     side: string;
     type: string;
@@ -35,10 +37,13 @@ type Activity = {
     link: any;
 };
 
-const UserActivity: React.FC = () => {
+const UserActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const marketInfo = useMarketContext();
+    const marketInfo =
+        marketType == MARKET_TYPE[0]
+            ? (useMarketContext() as OptionsMarketInfo)
+            : (useRangedMarketContext() as RangedMarketData);
 
     const { t } = useTranslation();
 
@@ -50,20 +55,25 @@ const UserActivity: React.FC = () => {
         walletAddress,
         networkId,
         {
-            enabled: isAppReady && !!marketInfo?.address && isWalletConnected,
+            enabled: isAppReady && marketType !== MARKET_TYPE[1] && isWalletConnected,
         }
     );
 
     const tradesQuery = useBinaryOptionsUserTradesQuery(
         marketInfo?.address,
-        marketInfo?.longAddress,
-        marketInfo?.shortAddress,
+        marketType == MARKET_TYPE[0]
+            ? (marketInfo as OptionsMarketInfo)?.longAddress
+            : (marketInfo as RangedMarketData)?.inAddress,
+        marketType == MARKET_TYPE[0]
+            ? (marketInfo as OptionsMarketInfo)?.shortAddress
+            : (marketInfo as RangedMarketData)?.outAddress,
         networkId,
         walletAddress,
+        marketType,
         { enabled: isAppReady && !!marketInfo?.address }
     );
 
-    const generateRowsForTileTable = (data: Activity[], marketInfo: OptionsMarketInfo) => {
+    const generateRowsForTileTable = (data: Activity[], marketInfo: OptionsMarketInfo | RangedMarketData) => {
         if (data?.length) {
             const rows: TileRow[] = data.map((item: Activity) => {
                 return {
@@ -73,8 +83,20 @@ const UserActivity: React.FC = () => {
                             value: item.timestamp,
                         },
                         {
-                            title: t('options.market.your-activity.strike-price'),
-                            value: formatCurrencyWithSign(USD_SIGN, marketInfo.strikePrice),
+                            title:
+                                marketType == MARKET_TYPE[0]
+                                    ? t('options.market.your-activity.strike-price')
+                                    : t('options.market.ranged-markets.strike-range'),
+                            value:
+                                marketType == MARKET_TYPE[0]
+                                    ? formatCurrencyWithSign(USD_SIGN, (marketInfo as OptionsMarketInfo)?.strikePrice)
+                                    : `${formatCurrencyWithSign(
+                                          USD_SIGN,
+                                          (marketInfo as RangedMarketData)?.leftPrice
+                                      )} - ${formatCurrencyWithSign(
+                                          USD_SIGN,
+                                          (marketInfo as RangedMarketData)?.rightPrice
+                                      )}`,
                         },
                         {
                             title: t('options.market.your-activity.paid'),
@@ -106,34 +128,43 @@ const UserActivity: React.FC = () => {
     };
 
     const userTransactionAndTradeList = useMemo(() => {
-        if (tradesQuery.isSuccess && marketTransactionsQuery.isSuccess && marketInfo?.address) {
-            const trades: Activity[] = tradesQuery?.data.map((trade) => {
-                return {
-                    timestamp: trade.timestamp,
-                    currencyKey: marketInfo.currencyKey,
-                    paid: Number(trade.amount) * Number(trade.price),
-                    price: trade?.price ? trade.price : null,
-                    amount: Number(trade.amount),
-                    side: trade.side == 'short' ? 'down' : 'up',
-                    type: trade.type,
-                    timeRemaining: marketInfo.timeRemaining,
-                    link: <ViewEtherscanLink hash={trade.hash} />,
-                };
-            });
+        if ((tradesQuery.isSuccess || marketTransactionsQuery.isSuccess) && marketInfo?.address) {
+            const trades: Activity[] = tradesQuery?.data
+                ? tradesQuery?.data.map((trade) => {
+                      return {
+                          timestamp: trade.timestamp,
+                          currencyKey: marketInfo.currencyKey,
+                          paid: Number(trade.amount) * Number(trade.price),
+                          price: trade?.price ? trade.price : null,
+                          amount: Number(trade.amount),
+                          side: marketType == MARKET_TYPE[0] ? (trade.side == 'short' ? 'down' : 'up') : trade.side,
+                          type: trade.type,
+                          timeRemaining: marketInfo.timeRemaining,
+                          link: <ViewEtherscanLink hash={trade.hash} />,
+                      };
+                  })
+                : [];
 
-            const transactions: Activity[] = marketTransactionsQuery?.data.map((transaction) => {
-                return {
-                    timestamp: transaction.timestamp,
-                    currencyKey: marketInfo.currencyKey,
-                    paid: null,
-                    price: null,
-                    amount: Number(transaction.amount),
-                    side: transaction.side == 'short' ? 'down' : 'up',
-                    type: transaction.type,
-                    timeRemaining: marketInfo.timeRemaining,
-                    link: <ViewEtherscanLink hash={transaction.hash} />,
-                };
-            });
+            const transactions: Activity[] = marketTransactionsQuery?.data
+                ? marketTransactionsQuery?.data.map((transaction) => {
+                      return {
+                          timestamp: transaction.timestamp,
+                          currencyKey: marketInfo.currencyKey,
+                          paid: null,
+                          price: null,
+                          amount: Number(transaction.amount),
+                          side:
+                              marketType == MARKET_TYPE[0]
+                                  ? transaction.side == 'short'
+                                      ? 'down'
+                                      : 'up'
+                                  : transaction.side,
+                          type: transaction.type,
+                          timeRemaining: marketInfo.timeRemaining,
+                          link: <ViewEtherscanLink hash={transaction.hash} />,
+                      };
+                  })
+                : [];
 
             return orderBy([...trades, ...transactions], ['timestamp'], ['desc']);
         }

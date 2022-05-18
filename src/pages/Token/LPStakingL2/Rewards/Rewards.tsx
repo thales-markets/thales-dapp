@@ -17,8 +17,8 @@ import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchLPStakingQuery } from 'utils/queryConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
-import { DefaultSubmitButton } from 'pages/Options/Market/components';
-import NetworkFees from 'pages/Options/components/NetworkFees';
+import { DefaultSubmitButton } from '../../components/components';
+import NetworkFees from '../../components/NetworkFees';
 
 type Properties = {
     rewards: number;

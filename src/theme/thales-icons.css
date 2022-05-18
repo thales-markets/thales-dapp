@@ -33,3 +33,15 @@
 .v2-icon--up:before {
     content: '\0047';
 }
+
+.v2-icon--range:before {
+    content: '\0048';
+}
+
+.v2-icon--in:before {
+    content: '\0049';
+}
+
+.v2-icon--out:before {
+    content: '\004A';
+}

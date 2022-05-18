@@ -167,6 +167,8 @@ export const OPTIONS_CURRENCY = ['UP', 'DOWN'];
 export const OPTIONS_CURRENCY_MAP = {
     long: 'UP',
     short: 'DOWN',
+    in: 'IN',
+    out: 'OUT',
 };
 
 export const CURRENCY_TO_OPTION = new Map([

@@ -96,7 +96,11 @@ const Markets: React.FC = () => {
         () =>
             optionsMarkets
                 .filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
-                .sort((a, b) => a.timeRemaining - b.timeRemaining),
+                .sort((a, b) => a.timeRemaining - b.timeRemaining)
+                .map((market) => {
+                    market.strikePrice = Number(market.strikePrice.toFixed(2));
+                    return market;
+                }),
         [optionsMarkets]
     );
 

@@ -42,6 +42,9 @@ export enum UI_COLORS {
     RED = '#C3244A',
     GREEN = '#50CE99',
     YELLOW = '#F7B91B',
+    IN_COLOR = '#B0FFE7',
+    OUT_COLOR = '#BF7EFF',
+    RANGE = '',
 }
 
 export const TooltipStyles = {

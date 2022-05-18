@@ -12,7 +12,7 @@ import format from 'date-fns/format';
 import { BigNumber } from 'ethers';
 import useInterval from 'hooks/useInterval';
 import { sortBy } from 'lodash';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
+import { RoyaleTooltip } from 'components/OldVersion/old-components';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

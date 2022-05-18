@@ -12,7 +12,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import UsersAssets from './UsersAssets';
 import UsersOrders from './UsersOrders';
 import Web3 from 'web3';
-import { FilterButton, Input, InputLabel, ShortInputContainer } from 'pages/Options/Market/components';
+import { FilterButton, Input, InputLabel, ShortInputContainer } from 'components/OldVersion/old-components';
 import axios from 'axios';
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import { useEffect } from 'react';

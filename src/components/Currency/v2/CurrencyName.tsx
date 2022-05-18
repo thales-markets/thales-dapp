@@ -7,6 +7,7 @@ type CurrencyNameProps = {
     currencyKey: CurrencyKey;
     showIcon?: boolean;
     hideAssetName?: boolean;
+    rangeMarket?: boolean;
     iconProps?: Record<string, unknown>;
     synthIconStyle?: CSSProperties;
     spanStyle?: CSSProperties;
@@ -17,6 +18,7 @@ export const CurrencyName: React.FC<CurrencyNameProps> = ({
     currencyKey,
     showIcon = false,
     hideAssetName,
+    rangeMarket,
     iconProps = {},
     spanStyle,
 }) => (
@@ -30,7 +32,18 @@ export const CurrencyName: React.FC<CurrencyNameProps> = ({
             ...spanStyle,
         }}
     >
-        {showIcon && <CurrencyIcon currencyKey={currencyKey} synthIconStyle={synthIconStyle} {...iconProps} />}
+        {showIcon && !rangeMarket && (
+            <CurrencyIcon currencyKey={currencyKey} synthIconStyle={synthIconStyle} {...iconProps} />
+        )}
+        {showIcon && rangeMarket && (
+            <CurrencyIcon
+                height={'32px'}
+                iconType={3}
+                currencyKey={currencyKey}
+                synthIconStyle={synthIconStyle}
+                {...iconProps}
+            />
+        )}
         {!hideAssetName && (
             <span style={{ fontWeight: 300, textTransform: 'uppercase' }}>{getSynthName(currencyKey)}</span>
         )}

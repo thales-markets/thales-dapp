@@ -7,20 +7,24 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
-import { buildOptionsMarketLink } from 'utils/routes';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
 import { formatShortDate } from 'utils/formatters/date';
-import { LoaderContainer, NoDataContainer, NoDataText } from '../../../../theme/common';
-import SimpleLoader from '../../../../components/SimpleLoader';
+import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
+import SimpleLoader from 'components/SimpleLoader';
 import { TFunction } from 'i18next';
+import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
+import { UI_COLORS } from 'constants/ui';
 
 type MaturedPositionsProps = {
     claimed: any[];
+    claimedRange: any[];
     positions: UsersAssets[];
     isSimpleView?: boolean;
     searchText: string;
     isLoading?: boolean;
+    rangedPositions: any[];
 };
 
 const MaturedPositions: React.FC<MaturedPositionsProps> = ({
@@ -29,6 +33,8 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     claimed,
     searchText,
     isLoading,
+    rangedPositions,
+    claimedRange,
 }) => {
     const { t } = useTranslation();
     const data = useMemo(() => {
@@ -37,9 +43,23 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
         if (claimed.length > 0) {
             claimed.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.range = false;
                 modifiedValue.balances = {};
                 modifiedValue.balances.amount = value.tx.amount;
                 modifiedValue.balances.type = value.tx.side === 'short' ? 'DOWN' : 'UP';
+                modifiedValue.claimable = false;
+                modifiedValue.claimed = true;
+                modifiedValue.link = buildOptionsMarketLink(value.tx.market);
+                newArray.push(modifiedValue);
+            });
+        }
+        if (claimedRange.length > 0) {
+            claimedRange.map((value) => {
+                const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.range = true;
+                modifiedValue.balances = {};
+                modifiedValue.balances.amount = value.tx.amount;
+                modifiedValue.balances.type = value.tx.side === 'in' ? 'IN' : 'OUT';
                 modifiedValue.claimable = false;
                 modifiedValue.claimed = true;
                 modifiedValue.link = buildOptionsMarketLink(value.tx.market);
@@ -50,6 +70,17 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
         if (positions.length > 0) {
             positions.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.range = false;
+                newArray.push(modifiedValue);
+            });
+        }
+
+        if (rangedPositions.length > 0) {
+            rangedPositions.map((value) => {
+                const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.balances.priceDiff = 0;
+                modifiedValue.market.strikePrice = value.market.leftPrice + ' - ' + value.market.rightPrice;
+                modifiedValue.range = true;
                 newArray.push(modifiedValue);
             });
         }
@@ -80,7 +111,13 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
-                            <SPAAnchor href={buildOptionsMarketLink(data.market.id)}>
+                            <SPAAnchor
+                                href={
+                                    data.range
+                                        ? buildRangeMarketLink(data.market.id)
+                                        : buildOptionsMarketLink(data.market.id)
+                                }
+                            >
                                 <Card.Wrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
                                     <Card>
                                         <Card.Column style={{ flex: 1 }}>
@@ -89,6 +126,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                     width="40px"
                                                     height="40px"
                                                     currencyKey={data.market.currencyKey}
+                                                    iconType={!data.range ? 0 : data.balances.type === 'IN' ? 1 : 2}
                                                 />
                                                 <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
                                             </Card.Section>
@@ -104,38 +142,56 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                             </Card.Section>
                                             <Card.Section>
                                                 <Card.RowTitle>
-                                                    {t(`options.home.markets-table.strike-price-col`)}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                        </Card.Column>
-                                        <Card.Column>
-                                            <Card.Section>
-                                                <Card.RowTitle>
                                                     {t(`options.home.markets-table.final-asset-price-col`)}
                                                 </Card.RowTitle>
                                                 <Card.RowSubtitle>
                                                     {formatCurrencyWithSign(USD_SIGN, data.market.finalPrice)}
                                                 </Card.RowSubtitle>
                                             </Card.Section>
-                                            <Card.Section>
-                                                <Card.RowTitle>
-                                                    {t('options.home.market-card.price-difference')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
-                                                    <PriceDifferenceInfo
-                                                        priceDiff={data.market.strikePrice < data.market.finalPrice}
-                                                    >
-                                                        {`${getPercentageDifference(
-                                                            data.market.finalPrice,
-                                                            data.market.strikePrice
-                                                        ).toFixed(2)}%`}
-                                                    </PriceDifferenceInfo>
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
                                         </Card.Column>
+                                        {data.range ? (
+                                            <Card.Column
+                                                style={{ top: 10, position: 'relative', maxWidth: 260, marginLeft: 10 }}
+                                                ranged={true}
+                                            >
+                                                <RangeIllustration
+                                                    priceData={{
+                                                        left: data.market.leftPrice,
+                                                        right: data.market.rightPrice,
+                                                        current: data.market.finalPrice,
+                                                    }}
+                                                    fontSize={24}
+                                                    maxWidth={65}
+                                                />
+                                            </Card.Column>
+                                        ) : (
+                                            <Card.Column>
+                                                <Card.Section>
+                                                    <Card.RowTitle>
+                                                        {t(`options.home.markets-table.strike-price-col`)}
+                                                    </Card.RowTitle>
+                                                    <Card.RowSubtitle>
+                                                        {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
+                                                    </Card.RowSubtitle>
+                                                </Card.Section>
+                                                <Card.Section>
+                                                    <Card.RowTitle>
+                                                        {t('options.home.market-card.price-difference')}
+                                                    </Card.RowTitle>
+                                                    <Card.RowSubtitle>
+                                                        <PriceDifferenceInfo
+                                                            priceDiff={data.market.strikePrice < data.market.finalPrice}
+                                                        >
+                                                            {`${getPercentageDifference(
+                                                                data.market.finalPrice,
+                                                                data.market.strikePrice
+                                                            ).toFixed(2)}%`}
+                                                        </PriceDifferenceInfo>
+                                                    </Card.RowSubtitle>
+                                                </Card.Section>
+                                            </Card.Column>
+                                        )}
+
                                         <Card.Column>
                                             <Card.Section>
                                                 <Card.RowTitle>
@@ -145,7 +201,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                     {data.balances.amount.toFixed(2)}
                                                     <Icon
                                                         style={{
-                                                            color: data.balances.type === 'UP' ? '#50CE99' : '#C3244A',
+                                                            color: getColor(data),
                                                             marginLeft: 6,
                                                         }}
                                                         className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
@@ -199,9 +255,15 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                         {
                             Header: t(`options.home.markets-table.strike-price-col`),
                             accessor: 'market.strikePrice',
-                            Cell: (_props: any) => (
-                                <TableText>{formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}</TableText>
-                            ),
+                            Cell: (_props: any) => {
+                                return (
+                                    <TableText>
+                                        {_props.cell.row.original.range
+                                            ? _props.cell.value
+                                            : formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}
+                                    </TableText>
+                                );
+                            },
                         },
                         {
                             Header: t(`options.home.markets-table.final-asset-price-col`),
@@ -230,7 +292,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         {row.balances.amount.toFixed(2)}
                                         <Icon
                                             style={{
-                                                color: row.balances.type === 'UP' ? '#50CE99' : '#C3244A',
+                                                color: getColor(row),
                                                 marginLeft: 6,
                                             }}
                                             className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
@@ -306,5 +368,12 @@ const Icon = styled.i`
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
     ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
 `;
+
+const getColor = (data: any) => {
+    if (data.range) {
+        return data.balances.type === 'IN' ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR;
+    }
+    return data.balances.type === 'UP' ? UI_COLORS.GREEN : UI_COLORS.RED;
+};
 
 export default MaturedPositions;

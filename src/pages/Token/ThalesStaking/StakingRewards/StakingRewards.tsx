@@ -20,9 +20,9 @@ import {
     StyledMaterialTooltip,
 } from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import NetworkFees from 'pages/Options/components/NetworkFees';
+import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import {
     GridContainer,
     StakingRewardsContent,
@@ -50,7 +50,7 @@ import styled from 'styled-components';
 import SnxStakingTooltip from './components/SnxStakingTooltip';
 import AmmTooltip from './components/AmmTooltip';
 import ThalesRoyaleTooltip from './components/ThalesRoyaleTooltip';
-import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { DefaultSubmitButton } from 'pages/Token/components/components';
 import onboardConnector from 'utils/onboardConnector';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { FlexDivCentered, FlexDivRowCentered } from 'theme/common';

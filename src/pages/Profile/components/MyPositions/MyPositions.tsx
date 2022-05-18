@@ -5,7 +5,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
 import { orderBy } from 'lodash';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,20 +13,30 @@ import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
-import { buildOptionsMarketLink } from 'utils/routes';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import SimpleLoader from 'components/SimpleLoader';
 import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
+import { UI_COLORS } from 'constants/ui';
+import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
     positions: UsersAssets[];
+    rangedPositions: any[];
     isSimpleView: boolean;
     searchText: string;
     isLoading?: boolean;
 };
 
-const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isSimpleView, searchText, isLoading }) => {
+const MyPositions: React.FC<MyPositionsProps> = ({
+    exchangeRates,
+    positions,
+    isSimpleView,
+    searchText,
+    isLoading,
+    rangedPositions,
+}) => {
     const { t } = useTranslation();
 
     const data = useMemo(() => {
@@ -38,12 +48,22 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                     exchangeRates?.[modifiedValue.market?.currencyKey] || 0,
                     modifiedValue.market.strikePrice
                 );
+                modifiedValue.range = false;
+                newArray.push(modifiedValue);
+            });
+        }
+        if (rangedPositions.length > 0) {
+            rangedPositions.map((value) => {
+                const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.balances.priceDiff = 0;
+                modifiedValue.market.strikePrice = value.market.leftPrice + ' - ' + value.market.rightPrice;
+                modifiedValue.range = true;
                 newArray.push(modifiedValue);
             });
         }
 
         return orderBy(newArray, ['balances.value', 'balances.priceDiff'], ['desc', 'asc']);
-    }, [positions]);
+    }, [positions, rangedPositions]);
 
     const filteredData = useMemo(() => {
         if (searchText === '') return data;
@@ -52,7 +72,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
         });
     }, [searchText, data]);
 
-    if (!isLoading && !data.length) {
+    if (!isLoading && !data.length && !rangedPositions.length) {
         return (
             <NoDataContainer>
                 <NoDataText>{t('common.no-data-available')}</NoDataText>
@@ -68,7 +88,13 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
-                            <SPAAnchor href={buildOptionsMarketLink(data.market.id)}>
+                            <SPAAnchor
+                                href={
+                                    data.range
+                                        ? buildRangeMarketLink(data.market.id)
+                                        : buildOptionsMarketLink(data.market.id)
+                                }
+                            >
                                 <Card.Wrapper>
                                     <Card>
                                         <Card.Column>
@@ -77,13 +103,13 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                     width="36px"
                                                     height="36px"
                                                     currencyKey={data.market.currencyKey}
+                                                    iconType={!data.range ? 0 : data.balances.type === 'IN' ? 1 : 2}
                                                 />
-
                                                 <Card.Section>
                                                     <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
                                                     <Card.RowTitle
                                                         style={{
-                                                            color: data.balances.type === 'UP' ? '#50CE99' : '#C3244A',
+                                                            color: getColor(data),
                                                         }}
                                                     >
                                                         {data.balances.type}
@@ -111,42 +137,58 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                                 </Card.RowSubtitle>
                                             </Card.Section>
                                         </Card.Column>
-                                        <Card.Column>
-                                            <Card.Section>
-                                                <Card.RowTitle>
-                                                    {t('options.home.market-card.strike-price')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                            <Card.Section>
-                                                <Card.RowTitle>
-                                                    {t('options.home.market-card.current-asset-price')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
-                                                    {formatCurrencyWithSign(
-                                                        USD_SIGN,
-                                                        exchangeRates?.[data.market.currencyKey] || 0
-                                                    )}
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                            <Card.Section>
-                                                <Card.RowTitle>
-                                                    {t('options.home.market-card.price-difference')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
-                                                    <PriceDifferenceInfo
-                                                        priceDiff={
-                                                            data.market.strikePrice <
-                                                            (exchangeRates?.[data.market?.currencyKey] || 0)
-                                                        }
-                                                    >
-                                                        {`${data.balances.priceDiff.toFixed(2)}%`}
-                                                    </PriceDifferenceInfo>
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                        </Card.Column>
+                                        {data.range ? (
+                                            <Card.Column style={{ top: 10, position: 'relative' }} ranged={true}>
+                                                <RangeIllustration
+                                                    priceData={{
+                                                        left: data.market.leftPrice,
+                                                        right: data.market.rightPrice,
+                                                        current: exchangeRates?.[data.market?.currencyKey] || 0,
+                                                    }}
+                                                    fontSize={16}
+                                                    maxWidth={65}
+                                                />
+                                            </Card.Column>
+                                        ) : (
+                                            <Card.Column>
+                                                <Card.Section>
+                                                    <Card.RowTitle>
+                                                        {t('options.home.market-card.strike-price')}
+                                                    </Card.RowTitle>
+                                                    <Card.RowSubtitle>
+                                                        {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
+                                                    </Card.RowSubtitle>
+                                                </Card.Section>
+                                                <Card.Section>
+                                                    <Card.RowTitle>
+                                                        {t('options.home.market-card.current-asset-price')}
+                                                    </Card.RowTitle>
+                                                    <Card.RowSubtitle>
+                                                        {formatCurrencyWithSign(
+                                                            USD_SIGN,
+                                                            exchangeRates?.[data.market.currencyKey] || 0
+                                                        )}
+                                                    </Card.RowSubtitle>
+                                                </Card.Section>
+
+                                                <Card.Section>
+                                                    <Card.RowTitle>
+                                                        {t('options.home.market-card.price-difference')}
+                                                    </Card.RowTitle>
+                                                    <Card.RowSubtitle>
+                                                        <PriceDifferenceInfo
+                                                            priceDiff={
+                                                                data.market.strikePrice <
+                                                                (exchangeRates?.[data.market?.currencyKey] || 0)
+                                                            }
+                                                        >
+                                                            {`${data.balances.priceDiff.toFixed(2)}%`}
+                                                        </PriceDifferenceInfo>
+                                                    </Card.RowSubtitle>
+                                                </Card.Section>
+                                            </Card.Column>
+                                        )}
+
                                         <Card.Column>
                                             <Card.Section>
                                                 <Card.RowTitle>
@@ -157,7 +199,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
 
                                                     <Icon
                                                         style={{
-                                                            color: data.balances.type === 'UP' ? '#50CE99' : '#C3244A',
+                                                            color: getColor(data),
                                                             marginLeft: 6,
                                                         }}
                                                         className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
@@ -189,6 +231,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                         )}
                     </Content>
                 ))}
+
             {!isLoading && !isSimpleView && data.length > 0 && (
                 <Table
                     containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
@@ -219,7 +262,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                 <PriceChart
                                     currencyKey={row?.market?.currencyKey}
                                     height={30}
-                                    width={125}
+                                    width={100}
                                     showFooter={false}
                                     showPercentageChangeOnSide={true}
                                     containerStyle={{
@@ -236,9 +279,15 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                         {
                             Header: t(`options.home.markets-table.strike-price-col`),
                             accessor: 'market.strikePrice',
-                            Cell: (_props: any) => (
-                                <TableText>{formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}</TableText>
-                            ),
+                            Cell: (_props: any) => {
+                                return (
+                                    <TableText>
+                                        {_props.cell.row.original.range
+                                            ? _props.cell.value
+                                            : formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}
+                                    </TableText>
+                                );
+                            },
                         },
                         {
                             Header: t(`options.home.markets-table.current-asset-price-col`),
@@ -269,7 +318,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({ exchangeRates, positions, isS
                                         {row.balances.amount.toFixed(2)}
                                         <Icon
                                             style={{
-                                                color: row.balances.type === 'UP' ? '#50CE99' : '#C3244A',
+                                                color: getColor(row),
                                                 marginLeft: 6,
                                             }}
                                             className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
@@ -331,5 +380,12 @@ const Icon = styled.i`
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
     ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
 `;
+
+const getColor = (data: any) => {
+    if (data.range) {
+        return data.balances.type === 'IN' ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR;
+    }
+    return data.balances.type === 'UP' ? UI_COLORS.GREEN : UI_COLORS.RED;
+};
 
 export default MyPositions;

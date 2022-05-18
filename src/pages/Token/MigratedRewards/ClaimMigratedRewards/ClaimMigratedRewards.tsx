@@ -21,7 +21,7 @@ import {
     Tip37Link,
 } from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import NetworkFees from 'pages/Options/components/NetworkFees';
+import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
 import {
     GridContainer,
@@ -31,7 +31,7 @@ import {
     GridAction,
 } from '../../gridComponents';
 import useMigratedRetroRewardsQuery from 'queries/token/useMigratedRetroRewardsQuery';
-import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { DefaultSubmitButton } from 'pages/Token/components/components';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 const ClaimMigratedRewards: React.FC = () => {

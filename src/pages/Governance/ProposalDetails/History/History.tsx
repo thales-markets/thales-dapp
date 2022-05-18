@@ -21,7 +21,7 @@ import { getEtherscanAddressLink } from 'utils/etherscan';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import { FIRST_COUNCIL_ELECTIONS_ID, ProposalTypeEnum } from 'constants/governance';
 import { useTranslation } from 'react-i18next';
-import { LightMediumTooltip } from 'pages/Options/Market/components';
+import { LightMediumTooltip } from 'pages/Token/components/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';

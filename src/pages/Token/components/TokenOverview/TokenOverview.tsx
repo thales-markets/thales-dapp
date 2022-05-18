@@ -12,7 +12,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
 import thalesTokenIcon from 'assets/images/sidebar/thales-token-white.svg';
-import { LightTooltip } from 'pages/Options/Market/components';
+import { LightTooltip } from '../components';
 import { LINKS } from 'constants/links';
 import { getNetworkId } from 'redux/modules/wallet';
 import thalesContract from 'utils/contracts/thalesContract';

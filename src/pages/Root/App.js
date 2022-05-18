@@ -5,12 +5,10 @@ import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
-import TokenPage from 'pages/Token/Token.tsx';
-import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
-import Profile from 'pages/Profile/Profile.tsx';
-import QuickTradingPage from 'pages/Options/QuickTrading';
-import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
-import ThalesRoyal from 'pages/Royale/ThalesRoyal';
+// import TokenPage from 'pages/Token/Token.tsx';
+// import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
+// import Profile from 'pages/Profile/Profile.tsx';
+// import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -30,30 +28,48 @@ import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
-import MainLayout from '../../components/MainLayout';
+// import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
-import GovernancePage from 'pages/Governance';
-import Leaderboard from 'pages/Leaderboard';
-import TradeHistory from 'pages/Options/TradeHistory';
-import AmmReporting from '../Options/AmmReporting';
+// import GovernancePage from 'pages/Governance';
+// import Leaderboard from 'pages/Leaderboard';
 import Cookies from 'universal-cookie';
-import Token from '../LandingPage/articles/Token';
-import Governance from '../LandingPage/articles/Governance';
-import Whitepaper from '../LandingPage/articles/Whitepaper';
-import DappLayout from 'layouts/DappLayout';
+// import Token from '../LandingPage/articles/Token';
+// import Governance from '../LandingPage/articles/Governance';
+// import Whitepaper from '../LandingPage/articles/Whitepaper';
+// import DappLayout from 'layouts/DappLayout';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../LandingPage/Home'));
-const Markets = lazy(() => import('../Markets'));
-const AMMTrading = lazy(() => import('../AMMTrading'));
-// const OptionsMarket = lazy(() => import('../Options/Market'));
+const DappLayout = lazy(() => import('layouts/DappLayout'));
+const MainLayout = lazy(() => import('../../components/MainLayout'));
+
+const OptionsCreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../Options/CreateMarket'));
+const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage/Home'));
+const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
+const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
+const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
+
+const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
+const Leaderboard = lazy(() => import(/* webpackChunkName: "Leaderboard" */ '../Leaderboard'));
+
+const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Markets'));
+const RangeMarkets = lazy(() => import(/* webpackChunkName: "RangeMarkets" */ '../RangeMarkets'));
+const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
+
+const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token/Token'));
+const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales/TaleOfThales'));
+const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
+const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
+
+// import TokenPage from 'pages/Token/Token.tsx';
+// import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
+// import Profile from 'pages/Profile/Profile.tsx';
+// import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
+    // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const { trackPageView } = useMatomo();
 
@@ -68,6 +84,7 @@ const App = () => {
             const { networkId, name } = await getEthereumNetwork();
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
+                console.log(snxJSConnector);
                 if (!snxJSConnector.initialized) {
                     const provider = loadProvider({
                         networkId,
@@ -85,8 +102,15 @@ const App = () => {
                 console.log(e);
             }
         };
-
-        init();
+        init().then(() => console.log('rdy'));
+        trackPageView();
+        const handler = (e) => {
+            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
+        };
+        document.addEventListener('market-notification', handler);
+        return () => {
+            document.removeEventListener('market-notification', handler);
+        };
     }, []);
 
     useEffect(() => {
@@ -181,20 +205,6 @@ const App = () => {
         setSnackbarDetails({ ...snackbarDetails, type: 'success', isOpen: false });
     };
 
-    useEffect(() => {
-        const handler = (e) => {
-            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
-        };
-        document.addEventListener('market-notification', handler);
-        return () => {
-            document.removeEventListener('market-notification', handler);
-        };
-    }, []);
-
-    useEffect(() => {
-        trackPageView();
-    }, []);
-
     return (
         <QueryClientProvider client={queryConnector.queryClient}>
             <Suspense fallback={<Loader />}>
@@ -214,31 +224,6 @@ const App = () => {
                             </DappLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.QuickTrading}>
-                            <MainLayout>
-                                <QuickTradingPage />
-                            </MainLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Options.TradeHistory}>
-                            <MainLayout>
-                                <TradeHistory />
-                            </MainLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Options.AmmReporting}>
-                            <MainLayout>
-                                <AmmReporting />
-                            </MainLayout>
-                        </Route>
-
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.QuickTradingCompetition}>
-                                <MainLayout>
-                                    <QuickTradingCompetitionPage />
-                                </MainLayout>
-                            </Route>
-                        )}
                         <Route
                             exact
                             path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
@@ -286,9 +271,25 @@ const App = () => {
                             )}
                         />
 
+                        <Route
+                            exact
+                            path={ROUTES.Options.RangeMarketMatch}
+                            render={(routeProps) => (
+                                <DappLayout>
+                                    <AMMTrading {...routeProps} />
+                                </DappLayout>
+                            )}
+                        />
+
                         <Route exact path={ROUTES.Options.Home}>
                             <DappLayout>
                                 <Markets />
+                            </DappLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.RangeMarkets}>
+                            <DappLayout>
+                                <RangeMarkets />
                             </DappLayout>
                         </Route>
 

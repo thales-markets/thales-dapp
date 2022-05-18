@@ -5,10 +5,12 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { assetToTradingViewMap } from 'config/tradingView';
 
 import { Container } from './styled-components/Container';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 const TradingView: React.FC = () => {
-    const marketInfo = useMarketContext();
-    const symbol = assetToTradingViewMap[marketInfo?.currencyKey] || `${marketInfo?.asset}USDT`;
+    const marketInfo = useMarketContext() || useRangedMarketContext();
+
+    const symbol = assetToTradingViewMap[marketInfo?.currencyKey] || `${marketInfo?.currencyKey}USDT`;
     return (
         <Container>
             <TradingViewWidget

@@ -3,7 +3,7 @@ import circle from 'assets/images/royale/circle.svg';
 import triangle from 'assets/images/royale/triangle.svg';
 import format from 'date-fns/format';
 import useInterval from 'hooks/useInterval';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import TimeRemaining from 'components/TimeRemaining';
 import { Trans, useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';

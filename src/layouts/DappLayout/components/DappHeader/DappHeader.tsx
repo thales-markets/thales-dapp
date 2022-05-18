@@ -42,6 +42,15 @@ const DappHeader: React.FC = () => {
                         label={t('common.sidebar.markets')}
                     />
 
+                    {!isPolygon && (
+                        <DappHeaderItem
+                            className={location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}
+                            href={buildHref(ROUTES.Options.RangeMarkets)}
+                            iconName="ranged-markets"
+                            label={t('common.sidebar.ranged-markets')}
+                        />
+                    )}
+
                     {isPolygon && (
                         <DappHeaderItem
                             className={location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''}

@@ -1,6 +1,6 @@
 import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
-import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { countryToCountryCode, eventToIcon } from 'components/OldVersion/old-utils';
 import useAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number'
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow, Row } from '../UserInfoModal';
 import ReactCountryFlag from 'react-country-flag';
-import { LightTooltip } from '../../../../pages/Options/Market/components';
+import { LightTooltip } from 'components/OldVersion/old-components';
 import exerciseOptionIcon from '../../../../assets/images/exercise-option.svg';
 import { useTranslation } from 'react-i18next';
 
