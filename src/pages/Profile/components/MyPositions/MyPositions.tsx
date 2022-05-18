@@ -56,7 +56,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({
             rangedPositions.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 modifiedValue.balances.priceDiff = 0;
-                modifiedValue.market.strikePrice = value.market.leftPrice + ' - ' + value.market.rightPrice;
+                modifiedValue.market.strikePrice =
+                    formatCurrencyWithSign(USD_SIGN, value.market.leftPrice) +
+                    ' - ' +
+                    formatCurrencyWithSign(USD_SIGN, value.market.rightPrice);
                 modifiedValue.range = true;
                 newArray.push(modifiedValue);
             });
@@ -239,17 +242,27 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                     searchQuery={searchText}
                     columns={[
                         {
+                            id: 'market.currencyKey',
                             Header: <>{t('options.home.markets-table.asset-col')}</>,
-                            accessor: 'market.currencyKey',
-                            Cell: (_props: any) => {
+                            accessor: (row: any) => {
+                                console.log('Row ', row);
                                 return (
                                     <Currency.Name
-                                        currencyKey={_props?.cell?.value}
+                                        currencyKey={row?.market?.currencyKey}
                                         showIcon={true}
                                         hideAssetName={true}
                                         iconProps={{ type: 'asset' }}
                                         synthIconStyle={{ width: 32, height: 32 }}
                                         spanStyle={{ float: 'left' }}
+                                        additionalIconType={
+                                            !row.range
+                                                ? row?.balances?.type === 'UP'
+                                                    ? 4
+                                                    : 5
+                                                : row?.balances?.type === 'IN'
+                                                ? 1
+                                                : 2
+                                        }
                                     />
                                 );
                             },
