@@ -1,6 +1,6 @@
 import { formatCurrency } from '../../../../../utils/formatters/number';
 import { formatShortDate } from '../../../../../utils/formatters/date';
-import { buildOptionsMarketLink } from '../../../../../utils/routes';
+import { buildOptionsMarketLink, buildRangeMarketLink } from '../../../../../utils/routes';
 import { TFunction } from 'i18next';
 
 const WIN_COLOR = '#50CE99';
@@ -108,7 +108,10 @@ const generateRows = (data: any[], translator: TFunction) => {
                         value: formatShortDate(new Date(d.marketItem.maturityDate)),
                     },
                 ],
-                link: buildOptionsMarketLink(d.marketItem.address),
+                link:
+                    d.optionSide == 'in' || d.optionSide == 'out'
+                        ? buildRangeMarketLink(d.marketItem.address)
+                        : buildOptionsMarketLink(d.marketItem.address),
             };
         });
     } catch (e) {
