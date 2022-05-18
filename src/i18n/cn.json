@@ -237,7 +237,8 @@
         "no-data": "没有任何数据可显示",
         "long": "长",
         "short": "短的",
-        "no-data-available": "无可用数据"
+        "no-data-available": "无可用数据",
+        "select-deselect-all": "全选/取消全选"
     },
     "modals": {
         "gwei": {

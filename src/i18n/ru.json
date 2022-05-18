@@ -237,7 +237,8 @@
         "no-data": "Нет данных для отображения",
         "long": "длинная",
         "short": "короткая",
-        "no-data-available": "Данные недоступны"
+        "no-data-available": "Данные недоступны",
+        "select-deselect-all": "Выбрать/Отменить выбор всего"
     },
     "modals": {
         "gwei": {

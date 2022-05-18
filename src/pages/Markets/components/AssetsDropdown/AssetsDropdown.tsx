@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
 import { getNetworkId } from '../../../../redux/modules/wallet';
+import { useTranslation } from 'react-i18next';
 
 const cookies = new Cookies();
 
@@ -23,10 +24,30 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
     setSelectedAssets,
     cookieKey,
 }) => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     return (
         <Container>
+            <StyledFlexDiv key={'select-all'}>
+                <Checkbox
+                    checked={assets.length === selectedAssets.length}
+                    value={''}
+                    onChange={(e: any) => {
+                        const checked = e.target.checked;
+                        if (checked) {
+                            const newSelectedAssets = [...assets];
+                            setSelectedAssets(newSelectedAssets);
+                            cookies.set(cookieKey + networkId, newSelectedAssets);
+                        } else {
+                            const newSelectedAssets = [] as string[];
+                            setSelectedAssets(newSelectedAssets);
+                            cookies.set(cookieKey + networkId, newSelectedAssets);
+                        }
+                    }}
+                />
+                <SelectAllRow>{t('common.select-deselect-all')}</SelectAllRow>
+            </StyledFlexDiv>
             {assets.map((asset) => (
                 <StyledFlexDiv key={asset}>
                     <Checkbox
@@ -67,6 +88,7 @@ const Container = styled.div`
     border-radius: 15px;
     z-index: 2;
     padding: 20px;
+    color: var(--primary-color) !important;
     @media (max-width: 768px) {
         top: 0;
         right: 0;
@@ -77,6 +99,14 @@ const StyledFlexDiv = styled(FlexDiv)`
     align-items: center;
     & > label {
         height: 15px;
+    }
+`;
+
+const SelectAllRow = styled.span`
+    width: 100%;
+    text-align: center;
+    @media (max-width: 768px) {
+        font-size: 15px;
     }
 `;
 
