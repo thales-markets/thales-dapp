@@ -40,7 +40,7 @@ const getOptionSideLabel = (optionSide: string) => {
 const generateStrike = (market: any) => {
     console.log(market);
     if (market.leftPrice) {
-        return '$' + market.leftPrice + ' - ' + '$' + market.rightPrice;
+        return '$' + formatCurrency(market.leftPrice) + ' - ' + '$' + formatCurrency(market.rightPrice);
     }
     return '$' + formatCurrency(market.strikePrice);
 };
