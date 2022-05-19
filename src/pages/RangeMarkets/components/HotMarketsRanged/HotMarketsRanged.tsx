@@ -155,11 +155,11 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
                     </>
                 ) : (
                     <>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
                     </>
                 )}
             </Wrapper>
