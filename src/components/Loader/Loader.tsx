@@ -13,7 +13,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { isNetworkSupported } from 'utils/network';
 import { useTranslation } from 'react-i18next';
-import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 
 type LoaderProps = {
     hideMainnet?: boolean;
@@ -92,6 +92,7 @@ const Wrapper = styled.div`
     justify-content: center;
     z-index: 99;
     backdrop-filter: blur(4px);
+    background: #04045a;
 `;
 
 const WrongNetworkWrapper = styled.div`
