@@ -40,7 +40,7 @@ export const StakeInfoContent = styled.span`
 export const StakingRewardsItem = styled(StakeInfoItem)<{
     orderOnMobile?: number;
 }>`
-    grid-column: span 3;
+    grid-column: span 4;
     @media (max-width: 767px) {
         grid-column: span 12 !important;
         order: ${(props) => props.orderOnMobile ?? 10};
