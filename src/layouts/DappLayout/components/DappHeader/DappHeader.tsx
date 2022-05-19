@@ -149,10 +149,11 @@ const FloatingBetaTag = styled.div`
     background-color: rgb(60, 181, 91);
     border-radius: 5px;
     color: rgb(246, 246, 254);
-    font-size: 10px;
-    padding: 2px 4px;
-    margin-left: -10px;
-    z-index: 2;
+    font-size: 14px;
+    padding: 4px 6px;
+    margin-left: 0;
+    margin-top: -3px;
+    z-index: 1;
 `;
 
 const PageTitle = styled.p`
