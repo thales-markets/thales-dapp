@@ -68,6 +68,7 @@ const generateRows = (data: any[], translator: TFunction) => {
             if (typeof d === 'string') {
                 return d;
             }
+            const isRanged = d.optionSide == 'in' || d.optionSide == 'out' ? true : false;
             const marketExpired = d.marketItem.result;
             const isLong = d.optionSide === 'long';
             const optionPrice = d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
@@ -108,7 +109,9 @@ const generateRows = (data: any[], translator: TFunction) => {
                         value: formatShortDate(new Date(d.marketItem.maturityDate)),
                     },
                 ],
-                link: buildOptionsMarketLink(d.marketItem.address),
+                link: isRanged
+                    ? buildRangeMarketLink(d.marketItem.address)
+                    : buildOptionsMarketLink(d.marketItem.address),
             };
         });
     } catch (e) {

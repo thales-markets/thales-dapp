@@ -40,6 +40,11 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     const data = useMemo(() => {
         const newArray: any = [];
 
+        console.log('claimed ', claimed);
+        console.log('claimedRange ', claimedRange);
+        console.log('positions ', positions);
+        console.log('rangedPositions ', rangedPositions);
+
         if (claimed.length > 0) {
             claimed.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
@@ -62,14 +67,15 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 modifiedValue.balances.type = value.tx.side === 'in' ? 'IN' : 'OUT';
                 modifiedValue.claimable = false;
                 modifiedValue.claimed = true;
-                modifiedValue.link = buildOptionsMarketLink(value.tx.market);
+                modifiedValue.link = buildRangeMarketLink(value.tx.market);
                 newArray.push(modifiedValue);
             });
         }
 
         if (positions.length > 0) {
-            positions.map((value) => {
+            positions.map((value: any) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
+                modifiedValue.link = buildOptionsMarketLink(value.market.id);
                 modifiedValue.range = false;
                 newArray.push(modifiedValue);
             });
@@ -79,6 +85,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
             rangedPositions.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 modifiedValue.balances.priceDiff = 0;
+                modifiedValue.link = buildRangeMarketLink(value.market.id);
                 modifiedValue.market.strikePrice = value.market.leftPrice + ' - ' + value.market.rightPrice;
                 modifiedValue.range = true;
                 newArray.push(modifiedValue);
@@ -111,13 +118,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
                         {data.balances.amount > 0 && (
-                            <SPAAnchor
-                                href={
-                                    data.range
-                                        ? buildRangeMarketLink(data.market.id)
-                                        : buildOptionsMarketLink(data.market.id)
-                                }
-                            >
+                            <SPAAnchor href={data.link}>
                                 <Card.Wrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
                                     <Card>
                                         <Card.Column style={{ flex: 1 }}>
@@ -270,6 +271,13 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                             accessor: (row: any) => {
                                 return <TableText>{formatCurrencyWithSign(USD_SIGN, row.market.finalPrice)}</TableText>;
                             },
+                            sortType: (firstElem: any, secondElem: any) => {
+                                if (firstElem.original.market.finalPrice > secondElem.original.market.finalPrice)
+                                    return 1;
+                                if (firstElem.original.market.finalPrice < secondElem.original.market.finalPrice)
+                                    return -1;
+                                return 0;
+                            },
                         },
                         {
                             Header: t(`options.home.markets-table.status-col`),
@@ -299,6 +307,11 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         ></Icon>
                                     </TableText>
                                 );
+                            },
+                            sortType: (firstElem: any, secondElem: any) => {
+                                if (firstElem.original.balances.amount > secondElem.original.balances.amount) return 1;
+                                if (firstElem.original.balances.amount < secondElem.original.balances.amount) return -1;
+                                return 0;
                             },
                         },
                     ]}

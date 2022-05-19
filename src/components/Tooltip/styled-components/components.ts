@@ -15,6 +15,7 @@ export const Icon = styled.i<{ color?: string; fontSize?: string; margin?: strin
 
 export const Text = styled.span<{ margin?: string }>`
     line-height: 110%;
+    font-size: 12px;
     color: var(--primary-color);
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
 `;

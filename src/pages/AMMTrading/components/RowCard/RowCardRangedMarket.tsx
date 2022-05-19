@@ -210,7 +210,7 @@ const RowCardRangedMarket: React.FC = () => {
                                 <Container.SubContainer.Header>
                                     {t('options.market.overview.amm-liquidity')}
                                     <Tooltip
-                                        message={t('options.market.overview.amm-liquidity-tooltip')}
+                                        message={t('options.market.overview.range-amm-liquidity-tooltip')}
                                         type={'info'}
                                         placement={'right'}
                                         container={{ alignItems: 'center' }}

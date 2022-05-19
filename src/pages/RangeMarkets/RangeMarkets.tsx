@@ -7,12 +7,12 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
-import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
+import { POLYGON_ID } from 'constants/network';
 import { CONVERT_TO_6_DECIMALS } from 'constants/token';
-import InfoBanner from 'components/InfoBanner';
-import styled from 'styled-components';
-import { FlexDiv } from 'theme/common';
-import { Trans } from 'react-i18next';
+// import InfoBanner from 'components/InfoBanner';
+// import styled from 'styled-components';
+// import { FlexDiv } from 'theme/common';
+// import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
@@ -97,7 +97,7 @@ const RangeMarkets: React.FC = () => {
 
     return (
         <>
-            <BannerContainer>
+            {/* <BannerContainer>
                 <InfoBanner>
                     <Trans
                         i18nKey="options.home.polygon-trading-competition-1"
@@ -127,7 +127,7 @@ const RangeMarkets: React.FC = () => {
                         }}
                     />
                 </InfoBanner>
-            </BannerContainer>
+            </BannerContainer> */}
             <HotMarketsRanged optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />
             <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
             {networkId === 1 && <Loader hideMainnet={true} />}
@@ -135,21 +135,21 @@ const RangeMarkets: React.FC = () => {
     );
 };
 
-const BannerContainer = styled(FlexDiv)`
-    width: 90% !important;
-    padding-bottom: 50px;
-    strong {
-        font-weight: bold;
-        cursor: pointer;
-        margin-left: 0.2em;
-        color: var(--input-border-color);
-    }
-    a {
-        display: contents;
-        font-weight: bold;
-        cursor: pointer;
-        color: var(--input-border-color);
-    }
-`;
+// const BannerContainer = styled(FlexDiv)`
+//     width: 90% !important;
+//     padding-bottom: 50px;
+//     strong {
+//         font-weight: bold;
+//         cursor: pointer;
+//         margin-left: 0.2em;
+//         color: var(--input-border-color);
+//     }
+//     a {
+//         display: contents;
+//         font-weight: bold;
+//         cursor: pointer;
+//         color: var(--input-border-color);
+//     }
+// `;
 
 export default RangeMarkets;

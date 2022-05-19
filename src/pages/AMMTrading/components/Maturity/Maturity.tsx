@@ -179,7 +179,11 @@ const Maturity: React.FC = () => {
     return (
         <Container>
             <Header>{t('options.market.trade-card.maturity.card-title')}</Header>
-            <Label>{t('options.market.trade-card.maturity.exercise-options')}</Label>
+            <Label>
+                {nothingToExercise
+                    ? t('options.market.trade-card.maturity.nothing-to-exercise')
+                    : t('options.market.trade-card.maturity.exercise-options')}
+            </Label>
             <OptionsContainer>
                 <Input
                     container={{ height: '60px', margin: '0 10px 0 0' }}

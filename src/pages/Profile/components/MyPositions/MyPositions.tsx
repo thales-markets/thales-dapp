@@ -56,7 +56,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({
             rangedPositions.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 modifiedValue.balances.priceDiff = 0;
-                modifiedValue.market.strikePrice = value.market.leftPrice + ' - ' + value.market.rightPrice;
+                modifiedValue.market.strikePrice =
+                    formatCurrencyWithSign(USD_SIGN, value.market.leftPrice) +
+                    ' - ' +
+                    formatCurrencyWithSign(USD_SIGN, value.market.rightPrice);
                 modifiedValue.range = true;
                 newArray.push(modifiedValue);
             });
@@ -103,7 +106,15 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     width="36px"
                                                     height="36px"
                                                     currencyKey={data.market.currencyKey}
-                                                    iconType={!data.range ? 0 : data.balances.type === 'IN' ? 1 : 2}
+                                                    iconType={
+                                                        !data.range
+                                                            ? data?.balances?.type === 'UP'
+                                                                ? 4
+                                                                : 5
+                                                            : data?.balances?.type === 'IN'
+                                                            ? 1
+                                                            : 2
+                                                    }
                                                 />
                                                 <Card.Section>
                                                     <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
@@ -239,17 +250,26 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                     searchQuery={searchText}
                     columns={[
                         {
+                            id: 'market.currencyKey',
                             Header: <>{t('options.home.markets-table.asset-col')}</>,
-                            accessor: 'market.currencyKey',
-                            Cell: (_props: any) => {
+                            accessor: (row: any) => {
                                 return (
                                     <Currency.Name
-                                        currencyKey={_props?.cell?.value}
+                                        currencyKey={row?.market?.currencyKey}
                                         showIcon={true}
                                         hideAssetName={true}
                                         iconProps={{ type: 'asset' }}
                                         synthIconStyle={{ width: 32, height: 32 }}
                                         spanStyle={{ float: 'left' }}
+                                        additionalIconType={
+                                            !row.range
+                                                ? row?.balances?.type === 'UP'
+                                                    ? 4
+                                                    : 5
+                                                : row?.balances?.type === 'IN'
+                                                ? 1
+                                                : 2
+                                        }
                                     />
                                 );
                             },
@@ -288,6 +308,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     </TableText>
                                 );
                             },
+                            sortable: true,
                         },
                         {
                             Header: t(`options.home.markets-table.current-asset-price-col`),
@@ -296,12 +317,28 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     {formatCurrencyWithSign(USD_SIGN, exchangeRates?.[row.market.currencyKey] || 0)}
                                 </TableText>
                             ),
+                            sortType: (firstElem: any, secondElem: any) => {
+                                if (
+                                    (exchangeRates?.[firstElem.original.market.currencyKey] || 0) >
+                                    (exchangeRates?.[secondElem.original.market.currencyKey] || 0)
+                                )
+                                    return 1;
+
+                                if (
+                                    (exchangeRates?.[firstElem.original.market.currencyKey] || 0) <
+                                    (exchangeRates?.[secondElem.original.market.currencyKey] || 0)
+                                )
+                                    return -1;
+                                return 0;
+                            },
+                            sortable: true,
                         },
                         {
                             Header: t(`options.home.markets-table.time-remaining-col`),
                             accessor: (row: any) => (
                                 <TimeRemaining end={row.market.maturityDate} fontSize={15} showFullCounter={true} />
                             ),
+                            sortable: true,
                         },
                         {
                             Header: t('options.leaderboard.trades.table.amount-col'),
@@ -326,6 +363,12 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     </TableText>
                                 );
                             },
+                            sortType: (firstElem: any, secondElem: any) => {
+                                if (firstElem.original.balances.amount > secondElem.original.balances.amount) return 1;
+                                if (firstElem.original.balances.amount < secondElem.original.balances.amount) return -1;
+                                return 0;
+                            },
+                            sortable: true,
                         },
                         {
                             Header: t('options.home.market-card.position-value'),
