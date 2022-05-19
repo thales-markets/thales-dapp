@@ -88,12 +88,19 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
 
     const showOnlyLiquidFromCookie = cookies.get('showOnlyLiquidRanged' + networkId);
     const tableViewFromCookie = cookies.get('showTableViewRanged' + networkId);
+    const isWideDesktop = window.innerWidth > 1250;
 
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
     const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
     const [sortOptions, setSortOptions] = useState(GridSortFilters);
     const [tableView, setTableView] = useState<boolean>(
-        tableViewFromCookie !== undefined ? (tableViewFromCookie === 'false' ? false : true) : window.innerWidth > 1250
+        isWideDesktop
+            ? tableViewFromCookie !== undefined
+                ? tableViewFromCookie === 'false'
+                    ? false
+                    : true
+                : isWideDesktop
+            : isWideDesktop
     );
     const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
     const [assetFilters, setAssetFilters] = useState<string[]>([]);
