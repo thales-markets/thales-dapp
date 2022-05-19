@@ -71,7 +71,7 @@ const App = () => {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
 
                 if (!snxJSConnector) {
-                    import('utils/snxJSConnector').then((snx) => {
+                    import(/* webpackChunkName: "snxJSConnector" */ 'utils/snxJSConnector').then((snx) => {
                         const provider = loadProvider({
                             networkId,
                             infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
