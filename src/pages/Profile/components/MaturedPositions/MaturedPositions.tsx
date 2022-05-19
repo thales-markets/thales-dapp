@@ -271,6 +271,13 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                             accessor: (row: any) => {
                                 return <TableText>{formatCurrencyWithSign(USD_SIGN, row.market.finalPrice)}</TableText>;
                             },
+                            sortType: (firstElem: any, secondElem: any) => {
+                                if (firstElem.original.market.finalPrice > secondElem.original.market.finalPrice)
+                                    return 1;
+                                if (firstElem.original.market.finalPrice < secondElem.original.market.finalPrice)
+                                    return -1;
+                                return 0;
+                            },
                         },
                         {
                             Header: t(`options.home.markets-table.status-col`),
@@ -300,6 +307,11 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         ></Icon>
                                     </TableText>
                                 );
+                            },
+                            sortType: (firstElem: any, secondElem: any) => {
+                                if (firstElem.original.balances.amount > secondElem.original.balances.amount) return 1;
+                                if (firstElem.original.balances.amount < secondElem.original.balances.amount) return -1;
+                                return 0;
                             },
                         },
                     ]}
