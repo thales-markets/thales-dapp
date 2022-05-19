@@ -49,7 +49,6 @@ import { ReactComponent as InfoIcon } from 'assets/images/info-circle-blue.svg';
 import styled from 'styled-components';
 import SnxStakingTooltip from './components/SnxStakingTooltip';
 import AmmTooltip from './components/AmmTooltip';
-import ThalesRoyaleTooltip from './components/ThalesRoyaleTooltip';
 import { DefaultSubmitButton } from 'pages/Token/components/components';
 import onboardConnector from 'utils/onboardConnector';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
@@ -215,13 +214,10 @@ const StakingRewards: React.FC = () => {
     const baseRewards = stakingRewards ? stakingRewards.baseRewards : 0;
     const snxBonus = stakingRewards ? stakingRewards.snxBonus : 0;
     const ammBonus = stakingRewards ? stakingRewards.ammBonus : 0;
-    const thalesRoyaleBonus = stakingRewards ? stakingRewards.thalesRoyaleBonus : 0;
     const maxSnxBonus = stakingRewards ? stakingRewards.maxSnxBonus : 0;
     const maxAmmBonus = stakingRewards ? stakingRewards.maxAmmBonus : 0;
-    const maxThalesRoyaleBonus = stakingRewards ? stakingRewards.maxThalesRoyaleBonus : 0;
     const maxSnxBonusPercentage = stakingRewards ? stakingRewards.maxSnxBonusPercentage : 0;
     const maxAmmBonusPercentage = stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
-    const maxThalesRoyaleBonusPercentage = stakingRewards ? stakingRewards.maxThalesRoyaleBonusPercentage : 0;
     const ammVolumeRewardsMultiplier = stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
     const snxVolumeRewardsMultiplier = stakingRewards ? stakingRewards.snxVolumeRewardsMultiplier : 0;
     const baseRewardsPool = stakingRewards ? stakingRewards.baseRewardsPool : 0;
@@ -237,7 +233,6 @@ const StakingRewards: React.FC = () => {
 
     const snxStakedMaxBonus = additionalSnxStaked === 0 && baseRewards > 0;
     const ammVolumeMaxBonus = additionalAmmVolume === 0 && baseRewards > 0;
-    const participatedInRoyale = !!(stakingRewards && stakingRewards.hasParticipatedInCurrentOrLastRoyale);
 
     return (
         <EarnSection
@@ -283,7 +278,7 @@ const StakingRewards: React.FC = () => {
                         {formatCurrencyWithKey(THALES_CURRENCY, baseRewardsPool, 0, true)}
                     </StakingRewardsHeaderContent>
                 </StakingRewardsItem>
-                <StakingRewardsItem orderOnMobile={2} style={{ gridColumn: 'span 9', padding: 15 }}>
+                <StakingRewardsItem orderOnMobile={2} style={{ gridColumn: 'span 8', padding: 15 }}>
                     <StakingRewardsHeaderLabel>
                         {t('options.earn.thales-staking.staking-rewards.weekly-bonus-rewards')}
                     </StakingRewardsHeaderLabel>
@@ -405,59 +400,6 @@ const StakingRewards: React.FC = () => {
                         <BonusRewardButton target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.AMM}>
                             <BonusRewardInnerButton>
                                 {t('options.earn.thales-staking.staking-rewards.bonus-button.amm-label')}
-                            </BonusRewardInnerButton>
-                        </BonusRewardButton>
-                    )}
-                </StakingRewardsItem>
-                <StakingRewardsItem orderOnMobile={6}>
-                    <StakingRewardsLabel color="linear-gradient(87.09deg, #9AB676 -1%, #0F803C 106.68%)">
-                        {t('options.earn.thales-staking.staking-rewards.thales-royale-label')}
-                        <StyledMaterialTooltip
-                            arrow
-                            interactive
-                            title={
-                                <ThalesRoyaleTooltip
-                                    maxPercentage={maxThalesRoyaleBonusPercentage}
-                                    participatedInRoyale={participatedInRoyale}
-                                />
-                            }
-                        >
-                            <BonusInfoIcon />
-                        </StyledMaterialTooltip>
-                    </StakingRewardsLabel>
-                    <StakingRewardsNotice>
-                        {t('options.earn.thales-staking.staking-rewards.max-reward-label', {
-                            max: formatCurrencyWithKey(THALES_CURRENCY, maxThalesRoyaleBonus),
-                        })}
-                    </StakingRewardsNotice>
-                    <StakingRewardsContent>
-                        {formatCurrencyWithKey(THALES_CURRENCY, thalesRoyaleBonus)}
-                    </StakingRewardsContent>
-                    <BonusInfo>
-                        <BonusCurrent>
-                            <BonusCurrentLabel>
-                                {t(
-                                    'options.earn.thales-staking.staking-rewards.bonus-info.current-thales-royale-label'
-                                )}
-                                :
-                            </BonusCurrentLabel>
-                            <BonusCurrentContent>
-                                {t(
-                                    `options.earn.thales-staking.staking-rewards.bonus-info.thales-royale-participation-${
-                                        participatedInRoyale ? 'yes' : 'no'
-                                    }`
-                                )}
-                            </BonusCurrentContent>
-                        </BonusCurrent>
-                    </BonusInfo>
-                    {participatedInRoyale ? (
-                        <MaxBonusNotice>
-                            {t('options.earn.thales-staking.staking-rewards.bonus-info.max-bonus-notice')}
-                        </MaxBonusNotice>
-                    ) : (
-                        <BonusRewardButton target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.ThalesRoyale}>
-                            <BonusRewardInnerButton>
-                                {t('options.earn.thales-staking.staking-rewards.bonus-button.thales-royale-label')}
                             </BonusRewardInnerButton>
                         </BonusRewardButton>
                     )}
