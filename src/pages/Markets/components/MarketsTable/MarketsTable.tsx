@@ -165,18 +165,15 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         []
     );
 
-    const ammPriceSort = useMemo(
-        () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
-            if (desc) {
-                return +rowA.values[columnId].props.red.slice(1) > +rowB.values[columnId].props.red.slice(1) ? 1 : -1;
-            } else {
-                return +rowA.values[columnId].props.green.slice(1) < +rowB.values[columnId].props.green.slice(1)
-                    ? 1
-                    : -1;
-            }
-        },
-        []
-    );
+    const ammPriceSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
+        const leftPrice = rowA.values[columnId].props.red.slice(1);
+        const rightPrice = rowB.values[columnId].props.red.slice(1);
+        if (desc) {
+            return Math.abs(Number(leftPrice) - 0.5) < Math.abs(Number(rightPrice) - 0.5) ? 1 : -1;
+        } else {
+            return +rowA.values[columnId].props.green.slice(1) < +rowB.values[columnId].props.green.slice(1) ? 1 : -1;
+        }
+    };
 
     const columns: Array<any> = useMemo(() => {
         return [
@@ -257,7 +254,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                       {
                           Header: t(`options.home.markets-table.price-up-down-col`),
                           accessor: (row: any) => <RatioText green={row.longPrice} red={row.shortPrice} />,
-                          sortType: ammPriceSort,
+                          sortType: ammPriceSort(),
                       },
                   ]
                 : []),
