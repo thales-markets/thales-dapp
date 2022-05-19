@@ -96,6 +96,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
 
     const showOnlyLiquidFromCookie = cookies.get('showOnlyLiquid' + networkId);
     const tableViewFromCookie = cookies.get('showTableView' + networkId);
+    const chosenAsset = cookies.get('chosenAsset' + networkId);
     const isWideDesktop = window.innerWidth > 1250;
 
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
@@ -111,7 +112,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             : isWideDesktop
     );
     const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
-    const [assetFilters, setAssetFilters] = useState<string[]>([]);
+    const [assetFilters, setAssetFilters] = useState<string[]>(chosenAsset ? chosenAsset : []);
     const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(
         showOnlyLiquidFromCookie !== undefined ? (showOnlyLiquidFromCookie === 'false' ? false : true) : true
     );
@@ -335,18 +336,22 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     }, [optionsMarkets, showOnlyLiquid, assetFilters]);
 
     useEffect(() => {
-        const chosenAsset = cookies.get('chosenAsset' + networkId);
-
-        if ((assetFilters?.length && assetFilters !== chosenAsset) || chosenAsset == undefined) {
-            cookies.set('chosenAsset' + networkId, assetFilters?.length ? assetFilters : '');
+        if (assetFilters !== chosenAsset || chosenAsset == undefined) {
+            cookies.set('chosenAsset' + networkId, assetFilters?.length ? assetFilters : '', {
+                path: '/',
+            });
         }
 
         if (showOnlyLiquidFromCookie !== showOnlyLiquid || showOnlyLiquidFromCookie == undefined) {
-            cookies.set('showOnlyLiquid' + networkId, showOnlyLiquid);
+            cookies.set('showOnlyLiquid' + networkId, showOnlyLiquid, {
+                path: '/',
+            });
         }
 
         if (tableViewFromCookie !== tableView || tableViewFromCookie == undefined) {
-            cookies.set('showTableView' + networkId, tableView);
+            cookies.set('showTableView' + networkId, tableView, {
+                path: '/',
+            });
         }
     }, [assetFilters, showOnlyLiquid, tableView]);
 
@@ -409,14 +414,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         gotoPage(0);
     }, [globalFilter, showOnlyLiquid, assetFilters]);
 
-    // useEffect(() => {
-    //     setDataCount(data.length);
-    // }, [data?.length, showOnlyLiquid, assetFilters, globalFilter]);
-
     useEffect(() => {
         setPageSize(20);
-        const chosenAsset = cookies.get('chosenAsset' + networkId);
-        chosenAsset ? setAssetFilters(chosenAsset) : '';
     }, []);
 
     const filters = useMemo(() => {

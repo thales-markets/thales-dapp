@@ -88,6 +88,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
 
     const showOnlyLiquidFromCookie = cookies.get('showOnlyLiquidRanged' + networkId);
     const tableViewFromCookie = cookies.get('showTableViewRanged' + networkId);
+    const chosenAsset = cookies.get('chosenAssetRanged' + networkId);
+
     const isWideDesktop = window.innerWidth > 1250;
 
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
@@ -103,7 +105,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
             : isWideDesktop
     );
     const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
-    const [assetFilters, setAssetFilters] = useState<string[]>([]);
+    const [assetFilters, setAssetFilters] = useState<string[]>(chosenAsset ? chosenAsset : []);
     const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(
         showOnlyLiquidFromCookie !== undefined ? (showOnlyLiquidFromCookie === 'false' ? false : true) : true
     );
@@ -326,18 +328,22 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
 
     // Get/Set asset and other filters in/from cookie
     useEffect(() => {
-        const chosenAsset = cookies.get('chosenAssetRanged' + networkId);
-
-        if (assetFilters?.length && assetFilters !== chosenAsset) {
-            cookies.set('chosenAssetRanged' + networkId, assetFilters?.length ? assetFilters : '');
+        if (assetFilters !== chosenAsset) {
+            cookies.set('chosenAssetRanged' + networkId, assetFilters?.length ? assetFilters : '', {
+                path: '/',
+            });
         }
 
         if (showOnlyLiquidFromCookie !== showOnlyLiquid || showOnlyLiquidFromCookie == undefined) {
-            cookies.set('showOnlyLiquidRanged' + networkId, showOnlyLiquid);
+            cookies.set('showOnlyLiquidRanged' + networkId, showOnlyLiquid, {
+                path: '/',
+            });
         }
 
         if (tableViewFromCookie !== tableView || tableViewFromCookie == undefined) {
-            cookies.set('showTableViewRanged' + networkId, tableView);
+            cookies.set('showTableViewRanged' + networkId, tableView, {
+                path: '/',
+            });
         }
     }, [assetFilters, showOnlyLiquid, tableView]);
 
@@ -402,8 +408,6 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
 
     useEffect(() => {
         setPageSize(20);
-        const chosenAsset = cookies.get('chosenAssetRanged' + networkId);
-        chosenAsset ? setAssetFilters(chosenAsset) : '';
     }, []);
 
     const filters = useMemo(() => {
