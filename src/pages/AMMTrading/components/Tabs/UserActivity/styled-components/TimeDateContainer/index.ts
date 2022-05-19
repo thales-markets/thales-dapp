@@ -12,7 +12,7 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
     align-items: center;
     justify-content: center;
     color: var(--primary-color);
-    width: 100px;
+    width: 110px;
 `;
 
 const Date = styled.span`

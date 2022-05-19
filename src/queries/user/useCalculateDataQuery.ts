@@ -9,6 +9,7 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
         async () => {
             let [profit, volume, trades, gain, investment] = [0, 0, 0, 0, 0];
             const marketTx = await thalesData.binaryOptions.optionTransactions({
+                max: 1000,
                 account: walletAddress,
                 network: networkId,
             });

@@ -21,11 +21,14 @@ import { UI_COLORS } from 'constants/ui';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { getStableCoinForNetwork } from '../../../../../utils/currency';
+import { MarketType, OptionsMarketInfo, RangedMarketData } from 'types/options';
+import { MARKET_TYPE } from 'constants/options';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
-const MarketActivity: React.FC = () => {
+const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     const { t } = useTranslation();
 
-    const optionsMarket = useMarketContext();
+    const optionsMarket = marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
@@ -37,9 +40,14 @@ const MarketActivity: React.FC = () => {
 
     const tradesQuery = useBinaryOptionsTradesQuery(
         optionsMarket?.address,
-        optionsMarket?.longAddress,
-        optionsMarket?.shortAddress,
+        marketType == MARKET_TYPE[0]
+            ? (optionsMarket as OptionsMarketInfo)?.longAddress
+            : (optionsMarket as RangedMarketData)?.inAddress,
+        marketType == MARKET_TYPE[0]
+            ? (optionsMarket as OptionsMarketInfo)?.shortAddress
+            : (optionsMarket as RangedMarketData)?.outAddress,
         networkId,
+        marketType,
         { enabled: isAppReady && !!optionsMarket?.address }
     );
 
@@ -57,8 +65,20 @@ const MarketActivity: React.FC = () => {
         switch (type) {
             case 'buy':
                 return UI_COLORS.GREEN;
+            case 'long':
+                return UI_COLORS.GREEN;
+            case 'up':
+                return UI_COLORS.GREEN;
             case 'sell':
                 return UI_COLORS.RED;
+            case 'short':
+                return UI_COLORS.RED;
+            case 'down':
+                return UI_COLORS.RED;
+            case 'in':
+                return UI_COLORS.IN_COLOR;
+            case 'out':
+                return UI_COLORS.OUT_COLOR;
             default:
                 return 'var(--primary-color)';
         }
@@ -68,6 +88,7 @@ const MarketActivity: React.FC = () => {
         <>
             <Table
                 data={transactions}
+                defaultPage={10}
                 columns={[
                     {
                         Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,

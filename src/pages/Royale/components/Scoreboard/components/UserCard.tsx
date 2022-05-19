@@ -7,7 +7,7 @@ import { OP_KOVAN_SUSD, OP_sUSD } from 'components/Swap/tokens';
 import { SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
+import { RoyaleTooltip } from 'components/OldVersion/old-components';
 import { Positions } from 'pages/Royale/Queries/usePositionsQuery';
 import { FooterData } from 'pages/Royale/Queries/useRoyaleFooterQuery';
 import useRoyalePassIdQuery from 'pages/Royale/Queries/useRoyalePassIdQuery';

@@ -19,7 +19,7 @@ const useExchangeRatesMarketDataQuery = (
         async () => {
             const filteredMarkets = uniqBy(markets, (market) => market.currencyKey).map((market) => ({
                 currencyKey: market.currencyKey,
-                address: market.address,
+                address: (market as any).leftMarket ? (market as any).leftMarket.id : market.address,
             }));
 
             const marketData: any = await Promise.all(

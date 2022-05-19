@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Background, Wrapper } from 'theme/common';
 import Cookies from 'universal-cookie';
 import { getIsOVM, getIsPolygon } from 'utils/network';
-import WalletNotConnectedDialog from 'pages/Options/components/WalletNotConnectedDialog/WalletNotConnectedDialog';
+import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 import { getIsAppReady } from 'redux/modules/app';
 import RoyaleArena from './components/Arena/RoyaleArena';
 import FooterV2 from './components/Footer/Footer';

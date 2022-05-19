@@ -6,7 +6,9 @@ export type Phase = 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';
 
-export type OptionType = 'up' | 'down';
+export type OptionType = 'up' | 'down' | 'in' | 'out';
+
+export type RangedMarketPositionType = 'in' | 'out';
 
 export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
@@ -16,13 +18,15 @@ export type TooltipType = 'error' | 'success' | 'info';
 
 export type TradingType = 'AMM' | 'Orderbook';
 
+export type MarketType = 'positional' | 'ranged';
+
 export type OptionsTransaction = {
     hash: string;
     type: OptionsTransactionType;
     account?: string;
     currencyKey?: CurrencyKey;
     timestamp: number;
-    side: OptionSide;
+    side: OptionSide | RangedMarketPositionType;
     amount: number | string;
     market: string;
     status?: 'pending' | 'confirmed';
@@ -76,6 +80,94 @@ export type HistoricalOptionsMarketInfo = {
     ammLiquidity?: number;
 };
 
+export type RangedMarket = {
+    address: string;
+    timestamp: number;
+    currencyKey: CurrencyKey;
+    maturityDate: number;
+    leftPrice: number;
+    rightPrice: number;
+    inAddress: string;
+    outAddress: string;
+    leftMarket: {
+        id: string;
+        creator: string;
+        longAddress: string;
+        shortAddress: string;
+    };
+    rightMarket: {
+        id: string;
+        creator: string;
+        longAddress: string;
+        shortAddress: string;
+    };
+    isOpen: boolean;
+    result: OptionType;
+    finalPrice: number;
+};
+
+export type RangedMarketInfo = {
+    address: string;
+    timestamp: number;
+    timeRemaining: number;
+    asset: CurrencyKey;
+    currencyKey: CurrencyKey;
+    maturityDate: number;
+    expiryDate: number;
+    leftPrice: number;
+    rightPrice: number;
+    inAddress: string;
+    outAddress: string;
+    leftMarket: {
+        id: string;
+        creator: string;
+        longAddress: string;
+        shortAddress: string;
+    };
+    rightMarket: {
+        id: string;
+        creator: string;
+        longAddress: string;
+        shortAddress: string;
+    };
+    isOpen: boolean;
+    result: OptionType;
+    finalPrice: number;
+    availableIn: number;
+    availableOut: number;
+    inPrice: number;
+    outPrice: number;
+    phase: string;
+    phaseNum: number;
+    range: string;
+};
+
+export type RangedMarketData = {
+    isResolved: boolean;
+    address: string;
+    currencyKey: CurrencyKey;
+    asset: string;
+    currentPrice: number;
+    finalPrice: number;
+    leftPrice: number;
+    rightPrice: number;
+    maturityDate: number;
+    expiryDate: number;
+    phase: Phase;
+    timeRemaining: number;
+    result: RangedMarketPositionType;
+    availablePositions: {
+        toBuyIn: number;
+        toBuyOut: number;
+        toSellIn: number;
+        toSellOut: number;
+    };
+    inAddress: string;
+    outAddress: string;
+    leftMarketAddress: string;
+    rightMarketAddress: string;
+};
+
 export type OptionsMarketInfo = {
     isResolved: boolean;
     address: string;
@@ -117,6 +209,11 @@ export type OptionsMarketInfo = {
 export type AccountMarketInfo = {
     long: number;
     short: number;
+};
+
+export type RangedMarketBalanceInfo = {
+    in: number;
+    out: number;
 };
 
 export type OptionsMarkets = HistoricalOptionsMarketInfo[];

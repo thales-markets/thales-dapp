@@ -35,3 +35,20 @@ export const getStableCoinForNetwork = (networkId: number) => {
 
     return SYNTHS_MAP.sUSD;
 };
+
+export const sortCurrencies = (a: string, b: string) => {
+    if (a === 'BTC' || a === 'sBTC') return -1;
+    if (b === 'BTC' || b === 'sETH') return 1;
+    if (a === 'ETH' || a === 'sETH') return -1;
+    if (b === 'ETH' || b === 'sETH') return 1;
+
+    if (a === 'SNX' || a === 'sSNX') return -1;
+    if (b === 'SNX' || b === 'sSNX') return 1;
+    if (a === 'LINK' || a === 'sLINK') return -1;
+    if (b === 'LINK' || b === 'sLINK') return 1;
+
+    if (a < b) return -1;
+    if (a > b) return 1;
+
+    return 0;
+};

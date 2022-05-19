@@ -25,11 +25,6 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             let claimable = 0;
             let claimableAmount = 0;
 
-            const optionsMarkets: OptionsMarkets = await thalesData.binaryOptions.markets({
-                max: Infinity,
-                network: networkId,
-            });
-
             const positionBalances: any = await thalesData.binaryOptions.positionBalances({
                 max: Infinity,
                 network: networkId,
@@ -70,21 +65,13 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                 })
             );
 
-            const claimablePosition = positionBalances.filter((balance: any) => {
-                if (Number(balance.amount) !== 0 && balance.position.market.result !== null) {
-                    if (balance.position.side === 'long' && balance.position.market.result === 0) {
-                        return true;
-                    }
-                    if (balance.position.side === 'short' && balance.position.market.result === 1) {
-                        return true;
-                    }
-                }
-                return false;
-            });
+            const maturedPositions = positionBalances.filter(
+                (balance: any) => Number(balance.amount) !== 0 && balance.position.market.result !== null
+            );
 
-            claimablePosition.map((balance: any) => {
-                claimable++;
-                claimableAmount += Number(ethers.utils.formatEther(balance.amount));
+            maturedPositions.map((balance: any) => {
+                claimable = isOptionClaimable(balance) ? claimable + 1 : claimable;
+                claimableAmount += isOptionClaimable(balance) ? Number(ethers.utils.formatEther(balance.amount)) : 0;
                 matured.push({
                     link: buildOptionsMarketLink(balance.position.market.id),
                     market: {
@@ -100,7 +87,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                         type: balance.position.side === 'long' ? 'UP' : 'DOWN',
                     },
                     claimed: false,
-                    claimable: true,
+                    claimable: isOptionClaimable(balance),
                 });
             });
 
@@ -117,18 +104,25 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
                 }
             });
 
+            const claimedMap = new Map();
+
+            const optionsMarkets: OptionsMarkets = await thalesData.binaryOptions.markets({
+                max: Infinity,
+                network: networkId,
+            });
+
             optionsMarkets
                 .filter((market) => market.maturityDate <= +Date.now())
                 .map((market) => {
                     if (txMap.has(market.address)) {
-                        txMap.set(market.address, { market, tx: txMap.get(market.address) });
+                        claimedMap.set(market.address, { market, tx: txMap.get(market.address) });
                     }
                 });
 
             const result = {
                 claimable,
                 claimableAmount,
-                claimed: Array.from(txMap.values()),
+                claimed: Array.from(claimedMap.values()),
                 matured,
                 live,
             };
@@ -149,6 +143,17 @@ const hexToAscii = (str: any) => {
         }
     }
     return out;
+};
+
+const isOptionClaimable = (balance: any) => {
+    if (balance.position.side === 'long' && balance.position.market.result === 0) {
+        return true;
+    }
+    if (balance.position.side === 'short' && balance.position.market.result === 1) {
+        return true;
+    }
+
+    return false;
 };
 
 export default useAllPositions;

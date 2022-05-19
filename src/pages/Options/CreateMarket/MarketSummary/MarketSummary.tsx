@@ -9,7 +9,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import arrowUp from 'assets/images/green-arrow-up.svg';
 import arrowDown from 'assets/images/red-arrow-down.svg';
 import { USD_SIGN } from 'constants/currency';
-import { LightTooltip } from 'pages/Options/Market/components';
+import { LightTooltip } from 'components/OldVersion/old-components';
 import './media.scss';
 
 type MarketSummaryProps = {

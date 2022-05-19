@@ -5,7 +5,7 @@ import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import Swap from 'components/Swap/Swap';
 import { OP_sUSD, OP_KOVAN_SUSD, POLYGON_USDC } from 'components/Swap/tokens';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
+import { RoyaleTooltip } from 'components/OldVersion/old-components';
 import useEthBalanceQuery from 'queries/walletBalances/useEthBalanceQuery';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';

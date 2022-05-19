@@ -4,6 +4,7 @@ import { PHASE } from '../constants/options';
 import { OptionsMarkets, Phase } from '../types/options';
 import { getSynthAsset } from './currency';
 import { Color } from '@material-ui/lab';
+import { ethers } from 'ethers';
 
 export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
@@ -92,4 +93,24 @@ export const dispatchMarketNotification = (message: string, type?: Color) => {
         detail: { text: message, type: type },
     });
     document.dispatchEvent(marketNotificationEvent);
+};
+
+export const determineIfPositionalMarket = async (contract: ethers.Contract) => {
+    try {
+        await contract.estimateGas.creator();
+        return true;
+    } catch (e) {
+        console.log('E ', e);
+        return false;
+    }
+};
+
+export const determineIfRangedMarket = async (contract: ethers.Contract) => {
+    try {
+        await contract.estimateGas.leftMarket();
+        return true;
+    } catch (e) {
+        console.log('E ', e);
+        return false;
+    }
 };

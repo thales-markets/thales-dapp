@@ -10,21 +10,28 @@ import AMM from './components/AMM';
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import OrderbookView from './components/OrderbookView';
 import Maturity from './components/Maturity';
+import RangedMarketAMM from './components/RangedMarketAMM';
+import TabContainerRangedMarket from './components/TabContainer/TabContainerRangedMarket';
 
 import { MarketProvider } from './contexts/MarketContext';
 
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
-import { OptionsMarketInfo } from 'types/options';
+import useRangedMarketQuery from 'queries/options/rangedMarkets/useRangedMarketQuery';
+
+import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { TradingType } from 'types/options';
-import { buildHref, navigateTo } from 'utils/routes';
-import ROUTES from 'constants/routes';
+// import { buildHref, navigateTo } from 'utils/routes';
+// import ROUTES from 'constants/routes';
 import Loader from 'components/Loader';
 import { setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
 import { getIsPolygon } from '../../utils/network';
 import { getNetworkId } from '../../redux/modules/wallet';
+import { RangedMarketProvider } from './contexts/RangedMarketContext';
+import RangeMaturity from './components/Maturity/RangeMaturity';
 
 type MarketProps = {
     marketAddress: string;
+    isRangedMarket?: boolean;
 };
 
 const TradingTypes = [
@@ -36,17 +43,22 @@ const TradingTypes = [
     },
 ];
 
-const Market: React.FC<MarketProps> = ({ marketAddress }) => {
+const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const [optionMarket, setOptionMarket] = useState<OptionsMarketInfo | null>(null);
+    const [rangedMarket, setRangedMarket] = useState<RangedMarketData | null>(null);
     const [tradingType, setTradingType] = useState<TradingType>(TradingTypes[1].value as TradingType);
     const [inMaturityPhase, setMaturityPhase] = useState<boolean>(false);
     const dispatch = useDispatch();
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
-        enabled: isAppReady,
+        enabled: isAppReady && !isRangedMarket,
+    });
+
+    const rangedMarketQuery = useRangedMarketQuery(marketAddress, {
+        enabled: isAppReady && isRangedMarket,
     });
 
     useEffect(() => {
@@ -55,50 +67,72 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     useEffect(() => {
         const fetchMarketData = async () => {
-            if (marketQuery.isSuccess && marketQuery.data) {
+            if (isRangedMarket && rangedMarketQuery.isSuccess && rangedMarketQuery?.data) {
+                setRangedMarket(rangedMarketQuery?.data);
+            }
+            if (!isRangedMarket && marketQuery.isSuccess && marketQuery.data) {
                 setOptionMarket(marketQuery.data);
             } else if (marketQuery.data === null) {
-                navigateTo(buildHref(ROUTES.Options.Home));
+                // navigateTo(buildHref(ROUTES.Options.Home));
             }
         };
 
         fetchMarketData();
-    }, [marketQuery.isSuccess, marketAddress, networkId]);
+    }, [marketQuery.isSuccess, rangedMarketQuery.isSuccess, marketAddress, networkId]);
 
     useEffect(() => {
-        optionMarket?.phase == 'maturity' ? setMaturityPhase(true) : setMaturityPhase(false);
-    }, [optionMarket?.phase]);
+        if (!isRangedMarket && optionMarket?.phase == 'maturity') {
+            setMaturityPhase(true);
+        } else if (isRangedMarket && rangedMarket?.phase == 'maturity') {
+            setMaturityPhase(true);
+        } else {
+            setMaturityPhase(false);
+        }
+    }, [optionMarket?.phase, rangedMarket?.phase]);
 
-    return optionMarket ? (
-        <MarketProvider optionsMarket={optionMarket}>
-            {!inMaturityPhase && (
-                <HeaderContainer>
-                    <Switch
-                        active={tradingType == 'AMM'}
-                        disabled={getIsPolygon(networkId)}
-                        width={'94px'}
-                        height={'32px'}
-                        dotSize={'22px'}
-                        label={{
-                            firstLabel: TradingTypes[0].value,
-                            secondLabel: TradingTypes[1].value,
-                            fontSize: '25px',
-                        }}
-                        shadow={true}
-                        dotBackground={'var(--amm-switch-circle)'}
-                        handleClick={() => (tradingType == 'AMM' ? setTradingType('Orderbook') : setTradingType('AMM'))}
-                    />
-                </HeaderContainer>
+    return optionMarket || rangedMarket ? (
+        <>
+            {!isRangedMarket && (
+                <MarketProvider optionsMarket={optionMarket}>
+                    {!inMaturityPhase && (
+                        <HeaderContainer>
+                            <Switch
+                                active={tradingType == 'AMM'}
+                                disabled={getIsPolygon(networkId)}
+                                width={'94px'}
+                                height={'32px'}
+                                dotSize={'22px'}
+                                label={{
+                                    firstLabel: TradingTypes[0].value,
+                                    secondLabel: TradingTypes[1].value,
+                                    fontSize: '25px',
+                                }}
+                                shadow={true}
+                                dotBackground={'var(--amm-switch-circle)'}
+                                handleClick={() =>
+                                    tradingType == 'AMM' ? setTradingType('Orderbook') : setTradingType('AMM')
+                                }
+                            />
+                        </HeaderContainer>
+                    )}
+                    {tradingType == TradingTypes[0].value && <OrderbookView />}
+                    {tradingType == TradingTypes[1].value && (
+                        <MainContainer>
+                            {inMaturityPhase ? <Maturity /> : <AMM />}
+                            <TabContainer />
+                        </MainContainer>
+                    )}
+                </MarketProvider>
             )}
-            {/* <RowCard /> */}
-            {tradingType == TradingTypes[0].value && <OrderbookView />}
-            {tradingType == TradingTypes[1].value && (
-                <MainContainer>
-                    {inMaturityPhase ? <Maturity /> : <AMM />}
-                    <TabContainer />
-                </MainContainer>
+            {isRangedMarket && (
+                <RangedMarketProvider rangedMarket={rangedMarket}>
+                    <MainContainer>
+                        {inMaturityPhase ? <RangeMaturity /> : <RangedMarketAMM />}
+                        <TabContainerRangedMarket />
+                    </MainContainer>
+                </RangedMarketProvider>
             )}
-        </MarketProvider>
+        </>
     ) : (
         <Loader />
     );

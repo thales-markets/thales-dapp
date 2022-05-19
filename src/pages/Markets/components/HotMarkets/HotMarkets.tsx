@@ -41,7 +41,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.long}`,
                 pricePerOption: market.longPrice,
-                strikePrice: market.strikePrice,
+                strikePrice: '$ ' + market.strikePrice,
                 timeRemaining: market.timeRemaining,
                 potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.longPrice)),
                 address: market.address,
@@ -52,7 +52,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.short}`,
                 pricePerOption: market.shortPrice,
-                strikePrice: market.strikePrice,
+                strikePrice: '$ ' + market.strikePrice,
                 timeRemaining: market.timeRemaining,
                 potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.shortPrice)),
                 address: market.address,
@@ -190,8 +190,8 @@ const Title = styled.p`
     font-weight: 600;
     font-size: 25px;
     line-height: 38px;
-    color: #64d9fe;
-    border-bottom: 4px solid rgba(100, 217, 254, 0.5);
+    color: var(--notice-text);
+    border-bottom: 4px solid var(--card-border-color);
     padding: 4px 20px;
     text-transform: capitalize;
     position: relative;

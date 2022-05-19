@@ -18,8 +18,8 @@
     content: '\0071';
 }
 
-.icon--markets-overview:before {
-    content: '\0058';
+.icon--ranged-markets:before {
+    content: '\0072';
 }
 
 .icon--create-market:before {

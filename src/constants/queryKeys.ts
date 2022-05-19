@@ -26,6 +26,13 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        Positions: (walletAddress: string, marketAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'positions',
+            walletAddress,
+            marketAddress,
+            networkId,
+        ],
     },
     Rates: {
         ExchangeRates: (networkId: NetworkId) => ['rates', 'exchangeRates', networkId],
@@ -47,8 +54,10 @@ export const QUERY_KEYS = {
     },
     BinaryOptions: {
         Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
+        RangedMarkets: (networkId: NetworkId) => ['binaryOptions', 'rangedMarkets', networkId],
         SynthsMap: (networkId: NetworkId) => ['binaryOptions', 'synthsMap', networkId],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
+        RangedMarket: (marketAddress: string) => ['positionalMarkets', 'market', marketAddress],
         MarketFlippening: () => ['binaryOptions', 'marketFlippening'],
         ETHBTCMarketCapRatioHistory: () => ['binaryOptions', 'ETHBTCMarketCapRatioHistory'],
         EthBurnedCount: () => ['binaryOptions', 'ethBurnedCount'],
@@ -86,6 +95,7 @@ export const QUERY_KEYS = {
         Competition: (networkId: NetworkId) => ['binaryOptions', 'competition', networkId],
         Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
         OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
+        RangedLiquidity: (networkId: NetworkId) => ['binaryOptions', 'rangedLiquidity', networkId],
         AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
     },
     User: {
@@ -96,6 +106,12 @@ export const QUERY_KEYS = {
         AllPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'allPositions',
+            walletAddress,
+            networkId,
+        ],
+        RangedPositions: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'rangedPositions',
             walletAddress,
             networkId,
         ],

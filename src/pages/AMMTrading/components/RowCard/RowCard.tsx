@@ -226,7 +226,7 @@ const RowCard: React.FC = () => {
                                 <Container.SubContainer.Value>
                                     {(ammData && ammData.maxUp > 0) || (ammData && ammData.maxDown > 0) ? (
                                         <>
-                                            <Container.SubContainer.Value.Liquidity>
+                                            <Container.SubContainer.Value.Liquidity shortLiqFlag={false}>
                                                 {ammData ? ammData.maxUp?.toFixed(1) : '0'}
                                             </Container.SubContainer.Value.Liquidity>
                                             {' / '}
@@ -246,7 +246,7 @@ const RowCard: React.FC = () => {
                                     {t('options.market.overview.amm-price')}
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
-                                    <Container.SubContainer.Value.Liquidity>
+                                    <Container.SubContainer.Value.Liquidity shortLiqFlag={false}>
                                         {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceUp, 3) : '0'}
                                     </Container.SubContainer.Value.Liquidity>
                                     {' / '}

@@ -1,6 +1,6 @@
 import { Modal } from '@material-ui/core';
 import axios from 'axios';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
+import { RoyaleTooltip } from 'components/OldVersion/old-components';
 import React, { useMemo, useState, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -261,7 +261,7 @@ const StyledInfoIcon = styled(InfoIcon)`
 const UserAvatar = styled(Image)<{ winner?: boolean }>`
     width: 44px;
     height: 44px;
-    border-radius: 50%50%;
+    border-radius: 50% 50%;
     border: ${(props) => (props.winner ? '2px solid #FFE489' : 'none')};
     filter: ${(props) => (props.winner ? 'drop-shadow(0px 0px 15px rgba(255, 232, 155, 0.7))' : 'none')};
     @media (max-width: 1024px) {

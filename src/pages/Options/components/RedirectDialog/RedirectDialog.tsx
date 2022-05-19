@@ -1,5 +1,5 @@
 import { DialogTitle } from '@material-ui/core';
-import { StyledModal } from 'pages/Options/Market/TradeOptions/Orderbook/components';
+import { StyledModal } from 'components/OldVersion/old-components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';

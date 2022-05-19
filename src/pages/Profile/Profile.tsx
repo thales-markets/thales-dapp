@@ -4,7 +4,7 @@ import TableGridSwitch from 'pages/Markets/components/Input/TableGridSwitch';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useAllPositions from 'queries/user/useAllPositions';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -22,6 +22,8 @@ import { USD_SIGN } from 'constants/currency';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import Loader from '../../components/Loader';
 import { getIsPolygon } from '../../utils/network';
+import useRangedPositions from 'queries/user/useRangedPositions';
+import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -36,6 +38,8 @@ const Profile: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
     const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
+    const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
+    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : undefined;
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
         refetchInterval: false,
@@ -51,12 +55,25 @@ const Profile: React.FC = () => {
         ? userPositionsQuery.data
         : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
 
+    const userRangePositionsQuery = useRangedPositions(networkId, walletAddress as any, {
+        enabled: isAppReady && walletAddress !== null,
+    });
+
+    const userRangePositions = userRangePositionsQuery.isSuccess
+        ? userRangePositionsQuery.data
+        : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
+
     const allTxAndDataQuery = useCalculateDataQuery(networkId, walletAddress as any, { enabled: isAppReady });
     const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
     const [isSimpleView, setSimpleView] = useState(true);
     const [searchText, setSearchText] = useState('');
     const [view, setView] = useState(NavItems.MyPositions);
+
+    const claimable = useMemo(() => {
+        return positions.claimable + userRangePositions.claimable;
+    }, [positions, userRangePositions]);
+    console.log(positions, userRangePositions);
 
     return (
         <>
@@ -86,9 +103,9 @@ const Profile: React.FC = () => {
                             className={view === NavItems.MaturedPositions ? 'active' : ''}
                         >
                             {NavItems.MaturedPositions}
-                            {positions.claimable > 0 && (
+                            {claimable > 0 && (
                                 <>
-                                    <Notification> {positions.claimable} </Notification>
+                                    <Notification> {claimable} </Notification>
                                 </>
                             )}
                         </NavItem>
@@ -106,6 +123,7 @@ const Profile: React.FC = () => {
                                 isSimpleView={isSimpleView}
                                 exchangeRates={exchangeRates}
                                 positions={positions.live}
+                                rangedPositions={userRangePositions.live}
                                 searchText={searchText}
                                 isLoading={userPositionsQuery.isLoading}
                             />
@@ -115,13 +133,15 @@ const Profile: React.FC = () => {
                                 isSimpleView={isSimpleView}
                                 positions={positions.matured}
                                 claimed={positions.claimed}
+                                claimedRange={userRangePositions.claimed}
                                 searchText={searchText}
                                 isLoading={userPositionsQuery.isLoading}
+                                rangedPositions={userRangePositions.matured}
                             />
                         )}
                         {view === NavItems.History && (
                             <History
-                                markets={markets}
+                                markets={[...(markets as any), ...(rangedMarkets as any)]}
                                 trades={DataForUi ? DataForUi.trades : []}
                                 searchText={searchText}
                                 isLoading={allTxAndDataQuery.isLoading}

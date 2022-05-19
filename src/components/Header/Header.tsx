@@ -8,7 +8,7 @@ import burger from 'assets/images/burger.svg';
 import { ReactComponent as PlayIcon } from 'assets/images/play.svg';
 import { ReactComponent as PauseIcon } from 'assets/images/pause.svg';
 import Cookies from 'universal-cookie';
-import { LightTooltip } from 'pages/Options/Market/components';
+import { LightTooltip } from 'components/OldVersion/old-components';
 import LanguageSelector from 'components/LanguageSelector';
 
 enum BurgerState {

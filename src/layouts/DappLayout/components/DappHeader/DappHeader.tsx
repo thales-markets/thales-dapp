@@ -42,6 +42,15 @@ const DappHeader: React.FC = () => {
                         label={t('common.sidebar.markets')}
                     />
 
+                    {!isPolygon && (
+                        <DappHeaderItem
+                            className={location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}
+                            href={buildHref(ROUTES.Options.RangeMarkets)}
+                            iconName="ranged-markets"
+                            label={t('common.sidebar.ranged-markets')}
+                        />
+                    )}
+
                     {isPolygon && (
                         <DappHeaderItem
                             className={location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''}
@@ -113,6 +122,14 @@ const DappHeader: React.FC = () => {
 
 const getTitle = (t: any) => {
     if (location.pathname === ROUTES.Options.Home) return t('common.sidebar.markets');
+    if (location.pathname === ROUTES.Options.RangeMarkets) {
+        return (
+            <>
+                {t('common.sidebar.ranged-markets')}
+                <FloatingBetaTag>{'Beta'}</FloatingBetaTag>
+            </>
+        );
+    }
     if (location.pathname.includes(ROUTES.Governance.Home)) return t('common.sidebar.governance-label');
     if (location.pathname === ROUTES.Options.Token) return t('common.sidebar.earn-label');
     if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
@@ -124,6 +141,19 @@ const Container = styled.div`
     width: 100%;
     flex: unset;
     position: relative;
+`;
+
+const FloatingBetaTag = styled.div`
+    display: inline;
+    position: absolute;
+    background-color: rgb(60, 181, 91);
+    border-radius: 5px;
+    color: rgb(246, 246, 254);
+    font-size: 14px;
+    padding: 4px 6px;
+    margin-left: 0;
+    margin-top: -3px;
+    z-index: 1;
 `;
 
 const PageTitle = styled.p`

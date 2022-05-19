@@ -181,6 +181,7 @@
         },
         "sidebar": {
             "markets": "Markets",
+            "ranged-markets": "Ranged Markets",
             "trending-label": "Trending markets",
             "overview-label": "Markets overview",
             "olympics-label": "Olympics markets",
@@ -231,7 +232,9 @@
             "display-name": "Display Name",
             "change-display-name": "Change Display Name"
         },
-        "no-data-available": "No data available"
+        "no-data-available": "No data available",
+        "all": "All",
+        "none": "none"
     },
     "modals": {
         "gwei": {
@@ -318,6 +321,7 @@
             },
             "hot-markets": {
                 "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
+                "range-markets-tooltip-text": "Ranged positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
                 "most-profitable-markets": "Most profitable markets"
             },
             "market-creation": {
@@ -345,6 +349,7 @@
                 "amm-size-col": "AMM liquidity",
                 "out-of-liquidity": "Out Of Liquidity",
                 "price-up-down-col": "Price UP/DOWN",
+                "price-in-out-col": "Price IN/OUT",
                 "time-remaining-col": "Time remaining",
                 "status-col": "Status",
                 "maturity-date-col": "Maturity Date",
@@ -697,6 +702,9 @@
                 "orderbook": "Order book",
                 "amm": "AMM"
             },
+            "ranged-markets": {
+                "strike-range": "Strike range"
+            },
             "your-activity": {
                 "time-date": "Time/Date",
                 "name": "Asset Name",
@@ -726,6 +734,7 @@
                 "deposited-currency-label": "Deposited {{currencyKey}}",
                 "amm-liquidity": "AMM liquidity",
                 "amm-liquidity-tooltip": "Currently available amounts of UP and DOWN tokens.",
+                "range-amm-liquidity-tooltip": "Currently available amounts of IN and OUT tokens.",
                 "amm-price": "AMM Price",
                 "final-result": "Final Result",
                 "event-name-label": "Event Name",
@@ -811,6 +820,7 @@
                     "card-title": "Market has been closed",
                     "card-subtitle": "Positions available:",
                     "exercise-options": "You can exercise following positions",
+                    "nothing-to-exercise": "You don't have positions to exercise.",
                     "payout-amount-label": "Payout amount",
                     "end-label": "Time left to exercise",
                     "confirm-button": {
@@ -1144,6 +1154,8 @@
             },
             "long": "up",
             "short": "down",
+            "in": "in",
+            "out": "out",
             "amount-long": "{{amount}} up",
             "amount-short": "{{amount}} down",
             "long-price": "Up price",

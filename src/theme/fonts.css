@@ -14,36 +14,6 @@
 }
 
 @font-face {
-    font-family: 'Icons';
-    src: local('Icons'), url(../assets/fonts/ThalesIcons/icons.ttf) format('truetype');
-}
-
-@font-face {
-    font-family: 'Currencies';
-    src: local('Currencies'), url(../assets/fonts/ThalesIcons/currencies.ttf) format('truetype');
-}
-
-@font-face {
-    font-family: 'SidebarIcons';
-    src: local('SidebarIcons'), url(../assets/fonts/ThalesIcons/sidebar.ttf) format('truetype');
-}
-
-@font-face {
-    font-family: 'Homepage Icons';
-    src: local('Homepage Icons'), url(../assets/fonts/HomepageIcons/homepage.ttf) format('truetype');
-}
-
-@font-face {
-    font-family: 'RoyaleAvatars';
-    src: local('RoyaleAvatars'), url(../assets/fonts/ThalesIcons/royale-avatars.ttf) format('truetype');
-}
-
-@font-face {
-    font-family: 'ThalesIcons';
-    src: local('ThalesIcons'), url(../assets/fonts/ThalesIcons/Thales2022.ttf) format('truetype');
-}
-
-@font-face {
     font-family: 'SansationLight';
     src: local('SansationLight'), url(../assets/fonts/SansationLight/Sansation-Light.ttf) format('truetype');
 }

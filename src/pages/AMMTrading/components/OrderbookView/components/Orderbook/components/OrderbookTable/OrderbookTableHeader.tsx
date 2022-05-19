@@ -1,4 +1,4 @@
-import { LightTooltip, StyledQuestionMarkIcon } from 'pages/Options/Market/components';
+import { LightTooltip, StyledQuestionMarkIcon } from 'pages/Token/components/components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';

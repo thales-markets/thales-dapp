@@ -136,8 +136,6 @@ table {
     border-spacing: 0;
 }
 
-@import './fonts.css';
-
 * {
     box-sizing: border-box;
     font-family: 'Roboto' !important;
@@ -226,6 +224,7 @@ a {
     text-decoration: none;
 }
 
+@import './fonts.css';
 @import './overrides.css';
 @import './text.css';
 @import './colors.css';

@@ -202,7 +202,8 @@
             "amm-reporting-label": "AMM报告",
             "markets": "市场",
             "profile-label": "轮廓",
-            "exotic-markets-label": "异国市场"
+            "exotic-markets-label": "异国市场",
+            "ranged-markets": "范围市场"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -236,7 +237,10 @@
         "no-data": "没有任何数据可显示",
         "long": "长",
         "short": "短的",
-        "no-data-available": "无可用数据"
+        "no-data-available": "无可用数据",
+        "select-deselect-all": "全选/取消全选",
+        "all": "全部",
+        "none": "没有任何"
     },
     "modals": {
         "gwei": {
@@ -348,7 +352,8 @@
                 "status-col": "状态",
                 "maturity-date-col": "成人礼",
                 "out-of-liquidity": "流动性不足",
-                "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送："
+                "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送：",
+                "price-in-out-col": "价格进/出"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",
@@ -358,7 +363,8 @@
             },
             "hot-markets": {
                 "tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买当前具有最高潜在利润的位置代币。",
-                "most-profitable-markets": "最赚钱的市场"
+                "most-profitable-markets": "最赚钱的市场",
+                "range-markets-tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买目前具有最高潜在利润的远程定位代币。"
             },
             "polygon-trading-competition-2": " 点击<bold>这里</bold>了解更多",
             "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播"
@@ -732,7 +738,8 @@
                 "final-result": "最后结果",
                 "position-value": "职位价值",
                 "amm-liquidity-tooltip": "当前可用数量的 UP 和 DOWN 代币。",
-                "no-similar-markets": "该资产没有市场且到期日相同。"
+                "no-similar-markets": "该资产没有市场且到期日相同。",
+                "range-amm-liquidity-tooltip": "当前可用数量的 IN 和 OUT 代币。"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
@@ -805,7 +812,8 @@
                         "success-label": "无需行权",
                         "confirmation-message": "已成功执行选项"
                     },
-                    "exercise-options": "您可以行使以下选项"
+                    "exercise-options": "您可以行使以下选项",
+                    "nothing-to-exercise": "你没有位置可以锻炼。"
                 }
             },
             "trade-options": {
@@ -974,6 +982,9 @@
             "row-card": {
                 "views": "意见",
                 "current-view": "视图：{{ currentView }}"
+            },
+            "ranged-markets": {
+                "strike-range": "打击范围"
             }
         },
         "quick-trading": {
@@ -1167,7 +1178,9 @@
                 "label": "使用传统签名",
                 "tooltip": "如果下单时遇到问题，请选中此选项以尝试旧版签名。某些钱包（如Trezor）在签名时遇到问题，选择此选项可以解决此问题。"
             },
-            "ratio": "比率"
+            "ratio": "比率",
+            "in": "在",
+            "out": "出去"
         },
         "swap": {
             "button-text": "获取 {{token}}",

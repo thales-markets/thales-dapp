@@ -8,25 +8,33 @@ import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOpt
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { AccountMarketInfo, OptionSide } from 'types/options';
+import {
+    AccountMarketInfo,
+    MarketType,
+    OptionSide,
+    RangedMarketBalanceInfo,
+    RangedMarketPositionType,
+} from 'types/options';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { SYNTHS_MAP } from 'constants/currency';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { UI_COLORS } from 'constants/ui';
 import { getStableCoinForNetwork } from '../../../../../../utils/currency';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import { MARKET_TYPE } from 'constants/options';
 
 type WalletBalancePropsType = {
-    type: OptionSide;
+    type: OptionSide | RangedMarketPositionType;
 };
 
 const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
-    const optionsMarket = useMarketContext();
+    const marketType: MarketType =
+        type == 'long' || type == 'short' ? (MARKET_TYPE[0] as MarketType) : (MARKET_TYPE[1] as MarketType);
+    const optionsMarket = marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
 
-    let optBalances = {
-        long: 0,
-        short: 0,
-    };
+    let optBalances = marketType == MARKET_TYPE[0] ? { short: 0, long: 0 } : { in: 0, out: 0 };
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -34,13 +42,39 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && marketType == MARKET_TYPE[0],
     });
 
-    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
+    const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(optionsMarket?.address, walletAddress, networkId, {
+        enabled: isAppReady && marketType == MARKET_TYPE[1],
+    });
+
+    if (
+        isWalletConnected &&
+        accountMarketInfoQuery.isSuccess &&
+        accountMarketInfoQuery.data &&
+        marketType == MARKET_TYPE[0]
+    ) {
         optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
     }
-    const tokenBalance = type === 'long' ? optBalances.long : optBalances.short;
+
+    if (
+        isWalletConnected &&
+        rangedMarketsBalance.isSuccess &&
+        rangedMarketsBalance.data &&
+        marketType == MARKET_TYPE[1]
+    ) {
+        optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
+    }
+
+    const tokenBalance =
+        marketType == MARKET_TYPE[0]
+            ? type == 'long'
+                ? optBalances.long
+                : optBalances.short
+            : type == 'in'
+            ? optBalances.in
+            : optBalances.out;
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -58,12 +92,29 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
                 <WalletIcon className="sidebar-icon icon--wallet" />
                 <Balance>{formatCurrencyWithKey(getStableCoinForNetwork(networkId), sUSDBalance)}</Balance>
             </BalanceContainer>
-            {tokenBalance > 0 && (
+            {tokenBalance && (
                 <BalanceContainer>
                     <Balance>{formatCurrency(tokenBalance)}</Balance>
                     <TokenIcon
-                        className={`v2-icon ${type == 'long' ? 'v2-icon--up' : 'v2-icon--down'}`}
-                        color={type == 'long' ? UI_COLORS.GREEN : UI_COLORS.RED}
+                        // Temporary same icons for in and long positions
+                        className={`v2-icon ${
+                            marketType == MARKET_TYPE[0]
+                                ? type == 'long'
+                                    ? 'v2-icon--up'
+                                    : 'v2-icon--down'
+                                : type == 'in'
+                                ? 'v2-icon--in'
+                                : 'v2-icon--out'
+                        }`}
+                        color={
+                            marketType == MARKET_TYPE[0]
+                                ? type == 'long'
+                                    ? UI_COLORS.GREEN
+                                    : UI_COLORS.RED
+                                : type == 'in'
+                                ? UI_COLORS.IN_COLOR
+                                : UI_COLORS.OUT_COLOR
+                        }
                     />
                 </BalanceContainer>
             )}

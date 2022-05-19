@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'Currencies';
+    src: local('Currencies'), url(/fonts/currencies.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Homepage Icons';
+    src: local('Homepage Icons'), url(/fonts/homepage.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Icons';
+    src: local('Icons'), url(/fonts/icons.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'RoyaleAvatars';
+    src: local('RoyaleAvatars'), url(/fonts/royale-avatars.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'SidebarIcons';
+    src: local('SidebarIcons'), url(/fonts/sidebar.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'ThalesIcons';
+    src: local('ThalesIcons'), url(/fonts/Thales2022v2.ttf) format('truetype');
+}
