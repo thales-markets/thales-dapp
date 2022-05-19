@@ -321,6 +321,7 @@
             },
             "hot-markets": {
                 "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
+                "range-markets-tooltip-text": "Ranged positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
                 "most-profitable-markets": "Most profitable markets"
             },
             "market-creation": {
@@ -733,6 +734,7 @@
                 "deposited-currency-label": "Deposited {{currencyKey}}",
                 "amm-liquidity": "AMM liquidity",
                 "amm-liquidity-tooltip": "Currently available amounts of UP and DOWN tokens.",
+                "range-amm-liquidity-tooltip": "Currently available amounts of IN and OUT tokens.",
                 "amm-price": "AMM Price",
                 "final-result": "Final Result",
                 "event-name-label": "Event Name",
@@ -818,6 +820,7 @@
                     "card-title": "Market has been closed",
                     "card-subtitle": "Positions available:",
                     "exercise-options": "You can exercise following positions",
+                    "nothing-to-exercise": "You don't have positions to exercise.",
                     "payout-amount-label": "Payout amount",
                     "end-label": "Time left to exercise",
                     "confirm-button": {

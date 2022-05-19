@@ -66,10 +66,14 @@ const useRangedAMMMaxLimitsQuery = (
                     ammContract.sellToAmmQuote(marketAddress, RANGE_SIDE['out'], parsedAmount),
                 ]);
 
-                ammMaxLimits.in.maxBuy = bigNumberFormatter(maxBuyIn);
-                ammMaxLimits.in.maxSell = bigNumberFormatter(maxSellIn);
-                ammMaxLimits.out.maxBuy = bigNumberFormatter(maxBuyOut);
-                ammMaxLimits.out.maxSell = bigNumberFormatter(maxSellOut);
+                ammMaxLimits.in.maxBuy =
+                    stableCoinFormatter(buyInPrice, networkId) !== 0 ? bigNumberFormatter(maxBuyIn) : 0;
+                ammMaxLimits.in.maxSell =
+                    stableCoinFormatter(sellInPrice, networkId) !== 0 ? bigNumberFormatter(maxSellIn) : 0;
+                ammMaxLimits.out.maxBuy =
+                    stableCoinFormatter(buyOutPrice, networkId) !== 0 ? bigNumberFormatter(maxBuyOut) : 0;
+                ammMaxLimits.out.maxSell =
+                    stableCoinFormatter(sellOutPrice, networkId) !== 0 ? bigNumberFormatter(maxSellOut) : 0;
                 ammMaxLimits.in.buyPrice = stableCoinFormatter(buyInPrice, networkId);
                 ammMaxLimits.out.buyPrice = stableCoinFormatter(buyOutPrice, networkId);
                 ammMaxLimits.in.sellPrice = stableCoinFormatter(sellInPrice, networkId);

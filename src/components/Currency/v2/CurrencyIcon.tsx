@@ -15,11 +15,13 @@ type CurrencyIconProps = {
     iconType?: IconType;
 };
 
-enum IconType {
+export enum IconType {
     NORMAL,
     IN,
     OUT,
     Range,
+    UP,
+    DOWN,
 }
 
 export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
@@ -42,6 +44,26 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 
     const AssetIcon = getAssetIcon(currencyKey);
 
+    let badgeColor = UI_COLORS.OUT_COLOR;
+
+    switch (iconType) {
+        case IconType.IN:
+            badgeColor = UI_COLORS.IN_COLOR;
+            break;
+        case IconType.OUT:
+            badgeColor = UI_COLORS.OUT_COLOR;
+            break;
+        case IconType.Range:
+            badgeColor = UI_COLORS.OUT_COLOR;
+            break;
+        case IconType.UP:
+            badgeColor = UI_COLORS.GREEN;
+            break;
+        case IconType.DOWN:
+            badgeColor = UI_COLORS.RED;
+            break;
+    }
+
     if (NEW_CURRENCY_ICONS.includes(currencyKey)) {
         synthIconStyle = {
             ...synthIconStyle,
@@ -56,13 +78,19 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
     return (
         <Content>
             {iconType === IconType.IN && (
-                <Badge height={badgeHeight} type={iconType} className="v2-icon v2-icon--in"></Badge>
+                <Badge height={badgeHeight} color={badgeColor} className="v2-icon v2-icon--in"></Badge>
             )}
             {iconType === IconType.OUT && (
-                <Badge height={badgeHeight} type={iconType} className="v2-icon v2-icon--out"></Badge>
+                <Badge height={badgeHeight} color={badgeColor} className="v2-icon v2-icon--out"></Badge>
             )}
             {iconType === IconType.Range && (
-                <Badge height={badgeHeight} type={iconType} className="v2-icon v2-icon--range"></Badge>
+                <Badge height={badgeHeight} color={badgeColor} className="v2-icon v2-icon--range"></Badge>
+            )}
+            {iconType === IconType.UP && (
+                <Badge height={badgeHeight} color={badgeColor} className="v2-icon v2-icon--up"></Badge>
+            )}
+            {iconType === IconType.DOWN && (
+                <Badge height={badgeHeight} color={badgeColor} className="v2-icon v2-icon--down"></Badge>
             )}
             <AssetIcon style={{ marginRight: 7, width: props.width, height: props.height, ...synthIconStyle }} />
         </Content>
@@ -73,14 +101,14 @@ const Content = styled.div`
     position: relative;
 `;
 
-const Badge = styled.i<{ type: IconType; height: number }>`
+const Badge = styled.i<{ color: string; height: number }>`
     position: absolute;
     top: -2px;
     left: 0px;
     font-size: ${(props) => props.height + 'px'};
     width: ${(props) => props.height + 'px'};
     border-radius: 20px;
-    color: ${(props) => (props.type === IconType.IN ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR)};
+    color: ${(props) => (props?.color ? props.color : '')};
     background: var(--background);
 `;
 
