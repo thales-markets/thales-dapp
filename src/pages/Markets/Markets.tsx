@@ -49,16 +49,11 @@ const Markets: React.FC = () => {
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
 
-    const openOrdersMap = useMemo(() => {
-        if (openOrdersQuery.isSuccess) {
-            return openOrdersQuery.data;
-        }
-    }, [openOrdersQuery]);
     const optionsMarkets = useMemo(() => {
-        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
-            const markets = openOrdersMap
+        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data) && openOrdersQuery.isSuccess) {
+            const markets = openOrdersQuery.data
                 ? marketsQuery.data.map((m) => {
-                      const apiData = (openOrdersMap as any).get(m.address.toLowerCase());
+                      const apiData = (openOrdersQuery.data as any).get(m.address.toLowerCase());
 
                       return {
                           ...m,
@@ -80,7 +75,7 @@ const Markets: React.FC = () => {
             return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery, openOrdersMap]);
+    }, [marketsQuery, openOrdersQuery]);
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,

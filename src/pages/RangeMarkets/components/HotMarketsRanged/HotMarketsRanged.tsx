@@ -10,6 +10,7 @@ import HotMarketCardSceleton from 'components/HotMarketSceleton/HotMarketCardSce
 import HotMarketRanged from './HotMarketRanged';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { RangedMarket } from 'types/options';
+import { PHASE } from 'constants/options';
 
 type RangedMarketUI = RangedMarket & {
     asset: string;
@@ -46,35 +47,38 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
     const currentMarkets = useMemo(() => {
         const markets: any[] = [];
 
-        optionsMarkets?.forEach((market: any) => {
-            if (market.outPrice == 0 || market.inPrice == 0) return;
-            if (!market?.outPrice && !market?.inPrice) return;
-            markets.push({
-                fullAssetName: getSynthName(market.currencyKey),
-                currencyKey: market.currencyKey,
-                assetName: `${market.asset} ${MarketType.in}`,
-                leftPrice: market.leftPrice,
-                rightPrice: market.rightPrice,
-                pricePerOption: market.inPrice,
-                strikePrice: market.range,
-                timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.inPrice)),
-                address: market.address,
-            });
+        optionsMarkets
+            .filter((market) => market.phaseNum === PHASE.trading)
+            .sort((a, b) => a.timeRemaining - b.timeRemaining)
+            .forEach((market: any) => {
+                if (market.outPrice == 0 || market.inPrice == 0) return;
+                if (!market?.outPrice && !market?.inPrice) return;
+                markets.push({
+                    fullAssetName: getSynthName(market.currencyKey),
+                    currencyKey: market.currencyKey,
+                    assetName: `${market.asset} ${MarketType.in}`,
+                    leftPrice: market.leftPrice,
+                    rightPrice: market.rightPrice,
+                    pricePerOption: market.inPrice,
+                    strikePrice: market.range,
+                    timeRemaining: market.timeRemaining,
+                    potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.inPrice)),
+                    address: market.address,
+                });
 
-            markets.push({
-                fullAssetName: getSynthName(market.currencyKey),
-                currencyKey: market.currencyKey,
-                assetName: `${market.asset} ${MarketType.out}`,
-                pricePerOption: market.outPrice,
-                leftPrice: market.leftPrice,
-                rightPrice: market.rightPrice,
-                strikePrice: market.range,
-                timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.outPrice)),
-                address: market.address,
+                markets.push({
+                    fullAssetName: getSynthName(market.currencyKey),
+                    currencyKey: market.currencyKey,
+                    assetName: `${market.asset} ${MarketType.out}`,
+                    pricePerOption: market.outPrice,
+                    leftPrice: market.leftPrice,
+                    rightPrice: market.rightPrice,
+                    strikePrice: market.range,
+                    timeRemaining: market.timeRemaining,
+                    potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.outPrice)),
+                    address: market.address,
+                });
             });
-        });
 
         return markets.sort((a: any, b: any) => a.pricePerOption - b.pricePerOption);
     }, [optionsMarkets]);
