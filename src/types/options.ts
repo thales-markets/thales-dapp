@@ -106,6 +106,18 @@ export type RangedMarket = {
     finalPrice: number;
 };
 
+export type RangedMarketUI = RangedMarket & {
+    asset: string;
+    availableIn: number;
+    availableOut: number;
+    inPrice: number;
+    outPrice: number;
+    ammLiquidity: string;
+    range: string;
+    phaseNum: number;
+    timeRemaining: number;
+};
+
 export type RangedMarketInfo = {
     address: string;
     timestamp: number;

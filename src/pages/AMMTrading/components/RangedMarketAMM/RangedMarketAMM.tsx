@@ -149,9 +149,7 @@ const AMM: React.FC = () => {
             ? (ammMaxLimitsQuery.data as RangeAmmMaxLimits)
             : undefined;
 
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
+    const collateral = snxJSConnector.collateral;
     const isBuy = orderSide.value === 'buy';
     const isInPosition = rangeSide === 'in';
     const isAmountEntered = Number(amount) > 0;
@@ -183,7 +181,7 @@ const AMM: React.FC = () => {
         !hasAllowance;
 
     const sellToken = isBuy
-        ? SynthsUSD.address
+        ? collateral?.address
         : isInPosition
         ? rangedMarketData?.inAddress
         : rangedMarketData?.outAddress;
@@ -200,7 +198,7 @@ const AMM: React.FC = () => {
     };
 
     useEffect(() => {
-        const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
+        const erc20Instance = new ethers.Contract(sellToken as any, erc20Contract.abi, snxJSConnector.signer);
         const { rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = rangedMarketAMMContract ? rangedMarketAMMContract.address : '';
 
@@ -257,7 +255,7 @@ const AMM: React.FC = () => {
                   parsedTotal,
                   parsedSlippage
               );
-        return getL1FeeInWei(txRequest);
+        return getL1FeeInWei(txRequest, snxJSConnector);
     };
 
     const fetchGasLimit = async (
@@ -322,7 +320,7 @@ const AMM: React.FC = () => {
     }, [isWalletConnected, hasAllowance, slippage]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
+        const erc20Instance = new ethers.Contract(sellToken as any, erc20Contract.abi, snxJSConnector.signer);
         const { rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = rangedMarketAMMContract ? rangedMarketAMMContract.address : '';
         const amountToApprove =

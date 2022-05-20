@@ -20,10 +20,10 @@ import {
     VOTING_ORACLE_COUNCIL_PROPOSAL_ID,
     NUMBER_OF_ORACLE_COUNCIL_MEMBERS,
 } from 'constants/governance';
-import { LightMediumTooltip } from 'pages/Token/components/components';
 import SimpleLoader from 'components/SimpleLoader';
 import { ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
+import { LightMediumTooltip } from 'components/OldVersion/old-components';
 
 type ResultsProps = {
     proposalResults?: ProposalResults;

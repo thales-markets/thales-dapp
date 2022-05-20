@@ -9,7 +9,6 @@ import {
     InputContainer,
     SubmitButtonContainer,
 } from 'components/OldVersion/old-components';
-import NumericInput from 'pages/Token/components/NumericInput';
 import { ModalContainer, ModalHeader, ModalTitle, StyledModal } from 'components/OldVersion/old-components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +19,7 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import onboardConnector from 'utils/onboardConnector';
+import NumericInput from 'components/NumericInput';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-// import Orderbook from '../OrderbookView/components/Orderbook';
 import OptionPriceTab from '../Tabs/OptionPriceTab';
 import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
@@ -16,8 +15,6 @@ import { MarketType, OptionSide } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { MARKET_TYPE } from 'constants/options';
-// import RangeIllustration from '../RangeIllustration';
-// import RangeMarketCard from 'pages/Markets/components/RangeMarketCard';
 
 type TabContainerProps = {
     optionSide?: OptionSide;

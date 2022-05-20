@@ -105,15 +105,15 @@ const Unstake: React.FC = () => {
     useEffect(() => {
         const fetchL1FeeStartUnstake = async (stakingThalesContractWithSigner: any, amount: any) => {
             const txRequest = await stakingThalesContractWithSigner.populateTransaction.startUnstake(amount);
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
         const fetchL1FeeUnstake = async (stakingThalesContractWithSigner: any) => {
             const txRequest = await stakingThalesContractWithSigner.populateTransaction.unstake();
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
         const fetchL1FeeCancelUnstake = async (stakingThalesContractWithSigner: any) => {
             const txRequest = await stakingThalesContractWithSigner.populateTransaction.cancelUnstake();
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {

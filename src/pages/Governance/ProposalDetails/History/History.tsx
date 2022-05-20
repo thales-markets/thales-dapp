@@ -18,15 +18,15 @@ import {
 } from 'pages/Governance/components';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'utils/network';
 import { FIRST_COUNCIL_ELECTIONS_ID, ProposalTypeEnum } from 'constants/governance';
 import { useTranslation } from 'react-i18next';
-import { LightMediumTooltip } from 'pages/Token/components/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';
+import { LightMediumTooltip } from 'components/OldVersion/old-components';
 
 type HistoryProps = {
     proposal: Proposal;
@@ -59,7 +59,7 @@ const History: React.FC<HistoryProps> = ({ proposal, proposalResults, isLoading 
                                 <SidebarRowData fontWeight={300}>
                                     <FlexDivCentered>
                                         <StyledLink
-                                            href={getEtherscanAddressLink(NetworkId.Mainnet, vote.voter)}
+                                            href={getEtherscanAddressLink(Network.Mainnet, vote.voter)}
                                             target="_blank"
                                             rel="noreferrer"
                                         >
@@ -111,7 +111,7 @@ const Voter: React.FC<StakerCellProps> = ({ address, walletAddress }) => {
             const stakerEns = await (snxJSConnector as any).provider.lookupAddress(address);
             setVoterEns(stakerEns);
         };
-        if (networkId === NetworkId.Mainnet) {
+        if (networkId === Network.Mainnet) {
             fetchVoterEns();
         }
     }, [address]);

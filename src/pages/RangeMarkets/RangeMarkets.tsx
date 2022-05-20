@@ -1,12 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
-
 import { RootState } from 'redux/rootReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-
 import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
@@ -21,21 +18,7 @@ import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarket
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
 import RangeMarketsTable from './components/RangeMarketsTable';
 import HotMarketsRanged from './components/HotMarketsRanged/HotMarketsRanged';
-import { RangedMarket } from 'types/options';
-
-// const MAX_HOT_MARKETS = 6;
-
-export type RangedMarketUI = RangedMarket & {
-    asset: string;
-    availableIn: number;
-    availableOut: number;
-    inPrice: number;
-    outPrice: number;
-    ammLiquidity: string;
-    range: string;
-    phaseNum: number;
-    timeRemaining: number;
-};
+import { RangedMarketUI } from 'types/options';
 
 const RangeMarkets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));

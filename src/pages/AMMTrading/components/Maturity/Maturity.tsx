@@ -85,7 +85,7 @@ const Maturity: React.FC = () => {
     useEffect(() => {
         const fetchL1Fee = async (BOMContractWithSigner: any) => {
             const txRequest = await BOMContractWithSigner.populateTransaction.exerciseOptions();
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
         const fetchGasLimit = async () => {
             try {

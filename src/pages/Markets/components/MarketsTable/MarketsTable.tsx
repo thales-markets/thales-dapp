@@ -16,11 +16,10 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM, getIsPolygon } from 'utils/network';
 
 import Currency from 'components/Currency/v2';
-import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import MarketsGrid from '../MarketsGrid';
 import { FlexDivRow } from 'theme/common';
-import TableGridSwitch from '../Input/TableGridSwitch';
-import SearchField from '../Input/SearchField';
+import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
+import SearchField from 'components/TableInputs/SearchField';
 import PriceChart from 'components/Charts/PriceChart';
 import { TablePagination } from '@material-ui/core';
 import SortingMenu from 'components/SortingMenu';
@@ -35,7 +34,7 @@ import { getSynthName } from 'utils/currency';
 
 import './main.scss';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
-import Phase from '../Phase/Phase';
+import Phase from 'components/Phase/Phase';
 import { UI_COLORS } from 'constants/ui';
 import { sortCurrencies } from 'utils/currency';
 
@@ -46,10 +45,11 @@ type MarketsTableProps = {
 };
 
 import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.svg';
-import AssetsDropdown from '../AssetsDropdown';
+import AssetsDropdown from '../../../../components/AssetsDropdown';
 import OutsideClickHandler from 'react-outside-click-handler';
 import Cookies from 'universal-cookie';
 import { isMobile } from '../../../../utils/device';
+import TimeRemaining from 'components/TimeRemaining';
 
 const FILTERS_LENGTH = 6;
 let scrolling: NodeJS.Timeout;
@@ -165,18 +165,15 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         []
     );
 
-    const ammPriceSort = useMemo(
-        () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
-            if (desc) {
-                return +rowA.values[columnId].props.red.slice(1) > +rowB.values[columnId].props.red.slice(1) ? 1 : -1;
-            } else {
-                return +rowA.values[columnId].props.green.slice(1) < +rowB.values[columnId].props.green.slice(1)
-                    ? 1
-                    : -1;
-            }
-        },
-        []
-    );
+    const ammPriceSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
+        const leftPrice = rowA.values[columnId].props.red.slice(1);
+        const rightPrice = rowB.values[columnId].props.red.slice(1);
+        if (desc) {
+            return Math.abs(Number(leftPrice) - 0.5) < Math.abs(Number(rightPrice) - 0.5) ? 1 : -1;
+        } else {
+            return +rowA.values[columnId].props.green.slice(1) < +rowB.values[columnId].props.green.slice(1) ? 1 : -1;
+        }
+    };
 
     const columns: Array<any> = useMemo(() => {
         return [
@@ -257,7 +254,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                       {
                           Header: t(`options.home.markets-table.price-up-down-col`),
                           accessor: (row: any) => <RatioText green={row.longPrice} red={row.shortPrice} />,
-                          sortType: ammPriceSort,
+                          sortType: ammPriceSort(),
                       },
                   ]
                 : []),

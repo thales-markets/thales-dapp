@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import DisplayNameForm from './DisplayNameForm';
 import UserSwap from './UserSwap';
 import UserWalletExpanded from './UserWalletExpanded';
-import { getIsPolygon } from '../../../../utils/network';
+import { getIsPolygon } from 'utils/network';
 
 export const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);

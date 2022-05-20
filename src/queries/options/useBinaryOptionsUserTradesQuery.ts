@@ -57,32 +57,30 @@ const useBinaryOptionsUserTradesQuery = (
     marketType: MarketType,
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
+    const collateral = snxJSConnector.collateral;
 
     return useQuery<OptionsTransactions>(
         QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress),
         async () => {
             const [firstPositionBuys, firstPositionSells, secondPositionBuys, secondPositionSells] = await Promise.all([
                 thalesData.binaryOptions.trades({
-                    makerToken: SynthsUSD.address,
+                    makerToken: collateral?.address,
                     takerToken: firstPositionAddress,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
                     makerToken: firstPositionAddress,
-                    takerToken: SynthsUSD.address,
+                    takerToken: collateral?.address,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
-                    makerToken: SynthsUSD.address,
+                    makerToken: collateral?.address,
                     takerToken: secondPositionAddress,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.trades({
                     makerToken: secondPositionAddress,
-                    takerToken: SynthsUSD.address,
+                    takerToken: collateral?.address,
                     network: networkId,
                 }),
             ]);

@@ -6,10 +6,22 @@ import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
 import Hammer from 'hammerjs';
 import Tooltip from 'components/Tooltip';
-import HotMarketCardSceleton from 'pages/Markets/components/MarketsCard/HotMarketCardSceleton';
-import { RangedMarketUI } from '../../RangeMarkets';
+import HotMarketCardSceleton from 'components/HotMarketSceleton/HotMarketCardSceleton';
 import HotMarketRanged from './HotMarketRanged';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import { RangedMarket } from 'types/options';
+
+type RangedMarketUI = RangedMarket & {
+    asset: string;
+    availableIn: number;
+    availableOut: number;
+    inPrice: number;
+    outPrice: number;
+    ammLiquidity: string;
+    range: string;
+    phaseNum: number;
+    timeRemaining: number;
+};
 
 type HotMarketsRangedProps = {
     optionsMarkets: RangedMarketUI[];
@@ -143,11 +155,11 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
                     </>
                 ) : (
                     <>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
-                        <HotMarketCardSceleton></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
+                        <HotMarketCardSceleton height={'340px'}></HotMarketCardSceleton>
                     </>
                 )}
             </Wrapper>

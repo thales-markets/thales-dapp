@@ -19,7 +19,7 @@ import {
 } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
-import NetworkFees from '../components/NetworkFees';
+import NetworkFees from './NetworkFees';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import Currency from 'components/Currency';
@@ -133,7 +133,7 @@ export const CreateMarket: React.FC = () => {
         const isL2 = getIsOVM(networkId);
         const isPolygon = getIsPolygon(networkId);
 
-        const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
+        const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
         let isCurrencySelected = false;
 
@@ -179,18 +179,16 @@ export const CreateMarket: React.FC = () => {
 
         useEffect(() => {
             if (!walletAddress) return;
-            const {
-                contracts: { SynthsUSD },
-            } = snxJSConnector.snxJS as any;
+            const collateral = snxJSConnector.collateral;
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
             const getAllowanceForCurrentWallet = async () => {
                 try {
                     const initialMint = ethers.utils.parseEther(Number(initialFundingAmount).toString());
                     const allowance = await checkAllowance(
                         initialMint,
-                        SynthsUSD,
+                        collateral,
                         walletAddress,
-                        binaryOptionsMarketManagerContract.address
+                        binaryOptionsMarketManagerContract?.address as any
                     );
                     setAllowance(allowance);
                 } catch (e) {
@@ -260,7 +258,7 @@ export const CreateMarket: React.FC = () => {
                     false,
                     ZERO_ADDRESS
                 );
-                return getL1FeeInWei(txRequest);
+                return getL1FeeInWei(txRequest, snxJSConnector);
             };
 
             const fetchGasLimit = async () => {
@@ -325,21 +323,23 @@ export const CreateMarket: React.FC = () => {
         }, [initialFundingAmount, longAmount, longPrice, shortAmount, shortPrice]);
 
         const handleAllowance = async (approveAmount: BigNumber) => {
-            const {
-                contracts: { SynthsUSD },
-            } = snxJSConnector.snxJS as any;
+            const collateral = snxJSConnector.collateral;
 
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
 
             try {
                 setIsAllowing(true);
-                const gasEstimate = await SynthsUSD.estimateGas.approve(
-                    binaryOptionsMarketManagerContract.address,
+                const gasEstimate = await collateral?.estimateGas.approve(
+                    binaryOptionsMarketManagerContract?.address as any,
                     approveAmount
                 );
-                const tx = (await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, approveAmount, {
-                    gasLimit: formatGasLimit(gasEstimate, networkId),
-                })) as ethers.ContractTransaction;
+                const tx = (await collateral?.approve(
+                    binaryOptionsMarketManagerContract?.address as any,
+                    approveAmount,
+                    {
+                        gasLimit: formatGasLimit(gasEstimate as any, networkId),
+                    }
+                )) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 await tx.wait();
                 setIsAllowing(false);
@@ -416,13 +416,11 @@ export const CreateMarket: React.FC = () => {
             optionsAmount: number | string,
             isLong?: boolean
         ) => {
-            const {
-                contracts: { SynthsUSD },
-            } = snxJSConnector.snxJS as any;
+            const collateral = snxJSConnector.collateral;
             setTxErrorMessage(null);
             isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
 
-            const takerToken = SynthsUSD.address;
+            const takerToken = collateral?.address;
             const makerAmount = optionsAmount;
             const takerAmount = Number(optionsAmount) * Number(price);
             const expiry = getOrderEndDate();
@@ -432,7 +430,7 @@ export const CreateMarket: React.FC = () => {
                     walletAddress,
                     networkId,
                     makerToken,
-                    takerToken,
+                    takerToken as any,
                     makerAmount,
                     takerAmount,
                     expiry

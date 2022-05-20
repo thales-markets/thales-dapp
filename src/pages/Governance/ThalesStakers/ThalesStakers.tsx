@@ -13,7 +13,7 @@ import { EnsNames, Staker, Stakers } from 'types/governance';
 import ThalesStakersTable from './ThalesStakersTable';
 import SearchStakers from '../components/SearchStakers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'utils/network';
 
 enum OrderDirection {
     NONE,
@@ -49,7 +49,7 @@ const ThalesStakers: React.FC = () => {
             setEnsNames(records);
         };
 
-        if (networkId === NetworkId.Mainnet) {
+        if (networkId === Network.Mainnet) {
             getEnsNames(stakers);
         }
     }, [stakers]);

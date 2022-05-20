@@ -41,7 +41,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
             const txRequest = await limitOrderProtocol1inchContractWithSigner.populateTransaction.cancelOrder(
                 cancelOrderData
             );
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {

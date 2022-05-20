@@ -7,8 +7,8 @@ import styled from 'styled-components';
 import DappHeader from './components/DappHeader/DappHeader';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { isNetworkSupported } from '../../utils/network';
-import { getNetworkId } from '../../redux/modules/wallet';
+import { isNetworkSupported } from 'utils/network';
+import { getNetworkId } from 'redux/modules/wallet';
 
 type DappLayoutProps = {
     children: React.ReactNode;

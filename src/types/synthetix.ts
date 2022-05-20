@@ -1,4 +1,4 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { NetworkId } from 'utils/network';
 import { ethers, Signer } from 'ethers';
 
 export type Token = {

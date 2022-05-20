@@ -8,7 +8,7 @@ import generateRows from './utils/generateRows';
 import { OptionsMarkets } from 'types/options';
 import { keyBy } from 'lodash';
 import { sortOptionsMarkets } from 'utils/options';
-import { currencyKeyToCoinGeckoIndexMap, currencyKeyToNameMap } from '../../../../constants/currency';
+import { currencyKeyToCoinGeckoIndexMap, currencyKeyToNameMap } from 'constants/currency';
 
 type HistoryProps = {
     markets?: OptionsMarkets;

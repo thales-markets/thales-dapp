@@ -57,7 +57,7 @@ const Vest: React.FC = () => {
     useEffect(() => {
         const fetchL1Fee = async (escrowThalesContractWithSigner: any, toVest: any) => {
             const txRequest = await escrowThalesContractWithSigner.populateTransaction.vest(toVest);
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {
