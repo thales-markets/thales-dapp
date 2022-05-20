@@ -1,4 +1,4 @@
-import DisplayNameForm from 'layouts/DappLayout/components/DappHeader/DisplayNameForm';
+import DisplayNameForm from 'components/DisplayNameForm/DisplayNameForm';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';

@@ -30,7 +30,7 @@ import { ethers } from 'ethers';
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
 
-const OptionsCreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../Options/CreateMarket'));
+const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
 const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage/Home'));
 const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
 const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
@@ -209,7 +209,7 @@ const App = () => {
 
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <DappLayout>
-                                <OptionsCreateMarket />
+                                <CreateMarket />
                             </DappLayout>
                         </Route>
 

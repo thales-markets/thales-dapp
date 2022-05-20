@@ -55,7 +55,7 @@ import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
-import { ZERO_ADDRESS } from '../../../constants/network';
+import { ZERO_ADDRESS } from 'constants/network';
 import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';

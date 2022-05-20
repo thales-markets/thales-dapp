@@ -12,7 +12,7 @@ import { getTheme } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import DisplayNameForm from './DisplayNameForm';
+import DisplayNameForm from '../../../../components/DisplayNameForm/DisplayNameForm';
 import UserSwap from './UserSwap';
 import UserWalletExpanded from './UserWalletExpanded';
 import { getIsPolygon } from 'utils/network';
@@ -70,7 +70,7 @@ interface ManuCardProps {
     visibility: boolean;
 }
 
-export const Overlay = styled.div`
+const Overlay = styled.div`
     position: fixed;
     min-height: 100vh;
     width: 100%;

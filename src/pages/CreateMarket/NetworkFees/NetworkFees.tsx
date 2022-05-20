@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
 import { getNetworkId } from 'redux/modules/wallet';
 
-export type GasLimit = {
+type GasLimit = {
     gasLimit: number;
     label: string;
 };

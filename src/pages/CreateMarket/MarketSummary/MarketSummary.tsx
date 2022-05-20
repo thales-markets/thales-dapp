@@ -187,12 +187,6 @@ const SummaryHeader = styled.div`
     }
 `;
 
-// const StrikeBy = styled(FlexDiv)`
-//     padding: 20px 35px 20px 35px;
-//     height: 140px;
-//     align-items: flex-end;
-// `;
-
 const MarketInfo = styled(FlexDivColumn)`
     padding: 20px 38px;
     font-size: 12px;
