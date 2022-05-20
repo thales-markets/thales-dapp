@@ -42,7 +42,7 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import RangeSlider from 'components/RangeSlider';
 import { FlexDivCentered } from 'theme/common';
 import { toast } from 'react-toastify';
-import { getStableCoinForNetwork } from '../../../../../../../../utils/currency';
+import { getStableCoinForNetwork } from 'utils/currency';
 
 type LimitOrderProps = {
     optionSide: OptionSide;

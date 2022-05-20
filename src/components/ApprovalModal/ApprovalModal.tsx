@@ -30,7 +30,7 @@ type ApprovalModalProps = {
     isRoyale?: boolean;
 };
 
-export const ApprovalModal: React.FC<ApprovalModalProps> = ({
+const ApprovalModal: React.FC<ApprovalModalProps> = ({
     defaultAmount,
     tokenSymbol,
     isAllowing,
@@ -275,7 +275,7 @@ const FlexContainer = styled(FlexDivCentered)`
     margin: 7px 0;
 `;
 
-export const ApprovalModalCloseIconContainer = styled(CloseIcon)<{ isRoyale?: boolean }>`
+const ApprovalModalCloseIconContainer = styled(CloseIcon)<{ isRoyale?: boolean }>`
     filter: ${(props) =>
         props.isRoyale ? 'invert(14%) sepia(42%) saturate(588%) hue-rotate(104deg) brightness(25%) contrast(94%)' : ''};
     :hover {

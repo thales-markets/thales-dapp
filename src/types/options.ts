@@ -218,6 +218,17 @@ export type OptionsMarketInfo = {
     outcome?: string;
 };
 
+export type HotMarket = {
+    fullAssetName?: string;
+    currencyKey: string;
+    assetName: string;
+    pricePerOption: number;
+    strikePrice: string;
+    timeRemaining: number;
+    potentialProfit: string;
+    address: string;
+};
+
 export type AccountMarketInfo = {
     long: number;
     short: number;

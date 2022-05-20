@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { OptionsMarkets } from 'types/options';
+import { HotMarket, OptionsMarkets } from 'types/options';
 
-import HotMarketCard, { HotMarket } from '../MarketsCard/HotMarketCard';
+import HotMarketCard from '../MarketsCard/HotMarketCard';
 import HotMarketCardSceleton from 'components/HotMarketSceleton/HotMarketCardSceleton';
 import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';

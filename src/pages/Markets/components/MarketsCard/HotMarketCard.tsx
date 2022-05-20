@@ -10,18 +10,8 @@ import { useTranslation } from 'react-i18next';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
-import { CurrencyKey } from 'components/AssetInfo/AssetInfo';
-
-export type HotMarket = {
-    fullAssetName?: string;
-    currencyKey: string;
-    assetName: string;
-    pricePerOption: number;
-    strikePrice: string;
-    timeRemaining: number;
-    potentialProfit: string;
-    address: string;
-};
+import styled from 'styled-components';
+import { HotMarket } from 'types/options';
 
 const HotMarketCard: React.FC<HotMarket> = ({
     currencyKey,
@@ -74,5 +64,14 @@ const HotMarketCard: React.FC<HotMarket> = ({
         </StyledComponents.Card>
     );
 };
+
+const CurrencyKey = styled.span<{ fontSize?: string }>`
+    font-family: Titillium Regular !important;
+    font-style: normal;
+    display: block;
+    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    text-transform: uppercase;
+    font-weight: 700;
+`;
 
 export default HotMarketCard;
