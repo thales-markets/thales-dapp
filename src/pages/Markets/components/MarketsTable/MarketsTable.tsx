@@ -37,7 +37,7 @@ import Phase from 'components/Phase/Phase';
 import { UI_COLORS } from 'constants/ui';
 import { sortCurrencies } from 'utils/currency';
 
-const MarketsGrid = lazy(() => import(/* webpackChunkName: "Home" */ '../MarketsGrid'));
+const MarketsGrid = lazy(() => import(/* webpackChunkName: "MarketsGrid" */ '../MarketsGrid'));
 
 type MarketsTableProps = {
     exchangeRates: Rates | null;

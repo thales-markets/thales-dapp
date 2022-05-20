@@ -6,7 +6,7 @@ import { OptionsMarkets, GridFilters } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 import { FlexDiv } from 'theme/common';
-import MarketCard from '../../../../components/MarketCard/MarketCard';
+import MarketCard from 'components/MarketCard/MarketCard';
 import { PaginationWrapper } from '../MarketsTable/MarketsTable';
 
 import SPAAnchor from 'components/SPAAnchor';
