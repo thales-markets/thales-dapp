@@ -9,6 +9,7 @@ import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
 import Hammer from 'hammerjs';
 import Tooltip from 'components/Tooltip';
+import { PHASE } from 'constants/options';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -32,30 +33,33 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
 
-        optionsMarkets?.forEach((market) => {
-            if (market.longPrice == 0 || market.shortPrice == 0) return;
-            markets.push({
-                fullAssetName: getSynthName(market.currencyKey),
-                currencyKey: market.currencyKey,
-                assetName: `${market.asset} ${MarketType.long}`,
-                pricePerOption: market.longPrice,
-                strikePrice: '$ ' + market.strikePrice,
-                timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.longPrice)),
-                address: market.address,
-            });
+        optionsMarkets
+            ?.filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
+            .sort((a, b) => a.timeRemaining - b.timeRemaining)
+            .forEach((market) => {
+                if (market.longPrice == 0 || market.shortPrice == 0) return;
+                markets.push({
+                    fullAssetName: getSynthName(market.currencyKey),
+                    currencyKey: market.currencyKey,
+                    assetName: `${market.asset} ${MarketType.long}`,
+                    pricePerOption: market.longPrice,
+                    strikePrice: '$ ' + market.strikePrice,
+                    timeRemaining: market.timeRemaining,
+                    potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.longPrice)),
+                    address: market.address,
+                });
 
-            markets.push({
-                fullAssetName: getSynthName(market.currencyKey),
-                currencyKey: market.currencyKey,
-                assetName: `${market.asset} ${MarketType.short}`,
-                pricePerOption: market.shortPrice,
-                strikePrice: '$ ' + market.strikePrice,
-                timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.shortPrice)),
-                address: market.address,
+                markets.push({
+                    fullAssetName: getSynthName(market.currencyKey),
+                    currencyKey: market.currencyKey,
+                    assetName: `${market.asset} ${MarketType.short}`,
+                    pricePerOption: market.shortPrice,
+                    strikePrice: '$ ' + market.strikePrice,
+                    timeRemaining: market.timeRemaining,
+                    potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.shortPrice)),
+                    address: market.address,
+                });
             });
-        });
 
         return markets.sort((a: HotMarket, b: HotMarket) => a.pricePerOption - b.pricePerOption);
     }, [optionsMarkets]);

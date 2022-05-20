@@ -10,7 +10,6 @@ import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
 import { sortOptionsMarkets } from 'utils/options';
-import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
 import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import { CONVERT_TO_6_DECIMALS } from 'constants/token';
@@ -55,7 +54,6 @@ const Markets: React.FC = () => {
             return openOrdersQuery.data;
         }
     }, [openOrdersQuery]);
-
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
@@ -83,25 +81,12 @@ const Markets: React.FC = () => {
         }
         return [];
     }, [marketsQuery, openOrdersMap]);
-
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
     });
 
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
-
-    const hotMarkets = useMemo(
-        () =>
-            optionsMarkets
-                .filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
-                .sort((a, b) => a.timeRemaining - b.timeRemaining)
-                .map((market) => {
-                    market.strikePrice = Number(market.strikePrice.toFixed(2));
-                    return market;
-                }),
-        [optionsMarkets]
-    );
 
     return (
         <>
@@ -139,7 +124,7 @@ const Markets: React.FC = () => {
                 </BannerContainer>
             )}
             <Suspense fallback={<></>}>
-                <HotMarkets optionsMarkets={hotMarkets} />
+                <HotMarkets optionsMarkets={optionsMarkets} />
             </Suspense>
             <Suspense fallback={<></>}>
                 <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
