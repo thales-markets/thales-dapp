@@ -39,7 +39,7 @@ const Profile: React.FC = () => {
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
     const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
-    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : undefined;
+    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
         refetchInterval: false,
