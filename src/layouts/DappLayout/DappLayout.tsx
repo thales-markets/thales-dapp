@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
 import { getTheme } from 'redux/modules/ui';
 import styled from 'styled-components';
-import DappHeader from './components/DappHeader/DappHeader';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isNetworkSupported } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
+
+const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
 type DappLayoutProps = {
     children: React.ReactNode;
@@ -25,7 +26,10 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     return (
         <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
             <NewWrapper>
-                <DappHeader />
+                <Suspense fallback={<></>}>
+                    <DappHeader />
+                </Suspense>
+
                 {children}
             </NewWrapper>
             <ToastContainer theme={'colored'} />
