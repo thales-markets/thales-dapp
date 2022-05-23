@@ -92,6 +92,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
+        "postbuild": "find ./build -type f -name '*.css' -o -name '*.js' -exec gzip -k '{}' \\;",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "prepare": "husky install"
