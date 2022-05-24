@@ -62,7 +62,7 @@ const AssetContainer = styled.div<{ displayInRowMobile?: boolean }>`
     }
 `;
 
-export const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
+const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
     display: ${(_props) => (_props?.displayInRow ? 'flex' : 'block')};
     ${(_props) => (_props?.displayInRow ? 'flex-direction: row;' : '')}
     ${(_props) => (_props?.displayInRow ? 'align-items: baseline;' : '')}
@@ -74,7 +74,7 @@ export const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
     }
 `;
 
-export const AssetName = styled.span<{ fontSize?: string }>`
+const AssetName = styled.span<{ fontSize?: string }>`
     font-family: Titillium Regular !important;
     font-style: normal;
     display: block;
@@ -88,7 +88,7 @@ export const AssetName = styled.span<{ fontSize?: string }>`
     }
 `;
 
-export const CurrencyKey = styled.span<{ fontSize?: string }>`
+const CurrencyKey = styled.span<{ fontSize?: string }>`
     font-family: Titillium Regular !important;
     font-style: normal;
     display: block;

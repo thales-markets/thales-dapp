@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { MarketCardContainer } from 'theme/common';
 
-const HotMarketCardSceleton: React.FC = () => {
+const HotMarketCardSceleton: React.FC<{ height?: string }> = ({ height }) => {
     return (
-        <Card>
+        <Card height={height}>
             <AssetInfo>
                 <Container>
                     <CurrencyIcon></CurrencyIcon>
@@ -30,10 +30,10 @@ const HotMarketCardSceleton: React.FC = () => {
     );
 };
 
-const Card = styled(MarketCardContainer)<{ address?: string }>`
+const Card = styled(MarketCardContainer)<{ height?: string }>`
     padding: 20px;
     width: 195px;
-    height: 316px;
+    height: ${(props) => props.height ?? '320px'};
     display: flex;
     border-radius: 15px;
     margin: 7.5px;

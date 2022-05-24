@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useInterval from 'hooks/useInterval';
-import { CurrencyKey } from './MarketCard';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
@@ -11,17 +10,8 @@ import { useTranslation } from 'react-i18next';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
-
-export type HotMarket = {
-    fullAssetName?: string;
-    currencyKey: string;
-    assetName: string;
-    pricePerOption: number;
-    strikePrice: string;
-    timeRemaining: number;
-    potentialProfit: string;
-    address: string;
-};
+import styled from 'styled-components';
+import { HotMarket } from 'types/options';
 
 const HotMarketCard: React.FC<HotMarket> = ({
     currencyKey,
@@ -45,7 +35,7 @@ const HotMarketCard: React.FC<HotMarket> = ({
                 <StyledComponents.AssetInfo>
                     <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
                     <StyledComponents.AssetNameContainer>
-                        <CurrencyKey alignSelf={'center'}>{assetName}</CurrencyKey>
+                        <CurrencyKey>{assetName}</CurrencyKey>
                     </StyledComponents.AssetNameContainer>
                 </StyledComponents.AssetInfo>
                 <StyledComponents.SectionContainer>
@@ -74,5 +64,14 @@ const HotMarketCard: React.FC<HotMarket> = ({
         </StyledComponents.Card>
     );
 };
+
+const CurrencyKey = styled.span<{ fontSize?: string }>`
+    font-family: Titillium Regular !important;
+    font-style: normal;
+    display: block;
+    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    text-transform: uppercase;
+    font-weight: 700;
+`;
 
 export default HotMarketCard;

@@ -109,7 +109,7 @@ const Badge = styled.i<{ color: string; height: number }>`
     width: ${(props) => props.height + 'px'};
     border-radius: 20px;
     color: ${(props) => (props?.color ? props.color : '')};
-    background: var(--background);
+    background: #04045a;
 `;
 
 export default CurrencyIcon;

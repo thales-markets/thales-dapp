@@ -2,9 +2,9 @@ import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { FunctionComponent, SVGProps } from 'react';
-import { NetworkId as SnxNetworkId } from '@synthetixio/contracts-interface/build/node/src/types';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
+import { Network } from 'utils/network';
 
 export const GWEI_UNIT = 1000000000;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -93,7 +93,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
         name: 'Optimism',
         icon: OpLogo,
         changeNetwork: async (networkId: number) => {
-            const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? SnxNetworkId['Mainnet-Ovm'];
+            const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network['Mainnet-Ovm'];
             const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
 
             if (typeof window.ethereum !== 'undefined') {

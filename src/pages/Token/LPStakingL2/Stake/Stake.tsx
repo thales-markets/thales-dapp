@@ -91,7 +91,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
     useEffect(() => {
         const fetchL1Fee = async (lpStakingRewardsContractWithSigner: any, amount: any) => {
             const txRequest = await lpStakingRewardsContractWithSigner.populateTransaction.stake(amount);
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {

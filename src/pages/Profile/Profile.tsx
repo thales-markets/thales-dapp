@@ -1,6 +1,6 @@
 import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated';
-import SearchField from 'pages/Markets/components/Input/SearchField';
-import TableGridSwitch from 'pages/Markets/components/Input/TableGridSwitch';
+import SearchField from 'components/TableInputs/SearchField';
+import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useAllPositions from 'queries/user/useAllPositions';
@@ -39,7 +39,7 @@ const Profile: React.FC = () => {
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
     const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
-    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : undefined;
+    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
         refetchInterval: false,

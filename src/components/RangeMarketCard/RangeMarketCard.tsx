@@ -1,15 +1,8 @@
 import { currencyKeyToDataFeedSourceMap } from 'constants/currency';
-import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
+import RangeIllustration from 'components/RangeIllustration';
 import React from 'react';
-import { RangedMarketData } from 'types/options';
-import {
-    AssetContainer,
-    AssetNameContainer,
-    CurrencyKey,
-    LightHeaderText,
-    MarketStatus,
-    StrongHeaderText,
-} from '../MarketsCard/MarketCard';
+import { RangedMarketData, RangedMarketUI } from 'types/options';
+
 import PhaseComponent from '../Phase/Phase';
 import { CardFooter, CardHeader, HeaderContainer, MiddleContrainer, Wrapper } from './styled-components';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
@@ -18,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { formatShortDate } from 'utils/formatters/date';
 import { UI_COLORS } from 'constants/ui';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import { RangedMarketUI } from 'pages/RangeMarkets/RangeMarkets';
+import styled from 'styled-components';
 
 type RangeMarketCardProps = {
     data: RangedMarketData | RangedMarketUI;
@@ -84,5 +77,56 @@ const RangeMarketCard: React.FC<RangeMarketCardProps> = ({ data, exchangeRates, 
         </Wrapper>
     );
 };
+
+const AssetContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    // align-items: center;
+`;
+
+const AssetNameContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: left;
+    font-size: 15px;
+    color: var(--primary-color) !important;
+`;
+
+const CurrencyKey = styled.span<{ alignSelf?: string }>`
+    display: flex;
+    flex-direction: row;
+    ${(_props) => (_props?.alignSelf ? `align-self: ${_props?.alignSelf}` : '')};
+    font-family: Roboto !important;
+    font-style: normal;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: 700;
+`;
+
+const MarketStatus = styled.span`
+    font-family: Roboto !important;
+    font-style: normal;
+    font-size: 7px;
+    display: block;
+    line-height: 18px;
+`;
+
+const LightHeaderText = styled.span`
+    display: flex;
+    flex-direction: row;
+    color: var(--primary-color);
+    font-family: Roboto !important;
+    font-style: normal;
+    line-height: 110%;
+    font-size: 14px;
+`;
+
+const StrongHeaderText = styled(LightHeaderText)<{ color?: string }>`
+    ${(_props) => (_props?.color ? `color: ${_props.color};` : '')}
+    font-size: 25px;
+    font-weight: 700;
+`;
 
 export default RangeMarketCard;

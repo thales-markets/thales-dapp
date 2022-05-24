@@ -1,14 +1,9 @@
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { loadProvider } from '@synthetixio/providers';
 import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
-// import TokenPage from 'pages/Token/Token.tsx';
-// import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
-// import Profile from 'pages/Profile/Profile.tsx';
-// import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -27,22 +22,15 @@ import {
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
-import snxJSConnector from 'utils/snxJSConnector';
-// import MainLayout from '../../components/MainLayout';
-import ROUTES from '../../constants/routes';
-// import GovernancePage from 'pages/Governance';
-// import Leaderboard from 'pages/Leaderboard';
+import ROUTES from 'constants/routes';
 import Cookies from 'universal-cookie';
-// import Token from '../LandingPage/articles/Token';
-// import Governance from '../LandingPage/articles/Governance';
-// import Whitepaper from '../LandingPage/articles/Whitepaper';
-// import DappLayout from 'layouts/DappLayout';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { ethers } from 'ethers';
 
-const DappLayout = lazy(() => import('layouts/DappLayout'));
-const MainLayout = lazy(() => import('../../components/MainLayout'));
+const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
+const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
 
-const OptionsCreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../Options/CreateMarket'));
+const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
 const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage/Home'));
 const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
 const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
@@ -60,10 +48,6 @@ const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '.
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
 const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
-// import TokenPage from 'pages/Token/Token.tsx';
-// import TaleOfThales from 'pages/TaleOfThales/TaleOfThales.tsx';
-// import Profile from 'pages/Profile/Profile.tsx';
-// import ThalesRoyal from 'pages/Royale/ThalesRoyal';
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
@@ -72,6 +56,7 @@ const App = () => {
     // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const { trackPageView } = useMatomo();
+    const [snxJSConnector, setSnxJSConnector] = useState();
 
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
@@ -84,19 +69,23 @@ const App = () => {
             const { networkId, name } = await getEthereumNetwork();
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
-                console.log(snxJSConnector);
-                if (!snxJSConnector.initialized) {
-                    const provider = loadProvider({
-                        networkId,
-                        infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-                        provider: window.ethereum,
+
+                if (!snxJSConnector) {
+                    import(/* webpackChunkName: "snxJSConnector" */ 'utils/snxJSConnector').then((snx) => {
+                        const provider = loadProvider({
+                            networkId,
+                            infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
+                            provider: window.ethereum,
+                        });
+
+                        const useOvm = getIsOVM(networkId);
+
+                        snx.default.setContractSettings({ networkId, provider, useOvm });
+
+                        setSnxJSConnector(snx.default);
+                        dispatch(setAppReady());
                     });
-
-                    const useOvm = getIsOVM(networkId);
-
-                    snxJSConnector.setContractSettings({ networkId, provider, useOvm });
                 }
-                dispatch(setAppReady());
             } catch (e) {
                 dispatch(setAppReady());
                 console.log(e);
@@ -220,7 +209,7 @@ const App = () => {
 
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <DappLayout>
-                                <OptionsCreateMarket />
+                                <CreateMarket />
                             </DappLayout>
                         </Route>
 
@@ -339,6 +328,12 @@ const App = () => {
             </Suspense>
         </QueryClientProvider>
     );
+};
+
+const loadProvider = ({ networkId = 1, infuraId, provider }) => {
+    if (!provider && !infuraId) throw new Error('No web3 provider');
+    if (provider) return new ethers.providers.Web3Provider(provider);
+    if (infuraId) return new ethers.providers.InfuraProvider(networkId, infuraId);
 };
 
 export default App;

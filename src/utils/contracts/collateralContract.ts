@@ -1,18 +1,17 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
+import { Network } from 'utils/network';
 
 export const erc20Contract = {
     addresses: {
-        [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: 'TBD',
-        [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: 'TBD',
+        [Network.Mainnet]: 'TBD',
+        [Network.Ropsten]: 'TBD',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: 'TBD',
         // added to resolve error with typings
-        [NetworkId.Goerli]: 'TBD', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: 'TBD',
-        [POLYGON_MUMBAI_ID]: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62',
-        [POLYGON_ID]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+        [Network.Goerli]: 'TBD', // TODO: goerli network remove or implement
+        [Network['Mainnet-Ovm']]: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9', // sUSD
+        [Network['Kovan-Ovm']]: '0xaA5068dC2B3AADE533d3e52C6eeaadC6a8154c57', // sUSD
+        [Network['POLYGON-MUMBAI']]: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', //USDC
+        [Network['POLYGON-MAINNET']]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', //USDC
     },
     abi: [
         { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },

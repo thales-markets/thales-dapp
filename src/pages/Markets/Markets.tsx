@@ -1,8 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
-
-import MarketsTable from './components/MarketsTable';
-
-import HotMarkets from './components/HotMarkets';
+import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 
 import { RootState } from 'redux/rootReducer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,15 +10,17 @@ import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
 import { sortOptionsMarkets } from 'utils/options';
-import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
-import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
-import { CONVERT_TO_6_DECIMALS } from '../../constants/token';
-import InfoBanner from '../../components/InfoBanner';
+import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
+import { CONVERT_TO_6_DECIMALS } from 'constants/token';
+import InfoBanner from 'components/InfoBanner';
 import styled from 'styled-components';
-import { FlexDiv } from '../../theme/common';
+import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+
+const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
+const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
 
 // const MAX_HOT_MARKETS = 6;
 const INFORMATION_BANNER_ACTIVE = false;
@@ -51,17 +49,11 @@ const Markets: React.FC = () => {
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
 
-    const openOrdersMap = useMemo(() => {
-        if (openOrdersQuery.isSuccess) {
-            return openOrdersQuery.data;
-        }
-    }, [openOrdersQuery]);
-
     const optionsMarkets = useMemo(() => {
-        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
-            const markets = openOrdersMap
+        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data) && openOrdersQuery.isSuccess) {
+            const markets = openOrdersQuery.data
                 ? marketsQuery.data.map((m) => {
-                      const apiData = (openOrdersMap as any).get(m.address.toLowerCase());
+                      const apiData = (openOrdersQuery.data as any).get(m.address.toLowerCase());
 
                       return {
                           ...m,
@@ -83,26 +75,13 @@ const Markets: React.FC = () => {
             return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery, openOrdersMap]);
-
+    }, [marketsQuery, openOrdersQuery]);
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
     });
 
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
-
-    const hotMarkets = useMemo(
-        () =>
-            optionsMarkets
-                .filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
-                .sort((a, b) => a.timeRemaining - b.timeRemaining)
-                .map((market) => {
-                    market.strikePrice = Number(market.strikePrice.toFixed(2));
-                    return market;
-                }),
-        [optionsMarkets]
-    );
 
     return (
         <>
@@ -139,8 +118,13 @@ const Markets: React.FC = () => {
                     </InfoBanner>
                 </BannerContainer>
             )}
-            <HotMarkets optionsMarkets={hotMarkets} />
-            <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
+            <Suspense fallback={<></>}>
+                <HotMarkets optionsMarkets={optionsMarkets} />
+            </Suspense>
+            <Suspense fallback={<></>}>
+                <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
+            </Suspense>
+
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>
     );

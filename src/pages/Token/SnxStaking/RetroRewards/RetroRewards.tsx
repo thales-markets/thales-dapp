@@ -78,7 +78,7 @@ const RetroRewards: React.FC = () => {
     useEffect(() => {
         const fetchL1Fee = async (vestingContractWithSigner: any) => {
             const txRequest = await vestingContractWithSigner.populateTransaction.claim();
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {

@@ -11,7 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getStableCoinForNetwork } from '../../../../utils/currency';
+import { getStableCoinForNetwork } from 'utils/currency';
 
 export const UserSwap: React.FC = () => {
     const { t } = useTranslation();

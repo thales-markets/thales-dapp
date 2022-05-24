@@ -1,11 +1,10 @@
 import onboard from 'bnc-onboard';
 import { Subscriptions } from 'bnc-onboard/dist/src/interfaces';
-import { getInfuraRpcURL, NetworkId as LocalNetworkId } from 'utils/network';
+import { getInfuraRpcURL, Network, NetworkId as LocalNetworkId } from 'utils/network';
 import browserWalletIcon from 'assets/images/browser-wallet.svg';
 import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import disclaimer from 'assets/docs/thales-protocol-disclaimer.pdf';
-import { NetworkId } from '@synthetixio/contracts-interface';
 import { initReactI18next } from 'react-i18next';
 import i18n from 'i18next';
 import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../constants/network';
@@ -82,10 +81,10 @@ export const initOnboard = (networkId: LocalNetworkId, subscriptions: Subscripti
                 {
                     walletName: 'walletConnect',
                     rpc: {
-                        [NetworkId.Mainnet]: getInfuraRpcURL(NetworkId.Mainnet),
-                        [NetworkId['Mainnet-Ovm']]: getInfuraRpcURL(NetworkId['Mainnet-Ovm']),
-                        [NetworkId.Kovan]: getInfuraRpcURL(NetworkId.Kovan),
-                        [NetworkId['Kovan-Ovm']]: getInfuraRpcURL(NetworkId['Kovan-Ovm']),
+                        [Network.Mainnet]: getInfuraRpcURL(Network.Mainnet),
+                        [Network['Mainnet-Ovm']]: getInfuraRpcURL(Network['Mainnet-Ovm']),
+                        [Network.Kovan]: getInfuraRpcURL(Network.Kovan),
+                        [Network['Kovan-Ovm']]: getInfuraRpcURL(Network['Kovan-Ovm']),
                         [POLYGON_MUMBAI_ID]: getInfuraRpcURL(POLYGON_MUMBAI_ID),
                         [POLYGON_ID]: getInfuraRpcURL(POLYGON_ID),
                     },

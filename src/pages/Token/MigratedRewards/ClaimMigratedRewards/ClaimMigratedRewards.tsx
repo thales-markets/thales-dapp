@@ -72,7 +72,7 @@ const ClaimMigratedRewards: React.FC = () => {
                 migratedRewards.reward.rawBalance,
                 migratedRewards.reward.proof
             );
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {

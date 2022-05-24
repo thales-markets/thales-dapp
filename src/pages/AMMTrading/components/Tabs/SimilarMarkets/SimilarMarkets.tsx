@@ -14,7 +14,6 @@ import { SimilarMarketsContainer } from './styled-components/SimilarMarkets';
 import { getNetworkId } from 'redux/modules/wallet';
 import { sortOptionsMarkets } from 'utils/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import MarketCard from 'pages/Markets/components/MarketsCard';
 import SPAAnchor from 'components/SPAAnchor';
 import { getIsAppReady } from 'redux/modules/app';
 import Loader from 'components/Loader';
@@ -26,7 +25,8 @@ import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRang
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { CONVERT_TO_6_DECIMALS } from 'constants/token';
 import { POLYGON_ID } from 'constants/network';
-import RangeMarketCard from 'pages/Markets/components/RangeMarketCard';
+import RangeMarketCard from 'components/RangeMarketCard';
+import MarketCard from 'components/MarketCard';
 
 const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) => {
     const marketInfo = marketType !== MARKET_TYPE[1] ? useMarketContext() : useRangedMarketContext();
@@ -125,7 +125,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
         return [];
     }, [rangedMarketsQuery.isLoading]);
 
-    const exchangeRatesMarketDataQuery = useExchangeRatesQuery(networkId, {
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery({
         enabled: isAppReady && (optionsMarkets.length > 0 || rangedMarkets?.length > 0),
         refetchInterval: false,
     });
