@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useInterval from 'hooks/useInterval';
-// import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -10,9 +9,8 @@ import { useTranslation } from 'react-i18next';
 import SPAAnchor from 'components/SPAAnchor';
 import { buildRangeMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
-import { CurrencyKey } from 'pages/Markets/components/MarketsCard/MarketCard';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
-// import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
+import styled from 'styled-components';
 
 export type HotRangedMarket = {
     fullAssetName?: string;
@@ -56,7 +54,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
                         iconType={assetName.includes('IN') ? 1 : 2}
                     />
                     <StyledComponents.AssetNameContainer>
-                        <CurrencyKey alignSelf={'center'}>{assetName}</CurrencyKey>
+                        <CurrencyKey>{assetName}</CurrencyKey>
                     </StyledComponents.AssetNameContainer>
                 </StyledComponents.AssetInfo>
                 <StyledComponents.SectionContainer>
@@ -99,5 +97,14 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
         </StyledComponents.Card>
     );
 };
+
+const CurrencyKey = styled.span<{ fontSize?: string }>`
+    font-family: Titillium Regular !important;
+    font-style: normal;
+    display: block;
+    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    text-transform: uppercase;
+    font-weight: 700;
+`;
 
 export default HotMarketRanged;

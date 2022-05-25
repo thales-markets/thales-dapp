@@ -108,9 +108,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
+    const collateral = snxJSConnector.collateral;
     const isBuy = orderSide.value === 'buy';
 
     const isAmountEntered = Number(amount) > 0;
@@ -128,8 +126,8 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
         insufficientBalance ||
         !hasAllowance;
 
-    const buyToken = isBuy ? baseToken : SynthsUSD.address;
-    const sellToken = isBuy ? SynthsUSD.address : baseToken;
+    const buyToken = isBuy ? baseToken : collateral?.address;
+    const sellToken = isBuy ? collateral?.address : baseToken;
     const sellTokenCurrencyKey = isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide];
     const addressToApprove = ONE_INCH_SWAP_CONTRACTS[networkId] || '';
 
@@ -173,7 +171,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
     }, [orderbookQuery.data, walletAddress]);
 
     useEffect(() => {
-        const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
+        const erc20Instance = new ethers.Contract(sellToken as any, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             try {
                 const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
@@ -189,7 +187,7 @@ const MarketOrder: React.FC<MarketOrderPropsType> = ({ optionSide }) => {
     }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance, amount, isAllowing]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
+        const erc20Instance = new ethers.Contract(sellToken as any, erc20Contract.abi, snxJSConnector.signer);
         try {
             setIsAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);

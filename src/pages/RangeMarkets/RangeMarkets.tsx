@@ -1,41 +1,24 @@
-import React, { useEffect, useMemo } from 'react';
-
+import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 import { RootState } from 'redux/rootReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
-
 import { sortOptionsMarkets } from 'utils/options';
-import { PHASE } from 'constants/options';
 import Loader from 'components/Loader';
 import { POLYGON_ID } from 'constants/network';
 import { CONVERT_TO_6_DECIMALS } from 'constants/token';
-// import InfoBanner from 'components/InfoBanner';
-// import styled from 'styled-components';
-// import { FlexDiv } from 'theme/common';
-// import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
-import RangeMarketsTable from './components/RangeMarketsTable';
-import HotMarketsRanged from './components/HotMarketsRanged/HotMarketsRanged';
-import { RangedMarket } from 'types/options';
+import { RangedMarketUI } from 'types/options';
 
-// const MAX_HOT_MARKETS = 6;
-
-export type RangedMarketUI = RangedMarket & {
-    asset: string;
-    availableIn: number;
-    availableOut: number;
-    inPrice: number;
-    outPrice: number;
-    ammLiquidity: string;
-    range: string;
-    phaseNum: number;
-    timeRemaining: number;
-};
+const HotMarketsRanged = lazy(
+    () => import(/* webpackChunkName: "HotMarketsRanged" */ './components/HotMarketsRanged/HotMarketsRanged')
+);
+const RangeMarketsTable = lazy(
+    () => import(/* webpackChunkName: "RangeMarketsTable" */ './components/RangeMarketsTable')
+);
 
 const RangeMarkets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -60,19 +43,13 @@ const RangeMarkets: React.FC = () => {
 
     const marketsQuery = useRangedMarketsQuery(networkId);
 
-    const rangeLiquidity = useRangedMarketsLiquidity(networkId);
-
-    const openOrdersMap = useMemo(() => {
-        if (rangeLiquidity.isSuccess) {
-            return rangeLiquidity.data;
-        }
-    }, [rangeLiquidity]);
+    const rangeLiquidityQuery = useRangedMarketsLiquidity(networkId);
 
     const optionsMarkets: RangedMarketUI[] = useMemo(() => {
-        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
-            const markets = openOrdersMap
+        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data) && rangeLiquidityQuery.isSuccess) {
+            const markets = rangeLiquidityQuery.data
                 ? marketsQuery.data.map((m) => {
-                      const apiData = (openOrdersMap as any).get(m.address.toLowerCase());
+                      const apiData = (rangeLiquidityQuery.data as any).get(m.address.toLowerCase());
 
                       return {
                           ...m,
@@ -95,7 +72,7 @@ const RangeMarkets: React.FC = () => {
             return sortOptionsMarkets(markets as any) as any;
         }
         return [];
-    }, [marketsQuery, openOrdersMap]);
+    }, [marketsQuery, rangeLiquidityQuery]);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets as any, {
         enabled: isAppReady && optionsMarkets.length > 0,
@@ -103,14 +80,6 @@ const RangeMarkets: React.FC = () => {
     });
 
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
-
-    const hotMarkets = useMemo(
-        () =>
-            optionsMarkets
-                .filter((market) => market.phaseNum === PHASE.trading)
-                .sort((a, b) => a.timeRemaining - b.timeRemaining),
-        [optionsMarkets]
-    );
 
     return (
         <>
@@ -145,8 +114,13 @@ const RangeMarkets: React.FC = () => {
                     />
                 </InfoBanner>
             </BannerContainer> */}
-            <HotMarketsRanged optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />
-            <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
+            <Suspense fallback={<></>}>
+                <HotMarketsRanged optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
+            </Suspense>
+            <Suspense fallback={<></>}>
+                <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
+            </Suspense>
+
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>
     );

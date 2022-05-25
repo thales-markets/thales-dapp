@@ -9,7 +9,6 @@ import {
     InputContainer,
     SubmitButtonContainer,
 } from 'components/OldVersion/old-components';
-import NumericInput from 'pages/Token/components/NumericInput';
 import { ModalContainer, ModalHeader, ModalTitle, StyledModal } from 'components/OldVersion/old-components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +19,7 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import onboardConnector from 'utils/onboardConnector';
+import NumericInput from 'components/NumericInput';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
@@ -30,7 +30,7 @@ type ApprovalModalProps = {
     isRoyale?: boolean;
 };
 
-export const ApprovalModal: React.FC<ApprovalModalProps> = ({
+const ApprovalModal: React.FC<ApprovalModalProps> = ({
     defaultAmount,
     tokenSymbol,
     isAllowing,
@@ -275,7 +275,7 @@ const FlexContainer = styled(FlexDivCentered)`
     margin: 7px 0;
 `;
 
-export const ApprovalModalCloseIconContainer = styled(CloseIcon)<{ isRoyale?: boolean }>`
+const ApprovalModalCloseIconContainer = styled(CloseIcon)<{ isRoyale?: boolean }>`
     filter: ${(props) =>
         props.isRoyale ? 'invert(14%) sepia(42%) saturate(588%) hue-rotate(104deg) brightness(25%) contrast(94%)' : ''};
     :hover {

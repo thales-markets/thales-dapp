@@ -2,11 +2,22 @@ import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
-import { BigNumber, ethers } from 'ethers';
-import { serializeTransaction, UnsignedTransaction } from 'ethers/lib/utils';
-import snxJSConnector from './snxJSConnector';
+import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
+import { serializeTransaction } from 'ethers/lib/utils';
 
 export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137;
+
+export enum Network {
+    Mainnet = 1,
+    Ropsten = 3,
+    Rinkeby = 4,
+    Goerli = 5,
+    Kovan = 42,
+    'Mainnet-Ovm' = 10,
+    'Kovan-Ovm' = 69,
+    'POLYGON-MUMBAI' = 80001,
+    'POLYGON-MAINNET' = 137,
+}
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -107,7 +118,7 @@ export const formatGasLimit = (gasEstimate: ethers.BigNumber | number, networkId
 export const formatL2GasLimit = (gasEstimate: ethers.BigNumber | number): number =>
     normalizeL2GasLimit(Number(gasEstimate));
 
-export const getL1FeeInWei = async (txRequest: any) => {
+export const getL1FeeInWei = async (txRequest: any, snxJSConnector: any) => {
     const OVM_GasPriceOracle = getContractFactory('OVM_GasPriceOracle', (snxJSConnector as any).signer).attach(
         predeploys.OVM_GasPriceOracle
     );
@@ -124,7 +135,7 @@ export const getL1FeeInWei = async (txRequest: any) => {
         const l1FeeInWei = await OVM_GasPriceOracle.getL1Fee(serializedTx);
         return l1FeeInWei.toNumber();
     }
-    return null;
+    return 1;
 };
 
 export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {

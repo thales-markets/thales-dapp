@@ -105,7 +105,7 @@ const Stake: React.FC = () => {
     useEffect(() => {
         const fetchL1Fee = async (stakingThalesContractWithSigner: any, amount: any) => {
             const txRequest = await stakingThalesContractWithSigner.populateTransaction.stake(amount);
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {

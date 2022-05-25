@@ -1,6 +1,6 @@
-import { formatCurrency } from '../../../../../utils/formatters/number';
-import { formatShortDate } from '../../../../../utils/formatters/date';
-import { buildOptionsMarketLink, buildRangeMarketLink } from '../../../../../utils/routes';
+import { formatCurrency } from 'utils/formatters/number';
+import { formatShortDate } from 'utils/formatters/date';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { TFunction } from 'i18next';
 
 const WIN_COLOR = '#50CE99';

@@ -1,10 +1,10 @@
 import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated';
-import SearchField from 'pages/Markets/components/Input/SearchField';
-import TableGridSwitch from 'pages/Markets/components/Input/TableGridSwitch';
+import SearchField from 'components/TableInputs/SearchField';
+import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useAllPositions from 'queries/user/useAllPositions';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -36,10 +36,14 @@ const Profile: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+
+    const [searchAddress, setSearchAddress] = useState<string>('');
+
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
     const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
-    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : undefined;
+    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
+
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
         refetchInterval: false,
@@ -47,7 +51,7 @@ const Profile: React.FC = () => {
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
     const isPolygon = getIsPolygon(networkId);
 
-    const userPositionsQuery = useAllPositions(networkId, walletAddress as any, {
+    const userPositionsQuery = useAllPositions(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
         enabled: isAppReady && walletAddress !== null,
     });
 
@@ -55,15 +59,21 @@ const Profile: React.FC = () => {
         ? userPositionsQuery.data
         : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
 
-    const userRangePositionsQuery = useRangedPositions(networkId, walletAddress as any, {
-        enabled: isAppReady && walletAddress !== null,
-    });
+    const userRangePositionsQuery = useRangedPositions(
+        networkId,
+        (searchAddress ? searchAddress : walletAddress) as any,
+        {
+            enabled: isAppReady && walletAddress !== null,
+        }
+    );
 
     const userRangePositions = userRangePositionsQuery.isSuccess
         ? userRangePositionsQuery.data
         : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
 
-    const allTxAndDataQuery = useCalculateDataQuery(networkId, walletAddress as any, { enabled: isAppReady });
+    const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
+        enabled: isAppReady,
+    });
     const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
     const [isSimpleView, setSimpleView] = useState(true);
@@ -73,7 +83,22 @@ const Profile: React.FC = () => {
     const claimable = useMemo(() => {
         return positions.claimable + userRangePositions.claimable;
     }, [positions, userRangePositions]);
-    console.log(positions, userRangePositions);
+
+    useEffect(() => {
+        if (searchText.startsWith('0x') && searchText?.length == 42) {
+            setSearchAddress(searchText.toLowerCase());
+        }
+
+        if (searchText == '') {
+            setSearchAddress('');
+        }
+    }, [searchText, searchAddress]);
+
+    useEffect(() => {
+        if (searchAddress?.toLowerCase() !== searchText?.toLowerCase() && searchText !== '') {
+            setSearchAddress('');
+        }
+    }, [searchAddress]);
 
     return (
         <>
@@ -124,7 +149,7 @@ const Profile: React.FC = () => {
                                 exchangeRates={exchangeRates}
                                 positions={positions.live}
                                 rangedPositions={userRangePositions.live}
-                                searchText={searchText}
+                                searchText={searchAddress ? '' : searchText}
                                 isLoading={userPositionsQuery.isLoading}
                             />
                         )}
@@ -134,7 +159,7 @@ const Profile: React.FC = () => {
                                 positions={positions.matured}
                                 claimed={positions.claimed}
                                 claimedRange={userRangePositions.claimed}
-                                searchText={searchText}
+                                searchText={searchAddress ? '' : searchText}
                                 isLoading={userPositionsQuery.isLoading}
                                 rangedPositions={userRangePositions.matured}
                             />
@@ -143,7 +168,7 @@ const Profile: React.FC = () => {
                             <History
                                 markets={[...(markets as any), ...(rangedMarkets as any)]}
                                 trades={DataForUi ? DataForUi.trades : []}
-                                searchText={searchText}
+                                searchText={searchAddress ? '' : searchText}
                                 isLoading={allTxAndDataQuery.isLoading}
                             />
                         )}

@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import Container from './styled-components/Container';
 import Tile from './styled-components/Tile';
 import AssetInfo, { AssetInfoProps } from '../AssetInfo/AssetInfo';
-import { FlexDiv, LoaderContainer, NoDataText, NoDataContainer } from '../../theme/common';
+import { FlexDiv, LoaderContainer, NoDataText, NoDataContainer } from 'theme/common';
 import SPAAnchor from '../SPAAnchor';
 import SimpleLoader from '../SimpleLoader';
 import { useTranslation } from 'react-i18next';

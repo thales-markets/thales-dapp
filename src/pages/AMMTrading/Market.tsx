@@ -24,8 +24,8 @@ import { TradingType } from 'types/options';
 // import ROUTES from 'constants/routes';
 import Loader from 'components/Loader';
 import { setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
-import { getIsPolygon } from '../../utils/network';
-import { getNetworkId } from '../../redux/modules/wallet';
+import { getIsPolygon } from 'utils/network';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RangedMarketProvider } from './contexts/RangedMarketContext';
 import RangeMaturity from './components/Maturity/RangeMaturity';
 

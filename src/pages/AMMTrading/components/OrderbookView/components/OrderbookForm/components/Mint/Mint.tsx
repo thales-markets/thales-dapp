@@ -102,9 +102,7 @@ const Mint: React.FC = () => {
     const addressToApprove = ONE_INCH_CONTRACTS[networkId] ?? '';
 
     useEffect(() => {
-        const {
-            contracts: { SynthsUSD },
-        } = snxJSConnector.snxJS as any;
+        const collateral = snxJSConnector.collateral;
         const { binaryOptionsMarketManagerContract } = snxJSConnector;
 
         const getAllowance = async () => {
@@ -112,9 +110,9 @@ const Mint: React.FC = () => {
                 const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
                 const allowance = await checkAllowance(
                     parsedAmount,
-                    SynthsUSD,
+                    collateral,
                     walletAddress,
-                    binaryOptionsMarketManagerContract.address
+                    binaryOptionsMarketManagerContract?.address as any
                 );
                 setAllowance(allowance);
             } catch (e) {
@@ -129,7 +127,7 @@ const Mint: React.FC = () => {
     useEffect(() => {
         const fetchL1Fee = async (BOMContractWithSigner: any, mintAmount: any) => {
             const txRequest = await BOMContractWithSigner.populateTransaction.mint(mintAmount);
-            return getL1FeeInWei(txRequest);
+            return getL1FeeInWei(txRequest, snxJSConnector);
         };
 
         const fetchGasLimit = async () => {
@@ -158,18 +156,16 @@ const Mint: React.FC = () => {
     }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
-        const {
-            contracts: { SynthsUSD },
-        } = snxJSConnector.snxJS as any;
+        const collateral = snxJSConnector.collateral;
         const { binaryOptionsMarketManagerContract } = snxJSConnector;
         try {
             setIsAllowing(true);
-            const gasEstimate = await SynthsUSD.estimateGas.approve(
-                binaryOptionsMarketManagerContract.address,
+            const gasEstimate = await collateral?.estimateGas.approve(
+                binaryOptionsMarketManagerContract?.address,
                 approveAmount
             );
-            const tx = (await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, approveAmount, {
-                gasLimit: formatGasLimit(gasEstimate, networkId),
+            const tx = (await collateral?.approve(binaryOptionsMarketManagerContract?.address, approveAmount, {
+                gasLimit: formatGasLimit(gasEstimate as any, networkId),
             })) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
@@ -429,9 +425,7 @@ const Mint: React.FC = () => {
         optionsAmount: number | string,
         isLong?: boolean
     ) => {
-        const {
-            contracts: { SynthsUSD },
-        } = snxJSConnector.snxJS as any;
+        const collateral = snxJSConnector.collateral;
         isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
 
         const id = toast.loading(
@@ -440,7 +434,7 @@ const Mint: React.FC = () => {
                 : t('options.market.trade-options.mint.confirm-button.submit-short-progress-label')
         );
 
-        const takerToken = SynthsUSD.address;
+        const takerToken = collateral?.address;
         const makerAmount = optionsAmount;
         const takerAmount = Number(optionsAmount) * Number(price);
         const expiry = getOrderEndDate();
@@ -450,7 +444,7 @@ const Mint: React.FC = () => {
                 walletAddress,
                 networkId,
                 makerToken,
-                takerToken,
+                takerToken as any,
                 makerAmount,
                 takerAmount,
                 expiry

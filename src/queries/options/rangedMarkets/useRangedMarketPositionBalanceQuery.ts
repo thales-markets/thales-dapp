@@ -6,7 +6,7 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { NetworkId } from 'utils/network';
 import { ethers } from 'ethers';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import erc20Contract from 'utils/contracts/usdcContract';
+import erc20Contract from 'utils/contracts/collateralContract';
 
 const useRangedMarketPositionBalanceQuery = (
     marketAddress: string,

@@ -1,18 +1,17 @@
-import { NetworkId } from '@synthetixio/contracts-interface';
-import { POLYGON_ID, POLYGON_MUMBAI_ID } from '../../constants/network';
+import { Network } from 'utils/network';
 
 export const priceFeedContract = {
     addresses: {
-        [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0x4a1e5AF88f39Ad09BC3fAc3563B77F4f8A55F3Da',
-        [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x750dCAdcA8e9e7f9702c85383119ea8034450993',
+        [Network.Mainnet]: 'TBD',
+        [Network.Ropsten]: '0x4a1e5AF88f39Ad09BC3fAc3563B77F4f8A55F3Da',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: '0x750dCAdcA8e9e7f9702c85383119ea8034450993',
         // added to resolve error with typings
-        [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0xf4aef21d906992aFAdde7A9676e1dB4feb6390DD',
-        [NetworkId['Kovan-Ovm']]: '0xDa00B46a924dA3019b2F5fC13E770956F75C04C7',
-        [POLYGON_MUMBAI_ID]: '0x9E0B492F029F969affBFd78cA17302c2da2604E6',
-        [POLYGON_ID]: '0xCd9c0E99396627C7746b4363B880939Ac2828d3E',
+        [Network.Goerli]: '', // TODO: goerli network remove or implement
+        [Network['Mainnet-Ovm']]: '0xf4aef21d906992aFAdde7A9676e1dB4feb6390DD',
+        [Network['Kovan-Ovm']]: '0xDa00B46a924dA3019b2F5fC13E770956F75C04C7',
+        [Network['POLYGON-MUMBAI']]: '0x9E0B492F029F969affBFd78cA17302c2da2604E6',
+        [Network['POLYGON-MAINNET']]: '0xCd9c0E99396627C7746b4363B880939Ac2828d3E',
     },
     abi: [
         {

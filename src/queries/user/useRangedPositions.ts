@@ -113,7 +113,6 @@ const useRangedPositions = (
             });
 
             const claimedMap = new Map();
-            console.log(txMap);
 
             const optionsMarkets: RangedMarket[] = await thalesData.binaryOptions.rangedMarkets({
                 max: Infinity,
@@ -128,7 +127,6 @@ const useRangedPositions = (
                     }
                 });
 
-            console.log('claimed map: ', claimedMap);
             const result = {
                 claimable,
                 claimableAmount,

@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
 import { getNetworkId } from 'redux/modules/wallet';
 
-export type GasLimit = {
+type GasLimit = {
     gasLimit: number;
     label: string;
 };
@@ -32,7 +32,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
     const ethGasPriceEip1559Query = useEthGasPriceEip1559Query(networkId, { enabled: isAppReady });
     const gasPrice = ethGasPriceEip1559Query.isSuccess ? ethGasPriceEip1559Query.data.proposeGasPrice ?? null : null;
 
-    const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
+    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const ethRate = get(exchangeRates, isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : SYNTHS_MAP.sETH, null);
 

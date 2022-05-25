@@ -1,12 +1,13 @@
-import { LightTooltip, StyledQuestionMarkIcon } from 'pages/Token/components/components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { TableRow, TableCell } from './OrderbookTable';
-import { getStableCoinForNetwork } from '../../../../../../../../utils/currency';
+import { getStableCoinForNetwork } from 'utils/currency';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../../../../../redux/rootReducer';
-import { getNetworkId } from '../../../../../../../../redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
+import { LightTooltip } from '../components';
+import { StyledQuestionMarkIcon } from 'components/OldVersion/old-components';
 
 type OrderbookTableHeaderProps = {
     optionsCurrencyKey: string;

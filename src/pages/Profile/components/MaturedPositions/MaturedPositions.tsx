@@ -14,7 +14,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
 import { TFunction } from 'i18next';
-import RangeIllustration from 'pages/AMMTrading/components/RangeIllustration';
+import RangeIllustration from 'components/RangeIllustration';
 import { UI_COLORS } from 'constants/ui';
 
 type MaturedPositionsProps = {

@@ -11,7 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import { getIsPolygon } from '../../../../utils/network';
+import { getIsPolygon } from 'utils/network';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;

@@ -11,7 +11,7 @@ const useRoyaleAssetPriceQuery = (royaleAsset: string, options?: UseQueryOptions
 
             if (priceFeedContract) {
                 return ethers.utils.formatEther(
-                    await priceFeedContract.rateForCurrency(snxJSConnector.snxJS?.toBytes32(royaleAsset))
+                    await priceFeedContract.rateForCurrency(ethers.utils.formatBytes32String(royaleAsset))
                 );
             }
         },

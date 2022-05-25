@@ -10,7 +10,7 @@ import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan'
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie, VotingPowerTitle } from '../components';
-import { NetworkId } from '@synthetixio/contracts-interface';
+import { Network } from 'utils/network';
 import { ProposalTypeEnum, SpaceKey, StatusEnum } from 'constants/governance';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
 import WeightedVoting from './Voting/WeightedVoting';
@@ -58,7 +58,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
             const authorEns = await (snxJSConnector as any).provider.lookupAddress(proposal.author);
             setAuthorEns(authorEns);
         };
-        if (networkId === NetworkId.Mainnet) {
+        if (networkId === Network.Mainnet) {
             fetchAuthorEns();
         }
     }, [proposal]);
@@ -77,7 +77,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                     <FlexDivRowCentered>
                         <Text>{t(`governance.proposal.author-label`)}</Text>
                         <StyledLink
-                            href={getEtherscanAddressLink(NetworkId.Mainnet, proposal.author)}
+                            href={getEtherscanAddressLink(Network.Mainnet, proposal.author)}
                             target="_blank"
                             rel="noreferrer"
                         >
@@ -121,7 +121,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                     <FlexDivRowCentered>
                         <Text>{t(`governance.proposal.snapshot-label`)}</Text>
                         <StyledLink
-                            href={getEtherscanBlockLink(NetworkId.Mainnet, proposal.snapshot)}
+                            href={getEtherscanBlockLink(Network.Mainnet, proposal.snapshot)}
                             target="_blank"
                             rel="noreferrer"
                         >

@@ -15,23 +15,21 @@ import thalesRoyaleContract from './contracts/thalesRoyalContract';
 import thalesExchangerContract from './contracts/thalesExchangerContract';
 import opThalesContract from './contracts/opThalesContract';
 import lpStakingRewardsContract from './contracts/lpStakingRewardsContract';
-import { synthetix, SynthetixJS, Config } from '@synthetixio/contracts-interface';
 import { gelatoContract } from './contracts/gelatoContract';
 import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
 import thalesRoyalePassportContract from './contracts/thalesRoyalePassportContract';
 import bridgeContract from './contracts/bridgeContract';
-import usdcContract from './contracts/usdcContract';
-import { getIsPolygon } from './network';
+import usdcContract from './contracts/collateralContract';
 import unclaimedRetroAirdropContract from './contracts/unclaimedRetroAirdrop';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 
 type SnxJSConnector = {
     initialized: boolean;
-    snxJS: SynthetixJS | null;
     provider: ethers.providers.Provider | undefined;
     signer: Signer | undefined;
-    binaryOptionsMarketDataContract: ethers.Contract;
-    binaryOptionsMarketManagerContract: ethers.Contract;
+    collateral?: ethers.Contract;
+    binaryOptionsMarketDataContract?: ethers.Contract;
+    binaryOptionsMarketManagerContract?: ethers.Contract;
     retroAirdropContract?: ethers.Contract;
     vestingEscrowContract?: ethers.Contract;
     ongoingAirdropContract?: ethers.Contract;
@@ -52,33 +50,26 @@ type SnxJSConnector = {
     bridgeContract?: ethers.Contract;
     unclaimedRetroAirdropContract?: ethers.Contract;
     unclaimedInvestorsRetroAirdropContract?: ethers.Contract;
-    setContractSettings: (contractSettings: Config) => void;
+    setContractSettings: (contractSettings: any) => void;
 };
 
 // @ts-ignore
 const snxJSConnector: SnxJSConnector = {
     initialized: false,
 
-    setContractSettings: function (contractSettings: Config) {
+    setContractSettings: function (contractSettings: any) {
         this.initialized = true;
-        if (!getIsPolygon(contractSettings.networkId || 10)) {
-            this.snxJS = synthetix(contractSettings);
-        } else {
-            // @ts-ignore
-            this.snxJS = {
-                contracts: {
-                    // @ts-ignore
-                    SynthsUSD: initializeContract(usdcContract, contractSettings).connect(contractSettings.signer),
-                },
-            };
-        }
         this.signer = contractSettings.signer;
         this.provider = contractSettings.provider;
-        this.binaryOptionsMarketDataContract = initializeContract(binaryOptionsMarketDataContract, contractSettings);
-        this.binaryOptionsMarketManagerContract = initializeContract(
+        this.binaryOptionsMarketDataContract = conditionalInitializeContract(
+            binaryOptionsMarketDataContract,
+            contractSettings
+        );
+        this.binaryOptionsMarketManagerContract = conditionalInitializeContract(
             binaryOptionsMarketManagerContract,
             contractSettings
         );
+        this.collateral = conditionalInitializeContract(usdcContract, contractSettings);
         this.retroAirdropContract = conditionalInitializeContract(airdrop, contractSettings);
         this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);
         this.ongoingAirdropContract = conditionalInitializeContract(ongoingAirdrop, contractSettings);
@@ -114,10 +105,10 @@ const snxJSConnector: SnxJSConnector = {
     },
 };
 
-const initializeContract = (contract: any, contractSettings: Config) =>
-    new ethers.Contract(contract.addresses[contractSettings.networkId || 1], contract.abi, snxJSConnector.provider);
+// const initializeContract = (contract: any, contractSettings: any) =>
+//     new ethers.Contract(contract.addresses[contractSettings.networkId || 1], contract.abi, snxJSConnector.provider);
 
-const conditionalInitializeContract = (contract: any, contractSettings: Config) =>
+const conditionalInitializeContract = (contract: any, contractSettings: any) =>
     contract.addresses[contractSettings.networkId || 1] !== 'TBD'
         ? new ethers.Contract(
               contract.addresses[contractSettings.networkId || 1],
