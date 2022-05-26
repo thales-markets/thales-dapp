@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 
 import { getIsAppReady } from 'redux/modules/app';
@@ -20,10 +20,7 @@ import useRangedMarketQuery from 'queries/options/rangedMarkets/useRangedMarketQ
 
 import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { TradingType } from 'types/options';
-// import { buildHref, navigateTo } from 'utils/routes';
-// import ROUTES from 'constants/routes';
 import Loader from 'components/Loader';
-import { setSimilarMarketVisibility } from 'redux/modules/marketWidgets';
 import { getIsPolygon } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RangedMarketProvider } from './contexts/RangedMarketContext';
@@ -51,7 +48,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const [rangedMarket, setRangedMarket] = useState<RangedMarketData | null>(null);
     const [tradingType, setTradingType] = useState<TradingType>(TradingTypes[1].value as TradingType);
     const [inMaturityPhase, setMaturityPhase] = useState<boolean>(false);
-    const dispatch = useDispatch();
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady && !isRangedMarket,
@@ -60,10 +56,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const rangedMarketQuery = useRangedMarketQuery(marketAddress, {
         enabled: isAppReady && isRangedMarket,
     });
-
-    useEffect(() => {
-        dispatch(setSimilarMarketVisibility(false));
-    }, [marketAddress]);
 
     useEffect(() => {
         const fetchMarketData = async () => {
