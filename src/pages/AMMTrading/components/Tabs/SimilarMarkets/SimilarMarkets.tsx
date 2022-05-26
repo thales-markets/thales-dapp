@@ -89,7 +89,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
             return markets;
         }
         return [];
-    }, [marketsQuery.isLoading]);
+    }, [isLoading, marketInfo?.address]);
 
     const rangedMarkets: RangedMarket[] | [] = useMemo(() => {
         if (rangedMarketsQuery.isSuccess && Array.isArray(rangedMarketsQuery.data)) {
@@ -123,7 +123,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
             return markets;
         }
         return [];
-    }, [rangedMarketsQuery.isLoading]);
+    }, [isLoading, marketInfo?.address]);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery({
         enabled: isAppReady && (optionsMarkets.length > 0 || rangedMarkets?.length > 0),
