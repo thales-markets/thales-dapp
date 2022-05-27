@@ -129,6 +129,12 @@ export const ammContract = {
                     name: 'amount',
                     type: 'uint256',
                 },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'volume',
+                    type: 'uint256',
+                },
             ],
             name: 'ReferrerPaid',
             type: 'event',
