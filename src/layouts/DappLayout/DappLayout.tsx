@@ -28,7 +28,6 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     const rawParams = useLocation();
     const queryParams = queryString.parse(rawParams?.search);
 
-    console.log('queryParams ', queryParams);
     useEffect(() => {
         if (queryParams?.referralId) {
             if (Web3.utils.isAddress(queryParams?.referralId?.toLowerCase())) {
