@@ -41,6 +41,7 @@ export const HeaderContainer = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
+    max-width: 1200px;
 `;
 
 export const DescriptionContainer = styled.div`
@@ -53,4 +54,10 @@ export const Text = styled.p`
     color: var(--primary-color);
     font-size: 16px;
     line-height: 150%;
+`;
+
+export const TableWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
 `;
