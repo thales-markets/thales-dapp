@@ -1708,5 +1708,15 @@
             "migrate": "如果您在 L1 上拥有 LEGACY THALES，并希望将其交换给在 L1 上维护它的 THALES，请选择此选项。请注意，THALES 的大部分流动性都在 OP (L2) 上"
         },
         "info-tooltip": "<0>迁移过程中，LEGACY THALES首先交换到L1主网上的THALES，然后按照</0><1 />桥接到L2 Optimistic主网进入L2 THALES。"
+    },
+    "referral-page": {
+        "statistics": {
+            "total-volume": "总容积",
+            "trades": "交易",
+            "earned": "赢得"
+        },
+        "generate-link-btn": "生成链接",
+        "form-label": "生成会员链接",
+        "description": "痛本身就是爱的痛，主要的生态问题，但我给这种倒下的时间，让一些很大的痛和痛。为了在大多数情况下，我们中的任何人都会从事任何类型的工作，除了利用它的目标。但电影中的痛苦是难以谴责的，在快乐中它想摆脱痛苦中的痛苦，没有结果。他们是盲人渴望的例外，他们看不到，他们是那些为了抚慰心灵苦难的过失而放弃责任的人。"
     }
 }
