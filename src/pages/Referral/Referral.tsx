@@ -78,6 +78,24 @@ const Referral: React.FC = () => {
         return [];
     }, [tradersQuery.isSuccess]);
 
+    const statisticsData = useMemo(() => {
+        const data = {
+            trades: 0,
+            totalVolume: 0,
+            totalEarned: 0,
+        };
+
+        if (transactionData?.length) {
+            transactionData.forEach((transaction) => {
+                data.trades += 1;
+                data.totalVolume += transaction.volume;
+                data.totalEarned += transaction.amount;
+            });
+        }
+
+        return data;
+    }, [transactionData]);
+
     // const dummyData = [
     //     {
     //         address: '0x1633e96fd8d8b4f3653fef8daf9f051cd4f82804',
@@ -243,15 +261,15 @@ const Referral: React.FC = () => {
                 <StatisticsWrapper>
                     <KeyValue>
                         <StatLabel>{t('referral-page.statistics.trades')}</StatLabel>
-                        <StatValue>{formatCurrencyWithSign(USD_SIGN, 32000, 2)}</StatValue>
+                        <StatValue>{statisticsData.trades}</StatValue>
                     </KeyValue>
                     <KeyValue>
                         <StatLabel>{t('referral-page.statistics.total-volume')}</StatLabel>
-                        <StatValue>{formatCurrencyWithSign(USD_SIGN, 32000, 2)}</StatValue>
+                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume, 2)}</StatValue>
                     </KeyValue>
                     <KeyValue>
                         <StatLabel>{t('referral-page.statistics.earned')}</StatLabel>
-                        <StatValue>{formatCurrencyWithSign(USD_SIGN, 32000, 2)}</StatValue>
+                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned, 2)}</StatValue>
                     </KeyValue>
                 </StatisticsWrapper>
                 <DescriptionContainer>
