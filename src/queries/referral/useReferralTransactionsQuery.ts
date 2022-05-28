@@ -15,17 +15,17 @@ export type ReferralTransactions = {
 const useReferralTransactionsQuery = (
     networkId: NetworkId,
     trader?: string,
-    refferer?: string,
+    referrer?: string,
     options?: UseQueryOptions<ReferralTransactions[]>
 ) => {
     return useQuery<ReferralTransactions[]>(
-        QUERY_KEYS.Referral.ReferralTransacations(networkId, trader, refferer),
+        QUERY_KEYS.Referral.ReferralTransacations(networkId, trader, referrer),
         async () => {
             const referrers: ReferralTransactions[] = await thalesData.binaryOptions.referralTransfers({
                 max: Infinity,
                 network: networkId,
                 trader,
-                refferer,
+                referrer,
             });
             return referrers;
         },
