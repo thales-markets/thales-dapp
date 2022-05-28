@@ -240,6 +240,12 @@ export const QUERY_KEYS = {
             networkId,
             address ? address : undefined,
         ],
+        ReferredTrader: (networkId: NetworkId, referrer?: string) => [
+            'referral',
+            'ReferredTrader',
+            networkId,
+            referrer ? referrer : undefined,
+        ],
         ReferralTransacations: (networkId: NetworkId, trader?: string, refferer?: string) => [
             'referral',
             'referralTransacations',
