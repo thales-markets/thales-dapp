@@ -1724,6 +1724,12 @@
             "address": "地址",
             "earned": "赢得",
             "tx-info": "交易信息"
+        },
+        "tabs": {
+            "labels": {
+                "all-transactions": "所有交易",
+                "by-trader": "按交易者查看结果"
+            }
         }
     }
 }

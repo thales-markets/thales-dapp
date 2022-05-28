@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 import thalesData from 'thales-data';
 
-type ReferredTrader = {
+export type ReferredTrader = {
     id: string;
     trades: number;
     totalVolume: number;
