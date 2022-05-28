@@ -24,8 +24,8 @@ const useReferralTransactionsQuery = (
             const referrers: ReferralTransactions[] = await thalesData.binaryOptions.referralTransfers({
                 max: Infinity,
                 network: networkId,
-                trader,
-                referrer,
+                trader: trader ? trader.toLowerCase() : undefined,
+                referrer: referrer ? referrer.toLowerCase() : undefined,
             });
             return referrers;
         },

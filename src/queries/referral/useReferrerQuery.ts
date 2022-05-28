@@ -18,7 +18,7 @@ const useReferrerQuery = (networkId: NetworkId, address?: string, options?: UseQ
             const referrers: Referrer[] = await thalesData.binaryOptions.referrers({
                 max: Infinity,
                 network: networkId,
-                address,
+                address: address ? address.toLowerCase() : undefined,
             });
             return referrers;
         },

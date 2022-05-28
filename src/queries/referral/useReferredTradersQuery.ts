@@ -23,7 +23,7 @@ const useReferredTradersQuery = (
             const referrers: ReferredTrader[] = await thalesData.binaryOptions.referredTraders({
                 max: Infinity,
                 network: networkId,
-                refferer: referrer,
+                referrer: referrer ? referrer.toLowerCase() : undefined,
             });
             return referrers;
         },
