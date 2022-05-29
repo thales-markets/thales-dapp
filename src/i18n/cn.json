@@ -1735,6 +1735,15 @@
                 "by-trader": "按交易者查看结果"
             }
         },
-        "title": "推荐"
+        "title": "推荐",
+        "pages": {
+            "range-market-page": "远程市场页面",
+            "market-page": "市场页面"
+        },
+        "modal": {
+            "copied": "复制！",
+            "copy-link": "复制网址"
+        },
+        "choose-landing": "选择登陆页面"
     }
 }
