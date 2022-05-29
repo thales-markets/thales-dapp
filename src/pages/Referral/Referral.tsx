@@ -6,6 +6,7 @@ import {
     HeaderContainer,
     KeyValue,
     Label,
+    RowContrainer,
     StatisticsWrapper,
     StatLabel,
     StatValue,
@@ -28,6 +29,10 @@ import { getIsAppReady } from 'redux/modules/app';
 import Container from 'pages/Leaderboard/styled-components';
 import useReferralTransactionsQuery, { ReferralTransactions } from 'queries/referral/useReferralTransactionsQuery';
 import useReferredTradersQuery, { ReferredTrader } from 'queries/referral/useReferredTradersQuery';
+import Checkbox from 'pages/AMMTrading/components/AMM/components/Checkbox';
+import LinkModal from './components/LinkModal';
+import { buildReferralLink } from 'utils/routes';
+import ROUTES from 'constants/routes';
 
 const Tabs = [
     {
@@ -47,6 +52,11 @@ const Referral: React.FC = () => {
 
     // const [walletAddress, setWalletAddress] = useState<string>('');
     const [tabIndex, setTabIndex] = useState<number>(Tabs[0].id);
+    const [landingPage, setLandingPage] = useState<number | undefined>(0);
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [referralLink, setReferralLink] = useState<string>('');
+
+    console.log('Location ', window.location);
     const { t } = useTranslation();
 
     const transactionsQuery = useReferralTransactionsQuery(
@@ -96,6 +106,24 @@ const Referral: React.FC = () => {
         return data;
     }, [transactionData]);
 
+    const generateLinkHandler = () => {
+        if (!walletAddress) {
+            alert('Connect your wallet first.');
+            return;
+        }
+
+        if (landingPage == 0) {
+            setReferralLink(`${window.location.origin}${buildReferralLink(ROUTES.Options.Home, walletAddress)}`);
+        } else if (landingPage == 1) {
+            setReferralLink(
+                `${window.location.origin}${buildReferralLink(ROUTES.Options.RangeMarkets, walletAddress)}`
+            );
+        } else {
+            setReferralLink(`${window.location.origin}${buildReferralLink(ROUTES.Home, walletAddress)}`);
+        }
+        setShowModal(true);
+    };
+
     return (
         <>
             <HeaderContainer>
@@ -106,14 +134,51 @@ const Referral: React.FC = () => {
                         margin={'9px 0px 16px 0'}
                         active={true}
                         hoverShadow={'var(--button-shadow)'}
+                        onClickHandler={generateLinkHandler}
                     >
                         {t('referral-page.generate-link-btn')}
                     </Button>
-                    {/* <InputWithIcon
-                        placeholder={'Enter wallet address'}
-                        text={walletAddress}
-                        handleChange={(value) => setWalletAddress(value)}
-                    /> */}
+                    <Label>{t('referral-page.choose-landing')}</Label>
+                    <RowContrainer>
+                        <Checkbox
+                            checked={landingPage == 0}
+                            container={{
+                                size: '20px',
+                                margin: '0 30px 0 0',
+                            }}
+                            wrapperStyle={{ justifyContent: 'space-between', margin: '0 0 10px 0' }}
+                            checkbox={{
+                                margin: '0 0 0 10px',
+                            }}
+                            label={{
+                                text: t('referral-page.pages.market-page'),
+                                fontSize: '12px',
+                            }}
+                            // disabled={actionInProgress}
+                            onChange={(e: any) => {
+                                setLandingPage(e.target.checked ? 0 : undefined);
+                            }}
+                        />
+                        <Checkbox
+                            checked={landingPage == 1}
+                            container={{
+                                size: '20px',
+                                margin: '0 30px 0 0',
+                            }}
+                            wrapperStyle={{ justifyContent: 'space-between' }}
+                            checkbox={{
+                                margin: '0 0 0 10px',
+                            }}
+                            label={{
+                                text: t('referral-page.pages.range-market-page'),
+                                fontSize: '12px',
+                            }}
+                            // disabled={actionInProgress}
+                            onChange={(e: any) => {
+                                setLandingPage(e.target.checked ? 1 : undefined);
+                            }}
+                        />
+                    </RowContrainer>
                 </FormWrapper>
                 <StatisticsWrapper>
                     <KeyValue>
@@ -245,6 +310,7 @@ const Referral: React.FC = () => {
                     )}
                 </>
             </Container.Tab>
+            {showModal && <LinkModal showModal={showModal} onClose={() => setShowModal(false)} link={referralLink} />}
         </>
     );
 };

@@ -61,3 +61,9 @@ export const TableWrapper = styled.div`
     display: flex;
     align-items: center;
 `;
+
+export const RowContrainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+`;
