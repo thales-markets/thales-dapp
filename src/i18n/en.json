@@ -114,6 +114,7 @@
         "powered-by": "Powered by"
     },
     "referral-page": {
+        "title": "Referral",
         "form-label": "Generate Affiliate link",
         "generate-link-btn": "Generate link",
         "statistics": {
