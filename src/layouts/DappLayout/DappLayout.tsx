@@ -9,10 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { isNetworkSupported } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useLocation } from 'react-router-dom';
-import Web3 from 'web3';
-import Cookies from 'universal-cookie';
 import queryString from 'query-string';
-import { REFERRAL_COOKIE_LIFETIME } from 'constants/ui';
+import { setReferralWallet } from 'utils/referral';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -24,18 +22,12 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const theme = useSelector((state: RootState) => getTheme(state));
 
-    const cookies = new Cookies();
     const rawParams = useLocation();
     const queryParams = queryString.parse(rawParams?.search);
 
     useEffect(() => {
         if (queryParams?.referralId) {
-            if (Web3.utils.isAddress(queryParams?.referralId?.toLowerCase())) {
-                cookies.set('referralId', queryParams?.referralId, {
-                    path: '/',
-                    maxAge: REFERRAL_COOKIE_LIFETIME,
-                });
-            }
+            setReferralWallet(queryParams?.referralId);
         }
     }, []);
 

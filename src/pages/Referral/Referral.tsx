@@ -78,7 +78,7 @@ const Referral: React.FC = () => {
         }
 
         return [];
-    }, [transactionsQuery.isSuccess]);
+    }, [transactionsQuery.isSuccess, walletAddress]);
 
     const tradersData: ReferredTrader[] | [] = useMemo(() => {
         if (tradersQuery.isSuccess && tradersQuery.data && walletAddress) {
@@ -86,7 +86,7 @@ const Referral: React.FC = () => {
         }
 
         return [];
-    }, [tradersQuery.isSuccess]);
+    }, [tradersQuery.isSuccess, walletAddress]);
 
     const statisticsData = useMemo(() => {
         const data = {
