@@ -3,6 +3,10 @@ import styled from 'styled-components';
 export const FormWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 520px) {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 `;
 
 export const Label = styled.span`
@@ -15,6 +19,10 @@ export const StatisticsWrapper = styled.div`
     border: 1.73987px solid var(--input-border-color);
     padding: 16px 32px;
     border-radius: 13.049px;
+    @media screen and (max-width: 520px) {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 `;
 
 export const KeyValue = styled.span`
@@ -40,14 +48,22 @@ export const HeaderContainer = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
+    flex-wrap: wrap;
     width: 100%;
     margin-bottom: 31px;
+    @media screen and (max-width: 520px) {
+        justify-content: center;
+    }
 `;
 
 export const DescriptionContainer = styled.div`
     color: var(--primary-color);
     display: block;
     width: 40%;
+    @media screen and (max-width: 520px) {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 `;
 
 export const Text = styled.p`

@@ -56,7 +56,6 @@ const Referral: React.FC = () => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [referralLink, setReferralLink] = useState<string>('');
 
-    console.log('Location ', window.location);
     const { t } = useTranslation();
 
     const transactionsQuery = useReferralTransactionsQuery(
