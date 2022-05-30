@@ -35,7 +35,7 @@ import Divider from 'pages/AMMTrading/components/AMM/styled-components/Divider';
 import NetworkFees from 'pages/AMMTrading/components/AMM/components/NetworkFees';
 import ApprovalModal from 'components/ApprovalModal';
 import { toast } from 'react-toastify';
-import { getStableCoinForNetwork } from '../../../../../../../../utils/currency';
+import { getStableCoinForNetwork } from 'utils/currency';
 
 const Mint: React.FC = () => {
     const { t } = useTranslation();
@@ -103,6 +103,7 @@ const Mint: React.FC = () => {
 
     useEffect(() => {
         const collateral = snxJSConnector.collateral;
+        const collateraSigned = collateral?.connect(snxJSConnector.signer as any);
         const { binaryOptionsMarketManagerContract } = snxJSConnector;
 
         const getAllowance = async () => {
@@ -110,7 +111,7 @@ const Mint: React.FC = () => {
                 const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
                 const allowance = await checkAllowance(
                     parsedAmount,
-                    collateral,
+                    collateraSigned,
                     walletAddress,
                     binaryOptionsMarketManagerContract?.address as any
                 );
@@ -157,14 +158,15 @@ const Mint: React.FC = () => {
 
     const handleAllowance = async (approveAmount: BigNumber) => {
         const collateral = snxJSConnector.collateral;
+        const collateraSigned = collateral?.connect(snxJSConnector.signer as any);
         const { binaryOptionsMarketManagerContract } = snxJSConnector;
         try {
             setIsAllowing(true);
-            const gasEstimate = await collateral?.estimateGas.approve(
+            const gasEstimate = await collateraSigned?.estimateGas.approve(
                 binaryOptionsMarketManagerContract?.address,
                 approveAmount
             );
-            const tx = (await collateral?.approve(binaryOptionsMarketManagerContract?.address, approveAmount, {
+            const tx = (await collateraSigned?.approve(binaryOptionsMarketManagerContract?.address, approveAmount, {
                 gasLimit: formatGasLimit(gasEstimate as any, networkId),
             })) as ethers.ContractTransaction;
             setOpenApprovalModal(false);

@@ -177,11 +177,15 @@ input[type='number'] {
 }
 
 #root {
-    overflow: hidden;
+    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+    height: 100vh;
     --sat: env(safe-area-inset-top);
     --sar: env(safe-area-inset-right);
     --sab: env(safe-area-inset-bottom);
     --sal: env(safe-area-inset-left);
+    &.collapse {
+        overflow: hidden;
+    }
 }
 
 body {
