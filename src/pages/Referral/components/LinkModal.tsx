@@ -70,7 +70,8 @@ const LinkModal: React.FC<{ showModal: boolean; onClose: () => void; link: strin
                                 width: '80%',
                                 textAlign: 'center',
                                 paddingBottom: '10px',
-                                height: '40px',
+                                paddingTop: '10px',
+                                height: 'auto',
                                 wordWrap: 'break-word',
                             }}
                         >
