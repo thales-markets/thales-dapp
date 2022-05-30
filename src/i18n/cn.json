@@ -1727,12 +1727,14 @@
             "index": "指数",
             "total-volume": "总容积",
             "total-earned": "总收入",
-            "trades": "交易数量"
+            "trades": "交易数量",
+            "first-transaction": "第一笔交易"
         },
         "tabs": {
             "labels": {
                 "all-transactions": "所有交易",
-                "by-trader": "按交易者查看结果"
+                "by-trader": "按交易者查看结果",
+                "affiliate-leaderboard": "会员排行榜"
             }
         },
         "title": "推荐",

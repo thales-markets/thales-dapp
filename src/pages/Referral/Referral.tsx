@@ -33,6 +33,8 @@ import Checkbox from 'pages/AMMTrading/components/AMM/components/Checkbox';
 import LinkModal from './components/LinkModal';
 import { buildReferralLink } from 'utils/routes';
 import ROUTES from 'constants/routes';
+import useReferrerQuery from 'queries/referral/useReferrerQuery';
+import { orderBy } from 'lodash';
 
 const Tabs = [
     {
@@ -42,6 +44,10 @@ const Tabs = [
     {
         id: 1,
         i18label: 'referral-page.tabs.labels.by-trader',
+    },
+    {
+        id: 2,
+        i18label: 'referral-page.tabs.labels.affiliate-leaderboard',
     },
 ];
 
@@ -86,6 +92,18 @@ const Referral: React.FC = () => {
 
         return [];
     }, [tradersQuery.isSuccess, walletAddress]);
+
+    const affiliateLeaderboardQuery = useReferrerQuery(networkId, undefined, {
+        enabled: !!walletAddress && isAppReady,
+    });
+
+    const affiliateCompetitionData = useMemo(() => {
+        if (affiliateLeaderboardQuery?.data) {
+            return orderBy(affiliateLeaderboardQuery.data, ['totalVolume'], ['desc']);
+        }
+    }, [affiliateLeaderboardQuery?.isSuccess]);
+
+    console.log('affiliateCompetitionData ', affiliateCompetitionData);
 
     const statisticsData = useMemo(() => {
         const data = {
@@ -214,6 +232,14 @@ const Referral: React.FC = () => {
                 >
                     {t(Tabs[1].i18label)}
                 </Container.Main.Item>
+                <Container.Main.Item
+                    noStrech={true}
+                    padding={'20px 30px'}
+                    active={tabIndex == 2}
+                    onClick={() => setTabIndex(Tabs[2].id)}
+                >
+                    {t(Tabs[2].i18label)}
+                </Container.Main.Item>
             </Container.Main>
             <Container.Tab>
                 <>
@@ -309,6 +335,54 @@ const Referral: React.FC = () => {
                                         Cell: (cellProps: any) => (
                                             <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
                                         ),
+                                        sortable: true,
+                                    },
+                                ]}
+                            />
+                        </TableWrapper>
+                    )}
+                    {tabIndex == Tabs[2].id && (
+                        <TableWrapper>
+                            <Table
+                                data={affiliateCompetitionData}
+                                defaultPage={10}
+                                containerStyle={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                }}
+                                columns={[
+                                    {
+                                        Header: <>{t('referral-page.table.address')}</>,
+                                        accessor: 'id',
+                                        Cell: (cellProps: any) => <p>{truncateAddress(cellProps.cell.value)}</p>,
+                                        disableSortBy: true,
+                                    },
+                                    {
+                                        Header: <>{t('referral-page.table.trades')}</>,
+                                        accessor: 'trades',
+                                        Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
+                                        sortable: true,
+                                    },
+                                    {
+                                        Header: <>{t('referral-page.table.total-volume')}</>,
+                                        accessor: 'totalVolume',
+                                        Cell: (cellProps: any) => (
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                        ),
+                                        sortable: true,
+                                    },
+                                    {
+                                        Header: <>{t('referral-page.table.total-earned')}</>,
+                                        accessor: 'totalEarned',
+                                        Cell: (cellProps: any) => (
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                        ),
+                                        sortable: true,
+                                    },
+                                    {
+                                        Header: <>{t('referral-page.table.first-transaction')}</>,
+                                        accessor: 'timestamp',
+                                        Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
                                         sortable: true,
                                     },
                                 ]}
