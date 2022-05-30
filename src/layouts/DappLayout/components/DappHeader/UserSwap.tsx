@@ -76,7 +76,7 @@ const SwapButton = styled.div`
     white-space: pre;
     padding: 5px;
     right: 234px;
-    top: 0;
+    top: 40px;
     @media (max-width: 1024px) {
         right: 224px;
         top: 22px;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SPAAnchor from '../../../../components/SPAAnchor';
+import SPAAnchor from 'components/SPAAnchor';
 import styled from 'styled-components';
 
 type MenuItem = {
@@ -86,7 +86,11 @@ const MenuItem = styled.li`
     }
 
     @media (max-width: 568px) {
+        display: none;
         padding: 0 10px;
+        &.show {
+            display: flex;
+        }
     }
 `;
 

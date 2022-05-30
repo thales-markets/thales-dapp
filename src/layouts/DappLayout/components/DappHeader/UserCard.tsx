@@ -58,7 +58,7 @@ const Overlay = styled.div`
 
 const MenuCardButton = styled.div`
     position: absolute;
-    top: 0;
+    top: 40px;
     right: 20px;
     width: 50px;
     cursor: pointer;

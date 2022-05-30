@@ -24,14 +24,11 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     }, [networkId]);
 
     return (
-        <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
-            <NewWrapper>
-                <Suspense fallback={<></>}>
-                    <DappHeader />
-                </Suspense>
-
-                {children}
-            </NewWrapper>
+        <Background id="main-content" className={theme == 0 ? 'light' : 'dark'}>
+            <Suspense fallback={<></>}>
+                <DappHeader />
+            </Suspense>
+            <NewWrapper>{children}</NewWrapper>
             <ToastContainer theme={'colored'} />
             {!isNetworkSupported(networkId) && <Loader />}
         </Background>
@@ -39,6 +36,21 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 };
 
 const Background = styled.section`
+    transition: all 0.5s ease;
+    min-height: 100vh;
+    position: relative;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    &.collapse {
+        transition: all 0.5s ease;
+        min-height: unset;
+        top: 40px;
+        left: 275px;
+        overflow: hidden;
+        border-radius: 20px;
+        height: calc(100vh - 80px);
+    }
     &.light {
         background-color: #f9f9f9;
         --background: #f9f9f9;

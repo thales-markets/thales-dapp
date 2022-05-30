@@ -41,8 +41,12 @@ const getTitle = (t: any) => {
 const Container = styled.div`
     height: 80px;
     width: 100%;
+    max-width: 1440px;
     flex: unset;
     position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px 20px 0px 92px;
 `;
 
 const FloatingBetaTag = styled.div`
