@@ -324,16 +324,17 @@ export const CreateMarket: React.FC = () => {
 
         const handleAllowance = async (approveAmount: BigNumber) => {
             const collateral = snxJSConnector.collateral;
+            const collateralContract = collateral?.connect((snxJSConnector as any).signer);
 
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
 
             try {
                 setIsAllowing(true);
-                const gasEstimate = await collateral?.estimateGas.approve(
+                const gasEstimate = await collateralContract?.estimateGas.approve(
                     binaryOptionsMarketManagerContract?.address as any,
                     approveAmount
                 );
-                const tx = (await collateral?.approve(
+                const tx = (await collateralContract?.approve(
                     binaryOptionsMarketManagerContract?.address as any,
                     approveAmount,
                     {
