@@ -179,7 +179,6 @@ input[type='number'] {
 #root {
     background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
     height: 100vh;
-    overflow: hidden;
     --sat: env(safe-area-inset-top);
     --sar: env(safe-area-inset-right);
     --sab: env(safe-area-inset-bottom);
