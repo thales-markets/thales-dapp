@@ -121,7 +121,7 @@
             "range-market-page": "Ranged markets page"
         },
         "modal": {
-            "copy-link": "Copy the url",
+            "copy-link": "Copy url",
             "copied": "Copied!"
         },
         "form-label": "Generate Affiliate link",

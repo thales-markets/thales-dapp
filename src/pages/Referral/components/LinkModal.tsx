@@ -18,11 +18,15 @@ const useStyles = makeStyles((theme: Theme) =>
             border: '2px solid #000',
             borderRadius: '10px',
             display: 'flex',
+            flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'center',
             color: '#04045a',
             boxShadow: theme.shadows[5],
-            padding: theme.spacing(2, 4, 3),
+            padding: '5px',
+            [theme.breakpoints.between(200, 520)]: {
+                width: '90%',
+            },
         },
     })
 );
@@ -60,7 +64,18 @@ const LinkModal: React.FC<{ showModal: boolean; onClose: () => void; link: strin
             >
                 <Fade in={showModal}>
                     <div className={classes.paper}>
-                        <p id="transition-modal-description">{link}</p>
+                        <p
+                            id="transition-modal-description"
+                            style={{
+                                width: '80%',
+                                textAlign: 'center',
+                                paddingBottom: '10px',
+                                height: '40px',
+                                wordWrap: 'break-word',
+                            }}
+                        >
+                            {link}
+                        </p>
                         <br />
                         <Button
                             inactiveBgColor={'#04045a'}
