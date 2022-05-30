@@ -28,9 +28,11 @@ const Sidebar: React.FC = () => {
                 onClick={() => {
                     const content = document.getElementById('main-content');
                     const sidebar = document.getElementById('sidebar');
+                    const root = document.getElementById('root');
                     if (collapse) {
                         content?.classList.remove('collapse');
                         sidebar?.classList.remove('collapse');
+                        root?.classList.remove('collapse');
                         setCollapse(false);
                     }
                 }}
@@ -137,6 +139,8 @@ const Sidebar: React.FC = () => {
                         content?.classList.add('collapse');
                         const sidebar = document.getElementById('sidebar');
                         sidebar?.classList.add('collapse');
+                        const root = document.getElementById('root');
+                        root?.classList.add('collapse');
                         setCollapse(true);
                     }}
                 >
