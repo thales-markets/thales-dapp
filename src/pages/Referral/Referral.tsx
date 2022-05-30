@@ -223,6 +223,10 @@ const Referral: React.FC = () => {
                             <Table
                                 data={transactionData}
                                 defaultPage={10}
+                                containerStyle={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                }}
                                 columns={[
                                     {
                                         Header: <>{t('referral-page.table.address')}</>,
@@ -267,6 +271,10 @@ const Referral: React.FC = () => {
                             <Table
                                 data={tradersData}
                                 defaultPage={10}
+                                containerStyle={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                }}
                                 columns={[
                                     {
                                         id: 'index',
