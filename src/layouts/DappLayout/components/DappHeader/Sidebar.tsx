@@ -72,7 +72,9 @@ const Sidebar: React.FC = () => {
                 )}
                 {!isPolygon && (
                     <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Referral ? 'selected' : ''}
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Referral ? 'selected' : ''
+                        }`}
                         href={buildHref(ROUTES.Options.Referral)}
                         iconName="referral-page"
                         label={t('referral-page.title')}
