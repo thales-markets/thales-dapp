@@ -1,10 +1,14 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, CSSProperties } from 'react';
 import styled from 'styled-components';
 
 type CheckboxPropsType = {
     checked?: boolean;
     container?: {
         size?: string;
+        margin?: string;
+    };
+    wrapperStyle?: CSSProperties;
+    checkbox?: {
         margin?: string;
     };
     label?: {
@@ -16,21 +20,39 @@ type CheckboxPropsType = {
     disabled?: boolean;
 };
 
-const Checkbox: React.FC<CheckboxPropsType> = ({ checked, container, label, onChange, disabled }) => {
+const Checkbox: React.FC<CheckboxPropsType> = ({
+    checked,
+    container,
+    wrapperStyle,
+    checkbox,
+    label,
+    onChange,
+    disabled,
+}) => {
     return (
-        <CheckboxContainer checked={checked} inputSize={container?.size} margin={container?.margin}>
-            <Label fontSize={label?.fontSize} color={label?.color}>
-                {label?.text ? label.text : ''}
-            </Label>
-            <HiddenCheckbox checked={checked} disabled={disabled} onChange={onChange} />
-            <StyledCheckbox checked={checked} size={container?.size}>
-                <Icon checked={checked} viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12" />
-                </Icon>
-            </StyledCheckbox>
-        </CheckboxContainer>
+        <Wrapper style={wrapperStyle}>
+            {label?.text && (
+                <Label fontSize={label?.fontSize} color={label?.color}>
+                    {label?.text ? label.text : ''}
+                </Label>
+            )}
+            <CheckboxContainer checked={checked} inputSize={container?.size} margin={container?.margin}>
+                <HiddenCheckbox checked={checked} disabled={disabled} onChange={onChange} />
+                <StyledCheckbox checked={checked} size={container?.size} margin={checkbox?.margin}>
+                    <Icon checked={checked} viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </Icon>
+                </StyledCheckbox>
+            </CheckboxContainer>
+        </Wrapper>
     );
 };
+
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`;
 
 const Label = styled.span<{ fontSize?: string; color?: string }>`
     color: ${(_props) => (_props?.color ? _props?.color : 'var(--primary-color)')};
@@ -67,12 +89,13 @@ const Icon = styled.svg<{ checked?: boolean }>`
     stroke-width: 2px;
 `;
 
-const StyledCheckbox = styled.div<{ checked?: boolean; size?: string }>`
+const StyledCheckbox = styled.div<{ checked?: boolean; size?: string; margin?: string }>`
     cursor: pointer;
     display: inline-block;
     width: ${(_props) => (_props?.size ? _props?.size : '32px')};
     height: ${(_props) => (_props?.size ? _props?.size : '32px')};
     background: transparent;
+    margin: ${(_props) => (_props?.margin ? _props.margin : '')};
     border-radius: 3px;
     transition: all 150ms;
     border: 1px solid ${(_props) => (_props?.checked ? 'var(--input-border-color)' : 'var(--card-border-color)')};

@@ -8,6 +8,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isNetworkSupported } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
+import { setReferralWallet } from 'utils/referral';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -18,6 +21,15 @@ type DappLayoutProps = {
 const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const theme = useSelector((state: RootState) => getTheme(state));
+
+    const rawParams = useLocation();
+    const queryParams = queryString.parse(rawParams?.search);
+
+    useEffect(() => {
+        if (queryParams?.referralId) {
+            setReferralWallet(queryParams?.referralId);
+        }
+    }, []);
 
     useEffect(() => {
         document.getElementsByTagName('body')[0].style.overflow = isNetworkSupported(networkId) ? 'auto' : 'hidden';

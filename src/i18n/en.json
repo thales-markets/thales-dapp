@@ -113,6 +113,45 @@
         "title": "Stay tuned, coming soon...",
         "powered-by": "Powered by"
     },
+    "referral-page": {
+        "title": "Referral",
+        "choose-landing": "Choose landing page",
+        "pages": {
+            "market-page": "Markets page",
+            "range-market-page": "Ranged markets page"
+        },
+        "modal": {
+            "copy-link": "Copy url",
+            "copied": "Copied!"
+        },
+        "form-label": "Generate Affiliate link",
+        "generate-link-btn": "Generate link",
+        "statistics": {
+            "trades": "Trades",
+            "total-volume": "Total Volume",
+            "earned": "Earned"
+        },
+        "table": {
+            "address": "Address",
+            "volume": "Volume",
+            "transaction-date": "Transaction date",
+            "earned": "Earned",
+            "tx-info": "Transaction Info",
+            "trades": "Number of trades",
+            "total-volume": "Total volume",
+            "total-earned": "Total earned",
+            "index": "Index",
+            "first-transaction": "First transaction"
+        },
+        "tabs": {
+            "labels": {
+                "all-transactions": "All transactions",
+                "by-trader": "See results by trader",
+                "affiliate-leaderboard": "Affiliate leaderboard"
+            }
+        },
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
     "common": {
         "max": "max",
         "save": "Save",

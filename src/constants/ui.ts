@@ -100,3 +100,5 @@ export const getInfoToastOptions = (message: string) => {
         type: 'info' as TypeOptions,
     };
 };
+
+export const REFERRAL_COOKIE_LIFETIME = 648000;
