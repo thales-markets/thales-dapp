@@ -45,11 +45,8 @@ const Background = styled.section`
     &.collapse {
         transition: all 0.5s ease;
         min-height: unset;
-        top: 40px;
         left: 275px;
         overflow: hidden;
-        border-radius: 20px;
-        height: calc(100vh - 80px);
     }
     &.light {
         background-color: #f9f9f9;
