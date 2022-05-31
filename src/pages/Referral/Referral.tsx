@@ -101,9 +101,8 @@ const Referral: React.FC = () => {
         if (affiliateLeaderboardQuery?.data) {
             return orderBy(affiliateLeaderboardQuery.data, ['totalVolume'], ['desc']);
         }
+        return [];
     }, [affiliateLeaderboardQuery?.isSuccess]);
-
-    console.log('affiliateCompetitionData ', affiliateCompetitionData);
 
     const statisticsData = useMemo(() => {
         const data = {
