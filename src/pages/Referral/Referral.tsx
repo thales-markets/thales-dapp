@@ -15,7 +15,7 @@ import {
 } from './styled-components';
 // import InputWithIcon from 'components/InputWithIcon';
 import Button from 'components/Button';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import Table from 'components/TableV2';
@@ -36,6 +36,7 @@ import { orderBy } from 'lodash';
 import SelectInput from 'components/SelectInput';
 import InputWithIcon from 'components/InputWithIcon';
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
 
 const Tabs = [
     {
@@ -226,7 +227,12 @@ const Referral: React.FC = () => {
                     </KeyValue>
                 </StatisticsWrapper>
                 <DescriptionContainer>
-                    <Text>{t('referral-page.description')}</Text>
+                    <Text>
+                        <Trans
+                            i18nKey={'referral-page.description'}
+                            components={{ bold: <BoldText />, italic: <i /> }}
+                        />
+                    </Text>
                 </DescriptionContainer>
             </HeaderContainer>
             <Container.Main justifyContent="flex-start" hide={false}>
@@ -408,5 +414,10 @@ const Referral: React.FC = () => {
         </>
     );
 };
+
+const BoldText = styled.span`
+    font-weight: 900;
+    text-decoration: underline;
+`;
 
 export default Referral;
