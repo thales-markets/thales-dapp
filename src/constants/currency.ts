@@ -53,6 +53,7 @@ import { ReactComponent as PERPIcon } from 'assets/currencies/crypto/PERP.svg';
 import { ReactComponent as APEIcon } from 'assets/currencies/crypto/APE.svg';
 import { ReactComponent as CVXIcon } from 'assets/currencies/crypto/CVX.svg';
 import { ReactComponent as OHMIcon } from 'assets/currencies/crypto/OHM.svg';
+import { ReactComponent as OPIcon } from 'assets/currencies/crypto/OP.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -153,6 +154,7 @@ export const CRYPTO_CURRENCY = [
     'APE',
     'CVX',
     'OHM',
+    'OP',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -236,6 +238,7 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.APE]: APEIcon,
     [CRYPTO_CURRENCY_MAP.CVX]: CVXIcon,
     [CRYPTO_CURRENCY_MAP.OHM]: OHMIcon,
+    [CRYPTO_CURRENCY_MAP.OP]: OPIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -300,6 +303,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.APE]: 'Apecoin',
     [CRYPTO_CURRENCY_MAP.CVX]: 'Convex Finance',
     [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
+    [CRYPTO_CURRENCY_MAP.OHM]: 'Optimism',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
@@ -370,7 +374,8 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.PERP]: 'perpetual-protocol',
     [CRYPTO_CURRENCY_MAP.APE]: 'apecoin',
     [CRYPTO_CURRENCY_MAP.CVX]: 'convex-finance',
-    [CRYPTO_CURRENCY_MAP.OHM]: 'olympus',
+    [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
+    [CRYPTO_CURRENCY_MAP.OP]: 'optimism',
 };
 
 export const currencyKeyToDataFeedSourceMap = {
