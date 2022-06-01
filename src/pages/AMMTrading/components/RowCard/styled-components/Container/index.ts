@@ -23,6 +23,7 @@ type ContainerChildren = {
     SubContainer: StyledComponent<'div', any, { hidden?: boolean }> & SubContainerChildren;
     Divider: StyledComponent<'div', any>;
     Icon: StyledComponent<'i', any, { color?: string }>;
+    IV: StyledComponent<'span', any>;
 };
 
 // @ts-ignore
@@ -156,6 +157,16 @@ const OutOfLiquidity = styled.span`
     color: ${UI_COLORS.YELLOW};
 `;
 
+const IV = styled.span`
+    display: inline-block;
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    white-space: pre;
+    color: var(--primary-color);
+`;
+
 Value.Liquidity = Liquidity;
 Value.OutOfLiquidity = OutOfLiquidity;
 
@@ -168,5 +179,6 @@ Container.Icon = Icon;
 Container.ColumnContainer = ColumnContainer;
 Container.ColumnAnchorSubContainer = ColumnAnchorSubContainer;
 Container.SubContainer = SubContainer;
+Container.IV = IV;
 
 export default Container;
