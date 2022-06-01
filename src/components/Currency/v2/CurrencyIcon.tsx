@@ -4,7 +4,7 @@ import { CurrencyKey } from 'constants/currency';
 import styled from 'styled-components';
 import { UI_COLORS } from 'constants/ui';
 
-const NEW_CURRENCY_ICONS = ['LYRA', 'LUNA', 'MATIC', 'PERP', 'OHM', 'CVX', 'APE'];
+const NEW_CURRENCY_ICONS = ['LYRA', 'LUNA', 'MATIC', 'PERP', 'OHM', 'CVX', 'APE', 'OP'];
 
 type CurrencyIconProps = {
     currencyKey: CurrencyKey;
