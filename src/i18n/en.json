@@ -118,7 +118,12 @@
         "choose-landing": "Choose landing page",
         "pages": {
             "market-page": "Markets page",
-            "range-market-page": "Ranged markets page"
+            "range-market-page": "Ranged markets page",
+            "landing-page": "Landing page",
+            "token-page": "Token page",
+            "royale-page": "Thales Royale page",
+            "tale-of-thales": "Thale of Thales",
+            "governance": "Governance"
         },
         "modal": {
             "copy-link": "Copy url",
