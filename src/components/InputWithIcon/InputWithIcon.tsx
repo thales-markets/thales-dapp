@@ -1,25 +1,49 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 type InputProps = {
-    placeholder: string;
+    placeholder?: string;
     text: string;
-    handleChange: (event: any) => void;
+    handleChange?: (event: any) => void;
     customIconClass?: string;
+    onIconClick?: () => void;
     inputStyle?: CSSProperties;
 };
 
-const InputWithIcon: React.FC<InputProps> = ({ placeholder, text, handleChange, customIconClass, inputStyle }) => {
+const InputWithIcon: React.FC<InputProps> = ({
+    placeholder,
+    text,
+    handleChange,
+    customIconClass,
+    inputStyle,
+    onIconClick,
+}) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        inputRef?.current?.focus();
+        if (text !== '' && inputRef?.current) {
+            inputRef.current.selectionStart = text?.length;
+            inputRef.current.selectionEnd = text?.length;
+        }
+    }, [text]);
+
     return (
         <Wrapper>
             <InputField
+                ref={inputRef}
                 type="text"
-                placeholder={placeholder}
+                placeholder={placeholder ? placeholder : ''}
                 defaultValue={text}
-                onChange={(event) => handleChange(event.target.value)}
+                // {...(handleChange == undefined ? { disabled: true } : {})}
+                {...(handleChange !== undefined ? { onChange: (event) => handleChange(event.target.value) } : {})}
                 style={inputStyle}
             />
-            <Icon className={customIconClass ? customIconClass : 'icon icon--search'} />
+            <Icon
+                className={customIconClass ? customIconClass : 'icon icon--search'}
+                onClick={() => (onIconClick ? onIconClick() : '')}
+                cursor={true}
+            />
         </Wrapper>
     );
 };
@@ -48,11 +72,12 @@ const InputField = styled.input`
     }
 `;
 
-const Icon = styled.i`
+const Icon = styled.i<{ cursor?: boolean }>`
     font-size: 15px;
     color: var(--input-border-color);
     position: absolute;
     right: 8px;
+    cursor: ${(_props) => (_props?.cursor ? 'pointer' : '')};
 `;
 
 export default InputWithIcon;

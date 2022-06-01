@@ -1740,7 +1740,12 @@
         "title": "Направления",
         "pages": {
             "range-market-page": "Страница ранжированных рынков",
-            "market-page": "Страница рынков"
+            "market-page": "Страница рынков",
+            "governance": "Управление",
+            "royale-page": "Страница Thales Royale",
+            "token-page": "Страница токена",
+            "landing-page": "Целевая страница",
+            "tale-of-thales": "Тале из Фалеса"
         },
         "modal": {
             "copied": "Скопировано!",
