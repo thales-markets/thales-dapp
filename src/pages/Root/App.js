@@ -341,6 +341,7 @@ const App = () => {
 };
 
 const loadProvider = ({ networkId = 1, infuraId, provider }) => {
+    console.log(provider);
     if (!provider && !infuraId) throw new Error('No web3 provider');
     if (provider) return new ethers.providers.Web3Provider(provider);
     if (infuraId) return new ethers.providers.InfuraProvider(networkId, infuraId);
