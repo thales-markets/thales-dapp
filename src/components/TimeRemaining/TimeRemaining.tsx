@@ -55,6 +55,7 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
         'hours-short': t('options.common.time-remaining.hours-short'),
         'minutes-short': t('options.common.time-remaining.minutes-short'),
         'seconds-short': t('options.common.time-remaining.seconds-short'),
+        'months-short': t('options.common.time-remaining.months-short'),
     };
 
     useEffect(() => {
