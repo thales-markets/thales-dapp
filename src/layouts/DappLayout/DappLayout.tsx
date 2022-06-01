@@ -8,6 +8,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isNetworkSupported } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
+import { setReferralWallet } from 'utils/referral';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -19,19 +22,25 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const theme = useSelector((state: RootState) => getTheme(state));
 
+    const rawParams = useLocation();
+    const queryParams = queryString.parse(rawParams?.search);
+
+    useEffect(() => {
+        if (queryParams?.referralId) {
+            setReferralWallet(queryParams?.referralId);
+        }
+    }, []);
+
     useEffect(() => {
         document.getElementsByTagName('body')[0].style.overflow = isNetworkSupported(networkId) ? 'auto' : 'hidden';
     }, [networkId]);
 
     return (
-        <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
-            <NewWrapper>
-                <Suspense fallback={<></>}>
-                    <DappHeader />
-                </Suspense>
-
-                {children}
-            </NewWrapper>
+        <Background id="main-content" className={theme == 0 ? 'light' : 'dark'}>
+            <Suspense fallback={<></>}>
+                <DappHeader />
+            </Suspense>
+            <NewWrapper>{children}</NewWrapper>
             <ToastContainer theme={'colored'} />
             {!isNetworkSupported(networkId) && <Loader />}
         </Background>
@@ -39,6 +48,18 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 };
 
 const Background = styled.section`
+    transition: all 0.5s ease;
+    min-height: 100vh;
+    position: relative;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    &.collapse {
+        transition: all 0.5s ease;
+        min-height: unset;
+        left: 275px;
+        overflow: hidden;
+    }
     &.light {
         background-color: #f9f9f9;
         --background: #f9f9f9;

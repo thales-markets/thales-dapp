@@ -29,7 +29,7 @@ const ProvideLiquidity: React.FC = () => {
                 <Description>
                     {t('options.earn.lp-staking.provide-liquidity.deposit')}
                     <StyledAnchor
-                        href="https://www.sorbet.finance/#/pools/0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5"
+                        href="https://beta.arrakis.finance/#/vaults/0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5"
                         target="_blank"
                         rel="noreferrer"
                     >

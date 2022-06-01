@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { buildHref } from 'utils/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
@@ -20,10 +20,23 @@ const Sidebar: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
     const { t } = useTranslation();
+    const [collapse, setCollapse] = useState(false);
 
     return (
-        <SidebarHtml>
-            <ItemsContainer>
+        <SidebarHtml id="sidebar">
+            <ItemsContainer
+                onClick={() => {
+                    const content = document.getElementById('main-content');
+                    const sidebar = document.getElementById('sidebar');
+                    const root = document.getElementById('root');
+                    if (collapse) {
+                        content?.classList.remove('collapse');
+                        sidebar?.classList.remove('collapse');
+                        root?.classList.remove('collapse');
+                        setCollapse(false);
+                    }
+                }}
+            >
                 <SPAAnchor className="sidebar-logoSmall" href={buildHref(ROUTES.Options.Home)}>
                     <LogoIcon width="38" height="42" src={logoSmallIcon} />
                 </SPAAnchor>
@@ -32,7 +45,7 @@ const Sidebar: React.FC = () => {
                 </SPAAnchor>
 
                 <DappHeaderItem
-                    className={location.pathname === ROUTES.Options.Home ? 'selected' : ''}
+                    className={`show ${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
                     href={buildHref(ROUTES.Options.Home)}
                     iconName="markets"
                     label={t('common.sidebar.markets')}
@@ -40,7 +53,7 @@ const Sidebar: React.FC = () => {
 
                 {!isPolygon && (
                     <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}
+                        className={`show ${location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}`}
                         href={buildHref(ROUTES.Options.RangeMarkets)}
                         iconName="ranged-markets"
                         label={t('common.sidebar.ranged-markets')}
@@ -49,23 +62,37 @@ const Sidebar: React.FC = () => {
 
                 {isPolygon && (
                     <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''}
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''
+                        }`}
                         href={buildHref(ROUTES.Options.Leaderboard)}
                         iconName="leaderboard"
                         label={t('common.sidebar.leaderboard-label')}
                     />
                 )}
+                {false && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Referral ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.Referral)}
+                        iconName="referral-page"
+                        label={t('referral-page.title')}
+                    />
+                )}
                 <Divider />
                 {!isPolygon && (
                     <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Token ? 'selected' : ''}
+                        className={`show ${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
                         href={buildHref(ROUTES.Options.Token)}
                         iconName="token"
                         label={t('common.sidebar.earn-label')}
                     />
                 )}
                 <DappHeaderItem
-                    className={location.pathname.includes(ROUTES.Governance.Home) ? 'selected' : ''}
+                    className={`${collapse ? 'show' : ''} ${
+                        location.pathname === ROUTES.Governance.Home ? 'selected' : ''
+                    }`}
                     href={buildHref(ROUTES.Governance.Home)}
                     iconName="governance"
                     label={t('common.sidebar.governance-label')}
@@ -74,14 +101,18 @@ const Sidebar: React.FC = () => {
                 <Divider />
                 {!isPolygon && (
                     <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Royal ? 'selected' : ''}
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Royal ? 'selected' : ''
+                        }`}
                         href={buildHref(ROUTES.Options.Royal)}
                         iconName="thales-royale"
                         label={t('common.sidebar.royale-label')}
                     />
                 )}
                 <DappHeaderItem
-                    className={location.pathname === ROUTES.Options.Game ? 'selected' : '' + ' game'}
+                    className={`${collapse ? 'show' : ''} ${
+                        location.pathname === ROUTES.Options.Game ? 'selected' : ''
+                    }`}
                     href={buildHref(ROUTES.Options.Game)}
                     iconName="game"
                     label={t('common.sidebar.game-label')}
@@ -89,14 +120,16 @@ const Sidebar: React.FC = () => {
 
                 {walletAddress && (
                     <DappHeaderItem
-                        className={location.pathname === ROUTES.Options.Profile ? 'selected' : ''}
+                        className={`show ${location.pathname === ROUTES.Options.Profile ? 'selected' : ''}`}
                         href={buildHref(ROUTES.Options.Profile)}
                         iconName="profile"
                         label={t('common.sidebar.profile-label')}
                     />
                 )}
+
                 <Divider />
                 <DappHeaderItem
+                    className={collapse ? 'show' : ''}
                     href={LINKS.ExoticMarkets}
                     iconName="exotic-markets"
                     label={t('common.sidebar.exotic-markets-label')}
@@ -110,12 +143,46 @@ const Sidebar: React.FC = () => {
                     }}
                     simpleOnClick={true}
                 />
+                <ThreeDotsContainer
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        const content = document.getElementById('main-content');
+                        content?.classList.add('collapse');
+                        const sidebar = document.getElementById('sidebar');
+                        sidebar?.classList.add('collapse');
+                        const root = document.getElementById('root');
+                        root?.classList.add('collapse');
+                        setCollapse(true);
+                    }}
+                >
+                    <i className="icon icon--three-dots"></i>
+                </ThreeDotsContainer>
             </ItemsContainer>
         </SidebarHtml>
     );
 };
 
+const ThreeDotsContainer = styled.div`
+    display: none;
+    align-items: center;
+    @media (max-width: 568px) {
+        display: flex;
+    }
+`;
+
+const ItemsContainer = styled.div`
+    transition: all 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    @media (max-width: 1024px) {
+        flex-direction: row;
+        justify-content: space-around;
+        height: 100%;
+    }
+`;
+
 const SidebarHtml = styled.nav`
+    transition: all 0.5s ease;
     position: fixed;
     top: 0;
     left: 0;
@@ -170,21 +237,36 @@ const SidebarHtml = styled.nav`
             display: none !important;
         }
     }
+
+    &.collapse {
+        transition: all 0.5s ease;
+        background: transparent !important;
+        height: 100vh;
+        width: 100vw;
+        ${ItemsContainer} {
+            transition: all 0.5s ease;
+            flex-direction: column;
+            gap: 25px;
+            justify-content: center;
+        }
+        ${ThreeDotsContainer} {
+            display: none;
+        }
+        border-radius: 0;
+        box-shadow: none;
+        span {
+            display: block;
+        }
+        li {
+            max-width: 250px;
+        }
+    }
+
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
-`;
-
-const ItemsContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    @media (max-width: 1024px) {
-        flex-direction: row;
-        justify-content: space-around;
-        height: 100%;
-    }
 `;
 
 const LogoIcon = styled.img`

@@ -197,6 +197,7 @@ export type OptionsMarketInfo = {
     totalSupplies: OptionValue;
     deposited: number;
     creator: string;
+
     // options: OptionValue;
     fees: {
         creator: number;
@@ -207,6 +208,7 @@ export type OptionsMarketInfo = {
     //     skewLimit: number;
     // };
     // BN: BNOptionValue;
+    IV?: any;
     availableLongs: number;
     availableShorts: number;
     longAddress: string;

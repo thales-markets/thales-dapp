@@ -20,11 +20,13 @@ export const Text = styled.span<{ margin?: string }>`
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
 `;
 
-export const IconContainer = styled.div<{ alignItems?: string; width?: string }>`
+export const IconContainer = styled.div<{ alignItems?: string; width?: string; display?: string; position?: string }>`
     display: flex;
     align-items: ${(_props) => (_props?.alignItems ? _props.alignItems : 'flex-start')};
     margin: 0px 5px;
     width: ${(_props) => (_props?.width ? _props.width : '')};
+    display: ${(_props) => (_props?.display ? _props.display : 'flex')};
+    position: ${(_props) => (_props?.position ? _props.position : '')};
 `;
 
 export const LinkInTooltip = styled.a`

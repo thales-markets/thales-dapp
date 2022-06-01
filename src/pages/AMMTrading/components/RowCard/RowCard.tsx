@@ -123,6 +123,15 @@ const RowCard: React.FC = () => {
                                         />
                                     )}
                                 </Container.SubContainer.Value>
+                                <Container.IV>
+                                    {marketInfo.IV + '% IV' ?? ''}{' '}
+                                    <Tooltip
+                                        message={t('options.home.markets-table.iv-tooltip')}
+                                        type={'info'}
+                                        iconColor={'var(--primary-color)'}
+                                        container={{ width: '15px', display: 'inline', position: 'absolute' }}
+                                    />
+                                </Container.IV>
                             </Container.SubContainer>
                         </Container.ColumnAnchorSubContainer>
                     </Container.ColumnContainer>

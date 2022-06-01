@@ -56,7 +56,7 @@ const MenuCard = styled.div<ManuCardProps>`
     right: 35px;
     max-height: 95vh;
     overflow-y: auto;
-    top: 0;
+    top: 40px;
     border: 1px solid #64d9fe;
     box-sizing: border-box;
     border-radius: 15px;

@@ -17,6 +17,8 @@ type CustomTooltipProps = {
     container?: {
         alignItems?: string;
         width?: string;
+        display?: string;
+        position?: string;
     };
     interactive?: boolean;
 };
@@ -94,7 +96,12 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
                 arrow
                 interactive={interactive ? true : false}
             >
-                <IconContainer alignItems={container?.alignItems} width={container?.width}>
+                <IconContainer
+                    alignItems={container?.alignItems}
+                    width={container?.width}
+                    display={container?.display}
+                    position={container?.position}
+                >
                     <Icon className={icons[type].className} color={iconColor} fontSize={'11px'} />
                 </IconContainer>
             </ModifiedTooltip>

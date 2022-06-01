@@ -101,3 +101,7 @@
 .icon--exotic-markets:before {
     content: '\0070';
 }
+
+.icon--referral-page:before {
+    content: '\0073';
+}

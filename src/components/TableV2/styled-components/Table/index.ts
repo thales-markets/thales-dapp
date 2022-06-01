@@ -107,6 +107,10 @@ const Header = styled(FlexDiv)`
     ${Cell} {
         font-weight: bold;
         text-transform: uppercase;
+        color: var(--table-header-text-color);
+    }
+    ${Cell} > i {
+        color: var(--table-header-text-color);
     }
     ${Row} {
         border-bottom: 4px solid var(--table-border-color);

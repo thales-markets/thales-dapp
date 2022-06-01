@@ -48,6 +48,8 @@ const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '.
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
 const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
+// const Referral = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Referral'));
+
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
@@ -73,7 +75,6 @@ const App = () => {
                 if (!snxJSConnector) {
                     import(/* webpackChunkName: "snxJSConnector" */ 'utils/snxJSConnector').then((snx) => {
                         const provider = loadProvider({
-                            networkId,
                             infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
                             provider: window.ethereum,
                         });
@@ -242,6 +243,14 @@ const App = () => {
                             </Route>
                         )}
 
+                        {/* {!isPolygon && (
+                            <Route exact path={ROUTES.Options.Referral}>
+                                <DappLayout>
+                                    <Referral />
+                                </DappLayout>
+                            </Route>
+                        )} */}
+
                         {isPolygon && (
                             <Route exact path={ROUTES.Options.Leaderboard}>
                                 <DappLayout>
@@ -330,10 +339,12 @@ const App = () => {
     );
 };
 
-const loadProvider = ({ networkId = 1, infuraId, provider }) => {
+const loadProvider = ({ infuraId, provider }) => {
+    const network = { chainId: 1, name: 'homestead', ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e' };
+
     if (!provider && !infuraId) throw new Error('No web3 provider');
     if (provider) return new ethers.providers.Web3Provider(provider);
-    if (infuraId) return new ethers.providers.InfuraProvider(networkId, infuraId);
+    if (infuraId) return new ethers.providers.InfuraProvider(network, infuraId);
 };
 
 export default App;

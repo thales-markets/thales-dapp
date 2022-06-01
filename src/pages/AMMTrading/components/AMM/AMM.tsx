@@ -44,6 +44,7 @@ import { toast } from 'react-toastify';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
+import { getReferralWallet } from 'utils/referral';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -57,6 +58,8 @@ const AMM: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
+
+    const referral = getReferralWallet();
 
     const orderSideOptions = [
         {
@@ -205,13 +208,22 @@ const AMM: React.FC = () => {
         parsedSlippage: any
     ) => {
         const txRequest = isBuy
-            ? await ammContractWithSigner.populateTransaction.buyFromAMM(
-                  marketAddress,
-                  side,
-                  parsedAmount,
-                  parsedTotal,
-                  parsedSlippage
-              )
+            ? !referral
+                ? await ammContractWithSigner.populateTransaction.buyFromAMM(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage
+                  )
+                : await ammContractWithSigner.populateTransaction.buyFromAMMWithReferrer(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage,
+                      referral
+                  )
             : await ammContractWithSigner.populateTransaction.sellToAMM(
                   marketAddress,
                   side,
@@ -444,14 +456,24 @@ const AMM: React.FC = () => {
                       gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
                   };
             const tx = (isBuy
-                ? await ammContractWithSigner.buyFromAMM(
-                      marketAddress,
-                      side,
-                      parsedAmount,
-                      parsedTotal,
-                      parsedSlippage,
-                      providerOptions
-                  )
+                ? !referral
+                    ? await ammContractWithSigner.buyFromAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage,
+                          providerOptions
+                      )
+                    : await ammContractWithSigner.buyFromAMMWithReferrer(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage,
+                          referral,
+                          providerOptions
+                      )
                 : await ammContractWithSigner.sellToAMM(
                       marketAddress,
                       side,

@@ -15,8 +15,6 @@ import lpl2ActiveIcon from 'assets/images/lp-l2-active.svg';
 import lpl2Icon from 'assets/images/lp-l2.svg';
 import migrationActiveIcon from 'assets/images/migration-active.svg';
 import migrationIcon from 'assets/images/migration.svg';
-import migratedRewardsActiveIcon from 'assets/images/migrated-rewards-active.svg';
-import migratedRewardsIcon from 'assets/images/migrated-rewards.svg';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
@@ -100,20 +98,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                                 : lpIcon
                         }
                     />
-                    {isL2 && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'migrated-rewards',
-                                    }),
-                                });
-                                setSelectedTab('migrated-rewards');
-                            }}
-                            src={selectedTab === 'migrated-rewards' ? migratedRewardsActiveIcon : migratedRewardsIcon}
-                        />
-                    )}
+
                     {!isL2 && (
                         <Icon
                             onClick={() => {

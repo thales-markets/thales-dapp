@@ -353,7 +353,8 @@
                 "maturity-date-col": "成人礼",
                 "out-of-liquidity": "流动性不足",
                 "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送：",
-                "price-in-out-col": "价格进/出"
+                "price-in-out-col": "价格进/出",
+                "iv-tooltip": "目前为该资产设置的隐含波动率为 xx%"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",
@@ -1708,5 +1709,49 @@
             "migrate": "如果您在 L1 上拥有 LEGACY THALES，并希望将其交换给在 L1 上维护它的 THALES，请选择此选项。请注意，THALES 的大部分流动性都在 OP (L2) 上"
         },
         "info-tooltip": "<0>迁移过程中，LEGACY THALES首先交换到L1主网上的THALES，然后按照</0><1 />桥接到L2 Optimistic主网进入L2 THALES。"
+    },
+    "referral-page": {
+        "statistics": {
+            "total-volume": "总容积",
+            "trades": "交易",
+            "earned": "赢得"
+        },
+        "generate-link-btn": "生成链接",
+        "form-label": "生成会员链接",
+        "description": "痛本身就是爱的痛，主要的生态问题，但我给这种倒下的时间，让一些很大的痛和痛。为了在大多数情况下，我们中的任何人都会从事任何类型的工作，除了利用它的目标。但电影中的痛苦是难以谴责的，在快乐中它想摆脱痛苦中的痛苦，没有结果。他们是盲人渴望的例外，他们看不到，他们是那些为了抚慰心灵苦难的过失而放弃责任的人。",
+        "table": {
+            "transaction-date": "交易日期",
+            "volume": "体积",
+            "address": "地址",
+            "earned": "赢得",
+            "tx-info": "交易信息",
+            "index": "指数",
+            "total-volume": "总容积",
+            "total-earned": "总收入",
+            "trades": "交易数量",
+            "first-transaction": "第一笔交易"
+        },
+        "tabs": {
+            "labels": {
+                "all-transactions": "所有交易",
+                "by-trader": "按交易者查看结果",
+                "affiliate-leaderboard": "会员排行榜"
+            }
+        },
+        "title": "推荐",
+        "pages": {
+            "range-market-page": "远程市场页面",
+            "market-page": "市场页面",
+            "governance": "治理",
+            "landing-page": "登陆页面",
+            "token-page": "令牌页面",
+            "tale-of-thales": "泰勒斯的泰勒斯",
+            "royale-page": "泰雷兹皇家页面"
+        },
+        "modal": {
+            "copied": "复制！",
+            "copy-link": "复制网址"
+        },
+        "choose-landing": "选择登陆页面"
     }
 }

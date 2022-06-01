@@ -233,6 +233,27 @@ export const QUERY_KEYS = {
         FooterData: (season: number) => ['royale', 'footerData', season],
         RoyalePassportsURIs: (tokenIds: number[]) => ['royale', 'royalePassportsURIs', tokenIds],
     },
+    Referral: {
+        Referrer: (networkId: NetworkId, address?: string) => [
+            'referral',
+            'referrer',
+            networkId,
+            address ? address : undefined,
+        ],
+        ReferredTrader: (networkId: NetworkId, referrer?: string) => [
+            'referral',
+            'ReferredTrader',
+            networkId,
+            referrer ? referrer : undefined,
+        ],
+        ReferralTransacations: (networkId: NetworkId, trader?: string, refferer?: string) => [
+            'referral',
+            'referralTransacations',
+            networkId,
+            trader ? trader : undefined,
+            refferer ? refferer : undefined,
+        ],
+    },
     Governance: {
         Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],
         Proposal: (spaceKey: SpaceKey, hash: string, walletAddress: string) => [

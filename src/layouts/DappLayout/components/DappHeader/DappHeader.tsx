@@ -36,13 +36,18 @@ const getTitle = (t: any) => {
     if (location.pathname === ROUTES.Options.Token) return t('common.sidebar.earn-label');
     if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
     if (location.pathname === ROUTES.Options.Leaderboard) return t('options.leaderboard.trading-comp-title');
+    if (location.pathname === ROUTES.Options.Referral) return t('referral-page.title');
 };
 
 const Container = styled.div`
     height: 80px;
     width: 100%;
+    max-width: 1440px;
     flex: unset;
     position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px 20px 0px 92px;
 `;
 
 const FloatingBetaTag = styled.div`

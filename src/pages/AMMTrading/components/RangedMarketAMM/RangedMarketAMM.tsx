@@ -48,6 +48,7 @@ import Tooltip from 'components/Tooltip';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import { getReferralWallet } from 'utils/referral';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -61,6 +62,8 @@ const AMM: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
+
+    const referral = getReferralWallet();
 
     const orderSideOptions = [
         {
@@ -490,14 +493,24 @@ const AMM: React.FC = () => {
                       gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
                   };
             const tx = (isBuy
-                ? await ammContractWithSigner.buyFromAMM(
-                      marketAddress,
-                      side,
-                      parsedAmount,
-                      parsedTotal,
-                      parsedSlippage,
-                      providerOptions
-                  )
+                ? !referral
+                    ? await ammContractWithSigner.buyFromAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage,
+                          providerOptions
+                      )
+                    : await ammContractWithSigner.buyFromAMMWithReferrer(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage,
+                          referral,
+                          providerOptions
+                      )
                 : await ammContractWithSigner.sellToAMM(
                       marketAddress,
                       side,
