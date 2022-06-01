@@ -399,6 +399,7 @@
                 "maturity-date-col": "Maturity Date",
                 "competition-tooltip": "This market is eligible for trading competition",
                 "twap-tooltip": "This asset uses a TWAP Price Feed from this Uniswap V3 pool pair:",
+                "iv-tooltip": "Currently set Implied Volatility for this asset is xx%",
                 "menu": {
                     "grid": "Grid",
                     "table": "Table",
