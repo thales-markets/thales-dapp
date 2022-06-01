@@ -53,6 +53,7 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     align-self: flex-start;
+    width: 100%;
 `;
 
 const InputField = styled.input`
@@ -62,6 +63,7 @@ const InputField = styled.input`
     color: var(--input-border-color);
     width: 100%;
     height: 28px;
+    font-size: 10px;
     padding-left: 10px;
     padding-right: 25px;
     -webkit-box-sizing: border-box;
