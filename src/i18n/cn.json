@@ -1740,7 +1740,12 @@
         "title": "推荐",
         "pages": {
             "range-market-page": "远程市场页面",
-            "market-page": "市场页面"
+            "market-page": "市场页面",
+            "governance": "治理",
+            "landing-page": "登陆页面",
+            "token-page": "令牌页面",
+            "tale-of-thales": "泰勒斯的泰勒斯",
+            "royale-page": "泰雷兹皇家页面"
         },
         "modal": {
             "copied": "复制！",
