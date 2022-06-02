@@ -159,6 +159,8 @@
         "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in sUSD instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.<br><br>To kick-start this referral program, in addition to the fees earned by the traders you refer, there will be 20,000 OP tokens to be distributed, at Thales Council discretion, among those that make the top in the Affiliate Leaderboard."
     },
     "common": {
+        "read-more": "Read more",
+        "show-less": "Show less",
         "max": "max",
         "save": "Save",
         "network-fee-gas": "Network fee (gas)",

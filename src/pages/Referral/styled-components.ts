@@ -66,10 +66,13 @@ export const DescriptionContainer = styled.div`
     }
 `;
 
-export const Text = styled.p`
+export const Text = styled.p<{ height?: string }>`
     color: var(--primary-color);
     font-size: 16px;
     line-height: 150%;
+    height: ${(_props) => (_props?.height ? _props.height : '')};
+    transition: height 0.3s ease-out;
+    overflow: hidden;
 `;
 
 export const TableWrapper = styled.div`

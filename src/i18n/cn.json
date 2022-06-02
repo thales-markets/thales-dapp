@@ -240,7 +240,9 @@
         "no-data-available": "无可用数据",
         "select-deselect-all": "全选/取消全选",
         "all": "全部",
-        "none": "没有任何"
+        "none": "没有任何",
+        "show-less": "显示较少",
+        "read-more": "阅读更多"
     },
     "modals": {
         "gwei": {

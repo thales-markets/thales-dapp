@@ -38,6 +38,7 @@ import InputWithIcon from 'components/InputWithIcon';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { UI_COLORS } from 'constants/ui';
+import ReadMoreButton from 'components/ReadMoreButton';
 
 const Tabs = [
     {
@@ -63,7 +64,8 @@ const Referral: React.FC = () => {
     const [tabIndex, setTabIndex] = useState<number>(Tabs[0].id);
     const [landingPage, setLandingPage] = useState<number | undefined>(0);
     const [referralLink, setReferralLink] = useState<string>('');
-
+    const [showMore, setShowMore] = useState<boolean>(false);
+    const [textHeight, setHeight] = useState<string>('200px');
     const { t } = useTranslation();
 
     const landingPageOptions = [
@@ -189,6 +191,12 @@ const Referral: React.FC = () => {
         }
     };
 
+    const handleReadMore = () => {
+        if (!showMore) setHeight('470px');
+        if (showMore) setHeight('200px');
+        setShowMore(!showMore);
+    };
+
     return (
         <>
             <HeaderContainer>
@@ -234,12 +242,14 @@ const Referral: React.FC = () => {
                     </KeyValue>
                 </StatisticsWrapper>
                 <DescriptionContainer>
-                    <Text>
+                    <Text height={textHeight}>
                         <Trans
                             i18nKey={'referral-page.description'}
                             components={{ bold: <BoldText />, italic: <i /> }}
                         />
+                        <TextGradient />
                     </Text>
+                    <ReadMoreButton onClick={handleReadMore} active={showMore} />
                 </DescriptionContainer>
             </HeaderContainer>
             <Container.Main justifyContent="flex-start" hide={false}>
@@ -295,11 +305,15 @@ const Referral: React.FC = () => {
                                         sortable: true,
                                     },
                                     {
+                                        id: 'amount',
                                         Header: <>{t('referral-page.table.earned')}</>,
-                                        accessor: 'amount',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                        // accessor: 'amount',
+                                        accessor: (row: any) => (
+                                            <p>{formatCurrencyWithSign(USD_SIGN, row.amount, 2)}</p>
                                         ),
+                                        // Cell: (cellProps: any) => (
+                                        //     <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                        // ),
                                         sortable: true,
                                     },
                                     {
@@ -425,6 +439,28 @@ const Referral: React.FC = () => {
 const BoldText = styled.span`
     font-weight: 900;
     text-decoration: underline;
+`;
+
+const TextGradient = styled.div`
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100px; /* adjust it to your needs */
+    background: url(data:image/svg+xml;base64,alotofcodehere);
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0%, rgba(255, 255, 255, 0)),
+        color-stop(70%, rgba(255, 255, 255, 1))
+    );
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+    background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+    background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
 `;
 
 export default Referral;

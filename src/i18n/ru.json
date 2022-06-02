@@ -240,7 +240,9 @@
         "no-data-available": "Данные недоступны",
         "select-deselect-all": "Выбрать/Отменить выбор всего",
         "all": "Все",
-        "none": "никто"
+        "none": "никто",
+        "show-less": "Показывай меньше",
+        "read-more": "Читать далее"
     },
     "modals": {
         "gwei": {
