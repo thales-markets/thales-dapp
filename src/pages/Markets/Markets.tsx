@@ -18,6 +18,7 @@ import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getUISize } from 'redux/modules/ui';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
@@ -29,6 +30,8 @@ const Markets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const screenSize = useSelector((state: RootState) => getUISize(state));
+    console.log(screenSize);
     const dispatch = useDispatch();
 
     useEffect(() => {
