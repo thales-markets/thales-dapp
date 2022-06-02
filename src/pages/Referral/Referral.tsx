@@ -37,6 +37,7 @@ import SelectInput from 'components/SelectInput';
 import InputWithIcon from 'components/InputWithIcon';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { UI_COLORS } from 'constants/ui';
 
 const Tabs = [
     {
@@ -111,7 +112,7 @@ const Referral: React.FC = () => {
 
     const transactionData: ReferralTransactions[] | [] = useMemo(() => {
         if (transactionsQuery.isSuccess && transactionsQuery.data && walletAddress) {
-            return transactionsQuery.data;
+            return orderBy(transactionsQuery.data, ['timestamp'], ['desc']);
         }
 
         return [];
@@ -222,8 +223,14 @@ const Referral: React.FC = () => {
                         <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume, 2)}</StatValue>
                     </KeyValue>
                     <KeyValue>
-                        <StatLabel>{t('referral-page.statistics.earned')}</StatLabel>
-                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned, 2)}</StatValue>
+                        <StatLabel>{t('referral-page.statistics.total-fees')}</StatLabel>
+                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume * 0.02, 2)}</StatValue>
+                    </KeyValue>
+                    <KeyValue>
+                        <StatLabel color={UI_COLORS.GREEN}>{t('referral-page.statistics.earned')}</StatLabel>
+                        <StatValue color={UI_COLORS.GREEN}>
+                            {formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned, 2)}
+                        </StatValue>
                     </KeyValue>
                 </StatisticsWrapper>
                 <DescriptionContainer>

@@ -134,6 +134,7 @@
         "statistics": {
             "trades": "Trades",
             "total-volume": "Total Volume",
+            "total-fees": "Total Trading Fees",
             "earned": "Earned"
         },
         "table": {

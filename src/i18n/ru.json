@@ -1714,7 +1714,8 @@
         "statistics": {
             "trades": "Сделки",
             "total-volume": "Общий объем",
-            "earned": "Заработано"
+            "earned": "Заработано",
+            "total-fees": "Общие торговые сборы"
         },
         "generate-link-btn": "Создать ссылку",
         "form-label": "Создать партнерскую ссылку",

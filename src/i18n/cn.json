@@ -1714,7 +1714,8 @@
         "statistics": {
             "total-volume": "总容积",
             "trades": "交易",
-            "earned": "赢得"
+            "earned": "赢得",
+            "total-fees": "总交易费用"
         },
         "generate-link-btn": "生成链接",
         "form-label": "生成会员链接",

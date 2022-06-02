@@ -31,10 +31,10 @@ export const KeyValue = styled.span`
     justify-content: space-between;
 `;
 
-export const StatLabel = styled.span`
+export const StatLabel = styled.span<{ color?: string }>`
     font-size: 21px;
     line-height: 26.53px;
-    color: var(--primary-color);
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
 `;
 
 export const StatValue = styled(StatLabel)<{ customColor?: string }>`
