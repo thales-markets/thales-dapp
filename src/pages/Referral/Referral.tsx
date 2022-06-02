@@ -219,7 +219,11 @@ const Referral: React.FC = () => {
                     >
                         {t('referral-page.generate-link-btn')}
                     </Button>
-                    <InputWithIcon text={referralLink} onIconClick={() => copyLink()} />
+                    <InputWithIcon
+                        text={referralLink}
+                        onIconClick={() => copyLink()}
+                        customIconClass={'icon icon--copy'}
+                    />
                 </FormWrapper>
                 <StatisticsWrapper>
                     <KeyValue>

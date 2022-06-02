@@ -224,3 +224,7 @@
 .icon--stats:before {
     content: '\0041';
 }
+
+.icon--copy:before {
+    content: '\0064';
+}
