@@ -93,7 +93,14 @@ const App = () => {
             }
         };
         init().then(() => console.log('rdy'));
-        trackPageView();
+        trackPageView({
+            customDimensions: [
+                {
+                    id: 1,
+                    networkId: networkId ? networkId?.toString() : '',
+                },
+            ],
+        });
         const handler = (e) => {
             setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
         };
