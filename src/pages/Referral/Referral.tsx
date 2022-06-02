@@ -65,7 +65,7 @@ const Referral: React.FC = () => {
     const [landingPage, setLandingPage] = useState<number | undefined>(0);
     const [referralLink, setReferralLink] = useState<string>('');
     const [showMore, setShowMore] = useState<boolean>(false);
-    const [textHeight, setHeight] = useState<string>('200px');
+    const [textHeight, setHeight] = useState<string>('170px');
     const { t } = useTranslation();
 
     const landingPageOptions = [
@@ -193,7 +193,7 @@ const Referral: React.FC = () => {
 
     const handleReadMore = () => {
         if (!showMore) setHeight('470px');
-        if (showMore) setHeight('200px');
+        if (showMore) setHeight('170px');
         setShowMore(!showMore);
     };
 
