@@ -31,6 +31,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
             backgroundColor: '#04045a',
             borderColor: '#64d9fe',
             color: '#64d9fe',
+            borderRadius: '15px',
             ':hover': {
                 ...provided[':hover'],
                 boxShadow: '0px 1px 15px rgba(100, 217, 254, 0.7)',

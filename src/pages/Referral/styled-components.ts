@@ -11,7 +11,7 @@ export const FormWrapper = styled.div`
 
 export const Label = styled.span`
     font-size: 21px;
-    line-height: 31px;
+    line-height: 21px;
     color: var(--primary-color);
 `;
 

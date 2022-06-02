@@ -212,7 +212,7 @@ const Referral: React.FC = () => {
                     {/* <Label>{t('referral-page.form-label')}</Label> */}
                     <Button
                         padding={'5px 0px'}
-                        margin={'9px 0px 16px 0'}
+                        margin={'9px 0px 9px 0'}
                         active={true}
                         hoverShadow={'var(--button-shadow)'}
                         onClickHandler={generateLinkHandler}
