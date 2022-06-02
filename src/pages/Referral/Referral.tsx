@@ -81,22 +81,6 @@ const Referral: React.FC = () => {
             value: 2,
             label: t('referral-page.pages.landing-page'),
         },
-        {
-            value: 3,
-            label: t('referral-page.pages.token-page'),
-        },
-        {
-            value: 4,
-            label: t('referral-page.pages.royale-page'),
-        },
-        {
-            value: 5,
-            label: t('referral-page.pages.tale-of-thales'),
-        },
-        {
-            value: 6,
-            label: t('referral-page.pages.governance'),
-        },
     ];
 
     const transactionsQuery = useReferralTransactionsQuery(
