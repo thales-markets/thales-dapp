@@ -442,7 +442,6 @@ const Referral: React.FC = () => {
 
 const BoldText = styled.span`
     font-weight: 900;
-    text-decoration: underline;
 `;
 
 const TextGradient = styled.div`

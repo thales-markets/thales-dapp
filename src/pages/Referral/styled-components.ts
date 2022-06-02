@@ -69,6 +69,7 @@ export const DescriptionContainer = styled.div`
 export const Text = styled.p<{ height?: string }>`
     color: var(--primary-color);
     font-size: 16px;
+    font-weight: 100 !important;
     line-height: 150%;
     height: ${(_props) => (_props?.height ? _props.height : '')};
     transition: height 0.3s ease-out;
