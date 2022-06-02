@@ -4,6 +4,11 @@
 }
 
 @font-face {
+    font-family: 'Roboto Thin';
+    src: local('Roboto'), url(../assets/fonts/Roboto/Roboto-Thin.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'Open Sans';
     src: local('Open Sans'), url(../assets/fonts/OpenSans/OpenSans-Regular.ttf) format('truetype');
 }
