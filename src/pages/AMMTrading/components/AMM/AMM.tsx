@@ -45,6 +45,7 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import { getReferralWallet } from 'utils/referral';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -60,6 +61,7 @@ const AMM: React.FC = () => {
     const dispatch = useDispatch();
 
     const referral = getReferralWallet();
+    const { trackEvent } = useMatomo();
 
     const orderSideOptions = [
         {
@@ -656,6 +658,24 @@ const AMM: React.FC = () => {
     };
 
     const onMaxClick = async (isBuy: boolean) => {
+        trackEvent({
+            category: 'AMM',
+            action: 'click-on-max-button',
+            customDimensions: [
+                {
+                    id: 1,
+                    value: networkId ? networkId?.toString() : '',
+                },
+                {
+                    id: 2,
+                    value: walletAddress ? walletAddress : '',
+                },
+                {
+                    id: 3,
+                    value: referral ? referral : '',
+                },
+            ],
+        });
         if (isBuy) {
             const { ammContract } = snxJSConnector as any;
             const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
