@@ -24,7 +24,6 @@ import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import Cookies from 'universal-cookie';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { ethers } from 'ethers';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
@@ -57,7 +56,6 @@ const App = () => {
     const networkId = useSelector((state) => getNetworkId(state));
     // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
-    const { trackPageView } = useMatomo();
     const [snxJSConnector, setSnxJSConnector] = useState();
 
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
@@ -93,14 +91,7 @@ const App = () => {
             }
         };
         init().then(() => console.log('rdy'));
-        trackPageView({
-            customDimensions: [
-                {
-                    id: 1,
-                    networkId: networkId ? networkId?.toString() : '',
-                },
-            ],
-        });
+
         const handler = (e) => {
             setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
         };
