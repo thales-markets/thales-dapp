@@ -13,7 +13,6 @@ import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { useTranslation } from 'react-i18next';
 import SortingMenu from 'components/SortingMenu';
-import VirtualScroll from 'react-dynamic-virtual-scroll';
 
 type MarketsGridProps = {
     optionsMarkets: OptionsMarkets;
@@ -152,19 +151,14 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
                 />
             )}
             <Wrapper>
-                <VirtualScroll
-                    className="List"
-                    minItemHeight={352}
-                    totalLength={options?.length}
-                    renderItem={(rowIndex: number) => {
+                {options &&
+                    options.map((optionMarket, index) => {
                         return (
-                            <SPAAnchor key={rowIndex} href={buildOptionsMarketLink((options as any)[rowIndex].address)}>
-                                <MarketCard optionMarket={(options as any)[rowIndex]} exchangeRates={exchangeRates} />{' '}
+                            <SPAAnchor key={index} href={buildOptionsMarketLink(optionMarket.address)}>
+                                <MarketCard optionMarket={optionMarket} exchangeRates={exchangeRates} />{' '}
                             </SPAAnchor>
                         );
-                    }}
-                />
-
+                    })}
                 <PaginationWrapper
                     rowsPerPageOptions={[9, 12, 15, 18]}
                     count={dataCount}
