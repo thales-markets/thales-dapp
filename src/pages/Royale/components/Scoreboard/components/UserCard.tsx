@@ -41,6 +41,7 @@ import { User, UserStatus } from '../queries/useRoyalePlayersQuery';
 import useUserRoyalQuery, { AnonimUser } from '../queries/useUserRoyalQuery';
 import ShowRoyalePassportsDialog from './ShowRoyalePassportsDialog/ShowRoyalePassportsDialog';
 import UserEditRoyaleDataDialog from './UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
+import { ROYALE_OF_ROYALES_NEXT } from '../../../../../constants/state';
 
 type UserCardProps = {
     assetPrice: string;
@@ -694,7 +695,8 @@ export const UserCard: React.FC<UserCardProps> = ({
                                 (user.status === UserStatus.NOTSIGNED &&
                                     (royaleData as any).signUpPeriod < new Date()) ||
                                 user.status === UserStatus.RDY ||
-                                !isWalletConnected
+                                !isWalletConnected ||
+                                ROYALE_OF_ROYALES_NEXT
                                     ? 'none'
                                     : '',
                         }}
