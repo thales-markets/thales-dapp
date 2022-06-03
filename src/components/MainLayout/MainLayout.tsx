@@ -42,7 +42,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 },
             ],
         });
-    }, [rawParams]);
+    }, [rawParams, networkId]);
 
     return <>{isAppReady ? children : <Loader />}</>;
 };
