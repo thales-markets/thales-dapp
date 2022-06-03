@@ -19,6 +19,7 @@ import { getTimeLeft } from '../../Arena/RoyaleArena';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { addSeconds, differenceInSeconds } from 'date-fns';
+import { ROYALE_OF_ROYALES_NEXT } from '../../../../../constants/state';
 
 const Intro: React.FC = () => {
     const { t } = useTranslation();
@@ -108,9 +109,11 @@ const Intro: React.FC = () => {
             if (timeLeftUntilNewSeason) {
                 return (
                     <>
-                        <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
+                        {!ROYALE_OF_ROYALES_NEXT && <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>}
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                            {timeLeftUntilNewSeason
+                            {ROYALE_OF_ROYALES_NEXT
+                                ? t('options.royale.scoreboard.royale-of-royales-coming-soon')
+                                : timeLeftUntilNewSeason
                                 ? lessThanADayBeforeSeason()
                                     ? format(timeLeftUntilNewSeason, '00:HH:mm:ss')
                                     : format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
@@ -242,14 +245,26 @@ const Intro: React.FC = () => {
                 />
             </InfoText>
             <InfoText style={{ margin: '14px 0px' }}>{t('options.royale.scoreboard.info4')}</InfoText>{' '}
-            <InfoText>
-                <Trans
-                    i18nKey="options.royale.scoreboard.info5"
-                    components={{
-                        bold: <strong />,
-                    }}
-                />
-            </InfoText>
+            {!ROYALE_OF_ROYALES_NEXT && (
+                <InfoText>
+                    <Trans
+                        i18nKey="options.royale.scoreboard.info5"
+                        components={{
+                            bold: <strong />,
+                        }}
+                    />
+                </InfoText>
+            )}
+            {ROYALE_OF_ROYALES_NEXT && (
+                <InfoText style={{ margin: '14px 0px' }}>
+                    <Trans i18nKey="options.royale.scoreboard.info8" />
+                </InfoText>
+            )}
+            {ROYALE_OF_ROYALES_NEXT && (
+                <InfoText style={{ margin: '14px 0px' }}>
+                    <Trans i18nKey="options.royale.scoreboard.info9" />
+                </InfoText>
+            )}
             <InfoText style={{ margin: '14px 0px' }}>
                 <Trans
                     i18nKey="options.royale.scoreboard.info6"
