@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.svg';
@@ -14,25 +14,23 @@ import { useSelector } from 'react-redux';
 const cookies = new Cookies();
 const FILTERS_LENGTH = 6;
 
-const AssetFilters: React.FC<{ allAssets: any }> = ({ allAssets }) => {
+const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilters: any }> = ({
+    allAssets,
+    assetFilters,
+    setAssetFilters,
+}) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const chosenAsset = cookies.get('chosenAsset' + networkId);
-    const [assetsDropdownOpen, setAssetsDropdownOpen] = useState<boolean>(false);
-    const [assetFilters, setAssetFilters] = useState<string[]>(chosenAsset ? chosenAsset : []);
-    const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
 
-    useEffect(() => {
-        if (assetFilters !== chosenAsset || chosenAsset == undefined) {
-            cookies.set('chosenAsset' + networkId, assetFilters?.length ? assetFilters : '', {
-                path: '/',
-            });
-        }
-    }, [assetFilters]);
+    const selectedAssetsCookie = cookies.get('selectedAssets' + networkId);
+
+    const [selectedAssets, setSelectedAssets] = useState<string[]>(selectedAssetsCookie ? selectedAssetsCookie : []);
+    const [assetsDropdownOpen, setAssetsDropdownOpen] = useState<boolean>(false);
+    console.log(assetFilters);
 
     const safeSetSelectedAssets = useCallback(
         (assets) => {
             setSelectedAssets(assets);
-            setAssetFilters(assetFilters.filter((filter) => assets.includes(filter)));
+            setAssetFilters(assetFilters.filter((filter: any) => assets.includes(filter)));
         },
         [setSelectedAssets, setAssetFilters, assetFilters]
     );
@@ -64,7 +62,7 @@ const AssetFilters: React.FC<{ allAssets: any }> = ({ allAssets }) => {
                                 className={assetFilters.includes(value) ? 'active' : ''}
                                 onClick={() => {
                                     if (assetFilters.includes(value)) {
-                                        setAssetFilters(assetFilters.filter((asset) => asset !== value));
+                                        setAssetFilters(assetFilters.filter((asset: any) => asset !== value));
                                     } else {
                                         setAssetFilters([...assetFilters, value]);
                                     }
