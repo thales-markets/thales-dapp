@@ -502,6 +502,18 @@ const AMM: React.FC = () => {
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');
+
+                if (isBuy) {
+                    trackEvent({
+                        category: 'AMM',
+                        action: 'buy-from-amm',
+                    });
+                } else {
+                    trackEvent({
+                        category: 'AMM',
+                        action: 'sell-to-amm',
+                    });
+                }
             }
         } catch (e) {
             console.log(e);
@@ -661,20 +673,6 @@ const AMM: React.FC = () => {
         trackEvent({
             category: 'AMM',
             action: 'click-on-max-button',
-            customDimensions: [
-                {
-                    id: 1,
-                    value: networkId ? networkId?.toString() : '',
-                },
-                {
-                    id: 2,
-                    value: walletAddress ? walletAddress : '',
-                },
-                {
-                    id: 3,
-                    value: referral ? referral : '',
-                },
-            ],
         });
         if (isBuy) {
             const { ammContract } = snxJSConnector as any;

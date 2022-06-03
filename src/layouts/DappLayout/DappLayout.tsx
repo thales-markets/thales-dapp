@@ -49,7 +49,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
                 },
             ],
         });
-    }, [rawParams]);
+    }, [rawParams, networkId]);
 
     useEffect(() => {
         document.getElementsByTagName('body')[0].style.overflow = isNetworkSupported(networkId) ? 'auto' : 'hidden';
