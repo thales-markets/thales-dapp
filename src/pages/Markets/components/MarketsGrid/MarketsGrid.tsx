@@ -140,7 +140,9 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
 
     return (
         <>
-            <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
+            <ButtonWrapper>
+                <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
+            </ButtonWrapper>
             {showSorting && (
                 <SortingMenu
                     setShowSorting={setShowSorting}
@@ -179,6 +181,11 @@ const Wrapper = styled(FlexDiv)`
     }
 `;
 
+const ButtonWrapper = styled.div`
+    width: 100%;
+    position: relative;
+`;
+
 const FiltersButton = styled.div`
     display: none;
     padding: 6px 20px;
@@ -195,6 +202,9 @@ const FiltersButton = styled.div`
     color: #64d9fe;
     @media (max-width: 768px) {
         display: block;
+        position: absolute;
+        left: 0;
+        top: -30px;
     }
 `;
 

@@ -109,6 +109,11 @@ const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilter
 const FilterContainer = styled.div`
     display: flex;
     align-items: center;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        justify-content: flex-end;
+    }
 `;
 
 const Filters = styled.div<{ length: number }>`
