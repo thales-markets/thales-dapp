@@ -106,7 +106,7 @@ export const MarketCardWrapper = styled.div<{ maxWidth?: string; margin?: string
     box-sizing: border-box;
     border-radius: 15px;
     padding: 31px 10px 31px 31px;
-    margin: ${(_props) => (_props?.margin ? _props.margin : '7.5px')};
+    margin: 7.5px 0;
     flex: 1;
     :hover {
         transform: scale(1.02);
