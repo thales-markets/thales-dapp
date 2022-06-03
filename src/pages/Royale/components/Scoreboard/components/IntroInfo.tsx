@@ -104,16 +104,21 @@ const Intro: React.FC = () => {
     };
 
     const getTitle = () => {
+        if (ROYALE_OF_ROYALES_NEXT) {
+            return (
+                <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                    {t('options.royale.scoreboard.royale-of-royales-coming-soon')}
+                </SubTitle>
+            );
+        }
         if (!data) return;
         if (data.seasonFinished || (!data.seasonStarted && !data.canStartNewSeason)) {
             if (timeLeftUntilNewSeason) {
                 return (
                     <>
-                        {!ROYALE_OF_ROYALES_NEXT && <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>}
+                        <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                            {ROYALE_OF_ROYALES_NEXT
-                                ? t('options.royale.scoreboard.royale-of-royales-coming-soon')
-                                : timeLeftUntilNewSeason
+                            {timeLeftUntilNewSeason
                                 ? lessThanADayBeforeSeason()
                                     ? format(timeLeftUntilNewSeason, '00:HH:mm:ss')
                                     : format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
