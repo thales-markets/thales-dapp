@@ -11,6 +11,7 @@ import { buildRangeMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import styled from 'styled-components';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 export type HotRangedMarket = {
     fullAssetName?: string;
@@ -38,13 +39,17 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
 }) => {
     const [time, setTime] = useState(formatTimeDifference(calculateDifference(timeRemaining)));
     const { t } = useTranslation();
+    const { trackEvent } = useMatomo();
 
     useInterval(() => {
         setTime(formatTimeDifference(calculateDifference(timeRemaining)));
     }, 1000);
 
     return (
-        <StyledComponents.Card address={address}>
+        <StyledComponents.Card
+            address={address}
+            onClick={() => trackEvent({ category: 'RangedMarkets', action: 'click-on-hot-market' })}
+        >
             <SPAAnchor href={buildRangeMarketLink(address, assetName.includes('IN') ? 'in' : 'out')}>
                 <StyledComponents.AssetInfo>
                     <CurrencyIcon
