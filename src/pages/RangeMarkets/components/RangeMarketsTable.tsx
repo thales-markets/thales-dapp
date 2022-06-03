@@ -312,7 +312,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                 return market;
             });
 
-        const result = new Set(Array.from(set).sort(sortCurrencies).slice(0, 11));
+        const result = new Set(Array.from(set).sort(sortCurrencies));
 
         const selectedAssetsCookie = cookies.get('selectedRangedAssets' + networkId);
 

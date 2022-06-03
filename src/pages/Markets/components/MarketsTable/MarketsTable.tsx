@@ -319,7 +319,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 return market;
             });
 
-        const result = new Set(Array.from(set).sort(sortCurrencies).slice(0, 11));
+        const result = new Set(Array.from(set).sort(sortCurrencies));
 
         const selectedAssetsCookie = cookies.get('selectedAssets' + networkId);
 
