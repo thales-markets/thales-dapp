@@ -30,11 +30,13 @@ const UserCard: React.FC = () => {
             >
                 <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
-            <OutsideClickHandler onOutsideClick={() => (showCard ? setShowCard(!showCard) : '')}>
+            {showCard && (
                 <Suspense fallback={<></>}>
-                    <MenuCardComponent showCard={showCard} setShowCard={setShowCard} />
+                    <OutsideClickHandler onOutsideClick={() => (showCard ? setShowCard(!showCard) : '')}>
+                        <MenuCardComponent showCard={showCard} setShowCard={setShowCard} />
+                    </OutsideClickHandler>
                 </Suspense>
-            </OutsideClickHandler>
+            )}
             <Overlay className={showCard ? 'show' : 'hide'} />
         </>
     );
