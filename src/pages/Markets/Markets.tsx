@@ -20,7 +20,7 @@ import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import { getUISize } from 'redux/modules/ui';
 
-const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
+// const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
 
 // const MAX_HOT_MARKETS = 6;
@@ -121,9 +121,9 @@ const Markets: React.FC = () => {
                     </InfoBanner>
                 </BannerContainer>
             )}
-            <Suspense fallback={<></>}>
+            {/* <Suspense fallback={<></>}>
                 <HotMarkets optionsMarkets={optionsMarkets} />
-            </Suspense>
+            </Suspense> */}
             <Suspense fallback={<></>}>
                 <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>
