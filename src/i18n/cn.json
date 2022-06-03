@@ -1317,7 +1317,10 @@
                 "choose-default-positions": "为选定的 Royale Passport ID 选择所有回合的默认位置：",
                 "my-passports": "出示我的护照",
                 "owned-by": "拥有者：{{玩家}}",
-                "info5": "当前买入为 <bold>30 sUSD</bold>。获胜者将分享一个奖池，该奖池由所有参与者的参赛金加上当前奖励 <bold>1000 THALES</bold> 组成，作为额外奖励。"
+                "info5": "当前买入为 <bold>30 sUSD</bold>。获胜者将分享一个奖池，该奖池由所有参与者的参赛金加上当前奖励 <bold>1000 THALES</bold> 组成，作为额外奖励。",
+                "info8": "所有 9 个泰雷兹皇家赛季都已播放完毕，恭喜获胜者！",
+                "royale-of-royales-coming-soon": "Royale of Royales 即将推出",
+                "info9": "请继续关注 Royale of Royales，这是一项特殊的 100 sUSD 买入赛事，每个人都可以参加，前几个赛季的所有冠军都会获得赞助参赛作品。更多新闻即将发布，因此请务必加入 Thales Discord 以了解最新动态"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

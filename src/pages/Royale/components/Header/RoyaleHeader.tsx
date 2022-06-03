@@ -32,6 +32,7 @@ import useLatestRoyaleForUserInfo from '../Scoreboard/queries/useLastRoyaleForUs
 import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
 import UserInfoRoyaleDialog from './UserInfoRoyaleDialog/UserInfoRoyaleDialog';
+import { ROYALE_OF_ROYALES_NEXT } from '../../../../constants/state';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -188,7 +189,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                 <ThalesLogo className="icon icon--logo" />
                 <InfoWrapper>
                     <UtilWrapper>
-                        {walletAddress && (
+                        {!ROYALE_OF_ROYALES_NEXT && walletAddress && (
                             <>
                                 {allowance ? (
                                     <Button
