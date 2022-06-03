@@ -1,8 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.svg';
-import AssetsDropdown from 'components/AssetsDropdown';
 import OutsideClickHandler from 'react-outside-click-handler';
 let scrolling: NodeJS.Timeout;
 import { isMobile } from 'utils/device';
@@ -10,6 +9,8 @@ import Cookies from 'universal-cookie';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
+
+const AssetsDropdown = lazy(() => import(/* webpackChunkName: "AssetsDropdown" */ 'components/AssetsDropdown'));
 
 const cookies = new Cookies();
 const FILTERS_LENGTH = 6;
@@ -89,19 +90,23 @@ const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilter
                 }}
                 className={'icon icon--right'}
             />
-            <OutsideClickHandler onOutsideClick={() => setAssetsDropdownOpen(false)}>
-                <AssetsDropdownContainer>
-                    <StyledPlusButton onClick={() => setAssetsDropdownOpen(!assetsDropdownOpen)} />
-                    {assetsDropdownOpen && (
-                        <AssetsDropdown
-                            assets={[...(allAssets as any)]}
-                            cookieKey={'selectedAssets'}
-                            selectedAssets={selectedAssets}
-                            setSelectedAssets={safeSetSelectedAssets}
-                        />
-                    )}
-                </AssetsDropdownContainer>
-            </OutsideClickHandler>
+            <StyledPlusButton onClick={() => setAssetsDropdownOpen(!assetsDropdownOpen)} />
+            {assetsDropdownOpen && (
+                <Suspense fallback={<></>}>
+                    <OutsideClickHandler onOutsideClick={() => setAssetsDropdownOpen(false)}>
+                        <AssetsDropdownContainer>
+                            {assetsDropdownOpen && (
+                                <AssetsDropdown
+                                    assets={[...(allAssets as any)]}
+                                    cookieKey={'selectedAssets'}
+                                    selectedAssets={selectedAssets}
+                                    setSelectedAssets={safeSetSelectedAssets}
+                                />
+                            )}
+                        </AssetsDropdownContainer>
+                    </OutsideClickHandler>
+                </Suspense>
+            )}
         </FilterContainer>
     );
 };
