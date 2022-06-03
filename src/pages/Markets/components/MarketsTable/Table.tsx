@@ -11,7 +11,6 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table';
 import Currency from 'components/Currency/v2';
-import PriceChart from 'components/Charts/PriceChart';
 import Tooltip from 'components/Tooltip';
 import Phase from 'components/Phase/Phase';
 import TimeRemaining from 'components/TimeRemaining';
@@ -146,18 +145,7 @@ const Table: React.FC<{
             {
                 id: 'priceChart',
                 Header: t(`options.home.markets-table.24h-change-col`),
-                accessor: (row: any) => (
-                    <PriceChart
-                        currencyKey={row?.currencyKey}
-                        height={30}
-                        width={125}
-                        showFooter={false}
-                        showPercentageChangeOnSide={true}
-                        containerStyle={{ marginTop: '6px', marginBottom: '6px', marginLeft: '10px' }}
-                        footerStyle={{ fontSize: '10px' }}
-                        isAnimationActive={false}
-                    />
-                ),
+                accessor: () => <></>,
                 disableSortBy: true,
             },
         ];
