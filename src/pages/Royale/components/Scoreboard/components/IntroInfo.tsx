@@ -103,6 +103,13 @@ const Intro: React.FC = () => {
     };
 
     const getTitle = () => {
+        if (ROYALE_OF_ROYALES_NEXT) {
+            return (
+                <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                    {t('options.royale.scoreboard.royale-of-royales-coming-soon')}
+                </SubTitle>
+            );
+        }
         if (!data) return;
         if (data.seasonFinished || (!data.seasonStarted && !data.canStartNewSeason)) {
             if (timeLeftUntilNewSeason) {
