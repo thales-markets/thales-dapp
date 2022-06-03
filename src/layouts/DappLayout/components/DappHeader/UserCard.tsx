@@ -1,12 +1,11 @@
-import UserWallet from './UserWallet';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 
 import styled from 'styled-components';
 
-import UserSwap from './UserSwap';
-
 const MenuCardComponent = lazy(() => import(/* webpackChunkName: "MenuCardComponent" */ './MenuCard'));
+const UserSwap = lazy(() => import(/* webpackChunkName: "UserSwap" */ './UserSwap'));
+const UserWallet = lazy(() => import(/* webpackChunkName: "UserWallet" */ './UserWallet'));
 
 const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
@@ -17,8 +16,13 @@ const UserCard: React.FC = () => {
 
     return (
         <>
-            <UserSwap />
-            <UserWallet />
+            <Suspense fallback={<></>}>
+                <UserSwap />
+            </Suspense>
+            <Suspense fallback={<></>}>
+                <UserWallet />
+            </Suspense>
+
             <MenuCardButton
                 onClick={() => {
                     setShowCard(!showCard);
