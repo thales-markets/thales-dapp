@@ -21,6 +21,7 @@ import { TablePagination } from '@material-ui/core';
 import './main.scss';
 
 const MarketsGrid = lazy(() => import(/* webpackChunkName: "MarketsGrid" */ '../MarketsGrid'));
+const Table = lazy(() => import(/* webpackChunkName:"Table" */ './Table'));
 
 type MarketsTableProps = {
     exchangeRates: Rates | null;
@@ -31,13 +32,13 @@ type MarketsTableProps = {
 import Cookies from 'universal-cookie';
 
 import AssetFilters from '../AssetFillters/AssetFilters';
-import Table from './Table';
+import { getUISize, UISize } from 'redux/modules/ui';
 
 const cookies = new Cookies();
 
 const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-
+    const screenSize = useSelector((state: RootState) => getUISize(state));
     const { t } = useTranslation();
 
     const showOnlyLiquidFromCookie = cookies.get('showOnlyLiquid' + networkId);
@@ -45,7 +46,9 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
 
     const [globalFilter, setGlobalFilter] = useState('');
-    const [tableView, setTableView] = useState<boolean>(tableViewFromCookie === 'false' ? false : true);
+    const [tableView, setTableView] = useState<boolean>(
+        screenSize === UISize.Large ? (tableViewFromCookie === 'false' ? false : true) : false
+    );
 
     const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(
         showOnlyLiquidFromCookie !== undefined ? (showOnlyLiquidFromCookie === 'false' ? false : true) : true
@@ -114,14 +117,16 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 </FormContainer>
             </Wrapper>
             {tableView && (
-                <Table
-                    optionsMarkets={optionsMarkets}
-                    exchangeRates={exchangeRates}
-                    showOnlyLiquid={showOnlyLiquid}
-                    assetFilters={filters.assetFilters}
-                    setAllAssets={setAllAssets}
-                    searchText={globalFilter}
-                ></Table>
+                <Suspense fallback={<></>}>
+                    <Table
+                        optionsMarkets={optionsMarkets}
+                        exchangeRates={exchangeRates}
+                        showOnlyLiquid={showOnlyLiquid}
+                        assetFilters={filters.assetFilters}
+                        setAllAssets={setAllAssets}
+                        searchText={globalFilter}
+                    ></Table>
+                </Suspense>
             )}
             {!tableView && (
                 <Suspense fallback={<></>}>
