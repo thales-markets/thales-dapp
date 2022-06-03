@@ -172,7 +172,7 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        Gelato: () => ['token', 'Gelato'],
+        Gelato: (totalGelatoLocked: number) => ['token', 'Gelato', totalGelatoLocked],
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],

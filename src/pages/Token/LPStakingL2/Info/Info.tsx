@@ -6,9 +6,13 @@ import { useTranslation } from 'react-i18next';
 import useGelatoQuery from 'queries/token/useGelatoQuery';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 
-const Info: React.FC = () => {
+type Properties = {
+    totalGelatoLocked: number;
+};
+
+const Info: React.FC<Properties> = ({ totalGelatoLocked }) => {
     const { t } = useTranslation();
-    const gelatoQuery = useGelatoQuery({ enabled: true });
+    const gelatoQuery = useGelatoQuery(totalGelatoLocked, { enabled: true });
     const gelatoData = gelatoQuery.isSuccess ? gelatoQuery.data : undefined;
 
     return (
