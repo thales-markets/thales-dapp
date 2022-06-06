@@ -64,7 +64,10 @@ const AMM: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
 
-    const referral = getReferralWallet();
+    const referral =
+        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
+            ? getReferralWallet()
+            : null;
 
     const orderSideOptions = [
         {
