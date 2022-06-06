@@ -69,6 +69,10 @@ const App = () => {
         trackPageView({
             customDimensions: [
                 {
+                    id: 3,
+                    value: Number(cookies.get('home-theme')) == 0 ? 0 : 1,
+                },
+                {
                     id: 4,
                     value: walletAddress ? true : false,
                 },
