@@ -16,6 +16,7 @@ import { MarketType, OptionSide } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { MARKET_TYPE } from 'constants/options';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 type TabContainerProps = {
     optionSide?: OptionSide;
@@ -26,6 +27,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
+    const { trackEvent } = useMatomo();
 
     useEffect(() => {
         if (marketInfo.phase == 'maturity') {
@@ -102,6 +104,12 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                                                 active={currentTab === item.index}
                                                 key={index}
                                                 onClick={() => {
+                                                    if (item.index == 5) {
+                                                        trackEvent({
+                                                            category: 'PositionalMarket',
+                                                            action: 'click-on-similar-markets',
+                                                        });
+                                                    }
                                                     setCurrentTab(item.index);
                                                     setShowViewsDropdown(false);
                                                 }}
