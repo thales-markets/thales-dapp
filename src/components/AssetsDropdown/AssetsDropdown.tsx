@@ -3,14 +3,11 @@ import styled from 'styled-components';
 import Checkbox from 'components/Checkbox';
 import AssetInfo from 'components/AssetInfo/AssetInfo';
 import { FlexDiv } from 'theme/common';
-import Cookies from 'universal-cookie';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import { sortCurrencies } from 'utils/currency';
-
-const cookies = new Cookies();
 
 type AssetsDropdownProps = {
     cookieKey: string;
@@ -37,7 +34,7 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
                         onClick={() => {
                             const newSelectedAssets = [...assets];
                             setSelectedAssets(newSelectedAssets);
-                            cookies.set(cookieKey + networkId, newSelectedAssets);
+                            localStorage.setItem(cookieKey + networkId, JSON.stringify(newSelectedAssets));
                         }}
                     >
                         {t('common.all')}
@@ -47,7 +44,7 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
                         onClick={() => {
                             const newSelectedAssets = [] as string[];
                             setSelectedAssets(newSelectedAssets);
-                            cookies.set(cookieKey + networkId, newSelectedAssets);
+                            localStorage.setItem(cookieKey + networkId, JSON.stringify(newSelectedAssets));
                         }}
                     >
                         {t('common.none')}
@@ -65,13 +62,13 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
                                 if (checked) {
                                     const newSelectedAssets = [...selectedAssets, asset].sort(sortCurrencies);
                                     setSelectedAssets(newSelectedAssets);
-                                    cookies.set(cookieKey + networkId, newSelectedAssets);
+                                    localStorage.setItem(cookieKey + networkId, JSON.stringify(newSelectedAssets));
                                 } else {
                                     const newSelectedAssets = selectedAssets
                                         .filter((a) => a !== asset)
                                         .sort(sortCurrencies);
                                     setSelectedAssets(newSelectedAssets);
-                                    cookies.set(cookieKey + networkId, newSelectedAssets);
+                                    localStorage.setItem(cookieKey + networkId, JSON.stringify(newSelectedAssets));
                                 }
                             }}
                         />

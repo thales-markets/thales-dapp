@@ -81,22 +81,6 @@ const Referral: React.FC = () => {
             value: 2,
             label: t('referral-page.pages.landing-page'),
         },
-        {
-            value: 3,
-            label: t('referral-page.pages.token-page'),
-        },
-        {
-            value: 4,
-            label: t('referral-page.pages.royale-page'),
-        },
-        {
-            value: 5,
-            label: t('referral-page.pages.tale-of-thales'),
-        },
-        {
-            value: 6,
-            label: t('referral-page.pages.governance'),
-        },
     ];
 
     const transactionsQuery = useReferralTransactionsQuery(
@@ -251,7 +235,7 @@ const Referral: React.FC = () => {
                             i18nKey={'referral-page.description'}
                             components={{ bold: <BoldText />, italic: <i /> }}
                         />
-                        <TextGradient />
+                        {/* <TextGradient /> */}
                     </Text>
                     <ReadMoreButton onClick={handleReadMore} active={showMore} />
                 </DescriptionContainer>
@@ -444,26 +428,26 @@ const BoldText = styled.span`
     font-weight: 900;
 `;
 
-const TextGradient = styled.div`
-    position: absolute;
-    z-index: 2;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 100px; /* adjust it to your needs */
-    background: url(data:image/svg+xml;base64,alotofcodehere);
-    background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-    background: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0%, rgba(255, 255, 255, 0)),
-        color-stop(70%, rgba(255, 255, 255, 1))
-    );
-    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-    background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-    background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-`;
+// const TextGradient = styled.div`
+//     position: absolute;
+//     z-index: 2;
+//     right: 0;
+//     bottom: 0;
+//     left: 0;
+//     height: 100px; /* adjust it to your needs */
+//     background: url(data:image/svg+xml;base64,alotofcodehere);
+//     background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+//     background: -webkit-gradient(
+//         linear,
+//         left top,
+//         left bottom,
+//         color-stop(0%, rgba(255, 255, 255, 0)),
+//         color-stop(70%, rgba(255, 255, 255, 1))
+//     );
+//     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+//     background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+//     background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+//     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+// `;
 
 export default Referral;

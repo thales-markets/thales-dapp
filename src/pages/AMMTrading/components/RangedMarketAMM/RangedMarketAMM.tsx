@@ -49,6 +49,7 @@ import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/u
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { getReferralWallet } from 'utils/referral';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -63,7 +64,10 @@ const AMM: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
 
-    const referral = getReferralWallet();
+    const referral =
+        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
+            ? getReferralWallet()
+            : null;
 
     const orderSideOptions = [
         {
@@ -104,6 +108,7 @@ const AMM: React.FC = () => {
 
     const rawParams = useLocation();
     const queryParams = queryString.parse(rawParams?.search);
+    const { trackEvent } = useMatomo();
 
     useEffect(() => {
         if (queryParams?.side == 'in') {
@@ -537,6 +542,18 @@ const AMM: React.FC = () => {
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');
+
+                if (isBuy) {
+                    trackEvent({
+                        category: 'RangeAMM',
+                        action: 'buy-from-amm',
+                    });
+                } else {
+                    trackEvent({
+                        category: 'RangeAMM',
+                        action: 'sell-to-amm',
+                    });
+                }
             }
         } catch (e) {
             console.log(e);
@@ -684,6 +701,10 @@ const AMM: React.FC = () => {
     };
 
     const onMaxClick = async (isBuy: boolean) => {
+        trackEvent({
+            category: 'RangeAMM',
+            action: 'click-on-max-button',
+        });
         if (isBuy) {
             const { rangedMarketAMMContract } = snxJSConnector as any;
             const ammContractWithSigner = rangedMarketAMMContract.connect((snxJSConnector as any).signer);

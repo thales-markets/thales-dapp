@@ -12,6 +12,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import { getIsPolygon } from 'utils/network';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;
@@ -22,14 +23,23 @@ const UserWallet: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
+    const { trackEvent } = useMatomo();
 
     return (
         <Wrapper>
             <WalletContainer
                 connected={isWalletConnected}
-                onClick={() =>
-                    isWalletConnected ? navigateTo(buildHref(ROUTES.Options.Profile)) : onboardConnector.connectWallet()
-                }
+                onClick={() => {
+                    if (isWalletConnected) {
+                        trackEvent({
+                            category: 'dAppHeader',
+                            action: 'click-on-wallet-when-connected',
+                        });
+                    }
+                    isWalletConnected
+                        ? navigateTo(buildHref(ROUTES.Options.Profile))
+                        : onboardConnector.connectWallet();
+                }}
             >
                 <WalletIcon
                     className={` ${

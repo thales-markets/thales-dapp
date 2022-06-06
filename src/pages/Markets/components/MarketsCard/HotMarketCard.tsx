@@ -12,6 +12,7 @@ import { buildOptionsMarketLink } from 'utils/routes';
 import StyledComponents from './styled-components';
 import styled from 'styled-components';
 import { HotMarket } from 'types/options';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const HotMarketCard: React.FC<HotMarket> = ({
     currencyKey,
@@ -24,13 +25,22 @@ const HotMarketCard: React.FC<HotMarket> = ({
 }) => {
     const [time, setTime] = useState(formatTimeDifference(calculateDifference(timeRemaining)));
     const { t } = useTranslation();
+    const { trackEvent } = useMatomo();
 
     useInterval(() => {
         setTime(formatTimeDifference(calculateDifference(timeRemaining)));
     }, 1000);
 
     return (
-        <StyledComponents.Card address={address}>
+        <StyledComponents.Card
+            address={address}
+            onClick={() =>
+                trackEvent({
+                    category: 'Markets',
+                    action: 'click-on-hot-market',
+                })
+            }
+        >
             <SPAAnchor href={buildOptionsMarketLink(address)}>
                 <StyledComponents.AssetInfo>
                     <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />

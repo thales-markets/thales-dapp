@@ -11,6 +11,7 @@ import HotMarketRanged from './HotMarketRanged';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { RangedMarket } from 'types/options';
 import { PHASE } from 'constants/options';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 type RangedMarketUI = RangedMarket & {
     asset: string;
@@ -44,6 +45,9 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
     const { t } = useTranslation();
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
+
+    const { trackEvent } = useMatomo();
+
     const currentMarkets = useMemo(() => {
         const markets: any[] = [];
 
@@ -84,10 +88,18 @@ const HotMarketsRanged: React.FC<HotMarketsRangedProps> = ({ optionsMarkets, exc
     }, [optionsMarkets]);
 
     const moveLeft = () => {
+        trackEvent({
+            category: 'RangedMarkets',
+            action: 'move-left-hot-markets',
+        });
         if (firstHotIndex === 0) setFirstHotIndex(currentMarkets.length - 1 - CARDS_TO_SHOW);
         if (firstHotIndex > 0) setFirstHotIndex(firstHotIndex - 1);
     };
     const moveRight = () => {
+        trackEvent({
+            category: 'RangedMarkets',
+            action: 'move-right-hot-markets',
+        });
         setFirstHotIndex(firstHotIndex + CARDS_TO_SHOW < currentMarkets.length - 1 ? firstHotIndex + 1 : 0);
     };
 

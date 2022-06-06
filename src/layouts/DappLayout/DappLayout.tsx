@@ -10,7 +10,8 @@ import { isNetworkSupported } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { setReferralWallet } from 'utils/referral';
+import { getReferralWallet, setReferralWallet } from 'utils/referral';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -25,11 +26,30 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     const rawParams = useLocation();
     const queryParams = queryString.parse(rawParams?.search);
 
+    const { trackPageView } = useMatomo();
+
     useEffect(() => {
         if (queryParams?.referralId) {
             setReferralWallet(queryParams?.referralId);
         }
     }, []);
+
+    useEffect(() => {
+        const referralWallet = getReferralWallet();
+
+        trackPageView({
+            customDimensions: [
+                {
+                    id: 1,
+                    value: networkId ? networkId?.toString() : '',
+                },
+                {
+                    id: 2,
+                    value: referralWallet ? referralWallet : '',
+                },
+            ],
+        });
+    }, [rawParams, networkId]);
 
     useEffect(() => {
         document.getElementsByTagName('body')[0].style.overflow = isNetworkSupported(networkId) ? 'auto' : 'hidden';

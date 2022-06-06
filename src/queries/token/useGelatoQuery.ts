@@ -31,22 +31,25 @@ const getRates = async (): Promise<Rates> => {
     };
 };
 
-const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
+const useGelatoQuery = (totalGelatoLocked: number, options?: UseQueryOptions<Balance>) => {
     return useQuery<Balance>(
-        QUERY_KEYS.Token.Gelato(),
+        QUERY_KEYS.Token.Gelato(totalGelatoLocked),
         async () => {
             try {
-                const [balance, ratesResults] = await Promise.all([
+                const [balance, totalSupply, ratesResults] = await Promise.all([
                     snxJSConnector?.gelatoContract?.getUnderlyingBalances(),
+                    snxJSConnector?.gelatoContract?.totalSupply(),
                     getRates(),
                 ]);
 
                 const thales = Number(toNumber(balance[0]).toFixed(2));
                 const weth = Number(toNumber(balance[1]).toFixed(2));
 
-                const totalInUSD = Number(
-                    (weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd).toFixed(2)
-                );
+                const totalInUSD =
+                    (totalGelatoLocked *
+                        Number((weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd).toFixed(2))) /
+                    toNumber(totalSupply);
+
                 const apr = ((100 * (LP_STAKING_WEEKLY_REWARDS * ratesResults.thales.usd * 52)) / totalInUSD).toFixed(
                     0
                 );
