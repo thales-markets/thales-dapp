@@ -10,7 +10,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
-import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
+import wallet, { getNetworkId, getWalletAddress, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
 import { setTheme } from 'redux/modules/ui';
 import {
     getEthereumNetwork,
@@ -25,6 +25,7 @@ import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import Cookies from 'universal-cookie';
 import { ethers } from 'ethers';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -52,15 +53,28 @@ const Referral = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Ref
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
+    const walletAddress = useSelector((state) => getWalletAddress(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
     // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const [snxJSConnector, setSnxJSConnector] = useState();
-
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
+    const { trackPageView } = useMatomo();
+
     queryConnector.setQueryClient();
+
+    useEffect(() => {
+        trackPageView({
+            customDimensions: [
+                {
+                    id: 4,
+                    value: walletAddress ? true : false,
+                },
+            ],
+        });
+    }, [walletAddress]);
 
     const cookies = new Cookies();
 
