@@ -151,10 +151,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                             </Card.Section>
                                         </Card.Column>
                                         {data.range ? (
-                                            <Card.Column
-                                                style={{ top: 10, position: 'relative', maxWidth: 260, marginLeft: 10 }}
-                                                ranged={true}
-                                            >
+                                            <MiddleContrainer>
                                                 <RangeIllustration
                                                     priceData={{
                                                         left: data.market.leftPrice,
@@ -164,7 +161,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                     fontSize={24}
                                                     maxWidth={65}
                                                 />
-                                            </Card.Column>
+                                            </MiddleContrainer>
                                         ) : (
                                             <Card.Column>
                                                 <Card.Section>
@@ -349,6 +346,12 @@ const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction) => {
 
 const Content = styled.div`
     display: content;
+`;
+
+const MiddleContrainer = styled.div`
+    display: flex;
+    width: 100%;
+    margin-top: 10px;
 `;
 
 const Container = styled.div`
