@@ -29,20 +29,16 @@ type MarketsTableProps = {
     watchlistedMarkets?: string[];
 };
 
-import Cookies from 'universal-cookie';
-
 import AssetFilters from '../AssetFillters/AssetFilters';
 import { getUISize, UISize } from 'redux/modules/ui';
-
-const cookies = new Cookies();
 
 const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const screenSize = useSelector((state: RootState) => getUISize(state));
     const { t } = useTranslation();
 
-    const showOnlyLiquidFromCookie = cookies.get('showOnlyLiquid' + networkId);
-    const tableViewFromCookie = cookies.get('showTableView' + networkId);
+    const showOnlyLiquidFromCookie = localStorage.getItem('showOnlyLiquid' + networkId);
+    const tableViewFromCookie = localStorage.getItem('showTableView' + networkId);
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
 
     const [globalFilter, setGlobalFilter] = useState('');
@@ -60,28 +56,23 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         t(`options.home.markets-table.menu.all`),
     ];
 
-    const chosenAsset = cookies.get('chosenAsset' + networkId);
-    const [assetFilters, setAssetFilters] = useState<string[]>(chosenAsset ? chosenAsset : []);
+    const chosenAsset = localStorage.getItem('chosenAsset' + networkId);
+
+    const [assetFilters, setAssetFilters] = useState<string[]>(chosenAsset ? JSON.parse(chosenAsset) : []);
 
     useEffect(() => {
-        if (assetFilters !== chosenAsset || chosenAsset == undefined) {
-            cookies.set('chosenAsset' + networkId, assetFilters?.length ? assetFilters : '', {
-                path: '/',
-            });
+        if (assetFilters !== (chosenAsset as any) || chosenAsset == undefined) {
+            localStorage.setItem('chosenAsset' + networkId, JSON.stringify(assetFilters?.length ? assetFilters : []));
         }
     }, [assetFilters]);
 
     useEffect(() => {
-        if (showOnlyLiquidFromCookie !== showOnlyLiquid || showOnlyLiquidFromCookie == undefined) {
-            cookies.set('showOnlyLiquid' + networkId, showOnlyLiquid, {
-                path: '/',
-            });
+        if (showOnlyLiquidFromCookie !== '' + showOnlyLiquid || showOnlyLiquidFromCookie == undefined) {
+            localStorage.setItem('showOnlyLiquid' + networkId, '' + showOnlyLiquid);
         }
 
-        if (tableViewFromCookie !== tableView || tableViewFromCookie == undefined) {
-            cookies.set('showTableView' + networkId, tableView, {
-                path: '/',
-            });
+        if (tableViewFromCookie !== '' + tableView || tableViewFromCookie == undefined) {
+            localStorage.setItem('showTableView' + networkId, '' + tableView);
         }
     }, [showOnlyLiquid, tableView]);
 

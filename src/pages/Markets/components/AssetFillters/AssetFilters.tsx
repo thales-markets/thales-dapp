@@ -5,14 +5,12 @@ import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.s
 import OutsideClickHandler from 'react-outside-click-handler';
 let scrolling: NodeJS.Timeout;
 import { isMobile } from 'utils/device';
-import Cookies from 'universal-cookie';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 
 const AssetsDropdown = lazy(() => import(/* webpackChunkName: "AssetsDropdown" */ 'components/AssetsDropdown'));
 
-const cookies = new Cookies();
 const FILTERS_LENGTH = 6;
 
 const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilters: any }> = ({
@@ -22,15 +20,17 @@ const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilter
 }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const selectedAssetsCookie = cookies.get('selectedAssets' + networkId);
+    const selectedAssetsCookie = localStorage.getItem('selectedAssets' + networkId);
 
-    const [selectedAssets, setSelectedAssets] = useState<string[]>(selectedAssetsCookie ? selectedAssetsCookie : []);
+    const [selectedAssets, setSelectedAssets] = useState<string[]>(
+        selectedAssetsCookie ? JSON.parse(selectedAssetsCookie) : []
+    );
     const [assetsDropdownOpen, setAssetsDropdownOpen] = useState<boolean>(false);
-    console.log(assetFilters);
 
     const safeSetSelectedAssets = useCallback(
         (assets) => {
             setSelectedAssets(assets);
+
             setAssetFilters(assetFilters.filter((filter: any) => assets.includes(filter)));
         },
         [setSelectedAssets, setAssetFilters, assetFilters]
