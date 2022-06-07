@@ -22,12 +22,14 @@ import bridgeContract from './contracts/bridgeContract';
 import usdcContract from './contracts/collateralContract';
 import unclaimedRetroAirdropContract from './contracts/unclaimedRetroAirdrop';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
+import multipleCollateral from './contracts/multipleCollateralContract';
 
 type SnxJSConnector = {
     initialized: boolean;
     provider: ethers.providers.Provider | undefined;
     signer: Signer | undefined;
     collateral?: ethers.Contract;
+    multipleCollateral?: Array<ethers.Contract | undefined>;
     binaryOptionsMarketDataContract?: ethers.Contract;
     binaryOptionsMarketManagerContract?: ethers.Contract;
     retroAirdropContract?: ethers.Contract;
@@ -70,6 +72,14 @@ const snxJSConnector: SnxJSConnector = {
             contractSettings
         );
         this.collateral = conditionalInitializeContract(usdcContract, contractSettings);
+
+        this.multipleCollateral = [
+            conditionalInitializeContract(multipleCollateral['sUSD'], contractSettings),
+            conditionalInitializeContract(multipleCollateral['DAI'], contractSettings),
+            conditionalInitializeContract(multipleCollateral['USDC'], contractSettings),
+            conditionalInitializeContract(multipleCollateral['USDT'], contractSettings),
+        ];
+
         this.retroAirdropContract = conditionalInitializeContract(airdrop, contractSettings);
         this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);
         this.ongoingAirdropContract = conditionalInitializeContract(ongoingAirdrop, contractSettings);
