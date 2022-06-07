@@ -237,7 +237,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                         showIcon={true}
                                         iconProps={{ type: 'asset' }}
                                         synthIconStyle={{ width: 32, height: 32 }}
-                                        spanStyle={{ float: 'left' }}
+                                        spanStyle={{ width: 60 }}
                                         hideAssetName={true}
                                     />
                                 );

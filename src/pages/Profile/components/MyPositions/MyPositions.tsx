@@ -260,7 +260,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                         hideAssetName={true}
                                         iconProps={{ type: 'asset' }}
                                         synthIconStyle={{ width: 32, height: 32 }}
-                                        spanStyle={{ float: 'left' }}
+                                        spanStyle={{ width: 60 }}
                                         additionalIconType={
                                             !row.range
                                                 ? row?.balances?.type === 'UP'
