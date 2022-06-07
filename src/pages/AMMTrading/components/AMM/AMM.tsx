@@ -184,8 +184,6 @@ const AMM: React.FC = () => {
         return [];
     }, [multipleStableBalances?.isLoading]);
 
-    console.log('multipleStableBalances ', multipleStableBalances);
-
     const isButtonDisabled =
         !isTotalEntered ||
         !isPriceEntered ||
@@ -847,12 +845,14 @@ const AMM: React.FC = () => {
                 subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={true}
             />
-            <Select
-                title={'Pay with'}
-                optionsArray={stableListBalances}
-                selectedOption={selectedStableIndex}
-                onChangeOption={(index) => setStableIndex(index)}
-            />
+            {isBuy && (
+                <Select
+                    title={'Pay with'}
+                    optionsArray={stableListBalances}
+                    selectedOption={selectedStableIndex}
+                    onChangeOption={(index) => setStableIndex(index)}
+                />
+            )}
             <Input
                 title={t(`amm.total-${orderSide.value}-label`)}
                 value={isGettingQuote ? '...' : Number(price) > 0 ? formatCurrency(total, 4) : '-'}
