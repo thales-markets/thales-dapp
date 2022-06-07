@@ -35,7 +35,7 @@ import onboardConnector from 'utils/onboardConnector';
 import { AccountMarketInfo, OrderSide, OptionSide } from 'types/options';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
-import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
+import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon } from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
@@ -65,7 +65,6 @@ const AMM: React.FC = () => {
             ? getReferralWallet()
             : null;
 
-    console.log('referral', referral);
     const { trackEvent } = useMatomo();
 
     const orderSideOptions = [
@@ -206,40 +205,40 @@ const AMM: React.FC = () => {
         setAmount('');
     }, [orderSide?.value, optionSide]);
 
-    const fetchL1Fee = async (
-        ammContractWithSigner: any,
-        marketAddress: string,
-        side: any,
-        parsedAmount: any,
-        parsedTotal: any,
-        parsedSlippage: any
-    ) => {
-        const txRequest = isBuy
-            ? !referral
-                ? await ammContractWithSigner.populateTransaction.buyFromAMM(
-                      marketAddress,
-                      side,
-                      parsedAmount,
-                      parsedTotal,
-                      parsedSlippage
-                  )
-                : await ammContractWithSigner.populateTransaction.buyFromAMMWithReferrer(
-                      marketAddress,
-                      side,
-                      parsedAmount,
-                      parsedTotal,
-                      parsedSlippage,
-                      referral
-                  )
-            : await ammContractWithSigner.populateTransaction.sellToAMM(
-                  marketAddress,
-                  side,
-                  parsedAmount,
-                  parsedTotal,
-                  parsedSlippage
-              );
-        return getL1FeeInWei(txRequest, snxJSConnector);
-    };
+    // const fetchL1Fee = async (
+    //     ammContractWithSigner: any,
+    //     marketAddress: string,
+    //     side: any,
+    //     parsedAmount: any,
+    //     parsedTotal: any,
+    //     parsedSlippage: any
+    // ) => {
+    //     const txRequest = isBuy
+    //         ? !referral
+    //             ? await ammContractWithSigner.populateTransaction.buyFromAMM(
+    //                   marketAddress,
+    //                   side,
+    //                   parsedAmount,
+    //                   parsedTotal,
+    //                   parsedSlippage
+    //               )
+    //             : await ammContractWithSigner.populateTransaction.buyFromAMMWithReferrer(
+    //                   marketAddress,
+    //                   side,
+    //                   parsedAmount,
+    //                   parsedTotal,
+    //                   parsedSlippage,
+    //                   referral
+    //               )
+    //         : await ammContractWithSigner.populateTransaction.sellToAMM(
+    //               marketAddress,
+    //               side,
+    //               parsedAmount,
+    //               parsedTotal,
+    //               parsedSlippage
+    //           );
+    //     return getL1FeeInWei(txRequest, snxJSConnector);
+    // };
 
     const fetchGasLimit = async (
         marketAddress: string,
@@ -253,16 +252,16 @@ const AMM: React.FC = () => {
             const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
             if (isL2) {
-                const l1FeeInWei = await fetchL1Fee(
-                    ammContractWithSigner,
-                    marketAddress,
-                    side,
-                    parsedAmount,
-                    parsedTotal,
-                    parsedSlippage
-                );
+                // const l1FeeInWei = await fetchL1Fee(
+                //     ammContractWithSigner,
+                //     marketAddress,
+                //     side,
+                //     parsedAmount,
+                //     parsedTotal,
+                //     parsedSlippage
+                // );
                 setGasLimit(MAX_L2_GAS_LIMIT);
-                setL1Fee(l1FeeInWei);
+                setL1Fee(0);
                 return MAX_L2_GAS_LIMIT;
             } else if (isPolygon) {
                 const gasLimit = isBuy
