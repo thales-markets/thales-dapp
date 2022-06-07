@@ -420,9 +420,9 @@ const Referral: React.FC = () => {
                     )}
                 </>
             </Container.Tab>
-            <Footer>
+            {/* <Footer>
                 <Trans i18nKey={'referral-page.disclaimer'} components={{ bold: <BoldText />, italic: <i /> }} />
-            </Footer>
+            </Footer> */}
         </>
     );
 };
@@ -431,14 +431,14 @@ const BoldText = styled.span`
     font-weight: 900;
 `;
 
-const Footer = styled.div`
-    position: absolute;
-    font-size: 12px;
-    width: 90%;
-    color: var(--primary-color);
-    bottom: 0;
-    margin-bottom: 10px;
-`;
+// const Footer = styled.div`
+//     position: absolute;
+//     font-size: 12px;
+//     width: 90%;
+//     color: var(--primary-color);
+//     bottom: 0;
+//     margin-bottom: 10px;
+// `;
 
 // const TextGradient = styled.div`
 //     position: absolute;
