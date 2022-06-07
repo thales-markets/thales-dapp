@@ -20,6 +20,28 @@ import { PaginationWrapper } from './MarketsTable';
 import { UI_COLORS } from 'constants/ui';
 import { OptionsMarkets } from 'types/options';
 
+const assetSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.asset.localeCompare(rowB.original.asset);
+};
+
+const ammSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
+    if (desc) {
+        return +rowA.values[columnId].props.red > +rowB.values[columnId].props.red ? 1 : -1;
+    } else {
+        return +rowA.values[columnId].props.green < +rowB.values[columnId].props.green ? 1 : -1;
+    }
+};
+
+const ammPriceSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
+    const leftPrice = rowA.values[columnId].props.red.slice(1);
+    const rightPrice = rowB.values[columnId].props.red.slice(1);
+    if (desc) {
+        return Math.abs(Number(leftPrice) - 0.5) < Math.abs(Number(rightPrice) - 0.5) ? 1 : -1;
+    } else {
+        return +rowA.values[columnId].props.green.slice(1) < +rowB.values[columnId].props.green.slice(1) ? 1 : -1;
+    }
+};
+
 const Table: React.FC<{
     optionsMarkets: OptionsMarkets;
     showOnlyLiquid: any;
@@ -32,27 +54,6 @@ const Table: React.FC<{
     const isL2OrPolygon = getIsOVM(networkId) || getIsPolygon(networkId);
 
     const { t } = useTranslation();
-
-    const ammSort = useMemo(
-        () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
-            if (desc) {
-                return +rowA.values[columnId].props.red > +rowB.values[columnId].props.red ? 1 : -1;
-            } else {
-                return +rowA.values[columnId].props.green < +rowB.values[columnId].props.green ? 1 : -1;
-            }
-        },
-        []
-    );
-
-    const ammPriceSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
-        const leftPrice = rowA.values[columnId].props.red.slice(1);
-        const rightPrice = rowB.values[columnId].props.red.slice(1);
-        if (desc) {
-            return Math.abs(Number(leftPrice) - 0.5) < Math.abs(Number(rightPrice) - 0.5) ? 1 : -1;
-        } else {
-            return +rowA.values[columnId].props.green.slice(1) < +rowB.values[columnId].props.green.slice(1) ? 1 : -1;
-        }
-    };
 
     const columns: Array<any> = useMemo(() => {
         return [
@@ -68,6 +69,7 @@ const Table: React.FC<{
                                 iconProps={{ type: 'asset' }}
                                 synthIconStyle={{ width: 32, height: 32 }}
                                 spanStyle={{ float: 'left' }}
+                                hideAssetName={true}
                             />
                             {currencyKeyToDataFeedSourceMap[row?.currencyKey]?.source == 'TWAP' && (
                                 <Tooltip
@@ -82,6 +84,7 @@ const Table: React.FC<{
                         </>
                     );
                 },
+                sortType: assetSort(),
             },
             {
                 id: 'strikePrice',
@@ -123,7 +126,7 @@ const Table: React.FC<{
                                   </YellowText>
                               );
                           },
-                          sortType: ammSort,
+                          sortType: ammSort(),
                       },
                   ]
                 : []),
@@ -205,6 +208,7 @@ const Table: React.FC<{
     // Custom global search filter -> useTable
     const ourGlobalFilterFunction = useCallback((rows: any, _columnIds: string[], filterValue: any) => {
         if (!filterValue) return rows;
+
         return rows.filter(
             (row: any) =>
                 row?.original?.asset.toLowerCase().includes(filterValue.toLowerCase()) ||
