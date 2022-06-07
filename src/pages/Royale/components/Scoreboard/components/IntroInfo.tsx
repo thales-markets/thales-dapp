@@ -116,9 +116,11 @@ const Intro: React.FC = () => {
             if (timeLeftUntilNewSeason) {
                 return (
                     <>
-                        <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
+                        {!ROYALE_OF_ROYALES_NEXT && <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>}
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                            {timeLeftUntilNewSeason
+                            {ROYALE_OF_ROYALES_NEXT
+                                ? t('options.royale.scoreboard.royale-of-royales-coming-soon')
+                                : timeLeftUntilNewSeason
                                 ? lessThanADayBeforeSeason()
                                     ? format(timeLeftUntilNewSeason, '00:HH:mm:ss')
                                     : format(timeLeftUntilNewSeason, 'dd:HH:mm:ss')
