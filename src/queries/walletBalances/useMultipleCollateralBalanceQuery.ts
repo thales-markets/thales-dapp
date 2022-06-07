@@ -33,18 +33,18 @@ const useMultipleCollateralBalanceQuery = (
                     : undefined;
 
                 return {
-                    sUSDBalance: sUSDBalance ? parseInt(sUSDBalance) / 10 ** STABLE_DECIMALS.sUSD : 0,
-                    DAIBalance: DAIBalance ? parseInt(DAIBalance) / 10 ** STABLE_DECIMALS.DAI : 0,
-                    USDCBalance: USDCBalance ? parseInt(USDCBalance) / 10 ** STABLE_DECIMALS.USDC : 0,
-                    USDTBalance: USDTBalance ? parseInt(USDTBalance) / 10 ** STABLE_DECIMALS.USDT : 0,
+                    sUSD: sUSDBalance ? parseInt(sUSDBalance) / 10 ** STABLE_DECIMALS.sUSD : 0,
+                    DAI: DAIBalance ? parseInt(DAIBalance) / 10 ** STABLE_DECIMALS.DAI : 0,
+                    USDC: USDCBalance ? parseInt(USDCBalance) / 10 ** STABLE_DECIMALS.USDC : 0,
+                    USDT: USDTBalance ? parseInt(USDTBalance) / 10 ** STABLE_DECIMALS.USDT : 0,
                 };
             } catch (e) {
                 console.log('e ', e);
                 return {
-                    sUSDBalance: 0,
-                    DAIBalance: 0,
-                    USDCBalance: 0,
-                    USDTBalance: 0,
+                    sUSD: 0,
+                    DAI: 0,
+                    USDC: 0,
+                    USDT: 0,
                 };
             }
         },

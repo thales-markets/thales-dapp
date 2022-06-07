@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
@@ -29,12 +29,25 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { refetchAmmData, refetchTrades, refetchUserBalance, refetchUserTrades } from 'utils/queryConnector';
-import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithKey,
+    formatCurrencyWithSign,
+    formatPercentage,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
-import { AccountMarketInfo, OrderSide, OptionSide } from 'types/options';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
+import { AccountMarketInfo, OrderSide, OptionSide, StableCoins } from 'types/options';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import {
+    COLLATERALS_INDEX,
+    MAX_L2_GAS_LIMIT,
+    MINIMUM_AMM_LIQUIDITY,
+    MIN_SCEW_IMPACT,
+    SIDE,
+    SLIPPAGE_PERCENTAGE,
+} from 'constants/options';
 import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
@@ -46,6 +59,8 @@ import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import { getReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
+import Select from 'components/SelectNew';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -65,7 +80,6 @@ const AMM: React.FC = () => {
             ? getReferralWallet()
             : null;
 
-    console.log('referral', referral);
     const { trackEvent } = useMatomo();
 
     const orderSideOptions = [
@@ -105,6 +119,7 @@ const AMM: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
+    const [selectedStableIndex, setStableIndex] = useState<number>(0);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket?.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!optionsMarket?.address,
@@ -144,6 +159,32 @@ const AMM: React.FC = () => {
     const insufficientBalance = isBuy
         ? sUSDBalance < Number(total) || !sUSDBalance
         : tokenBalance < Number(amount) || !tokenBalance;
+
+    const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
+        enabled: isAppReady && walletAddress !== '',
+    });
+
+    const stableListBalances = useMemo(() => {
+        if (multipleStableBalances?.isSuccess && multipleStableBalances?.data) {
+            const list = [];
+
+            for (const [key, value] of Object.entries(multipleStableBalances?.data)) {
+                list.push({
+                    index: COLLATERALS_INDEX[key as StableCoins],
+                    title: key,
+                    subValue: formatCurrencyWithSign(USD_SIGN, Number(value)),
+                });
+            }
+
+            if (list?.length) {
+                return list;
+            }
+        }
+
+        return [];
+    }, [multipleStableBalances?.isLoading]);
+
+    console.log('multipleStableBalances ', multipleStableBalances);
 
     const isButtonDisabled =
         !isTotalEntered ||
@@ -805,6 +846,12 @@ const AMM: React.FC = () => {
                 }
                 subValue={getStableCoinForNetwork(networkId)}
                 valueEditDisable={true}
+            />
+            <Select
+                title={'Pay with'}
+                optionsArray={stableListBalances}
+                selectedOption={selectedStableIndex}
+                onChangeOption={(index) => setStableIndex(index)}
             />
             <Input
                 title={t(`amm.total-${orderSide.value}-label`)}
