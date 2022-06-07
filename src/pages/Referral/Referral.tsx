@@ -433,6 +433,7 @@ const BoldText = styled.span`
 
 const Footer = styled.div`
     position: absolute;
+    font-size: 12px;
     width: 90%;
     color: var(--primary-color);
     bottom: 0;
