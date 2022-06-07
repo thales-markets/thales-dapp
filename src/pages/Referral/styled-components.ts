@@ -11,7 +11,7 @@ export const FormWrapper = styled.div`
 
 export const Label = styled.span`
     font-size: 21px;
-    line-height: 31px;
+    line-height: 21px;
     color: var(--primary-color);
 `;
 
@@ -31,10 +31,10 @@ export const KeyValue = styled.span`
     justify-content: space-between;
 `;
 
-export const StatLabel = styled.span`
+export const StatLabel = styled.span<{ color?: string }>`
     font-size: 21px;
     line-height: 26.53px;
-    color: var(--primary-color);
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
 `;
 
 export const StatValue = styled(StatLabel)<{ customColor?: string }>`
@@ -66,10 +66,15 @@ export const DescriptionContainer = styled.div`
     }
 `;
 
-export const Text = styled.p`
+export const Text = styled.p<{ height?: string }>`
     color: var(--primary-color);
     font-size: 16px;
+    font-weight: 100 !important;
     line-height: 150%;
+    height: ${(_props) => (_props?.height ? _props.height : '')};
+    transition: height 0.3s ease-out;
+    overflow: hidden;
+    font-family: 'Roboto Thin' !important;
 `;
 
 export const TableWrapper = styled.div`

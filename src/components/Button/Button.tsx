@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
 
 type ButtonProps = {
@@ -16,6 +16,7 @@ type ButtonProps = {
     onClickHandler?: () => void;
     fontSize?: string;
     disabled?: boolean;
+    additionalStyles?: CSSProperties;
     children?: any;
 };
 
@@ -33,6 +34,7 @@ const Button: React.FC<ButtonProps> = ({
     margin,
     onClickHandler,
     disabled,
+    additionalStyles,
     fontSize,
     children,
 }) => {
@@ -52,6 +54,7 @@ const Button: React.FC<ButtonProps> = ({
             onClick={() => (onClickHandler ? onClickHandler() : '')}
             disabled={disabled}
             fontSize={fontSize}
+            style={additionalStyles}
         >
             {children}
         </Wrapper>

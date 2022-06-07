@@ -134,6 +134,7 @@
         "statistics": {
             "trades": "Trades",
             "total-volume": "Total Volume",
+            "total-fees": "Total Trading Fees",
             "earned": "Earned"
         },
         "table": {
@@ -155,9 +156,12 @@
                 "affiliate-leaderboard": "Affiliate leaderboard"
             }
         },
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in sUSD instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.<br><br>To kick-start this referral program, in addition to the fees earned by the traders you refer, there will be 20,000 OP tokens to be distributed, at Thales Council discretion, among those that make the top in the Affiliate Leaderboard.",
+        "disclaimer": "We strongly advise affiliates to stay compliant with the regulatory guidelines on testimonials and endorsements from their respective countries or jurisdictions. We suggest all endorsements, reviews, testimonials on Thales' products and services, as well as relationships between other types of content websites (forums, blogs, microblogs, and other Social Media channels) and Thales are clearly disclosed. The end-user of Thales' products and services has the right to be informed, and understand, when he is directed to Thales website through a referral link. In addition, you may not in any manner misrepresent or embellish the relationship between Thales platform (or any of its products and services) and you. Thales Council in its sole discretion, has the right to suspend or end this Referral Program.<br>Thales' terms and conditions of use also apply to the use of this referral links platform."
     },
     "common": {
+        "read-more": "Read more",
+        "show-less": "Show less",
         "max": "max",
         "save": "Save",
         "network-fee-gas": "Network fee (gas)",

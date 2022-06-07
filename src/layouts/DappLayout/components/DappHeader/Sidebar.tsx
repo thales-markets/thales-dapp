@@ -70,7 +70,7 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.leaderboard-label')}
                     />
                 )}
-                {false && (
+                {!isPolygon && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Referral ? 'selected' : ''

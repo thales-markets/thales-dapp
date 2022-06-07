@@ -5,11 +5,13 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 
 import UserSwap from './UserSwap';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const MenuCardComponent = lazy(() => import(/* webpackChunkName: "MenuCardComponent" */ './MenuCard'));
 
 const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
+    const { trackEvent } = useMatomo();
 
     useEffect(() => {
         document.getElementsByTagName('body')[0]?.style.setProperty('overflow', showCard ? 'hidden' : 'auto');
@@ -21,6 +23,10 @@ const UserCard: React.FC = () => {
             <UserWallet />
             <MenuCardButton
                 onClick={() => {
+                    trackEvent({
+                        category: 'dAppHeader',
+                        action: 'click-on-open-user-card',
+                    });
                     setShowCard(!showCard);
                 }}
             >

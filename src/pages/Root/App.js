@@ -10,7 +10,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
-import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
 import { setTheme } from 'redux/modules/ui';
 import {
     getEthereumNetwork,
@@ -24,8 +24,8 @@ import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import Cookies from 'universal-cookie';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { ethers } from 'ethers';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -48,21 +48,37 @@ const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '.
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
 const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
-// const Referral = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Referral'));
+const Referral = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Referral'));
 
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
+    const walletAddress = useSelector((state) => getWalletAddress(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
     // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
-    const { trackPageView } = useMatomo();
     const [snxJSConnector, setSnxJSConnector] = useState();
-
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
+    const { trackPageView } = useMatomo();
+
     queryConnector.setQueryClient();
+
+    useEffect(() => {
+        trackPageView({
+            customDimensions: [
+                {
+                    id: 3,
+                    value: Number(cookies.get('home-theme')) == 0 ? 0 : 1,
+                },
+                {
+                    id: 4,
+                    value: walletAddress ? true : false,
+                },
+            ],
+        });
+    }, [walletAddress]);
 
     const cookies = new Cookies();
 
@@ -93,7 +109,7 @@ const App = () => {
             }
         };
         init().then(() => console.log('rdy'));
-        trackPageView();
+
         const handler = (e) => {
             setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
         };
@@ -243,13 +259,13 @@ const App = () => {
                             </Route>
                         )}
 
-                        {/* {!isPolygon && (
+                        {!isPolygon && (
                             <Route exact path={ROUTES.Options.Referral}>
                                 <DappLayout>
                                     <Referral />
                                 </DappLayout>
                             </Route>
-                        )} */}
+                        )}
 
                         {isPolygon && (
                             <Route exact path={ROUTES.Options.Leaderboard}>

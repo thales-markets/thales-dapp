@@ -321,12 +321,12 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
 
         const result = new Set(Array.from(set).sort(sortCurrencies));
 
-        const selectedAssetsCookie = cookies.get('selectedAssets' + networkId);
+        const selectedAssetsCookie = localStorage.getItem('selectedAssets' + networkId);
 
         setAllAssets(result);
         setSelectedAssets(
             selectedAssetsCookie
-                ? selectedAssetsCookie.filter((a: string) => result.has(a))
+                ? JSON.parse(selectedAssetsCookie).filter((a: string) => result.has(a))
                 : [...(allAssets as any)].slice(0, FILTERS_LENGTH)
         );
 

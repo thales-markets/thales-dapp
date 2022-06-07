@@ -45,6 +45,7 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import { getReferralWallet } from 'utils/referral';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -59,7 +60,13 @@ const AMM: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
 
-    const referral = getReferralWallet();
+    const referral =
+        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
+            ? getReferralWallet()
+            : null;
+
+    console.log('referral', referral);
+    const { trackEvent } = useMatomo();
 
     const orderSideOptions = [
         {
@@ -500,6 +507,18 @@ const AMM: React.FC = () => {
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');
+
+                if (isBuy) {
+                    trackEvent({
+                        category: 'AMM',
+                        action: 'buy-from-amm',
+                    });
+                } else {
+                    trackEvent({
+                        category: 'AMM',
+                        action: 'sell-to-amm',
+                    });
+                }
             }
         } catch (e) {
             console.log(e);
@@ -656,6 +675,10 @@ const AMM: React.FC = () => {
     };
 
     const onMaxClick = async (isBuy: boolean) => {
+        trackEvent({
+            category: 'AMM',
+            action: 'click-on-max-button',
+        });
         if (isBuy) {
             const { ammContract } = snxJSConnector as any;
             const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);

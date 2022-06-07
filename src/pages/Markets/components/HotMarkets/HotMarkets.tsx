@@ -7,10 +7,11 @@ import HotMarketCard from '../MarketsCard/HotMarketCard';
 import HotMarketCardSceleton from 'components/HotMarketSceleton/HotMarketCardSceleton';
 import { formatCurrencyWithSign, formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
-import Hammer from 'hammerjs';
+import Hammer, { DIRECTION_HORIZONTAL } from 'hammerjs';
 import Tooltip from 'components/Tooltip';
 import { PHASE } from 'constants/options';
 import { USD_SIGN } from 'constants/currency';
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -31,6 +32,9 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
+
+    const { trackEvent } = useMatomo();
+
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
 
@@ -68,8 +72,16 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const moveLeft = () => {
         if (firstHotIndex === 0) setFirstHotIndex(currentMarkets.length - 1 - CARDS_TO_SHOW);
         if (firstHotIndex > 0) setFirstHotIndex(firstHotIndex - 1);
+        trackEvent({
+            category: 'Markets',
+            action: 'move-left-hot-markets',
+        });
     };
     const moveRight = () => {
+        trackEvent({
+            category: 'Markets',
+            action: 'move-right-hot-markets',
+        });
         setFirstHotIndex(firstHotIndex + CARDS_TO_SHOW < currentMarkets.length - 1 ? firstHotIndex + 1 : 0);
     };
 
@@ -86,7 +98,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 }
 
                 if (window.innerWidth <= 1250) {
-                    const swipe = new Hammer.Swipe();
+                    const swipe = new Hammer.Swipe({ direction: DIRECTION_HORIZONTAL });
                     hammer.add(swipe);
                     hammer.on('swipeleft', moveRight);
                     hammer.on('swiperight', moveLeft);

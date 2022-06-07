@@ -15,7 +15,7 @@ import {
 } from './styled-components';
 // import InputWithIcon from 'components/InputWithIcon';
 import Button from 'components/Button';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import Table from 'components/TableV2';
@@ -36,6 +36,9 @@ import { orderBy } from 'lodash';
 import SelectInput from 'components/SelectInput';
 import InputWithIcon from 'components/InputWithIcon';
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import { UI_COLORS } from 'constants/ui';
+import ReadMoreButton from 'components/ReadMoreButton';
 
 const Tabs = [
     {
@@ -61,7 +64,8 @@ const Referral: React.FC = () => {
     const [tabIndex, setTabIndex] = useState<number>(Tabs[0].id);
     const [landingPage, setLandingPage] = useState<number | undefined>(0);
     const [referralLink, setReferralLink] = useState<string>('');
-
+    const [showMore, setShowMore] = useState<boolean>(false);
+    const [textHeight, setHeight] = useState<string>('170px');
     const { t } = useTranslation();
 
     const landingPageOptions = [
@@ -76,22 +80,6 @@ const Referral: React.FC = () => {
         {
             value: 2,
             label: t('referral-page.pages.landing-page'),
-        },
-        {
-            value: 3,
-            label: t('referral-page.pages.token-page'),
-        },
-        {
-            value: 4,
-            label: t('referral-page.pages.royale-page'),
-        },
-        {
-            value: 5,
-            label: t('referral-page.pages.tale-of-thales'),
-        },
-        {
-            value: 6,
-            label: t('referral-page.pages.governance'),
         },
     ];
 
@@ -110,7 +98,7 @@ const Referral: React.FC = () => {
 
     const transactionData: ReferralTransactions[] | [] = useMemo(() => {
         if (transactionsQuery.isSuccess && transactionsQuery.data && walletAddress) {
-            return transactionsQuery.data;
+            return orderBy(transactionsQuery.data, ['timestamp'], ['desc']);
         }
 
         return [];
@@ -187,6 +175,12 @@ const Referral: React.FC = () => {
         }
     };
 
+    const handleReadMore = () => {
+        if (!showMore) setHeight('470px');
+        if (showMore) setHeight('170px');
+        setShowMore(!showMore);
+    };
+
     return (
         <>
             <HeaderContainer>
@@ -202,14 +196,18 @@ const Referral: React.FC = () => {
                     {/* <Label>{t('referral-page.form-label')}</Label> */}
                     <Button
                         padding={'5px 0px'}
-                        margin={'9px 0px 16px 0'}
+                        margin={'9px 0px 9px 0'}
                         active={true}
                         hoverShadow={'var(--button-shadow)'}
                         onClickHandler={generateLinkHandler}
                     >
                         {t('referral-page.generate-link-btn')}
                     </Button>
-                    <InputWithIcon text={referralLink} onIconClick={() => copyLink()} />
+                    <InputWithIcon
+                        text={referralLink}
+                        onIconClick={() => copyLink()}
+                        customIconClass={'icon icon--copy'}
+                    />
                 </FormWrapper>
                 <StatisticsWrapper>
                     <KeyValue>
@@ -221,12 +219,25 @@ const Referral: React.FC = () => {
                         <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume, 2)}</StatValue>
                     </KeyValue>
                     <KeyValue>
-                        <StatLabel>{t('referral-page.statistics.earned')}</StatLabel>
-                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned, 2)}</StatValue>
+                        <StatLabel>{t('referral-page.statistics.total-fees')}</StatLabel>
+                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume * 0.02, 2)}</StatValue>
+                    </KeyValue>
+                    <KeyValue>
+                        <StatLabel color={UI_COLORS.GREEN}>{t('referral-page.statistics.earned')}</StatLabel>
+                        <StatValue color={UI_COLORS.GREEN}>
+                            {formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned, 2)}
+                        </StatValue>
                     </KeyValue>
                 </StatisticsWrapper>
                 <DescriptionContainer>
-                    <Text>{t('referral-page.description')}</Text>
+                    <Text height={textHeight}>
+                        <Trans
+                            i18nKey={'referral-page.description'}
+                            components={{ bold: <BoldText />, italic: <i /> }}
+                        />
+                        {/* <TextGradient /> */}
+                    </Text>
+                    <ReadMoreButton onClick={handleReadMore} active={showMore} />
                 </DescriptionContainer>
             </HeaderContainer>
             <Container.Main justifyContent="flex-start" hide={false}>
@@ -282,11 +293,15 @@ const Referral: React.FC = () => {
                                         sortable: true,
                                     },
                                     {
+                                        id: 'amount',
                                         Header: <>{t('referral-page.table.earned')}</>,
-                                        accessor: 'amount',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                        // accessor: 'amount',
+                                        accessor: (row: any) => (
+                                            <p>{formatCurrencyWithSign(USD_SIGN, row.amount, 2)}</p>
                                         ),
+                                        // Cell: (cellProps: any) => (
+                                        //     <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                        // ),
                                         sortable: true,
                                     },
                                     {
@@ -405,8 +420,46 @@ const Referral: React.FC = () => {
                     )}
                 </>
             </Container.Tab>
+            {/* <Footer>
+                <Trans i18nKey={'referral-page.disclaimer'} components={{ bold: <BoldText />, italic: <i /> }} />
+            </Footer> */}
         </>
     );
 };
+
+const BoldText = styled.span`
+    font-weight: 900;
+`;
+
+// const Footer = styled.div`
+//     position: absolute;
+//     font-size: 12px;
+//     width: 90%;
+//     color: var(--primary-color);
+//     bottom: 0;
+//     margin-bottom: 10px;
+// `;
+
+// const TextGradient = styled.div`
+//     position: absolute;
+//     z-index: 2;
+//     right: 0;
+//     bottom: 0;
+//     left: 0;
+//     height: 100px; /* adjust it to your needs */
+//     background: url(data:image/svg+xml;base64,alotofcodehere);
+//     background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+//     background: -webkit-gradient(
+//         linear,
+//         left top,
+//         left bottom,
+//         color-stop(0%, rgba(255, 255, 255, 0)),
+//         color-stop(70%, rgba(255, 255, 255, 1))
+//     );
+//     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+//     background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+//     background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+//     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
+// `;
 
 export default Referral;
