@@ -39,6 +39,8 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { UI_COLORS } from 'constants/ui';
 import ReadMoreButton from 'components/ReadMoreButton';
+import Tooltip from 'components/Tooltip';
+import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 
 const Tabs = [
     {
@@ -420,6 +422,25 @@ const Referral: React.FC = () => {
                     )}
                 </>
             </Container.Tab>
+            <Footer>
+                {'By sharing a referral link you consent to the disclaimer'}
+                <Tooltip
+                    message={t('referral-page.disclaimer')}
+                    type={'info'}
+                    iconColor={'var(--primary-color)'}
+                    container={{ width: '15px' }}
+                    interactive={true}
+                />
+                {'and'}{' '}
+                <a
+                    target="_blank"
+                    rel="noreferrer"
+                    href={termsOfUse}
+                    style={{ color: 'var(--primary-color)', marginLeft: '5px', textDecoration: 'underline' }}
+                >
+                    {' terms'}
+                </a>
+            </Footer>
             {/* <Footer>
                 <Trans i18nKey={'referral-page.disclaimer'} components={{ bold: <BoldText />, italic: <i /> }} />
             </Footer> */}
@@ -431,14 +452,16 @@ const BoldText = styled.span`
     font-weight: 900;
 `;
 
-// const Footer = styled.div`
-//     position: absolute;
-//     font-size: 12px;
-//     width: 90%;
-//     color: var(--primary-color);
-//     bottom: 0;
-//     margin-bottom: 10px;
-// `;
+const Footer = styled.div`
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    font-size: 16px;
+    width: 90%;
+    color: var(--primary-color);
+    bottom: 0;
+    margin-bottom: 10px;
+`;
 
 // const TextGradient = styled.div`
 //     position: absolute;
