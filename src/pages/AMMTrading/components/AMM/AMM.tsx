@@ -54,7 +54,7 @@ import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
-import { getStableCoinForNetwork } from 'utils/currency';
+import { checkMultipleStableBalances, getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import { getReferralWallet } from 'utils/referral';
@@ -183,6 +183,14 @@ const AMM: React.FC = () => {
 
         return [];
     }, [multipleStableBalances?.isLoading]);
+
+    // If sUSD balance is zero, select first stable with nonzero value as default
+    useEffect(() => {
+        if (multipleStableBalances?.data && multipleStableBalances?.isSuccess) {
+            const defaultStableBalance = checkMultipleStableBalances(multipleStableBalances?.data);
+            setStableIndex(defaultStableBalance);
+        }
+    }, [multipleStableBalances?.data]);
 
     const isButtonDisabled =
         !isTotalEntered ||

@@ -6,6 +6,8 @@ import {
     SYNTHS_MAP,
     currencyKeyToNameMap,
 } from 'constants/currency';
+import { COLLATERALS_INDEX } from 'constants/options';
+import { StableCoins } from 'types/options';
 import { getIsPolygon } from './network';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
@@ -51,4 +53,25 @@ export const sortCurrencies = (a: string, b: string) => {
     if (a > b) return 1;
 
     return 0;
+};
+
+type StableBalances = {
+    sUSD: number | null;
+    DAI: number | null;
+    USDC: number | null;
+    USDT: number | null;
+};
+
+export const checkMultipleStableBalances = (balancesObject: any) => {
+    let index = COLLATERALS_INDEX['sUSD'];
+    if (balancesObject?.sUSD == 0) {
+        for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
+            if (value && value > 0) {
+                index = COLLATERALS_INDEX[key as StableCoins];
+                break;
+            }
+        }
+    }
+
+    return index;
 };
