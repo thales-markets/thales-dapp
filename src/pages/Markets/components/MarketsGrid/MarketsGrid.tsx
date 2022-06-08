@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 
-import { OptionsMarkets, GridFilters } from 'types/options';
+import { OptionsMarkets, GridFilters, SortOption } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 import { FlexDiv } from 'theme/common';
@@ -11,6 +11,8 @@ import { PaginationWrapper } from '../MarketsTable/MarketsTable';
 
 import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
+import { useTranslation } from 'react-i18next';
+import SortingMenu from 'components/SortingMenu';
 
 type MarketsGridProps = {
     optionsMarkets: OptionsMarkets;
@@ -23,75 +25,150 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [dataCount, setDataCount] = useState<number>(optionsMarkets?.length || 0);
 
+    const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
+
+    const { t } = useTranslation();
+
+    const GridSortFilters: Array<SortOption> = [
+        {
+            property: 'asset',
+            displayName: t(`options.home.markets-table.asset-col`),
+            desc: false,
+            asc: false,
+        },
+        {
+            property: 'strikePrice',
+            displayName: t(`options.home.markets-table.strike-price-col`),
+            desc: false,
+            asc: false,
+        },
+        {
+            property: 'currentAssetPrice',
+            displayName: t(`options.home.markets-table.current-asset-price-col`),
+            desc: false,
+            asc: false,
+        },
+        {
+            property: 'timeRemaining',
+            displayName: t(`options.home.markets-table.time-remaining-col`),
+            desc: false,
+            asc: false,
+        },
+        {
+            property: 'phase',
+            displayName: t(`options.home.markets-table.phase-col`),
+            desc: false,
+            asc: false,
+        },
+    ];
+
+    const [sortOptions, setSortOptions] = useState(GridSortFilters);
+
     const options = useMemo(() => {
         let data = optionsMarkets;
+        console.log('sort');
+        if (data.length > 0) {
+            if (filters?.assetFilters?.length) {
+                data = data.filter((market) => {
+                    return filters.assetFilters.includes(market.currencyKey);
+                });
+            }
 
-        if (filters?.assetFilters?.length) {
-            data = data.filter((market) => {
-                return filters.assetFilters.includes(market.currencyKey);
-            });
+            if (filters?.showOnlyLiquid) {
+                data = data.filter((market) => {
+                    return market.availableLongs > 0 || market.availableShorts > 0;
+                });
+            }
+
+            if (filters?.searchQuery) {
+                data = data.filter((market) => {
+                    if (market?.asset.toLowerCase().includes(filters.searchQuery.toLowerCase())) return market;
+                    if (market?.strikePrice.toFixed(2).includes(filters.searchQuery)) return market;
+                    if (exchangeRates && exchangeRates[market.currencyKey]) {
+                        if (exchangeRates[market.currencyKey].toFixed(2).includes(filters.searchQuery)) return market;
+                    }
+                    if (market?.phase.includes(filters.searchQuery)) return market;
+                });
+            }
+
+            if (sortOptions.length) {
+                sortOptions.forEach((sort) => {
+                    if (sort?.property && typeof (data as any)[0][sort.property] == 'number') {
+                        if (sort.asc) data = _.orderBy(data, [sort.property], 'asc');
+                        if (sort.desc) data = _.orderBy(data, [sort.property], 'desc');
+                    }
+
+                    if (sort?.property && typeof (data as any)[0][sort?.property] == 'string') {
+                        if (sort.asc) data = _.orderBy(data, [sort.property], 'asc');
+                        if (sort.desc) data = _.orderBy(data, [sort.property], 'desc');
+                    }
+                });
+            }
+
+            setDataCount(data?.length || 0);
+            data = data.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage);
+
+            return data;
         }
-
-        if (filters?.showOnlyLiquid) {
-            data = data.filter((market) => {
-                return market.availableLongs > 0 || market.availableShorts > 0;
-            });
-        }
-
-        if (filters?.searchQuery) {
-            data = data.filter((market) => {
-                if (market?.asset.toLowerCase().includes(filters.searchQuery.toLowerCase())) return market;
-                if (market?.strikePrice.toFixed(2).includes(filters.searchQuery)) return market;
-                if (exchangeRates && exchangeRates[market.currencyKey]) {
-                    if (exchangeRates[market.currencyKey].toFixed(2).includes(filters.searchQuery)) return market;
-                }
-                if (market?.phase.includes(filters.searchQuery)) return market;
-            });
-        }
-
-        if (filters?.sort?.length) {
-            filters.sort.forEach((sort) => {
-                if (sort?.column && typeof (data as any)[0][sort.column] == 'number') {
-                    if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
-                    if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
-                }
-
-                if (sort?.column && typeof (data as any)[0][sort?.column] == 'string') {
-                    if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
-                    if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
-                }
-            });
-        }
-
-        setDataCount(data?.length || 0);
-        data = data.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage);
-
-        return data;
-    }, [optionsMarkets, exchangeRates, filters, pageIndex, rowsPerPage]);
+    }, [optionsMarkets, exchangeRates, filters, pageIndex, rowsPerPage, sortOptions]);
 
     useEffect(() => {
         setPageIndex(0);
     }, [filters]);
 
+    const updateSortOptions = (index: number) => {
+        const newSortOptions = [...sortOptions];
+
+        if (newSortOptions[index].asc) {
+            newSortOptions[index].asc = false;
+            newSortOptions[index].desc = true;
+        } else if (newSortOptions[index].desc) {
+            newSortOptions[index].asc = false;
+            newSortOptions[index].desc = false;
+        } else if (!newSortOptions[index].asc && !newSortOptions[index].desc) {
+            newSortOptions[index].asc = true;
+        }
+
+        newSortOptions.forEach((item, itemIndex) => {
+            if (index == itemIndex) return;
+            item.asc = false;
+            item.desc = false;
+        });
+
+        setSortOptions(newSortOptions);
+    };
+
     return (
-        <Wrapper>
-            {options &&
-                options.map((optionMarket, index) => {
-                    return (
-                        <SPAAnchor key={index} href={buildOptionsMarketLink(optionMarket.address)}>
-                            <MarketCard optionMarket={optionMarket} exchangeRates={exchangeRates} />{' '}
-                        </SPAAnchor>
-                    );
-                })}
-            <PaginationWrapper
-                rowsPerPageOptions={[9, 12, 15, 18]}
-                count={dataCount}
-                rowsPerPage={rowsPerPage}
-                page={pageIndex}
-                onPageChange={(_event: any, newPage: number) => setPageIndex(newPage)}
-                onRowsPerPageChange={(event: any) => setRowsPerPage(parseInt(event.target.value, 10))}
-            />
-        </Wrapper>
+        <>
+            <ButtonWrapper>
+                <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
+            </ButtonWrapper>
+            {showSorting && (
+                <SortingMenu
+                    setShowSorting={setShowSorting}
+                    items={sortOptions}
+                    itemClickEventHandler={updateSortOptions}
+                />
+            )}
+            <Wrapper>
+                {options &&
+                    options.map((optionMarket, index) => {
+                        return (
+                            <SPAAnchor key={index} href={buildOptionsMarketLink(optionMarket.address)}>
+                                <MarketCard optionMarket={optionMarket} exchangeRates={exchangeRates} />{' '}
+                            </SPAAnchor>
+                        );
+                    })}
+                <PaginationWrapper
+                    rowsPerPageOptions={[9, 12, 15, 18]}
+                    count={dataCount}
+                    rowsPerPage={rowsPerPage}
+                    page={pageIndex}
+                    onPageChange={(_event: any, newPage: number) => setPageIndex(newPage)}
+                    onRowsPerPageChange={(event: any) => setRowsPerPage(parseInt(event.target.value, 10))}
+                />
+            </Wrapper>
+        </>
     );
 };
 
@@ -101,6 +178,33 @@ const Wrapper = styled(FlexDiv)`
     justify-content: center;
     @media (max-width: 1250px) {
         max-width: 1140px;
+    }
+`;
+
+const ButtonWrapper = styled.div`
+    width: 100%;
+    position: relative;
+`;
+
+const FiltersButton = styled.div`
+    display: none;
+    padding: 6px 20px;
+    border: 1.5px solid rgba(100, 217, 254, 0.5);
+    box-sizing: border-box;
+    border-radius: 30px;
+    background: transparent;
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 11px;
+    text-transform: uppercase;
+    color: #64d9fe;
+    @media (max-width: 768px) {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: -30px;
     }
 `;
 
