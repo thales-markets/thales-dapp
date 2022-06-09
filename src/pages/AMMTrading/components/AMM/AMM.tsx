@@ -68,6 +68,7 @@ import { getReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import Select from 'components/SelectNew';
+import CollateralSelector from 'components/CollateralSelector';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -938,6 +939,11 @@ const AMM: React.FC = () => {
                     {t('options.common.short')}
                 </Button>
             </ButtonWrapper>
+            <CollateralSelector
+                collateralArray={COLLATERALS}
+                selectedItem={selectedStableIndex}
+                onChangeCollateral={(index) => setStableIndex(index)}
+            />
             <Input
                 title={t('options.market.trade-options.place-order.amount-label', {
                     orderSide: orderSide.value.toUpperCase(),
