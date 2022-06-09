@@ -105,7 +105,6 @@ const AMM: React.FC = () => {
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase() && !isPolygon
             ? getReferralWallet()
             : null;
-    console.log('referral ', referral);
 
     const rawParams = useLocation();
     const queryParams = queryString.parse(rawParams?.search);

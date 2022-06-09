@@ -105,8 +105,6 @@ const AMM: React.FC = () => {
             ? getReferralWallet()
             : null;
 
-    console.log('referral ', referral);
-
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket?.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!optionsMarket?.address,
     });
