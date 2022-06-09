@@ -60,11 +60,6 @@ const AMM: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
 
-    const referral =
-        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
-            ? getReferralWallet()
-            : null;
-
     const { trackEvent } = useMatomo();
 
     const orderSideOptions = [
@@ -104,6 +99,13 @@ const AMM: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
+
+    const referral =
+        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase() && !isPolygon
+            ? getReferralWallet()
+            : null;
+
+    console.log('referral ', referral);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket?.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!optionsMarket?.address,
