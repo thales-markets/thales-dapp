@@ -30,7 +30,11 @@ export const getSynthName = (currencyKey: string) =>
 export const getSynthAsset = (currencyKey: string) =>
     SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
 
-export const getStableCoinForNetwork = (networkId: number) => {
+export const getStableCoinForNetwork = (networkId: number, customStable?: StableCoins) => {
+    if (customStable) {
+        return customStable;
+    }
+
     if (getIsPolygon(networkId)) {
         return CRYPTO_CURRENCY_MAP.USDC;
     }
@@ -74,4 +78,11 @@ export const checkMultipleStableBalances = (balancesObject: any) => {
     }
 
     return index;
+};
+
+export const getStableCoinBalance = (balancesQueryObject: any, currency: StableCoins) => {
+    if (balancesQueryObject[currency]) {
+        return balancesQueryObject[currency];
+    }
+    return 0;
 };

@@ -28,7 +28,13 @@ import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuer
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import { refetchAmmData, refetchTrades, refetchUserBalance, refetchUserTrades } from 'utils/queryConnector';
+import {
+    refetchAmmData,
+    refetchTrades,
+    refetchUserBalance,
+    refetchUserTrades,
+    refetchWalletBalances,
+} from 'utils/queryConnector';
 import {
     formatCurrency,
     formatCurrencyWithKey,
@@ -55,7 +61,7 @@ import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
-import { checkMultipleStableBalances, getStableCoinForNetwork } from 'utils/currency';
+import { checkMultipleStableBalances, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE, ZERO_ADDRESS } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import { getReferralWallet } from 'utils/referral';
@@ -116,6 +122,7 @@ const AMM: React.FC = () => {
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
+    const isNonDefaultStable = selectedStableIndex !== 0 && !isPolygon;
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase() && !isPolygon
@@ -139,31 +146,6 @@ const AMM: React.FC = () => {
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-    const walletBalancesMap =
-        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
-            ? { synths: synthsWalletBalancesQuery.data }
-            : null;
-    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
-
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
-        enabled: isAppReady && !!optionsMarket?.address,
-    });
-    const ammMaxLimits =
-        ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? (ammMaxLimitsQuery.data as AmmMaxLimits) : undefined;
-
-    const collateral = snxJSConnector.collateral;
-    const multiCollateral = snxJSConnector.multipleCollateral;
-    const isBuy = orderSide.value === 'buy';
-    const isLong = optionSide === 'long';
-    const isAmountEntered = Number(amount) > 0;
-    const isPriceEntered = Number(price) > 0;
-    const isTotalEntered = Number(total) > 0;
-    const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
-    const isNonDefaultStable = selectedStableIndex !== 0 && !isPolygon;
-
-    const insufficientBalance = isBuy
-        ? sUSDBalance < Number(total) || !sUSDBalance
-        : tokenBalance < Number(amount) || !tokenBalance;
 
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '',
@@ -187,7 +169,7 @@ const AMM: React.FC = () => {
         }
 
         return [];
-    }, [multipleStableBalances?.isLoading]);
+    }, [multipleStableBalances?.data]);
 
     // If sUSD balance is zero, select first stable with nonzero value as default
     useEffect(() => {
@@ -196,6 +178,33 @@ const AMM: React.FC = () => {
             setStableIndex(defaultStableBalance);
         }
     }, [multipleStableBalances?.data]);
+
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const stableBalance = isNonDefaultStable
+        ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[selectedStableIndex] as StableCoins)
+        : getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD);
+
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket?.address, networkId, {
+        enabled: isAppReady && !!optionsMarket?.address,
+    });
+    const ammMaxLimits =
+        ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? (ammMaxLimitsQuery.data as AmmMaxLimits) : undefined;
+
+    const collateral = snxJSConnector.collateral;
+    const multiCollateral = snxJSConnector.multipleCollateral;
+    const isBuy = orderSide.value === 'buy';
+    const isLong = optionSide === 'long';
+    const isAmountEntered = Number(amount) > 0;
+    const isPriceEntered = Number(price) > 0;
+    const isTotalEntered = Number(total) > 0;
+    const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
+
+    const insufficientBalance = isBuy
+        ? stableBalance < Number(total) || !stableBalance
+        : tokenBalance < Number(amount) || !tokenBalance;
 
     const isButtonDisabled =
         !isTotalEntered ||
@@ -674,6 +683,7 @@ const AMM: React.FC = () => {
                 refetchTrades(optionsMarket?.address);
                 refetchUserTrades(optionsMarket?.address, walletAddress);
                 refetchUserBalance(walletAddress, networkId);
+                refetchWalletBalances(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');
@@ -744,11 +754,11 @@ const AMM: React.FC = () => {
             Number(amount) === 0 ||
                 (Number(amount) > 0 &&
                     (isBuy
-                        ? (Number(total) > 0 && Number(total) <= sUSDBalance) ||
-                          (Number(total) === 0 && sUSDBalance > 0)
+                        ? (Number(total) > 0 && Number(total) <= stableBalance) ||
+                          (Number(total) === 0 && stableBalance > 0)
                         : Number(amount) <= tokenBalance))
         );
-    }, [amount, total, isBuy, sUSDBalance, tokenBalance]);
+    }, [amount, total, isBuy, stableBalance, tokenBalance]);
 
     useEffect(() => {
         setMaxLimitExceeded(Number(amount) > maxLimit);
@@ -856,7 +866,7 @@ const AMM: React.FC = () => {
             const calcPrice = !price ? basePrice : price;
 
             if (calcPrice) {
-                let tmpSuggestedAmount = Number(sUSDBalance) / Number(calcPrice);
+                let tmpSuggestedAmount = Number(stableBalance) / Number(calcPrice);
                 const suggestedAmount = ethers.utils.parseEther(tmpSuggestedAmount.toString());
 
                 if (tmpSuggestedAmount > maxLimit) {
@@ -877,7 +887,7 @@ const AMM: React.FC = () => {
                         isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
                     ) / Number(tmpSuggestedAmount);
 
-                tmpSuggestedAmount = (Number(sUSDBalance) / Number(ammPrice)) * ((100 - Number(slippage)) / 100);
+                tmpSuggestedAmount = (Number(stableBalance) / Number(ammPrice)) * ((100 - Number(slippage)) / 100);
 
                 setAmount(truncToDecimals(tmpSuggestedAmount));
             }
@@ -889,7 +899,7 @@ const AMM: React.FC = () => {
     const formDisabled = isSubmitting || isAmmTradingDisabled;
     return (
         <Wrapper>
-            <WalletBalance type={optionSide} />
+            <WalletBalance type={optionSide} stableIndex={selectedStableIndex} />
             <Switch
                 active={orderSide.value !== 'buy'}
                 width={'94px'}
