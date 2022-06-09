@@ -581,7 +581,7 @@ const AMM: React.FC = () => {
 
     useDebouncedEffect(() => {
         fetchAmmPriceData(false);
-    }, [amount, isBuy, isLong, walletAddress, isAmountEntered]);
+    }, [amount, isBuy, isLong, walletAddress, isAmountEntered, selectedStableIndex]);
 
     useInterval(async () => {
         fetchAmmPriceData(true);
