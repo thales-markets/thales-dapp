@@ -47,6 +47,7 @@ import {
     MIN_SCEW_IMPACT,
     SIDE,
     SLIPPAGE_PERCENTAGE,
+    STABLE_DECIMALS,
 } from 'constants/options';
 import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 
@@ -115,14 +116,12 @@ const AMM: React.FC = () => {
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
-    const isNonDefaultStable = selectedStableIndex !== 0 && !isPolygon;
+    const isNonDefaultStable = selectedStableIndex !== 0 && !isPolygon && orderSide.value === 'buy';
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase() && !isPolygon
             ? getReferralWallet()
             : null;
-
-    console.log('referral ', referral);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket?.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!optionsMarket?.address,
@@ -195,7 +194,7 @@ const AMM: React.FC = () => {
     let sellToken: string | undefined;
     let sellTokenCurrencyKey: string;
 
-    if (isBuy && isNonDefaultStable) {
+    if (isNonDefaultStable) {
         sellToken = multiCollateral ? multiCollateral[selectedStableIndex]?.address : undefined;
         sellTokenCurrencyKey = COLLATERALS[selectedStableIndex];
     } else if (isBuy) {
@@ -231,10 +230,20 @@ const AMM: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const parsedSellAmount =
-                    isPolygon && isBuy
-                        ? ethers.utils.parseUnits(Number(sellAmount).toString(), 6)
-                        : ethers.utils.parseEther(Number(sellAmount).toString());
+                let parsedSellAmount: BigNumber;
+
+                if (isPolygon && isBuy) {
+                    parsedSellAmount = ethers.utils.parseUnits(Number(sellAmount).toString(), 6);
+                } else if (isNonDefaultStable) {
+                    parsedSellAmount = stableCoinParser(
+                        sellAmount?.toString(),
+                        networkId,
+                        COLLATERALS[selectedStableIndex]
+                    );
+                } else {
+                    parsedSellAmount = ethers.utils.parseEther(Number(sellAmount).toString());
+                }
+
                 const allowance = await checkAllowance(
                     parsedSellAmount,
                     erc20Instance,
@@ -268,7 +277,7 @@ const AMM: React.FC = () => {
         parsedSlippage: any
     ) => {
         let txRequest: any;
-        if (isBuy && isNonDefaultStable) {
+        if (isNonDefaultStable) {
             txRequest = ammContractWithSigner.populateTransaction.buyFromAMMWithDifferentCollateralAndReferrer(
                 marketAddress,
                 side,
@@ -373,12 +382,23 @@ const AMM: React.FC = () => {
         const erc20Instance = new ethers.Contract(sellToken as any, erc20Contract.abi, snxJSConnector.signer);
         const { ammContract } = snxJSConnector;
         const addressToApprove = ammContract ? ammContract.address : '';
-        const amountToApprove =
-            isPolygon && isBuy
-                ? approveAmount === ethers.constants.MaxUint256
-                    ? ethers.constants.MaxUint256
-                    : ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6)
-                : approveAmount;
+        let amountToApprove: BigNumber;
+
+        if (isPolygon && isBuy) {
+            if (approveAmount === ethers.constants.MaxUint256) {
+                amountToApprove = ethers.constants.MaxUint256;
+            } else {
+                amountToApprove = ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6);
+            }
+        } else if (isNonDefaultStable) {
+            amountToApprove = ethers.utils.parseUnits(
+                ethers.utils.formatEther(approveAmount),
+                STABLE_DECIMALS[COLLATERALS[selectedStableIndex] as StableCoins]
+            );
+        } else {
+            amountToApprove = approveAmount;
+        }
+
         const gasPrice = await snxJSConnector.provider?.getGasPrice();
         const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
 
@@ -437,7 +457,7 @@ const AMM: React.FC = () => {
                 const parsedAmount = ethers.utils.parseEther(amount.toString());
 
                 const promises = [];
-                if (isBuy && isNonDefaultStable) {
+                if (isNonDefaultStable) {
                     promises.push(
                         ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(
                             optionsMarket.address,
@@ -481,7 +501,7 @@ const AMM: React.FC = () => {
                 // eslint-disable-next-line prefer-const
                 let [ammQuote, ammPriceImpact] = await Promise.all(promises);
 
-                if (isBuy && isNonDefaultStable) {
+                if (isNonDefaultStable) {
                     ammQuote = ammQuote[0];
                 }
 
@@ -600,7 +620,7 @@ const AMM: React.FC = () => {
 
             let tx: ethers.ContractTransaction;
 
-            if (isBuy && isNonDefaultStable) {
+            if (isNonDefaultStable) {
                 tx = (await ammContractWithSigner.buyFromAMMWithDifferentCollateralAndReferrer(
                     marketAddress,
                     side,
@@ -846,12 +866,22 @@ const AMM: React.FC = () => {
                     setAmount(truncToDecimals(maxLimit));
                     return;
                 }
+                let ammQuote = isNonDefaultStable
+                    ? await ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(
+                          optionsMarket.address,
+                          SIDE[optionSide],
+                          suggestedAmount,
+                          sellToken
+                      )
+                    : await ammContractWithSigner.buyFromAmmQuote(
+                          optionsMarket.address,
+                          SIDE[optionSide],
+                          suggestedAmount
+                      );
 
-                const ammQuote = await ammContractWithSigner.buyFromAmmQuote(
-                    optionsMarket.address,
-                    SIDE[optionSide],
-                    suggestedAmount
-                );
+                if (ammQuote && isNonDefaultStable) {
+                    ammQuote = ammQuote[0];
+                }
 
                 const ammPrice =
                     stableCoinFormatter(

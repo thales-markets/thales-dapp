@@ -22,7 +22,20 @@ export const stableCoinFormatter = (value: BigNumberish, networkId: number, curr
     return Number(ethers.utils.formatUnits(value, 18));
 };
 
-export const stableCoinParser = (value: string, networkId: number) =>
-    ethers.utils.parseUnits(value, networkId === POLYGON_ID ? 6 : 18);
+export const stableCoinParser = (value: string, networkId: number, currency?: string) => {
+    try {
+        if (networkId == POLYGON_ID) {
+            return ethers.utils.parseUnits(value, 6);
+        }
+        if (currency && STABLE_DECIMALS[currency as StableCoins]) {
+            return ethers.utils.parseUnits(value, STABLE_DECIMALS[currency as StableCoins]);
+        }
+
+        return ethers.utils.parseUnits(value, networkId === POLYGON_ID ? 6 : 18);
+    } catch (e) {
+        console.log('e ', e);
+        return ethers.utils.parseUnits(value, networkId === POLYGON_ID ? 6 : 18);
+    }
+};
 
 export const getAddress = (addr: string) => ethers.utils.getAddress(addr);
