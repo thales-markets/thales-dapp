@@ -36,4 +36,10 @@ export const AssetContainer = styled.div`
     justify-content: space-between;
 `;
 
-export const CollateralIcon = styled.div<{ active?: boolean }>``;
+export const CollateralIcon = styled.div<{ active?: boolean }>`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+    box-shadow: ${(_props) => (_props?.active ? 'var(--shadow)' : '')};
+`;

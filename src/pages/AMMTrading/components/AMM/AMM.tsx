@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
@@ -35,20 +35,13 @@ import {
     refetchUserTrades,
     refetchWalletBalances,
 } from 'utils/queryConnector';
-import {
-    formatCurrency,
-    formatCurrencyWithKey,
-    formatCurrencyWithSign,
-    formatPercentage,
-    truncToDecimals,
-} from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
 import { AccountMarketInfo, OrderSide, OptionSide, StableCoins } from 'types/options';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import {
     COLLATERALS,
-    COLLATERALS_INDEX,
     MAX_L2_GAS_LIMIT,
     MINIMUM_AMM_LIQUIDITY,
     MIN_SCEW_IMPACT,
@@ -67,7 +60,6 @@ import Tooltip from 'components/Tooltip';
 import { getReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
-import Select from 'components/SelectNew';
 import CollateralSelector from 'components/CollateralSelector';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
@@ -151,26 +143,6 @@ const AMM: React.FC = () => {
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '',
     });
-
-    const stableListBalances = useMemo(() => {
-        if (multipleStableBalances?.isSuccess && multipleStableBalances?.data) {
-            const list = [];
-
-            for (const [key, value] of Object.entries(multipleStableBalances?.data)) {
-                list.push({
-                    index: COLLATERALS_INDEX[key as StableCoins],
-                    title: key,
-                    subValue: formatCurrencyWithSign(USD_SIGN, Number(value)),
-                });
-            }
-
-            if (list?.length) {
-                return list;
-            }
-        }
-
-        return [];
-    }, [multipleStableBalances?.data]);
 
     // If sUSD balance is zero, select first stable with nonzero value as default
     useEffect(() => {
@@ -900,7 +872,7 @@ const AMM: React.FC = () => {
     const formDisabled = isSubmitting || isAmmTradingDisabled;
     return (
         <Wrapper>
-            <WalletBalance type={optionSide} stableIndex={selectedStableIndex} />
+            <WalletBalance type={optionSide} stableIndex={isBuy ? selectedStableIndex : undefined} />
             <Switch
                 active={orderSide.value !== 'buy'}
                 width={'94px'}
@@ -939,11 +911,13 @@ const AMM: React.FC = () => {
                     {t('options.common.short')}
                 </Button>
             </ButtonWrapper>
-            <CollateralSelector
-                collateralArray={COLLATERALS}
-                selectedItem={selectedStableIndex}
-                onChangeCollateral={(index) => setStableIndex(index)}
-            />
+            {isBuy && !isPolygon && (
+                <CollateralSelector
+                    collateralArray={COLLATERALS}
+                    selectedItem={selectedStableIndex}
+                    onChangeCollateral={(index) => setStableIndex(index)}
+                />
+            )}
             <Input
                 title={t('options.market.trade-options.place-order.amount-label', {
                     orderSide: orderSide.value.toUpperCase(),
@@ -1000,14 +974,6 @@ const AMM: React.FC = () => {
                 )}
                 valueEditDisable={true}
             />
-            {isBuy && !isPolygon && (
-                <Select
-                    title={'Pay with'}
-                    optionsArray={stableListBalances}
-                    selectedOption={selectedStableIndex}
-                    onChangeOption={(index) => setStableIndex(index)}
-                />
-            )}
             <Input
                 title={t(`amm.total-${orderSide.value}-label`)}
                 value={isGettingQuote ? '...' : Number(price) > 0 ? formatCurrency(total, 4) : '-'}

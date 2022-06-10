@@ -1,7 +1,15 @@
 import React from 'react';
-import { AssetContainer, CollateralName, Container, Label, LabelValueContainer } from './styled-components';
+import {
+    AssetContainer,
+    CollateralIcon,
+    CollateralName,
+    Container,
+    Label,
+    LabelValueContainer,
+} from './styled-components';
 // import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { getAssetIcon } from 'utils/currency';
+import { useTranslation } from 'react-i18next';
 
 type CollateralSelectorProps = {
     collateralArray: Array<string>;
@@ -14,52 +22,36 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     selectedItem,
     onChangeCollateral,
 }) => {
+    const { t } = useTranslation();
     return (
         <Container>
             <LabelValueContainer>
-                <Label>{'Pay with'}</Label>
-                <CollateralName>{'usdt'}</CollateralName>
+                <Label>{t('amm.pay-with')}</Label>
+                <CollateralName>{collateralArray[selectedItem]}</CollateralName>
             </LabelValueContainer>
             <AssetContainer>
                 {collateralArray.length &&
                     collateralArray.map((item, index) => {
                         const AssetIcon = getAssetIcon(item);
                         return (
-                            <AssetIcon
-                                key={index}
-                                onClick={() => onChangeCollateral(index)}
-                                style={{
-                                    ...(selectedItem == index
-                                        ? {
-                                              opacity: '1',
-                                              //   boxShadow: 'var(--shadow)',
-                                          }
-                                        : {
-                                              opacity: '0.5',
-                                          }),
-                                    marginRight: 7,
-                                    width: '40px',
-                                    height: '40px',
-                                }}
-                            />
-                            // <CollateralIcon
-                            //     key={index}
-                            //     active={index == selectedItem}
-                            //     onClick={() => onChangeCollateral(index)}
-                            // >
-                            //     <CurrencyIcon
-                            //         key={index}
-                            //         synthIconStyle={{
-                            //             marginRight: '0px !important',
-                            //             display: 'flex',
-                            //             padding: '2px',
-                            //             alignItems: 'center',
-                            //         }}
-                            //         currencyKey={item}
-                            //         width={'50px'}
-                            //         height={'50px'}
-                            //     />
-                            // </CollateralIcon>
+                            <CollateralIcon active={selectedItem == index} key={index}>
+                                <AssetIcon
+                                    key={index}
+                                    onClick={() => onChangeCollateral(index)}
+                                    style={{
+                                        ...(selectedItem == index
+                                            ? {
+                                                  opacity: '1',
+                                              }
+                                            : {
+                                                  opacity: '0.5',
+                                              }),
+                                        marginRight: 7,
+                                        width: '40px',
+                                        height: '40px',
+                                    }}
+                                />
+                            </CollateralIcon>
                         );
                     })}
             </AssetContainer>
