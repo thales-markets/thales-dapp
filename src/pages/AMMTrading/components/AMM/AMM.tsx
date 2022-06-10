@@ -601,11 +601,6 @@ const AMM: React.FC = () => {
 
             const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
 
-            console.log(
-                'latestGasLimit !== null ? latestGasLimit : gasLimit ',
-                latestGasLimit !== null ? latestGasLimit : gasLimit
-            );
-
             const providerOptions = isPolygon
                 ? {
                       gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
