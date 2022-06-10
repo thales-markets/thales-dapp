@@ -897,6 +897,13 @@ const AMM: React.FC = () => {
     const formDisabled = isSubmitting || isAmmTradingDisabled;
     return (
         <Wrapper>
+            {isBuy && !isPolygon && (
+                <CollateralSelector
+                    collateralArray={COLLATERALS}
+                    selectedItem={selectedStableIndex}
+                    onChangeCollateral={(index) => setStableIndex(index)}
+                />
+            )}
             <WalletBalance type={optionSide} stableIndex={isBuy ? selectedStableIndex : undefined} />
             <Switch
                 active={orderSide.value !== 'buy'}
@@ -936,13 +943,6 @@ const AMM: React.FC = () => {
                     {t('options.common.short')}
                 </Button>
             </ButtonWrapper>
-            {isBuy && !isPolygon && (
-                <CollateralSelector
-                    collateralArray={COLLATERALS}
-                    selectedItem={selectedStableIndex}
-                    onChangeCollateral={(index) => setStableIndex(index)}
-                />
-            )}
             <Input
                 title={t('options.market.trade-options.place-order.amount-label', {
                     orderSide: orderSide.value.toUpperCase(),
