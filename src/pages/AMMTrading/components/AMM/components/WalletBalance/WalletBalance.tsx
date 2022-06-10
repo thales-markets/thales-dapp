@@ -21,7 +21,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { SYNTHS_MAP } from 'constants/currency';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { UI_COLORS } from 'constants/ui';
-import { getStableCoinBalance, getStableCoinForNetwork } from '../../../../../../utils/currency';
+import { getAssetIcon, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import { COLLATERALS, MARKET_TYPE } from 'constants/options';
@@ -97,10 +97,14 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) 
             ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[stableIndex] as StableCoins)
             : getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
+    const AssetIcon = getAssetIcon(
+        getStableCoinForNetwork(networkId, stableIndex ? (COLLATERALS[stableIndex] as StableCoins) : undefined)
+    );
+
     return (
         <Wrapper>
             <BalanceContainer>
-                <WalletIcon className="sidebar-icon icon--wallet" />
+                <AssetIcon style={{ width: '20px', height: '20px', marginRight: 7 }} />
                 <Balance>
                     {formatCurrencyWithKey(
                         getStableCoinForNetwork(
@@ -160,11 +164,11 @@ const BalanceContainer = styled.div`
     margin: 0 7px;
 `;
 
-const WalletIcon = styled.i`
-    font-size: 20px;
-    margin-right: 8px;
-    color: var(--card-border-color);
-`;
+// const WalletIcon = styled.i`
+//     font-size: 20px;
+//     margin-right: 8px;
+//     color: var(--card-border-color);
+// `;
 
 const Balance = styled.span`
     font-size: 13px;
