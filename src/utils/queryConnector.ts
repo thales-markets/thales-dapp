@@ -115,6 +115,9 @@ export const refetchLPStakingQuery = (walletAddress: string, networkId: NetworkI
 };
 
 export const refetchWalletBalances = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId)
+    );
     queryConnector.queryClient.fetchQuery(QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId));
 };
 

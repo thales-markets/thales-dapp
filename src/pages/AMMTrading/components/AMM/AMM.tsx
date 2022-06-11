@@ -143,6 +143,10 @@ const AMM: React.FC = () => {
         enabled: isAppReady && walletAddress !== '',
     });
 
+    useEffect(() => {
+        refetchWalletBalances(walletAddress, networkId);
+    }, [walletAddress]);
+
     // If sUSD balance is zero, select first stable with nonzero value as default
     useEffect(() => {
         if (multipleStableBalances?.data && multipleStableBalances?.isSuccess) {
