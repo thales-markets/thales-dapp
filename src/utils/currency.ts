@@ -81,8 +81,8 @@ export const checkMultipleStableBalances = (balancesObject: any) => {
 };
 
 export const getStableCoinBalance = (balancesQueryObject: any, currency: StableCoins) => {
-    if (balancesQueryObject[currency]) {
-        return balancesQueryObject[currency];
+    if (balancesQueryObject && currency) {
+        return balancesQueryObject[currency] ? balancesQueryObject[currency] : 0;
     }
     return 0;
 };
