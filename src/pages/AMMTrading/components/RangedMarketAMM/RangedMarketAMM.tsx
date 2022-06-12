@@ -29,27 +29,50 @@ import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuer
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import { refetchAmmData, refetchTrades, refetchUserBalance, refetchUserTrades } from 'utils/queryConnector';
+import {
+    refetchAmmData,
+    refetchTrades,
+    refetchUserBalance,
+    refetchUserTrades,
+    refetchWalletBalances,
+} from 'utils/queryConnector';
 import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
-import { OrderSide, RangedMarketBalanceInfo, RangedMarketPositionType } from 'types/options';
+import { OrderSide, RangedMarketBalanceInfo, RangedMarketPositionType, StableCoins } from 'types/options';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, RANGE_SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
+import {
+    COLLATERALS,
+    MAX_L2_GAS_LIMIT,
+    MINIMUM_AMM_LIQUIDITY,
+    RANGE_SIDE,
+    SLIPPAGE_PERCENTAGE,
+} from 'constants/options';
 import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
 import WalletBalance from '../AMM/components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
-import { getStableCoinForNetwork } from '../../../../utils/currency';
-import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
+import { checkMultipleStableBalances, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
+import { POLYGON_GWEI_INCREASE_PERCENTAGE, ZERO_ADDRESS } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { getReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
+// import CollateralSelector from 'components/CollateralSelector';
+import { getSellToken, getSellTokenCurrency } from 'utils/options';
+import {
+    getAmountToApprove,
+    getQuoteFromRangedAMM,
+    parseSellAmount,
+    preparePopulateTransactionForAMM,
+    prepareTransactionForAMM,
+} from 'utils/amm';
+import CollateralSelector from 'components/CollateralSelector';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -64,10 +87,7 @@ const AMM: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
 
-    const referral =
-        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
-            ? getReferralWallet()
-            : null;
+    const { trackEvent } = useMatomo();
 
     const orderSideOptions = [
         {
@@ -105,10 +125,16 @@ const AMM: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
+    const [selectedStableIndex, setStableIndex] = useState<number>(0);
+    const isNonDefaultStable = selectedStableIndex !== 0 && !isPolygon && orderSide.value === 'buy';
 
     const rawParams = useLocation();
     const queryParams = queryString.parse(rawParams?.search);
-    const { trackEvent } = useMatomo();
+
+    const referral =
+        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
+            ? getReferralWallet()
+            : null;
 
     useEffect(() => {
         if (queryParams?.side == 'in') {
@@ -137,6 +163,21 @@ const AMM: React.FC = () => {
     if (isWalletConnected && positionBalanceQuery.isSuccess && positionBalanceQuery.data) {
         optBalances = positionBalanceQuery.data as RangedMarketBalanceInfo;
     }
+    const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
+        enabled: isAppReady && walletAddress !== '',
+    });
+
+    useEffect(() => {
+        refetchWalletBalances(walletAddress, networkId);
+    }, [walletAddress]);
+
+    // If sUSD balance is zero, select first stable with nonzero value as default
+    useEffect(() => {
+        if (multipleStableBalances?.data && multipleStableBalances?.isSuccess) {
+            const defaultStableBalance = checkMultipleStableBalances(multipleStableBalances?.data);
+            setStableIndex(defaultStableBalance);
+        }
+    }, [multipleStableBalances?.data]);
 
     const tokenBalance = rangeSide === 'in' ? optBalances.in : optBalances.out;
 
@@ -147,7 +188,9 @@ const AMM: React.FC = () => {
         synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
             ? { synths: synthsWalletBalancesQuery.data }
             : null;
-    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+    const stableBalance = isNonDefaultStable
+        ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[selectedStableIndex] as StableCoins)
+        : getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD);
 
     const ammMaxLimitsQuery = useRangedAMMMaxLimitsQuery(rangedMarketData?.address, networkId, {
         enabled: isAppReady,
@@ -158,6 +201,7 @@ const AMM: React.FC = () => {
             : undefined;
 
     const collateral = snxJSConnector.collateral;
+    const multiCollateral = snxJSConnector.multipleCollateral;
     const isBuy = orderSide.value === 'buy';
     const isInPosition = rangeSide === 'in';
     const isAmountEntered = Number(amount) > 0;
@@ -172,7 +216,7 @@ const AMM: React.FC = () => {
         !ammMaxLimits;
 
     const insufficientBalance = isBuy
-        ? sUSDBalance < Number(total) || !sUSDBalance
+        ? stableBalance < Number(total) || !stableBalance
         : tokenBalance < Number(amount) || !tokenBalance;
 
     const isButtonDisabled =
@@ -188,13 +232,26 @@ const AMM: React.FC = () => {
         isAmmTradingDisabled ||
         !hasAllowance;
 
-    const sellToken = isBuy
-        ? collateral?.address
-        : isInPosition
-        ? rangedMarketData?.inAddress
-        : rangedMarketData?.outAddress;
+    const sellToken = getSellToken(
+        isNonDefaultStable,
+        isBuy,
+        isInPosition,
+        rangedMarketData?.inAddress,
+        rangedMarketData?.outAddress,
+        selectedStableIndex,
+        collateral,
+        multiCollateral
+    );
+
+    const sellTokenCurrencyKey = getSellTokenCurrency(
+        isNonDefaultStable,
+        isBuy,
+        networkId,
+        rangeSide,
+        selectedStableIndex
+    );
+
     const sellAmount = isBuy ? total : amount;
-    const sellTokenCurrencyKey = isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[rangeSide];
 
     const formatBuySellArguments = () => {
         const marketAddress = rangedMarketData?.address;
@@ -212,16 +269,28 @@ const AMM: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const parsedSellAmount =
-                    isPolygon && isBuy
-                        ? ethers.utils.parseUnits(Number(sellAmount).toString(), 6)
-                        : ethers.utils.parseEther(Number(sellAmount).toString());
+                const parsedSellAmount = parseSellAmount(
+                    sellAmount,
+                    isNonDefaultStable,
+                    isBuy,
+                    isPolygon,
+                    selectedStableIndex,
+                    networkId
+                );
+
                 const allowance = await checkAllowance(
                     parsedSellAmount,
                     erc20Instance,
                     walletAddress,
                     addressToApprove
                 );
+                console.log('parsedSellAmount ', parsedSellAmount);
+                console.log('erc20Instance ', erc20Instance);
+                console.log('walletAddress ', walletAddress);
+                console.log('addressToApprove ', addressToApprove);
+
+                console.log('allowance ', allowance);
+
                 setAllowance(allowance);
             } catch (e) {
                 console.log(e);
@@ -248,21 +317,19 @@ const AMM: React.FC = () => {
         parsedTotal: any,
         parsedSlippage: any
     ) => {
-        const txRequest = isBuy
-            ? await ammContractWithSigner.populateTransaction.buyFromAMM(
-                  marketAddress,
-                  side,
-                  parsedAmount,
-                  parsedTotal,
-                  parsedSlippage
-              )
-            : await ammContractWithSigner.populateTransaction.sellToAMM(
-                  marketAddress,
-                  side,
-                  parsedAmount,
-                  parsedTotal,
-                  parsedSlippage
-              );
+        const txRequest: any = await preparePopulateTransactionForAMM(
+            isNonDefaultStable,
+            isBuy,
+            ammContractWithSigner,
+            marketAddress,
+            side,
+            parsedAmount,
+            parsedTotal,
+            parsedSlippage,
+            sellToken,
+            referral
+        );
+
         return getL1FeeInWei(txRequest, snxJSConnector);
     };
 
@@ -331,12 +398,14 @@ const AMM: React.FC = () => {
         const erc20Instance = new ethers.Contract(sellToken as any, erc20Contract.abi, snxJSConnector.signer);
         const { rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = rangedMarketAMMContract ? rangedMarketAMMContract.address : '';
-        const amountToApprove =
-            isPolygon && isBuy
-                ? approveAmount === ethers.constants.MaxUint256
-                    ? ethers.constants.MaxUint256
-                    : ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6)
-                : approveAmount;
+        const amountToApprove = getAmountToApprove(
+            approveAmount,
+            isNonDefaultStable,
+            isPolygon,
+            isBuy,
+            selectedStableIndex
+        );
+
         const gasPrice = await snxJSConnector.provider?.getGasPrice();
         const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
 
@@ -393,29 +462,47 @@ const AMM: React.FC = () => {
                 const ammContractWithSigner = rangedMarketAMMContract.connect((snxJSConnector as any).signer);
 
                 const parsedAmount = ethers.utils.parseEther(amount.toString());
-                const [ammQuote] = await Promise.all([
-                    isBuy
-                        ? ammContractWithSigner.buyFromAmmQuote(
-                              rangedMarketData.address,
-                              RANGE_SIDE[rangeSide],
-                              parsedAmount
-                          )
-                        : ammContractWithSigner.sellToAmmQuote(
-                              rangedMarketData.address,
-                              RANGE_SIDE[rangeSide],
-                              parsedAmount
-                          ),
-                ]);
+                let ammQuote = await getQuoteFromRangedAMM(
+                    isNonDefaultStable,
+                    isBuy,
+                    ammContractWithSigner,
+                    parsedAmount,
+                    rangedMarketData.address,
+                    RANGE_SIDE[rangeSide],
+                    sellToken
+                );
 
-                const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(amount);
+                if (isNonDefaultStable) {
+                    ammQuote = ammQuote[0];
+                }
+
+                const ammPrice =
+                    stableCoinFormatter(
+                        ammQuote,
+                        networkId,
+                        isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
+                    ) / Number(amount);
 
                 setPrice(ammPrice);
-                setTotal(stableCoinFormatter(ammQuote, networkId));
+                setTotal(
+                    stableCoinFormatter(
+                        ammQuote,
+                        networkId,
+                        isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
+                    )
+                );
                 setPotentialReturn(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
                 setIsPotentialReturnAvailable(isBuy);
 
                 const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
-                const isQuoteChanged = ammPrice !== price || total !== stableCoinFormatter(ammQuote, networkId);
+                const isQuoteChanged =
+                    ammPrice !== price ||
+                    total !==
+                        stableCoinFormatter(
+                            ammQuote,
+                            networkId,
+                            isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
+                        );
 
                 if (isSubmit) {
                     latestGasLimit = await fetchGasLimit(
@@ -428,7 +515,11 @@ const AMM: React.FC = () => {
                 } else {
                     if (
                         ammPrice > 0 &&
-                        stableCoinFormatter(ammQuote, networkId) > 0 &&
+                        stableCoinFormatter(
+                            ammQuote,
+                            networkId,
+                            isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
+                        ) > 0 &&
                         isSlippageValid &&
                         isQuoteChanged &&
                         hasAllowance
@@ -459,7 +550,7 @@ const AMM: React.FC = () => {
 
     useDebouncedEffect(() => {
         fetchAmmPriceData(false);
-    }, [amount, isBuy, isInPosition, walletAddress, isAmountEntered]);
+    }, [amount, isBuy, isInPosition, walletAddress, isAmountEntered, selectedStableIndex]);
 
     useInterval(async () => {
         fetchAmmPriceData(true);
@@ -497,33 +588,21 @@ const AMM: React.FC = () => {
                 : {
                       gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
                   };
-            const tx = (isBuy
-                ? !referral
-                    ? await ammContractWithSigner.buyFromAMM(
-                          marketAddress,
-                          side,
-                          parsedAmount,
-                          parsedTotal,
-                          parsedSlippage,
-                          providerOptions
-                      )
-                    : await ammContractWithSigner.buyFromAMMWithReferrer(
-                          marketAddress,
-                          side,
-                          parsedAmount,
-                          parsedTotal,
-                          parsedSlippage,
-                          referral,
-                          providerOptions
-                      )
-                : await ammContractWithSigner.sellToAMM(
-                      marketAddress,
-                      side,
-                      parsedAmount,
-                      parsedTotal,
-                      parsedSlippage,
-                      providerOptions
-                  )) as ethers.ContractTransaction;
+
+            const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
+                isNonDefaultStable,
+                isBuy,
+                ammContractWithSigner,
+                marketAddress,
+                side,
+                parsedAmount,
+                parsedTotal,
+                parsedSlippage,
+                sellToken,
+                referral ? referral : ZERO_ADDRESS,
+                providerOptions
+            );
+
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -539,6 +618,7 @@ const AMM: React.FC = () => {
                 refetchTrades(rangedMarketData?.address);
                 refetchUserTrades(rangedMarketData?.address, walletAddress);
                 refetchUserBalance(walletAddress, networkId);
+                refetchWalletBalances(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');
@@ -600,11 +680,11 @@ const AMM: React.FC = () => {
             Number(amount) === 0 ||
                 (Number(amount) > 0 &&
                     (isBuy
-                        ? (Number(total) > 0 && Number(total) <= sUSDBalance) ||
-                          (Number(total) === 0 && sUSDBalance > 0)
+                        ? (Number(total) > 0 && Number(total) <= stableBalance) ||
+                          (Number(total) === 0 && stableBalance > 0)
                         : Number(amount) <= tokenBalance))
         );
-    }, [amount, total, isBuy, sUSDBalance, tokenBalance]);
+    }, [amount, total, isBuy, stableBalance, tokenBalance]);
 
     useEffect(() => {
         setMaxLimitExceeded(Number(amount) > maxLimit);
@@ -712,7 +792,7 @@ const AMM: React.FC = () => {
             const calcPrice = !price ? basePrice : price;
 
             if (calcPrice) {
-                let tmpSuggestedAmount = Number(sUSDBalance) / Number(calcPrice);
+                let tmpSuggestedAmount = Number(stableBalance) / Number(calcPrice);
                 const suggestedAmount = ethers.utils.parseEther(tmpSuggestedAmount.toString());
 
                 if (tmpSuggestedAmount > maxLimit) {
@@ -720,15 +800,28 @@ const AMM: React.FC = () => {
                     return;
                 }
 
-                const ammQuote = await ammContractWithSigner.buyFromAmmQuote(
+                let ammQuote = await getQuoteFromRangedAMM(
+                    isNonDefaultStable,
+                    isBuy,
+                    ammContractWithSigner,
+                    suggestedAmount,
                     rangedMarketData.address,
                     RANGE_SIDE[rangeSide],
-                    suggestedAmount
+                    sellToken
                 );
 
-                const ammPrice = stableCoinFormatter(ammQuote, networkId) / Number(tmpSuggestedAmount);
+                if (isNonDefaultStable) {
+                    ammQuote = ammQuote[0];
+                }
 
-                tmpSuggestedAmount = (Number(sUSDBalance) / Number(ammPrice)) * ((100 - Number(slippage)) / 100);
+                const ammPrice =
+                    stableCoinFormatter(
+                        ammQuote,
+                        networkId,
+                        isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
+                    ) / Number(tmpSuggestedAmount);
+
+                tmpSuggestedAmount = (Number(stableBalance) / Number(ammPrice)) * ((100 - Number(slippage)) / 100);
 
                 setAmount(truncToDecimals(tmpSuggestedAmount));
             }
@@ -740,7 +833,14 @@ const AMM: React.FC = () => {
     const formDisabled = isSubmitting || isAmmTradingDisabled;
     return (
         <Wrapper>
-            <WalletBalance type={rangeSide} />
+            {isBuy && !isPolygon && (
+                <CollateralSelector
+                    collateralArray={COLLATERALS}
+                    selectedItem={selectedStableIndex}
+                    onChangeCollateral={(index) => setStableIndex(index)}
+                />
+            )}
+            <WalletBalance type={rangeSide} stableIndex={isBuy ? selectedStableIndex : undefined} />
             <Switch
                 active={orderSide.value !== 'buy'}
                 width={'94px'}
