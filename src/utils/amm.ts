@@ -97,7 +97,7 @@ export const prepareTransactionForAMM = async (
             parsedTotal,
             parsedSlippage,
             sellToken,
-            referral,
+            referral ? referral : ZERO_ADDRESS,
             providerOptions
         )) as ethers.ContractTransaction;
     } else {

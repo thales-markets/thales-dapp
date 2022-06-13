@@ -55,7 +55,7 @@ import WalletBalance from '../AMM/components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
 import { checkMultipleStableBalances, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
-import { POLYGON_GWEI_INCREASE_PERCENTAGE, ZERO_ADDRESS } from 'constants/network';
+import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { useLocation } from 'react-router-dom';
@@ -284,12 +284,6 @@ const AMM: React.FC = () => {
                     walletAddress,
                     addressToApprove
                 );
-                console.log('parsedSellAmount ', parsedSellAmount);
-                console.log('erc20Instance ', erc20Instance);
-                console.log('walletAddress ', walletAddress);
-                console.log('addressToApprove ', addressToApprove);
-
-                console.log('allowance ', allowance);
 
                 setAllowance(allowance);
             } catch (e) {
@@ -599,7 +593,7 @@ const AMM: React.FC = () => {
                 parsedTotal,
                 parsedSlippage,
                 sellToken,
-                referral ? referral : ZERO_ADDRESS,
+                referral,
                 providerOptions
             );
 
