@@ -16,22 +16,20 @@ const useMultipleCollateralBalanceQuery = (
             try {
                 const multipleCollateral = snxJSConnector.multipleCollateral;
 
-                const sUSDBalance = multipleCollateral?.length
-                    ? await multipleCollateral[COLLATERALS_INDEX.sUSD]?.balanceOf(walletAddress)
-                    : undefined;
-
-                const DAIBalance = multipleCollateral?.length
-                    ? await multipleCollateral[COLLATERALS_INDEX.DAI]?.balanceOf(walletAddress)
-                    : undefined;
-
-                const USDCBalance = multipleCollateral?.length
-                    ? await multipleCollateral[COLLATERALS_INDEX.USDC]?.balanceOf(walletAddress)
-                    : undefined;
-
-                const USDTBalance = multipleCollateral?.length
-                    ? await multipleCollateral[COLLATERALS_INDEX.USDT]?.balanceOf(walletAddress)
-                    : undefined;
-
+                const [sUSDBalance, DAIBalance, USDCBalance, USDTBalance] = await Promise.all([
+                    multipleCollateral?.length
+                        ? multipleCollateral[COLLATERALS_INDEX.sUSD]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral?.length
+                        ? multipleCollateral[COLLATERALS_INDEX.DAI]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral?.length
+                        ? multipleCollateral[COLLATERALS_INDEX.USDC]?.balanceOf(walletAddress)
+                        : undefined,
+                    multipleCollateral?.length
+                        ? multipleCollateral[COLLATERALS_INDEX.USDT]?.balanceOf(walletAddress)
+                        : undefined,
+                ]);
                 return {
                     sUSD: sUSDBalance ? parseInt(sUSDBalance) / 10 ** STABLE_DECIMALS.sUSD : 0,
                     DAI: DAIBalance ? parseInt(DAIBalance) / 10 ** STABLE_DECIMALS.DAI : 0,
