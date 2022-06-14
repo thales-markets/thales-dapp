@@ -40,7 +40,7 @@ import { ReactComponent as sAMZNIcon } from 'assets/synths/sAMZN.svg';
 import { ReactComponent as sCEXIcon } from 'assets/synths/sCEX.svg';
 import { ReactComponent as sXAGIcon } from 'assets/synths/sXAG.svg';
 import { ReactComponent as sJPYIcon } from 'assets/synths/sJPY.svg';
-import { ReactComponent as sUSDIcon } from 'assets/synths/sUSD.svg';
+import { ReactComponent as sUSDIcon } from 'assets/currencies/crypto/sUSD.svg';
 import { ReactComponent as sFTSEIcon } from 'assets/synths/sFTSE.svg';
 import { ReactComponent as BCHIcon } from 'assets/currencies/crypto/BCH.svg';
 import { ReactComponent as SNXIcon } from 'assets/currencies/crypto/SNX.svg';
