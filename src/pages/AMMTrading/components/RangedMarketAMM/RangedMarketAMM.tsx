@@ -929,13 +929,19 @@ const AMM: React.FC = () => {
                         ? formatCurrency(Number(price) > 0 ? price : basePrice, 4)
                         : '-'
                 }
-                subValue={getStableCoinForNetwork(networkId)}
+                subValue={getStableCoinForNetwork(
+                    networkId,
+                    isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
+                )}
                 valueEditDisable={true}
             />
             <Input
                 title={t(`amm.total-${orderSide.value}-label`)}
                 value={isGettingQuote ? '...' : Number(price) > 0 ? formatCurrency(total, 4) : '-'}
-                subValue={getStableCoinForNetwork(networkId)}
+                subValue={getStableCoinForNetwork(
+                    networkId,
+                    isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
+                )}
                 valueEditDisable={true}
             />
             <Input
