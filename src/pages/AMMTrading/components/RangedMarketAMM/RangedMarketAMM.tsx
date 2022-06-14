@@ -609,11 +609,11 @@ const AMM: React.FC = () => {
                         )
                     )
                 );
+                refetchWalletBalances(walletAddress, networkId);
                 refetchAmmData(walletAddress, rangedMarketData?.address, networkId);
                 refetchTrades(rangedMarketData?.address);
                 refetchUserTrades(rangedMarketData?.address, walletAddress);
                 refetchUserBalance(walletAddress, networkId);
-                refetchWalletBalances(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');
