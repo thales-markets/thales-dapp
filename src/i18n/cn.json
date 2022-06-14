@@ -166,7 +166,8 @@
             "invalid-slippage": "无效滑点",
             "max-limit-exceeded": "金额超过 AMM 上的可用金额",
             "user-rejected-tx": "用户拒绝交易",
-            "insufficient-staking-balance": "质押余额不足"
+            "insufficient-staking-balance": "质押余额不足",
+            "try-again": "再试一次。 AMM 数据已更改。"
         },
         "search": "搜索",
         "buy": "买",

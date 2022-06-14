@@ -166,7 +166,8 @@
             "invalid-slippage": "Недопустимый процент проскальзывания",
             "max-limit-exceeded": "Сумма превышает доступную на AMM",
             "user-rejected-tx": "Пользователь отклонил транзакцию",
-            "insufficient-staking-balance": "Недостаточный баланс ставок"
+            "insufficient-staking-balance": "Недостаточный баланс ставок",
+            "try-again": "Попробуйте еще раз. Данные АММ изменены."
         },
         "search": "поиск",
         "buy": "купить",

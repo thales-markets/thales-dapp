@@ -558,6 +558,7 @@ const AMM: React.FC = () => {
 
         const { priceChanged, latestGasLimit } = await fetchAmmPriceData(true, true);
         if (priceChanged) {
+            toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
             setIsPriceChanged(true);
             setIsSubmitting(false);
             return;
