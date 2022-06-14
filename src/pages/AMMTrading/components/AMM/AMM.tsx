@@ -865,7 +865,12 @@ const AMM: React.FC = () => {
                 tooltipText={t(
                     !isAmountValid ? 'common.errors.insufficient-balance-wallet' : 'common.errors.max-limit-exceeded',
                     {
-                        currencyKey: isBuy ? getStableCoinForNetwork(networkId) : OPTIONS_CURRENCY_MAP[optionSide],
+                        currencyKey: isBuy
+                            ? getStableCoinForNetwork(
+                                  networkId,
+                                  isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
+                              )
+                            : OPTIONS_CURRENCY_MAP[optionSide],
                     }
                 )}
             >
