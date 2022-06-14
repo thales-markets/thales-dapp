@@ -1,8 +1,7 @@
 import { Modal } from '@material-ui/core';
-import Swap from 'components/Swap';
 import { SYNTHS_MAP } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import React, { useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -12,6 +11,8 @@ import styled from 'styled-components';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getStableCoinForNetwork } from 'utils/currency';
+
+const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
 
 export const UserSwap: React.FC = () => {
     const { t } = useTranslation();
@@ -52,15 +53,19 @@ export const UserSwap: React.FC = () => {
                 <SwapButtonIcon className="v2-icon v2-icon--dollar" />
                 <SwapButtonText>{buttonText}</SwapButtonText>
             </SwapButton>
-            <Modal
-                open={showSwap}
-                onClose={(_, reason) => {
-                    if (reason !== 'backdropClick') setShowSwap(false);
-                }}
-                style={{ backdropFilter: 'blur(10px)' }}
-            >
-                <Swap handleClose={setShowSwap}></Swap>
-            </Modal>
+            {showSwap && (
+                <Modal
+                    open={showSwap}
+                    onClose={(_, reason) => {
+                        if (reason !== 'backdropClick') setShowSwap(false);
+                    }}
+                    style={{ backdropFilter: 'blur(10px)' }}
+                >
+                    <Suspense fallback={<></>}>
+                        <Swap handleClose={setShowSwap}></Swap>
+                    </Suspense>
+                </Modal>
+            )}
         </>
     );
 };

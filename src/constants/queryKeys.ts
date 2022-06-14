@@ -33,6 +33,12 @@ export const QUERY_KEYS = {
             marketAddress,
             networkId,
         ],
+        MultipleCollateral: (walletAddress: string, networkId: NetworkId) => [
+            'multipleCollateral',
+            'balance',
+            walletAddress,
+            networkId,
+        ],
     },
     Rates: {
         ExchangeRates: () => ['rates', 'exchangeRates'],

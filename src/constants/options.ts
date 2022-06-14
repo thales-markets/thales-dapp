@@ -38,6 +38,22 @@ export const orderSideOptions = [
     },
 ];
 
+export enum COLLATERALS_INDEX {
+    'sUSD' = 0,
+    'DAI' = 1,
+    'USDC' = 2,
+    'USDT' = 3,
+}
+
+export const COLLATERALS = ['sUSD', 'DAI', 'USDC', 'USDT'];
+
+export const STABLE_DECIMALS = {
+    sUSD: 18,
+    DAI: 18,
+    USDC: 6,
+    USDT: 6,
+};
+
 export const PHASES = ['trading', 'maturity', 'expiry'] as Phase[];
 export const PHASES_CARDS = ['trading', 'maturity'] as Phase[];
 
