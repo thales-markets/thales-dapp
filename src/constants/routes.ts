@@ -23,6 +23,7 @@ export const ROUTES = {
         TokenMigration: '/token?tab=migration&action=migrate',
         Profile: '/profile',
         Referral: '/referral',
+        Wizzard: '/wizzard',
     },
     Governance: {
         Home: '/governance',
