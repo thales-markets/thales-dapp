@@ -591,6 +591,7 @@ const AMM: React.FC = () => {
                     trackEvent({
                         category: 'AMM',
                         action: 'buy-from-amm',
+                        value: selectedStableIndex,
                     });
                 } else {
                     trackEvent({
