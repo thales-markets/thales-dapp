@@ -6,6 +6,8 @@ import {
     SYNTHS_MAP,
     currencyKeyToNameMap,
 } from 'constants/currency';
+import { COLLATERALS_INDEX } from 'constants/options';
+import { StableCoins } from 'types/options';
 import { getIsPolygon } from './network';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
@@ -28,7 +30,11 @@ export const getSynthName = (currencyKey: string) =>
 export const getSynthAsset = (currencyKey: string) =>
     SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
 
-export const getStableCoinForNetwork = (networkId: number) => {
+export const getStableCoinForNetwork = (networkId: number, customStable?: StableCoins) => {
+    if (customStable) {
+        return customStable;
+    }
+
     if (getIsPolygon(networkId)) {
         return CRYPTO_CURRENCY_MAP.USDC;
     }
@@ -50,5 +56,33 @@ export const sortCurrencies = (a: string, b: string) => {
     if (a < b) return -1;
     if (a > b) return 1;
 
+    return 0;
+};
+
+type StableBalances = {
+    sUSD: number | null;
+    DAI: number | null;
+    USDC: number | null;
+    USDT: number | null;
+};
+
+export const checkMultipleStableBalances = (balancesObject: any) => {
+    let index = COLLATERALS_INDEX['sUSD'];
+    if (balancesObject?.sUSD < 1) {
+        for (const [key, value] of Object.entries(balancesObject as StableBalances)) {
+            if (value && value > 1) {
+                index = COLLATERALS_INDEX[key as StableCoins];
+                break;
+            }
+        }
+    }
+
+    return index;
+};
+
+export const getStableCoinBalance = (balancesQueryObject: any, currency: StableCoins) => {
+    if (balancesQueryObject && currency) {
+        return balancesQueryObject[currency] ? balancesQueryObject[currency] : 0;
+    }
     return 0;
 };

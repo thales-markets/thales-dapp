@@ -114,4 +114,14 @@ export const refetchLPStakingQuery = (walletAddress: string, networkId: NetworkI
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.LPStaking(walletAddress, networkId));
 };
 
+export const refetchWalletBalances = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId),
+        {
+            refetchActive: true,
+            refetchInactive: true,
+        }
+    );
+};
+
 export default queryConnector;

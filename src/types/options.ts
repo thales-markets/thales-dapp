@@ -20,6 +20,8 @@ export type TradingType = 'AMM' | 'Orderbook';
 
 export type MarketType = 'positional' | 'ranged';
 
+export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT';
+
 export type OptionsTransaction = {
     hash: string;
     type: OptionsTransactionType;

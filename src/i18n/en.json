@@ -193,6 +193,7 @@
             "disclaimer-info": "By connecting a wallet you agree to Thales DAO Terms Of Use and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <a target=\"_blank\" href={{link}}>disclaimer</a>"
         },
         "errors": {
+            "try-again": "Try again. AMM data is changed.",
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
             "unknown-error-try-again-general": "An unknown error occurred. Please try again.",
             "insufficient-balance": "Insufficient balance",
@@ -403,7 +404,7 @@
                 "maturity-date-col": "Maturity Date",
                 "competition-tooltip": "This market is eligible for trading competition",
                 "twap-tooltip": "This asset uses a TWAP Price Feed from this Uniswap V3 pool pair:",
-                "iv-tooltip": "Currently set Implied Volatility for this asset is xx%",
+                "iv-tooltip": "Currently set Implied Volatility for this asset is {{percentage}}%",
                 "menu": {
                     "grid": "Grid",
                     "table": "Table",
@@ -1541,6 +1542,7 @@
     "amm": {
         "type-label": "type",
         "total-buy-label": "Total to pay",
+        "pay-with": "Pay with",
         "total-sell-label": "Total to receive",
         "return-label": "Potential profit",
         "return-tooltip": "Potential profit if this position wins",
