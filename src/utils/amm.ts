@@ -87,7 +87,6 @@ export const prepareTransactionForAMM = async (
           }
 ): Promise<ethers.ContractTransaction> => {
     let tx: ethers.ContractTransaction;
-    console.log(ammContractWithSigner);
 
     if (isNonDefaultStable) {
         tx = (await ammContractWithSigner.buyFromAMMWithDifferentCollateralAndReferrer(
@@ -222,7 +221,6 @@ export const parseSellAmount = (
     selectedStableIndex: number,
     networkId: NetworkId
 ) => {
-    console.log('SellAmount ', sellAmount);
     if (isPolygon && isBuy) {
         return ethers.utils.parseUnits(Number(sellAmount).toString(), 6);
     } else if (isNonDefaultStable) {
