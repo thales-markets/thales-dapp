@@ -130,11 +130,6 @@ const AMM: React.FC = () => {
             ? getReferralWallet()
             : null;
 
-    const referral =
-        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase() && !isPolygon
-            ? getReferralWallet()
-            : null;
-
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket?.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!optionsMarket?.address,
     });
