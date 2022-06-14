@@ -11,7 +11,7 @@ const useMultipleCollateralBalanceQuery = (
     options?: UseQueryOptions<any>
 ) => {
     return useQuery<any>(
-        QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress ?? '', networkId),
+        QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId),
         async () => {
             try {
                 const multipleCollateral = snxJSConnector.multipleCollateral;

@@ -224,7 +224,7 @@ export const parseSellAmount = (
     if (isPolygon && isBuy) {
         return ethers.utils.parseUnits(Number(sellAmount).toString(), 6);
     } else if (isNonDefaultStable) {
-        return stableCoinParser(sellAmount?.toString(), networkId, COLLATERALS[selectedStableIndex]);
+        return stableCoinParser(Number(sellAmount)?.toString(), networkId, COLLATERALS[selectedStableIndex]);
     } else {
         return ethers.utils.parseEther(Number(sellAmount).toString());
     }

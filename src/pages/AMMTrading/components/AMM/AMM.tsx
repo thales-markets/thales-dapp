@@ -147,7 +147,7 @@ const AMM: React.FC = () => {
     });
 
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && walletAddress !== '',
+        enabled: isAppReady && isWalletConnected,
     });
 
     useEffect(() => {
@@ -156,7 +156,7 @@ const AMM: React.FC = () => {
 
     // If sUSD balance is zero, select first stable with nonzero value as default
     useEffect(() => {
-        if (multipleStableBalances?.data && multipleStableBalances?.isSuccess) {
+        if (multipleStableBalances?.data && multipleStableBalances?.isSuccess && selectedStableIndex == 0) {
             const defaultStableBalance = checkMultipleStableBalances(multipleStableBalances?.data);
             setStableIndex(defaultStableBalance);
         }
