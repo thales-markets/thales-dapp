@@ -119,23 +119,27 @@ export const formatL2GasLimit = (gasEstimate: ethers.BigNumber | number): number
     normalizeL2GasLimit(Number(gasEstimate));
 
 export const getL1FeeInWei = async (txRequest: any, snxJSConnector: any) => {
-    const OVM_GasPriceOracle = getContractFactory('OVM_GasPriceOracle', (snxJSConnector as any).signer).attach(
-        predeploys.OVM_GasPriceOracle
-    );
-    const unsignedTx = (await (snxJSConnector as any).signer.populateTransaction(txRequest)) as UnsignedTransaction;
-    if (unsignedTx) {
-        const serializedTx = serializeTransaction({
-            nonce: unsignedTx.nonce ? parseInt(unsignedTx.nonce.toString(10), 10) : 0,
-            value: unsignedTx.value,
-            gasPrice: unsignedTx.gasPrice,
-            gasLimit: unsignedTx.gasLimit,
-            to: unsignedTx.to,
-            data: unsignedTx.data,
-        });
-        const l1FeeInWei = await OVM_GasPriceOracle.getL1Fee(serializedTx);
-        return l1FeeInWei.toNumber();
+    try {
+        const OVM_GasPriceOracle = getContractFactory('OVM_GasPriceOracle', (snxJSConnector as any).signer).attach(
+            predeploys.OVM_GasPriceOracle
+        );
+        const unsignedTx = (await (snxJSConnector as any).signer.populateTransaction(txRequest)) as UnsignedTransaction;
+        if (unsignedTx) {
+            const serializedTx = serializeTransaction({
+                nonce: unsignedTx.nonce ? parseInt(unsignedTx.nonce.toString(10), 10) : 0,
+                value: unsignedTx.value,
+                gasPrice: unsignedTx.gasPrice,
+                gasLimit: unsignedTx.gasLimit,
+                to: unsignedTx.to,
+                data: unsignedTx.data,
+            });
+            const l1FeeInWei = await OVM_GasPriceOracle.getL1Fee(serializedTx);
+            return l1FeeInWei.toNumber();
+        }
+        return 1;
+    } catch (e) {
+        console.log('e ', e);
     }
-    return 1;
 };
 
 export const checkAllowance = async (amount: BigNumber, token: any, walletAddress: string, spender: string) => {
