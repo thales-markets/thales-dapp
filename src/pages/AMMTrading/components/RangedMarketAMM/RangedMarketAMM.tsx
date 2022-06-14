@@ -128,13 +128,13 @@ const AMM: React.FC = () => {
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
     const isNonDefaultStable = selectedStableIndex !== 0 && !isPolygon && orderSide.value === 'buy';
 
-    const rawParams = useLocation();
-    const queryParams = queryString.parse(rawParams?.search);
-
     const referral =
-        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
+        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase() && !isPolygon
             ? getReferralWallet()
             : null;
+
+    const rawParams = useLocation();
+    const queryParams = queryString.parse(rawParams?.search);
 
     useEffect(() => {
         if (queryParams?.side == 'in') {
