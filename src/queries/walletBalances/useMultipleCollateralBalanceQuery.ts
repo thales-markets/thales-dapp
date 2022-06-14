@@ -16,6 +16,15 @@ const useMultipleCollateralBalanceQuery = (
             try {
                 const multipleCollateral = snxJSConnector.multipleCollateral;
 
+                if (!walletAddress || !networkId) {
+                    return {
+                        sUSD: 0,
+                        DAI: 0,
+                        USDC: 0,
+                        USDT: 0,
+                    };
+                }
+
                 const [sUSDBalance, DAIBalance, USDCBalance, USDTBalance] = await Promise.all([
                     multipleCollateral?.length
                         ? multipleCollateral[COLLATERALS_INDEX.sUSD]?.balanceOf(walletAddress)
