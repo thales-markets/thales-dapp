@@ -149,7 +149,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                             </Card.Section>
                                         </Card.Column>
                                         {data.range ? (
-                                            <Card.Column style={{ top: 10, position: 'relative' }} ranged={true}>
+                                            <MiddleContrainer>
                                                 <RangeIllustration
                                                     priceData={{
                                                         left: data.market.leftPrice,
@@ -159,7 +159,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     fontSize={16}
                                                     maxWidth={65}
                                                 />
-                                            </Card.Column>
+                                            </MiddleContrainer>
                                         ) : (
                                             <Card.Column>
                                                 <Card.Section>
@@ -260,7 +260,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                         hideAssetName={true}
                                         iconProps={{ type: 'asset' }}
                                         synthIconStyle={{ width: 32, height: 32 }}
-                                        spanStyle={{ float: 'left' }}
+                                        spanStyle={{ width: 60 }}
                                         additionalIconType={
                                             !row.range
                                                 ? row?.balances?.type === 'UP'
@@ -389,6 +389,13 @@ const MyPositions: React.FC<MyPositionsProps> = ({
         </Container>
     );
 };
+
+const MiddleContrainer = styled.div`
+    display: flex;
+    width: 100%;
+    margin-top: 10px;
+    min-width: 180px;
+`;
 
 const Content = styled.div`
     display: content;

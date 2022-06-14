@@ -12,12 +12,31 @@ export enum Theme {
     Dark,
 }
 
+export enum UISize {
+    Small,
+    Medium,
+    Large,
+}
+
 type UISliceState = {
     theme: number;
+    size: UISize;
+};
+
+const initialUISize = () => {
+    const width = window.innerWidth;
+    if (width <= 568) {
+        return UISize.Small;
+    }
+    if (width <= 1250) {
+        return UISize.Medium;
+    }
+    return UISize.Large;
 };
 
 const initialState: UISliceState = {
     theme: 1,
+    size: initialUISize(),
 };
 
 export const uiSlice = createSlice({
@@ -35,4 +54,5 @@ export const { setTheme } = uiSlice.actions;
 
 export const getUIState = (state: RootState) => state[sliceName];
 export const getTheme = (state: RootState) => getUIState(state).theme;
+export const getUISize = (state: RootState) => getUIState(state).size;
 export default uiSlice.reducer;

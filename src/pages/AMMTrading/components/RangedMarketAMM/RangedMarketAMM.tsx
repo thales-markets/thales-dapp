@@ -348,7 +348,7 @@ const AMM: React.FC = () => {
                     parsedSlippage
                 );
                 setGasLimit(MAX_L2_GAS_LIMIT);
-                setL1Fee(l1FeeInWei);
+                setL1Fee(l1FeeInWei ? l1FeeInWei : 0);
                 return MAX_L2_GAS_LIMIT;
             } else if (isPolygon) {
                 const gasLimit = isBuy

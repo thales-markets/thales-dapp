@@ -7,7 +7,7 @@ import HotMarketCard from '../MarketsCard/HotMarketCard';
 import HotMarketCardSceleton from 'components/HotMarketSceleton/HotMarketCardSceleton';
 import { formatCurrencyWithSign, formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
-import Hammer from 'hammerjs';
+import Hammer, { DIRECTION_HORIZONTAL } from 'hammerjs';
 import Tooltip from 'components/Tooltip';
 import { PHASE } from 'constants/options';
 import { USD_SIGN } from 'constants/currency';
@@ -98,7 +98,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 }
 
                 if (window.innerWidth <= 1250) {
-                    const swipe = new Hammer.Swipe();
+                    const swipe = new Hammer.Swipe({ direction: DIRECTION_HORIZONTAL });
                     hammer.add(swipe);
                     hammer.on('swipeleft', moveRight);
                     hammer.on('swiperight', moveLeft);

@@ -184,6 +184,7 @@ const Container = styled.canvas`
     margin-left: auto;
     margin-right: auto;
     display: block;
+    max-width: 350px;
     /* height: 150px; */
 `;
 

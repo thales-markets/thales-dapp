@@ -49,6 +49,7 @@ const useGelatoQuery = (totalGelatoLocked: number, options?: UseQueryOptions<Bal
                     (totalGelatoLocked *
                         Number((weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd).toFixed(2))) /
                     toNumber(totalSupply);
+
                 const apr = ((100 * (LP_STAKING_WEEKLY_REWARDS * ratesResults.thales.usd * 52)) / totalInUSD).toFixed(
                     0
                 );

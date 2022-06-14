@@ -1,13 +1,11 @@
-import UserWallet from './UserWallet';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
-
 import styled from 'styled-components';
-
-import UserSwap from './UserSwap';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
 const MenuCardComponent = lazy(() => import(/* webpackChunkName: "MenuCardComponent" */ './MenuCard'));
+const UserSwap = lazy(() => import(/* webpackChunkName: "UserSwap" */ './UserSwap'));
+const UserWallet = lazy(() => import(/* webpackChunkName: "UserWallet" */ './UserWallet'));
 
 const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
@@ -19,8 +17,13 @@ const UserCard: React.FC = () => {
 
     return (
         <>
-            <UserSwap />
-            <UserWallet />
+            <Suspense fallback={<></>}>
+                <UserSwap />
+            </Suspense>
+            <Suspense fallback={<></>}>
+                <UserWallet />
+            </Suspense>
+
             <MenuCardButton
                 onClick={() => {
                     trackEvent({
@@ -32,11 +35,13 @@ const UserCard: React.FC = () => {
             >
                 <MenuIcon style={{ fontSize: 30 }} className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
-            <OutsideClickHandler onOutsideClick={() => (showCard ? setShowCard(!showCard) : '')}>
+            {showCard && (
                 <Suspense fallback={<></>}>
-                    <MenuCardComponent showCard={showCard} setShowCard={setShowCard} />
+                    <OutsideClickHandler onOutsideClick={() => (showCard ? setShowCard(!showCard) : '')}>
+                        <MenuCardComponent showCard={showCard} setShowCard={setShowCard} />
+                    </OutsideClickHandler>
                 </Suspense>
-            </OutsideClickHandler>
+            )}
             <Overlay className={showCard ? 'show' : 'hide'} />
         </>
     );
