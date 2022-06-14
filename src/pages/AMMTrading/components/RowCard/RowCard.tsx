@@ -126,7 +126,9 @@ const RowCard: React.FC = () => {
                                 <Container.IV>
                                     {marketInfo.IV + '% IV' ?? ''}{' '}
                                     <Tooltip
-                                        message={t('options.home.markets-table.iv-tooltip')}
+                                        message={t('options.home.markets-table.iv-tooltip', {
+                                            percentage: marketInfo.IV,
+                                        })}
                                         type={'info'}
                                         iconColor={'var(--primary-color)'}
                                         container={{ width: '15px', display: 'inline', position: 'absolute' }}
