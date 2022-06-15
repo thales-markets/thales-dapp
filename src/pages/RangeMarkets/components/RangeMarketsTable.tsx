@@ -211,7 +211,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                 id: 'currentPrice',
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
-                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value),
+                Cell: (_props: any) => <span>{formatCurrencyWithSign(USD_SIGN, _props?.cell?.value)}</span>,
             },
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),
