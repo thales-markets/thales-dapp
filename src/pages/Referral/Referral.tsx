@@ -115,7 +115,7 @@ const Referral: React.FC = () => {
     }, [tradersQuery.isSuccess, walletAddress]);
 
     const affiliateLeaderboardQuery = useReferrerQuery(networkId, undefined, {
-        enabled: !!walletAddress && isAppReady,
+        enabled: isAppReady,
     });
 
     const affiliateCompetitionData = useMemo(() => {
@@ -295,15 +295,11 @@ const Referral: React.FC = () => {
                                         sortable: true,
                                     },
                                     {
-                                        id: 'amount',
                                         Header: <>{t('referral-page.table.earned')}</>,
-                                        // accessor: 'amount',
-                                        accessor: (row: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, row.amount, 2)}</p>
+                                        accessor: 'amount',
+                                        Cell: (cellProps: any) => (
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
                                         ),
-                                        // Cell: (cellProps: any) => (
-                                        //     <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
-                                        // ),
                                         sortable: true,
                                     },
                                     {
