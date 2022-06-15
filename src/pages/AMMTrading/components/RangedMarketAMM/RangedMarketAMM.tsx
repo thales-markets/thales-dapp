@@ -621,8 +621,8 @@ const AMM: React.FC = () => {
                 if (isBuy) {
                     trackEvent({
                         category: 'RangeAMM',
-                        action: 'buy-from-amm',
-                        value: selectedStableIndex,
+                        action: `buy-with-${COLLATERALS[selectedStableIndex]}`,
+                        value: Number(total),
                     });
                 } else {
                     trackEvent({
