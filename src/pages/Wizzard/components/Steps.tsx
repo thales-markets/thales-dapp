@@ -12,11 +12,9 @@ import { RootState } from 'redux/rootReducer';
 
 const MMURL = 'https://metamask.io/download/';
 
-const IFrameUrl = 'https://widget.mtpelerin.com/?lang=en';
-
 const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
 
-const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurrentStep }) => {
+const Steps: React.FC<{ step: number; setCurrentStep: any; iframe: string }> = ({ step, setCurrentStep, iframe }) => {
     const [showIframe, setShowIframe] = useState(false);
     const [showSwap, setShowSwap] = useState(false);
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -105,7 +103,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 }}
             >
                 <IFrameWrapper>
-                    <IFrame src={IFrameUrl} />
+                    <IFrame src={iframe} />
                 </IFrameWrapper>
             </Modal>
             {showSwap && (

@@ -3,8 +3,8 @@ import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import Steps from './components/Steps';
 import WizzardText from './components/WizzardText';
-import { ethers } from 'ethers';
-import https from 'https';
+// import https from 'https';
+// import * as crypto from 'crypto';
 
 enum WizzardSteps {
     None,
@@ -19,7 +19,10 @@ enum OnRampProvider {
     Banxa,
 }
 
-const getPaymentMethods = '/api/payment-methods?source=USD';
+// const getPaymentMethods = '/api/payment-methods?source=USD';
+const mtPelerinIframe = 'https://widget.mtpelerin.com/?lang=en';
+const banxaIframe =
+    'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY?coinType=ETH&fiatType=USD&fiatAmount=500';
 
 const Wizzard: React.FC = () => {
     const [currentStep, setCurrentStep] = useState(WizzardSteps.None);
@@ -27,9 +30,9 @@ const Wizzard: React.FC = () => {
 
     const iFrameUrl = useMemo(() => {
         if (onRampProvider === OnRampProvider.MtPelerin) {
-            return 'https://widget.mtpelerin.com/?lang=en';
+            return mtPelerinIframe;
         } else {
-            sendGetRequest(getPaymentMethods);
+            return banxaIframe;
         }
     }, [onRampProvider]);
 
@@ -38,14 +41,22 @@ const Wizzard: React.FC = () => {
     return (
         <>
             <ProviderWrapper>
-                <Button padding={'5px 20px'} onClickHandler={setProvider.bind(this, OnRampProvider.MtPelerin)}>
+                <Button
+                    padding={'5px 20px'}
+                    onClickHandler={setProvider.bind(this, OnRampProvider.MtPelerin)}
+                    additionalStyles={{ opacity: onRampProvider === OnRampProvider.MtPelerin ? 1 : 0.3 }}
+                >
                     MtPelerin
                 </Button>
-                <Button padding={'5px 20px'} onClickHandler={setProvider.bind(this, OnRampProvider.Banxa)}>
+                <Button
+                    padding={'5px 20px'}
+                    onClickHandler={setProvider.bind(this, OnRampProvider.Banxa)}
+                    additionalStyles={{ opacity: onRampProvider === OnRampProvider.Banxa ? 1 : 0.3 }}
+                >
                     Banxa
                 </Button>
             </ProviderWrapper>
-            <Steps step={currentStep} setCurrentStep={setCurrentStep}></Steps>
+            <Steps iframe={iFrameUrl} step={currentStep} setCurrentStep={setCurrentStep}></Steps>
             <WizzardText step={currentStep}></WizzardText>
         </>
     );
@@ -54,71 +65,6 @@ const Wizzard: React.FC = () => {
 // Endpoint: thalesmarket.banxa-sandbox.com
 // API Key: thalesmarket@2022test
 // Secret: x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY
-
-function generateHmac(signature: any, nonce: any) {
-    const key = 'thalesmarket@2022test';
-    const secret = 'x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY';
-
-    const localSignature = ethers.utils.computeHmac(
-        ethers.utils.SupportedAlgorithm.sha256,
-        ethers.utils.toUtf8Bytes(secret),
-        ethers.utils.toUtf8Bytes(signature)
-    );
-    return `${key}:${localSignature}:${nonce}`;
-}
-
-// const getIframe = () => {
-//     const options = {
-//         method: 'POST',
-//         headers: {
-//             Accept: 'application/json',
-//             'Content-Type': 'application/json',
-//             Authorization: 'Bearer null',
-//         },
-//     };
-
-//     fetch('https://api.banxa.com/api/orders', options)
-//         .then((response) => response.json())
-//         .then((response) => console.log(response))
-//         .catch((err) => console.error(err));
-// };
-
-function sendGetRequest(query: any) {
-    const hostname = 'thalesmarket.banxa-sandbox.com';
-    const nonce = Date.now();
-    const method = 'GET';
-    const data = method + '\n' + query + '\n' + nonce;
-
-    const hmac = generateHmac(data, nonce);
-    console.log('hmac: ', hmac);
-    const options = {
-        hostname: hostname,
-        path: query,
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${hmac}`,
-        },
-    };
-
-    console.log('options: ', options);
-
-    const req = https.get(options, (res: any) => {
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-        res.setEncoding('utf8');
-        res.on('data', (chunk: any) => {
-            console.log(`BODY: ${chunk}`);
-        });
-        res.on('end', () => {
-            console.log('No more data in response.');
-        });
-    });
-
-    req.on('error', (e: any) => {
-        console.error(`problem with request: ${e.message}`);
-    });
-}
 
 const ProviderWrapper = styled.div`
     display: flex;
