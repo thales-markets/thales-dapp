@@ -174,6 +174,8 @@ const ItemsContainer = styled.div`
     transition: all 0.5s ease;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    --scrollbar-width: 0%;
     @media (max-width: 1024px) {
         flex-direction: row;
         justify-content: space-around;
