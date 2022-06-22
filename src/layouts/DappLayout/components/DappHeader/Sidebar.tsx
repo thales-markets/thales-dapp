@@ -176,10 +176,10 @@ const ItemsContainer = styled.div`
     flex-direction: column;
     overflow-y: auto;
     --scrollbar-width: 0%;
+    height: 100%;
     @media (max-width: 1024px) {
         flex-direction: row;
         justify-content: space-around;
-        height: 100%;
     }
 `;
 
