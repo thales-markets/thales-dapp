@@ -20,7 +20,8 @@ enum OnRampProvider {
 }
 
 const getPaymentMethods = '/api/coins/buy';
-const mtPelerinIframe = 'https://widget.mtpelerin.com/?lang=en';
+const mtPelerinIframe =
+    'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH';
 const banxaIframe = 'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY?blockchain=XRP';
 
 const Wizzard: React.FC = () => {
