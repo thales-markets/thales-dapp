@@ -84,6 +84,22 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
         }
     };
 
+    const priceSort = useMemo(
+        () => (rowA: any, rowB: any, columnId: any, desc: any) => {
+            let a = Number.parseFloat(rowA.values[columnId]);
+            let b = Number.parseFloat(rowB.values[columnId]);
+            if (Number.isNaN(a)) {
+                // Blanks and non-numeric to bottom
+                a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            }
+            if (Number.isNaN(b)) {
+                b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            }
+            return a > b ? 1 : a < b ? -1 : 0;
+        },
+        []
+    );
+
     return (
         <>
             <Table
@@ -132,7 +148,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                     },
                     {
                         Header: <>{t('options.market.transactions-card.table.price-col')}</>,
-                        sortType: 'basic',
+                        sortType: priceSort,
                         accessor: 'price',
                         Cell: (cellProps: any) => (
                             <p>
