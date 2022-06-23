@@ -1,1 +1,1 @@
-export const ROYALE_OF_ROYALES_NEXT = false;
+export const ROYALE_OF_ROYALES_NEXT = true;
