@@ -112,7 +112,8 @@
             "etherscan": "Этерскан",
             "brand-assets": "Активы бренда",
             "all-rights-reserved": "© {{year}} THALES DAO Все права защищены."
-        }
+        },
+        "featured-in": "Показан в"
     },
     "maintenance-page": {
         "title": "Оставайтесь с нами, продолжние следует...",

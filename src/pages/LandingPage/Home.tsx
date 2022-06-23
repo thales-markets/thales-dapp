@@ -102,6 +102,46 @@ const Home: React.FC = () => {
                         <OPTIMISM className="icon-home icon-home--polygon" />
                     </a>
                 </FlexDiv>
+                <Title style={{ marginBottom: '1em' }}> {t('landing-page.featured-in')}</Title>
+                <FlexDiv>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://finance.yahoo.com/news/thales-announces-launch-referral-program-121249063.html"
+                    >
+                        <FeatureLogo className="icon-home logo--yahoo" />
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://www.bloomberg.com/press-releases/2022-06-07/thales-announces-the-launch-of-its-new-referral-program"
+                    >
+                        <FeatureLogo className="icon-home logo--bloomberg" />
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://www.nasdaq.com/press-release/thales-announces-the-launch-of-its-new-referral-program-2022-06-07"
+                    >
+                        <FeatureLogo className="icon-home logo--nasdaq" />
+                    </a>
+                </FlexDiv>
+                <FlexDiv>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://www.benzinga.com/content/27585212/thales-announces-the-launch-of-its-new-referral-program"
+                    >
+                        <FeatureLogo className="icon-home logo--benzinga" />
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href="https://newsletter.banklesshq.com/p/your-guide-to-the-synthetix-ecosystem?s=r"
+                    >
+                        <FeatureLogo className="icon-home logo--bankless" />
+                    </a>
+                </FlexDiv>
                 <Title style={{ marginTop: 100 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
                 <Title id="faq-section" style={{ marginTop: 50 }}>
@@ -227,6 +267,14 @@ const ThalesGame = styled(IconAbs)`
     @media (max-width: 450px) {
         margin-bottom: 90px;
         padding: 0 10px;
+    }
+`;
+
+const FeatureLogo = styled(IconAbs)`
+    font-size: 16em;
+    line-height: 0.5em;
+    @media (max-width: 600px) {
+        font-size: 10em;
     }
 `;
 

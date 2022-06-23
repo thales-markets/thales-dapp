@@ -112,7 +112,8 @@
             "etherscan": "以太扫描",
             "brand-assets": "品牌资产",
             "all-rights-reserved": "© {{year}} THALES DAO 保留所有权利。"
-        }
+        },
+        "featured-in": "精选于"
     },
     "maintenance-page": {
         "title": "敬请关注，马上就来…",
