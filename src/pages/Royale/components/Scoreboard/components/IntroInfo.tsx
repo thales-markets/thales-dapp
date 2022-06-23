@@ -280,7 +280,7 @@ const Intro: React.FC = () => {
                     }}
                 />
                 <Link
-                    href="https://thalesmarket.medium.com/thales-royale-seasons-are-going-live-on-optimism-5459217ec0fd"
+                    href="https://thalesmarket.medium.com/royale-of-royales-is-coming-are-you-ready-cf0795c64e8a"
                     target="_blank"
                     rel="noreferrer"
                 >
