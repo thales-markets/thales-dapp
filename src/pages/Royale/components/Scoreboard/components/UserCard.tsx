@@ -139,7 +139,7 @@ export const UserCard: React.FC<UserCardProps> = ({
 
     useEffect(() => {
         if ((royalePassData as any).balance !== undefined && !isBuyingIn) {
-            (royalePassData as any).balance > 0
+            (royalePassData as any).balance > 0 && !ROYALE_OF_ROYALES_NEXT
                 ? setSelectedBuyInCollateral(BuyInCollateralEnum.PASS)
                 : setSelectedBuyInCollateral(BuyInCollateralEnum.SUSD);
             royalePassIdQuery.refetch();
