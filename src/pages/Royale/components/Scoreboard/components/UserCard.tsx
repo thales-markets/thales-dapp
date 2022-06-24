@@ -513,22 +513,28 @@ export const UserCard: React.FC<UserCardProps> = ({
                         <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
                         <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
                     </FlexContainer>
-                    <RoyalePassContainer>
-                        <UserLabel
-                            style={{
-                                padding: (royalePassData as any).balance === 0 || !isWalletConnected ? '15px 0px' : '',
-                            }}
-                        >
-                            {t('options.royale.scoreboard.royale-passes', { passes: (royalePassData as any).balance })}:
-                        </UserLabel>
-                        <ImageWrapper
-                            style={{
-                                display: (royalePassData as any).balance === 0 || !isWalletConnected ? 'none' : '',
-                            }}
-                        >
-                            <NftImage src="https://thales-protocol.s3.eu-north-1.amazonaws.com/THALES_ROYALE_PASS.gif" />
-                        </ImageWrapper>
-                    </RoyalePassContainer>
+                    {!ROYALE_OF_ROYALES_NEXT && (
+                        <RoyalePassContainer>
+                            <UserLabel
+                                style={{
+                                    padding:
+                                        (royalePassData as any).balance === 0 || !isWalletConnected ? '15px 0px' : '',
+                                }}
+                            >
+                                {t('options.royale.scoreboard.royale-passes', {
+                                    passes: (royalePassData as any).balance,
+                                })}
+                                :
+                            </UserLabel>
+                            <ImageWrapper
+                                style={{
+                                    display: (royalePassData as any).balance === 0 || !isWalletConnected ? 'none' : '',
+                                }}
+                            >
+                                <NftImage src="https://thales-protocol.s3.eu-north-1.amazonaws.com/THALES_ROYALE_PASS.gif" />
+                            </ImageWrapper>
+                        </RoyalePassContainer>
+                    )}
                     <RoyalePassportContainer>
                         <FlexDivSpaceBetween>
                             <UserLabel>{t('options.royale.scoreboard.passports-in-wallet')} </UserLabel>
@@ -1164,8 +1170,11 @@ const RoyalePassContainer = styled(FlexContainer)`
 `;
 
 const RoyalePassportContainer = styled.div`
+    padding-top: 25px;
+    margin-top: 20px;
     padding-bottom: 25px;
     margin-bottom: 20px;
+    border-top: 2px dashed var(--color);
     border-bottom: 2px dashed var(--color);
     display: flex;
     flex-direction: column;

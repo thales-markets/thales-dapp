@@ -231,12 +231,15 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                 </Button>
                                 <Balances>
                                     <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</span>{' '}
-                                    <span>
-                                        {(royalePassData as any).balance}{' '}
-                                        {(royalePassData as any).balance === 0 || (royalePassData as any).balance > 1
-                                            ? t('options.royale.scoreboard.royale-pass-2')
-                                            : t('options.royale.scoreboard.royale-pass')}
-                                    </span>
+                                    {!ROYALE_OF_ROYALES_NEXT && (
+                                        <span>
+                                            {(royalePassData as any).balance}{' '}
+                                            {(royalePassData as any).balance === 0 ||
+                                            (royalePassData as any).balance > 1
+                                                ? t('options.royale.scoreboard.royale-pass-2')
+                                                : t('options.royale.scoreboard.royale-pass')}
+                                        </span>
+                                    )}
                                 </Balances>
                             </>
                         }
@@ -624,7 +627,7 @@ const Button = styled.button`
 `;
 
 const Balances = styled.div`
-    padding: 3px 15px 6px 5px;
+    padding: 8px 15px 6px 5px;
     font-family: Sansation !important;
     color: var(--color);
     text-align: center;
