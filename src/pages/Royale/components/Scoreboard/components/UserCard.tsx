@@ -349,7 +349,22 @@ export const UserCard: React.FC<UserCardProps> = ({
             } else {
                 if (user.status === UserStatus.RDY) {
                     if (user.isAlive) {
+                        if (royaleData.seasonFinished) {
+                            return (
+                                <DeadText>
+                                    <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                                    {t('options.royale.scoreboard.season-finished')}
+                                </DeadText>
+                            );
+                        }
                         return <></>;
+                    } else if (Number(user.deathRound) === royaleData.currentRound && royaleData.seasonFinished) {
+                        return (
+                            <DeadText>
+                                <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                                {t('options.royale.scoreboard.season-finished')}
+                            </DeadText>
+                        );
                     } else {
                         return (
                             <DeadText>
@@ -516,7 +531,7 @@ export const UserCard: React.FC<UserCardProps> = ({
                     </RoyalePassContainer>
                     <RoyalePassportContainer>
                         <FlexDivSpaceBetween>
-                            <UserLabel>{t('options.royale.scoreboard.passports-in-wallet')}</UserLabel>
+                            <UserLabel>{t('options.royale.scoreboard.passports-in-wallet')} </UserLabel>
                             <InputWrapper
                                 style={{
                                     maxWidth: 240,
