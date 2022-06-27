@@ -19,6 +19,9 @@ import { getSynthName, sortCurrencies } from 'utils/currency';
 import { PaginationWrapper } from './MarketsTable';
 import { UI_COLORS } from 'constants/ui';
 import { OptionsMarkets } from 'types/options';
+import { get } from 'utils/localStore';
+import { saveTableSort } from 'utils/table';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 
 const assetSort = () => (rowA: any, rowB: any) => {
     return rowA.original.asset.localeCompare(rowB.original.asset);
@@ -230,13 +233,16 @@ const Table: React.FC<{
         prepareRow,
         state,
         setGlobalFilter,
+        setSortBy,
+        disableMultiSort,
+        isMultiSortEvent = (e: any) => e.shiftKey,
         gotoPage,
         setPageSize,
     } = useTable(
         {
             columns,
             data: data,
-            initalState: {
+            initialState: {
                 pageIndex: 1,
             },
             globalFilter: ourGlobalFilterFunction,
@@ -253,6 +259,15 @@ const Table: React.FC<{
     useEffect(() => {
         setGlobalFilter(searchText);
     }, [searchText]);
+
+    const tableSortLocalStorageKey = LOCAL_STORAGE_KEYS.MARKET_TABLE_SORTED_COLUMNS + networkId;
+    const tableSortLocalStorageValue = get(tableSortLocalStorageKey) as [];
+
+    useEffect(() => {
+        if (tableSortLocalStorageValue) {
+            setSortBy(tableSortLocalStorageValue);
+        }
+    }, []);
 
     const { pageIndex, pageSize, globalFilter } = state;
 
@@ -280,7 +295,24 @@ const Table: React.FC<{
                     {headerGroups.map((headerGroup: any, index: number) => (
                         <tr key={index} {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column: any, index2: number) => (
-                                <th key={index2} {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                <th
+                                    key={index2}
+                                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                                    onClick={
+                                        column.canSort
+                                            ? (e) => {
+                                                  e.persist();
+                                                  const isMultiSort = !disableMultiSort && isMultiSortEvent(e);
+                                                  column.toggleSortBy(undefined, isMultiSort);
+                                                  saveTableSort(tableSortLocalStorageKey, {
+                                                      id: column.id,
+                                                      desc: column.isSortedDesc,
+                                                      isMultiSort: isMultiSort,
+                                                  });
+                                              }
+                                            : undefined
+                                    }
+                                >
                                     {column.render('Header')}
                                     {
                                         <Arrow

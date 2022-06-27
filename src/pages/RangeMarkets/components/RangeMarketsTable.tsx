@@ -25,6 +25,7 @@ import { getSynthName } from 'utils/currency';
 import './main.scss';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { UI_COLORS } from 'constants/ui';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import GridViewRangedMarkets from './GridViewRangedMarkets';
 import Cookies from 'universal-cookie';
 import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.svg';
@@ -36,6 +37,8 @@ import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
 import SearchField from 'components/TableInputs/SearchField';
 import PhaseComponent from 'components/Phase/Phase';
 import { sortCurrencies } from 'utils/currency';
+import { get } from 'utils/localStore';
+import { saveTableSort } from 'utils/table';
 
 type RangeMarketsTableProps = {
     exchangeRates: Rates | null;
@@ -371,13 +374,16 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         prepareRow,
         state,
         setGlobalFilter,
+        setSortBy,
+        disableMultiSort,
+        isMultiSortEvent = (e: any) => e.shiftKey,
         gotoPage,
         setPageSize,
     } = useTable(
         {
             columns,
             data: data,
-            initalState: {
+            initialState: {
                 pageIndex: 1,
             },
             globalFilter: ourGlobalFilterFunction,
@@ -390,6 +396,15 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         useSortBy,
         usePagination
     );
+
+    const tableSortLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_SORTED_COLUMNS + networkId;
+    const tableSortLocalStorageValue = get(tableSortLocalStorageKey) as [];
+
+    useEffect(() => {
+        if (tableSortLocalStorageValue) {
+            setSortBy(tableSortLocalStorageValue);
+        }
+    }, []);
 
     const { pageIndex, pageSize, globalFilter } = state;
 
@@ -537,7 +552,23 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                             {headerGroups.map((headerGroup: any) => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
                                     {headerGroup.headers.map((column: any) => (
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        <th
+                                            {...column.getHeaderProps(column.getSortByToggleProps())}
+                                            onClick={
+                                                column.canSort
+                                                    ? (e) => {
+                                                          e.persist();
+                                                          const isMultiSort = !disableMultiSort && isMultiSortEvent(e);
+                                                          column.toggleSortBy(undefined, isMultiSort);
+                                                          saveTableSort(tableSortLocalStorageKey, {
+                                                              id: column.id,
+                                                              desc: column.isSortedDesc,
+                                                              isMultiSort: isMultiSort,
+                                                          });
+                                                      }
+                                                    : undefined
+                                            }
+                                        >
                                             {column.render('Header')}
                                             {
                                                 <Arrow
