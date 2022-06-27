@@ -94,12 +94,14 @@ const Table: React.FC<{
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: 'strikePrice',
                 Cell: (_props: any) => <span>{formatCurrencyWithSign(USD_SIGN, _props?.cell?.value)}</span>,
+                sortType: 'basic',
             },
             {
                 id: 'currentPrice',
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
                 Cell: (_props: any) => <span>{formatCurrencyWithSign(USD_SIGN, _props?.cell?.value)}</span>,
+                sortType: 'basic',
             },
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),
