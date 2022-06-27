@@ -10,6 +10,10 @@
     content: '\0043';
 }
 
+.icon--swap:before {
+    content: '\0044';
+}
+
 .icon--leaderboard:before {
     content: '\0045';
 }
@@ -104,4 +108,15 @@
 
 .icon--referral-page:before {
     content: '\0073';
+}
+
+.icon--wizard:before {
+    content: '\0074';
+}
+
+.icon--wizard {
+    font-size: 36px;
+    position: relative;
+    left: -2px;
+    top: -4px;
 }

@@ -160,6 +160,15 @@
         "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in sUSD instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.<br><br>To kick-start this referral program, in addition to the fees earned by the traders you refer, there will be 20,000 OP tokens to be distributed, at Thales Council discretion, among those that make the top in the Affiliate Leaderboard.",
         "disclaimer": "We strongly advise affiliates to stay compliant with the regulatory guidelines on testimonials and endorsements from their respective countries or jurisdictions. We suggest all endorsements, reviews, testimonials on Thales' products and services, as well as relationships between other types of content websites (forums, blogs, microblogs, and other Social Media channels) and Thales are clearly disclosed. The end-user of Thales' products and services has the right to be informed, and understand, when he is directed to Thales website through a referral link. In addition, you may not in any manner misrepresent or embellish the relationship between Thales platform (or any of its products and services) and you. Thales Council in its sole discretion, has the right to suspend or end this Referral Program.<br>Thales' terms and conditions of use also apply to the use of this referral links platform."
     },
+    "wizzard-page": {
+        "title": "Buy Crypto with credit card",
+        "intro1": "Starting your journey on Optimism it's now easier than ever.",
+        "intro2": "You can now obtain sUSD, the main stablecoin used for trading on Thales, on Optimism with your Credit Card using MtPelerin integration and following the step-by-step onboarding wizard.",
+        "step1": "The first step is to install Metamask on your browser, if you don't have it already. This step provides you with your own Ethereum 'Hot Wallet' which is a baseline for all interactions with the Web3 applications in the likes of Thales. <b>Please make sure to follow all steps provided by Metamask install wizard carefully, and read the safety tips with full attention.</b>",
+        "step2": "The second step is to obtain Ethereum on Optimism using your credit card with the integrated 'Fiat to Crypto' on-ramp. If you used the first step to set up a new Metamask wallet, you would need to use the same wallet's address for the deposit of purchased Ethereum.",
+        "step3": "The third step is to exchange your acquired Ethereum for sUSD, the decentralized stablecoin that is used for trading on Thales, or if you prefer for either USDT, USDC, or DAI (which are all also currently supported on Thales).",
+        "step4": "The last step is to get rekt by the AMM, but always remember to have fun!!!"
+    },
     "common": {
         "read-more": "Read more",
         "show-less": "Show less",
@@ -251,7 +260,8 @@
             "trade-history-label": "Trading history",
             "amm-mining-label": "AMM rewards",
             "amm-reporting-label": "AMM reporting",
-            "exotic-markets-label": "Exotic markets"
+            "exotic-markets-label": "Exotic markets",
+            "wizard": "Thales Wizard"
         },
         "coming-soon": "Coming soon...",
         "of": "of",

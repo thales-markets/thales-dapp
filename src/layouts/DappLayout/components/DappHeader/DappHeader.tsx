@@ -37,6 +37,7 @@ const getTitle = (t: any) => {
     if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
     if (location.pathname === ROUTES.Options.Leaderboard) return t('options.leaderboard.trading-comp-title');
     if (location.pathname === ROUTES.Options.Referral) return t('referral-page.title');
+    if (location.pathname === ROUTES.Options.Wizzard) return t('wizzard-page.title');
 };
 
 const Container = styled.div`
