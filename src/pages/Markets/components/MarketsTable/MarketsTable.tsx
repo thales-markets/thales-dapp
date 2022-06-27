@@ -121,7 +121,12 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             )}
             {!tableView && (
                 <Suspense fallback={<></>}>
-                    <MarketsGrid optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} filters={filters} />
+                    <MarketsGrid
+                        optionsMarkets={optionsMarkets}
+                        exchangeRates={exchangeRates}
+                        filters={filters}
+                        setAllAssets={setAllAssets}
+                    />
                 </Suspense>
             )}
         </>

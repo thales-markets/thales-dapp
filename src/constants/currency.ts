@@ -40,7 +40,7 @@ import { ReactComponent as sAMZNIcon } from 'assets/synths/sAMZN.svg';
 import { ReactComponent as sCEXIcon } from 'assets/synths/sCEX.svg';
 import { ReactComponent as sXAGIcon } from 'assets/synths/sXAG.svg';
 import { ReactComponent as sJPYIcon } from 'assets/synths/sJPY.svg';
-import { ReactComponent as sUSDIcon } from 'assets/synths/sUSD.svg';
+import { ReactComponent as sUSDIcon } from 'assets/currencies/crypto/sUSD.svg';
 import { ReactComponent as sFTSEIcon } from 'assets/synths/sFTSE.svg';
 import { ReactComponent as BCHIcon } from 'assets/currencies/crypto/BCH.svg';
 import { ReactComponent as SNXIcon } from 'assets/currencies/crypto/SNX.svg';
@@ -54,6 +54,9 @@ import { ReactComponent as APEIcon } from 'assets/currencies/crypto/APE.svg';
 import { ReactComponent as CVXIcon } from 'assets/currencies/crypto/CVX.svg';
 import { ReactComponent as OHMIcon } from 'assets/currencies/crypto/OHM.svg';
 import { ReactComponent as OPIcon } from 'assets/currencies/crypto/OP.svg';
+import { ReactComponent as DAIIcon } from 'assets/currencies/crypto/DAI.svg';
+import { ReactComponent as USDCIcon } from 'assets/currencies/crypto/USDC.svg';
+import { ReactComponent as USDTIcon } from 'assets/currencies/crypto/USDT.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -140,6 +143,7 @@ export const CRYPTO_CURRENCY = [
     'REP',
     'USDC',
     'USDT',
+    'DAI',
     'VELO',
     'ZRX',
     'THALES',
@@ -238,6 +242,9 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.APE]: APEIcon,
     [CRYPTO_CURRENCY_MAP.CVX]: CVXIcon,
     [CRYPTO_CURRENCY_MAP.OHM]: OHMIcon,
+    [CRYPTO_CURRENCY_MAP.DAI]: DAIIcon,
+    [CRYPTO_CURRENCY_MAP.USDC]: USDCIcon,
+    [CRYPTO_CURRENCY_MAP.USDT]: USDTIcon,
     [CRYPTO_CURRENCY_MAP.OP]: OPIcon,
 };
 

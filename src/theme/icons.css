@@ -228,3 +228,23 @@
 .icon--copy:before {
     content: '\0064';
 }
+
+.logo--bankless:before {
+    content: '\0056';
+}
+
+.logo--benzinga:before {
+    content: '\0057';
+}
+
+.logo--bloomberg:before {
+    content: '\0058';
+}
+
+.logo--nasdaq:before {
+    content: '\0059';
+}
+
+.logo--yahoo:before {
+    content: '\005A';
+}

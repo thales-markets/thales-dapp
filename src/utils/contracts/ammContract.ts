@@ -326,19 +326,6 @@ export const ammContract = {
                 {
                     indexed: false,
                     internalType: 'address',
-                    name: '_stakingThales',
-                    type: 'address',
-                },
-            ],
-            name: 'SetStakingThales',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'address',
                     name: 'seller',
                     type: 'address',
                 },
@@ -381,6 +368,21 @@ export const ammContract = {
             ],
             name: 'SoldToAMM',
             type: 'event',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'MAX_APPROVAL',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
         },
         {
             constant: false,
@@ -534,6 +536,51 @@ export const ammContract = {
                 },
                 {
                     internalType: 'address',
+                    name: 'collateral',
+                    type: 'address',
+                },
+                {
+                    internalType: 'address',
+                    name: '_referrer',
+                    type: 'address',
+                },
+            ],
+            name: 'buyFromAMMWithDifferentCollateralAndReferrer',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'market',
+                    type: 'address',
+                },
+                {
+                    internalType: 'enum ThalesAMM.Position',
+                    name: 'position',
+                    type: 'uint8',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'expectedPayout',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'additionalSlippage',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'address',
                     name: '_referrer',
                     type: 'address',
                 },
@@ -565,6 +612,47 @@ export const ammContract = {
             ],
             name: 'buyFromAmmQuote',
             outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'market',
+                    type: 'address',
+                },
+                {
+                    internalType: 'enum ThalesAMM.Position',
+                    name: 'position',
+                    type: 'uint8',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'address',
+                    name: 'collateral',
+                    type: 'address',
+                },
+            ],
+            name: 'buyFromAmmQuoteWithDifferentCollateral',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
                 {
                     internalType: 'uint256',
                     name: '',
@@ -672,6 +760,36 @@ export const ammContract = {
                     internalType: 'uint256',
                     name: '',
                     type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'curveSUSD',
+            outputs: [
+                {
+                    internalType: 'contract ICurveSUSD',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'dai',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
                 },
             ],
             payable: false,
@@ -997,6 +1115,21 @@ export const ammContract = {
         },
         {
             constant: true,
+            inputs: [],
+            name: 'previousManager',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
             inputs: [
                 {
                     internalType: 'address',
@@ -1064,21 +1197,6 @@ export const ammContract = {
             ],
             payable: false,
             stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address payable',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
-            name: 'retrieveSUSD',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -1282,6 +1400,36 @@ export const ammContract = {
             constant: false,
             inputs: [
                 {
+                    internalType: 'address',
+                    name: '_curveSUSD',
+                    type: 'address',
+                },
+                {
+                    internalType: 'address',
+                    name: '_dai',
+                    type: 'address',
+                },
+                {
+                    internalType: 'address',
+                    name: '_usdc',
+                    type: 'address',
+                },
+                {
+                    internalType: 'address',
+                    name: '_usdt',
+                    type: 'address',
+                },
+            ],
+            name: 'setCurveSUSD',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
                     internalType: 'bytes32',
                     name: 'asset',
                     type: 'bytes32',
@@ -1303,41 +1451,16 @@ export const ammContract = {
             inputs: [
                 {
                     internalType: 'uint256',
-                    name: '_spread',
+                    name: '_minspread',
                     type: 'uint256',
                 },
-            ],
-            name: 'setMaxSpread',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
                 {
                     internalType: 'uint256',
-                    name: '_maxSupportedPrice',
+                    name: '_maxspread',
                     type: 'uint256',
                 },
             ],
-            name: 'setMaxSupportedPrice',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_spread',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setMinSpread',
+            name: 'setMinMaxSpread',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1351,8 +1474,13 @@ export const ammContract = {
                     name: '_minSupportedPrice',
                     type: 'uint256',
                 },
+                {
+                    internalType: 'uint256',
+                    name: '_maxSupportedPrice',
+                    type: 'uint256',
+                },
             ],
-            name: 'setMinSupportedPrice',
+            name: 'setMinMaxSupportedPrice',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1437,26 +1565,6 @@ export const ammContract = {
             constant: false,
             inputs: [
                 {
-                    internalType: 'address',
-                    name: '_referrals',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_referrerFee',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setReferrals',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
                     internalType: 'contract IERC20',
                     name: '_sUSD',
                     type: 'address',
@@ -1476,23 +1584,13 @@ export const ammContract = {
                     name: '_safeBox',
                     type: 'address',
                 },
-            ],
-            name: 'setSafeBox',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
                 {
                     internalType: 'uint256',
                     name: '_safeBoxImpact',
                     type: 'uint256',
                 },
             ],
-            name: 'setSafeBoxImpact',
+            name: 'setSafeBoxData',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1506,8 +1604,18 @@ export const ammContract = {
                     name: '_stakingThales',
                     type: 'address',
                 },
+                {
+                    internalType: 'address',
+                    name: '_referrals',
+                    type: 'address',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_referrerFee',
+                    type: 'uint256',
+                },
             ],
-            name: 'setStakingThales',
+            name: 'setStakingThalesAndReferrals',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1582,6 +1690,36 @@ export const ammContract = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'usdc',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'usdt',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {
