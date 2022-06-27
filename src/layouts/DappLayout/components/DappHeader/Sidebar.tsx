@@ -143,6 +143,16 @@ const Sidebar: React.FC = () => {
                     }}
                     simpleOnClick={true}
                 />
+                {!isPolygon && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Wizzard ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.Wizzard)}
+                        iconName="wizard"
+                        label={t('common.sidebar.wizard')}
+                    />
+                )}
                 <ThreeDotsContainer
                     onClick={(event) => {
                         event.stopPropagation();

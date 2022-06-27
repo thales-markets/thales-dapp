@@ -109,3 +109,7 @@
 .icon--referral-page:before {
     content: '\0073';
 }
+
+.icon--wizard:before {
+    content: '\0074';
+}

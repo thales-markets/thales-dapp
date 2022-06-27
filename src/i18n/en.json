@@ -260,7 +260,8 @@
             "trade-history-label": "Trading history",
             "amm-mining-label": "AMM rewards",
             "amm-reporting-label": "AMM reporting",
-            "exotic-markets-label": "Exotic markets"
+            "exotic-markets-label": "Exotic markets",
+            "wizard": "Thales Wizard"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
