@@ -39,6 +39,7 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                         return format(val, 'dd MMM');
                     }}
                     tick={{ fill: 'var(--primary-color)' }}
+                    interval="preserveStartEnd"
                 />
                 {data && (
                     <Tooltip
@@ -52,7 +53,7 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                             if (!isNumber(label)) {
                                 return '';
                             }
-                            return format(label, 'do MMM yy | HH:mm');
+                            return format(label, 'do MMM yyyy');
                         }}
                     />
                 )}

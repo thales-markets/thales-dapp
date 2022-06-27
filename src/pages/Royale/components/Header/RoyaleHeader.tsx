@@ -189,33 +189,41 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                 <ThalesLogo className="icon icon--logo" />
                 <InfoWrapper>
                     <UtilWrapper>
-                        {!ROYALE_OF_ROYALES_NEXT && walletAddress && (
+                        {
                             <>
-                                {allowance ? (
-                                    <Button
-                                        className={walletBalance < (royaleData as any).buyInAmount ? 'disabled' : ''}
-                                        disabled={walletBalance < (royaleData as any).buyInAmount}
-                                        onClick={() => {
-                                            mintRoyalePass(walletAddress).then(() => {
-                                                synthsWalletBalancesQuery.refetch();
-                                                royalePassIdQuery.refetch();
-                                            });
-                                        }}
-                                    >
-                                        {t('options.royale.scoreboard.mint-royale-pass')}
-                                    </Button>
-                                ) : (
+                                {!ROYALE_OF_ROYALES_NEXT && walletAddress && (
                                     <>
-                                        <RoyaleTooltip title={t('options.royale.scoreboard.approve-for-minting')}>
+                                        {allowance ? (
                                             <Button
-                                                style={{ marginRight: 30 }}
-                                                onClick={() => setOpenApprovalModal(true)}
-                                                disabled={isAllowing}
-                                                className={isAllowing ? 'disabled' : ''}
+                                                className={
+                                                    walletBalance < (royaleData as any).buyInAmount ? 'disabled' : ''
+                                                }
+                                                disabled={walletBalance < (royaleData as any).buyInAmount}
+                                                onClick={() => {
+                                                    mintRoyalePass(walletAddress).then(() => {
+                                                        synthsWalletBalancesQuery.refetch();
+                                                        royalePassIdQuery.refetch();
+                                                    });
+                                                }}
                                             >
                                                 {t('options.royale.scoreboard.mint-royale-pass')}
                                             </Button>
-                                        </RoyaleTooltip>
+                                        ) : (
+                                            <>
+                                                <RoyaleTooltip
+                                                    title={t('options.royale.scoreboard.approve-for-minting')}
+                                                >
+                                                    <Button
+                                                        style={{ marginRight: 30 }}
+                                                        onClick={() => setOpenApprovalModal(true)}
+                                                        disabled={isAllowing}
+                                                        className={isAllowing ? 'disabled' : ''}
+                                                    >
+                                                        {t('options.royale.scoreboard.mint-royale-pass')}
+                                                    </Button>
+                                                </RoyaleTooltip>
+                                            </>
+                                        )}
                                     </>
                                 )}
                                 <Button onClick={() => setShowSwap(true)}>
@@ -223,15 +231,18 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                                 </Button>
                                 <Balances>
                                     <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</span>{' '}
-                                    <span>
-                                        {(royalePassData as any).balance}{' '}
-                                        {(royalePassData as any).balance === 0 || (royalePassData as any).balance > 1
-                                            ? t('options.royale.scoreboard.royale-pass-2')
-                                            : t('options.royale.scoreboard.royale-pass')}
-                                    </span>
+                                    {!ROYALE_OF_ROYALES_NEXT && (
+                                        <span>
+                                            {(royalePassData as any).balance}{' '}
+                                            {(royalePassData as any).balance === 0 ||
+                                            (royalePassData as any).balance > 1
+                                                ? t('options.royale.scoreboard.royale-pass-2')
+                                                : t('options.royale.scoreboard.royale-pass')}
+                                        </span>
+                                    )}
                                 </Balances>
                             </>
-                        )}
+                        }
                         <Modal
                             open={showSwap}
                             onClose={(_, reason) => {
@@ -296,7 +307,12 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                             }
                         />
                         {!walletAddress && (
-                            <HeaderButton onClick={onboardConnector.connectWallet}>
+                            <HeaderButton
+                                onClick={() => {
+                                    onboardConnector.connectWallet();
+                                    setShowBurgerMenu(BurgerState.Hide);
+                                }}
+                            >
                                 <WalletIcon className="icon icon--wallet" />
                                 <InfoText>{t('common.wallet.connect-your-wallet')}</InfoText>
                             </HeaderButton>
@@ -611,7 +627,7 @@ const Button = styled.button`
 `;
 
 const Balances = styled.div`
-    padding: 3px 15px 6px 5px;
+    padding: 8px 15px 6px 5px;
     font-family: Sansation !important;
     color: var(--color);
     text-align: center;

@@ -77,6 +77,10 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
         return lastTrade ? lastTrade.price : 0;
     };
 
+    const removeTimePart = (timestamp: number) => {
+        return new Date(new Date(timestamp).toDateString()).getTime();
+    };
+
     const chartData = useMemo(() => {
         let trades: any = [];
 
@@ -87,7 +91,7 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                 const shortPrice =
                     trade.side === 'short' ? trade.price : getLastPrice(tradesQuery.data, 'short', trade.timestamp);
                 return {
-                    timestamp: trade.timestamp,
+                    timestamp: removeTimePart(trade.timestamp),
                     firstPositionPrice: longPrice,
                     secondPositionPrice: shortPrice,
                 };
@@ -101,16 +105,38 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                 const outPrice =
                     trade.side === 'out' ? trade.price : getLastPrice(tradesQuery.data, 'out', trade.timestamp);
                 return {
-                    timestamp: trade.timestamp,
+                    timestamp: removeTimePart(trade.timestamp),
                     firstPositionPrice: inPrice,
                     secondPositionPrice: outPrice,
                 };
             });
         }
 
-        const data = orderBy(trades ? trades : [], 'timestamp', 'desc');
+        // Calculate the price sums and group data by date (while tracking count)
+        const groupedTradesByDate = trades.reduce((grouped: any, trade: any) => {
+            if (!grouped[trade.timestamp]) {
+                grouped[trade.timestamp] = { ...trade, count: 1 };
+                return grouped;
+            }
+            grouped[trade.timestamp].firstPositionPrice += trade.firstPositionPrice;
+            grouped[trade.timestamp].secondPositionPrice += trade.secondPositionPrice;
+            grouped[trade.timestamp].count += 1;
+            return grouped;
+        }, {});
+
+        // Create new array from grouped data and compute the average prices
+        const avgPriceForGroupedTrades = Object.keys(groupedTradesByDate).map((timestamp) => {
+            const groupedTrade = groupedTradesByDate[timestamp];
+            return {
+                timestamp: groupedTrade.timestamp,
+                firstPositionPrice: groupedTrade.firstPositionPrice / groupedTrade.count,
+                secondPositionPrice: groupedTrade.secondPositionPrice / groupedTrade.count,
+            };
+        });
+
+        const data = orderBy(avgPriceForGroupedTrades ? avgPriceForGroupedTrades : [], 'timestamp', 'asc');
         if (data.length) {
-            return [...data].reverse().slice(0, 8);
+            return [...data].slice(0, 8);
         }
         return [];
     }, [tradesQuery.data]);

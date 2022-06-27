@@ -139,7 +139,7 @@ export const UserCard: React.FC<UserCardProps> = ({
 
     useEffect(() => {
         if ((royalePassData as any).balance !== undefined && !isBuyingIn) {
-            (royalePassData as any).balance > 0
+            (royalePassData as any).balance > 0 && !ROYALE_OF_ROYALES_NEXT
                 ? setSelectedBuyInCollateral(BuyInCollateralEnum.PASS)
                 : setSelectedBuyInCollateral(BuyInCollateralEnum.SUSD);
             royalePassIdQuery.refetch();
@@ -349,7 +349,22 @@ export const UserCard: React.FC<UserCardProps> = ({
             } else {
                 if (user.status === UserStatus.RDY) {
                     if (user.isAlive) {
+                        if (royaleData.seasonFinished) {
+                            return (
+                                <DeadText>
+                                    <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                                    {t('options.royale.scoreboard.season-finished')}
+                                </DeadText>
+                            );
+                        }
                         return <></>;
+                    } else if (Number(user.deathRound) === royaleData.currentRound && royaleData.seasonFinished) {
+                        return (
+                            <DeadText>
+                                <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                                {t('options.royale.scoreboard.season-finished')}
+                            </DeadText>
+                        );
                     } else {
                         return (
                             <DeadText>
@@ -498,25 +513,31 @@ export const UserCard: React.FC<UserCardProps> = ({
                         <UserLabel>{t('options.leaderboard.balance')}:</UserLabel>
                         <InputWrapper>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</InputWrapper>
                     </FlexContainer>
-                    <RoyalePassContainer>
-                        <UserLabel
-                            style={{
-                                padding: (royalePassData as any).balance === 0 || !isWalletConnected ? '15px 0px' : '',
-                            }}
-                        >
-                            {t('options.royale.scoreboard.royale-passes', { passes: (royalePassData as any).balance })}:
-                        </UserLabel>
-                        <ImageWrapper
-                            style={{
-                                display: (royalePassData as any).balance === 0 || !isWalletConnected ? 'none' : '',
-                            }}
-                        >
-                            <NftImage src="https://thales-protocol.s3.eu-north-1.amazonaws.com/THALES_ROYALE_PASS.gif" />
-                        </ImageWrapper>
-                    </RoyalePassContainer>
+                    {!ROYALE_OF_ROYALES_NEXT && (
+                        <RoyalePassContainer>
+                            <UserLabel
+                                style={{
+                                    padding:
+                                        (royalePassData as any).balance === 0 || !isWalletConnected ? '15px 0px' : '',
+                                }}
+                            >
+                                {t('options.royale.scoreboard.royale-passes', {
+                                    passes: (royalePassData as any).balance,
+                                })}
+                                :
+                            </UserLabel>
+                            <ImageWrapper
+                                style={{
+                                    display: (royalePassData as any).balance === 0 || !isWalletConnected ? 'none' : '',
+                                }}
+                            >
+                                <NftImage src="https://thales-protocol.s3.eu-north-1.amazonaws.com/THALES_ROYALE_PASS.gif" />
+                            </ImageWrapper>
+                        </RoyalePassContainer>
+                    )}
                     <RoyalePassportContainer>
                         <FlexDivSpaceBetween>
-                            <UserLabel>{t('options.royale.scoreboard.passports-in-wallet')}</UserLabel>
+                            <UserLabel>{t('options.royale.scoreboard.passports-in-wallet')} </UserLabel>
                             <InputWrapper
                                 style={{
                                     maxWidth: 240,
@@ -1149,8 +1170,11 @@ const RoyalePassContainer = styled(FlexContainer)`
 `;
 
 const RoyalePassportContainer = styled.div`
+    padding-top: 25px;
+    margin-top: 20px;
     padding-bottom: 25px;
     margin-bottom: 20px;
+    border-top: 2px dashed var(--color);
     border-bottom: 2px dashed var(--color);
     display: flex;
     flex-direction: column;

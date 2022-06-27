@@ -11,6 +11,7 @@ import { PaginationWrapper } from '../MarketsTable/MarketsTable';
 
 import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
+import { sortCurrencies } from 'utils/currency';
 import { useTranslation } from 'react-i18next';
 import SortingMenu from 'components/SortingMenu';
 
@@ -18,9 +19,10 @@ type MarketsGridProps = {
     optionsMarkets: OptionsMarkets;
     exchangeRates: Rates | null;
     filters: GridFilters;
+    setAllAssets: any;
 };
 
-const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates, filters }) => {
+const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates, filters, setAllAssets }) => {
     const [rowsPerPage, setRowsPerPage] = useState<number>(9);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [dataCount, setDataCount] = useState<number>(optionsMarkets?.length || 0);
@@ -66,8 +68,11 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
 
     const options = useMemo(() => {
         let data = optionsMarkets;
-        console.log('sort');
         if (data.length > 0) {
+            let allAssets = new Set(data.filter((market) => !market.customMarket).map((market) => market.currencyKey));
+            allAssets = new Set(Array.from(allAssets).sort(sortCurrencies).slice(0, 11));
+            setAllAssets(allAssets);
+
             if (filters?.assetFilters?.length) {
                 data = data.filter((market) => {
                     return filters.assetFilters.includes(market.currencyKey);
