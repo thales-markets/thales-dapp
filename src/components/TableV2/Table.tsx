@@ -203,6 +203,7 @@ const Table: React.FC<TableProps> = ({
                                                         : undefined
                                                     : undefined
                                             }
+                                            isClaimed={row.original.claimed}
                                         >
                                             {row.cells.map((cell: any, cellIndex: number) => {
                                                 return (
@@ -219,7 +220,11 @@ const Table: React.FC<TableProps> = ({
                                     );
 
                                     if (row.original.link) {
-                                        return <SPAAnchor href={row.original.link}>{rowComponent}</SPAAnchor>;
+                                        return (
+                                            <SPAAnchor href={row.original.link} key={index}>
+                                                {rowComponent}
+                                            </SPAAnchor>
+                                        );
                                     }
 
                                     if (row.original.sticky) return;
@@ -325,14 +330,20 @@ const Table: React.FC<TableProps> = ({
                         </TableView.Body>
                     )}
                     {!hidePagination && (
-                        <Pagination
-                            rowsPerPageOptions={resultsPerPage ? resultsPerPage : [5, 10, 20, 25]}
-                            count={leaderboardView ? data.length - 1 : data.length}
-                            rowsPerPage={pageSize}
-                            page={pageIndex}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <Pagination
+                                        rowsPerPageOptions={resultsPerPage ? resultsPerPage : [5, 10, 20, 25]}
+                                        count={leaderboardView ? data.length - 1 : data.length}
+                                        rowsPerPage={pageSize}
+                                        page={pageIndex}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                    />
+                                </tr>
+                            </tbody>
+                        </table>
                     )}
                 </FlexDivColumn>
             )}

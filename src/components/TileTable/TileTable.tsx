@@ -33,13 +33,19 @@ type Properties = {
     isLoading?: boolean;
 };
 
-const wrapInAnchor = (child: JSX.Element, href?: string) => {
-    return href ? <SPAAnchor href={href}>{child}</SPAAnchor> : child;
+const wrapInAnchor = (child: JSX.Element, index: number, href?: string) => {
+    return href ? (
+        <SPAAnchor href={href} key={index}>
+            {child}
+        </SPAAnchor>
+    ) : (
+        child
+    );
 };
 
 const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRenderer, rows, isLoading }) => {
     const { t } = useTranslation();
-    if (!isLoading && !rows.length) {
+    if (!isLoading && !rows?.length) {
         return (
             <NoDataContainer>
                 <NoDataText>{t('common.no-data-available')}</NoDataText>
@@ -79,11 +85,12 @@ const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRender
                             </Tile>
                             {lastColumnRenderer && lastColumnRenderer(row)}
                         </FlexDiv>,
+                        index,
                         row.link
                     );
                 } else {
                     return (
-                        <FlexDiv>
+                        <FlexDiv key={index}>
                             {firstColumnRenderer && firstColumnRenderer(row)}
                             <Tile.Title lineHidden={index === 0} key={index}>
                                 {row}
