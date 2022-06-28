@@ -22,47 +22,57 @@ const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exc
 
     const options = useMemo(() => {
         let data = optionsMarkets;
+        if (data.length > 0) {
+            if (filters?.assetFilters?.length) {
+                data = data.filter((market) => {
+                    return filters.assetFilters.includes(market.currencyKey);
+                });
+            }
 
-        if (filters?.assetFilters?.length) {
-            data = data.filter((market) => {
-                return filters.assetFilters.includes(market.currencyKey);
+            if (filters?.showOnlyLiquid) {
+                data = data.filter((market) => {
+                    return market.availableIn > 0 || market.availableOut > 0;
+                });
+            }
+
+            if (filters?.searchQuery) {
+                data = data.filter((market) => {
+                    if (market?.asset.toLowerCase().includes(filters.searchQuery.toLowerCase())) return market;
+
+                    if (exchangeRates && exchangeRates[market.currencyKey]) {
+                        if (exchangeRates[market.currencyKey].toFixed(2).includes(filters.searchQuery)) return market;
+                    }
+                });
+            }
+
+            data = data.map((market) => {
+                // currentAssetPrice and strikePrice is required because it is part of Sort Filters
+                return {
+                    ...market,
+                    currentAssetPrice: exchangeRates?.[market?.currencyKey] || 0,
+                    strikePrice: market.range,
+                };
             });
+
+            if (filters?.sort?.length) {
+                filters.sort.forEach((sort) => {
+                    if (sort?.column && typeof (data as any)[0][sort?.column] == 'number') {
+                        if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
+                        if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
+                    }
+
+                    if (sort?.column && typeof (data as any)[0][sort?.column] == 'string') {
+                        if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
+                        if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
+                    }
+                });
+            }
+
+            setDataCount(data?.length || 0);
+            data = data.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage);
+
+            return data;
         }
-
-        if (filters?.showOnlyLiquid) {
-            data = data.filter((market) => {
-                return market.availableIn > 0 || market.availableOut > 0;
-            });
-        }
-
-        if (filters?.searchQuery) {
-            data = data.filter((market) => {
-                if (market?.asset.toLowerCase().includes(filters.searchQuery.toLowerCase())) return market;
-
-                if (exchangeRates && exchangeRates[market.currencyKey]) {
-                    if (exchangeRates[market.currencyKey].toFixed(2).includes(filters.searchQuery)) return market;
-                }
-            });
-        }
-
-        if (filters?.sort?.length) {
-            filters.sort.forEach((sort) => {
-                if (sort?.column && typeof (data as any)[0][sort.column] == 'number') {
-                    if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
-                    if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
-                }
-
-                if (sort?.column && typeof (data as any)[0][sort?.column] == 'string') {
-                    if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
-                    if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
-                }
-            });
-        }
-
-        setDataCount(data?.length || 0);
-        data = data.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage);
-
-        return data;
     }, [optionsMarkets, exchangeRates, filters, pageIndex, rowsPerPage]);
 
     useEffect(() => {

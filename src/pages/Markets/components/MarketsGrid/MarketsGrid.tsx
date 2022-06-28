@@ -15,14 +15,26 @@ import { sortCurrencies } from 'utils/currency';
 import { useTranslation } from 'react-i18next';
 import SortingMenu from 'components/SortingMenu';
 
+import { get } from 'utils/localStore';
+import { mapGridToTableSort, mapTableToGridSort, TableColumnSort } from 'utils/table';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import { NetworkId } from 'utils/network';
+
 type MarketsGridProps = {
+    networkId: NetworkId;
     optionsMarkets: OptionsMarkets;
     exchangeRates: Rates | null;
     filters: GridFilters;
     setAllAssets: any;
 };
 
-const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates, filters, setAllAssets }) => {
+const MarketsGrid: React.FC<MarketsGridProps> = ({
+    networkId,
+    optionsMarkets,
+    exchangeRates,
+    filters,
+    setAllAssets,
+}) => {
     const [rowsPerPage, setRowsPerPage] = useState<number>(9);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [dataCount, setDataCount] = useState<number>(optionsMarkets?.length || 0);
@@ -69,10 +81,6 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
     const options = useMemo(() => {
         let data = optionsMarkets;
         if (data.length > 0) {
-            let allAssets = new Set(data.filter((market) => !market.customMarket).map((market) => market.currencyKey));
-            allAssets = new Set(Array.from(allAssets).sort(sortCurrencies).slice(0, 11));
-            setAllAssets(allAssets);
-
             if (filters?.assetFilters?.length) {
                 data = data.filter((market) => {
                     return filters.assetFilters.includes(market.currencyKey);
@@ -96,6 +104,11 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
                 });
             }
 
+            data = data.map((market) => {
+                // currentAssetPrice is required because it is part of GridSortFilters
+                return { ...market, currentAssetPrice: exchangeRates?.[market?.currencyKey] || 0 };
+            });
+
             if (sortOptions.length) {
                 sortOptions.forEach((sort) => {
                     if (sort?.property && typeof (data as any)[0][sort.property] == 'number') {
@@ -118,8 +131,28 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
     }, [optionsMarkets, exchangeRates, filters, pageIndex, rowsPerPage, sortOptions]);
 
     useEffect(() => {
+        let allAssets: Set<string> = new Set();
+        optionsMarkets.forEach((market) => {
+            if (!market.customMarket) allAssets.add(market.currencyKey);
+            // currentAssetPrice is required because it is part of GridSortFilters
+        });
+        allAssets = new Set(Array.from(allAssets).sort(sortCurrencies).slice(0, 11));
+        setAllAssets(allAssets);
+    }, [optionsMarkets]);
+
+    useEffect(() => {
         setPageIndex(0);
     }, [filters]);
+
+    const tableSortLocalStorageKey = LOCAL_STORAGE_KEYS.MARKET_TABLE_SORTED_COLUMNS + networkId;
+    const tableSortLocalStorageValue: TableColumnSort[] = get(tableSortLocalStorageKey) as [];
+
+    useEffect(() => {
+        if (tableSortLocalStorageValue) {
+            const gridSortFilters = mapTableToGridSort(tableSortLocalStorageValue, GridSortFilters);
+            setSortOptions(gridSortFilters);
+        }
+    }, []);
 
     const updateSortOptions = (index: number) => {
         const newSortOptions = [...sortOptions];
@@ -141,6 +174,9 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
         });
 
         setSortOptions(newSortOptions);
+
+        const tableSortFormat = mapGridToTableSort(newSortOptions[index]);
+        localStorage.setItem(tableSortLocalStorageKey, JSON.stringify(tableSortFormat));
     };
 
     return (

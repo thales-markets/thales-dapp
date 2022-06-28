@@ -245,7 +245,7 @@ const Table: React.FC<{
             columns,
             data: data,
             initialState: {
-                pageIndex: 1,
+                pageIndex: 0,
             },
             globalFilter: ourGlobalFilterFunction,
             autoResetPage: false,
@@ -338,7 +338,7 @@ const Table: React.FC<{
                     {page.map((row: any, index: number) => {
                         prepareRow(row);
                         return (
-                            <SPAAnchor key={index} href={buildOptionsMarketLink(row.original.address)}>
+                            <SPAAnchor key={'a' + index} href={buildOptionsMarketLink(row.original.address)}>
                                 <tr key={index} {...row.getRowProps()}>
                                     {row.cells.map((cell: any, index: number) => {
                                         return (

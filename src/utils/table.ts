@@ -1,6 +1,7 @@
+import { SortOption } from 'types/options';
 import { get } from './localStore';
 
-type TableColumnSort = {
+export type TableColumnSort = {
     id: string;
     desc: boolean | undefined;
     isMultiSort: boolean;
@@ -35,4 +36,33 @@ export const saveTableSort = (lolcaStorageKey: string, columnAction: TableColumn
         );
 
     localStorage.setItem(lolcaStorageKey, JSON.stringify(sortedColumns));
+};
+
+export const mapTableToGridSort = (tableSort: TableColumnSort[], gridSort: Array<SortOption>): Array<SortOption> => {
+    const gridSortFormat = [...gridSort];
+    // Map Table sort to Grid sort filters
+    if (tableSort && tableSort.length > 0) {
+        const index = gridSortFormat.findIndex((element) => {
+            return element.property === (tableSort[0].id === 'currentPrice' ? 'currentAssetPrice' : tableSort[0].id);
+        });
+        if (index > -1) {
+            gridSortFormat[index].asc = !tableSort[0].desc;
+            gridSortFormat[index].desc = !!tableSort[0].desc;
+        }
+    }
+
+    return gridSortFormat;
+};
+
+export const mapGridToTableSort = (gridSort: SortOption): TableColumnSort[] => {
+    const tableSortFormat: TableColumnSort[] = [];
+    if (gridSort.asc || gridSort.desc) {
+        tableSortFormat.push({
+            id: gridSort.property === 'currentAssetPrice' ? 'currentPrice' : gridSort.property,
+            desc: gridSort.desc,
+            isMultiSort: false,
+        });
+    }
+
+    return tableSortFormat;
 };

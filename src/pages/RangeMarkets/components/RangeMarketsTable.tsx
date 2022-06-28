@@ -38,6 +38,7 @@ import SearchField from 'components/TableInputs/SearchField';
 import PhaseComponent from 'components/Phase/Phase';
 import { sortCurrencies } from 'utils/currency';
 import { get } from 'utils/localStore';
+import { mapGridToTableSort, mapTableToGridSort, TableColumnSort } from 'utils/table';
 import { saveTableSort } from 'utils/table';
 
 type RangeMarketsTableProps = {
@@ -128,6 +129,16 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         [setSelectedAssets, setAssetFilters, assetFilters]
     );
 
+    const tableSortLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_SORTED_COLUMNS + networkId;
+    const tableSortLocalStorageValue: TableColumnSort[] = get(tableSortLocalStorageKey) as [];
+
+    useEffect(() => {
+        if (tableSortLocalStorageValue) {
+            const gridSortFilters = mapTableToGridSort(tableSortLocalStorageValue, GridSortFilters);
+            setSortOptions(gridSortFilters);
+        }
+    }, [tableView]);
+
     const updateSortOptions = (index: number) => {
         const newSortOptions = [...sortOptions];
 
@@ -148,6 +159,9 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         });
 
         setSortOptions(newSortOptions);
+
+        const tableSortFormat = mapGridToTableSort(newSortOptions[index]);
+        localStorage.setItem(tableSortLocalStorageKey, JSON.stringify(tableSortFormat));
     };
 
     const ammSort = useMemo(
@@ -179,11 +193,12 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
             {
                 id: 'asset',
                 Header: t(`options.home.markets-table.asset-col`),
-                accessor: (row: any) => {
+                accessor: 'asset',
+                Cell: (_props: any) => {
                     return (
                         <>
                             <Currency.Name
-                                currencyKey={row?.currencyKey}
+                                currencyKey={_props?.value}
                                 showIcon={true}
                                 hideAssetName={true}
                                 rangeMarket={true}
@@ -191,10 +206,10 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                                 synthIconStyle={{ width: 32, height: 32 }}
                                 spanStyle={{ float: 'left' }}
                             />
-                            {currencyKeyToDataFeedSourceMap[row?.currencyKey]?.source == 'TWAP' && (
+                            {currencyKeyToDataFeedSourceMap[_props?.value]?.source == 'TWAP' && (
                                 <Tooltip
                                     message={t('options.home.markets-table.twap-tooltip')}
-                                    link={currencyKeyToDataFeedSourceMap[row?.currencyKey]?.link}
+                                    link={currencyKeyToDataFeedSourceMap[_props?.value]?.link}
                                     type={'info'}
                                     iconColor={'var(--primary-color)'}
                                     container={{ width: '15px' }}
@@ -385,7 +400,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
             columns,
             data: data,
             initialState: {
-                pageIndex: 1,
+                pageIndex: 0,
             },
             globalFilter: ourGlobalFilterFunction,
             autoResetPage: false,
@@ -398,14 +413,12 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         usePagination
     );
 
-    const tableSortLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_SORTED_COLUMNS + networkId;
-    const tableSortLocalStorageValue = get(tableSortLocalStorageKey) as [];
-
     useEffect(() => {
+        const tableSortLocalStorageValue = get(tableSortLocalStorageKey) as [];
         if (tableSortLocalStorageValue) {
             setSortBy(tableSortLocalStorageValue);
         }
-    }, []);
+    }, [tableView]);
 
     const { pageIndex, pageSize, globalFilter } = state;
 
@@ -550,10 +563,11 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                 <>
                     <table {...getTableProps()}>
                         <thead>
-                            {headerGroups.map((headerGroup: any) => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map((column: any) => (
+                            {headerGroups.map((headerGroup: any, index: number) => (
+                                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map((column: any, thIndex: number) => (
                                         <th
+                                            key={thIndex}
                                             {...column.getHeaderProps(column.getSortByToggleProps())}
                                             onClick={
                                                 column.canSort
@@ -593,7 +607,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                             {page.map((row: any, index: number) => {
                                 prepareRow(row);
                                 return (
-                                    <SPAAnchor href={buildRangeMarketLink(row.original.address)}>
+                                    <SPAAnchor key={'a' + index} href={buildRangeMarketLink(row.original.address)}>
                                         <tr key={index} {...row.getRowProps()}>
                                             {row.cells.map((cell: any) => {
                                                 return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;

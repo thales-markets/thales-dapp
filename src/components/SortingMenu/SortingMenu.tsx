@@ -39,7 +39,7 @@ const SortingMenu: React.FC<SortingMenuProps> = ({ items, itemClickEventHandler,
             {window.innerWidth > 768 && (
                 <Wrapper>
                     {items.map((item, index) => (
-                        <>
+                        <React.Fragment key={index}>
                             <Item key={index} onClick={() => itemClickEventHandler(index)}>
                                 {item.displayName}
                                 <Arrow
@@ -52,7 +52,7 @@ const SortingMenu: React.FC<SortingMenuProps> = ({ items, itemClickEventHandler,
                                     }`}
                                 />
                             </Item>
-                        </>
+                        </React.Fragment>
                     ))}
                 </Wrapper>
             )}
