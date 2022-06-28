@@ -111,12 +111,13 @@
 }
 
 .icon--wizard:before {
-    content: '\0074';
+    content: '\0075';
 }
 
 .icon--wizard {
-    font-size: 36px;
+    width: 32px;
+    font-size: 44px;
     position: relative;
-    left: -2px;
-    top: -4px;
+    left: -4px;
+    top: -6px;
 }
