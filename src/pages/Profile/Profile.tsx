@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
     const [searchAddress, setSearchAddress] = useState<string>('');
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
-    const markets = marketsQuery.isSuccess ? marketsQuery.data : undefined;
+    const markets = marketsQuery.isSuccess ? marketsQuery.data : [];
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
     const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
 

@@ -69,7 +69,7 @@ const generateRows = (data: any[], translator: TFunction) => {
                 return d;
             }
             const isRanged = d.optionSide == 'in' || d.optionSide == 'out' ? true : false;
-            const marketExpired = d.marketItem.result;
+            const marketExpired = d.marketItem?.result;
             const isLong = d.optionSide === 'long';
             const optionPrice = d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
             const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;

@@ -13,7 +13,11 @@ type CellProps = {
 type Children = {
     Header: StyledComponent<'div', any>;
     Body: StyledComponent<'div', any, { leaderboardView?: boolean; isMobile?: boolean }>;
-    Row: StyledComponent<'div', any, { leaderboardRank?: number; isUser?: boolean; isMobile?: boolean }>;
+    Row: StyledComponent<
+        'div',
+        any,
+        { leaderboardRank?: number; isUser?: boolean; isMobile?: boolean; isClaimed?: boolean }
+    >;
     Cell: StyledComponent<'div', any, CellProps>;
     RowMobile: StyledComponent<'div', any>;
     Arrow: StyledComponent<'i', any>;
@@ -47,7 +51,7 @@ const RowMobile = styled.div`
     border-bottom: 1px solid var(--table-border-color);
 `;
 
-const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: boolean }>`
+const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: boolean; isClaimed?: boolean }>`
     display: flex;
     height: 43px;
     width: 100%;
@@ -84,6 +88,7 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
                 border: 1px solid var(--table-border-color) !important;
             `
             : ''};
+    ${(_props) => (_props?.isClaimed ? 'opacity: 0.5' : '')};
 `;
 
 const Body = styled.div<{ leaderboardView?: boolean; isMobile?: boolean }>`
