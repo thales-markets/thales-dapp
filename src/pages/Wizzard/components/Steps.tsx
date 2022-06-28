@@ -9,6 +9,7 @@ import ROUTES from 'constants/routes';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
+import arrow from 'assets/images/arrow-link.svg';
 
 const MMURL = 'https://metamask.io/download/';
 
@@ -52,6 +53,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any; iframe: string }> = (
                             <>Connect Wallet</>
                         )}
                     </Text>
+                    {step === 1 && <ArrowImg src={arrow} />}
                 </Card>
                 <Card
                     active={step === 0 || step === 2}
@@ -62,6 +64,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any; iframe: string }> = (
                 >
                     <Image src={wizzard} />
                     <Text>Buy Ethereum</Text>
+                    {step === 2 && <ArrowImg src={arrow} />}
                 </Card>
                 <Card
                     active={step === 0 || step === 3}
@@ -74,6 +77,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any; iframe: string }> = (
                         <Icon style={{ fontSize: 74 }} className={`sidebar-icon icon--swap`} />
                     </IconWrapper>
                     <Text>Exchange to sUSD</Text>
+                    {step === 3 && <ArrowImg src={arrow} />}
                 </Card>
                 <Card
                     active={step === 0 || step === 4}
@@ -88,6 +92,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any; iframe: string }> = (
                     </IconWrapper>
 
                     <Text>Thales Markets</Text>
+                    {step === 4 && <ArrowImg src={arrow} />}
                 </Card>
             </CardWrapper>
             <CardWrapper justifyContent={false}>
@@ -191,6 +196,14 @@ const Icon = styled.i`
     font-size: 57px;
     color: var(--input-border-color);
 `;
+
+const ArrowImg = styled.img`
+    height: 14px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+`;
+
 const Text = styled.p`
     font-style: normal;
     font-weight: 400;
