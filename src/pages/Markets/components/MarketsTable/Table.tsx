@@ -172,10 +172,8 @@ const Table: React.FC<{
     }, [optionsMarkets]);
 
     const data = useMemo(() => {
-        const set: Set<string> = new Set();
         const processedMarkets = optionsMarkets
             .map((market) => {
-                if (!market.customMarket) set.add(market.currencyKey);
                 return {
                     address: market.address,
                     asset: market.asset,
@@ -204,11 +202,18 @@ const Table: React.FC<{
                 return market;
             });
 
-        const result = new Set(Array.from(set).sort(sortCurrencies).slice(0, 11));
-        setAllAssets(result);
-
         return processedMarkets;
     }, [optionsMarkets, showOnlyLiquid, assetFilters]);
+
+    useEffect(() => {
+        let allAssets: Set<string> = new Set();
+        optionsMarkets.forEach((market) => {
+            if (!market.customMarket) allAssets.add(market.currencyKey);
+            // currentAssetPrice is required because it is part of GridSortFilters
+        });
+        allAssets = new Set(Array.from(allAssets).sort(sortCurrencies).slice(0, 11));
+        setAllAssets(allAssets);
+    }, [optionsMarkets]);
 
     // Custom global search filter -> useTable
     const ourGlobalFilterFunction = useCallback((rows: any, _columnIds: string[], filterValue: any) => {
