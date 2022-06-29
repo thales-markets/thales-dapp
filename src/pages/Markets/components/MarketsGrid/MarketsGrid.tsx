@@ -109,7 +109,7 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({
                 return { ...market, currentAssetPrice: exchangeRates?.[market?.currencyKey] || 0 };
             });
 
-            if (sortOptions.length) {
+            if (data.length) {
                 sortOptions.forEach((sort) => {
                     if (sort?.property && typeof (data as any)[0][sort.property] == 'number') {
                         if (sort.asc) data = _.orderBy(data, [sort.property], 'asc');
