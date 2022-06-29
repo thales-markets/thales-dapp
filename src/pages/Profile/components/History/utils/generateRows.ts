@@ -38,7 +38,6 @@ const getOptionSideLabel = (optionSide: string) => {
 };
 
 const generateStrike = (market: any) => {
-    console.log(market);
     if (market.leftPrice) {
         return '$' + formatCurrency(market.leftPrice) + ' - ' + '$' + formatCurrency(market.rightPrice);
     }
@@ -47,7 +46,6 @@ const generateStrike = (market: any) => {
 
 const generateRows = (data: any[], translator: TFunction) => {
     try {
-        console.log(data);
         const dateMap: Record<string, any> = {};
         const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
         sortedData.forEach((trade) => {

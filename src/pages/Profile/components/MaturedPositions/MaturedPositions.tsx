@@ -40,11 +40,6 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     const data = useMemo(() => {
         const newArray: any = [];
 
-        console.log('claimed ', claimed);
-        console.log('claimedRange ', claimedRange);
-        console.log('positions ', positions);
-        console.log('rangedPositions ', rangedPositions);
-
         if (claimed.length > 0) {
             claimed.map((value) => {
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
