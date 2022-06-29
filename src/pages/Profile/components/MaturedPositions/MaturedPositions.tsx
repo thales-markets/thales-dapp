@@ -244,7 +244,6 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                             },
                             sortable: true,
                         },
-
                         {
                             Header: t(`options.home.markets-table.maturity-date-col`),
                             accessor: (row: any) => <TableText>{formatShortDate(row.market.maturityDate)}</TableText>,
@@ -262,6 +261,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                     </TableText>
                                 );
                             },
+                            sortType: 'basic',
                         },
                         {
                             Header: t(`options.home.markets-table.final-asset-price-col`),
