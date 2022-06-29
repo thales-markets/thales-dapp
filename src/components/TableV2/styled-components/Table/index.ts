@@ -13,6 +13,7 @@ type CellProps = {
 type Children = {
     Header: StyledComponent<'div', any>;
     Body: StyledComponent<'div', any, { leaderboardView?: boolean; isMobile?: boolean }>;
+    RowWrapper: any;
     Row: StyledComponent<
         'div',
         any,
@@ -51,7 +52,16 @@ const RowMobile = styled.div`
     border-bottom: 1px solid var(--table-border-color);
 `;
 
+const RowWrapper = styled.div<{ isClaimable?: boolean }>`
+    background: ${(_props) =>
+        _props?.isClaimable ? 'linear-gradient(rgba(130, 8, 252, 1), rgba(81, 106, 255, 1))' : 'transparent'};
+    margin: ${(_props) => (_props?.isClaimable ? '5px 0px 5px 0px' : '')};
+    box-shadow: ${(_props) => (_props?.isClaimable ? ' 0px 0px 10px 3px rgba(100, 217, 254, 0.3)' : 'none')};
+    padding: 2px 0px 2px 0px;
+`;
+
 const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: boolean; isClaimed?: boolean }>`
+    background: var(--background);
     display: flex;
     height: 43px;
     width: 100%;
@@ -143,6 +153,7 @@ export const NoDataText = styled.div`
 
 Table.Header = Header;
 Table.Body = Body;
+Table.RowWrapper = RowWrapper;
 Table.Row = Row;
 Table.RowMobile = RowMobile;
 Table.Cell = Cell;

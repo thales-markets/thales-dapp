@@ -193,30 +193,32 @@ const Table: React.FC<TableProps> = ({
                                 {page.map((row: any, index: number) => {
                                     prepareRow(row);
                                     const rowComponent = (
-                                        <TableView.Row
-                                            key={index}
-                                            {...row.getRowProps()}
-                                            leaderboardRank={
-                                                leaderboardView
-                                                    ? row?.values?.rank
+                                        <TableView.RowWrapper isClaimable={row.original.claimable}>
+                                            <TableView.Row
+                                                key={index}
+                                                {...row.getRowProps()}
+                                                leaderboardRank={
+                                                    leaderboardView
                                                         ? row?.values?.rank
+                                                            ? row?.values?.rank
+                                                            : undefined
                                                         : undefined
-                                                    : undefined
-                                            }
-                                            isClaimed={row.original.claimed}
-                                        >
-                                            {row.cells.map((cell: any, cellIndex: number) => {
-                                                return (
-                                                    <TableView.Cell
-                                                        defaultFontWeight={'bold'}
-                                                        key={cellIndex}
-                                                        {...cell.getCellProps()}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableView.Cell>
-                                                );
-                                            })}
-                                        </TableView.Row>
+                                                }
+                                                isClaimed={row.original.claimed}
+                                            >
+                                                {row.cells.map((cell: any, cellIndex: number) => {
+                                                    return (
+                                                        <TableView.Cell
+                                                            defaultFontWeight={'bold'}
+                                                            key={cellIndex}
+                                                            {...cell.getCellProps()}
+                                                        >
+                                                            {cell.render('Cell')}
+                                                        </TableView.Cell>
+                                                    );
+                                                })}
+                                            </TableView.Row>
+                                        </TableView.RowWrapper>
                                     );
 
                                     if (row.original.link) {
@@ -293,6 +295,7 @@ const Table: React.FC<TableProps> = ({
                                                     : undefined
                                                 : undefined
                                         }
+                                        isClaimed={row.original.claimed}
                                     >
                                         {row.cells.map((cell: any, cellIndex: number) => {
                                             return (
