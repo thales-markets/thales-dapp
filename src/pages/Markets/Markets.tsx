@@ -31,7 +31,7 @@ const Markets: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const screenSize = useSelector((state: RootState) => getUISize(state));
-    console.log(screenSize);
+    console.log('screenSize: ' + screenSize);
     const dispatch = useDispatch();
 
     useEffect(() => {
