@@ -60,7 +60,7 @@ const Sidebar: React.FC = () => {
                     />
                 )}
 
-                {isPolygon && (
+                {/* {isPolygon && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Leaderboard ? 'selected' : ''
@@ -69,7 +69,7 @@ const Sidebar: React.FC = () => {
                         iconName="leaderboard"
                         label={t('common.sidebar.leaderboard-label')}
                     />
-                )}
+                )} */}
                 {!isPolygon && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
