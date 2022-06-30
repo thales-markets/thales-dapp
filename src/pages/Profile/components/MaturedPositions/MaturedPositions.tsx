@@ -6,7 +6,11 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
-import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import {
+    formatCurrencyWithSign,
+    formatCurrencyWithSignInRange,
+    getPercentageDifference,
+} from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
@@ -81,7 +85,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 const modifiedValue: any = JSON.parse(JSON.stringify(value));
                 modifiedValue.balances.priceDiff = 0;
                 modifiedValue.link = buildRangeMarketLink(value.market.id);
-                modifiedValue.market.strikePrice = value.market.leftPrice + ' - ' + value.market.rightPrice;
+                modifiedValue.market.strikePrice = { left: value.market.leftPrice, right: value.market.rightPrice };
                 modifiedValue.range = true;
                 newArray.push(modifiedValue);
             });
@@ -246,17 +250,36 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                         },
                         {
                             Header: t(`options.home.markets-table.strike-price-col`),
-                            accessor: 'market.strikePrice',
-                            Cell: (_props: any) => {
+                            accessor: (row: any) => {
                                 return (
                                     <TableText>
-                                        {_props.cell.row.original.range
-                                            ? _props.cell.value
-                                            : formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}
+                                        {row.range
+                                            ? formatCurrencyWithSignInRange(
+                                                  USD_SIGN,
+                                                  row.market.strikePrice.left,
+                                                  row.market.strikePrice.right,
+                                                  2
+                                              )
+                                            : formatCurrencyWithSign(USD_SIGN, row.market.strikePrice, 2)}
                                     </TableText>
                                 );
                             },
-                            sortType: 'basic',
+                            sortType: (firstElem: any, secondElem: any) => {
+                                const firstPrice =
+                                    firstElem.original.market.strikePrice?.left ||
+                                    firstElem.original.market.strikePrice;
+                                const secondPrice =
+                                    secondElem.original.market.strikePrice?.left ||
+                                    secondElem.original.market.strikePrice;
+
+                                if (firstPrice > secondPrice) {
+                                    return 1;
+                                }
+                                if (firstPrice < secondPrice) {
+                                    return -1;
+                                }
+                                return 0;
+                            },
                         },
                         {
                             Header: t(`options.home.markets-table.final-asset-price-col`),

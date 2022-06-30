@@ -63,6 +63,13 @@ export const formatCurrencyWithSign = (sign: string | null | undefined, value: N
         decimals || getPrecision(value)
     )}`;
 
+export const formatCurrencyWithSignInRange = (
+    sign: string | null | undefined,
+    leftValue: NumericValue,
+    rightValue: NumericValue,
+    decimals?: number
+) => formatCurrencyWithSign(sign, leftValue, decimals) + ' - ' + formatCurrencyWithSign(sign, rightValue, decimals);
+
 export const formatCurrencyWithKey = (
     currencyKey: CurrencyKey,
     value: NumericValue,

@@ -8,7 +8,9 @@ import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
 import { POLYGON_ID } from 'constants/network';
 import { CONVERT_TO_6_DECIMALS } from 'constants/token';
+import { USD_SIGN } from 'constants/currency';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { formatCurrencyWithSignInRange } from 'utils/formatters/number';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
 import { RangedMarketUI } from 'types/options';
@@ -65,7 +67,7 @@ const RangeMarkets: React.FC = () => {
                                   ? apiData?.outPrice * CONVERT_TO_6_DECIMALS
                                   : apiData?.outPrice) ?? 0,
                           ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
-                          range: '$' + m.leftPrice.toFixed(2) + ' - ' + '$' + m.rightPrice.toFixed(2),
+                          range: formatCurrencyWithSignInRange(USD_SIGN, m.leftPrice, m.rightPrice, 2),
                       };
                   })
                 : marketsQuery.data;
