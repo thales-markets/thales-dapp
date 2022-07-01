@@ -68,7 +68,7 @@ const Results: React.FC<ResultsProps> = ({
     }, [proposalResults]);
 
     const numberOfCouncilMemebers = isCouncilResults
-        ? NUMBER_OF_COUNCIL_MEMBERS + 1
+        ? NUMBER_OF_COUNCIL_MEMBERS
         : proposalId === VOTING_ORACLE_COUNCIL_PROPOSAL_ID
         ? NUMBER_OF_ORACLE_COUNCIL_MEMBERS
         : NUMBER_OF_COUNCIL_MEMBERS;
@@ -107,16 +107,6 @@ const Results: React.FC<ResultsProps> = ({
                                         (index === numberOfCouncilMemebers - 1 || index === choices.length - 1))
                                         ? 20
                                         : 10
-                                }
-                                style={
-                                    isCouncilResults && index === 4
-                                        ? {
-                                              textDecoration: 'line-through',
-                                              textDecorationColor: '#B8C6E5',
-                                              textDecorationThickness: '2px',
-                                              opacity: '0.5',
-                                          }
-                                        : {}
                                 }
                             >
                                 <SidebarRowData>
