@@ -6,6 +6,7 @@ import winnerCardS5 from 'assets/images/royale/winner-card-s5.svg';
 import winnerCardS6 from 'assets/images/royale/winner-card-s6.svg';
 import winnerCardS7 from 'assets/images/royale/winner-card-s7.svg';
 import winnerCardS8 from 'assets/images/royale/winner-card-s8.svg';
+import winnerCardS9 from 'assets/images/royale/winner-card-s9.svg';
 import winnerCardS10 from 'assets/images/royale/winner-card-s10.svg';
 import winnerCard from 'assets/images/royale/winner-card.svg';
 import addSeconds from 'date-fns/addSeconds';
@@ -129,6 +130,8 @@ const renderRounds = (
                 return winnerCardS7;
             case 8:
                 return winnerCardS8;
+            case 9:
+                return winnerCardS9;
             case 10:
                 return winnerCardS10;
             default:
