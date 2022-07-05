@@ -146,9 +146,9 @@ const Sidebar: React.FC = () => {
                 {!isPolygon && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Wizzard ? 'selected' : ''
+                            location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
                         }`}
-                        href={buildHref(ROUTES.Options.Wizzard)}
+                        href={buildHref(ROUTES.Options.Wizard)}
                         iconName="wizard"
                         label={t('common.sidebar.wizard')}
                     />

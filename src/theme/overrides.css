@@ -20,6 +20,7 @@
 
 .bn-onboard-custom {
     z-index: 1301;
+    backdrop-filter: blur(10px);
 }
 
 .bn-onboard-custom.bn-onboard-dark-mode {
