@@ -1799,11 +1799,9 @@
         "question11": "什么是桥？",
         "question1": "什么是 Web3？",
         "intro": "现在，您可以使用<b>MtPelerin</b>集成并按照分步引导向导，使用您的信用卡在 Optimism 上获得<b>sUSD</b> ，这是用于在 Thales 上交易的主要稳定币。<br/><br/>要在 Thalesmarkets 上交易，您将需要一些先决条件：<br/> 1. 连接 Metamask 钱包<br/>2. 保持乐观<br/>3. 购买以太坊<br/>4. 购买 sUSD 或兑换一些以太坊<br/>完成这些步骤后，您可以自由探索我们的任何产品。",
-        "question13-link-text": "视频链接",
         "question14": "什么是范围市场？",
         "buy-button1": "用卡购买",
         "buy-button2": "用卡购买",
-        "question14-link-text": "视频链接",
         "question2": "什么是钱包？",
         "question16": "支持哪些加密货币？",
         "question3": "什么是元掩码？",
@@ -1827,6 +1825,8 @@
         "about": "关于",
         "step4-directional": "定向",
         "step1-1": "安装后，您需要“连接”您的 Metamask 钱包。为此，<b>请单击连接钱包卡上的 Metamask 图标，点击</b>链接。<br/><br/>在这种情况下，由于我们以 Optimism 网络为例，您需要连接您的钱包并选择 Optimism 网络。",
-        "step1-0": "第一步是<b>在您的浏览器上安装 Metamask</b> 。如果您已经安装了它，您可以跳过此步骤。<br/><br/>此步骤为您提供您自己的以太坊“热钱包”，这是与 Thales 等 Web3 应用程序进行所有交互的基准。请务必<b>仔细遵循 Metamask 安装向导提供的所有步骤，并仔细阅读安全提示</b>。"
+        "step1-0": "第一步是<b>在您的浏览器上安装 Metamask</b> 。如果您已经安装了它，您可以跳过此步骤。<br/><br/>此步骤为您提供您自己的以太坊“热钱包”，这是与 Thales 等 Web3 应用程序进行所有交互的基准。请务必<b>仔细遵循 Metamask 安装向导提供的所有步骤，并仔细阅读安全提示</b>。",
+        "question14-link-text": "看视频",
+        "question13-link-text": "看视频"
     }
 }
