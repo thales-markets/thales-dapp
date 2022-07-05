@@ -60,13 +60,13 @@ const WizardFaq: React.FC = () => {
         {
             question: 'wizard-page.question13',
             answer: 'wizard-page.answer13',
-            linkUrl: '',
+            linkUrl: 'https://www.youtube.com/watch?v=sWiOiW5VTdE&t=63s',
             linkText: 'wizard-page.question13-link-text',
         },
         {
             question: 'wizard-page.question14',
             answer: 'wizard-page.answer14',
-            linkUrl: '',
+            linkUrl: 'https://www.youtube.com/watch?v=8oIgCT8GTd0&t=401s',
             linkText: 'wizard-page.question14-link-text',
         },
         {

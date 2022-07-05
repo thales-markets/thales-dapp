@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
+import useInterval from 'hooks/useInterval';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -43,9 +44,13 @@ const MMURL = 'https://metamask.io/download/';
 const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
 
 const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurrentStep }) => {
+    const [installMetamask, setInstallMetamask] = useState(false);
+    const [metamaskInstaleld, setMetamaskInstaleld] = useState(typeof window.ethereum !== 'undefined');
+
     const [showBuyModal, setShowBuyModal] = useState(false);
     const [iframe, setIframe] = useState('');
     const [iframeLoader, setLoader] = useState(false);
+
     const [showSwap, setShowSwap] = useState(false);
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -56,9 +61,22 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         }
     }, [isWalletConnected]);
 
+    // Check after every 1s if user installed Metamask
+    useInterval(
+        () => {
+            const mmInstaled = typeof window.ethereum !== 'undefined';
+            setMetamaskInstaleld(mmInstaled);
+            if (mmInstaled) {
+                setCurrentStep(WizardSteps.ConnectMetamask);
+            }
+        },
+        installMetamask && !metamaskInstaleld ? 1000 : null
+    );
+
     const metamaskClickHandler = () => {
         if (typeof window.ethereum === 'undefined') {
             window.open(MMURL);
+            setInstallMetamask(true);
         } else {
             onboardConnector.connectWallet();
         }
@@ -83,19 +101,19 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         <>
             <CardWrapper>
                 <Card
-                    clickable={step !== WizardSteps.Metamask}
+                    clickable={step !== WizardSteps.InstallMetamask && step !== WizardSteps.ConnectMetamask}
                     onClick={() => {
-                        if (step !== WizardSteps.Metamask) {
-                            setCurrentStep(WizardSteps.Metamask);
+                        if (step !== WizardSteps.InstallMetamask && step !== WizardSteps.ConnectMetamask) {
+                            setCurrentStep(WizardSteps.ConnectMetamask);
                         }
                     }}
-                    active={step === WizardSteps.Metamask}
+                    active={step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask}
                 >
                     <Image
                         src={metamask}
-                        clickable={step === WizardSteps.Metamask}
+                        clickable={step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask}
                         onClick={() => {
-                            if (step === WizardSteps.Metamask) {
+                            if (step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask) {
                                 metamaskClickHandler();
                             }
                         }}
@@ -113,12 +131,12 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                 <Trans i18nKey="wizard-page.step1-name" />
                             )}
                         </Text>
-                        {step === WizardSteps.Metamask && (
+                        {(step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask) && (
                             <ArrowImg
-                                clickable={step === WizardSteps.Metamask}
+                                clickable={step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask}
                                 src={arrow}
                                 onClick={() => {
-                                    if (step === WizardSteps.Metamask) {
+                                    if (step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask) {
                                         metamaskClickHandler();
                                     }
                                 }}
@@ -234,13 +252,19 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 </Card>
             </CardWrapper>
             <CardWrapper justifyContent={false}>
-                <Step active={step === WizardSteps.Metamask}>1</Step>
+                <Step active={step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask}>1</Step>
                 <Step active={step === WizardSteps.Buy}>2</Step>
                 <Step active={step === WizardSteps.Exchange}>3</Step>
                 <Step active={step === WizardSteps.Trade}>4</Step>
             </CardWrapper>
             <Nav justifyContent={'space-between'}>
-                <NavItem className={step === WizardSteps.Metamask ? 'active' : ''}>{NavItems.Step1}</NavItem>
+                <NavItem
+                    className={
+                        step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask ? 'active' : ''
+                    }
+                >
+                    {NavItems.Step1}
+                </NavItem>
                 <NavItem className={step === WizardSteps.Buy ? 'active' : ''}>{NavItems.Step2}</NavItem>
                 <NavItem className={step === WizardSteps.Exchange ? 'active' : ''}>{NavItems.Step3}</NavItem>
                 <NavItem className={step === WizardSteps.Trade ? 'active' : ''}>{NavItems.Step4}</NavItem>

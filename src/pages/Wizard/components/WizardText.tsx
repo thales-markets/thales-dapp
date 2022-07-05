@@ -6,23 +6,24 @@ import { WizardSteps } from '../Wizard';
 const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
     return (
         <Wrapper>
-            {step === WizardSteps.Metamask && (
+            {step === WizardSteps.InstallMetamask && (
                 <Text>
-                    {typeof window.ethereum === 'undefined' ? (
-                        <Trans
-                            i18nKey="wizard-page.step1-0"
-                            components={{
-                                b: <strong />,
-                            }}
-                        />
-                    ) : (
-                        <Trans
-                            i18nKey="wizard-page.step1-1"
-                            components={{
-                                b: <strong />,
-                            }}
-                        />
-                    )}
+                    <Trans
+                        i18nKey="wizard-page.step1-0"
+                        components={{
+                            b: <strong />,
+                        }}
+                    />
+                </Text>
+            )}
+            {step === WizardSteps.ConnectMetamask && (
+                <Text>
+                    <Trans
+                        i18nKey="wizard-page.step1-1"
+                        components={{
+                            b: <strong />,
+                        }}
+                    />
                 </Text>
             )}
             {step === WizardSteps.Buy && (

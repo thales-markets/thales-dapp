@@ -8,7 +8,8 @@ import WizardFooter from './components/WizardFooter';
 import styled from 'styled-components';
 
 export enum WizardSteps {
-    Metamask,
+    InstallMetamask,
+    ConnectMetamask,
     Buy,
     Exchange,
     Trade,
@@ -17,7 +18,9 @@ export enum WizardSteps {
 const Wizard: React.FC = () => {
     const { t } = useTranslation();
 
-    const [currentStep, setCurrentStep] = useState(WizardSteps.Metamask);
+    const initialStep =
+        typeof window.ethereum === 'undefined' ? WizardSteps.InstallMetamask : WizardSteps.ConnectMetamask;
+    const [currentStep, setCurrentStep] = useState(initialStep);
 
     return (
         <Wrapper>
