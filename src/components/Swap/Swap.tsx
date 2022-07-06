@@ -34,10 +34,10 @@ import {
     OP_USDC,
     OP_USDT,
     POLYGON_Dai,
-    POLYGON_ETH,
     POLYGON_MATIC,
     POLYGON_USDC,
     POLYGON_USDT,
+    mapTokenByNetwork,
 } from './tokens';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
@@ -112,11 +112,17 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     }, [fromToken, amount]);
 
     useEffect(() => {
+        const mappedToToken = mapTokenByNetwork(toToken.symbol, isL2, isPolygon);
+
         isL2
-            ? (setPreLoadTokens([OP_Eth, OP_Dai, OP_USDC, OP_USDT]), _setToToken(OP_sUSD))
+            ? (setPreLoadTokens([OP_sUSD, OP_Dai, OP_USDC, OP_USDT]), _setFromToken(OP_Eth), _setToToken(mappedToToken))
             : isPolygon
-            ? (setPreLoadTokens([POLYGON_MATIC, POLYGON_USDT, POLYGON_ETH, POLYGON_Dai]), _setToToken(POLYGON_USDC))
-            : (setPreLoadTokens([ETH_Eth, ETH_Dai, ETH_USDC, ETH_USDT]), _setToToken(ETH_sUSD));
+            ? (setPreLoadTokens([POLYGON_Dai, POLYGON_USDC, POLYGON_USDT]),
+              _setFromToken(POLYGON_MATIC),
+              _setToToken(mappedToToken))
+            : (setPreLoadTokens([ETH_sUSD, ETH_Dai, ETH_USDC, ETH_USDT]),
+              _setFromToken(ETH_Eth),
+              _setToToken(mappedToToken));
     }, [networkId]);
 
     useEffect(() => {
@@ -325,6 +331,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                                         </FlexDivRowCentered>
                                     );
                                 }}
+                                isDisabled={true}
                                 value={fromToken}
                                 onChange={(option: any) => {
                                     _setFromToken(option);
@@ -388,7 +395,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                                         </FlexDivRowCentered>
                                     );
                                 }}
-                                isDisabled={true}
+                                isDisabled={false}
                                 value={toToken}
                                 onChange={(option: any) => {
                                     _setToToken(option);

@@ -26,17 +26,17 @@ import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader';
 
 enum NavItems {
-    Step1 = 'Step 1 - Metamask',
-    Step2 = 'Step 2 - Get ETH',
-    Step3 = 'Step 3 - Get SUSD',
-    Step4 = 'Step 4 - Trade',
+    STEP_1 = 'Step 1 - Metamask',
+    STEP_2 = 'Step 2 - Get ETH',
+    STEP_3 = 'Step 3 - Get SUSD',
+    STEP_4 = 'Step 4 - Trade',
 }
 
 enum Provider {
-    Banxa = 'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY?blockchain=XRP',
-    MtPelerin = 'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH',
-    Bungee = 'https://www.bungee.exchange/',
-    LayerSwap = 'https://www.layerswap.io/?destNetwork=optimism_mainnet&lockNetwork=true&sourceExchangeName=binance&asset=usdc',
+    BANXA = 'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY?blockchain=XRP',
+    MT_PELERIN = 'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH',
+    BUNGEE = 'https://multitx.bungee.exchange/',
+    LAYER_SWAP = 'https://www.layerswap.io/?destNetwork=optimism_mainnet&lockNetwork=true&sourceExchangeName=binance&asset=usdc',
 }
 
 const MMURL = 'https://metamask.io/download/';
@@ -57,7 +57,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
 
     useEffect(() => {
         if (typeof window.ethereum !== 'undefined' && isWalletConnected) {
-            setCurrentStep(WizardSteps.Buy);
+            setCurrentStep(WizardSteps.BUY);
         }
     }, [isWalletConnected]);
 
@@ -67,7 +67,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             const mmInstaled = typeof window.ethereum !== 'undefined';
             setMetamaskInstaleld(mmInstaled);
             if (mmInstaled) {
-                setCurrentStep(WizardSteps.ConnectMetamask);
+                setCurrentStep(WizardSteps.CONNECT_METAMASK);
             }
         },
         installMetamask && !metamaskInstaleld ? 1000 : null
@@ -84,12 +84,12 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
 
     const buyButtonHandler = (buttonType: Provider) => {
         switch (buttonType) {
-            case Provider.Banxa:
-                setIframe(Provider.Banxa.toString());
+            case Provider.BANXA:
+                setIframe(Provider.BANXA.toString());
                 setLoader(true);
                 break;
-            case Provider.MtPelerin:
-                setIframe(Provider.MtPelerin.toString());
+            case Provider.MT_PELERIN:
+                setIframe(Provider.MT_PELERIN.toString());
                 setLoader(true);
                 break;
             default:
@@ -101,19 +101,19 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         <>
             <CardWrapper>
                 <Card
-                    clickable={step !== WizardSteps.InstallMetamask && step !== WizardSteps.ConnectMetamask}
+                    clickable={step !== WizardSteps.INSTALL_METAMASK && step !== WizardSteps.CONNECT_METAMASK}
                     onClick={() => {
-                        if (step !== WizardSteps.InstallMetamask && step !== WizardSteps.ConnectMetamask) {
-                            setCurrentStep(WizardSteps.ConnectMetamask);
+                        if (step !== WizardSteps.INSTALL_METAMASK && step !== WizardSteps.CONNECT_METAMASK) {
+                            setCurrentStep(WizardSteps.CONNECT_METAMASK);
                         }
                     }}
-                    active={step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask}
+                    active={step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK}
                 >
                     <Image
                         src={metamask}
-                        clickable={step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask}
+                        clickable={step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK}
                         onClick={() => {
-                            if (step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask) {
+                            if (step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK) {
                                 metamaskClickHandler();
                             }
                         }}
@@ -131,12 +131,17 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                 <Trans i18nKey="wizard-page.step1-name" />
                             )}
                         </Text>
-                        {(step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask) && (
+                        {(step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK) && (
                             <ArrowImg
-                                clickable={step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask}
+                                clickable={
+                                    step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK
+                                }
                                 src={arrow}
                                 onClick={() => {
-                                    if (step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask) {
+                                    if (
+                                        step === WizardSteps.INSTALL_METAMASK ||
+                                        step === WizardSteps.CONNECT_METAMASK
+                                    ) {
                                         metamaskClickHandler();
                                     }
                                 }}
@@ -145,83 +150,83 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                     </CardNameWrapper>
                 </Card>
                 <Card
-                    clickable={isWalletConnected && step !== WizardSteps.Buy}
-                    active={step === WizardSteps.Buy}
+                    clickable={isWalletConnected && step !== WizardSteps.BUY}
+                    active={step === WizardSteps.BUY}
                     onClick={() => {
                         if (!isWalletConnected) return;
-                        if (step !== WizardSteps.Buy) {
-                            setCurrentStep(WizardSteps.Buy);
+                        if (step !== WizardSteps.BUY) {
+                            setCurrentStep(WizardSteps.BUY);
                         }
                     }}
                 >
                     <Image
                         src={insertCard}
-                        clickable={isWalletConnected && step === WizardSteps.Buy}
-                        onClick={() => (step === WizardSteps.Buy ? setShowBuyModal(true) : '')}
+                        clickable={isWalletConnected && step === WizardSteps.BUY}
+                        onClick={() => (step === WizardSteps.BUY ? setShowBuyModal(true) : '')}
                     />
                     <CardNameWrapper>
                         <Text>
                             <Trans i18nKey="wizard-page.step2-name" />
                         </Text>
-                        {step === WizardSteps.Buy && (
+                        {step === WizardSteps.BUY && (
                             <ArrowImg
-                                clickable={isWalletConnected && step === WizardSteps.Buy}
+                                clickable={isWalletConnected && step === WizardSteps.BUY}
                                 src={arrow}
-                                onClick={() => (step === WizardSteps.Buy ? setShowBuyModal(true) : '')}
+                                onClick={() => (step === WizardSteps.BUY ? setShowBuyModal(true) : '')}
                             />
                         )}
                     </CardNameWrapper>
                 </Card>
                 <Card
-                    clickable={isWalletConnected && step !== WizardSteps.Exchange}
-                    active={step === WizardSteps.Exchange}
+                    clickable={isWalletConnected && step !== WizardSteps.EXCHANGE}
+                    active={step === WizardSteps.EXCHANGE}
                     onClick={() => {
                         if (!isWalletConnected) return;
-                        if (step !== WizardSteps.Exchange) {
-                            setCurrentStep(WizardSteps.Exchange);
+                        if (step !== WizardSteps.EXCHANGE) {
+                            setCurrentStep(WizardSteps.EXCHANGE);
                         }
                     }}
                 >
                     <IconsWrapper>
                         <Icon
-                            clickable={isWalletConnected && step === WizardSteps.Exchange}
+                            clickable={isWalletConnected && step === WizardSteps.EXCHANGE}
                             style={{ fontSize: 74 }}
                             className={`sidebar-icon icon--swap`}
-                            onClick={() => (step === WizardSteps.Exchange ? setShowSwap(true) : '')}
+                            onClick={() => (step === WizardSteps.EXCHANGE ? setShowSwap(true) : '')}
                         />
                     </IconsWrapper>
                     <CardNameWrapper>
                         <Text>
                             <Trans i18nKey="wizard-page.step3-name" />
                         </Text>
-                        {step === WizardSteps.Exchange && (
+                        {step === WizardSteps.EXCHANGE && (
                             <ArrowImg
-                                clickable={isWalletConnected && step === WizardSteps.Exchange}
+                                clickable={isWalletConnected && step === WizardSteps.EXCHANGE}
                                 src={arrow}
-                                onClick={() => (step === WizardSteps.Exchange ? setShowSwap(true) : '')}
+                                onClick={() => (step === WizardSteps.EXCHANGE ? setShowSwap(true) : '')}
                             />
                         )}
                     </CardNameWrapper>
                 </Card>
                 <Card
-                    clickable={isWalletConnected && step !== WizardSteps.Trade}
-                    active={step === WizardSteps.Trade}
+                    clickable={isWalletConnected && step !== WizardSteps.TRADE}
+                    active={step === WizardSteps.TRADE}
                     onClick={() => {
                         if (!isWalletConnected) return;
-                        if (step !== WizardSteps.Trade) {
-                            setCurrentStep(WizardSteps.Trade);
+                        if (step !== WizardSteps.TRADE) {
+                            setCurrentStep(WizardSteps.TRADE);
                         }
                     }}
                 >
                     <IconsWrapper>
                         <IconWrapper
-                            clickable={isWalletConnected && step === WizardSteps.Trade}
-                            active={step === WizardSteps.Trade}
+                            clickable={isWalletConnected && step === WizardSteps.TRADE}
+                            active={step === WizardSteps.TRADE}
                         >
                             <Icon
-                                clickable={isWalletConnected && step === WizardSteps.Trade}
+                                clickable={isWalletConnected && step === WizardSteps.TRADE}
                                 className={`sidebar-icon icon--markets`}
-                                onClick={() => (step === WizardSteps.Trade ? navigateTo(ROUTES.Options.Home) : '')}
+                                onClick={() => (step === WizardSteps.TRADE ? navigateTo(ROUTES.Options.Home) : '')}
                             />
                             <IconText>
                                 <Trans i18nKey="wizard-page.step4-directional" />
@@ -229,14 +234,14 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         </IconWrapper>
                         <SeparatorImg src={separator} />
                         <IconWrapper
-                            clickable={isWalletConnected && step === WizardSteps.Trade}
-                            active={step === WizardSteps.Trade}
+                            clickable={isWalletConnected && step === WizardSteps.TRADE}
+                            active={step === WizardSteps.TRADE}
                         >
                             <Icon
-                                clickable={isWalletConnected && step === WizardSteps.Trade}
+                                clickable={isWalletConnected && step === WizardSteps.TRADE}
                                 className={`sidebar-icon icon--ranged-markets`}
                                 onClick={() =>
-                                    step === WizardSteps.Trade ? navigateTo(ROUTES.Options.RangeMarkets) : ''
+                                    step === WizardSteps.TRADE ? navigateTo(ROUTES.Options.RangeMarkets) : ''
                                 }
                             />
                             <IconText>
@@ -252,22 +257,22 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 </Card>
             </CardWrapper>
             <CardWrapper justifyContent={false}>
-                <Step active={step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask}>1</Step>
-                <Step active={step === WizardSteps.Buy}>2</Step>
-                <Step active={step === WizardSteps.Exchange}>3</Step>
-                <Step active={step === WizardSteps.Trade}>4</Step>
+                <Step active={step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK}>1</Step>
+                <Step active={step === WizardSteps.BUY}>2</Step>
+                <Step active={step === WizardSteps.EXCHANGE}>3</Step>
+                <Step active={step === WizardSteps.TRADE}>4</Step>
             </CardWrapper>
             <Nav justifyContent={'space-between'}>
                 <NavItem
                     className={
-                        step === WizardSteps.InstallMetamask || step === WizardSteps.ConnectMetamask ? 'active' : ''
+                        step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK ? 'active' : ''
                     }
                 >
-                    {NavItems.Step1}
+                    {NavItems.STEP_1}
                 </NavItem>
-                <NavItem className={step === WizardSteps.Buy ? 'active' : ''}>{NavItems.Step2}</NavItem>
-                <NavItem className={step === WizardSteps.Exchange ? 'active' : ''}>{NavItems.Step3}</NavItem>
-                <NavItem className={step === WizardSteps.Trade ? 'active' : ''}>{NavItems.Step4}</NavItem>
+                <NavItem className={step === WizardSteps.BUY ? 'active' : ''}>{NavItems.STEP_2}</NavItem>
+                <NavItem className={step === WizardSteps.EXCHANGE ? 'active' : ''}>{NavItems.STEP_3}</NavItem>
+                <NavItem className={step === WizardSteps.TRADE ? 'active' : ''}>{NavItems.STEP_4}</NavItem>
             </Nav>
             <LineUnderNav />
             {showBuyModal && (
@@ -287,45 +292,45 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                             <ButtonWrapper>
                                 <Button
                                     onClick={() => {
-                                        buyButtonHandler(Provider.Banxa);
+                                        buyButtonHandler(Provider.BANXA);
                                     }}
                                 >
                                     <Trans i18nKey="wizard-page.buy-button1" />
                                 </Button>
                             </ButtonWrapper>
-                            <Logo logoType={Provider.Banxa} />
+                            <Logo logoType={Provider.BANXA} />
                         </ButtonLogoGroup>
                         <ButtonLogoGroup>
                             <ButtonWrapper>
                                 <Button
                                     onClick={() => {
-                                        buyButtonHandler(Provider.MtPelerin);
+                                        buyButtonHandler(Provider.MT_PELERIN);
                                     }}
                                 >
                                     <Trans i18nKey="wizard-page.buy-button2" />
                                 </Button>
                             </ButtonWrapper>
-                            <Logo logoType={Provider.MtPelerin} />
+                            <Logo logoType={Provider.MT_PELERIN} />
                         </ButtonLogoGroup>
                         <ButtonLogoGroup>
                             <ButtonWrapper>
-                                <SPAAnchor href={Provider.Bungee}>
+                                <SPAAnchor href={Provider.BUNGEE}>
                                     <Button>
                                         <Trans i18nKey="wizard-page.buy-button3" />
                                     </Button>
                                 </SPAAnchor>
                             </ButtonWrapper>
-                            <Logo logoType={Provider.Bungee} />
+                            <Logo logoType={Provider.BUNGEE} />
                         </ButtonLogoGroup>
                         <ButtonLogoGroup>
                             <ButtonWrapper>
-                                <SPAAnchor href={Provider.LayerSwap}>
+                                <SPAAnchor href={Provider.LAYER_SWAP}>
                                     <Button>
                                         <Trans i18nKey="wizard-page.buy-button4" />
                                     </Button>
                                 </SPAAnchor>
                             </ButtonWrapper>
-                            <Logo logoType={Provider.LayerSwap} />
+                            <Logo logoType={Provider.LAYER_SWAP} />
                         </ButtonLogoGroup>
                     </BuyWrapper>
                 </Modal>
@@ -642,13 +647,13 @@ const Button = styled.div`
 
 const handleLogoType = (logoType: Provider) => {
     switch (logoType) {
-        case Provider.Banxa:
+        case Provider.BANXA:
             return banxa;
-        case Provider.MtPelerin:
+        case Provider.MT_PELERIN:
             return mtPelerin;
-        case Provider.Bungee:
+        case Provider.BUNGEE:
             return bungee;
-        case Provider.LayerSwap:
+        case Provider.LAYER_SWAP:
             return layerSwap;
         default:
             return '';

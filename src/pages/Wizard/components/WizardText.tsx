@@ -6,7 +6,7 @@ import { WizardSteps } from '../Wizard';
 const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
     return (
         <Wrapper>
-            {step === WizardSteps.InstallMetamask && (
+            {step === WizardSteps.INSTALL_METAMASK && (
                 <Text>
                     <Trans
                         i18nKey="wizard-page.step1-0"
@@ -16,7 +16,7 @@ const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
                     />
                 </Text>
             )}
-            {step === WizardSteps.ConnectMetamask && (
+            {step === WizardSteps.CONNECT_METAMASK && (
                 <Text>
                     <Trans
                         i18nKey="wizard-page.step1-1"
@@ -26,7 +26,7 @@ const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
                     />
                 </Text>
             )}
-            {step === WizardSteps.Buy && (
+            {step === WizardSteps.BUY && (
                 <Text>
                     <Trans
                         i18nKey="wizard-page.step2"
@@ -36,7 +36,7 @@ const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
                     />
                 </Text>
             )}
-            {step === WizardSteps.Exchange && (
+            {step === WizardSteps.EXCHANGE && (
                 <Text>
                     <Trans
                         i18nKey="wizard-page.step3"
@@ -46,7 +46,7 @@ const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
                     />
                 </Text>
             )}
-            {step === WizardSteps.Trade && (
+            {step === WizardSteps.TRADE && (
                 <Text>
                     <Trans
                         i18nKey="wizard-page.step4"

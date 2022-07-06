@@ -11,7 +11,7 @@ const WizardFooter: React.FC = () => {
                 <TextLink target="_blank" rel="noreferrer" href="">
                     <Trans i18nKey="wizard-page.discover" />
                 </TextLink>
-                <TextLink target="_blank" rel="noreferrer" href="">
+                <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/governance">
                     <Trans i18nKey="wizard-page.about" />
                 </TextLink>
                 <TextLink target="_blank" rel="noreferrer" href="">
