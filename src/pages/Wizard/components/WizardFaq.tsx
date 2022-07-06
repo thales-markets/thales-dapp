@@ -108,7 +108,7 @@ const WizardFaq: React.FC = () => {
                             </Question>
 
                             {questionOpenedIndex === index && (
-                                <Answer key={'a' + index}>
+                                <Answer key={'a' + index} onClick={(e) => e.stopPropagation()}>
                                     <Trans i18nKey={qa.answer} />
                                 </Answer>
                             )}
@@ -170,6 +170,7 @@ const Answer = styled.p`
     text-align: justify;
     text-transform: capitalize;
     color: #ffffff;
+    cursor: text;
 `;
 
 const LineUnderQuestion = styled.div`
