@@ -195,7 +195,6 @@
             "leaderboard-label": "排行榜",
             "quick-trading-label": "快速交易",
             "quick-trading-label-competition": "竞赛订单",
-            "earn-label": "泰勒斯",
             "royale-label": "泰勒斯鱿鱼游戏",
             "governance-label": "治理",
             "game-label": "米利都",
@@ -206,7 +205,8 @@
             "profile-label": "轮廓",
             "exotic-markets-label": "异国市场",
             "ranged-markets": "范围市场",
-            "wizard": "泰雷兹向导"
+            "wizard": "板载向导",
+            "earn-label": "泰雷兹通证"
         },
         "coming-soon": "即将到来…",
         "of": "之",

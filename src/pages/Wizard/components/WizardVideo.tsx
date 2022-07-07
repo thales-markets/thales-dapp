@@ -3,16 +3,20 @@ import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import videoTutorial from 'assets/images/wizard/video-tutorial.png';
 
-const WizardVideo: React.FC = () => {
+const WizardVideo: React.FC<{ header: boolean; videoLink: string; videoTitle: string }> = ({
+    header,
+    videoLink,
+    videoTitle,
+}) => {
     const [showIframe, setShowIframe] = useState(false);
-
-    const videoLink = 'https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1';
 
     return (
         <>
-            <VideoHeader>
-                <Trans i18nKey="wizard-page.video-header" />
-            </VideoHeader>
+            {header && (
+                <VideoHeader>
+                    <Trans i18nKey="wizard-page.video-header" />
+                </VideoHeader>
+            )}
             {!showIframe && (
                 <VideoContainer>
                     <VideoTutorial
@@ -30,7 +34,7 @@ const WizardVideo: React.FC = () => {
                             width="1280"
                             height="720"
                             src={videoLink}
-                            title="On-boarding Wizard video walk through for Thales platform"
+                            title={videoTitle}
                             allow={
                                 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                             }

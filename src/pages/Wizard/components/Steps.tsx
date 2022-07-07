@@ -1,9 +1,9 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState, useRef } from 'react';
 import useInterval from 'hooks/useInterval';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { Modal } from '@material-ui/core';
 
@@ -18,12 +18,12 @@ import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 
 import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
-import { navigateTo } from 'utils/routes';
 
 import { WizardSteps } from '../Wizard';
 import { XButton } from 'theme/common';
 import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader';
+import { POLYGON_ID } from 'constants/network';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -34,7 +34,7 @@ enum NavItems {
 
 enum Provider {
     BANXA = 'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY&coinType=ETH&fiatType=EUR&blockchain=OPTIMISM',
-    MT_PELERIN = 'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH',
+    MT_PELERIN = 'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg',
     BUNGEE = 'https://multitx.bungee.exchange/',
     LAYER_SWAP = 'https://www.layerswap.io/?destNetwork=optimism_mainnet&lockNetwork=true&sourceExchangeName=binance&asset=usdc',
 }
@@ -54,6 +54,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const [showSwap, setShowSwap] = useState(false);
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     useEffect(() => {
         if (isWalletConnected) {
@@ -81,15 +82,6 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         installMetamask && !metamaskInstaleld ? 1000 : null
     );
 
-    const metamaskClickHandler = () => {
-        if (typeof window.ethereum === 'undefined') {
-            window.open(MMURL);
-            setInstallMetamask(true);
-        } else {
-            onboardConnector.connectWallet();
-        }
-    };
-
     const buyButtonHandler = (buttonType: Provider) => {
         switch (buttonType) {
             case Provider.BANXA:
@@ -97,7 +89,11 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 setLoader(true);
                 break;
             case Provider.MT_PELERIN:
-                setIframe(Provider.MT_PELERIN.toString());
+                const queryParams =
+                    networkId === POLYGON_ID
+                        ? '&net=polygon_mainnet&bsc=EUR&bdc=MATIC&crys=MATIC'
+                        : '&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH';
+                setIframe(Provider.MT_PELERIN.toString() + queryParams);
                 setLoader(true);
                 break;
             default:
@@ -105,27 +101,56 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         }
     };
 
+    const isStep1 = step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK;
+
+    const scrollToSteps = () => ref.current?.scrollIntoView({ behavior: 'smooth' });
+    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const step1ClickHandler = async () => {
+        if (isStep1) {
+            scrollToSteps();
+            if (typeof window.ethereum === 'undefined') {
+                await delay(300);
+                window.open(MMURL);
+                setInstallMetamask(true);
+            } else {
+                await delay(600);
+                onboardConnector.connectWallet();
+            }
+        }
+    };
+    const step2ClickHandler = async () => {
+        if (!isWalletConnected) return;
+        scrollToSteps();
+        await delay(500);
+        if (step === WizardSteps.BUY) {
+            setShowBuyModal(true);
+        } else {
+            setCurrentStep(WizardSteps.BUY);
+        }
+    };
+    const step3ClickHandler = () => {
+        if (!isWalletConnected) return;
+        if (step === WizardSteps.EXCHANGE) {
+            setShowSwap(true);
+        } else {
+            setCurrentStep(WizardSteps.EXCHANGE);
+        }
+    };
+    const step4ClickHandler = () => {
+        if (!isWalletConnected) return;
+        setCurrentStep(WizardSteps.TRADE);
+    };
+
+    const ref = useRef<null | HTMLDivElement>(null);
+
     return (
         <>
-            <CardWrapper>
-                <Card
-                    clickable={step !== WizardSteps.INSTALL_METAMASK && step !== WizardSteps.CONNECT_METAMASK}
-                    onClick={() => {
-                        if (step !== WizardSteps.INSTALL_METAMASK && step !== WizardSteps.CONNECT_METAMASK) {
-                            setCurrentStep(WizardSteps.CONNECT_METAMASK);
-                        }
-                    }}
-                    active={step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK}
-                >
-                    <Image
-                        src={metamask}
-                        clickable={step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK}
-                        onClick={() => {
-                            if (step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK) {
-                                metamaskClickHandler();
-                            }
-                        }}
-                    />
+            <CardWrapper ref={ref}>
+                <Card clickable={isStep1} active={isStep1} onClick={step1ClickHandler}>
+                    <IconWrapper clickable={isStep1} active={isStep1}>
+                        <Image src={metamask} clickable={isStep1} />
+                    </IconWrapper>
                     <CardNameWrapper>
                         <Text>
                             {typeof window.ethereum === 'undefined' ? (
@@ -139,102 +164,63 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                 <Trans i18nKey="wizard-page.step1-name" />
                             )}
                         </Text>
-                        {(step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK) && (
-                            <ArrowImg
-                                clickable={
-                                    step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK
-                                }
-                                src={arrow}
-                                onClick={() => {
-                                    if (
-                                        step === WizardSteps.INSTALL_METAMASK ||
-                                        step === WizardSteps.CONNECT_METAMASK
-                                    ) {
-                                        metamaskClickHandler();
-                                    }
-                                }}
-                            />
-                        )}
+                        {isStep1 && <ArrowImg clickable={isStep1} src={arrow} />}
                     </CardNameWrapper>
                 </Card>
-                <Card
-                    clickable={isWalletConnected && step !== WizardSteps.BUY}
-                    active={step === WizardSteps.BUY}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        if (step !== WizardSteps.BUY) {
-                            setCurrentStep(WizardSteps.BUY);
-                        }
-                    }}
-                >
-                    <Image
-                        src={insertCard}
+                <Card clickable={isWalletConnected} active={step === WizardSteps.BUY} onClick={step2ClickHandler}>
+                    <IconWrapper
                         clickable={isWalletConnected && step === WizardSteps.BUY}
-                        onClick={() => (step === WizardSteps.BUY ? setShowBuyModal(true) : '')}
-                    />
+                        active={step === WizardSteps.BUY}
+                    >
+                        <Image src={insertCard} clickable={isWalletConnected && step === WizardSteps.BUY} />
+                    </IconWrapper>
                     <CardNameWrapper>
                         <Text>
                             <Trans i18nKey="wizard-page.step2-name" />
                         </Text>
                         {step === WizardSteps.BUY && (
-                            <ArrowImg
-                                clickable={isWalletConnected && step === WizardSteps.BUY}
-                                src={arrow}
-                                onClick={() => (step === WizardSteps.BUY ? setShowBuyModal(true) : '')}
-                            />
+                            <ArrowImg clickable={isWalletConnected && step === WizardSteps.BUY} src={arrow} />
                         )}
                     </CardNameWrapper>
                 </Card>
-                <Card
-                    clickable={isWalletConnected && step !== WizardSteps.EXCHANGE}
-                    active={step === WizardSteps.EXCHANGE}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        if (step !== WizardSteps.EXCHANGE) {
-                            setCurrentStep(WizardSteps.EXCHANGE);
-                        }
-                    }}
-                >
-                    <IconsWrapper>
+                <Card clickable={isWalletConnected} active={step === WizardSteps.EXCHANGE} onClick={step3ClickHandler}>
+                    <IconWrapper
+                        clickable={isWalletConnected && step === WizardSteps.EXCHANGE}
+                        active={step === WizardSteps.EXCHANGE}
+                    >
                         <Icon
                             clickable={isWalletConnected && step === WizardSteps.EXCHANGE}
                             style={{ fontSize: 74 }}
                             className={`sidebar-icon icon--swap`}
-                            onClick={() => (step === WizardSteps.EXCHANGE ? setShowSwap(true) : '')}
                         />
-                    </IconsWrapper>
+                    </IconWrapper>
                     <CardNameWrapper>
                         <Text>
                             <Trans i18nKey="wizard-page.step3-name" />
                         </Text>
                         {step === WizardSteps.EXCHANGE && (
-                            <ArrowImg
-                                clickable={isWalletConnected && step === WizardSteps.EXCHANGE}
-                                src={arrow}
-                                onClick={() => (step === WizardSteps.EXCHANGE ? setShowSwap(true) : '')}
-                            />
+                            <ArrowImg clickable={isWalletConnected && step === WizardSteps.EXCHANGE} src={arrow} />
                         )}
                     </CardNameWrapper>
                 </Card>
                 <Card
                     clickable={isWalletConnected && step !== WizardSteps.TRADE}
                     active={step === WizardSteps.TRADE}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        if (step !== WizardSteps.TRADE) {
-                            setCurrentStep(WizardSteps.TRADE);
-                        }
-                    }}
+                    onClick={step4ClickHandler}
                 >
                     <IconsWrapper>
                         <IconWrapper
                             clickable={isWalletConnected && step === WizardSteps.TRADE}
                             active={step === WizardSteps.TRADE}
+                            onClick={() => {
+                                if (step === WizardSteps.TRADE) {
+                                    window.open(ROUTES.Options.Home, '_blank');
+                                }
+                            }}
                         >
                             <Icon
                                 clickable={isWalletConnected && step === WizardSteps.TRADE}
                                 className={`sidebar-icon icon--markets`}
-                                onClick={() => (step === WizardSteps.TRADE ? navigateTo(ROUTES.Options.Home) : '')}
                             />
                             <IconText>
                                 <Trans i18nKey="wizard-page.step4-directional" />
@@ -244,13 +230,15 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         <IconWrapper
                             clickable={isWalletConnected && step === WizardSteps.TRADE}
                             active={step === WizardSteps.TRADE}
+                            onClick={() => {
+                                if (step === WizardSteps.TRADE) {
+                                    window.open(ROUTES.Options.RangeMarkets, '_blank');
+                                }
+                            }}
                         >
                             <Icon
                                 clickable={isWalletConnected && step === WizardSteps.TRADE}
                                 className={`sidebar-icon icon--ranged-markets`}
-                                onClick={() =>
-                                    step === WizardSteps.TRADE ? navigateTo(ROUTES.Options.RangeMarkets) : ''
-                                }
                             />
                             <IconText>
                                 <Trans i18nKey="wizard-page.step4-ranged" />
@@ -265,22 +253,74 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 </Card>
             </CardWrapper>
             <CardWrapper justifyContent={false}>
-                <Step active={step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK}>1</Step>
-                <Step active={step === WizardSteps.BUY}>2</Step>
-                <Step active={step === WizardSteps.EXCHANGE}>3</Step>
-                <Step active={step === WizardSteps.TRADE}>4</Step>
+                <Step active={isStep1} clickable={isStep1}>
+                    1
+                </Step>
+                <Step
+                    active={step === WizardSteps.BUY}
+                    clickable={isWalletConnected}
+                    onClick={() => {
+                        if (!isWalletConnected) return;
+                        setCurrentStep(WizardSteps.BUY);
+                    }}
+                >
+                    2
+                </Step>
+                <Step
+                    active={step === WizardSteps.EXCHANGE}
+                    clickable={isWalletConnected}
+                    onClick={() => {
+                        if (!isWalletConnected) return;
+                        setCurrentStep(WizardSteps.EXCHANGE);
+                    }}
+                >
+                    3
+                </Step>
+                <Step
+                    active={step === WizardSteps.TRADE}
+                    clickable={isWalletConnected}
+                    onClick={() => {
+                        if (!isWalletConnected) return;
+                        setCurrentStep(WizardSteps.TRADE);
+                    }}
+                >
+                    4
+                </Step>
             </CardWrapper>
             <Nav justifyContent={'space-between'}>
-                <NavItem
-                    className={
-                        step === WizardSteps.INSTALL_METAMASK || step === WizardSteps.CONNECT_METAMASK ? 'active' : ''
-                    }
-                >
+                <NavItem className={isStep1 ? 'active' : ''} clickable={isStep1}>
                     {NavItems.STEP_1}
                 </NavItem>
-                <NavItem className={step === WizardSteps.BUY ? 'active' : ''}>{NavItems.STEP_2}</NavItem>
-                <NavItem className={step === WizardSteps.EXCHANGE ? 'active' : ''}>{NavItems.STEP_3}</NavItem>
-                <NavItem className={step === WizardSteps.TRADE ? 'active' : ''}>{NavItems.STEP_4}</NavItem>
+                <NavItem
+                    className={step === WizardSteps.BUY ? 'active' : ''}
+                    clickable={isWalletConnected}
+                    onClick={() => {
+                        if (!isWalletConnected) return;
+                        setCurrentStep(WizardSteps.BUY);
+                    }}
+                >
+                    {NavItems.STEP_2}
+                </NavItem>
+                <NavItem
+                    className={step === WizardSteps.EXCHANGE ? 'active' : ''}
+                    clickable={isWalletConnected}
+                    onClick={() => {
+                        if (!isWalletConnected) return;
+                        setCurrentStep(WizardSteps.EXCHANGE);
+                    }}
+                >
+                    {NavItems.STEP_3}
+                </NavItem>
+                <NavItem
+                    className={step === WizardSteps.TRADE ? 'active' : ''}
+                    clickable={isWalletConnected}
+                    onClick={() => {
+                        if (!isWalletConnected) return;
+                        setCurrentStep(WizardSteps.TRADE);
+                    }}
+                >
+                    {NavItems.STEP_4}
+                </NavItem>
             </Nav>
             <LineUnderNav />
             {showBuyModal && (
@@ -384,7 +424,7 @@ const Nav = styled.div<{ justifyContent: string }>`
     }
 `;
 
-const NavItem = styled.div`
+const NavItem = styled.div<{ clickable: boolean }>`
     flex: 1;
     font-family: 'Titillium Web';
     font-style: normal;
@@ -395,7 +435,7 @@ const NavItem = styled.div`
     text-align: center;
     text-transform: uppercase;
     color: var(--primary-color);
-    cursor: pointer;
+    cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
     &.active {
         box-shadow: 0px 4px var(--primary-filter-menu-active);
@@ -443,7 +483,7 @@ const Card = styled.div<{ clickable: boolean; active?: boolean }>`
         ${(props) => (props.clickable || props.active ? 'opacity: 1;' : '')};
     }
 `;
-const Step = styled.div<{ active?: boolean }>`
+const Step = styled.div<{ active?: boolean; clickable: boolean }>`
     position: relative;
     width: 79px;
     height: 79px;
@@ -460,6 +500,7 @@ const Step = styled.div<{ active?: boolean }>`
     text-transform: uppercase;
     z-index: 2;
     opacity: ${(props) => (props.active ? '1' : '0.3')};
+    cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     &:not(:first-child)::after {
         content: ' ';
         display: block;
@@ -469,6 +510,7 @@ const Step = styled.div<{ active?: boolean }>`
         width: 155px;
         border-top: 3px dashed var(--input-border-color);
         opacity: 0.5;
+        cursor: default;
     }
 `;
 
@@ -489,7 +531,7 @@ const IconsWrapper = styled.div`
 const IconWrapper = styled.div<{ clickable: boolean; active: boolean }>`
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
 
-    animation: ${(props) => (props.active ? 'pulsing 2s ease-in;' : '')};
+    animation: ${(props) => (props.active ? 'pulsing 1s ease-in;' : '')};
     animation-iteration-count: ${(props) => (props.active ? 'infinite;' : '')};
 
     @keyframes pulsing {
@@ -546,7 +588,7 @@ const ArrowImg = styled.img<{ clickable: boolean }>`
             opacity: 1;
         }
         50% {
-            -webkit-transform: scale(1.3);
+            -webkit-transform: scale(1.4);
             opacity: 1;
         }
         100% {

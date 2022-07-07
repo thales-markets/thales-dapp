@@ -304,7 +304,7 @@
             "leaderboard-label": "Leaderboard",
             "quick-trading-label": "Quick trading",
             "quick-trading-label-competition": "Comp. quick trading",
-            "earn-label": "THALES",
+            "earn-label": "THALES TOKEN",
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
             "game-label": "Tale of Thales",
@@ -313,7 +313,7 @@
             "amm-mining-label": "AMM rewards",
             "amm-reporting-label": "AMM reporting",
             "exotic-markets-label": "Exotic markets",
-            "wizard": "Thales Wizard"
+            "wizard": "Onboard Wizard"
         },
         "coming-soon": "Coming soon...",
         "of": "of",

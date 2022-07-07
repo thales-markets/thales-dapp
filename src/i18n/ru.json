@@ -195,7 +195,6 @@
             "leaderboard-label": "Лидеры",
             "quick-trading-label": "Быстрая торговля",
             "quick-trading-label-competition": "Kонк. быстрая торговля",
-            "earn-label": "THALES",
             "royale-label": "Thales Royale",
             "governance-label": "Управление",
             "game-label": "Милет",
@@ -206,7 +205,8 @@
             "profile-label": "Профиль",
             "exotic-markets-label": "Экзотические рынки",
             "ranged-markets": "Диапазонные рынки",
-            "wizard": "Волшебник Фалеса"
+            "earn-label": "ЖЕЛЕЗНЫЙ ТОКЕН",
+            "wizard": "Встроенный мастер"
         },
         "coming-soon": "Скоро...",
         "of": "из",

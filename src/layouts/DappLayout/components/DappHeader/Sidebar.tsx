@@ -70,6 +70,18 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.leaderboard-label')}
                     />
                 )} */}
+
+                {!isPolygon && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.Wizard)}
+                        iconName="wizard"
+                        label={t('common.sidebar.wizard')}
+                    />
+                )}
+
                 {!isPolygon && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
@@ -143,16 +155,7 @@ const Sidebar: React.FC = () => {
                     }}
                     simpleOnClick={true}
                 />
-                {!isPolygon && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Wizard)}
-                        iconName="wizard"
-                        label={t('common.sidebar.wizard')}
-                    />
-                )}
+
                 <ThreeDotsContainer
                     onClick={(event) => {
                         event.stopPropagation();

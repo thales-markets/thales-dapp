@@ -33,9 +33,18 @@ const Wizard: React.FC = () => {
                     }}
                 />
             </TextIntro>
+            <WizardVideo
+                header={false}
+                videoLink="https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1"
+                videoTitle="On-boarding Wizard video walk through for Thales platform"
+            />
             <Steps step={currentStep} setCurrentStep={setCurrentStep}></Steps>
             <WizardText step={currentStep}></WizardText>
-            <WizardVideo />
+            <WizardVideo
+                header={true}
+                videoLink="https://www.youtube.com/embed/sWiOiW5VTdE?&autoplay=1"
+                videoTitle="How to use Thales AMM (Automated Market Maker)? Walk through - Video Tutorial"
+            />
             <WizardFaq />
             <WizardFooter />
         </Wrapper>
