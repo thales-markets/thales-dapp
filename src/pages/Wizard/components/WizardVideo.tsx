@@ -6,7 +6,7 @@ import videoTutorial from 'assets/images/wizard/video-tutorial.png';
 const WizardVideo: React.FC = () => {
     const [showIframe, setShowIframe] = useState(false);
 
-    const videoLink = 'https://www.youtube.com/embed/iiyGnaBnIqk?&autoplay=1';
+    const videoLink = 'https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1';
 
     return (
         <>
@@ -30,6 +30,7 @@ const WizardVideo: React.FC = () => {
                             width="1280"
                             height="720"
                             src={videoLink}
+                            title="On-boarding Wizard video walk through for Thales platform"
                             allow={
                                 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                             }

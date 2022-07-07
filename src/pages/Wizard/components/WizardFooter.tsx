@@ -8,13 +8,13 @@ const WizardFooter: React.FC = () => {
             <ThalesLogo className="icon icon--logo" />
             <ThalesLogoText>© 2022 THALES DAO All Rights Reserved</ThalesLogoText>
             <FooterIconsWrapper>
-                <TextLink target="_blank" rel="noreferrer" href="">
+                <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io">
                     <Trans i18nKey="wizard-page.discover" />
                 </TextLink>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/governance">
                     <Trans i18nKey="wizard-page.about" />
                 </TextLink>
-                <TextLink target="_blank" rel="noreferrer" href="">
+                <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io">
                     <Trans i18nKey="wizard-page.resources" />
                 </TextLink>
                 <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">

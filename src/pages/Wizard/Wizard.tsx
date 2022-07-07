@@ -30,6 +30,7 @@ const Wizard: React.FC = () => {
                     i18nKey="wizard-page.intro"
                     components={{
                         b: <strong />,
+                        s: <span />,
                     }}
                 />
             </TextIntro>

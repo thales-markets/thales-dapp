@@ -97,7 +97,13 @@ const WizardFaq: React.FC = () => {
                             }}
                         >
                             <Question key={'q' + index}>
-                                <Trans i18nKey={qa.question} />
+                                <Trans
+                                    i18nKey={qa.question}
+                                    components={{
+                                        b: <strong />,
+                                        s: <span />,
+                                    }}
+                                />
                                 {!!qa.linkUrl && (
                                     <SPAAnchor href={qa.linkUrl}>
                                         {' ('}
@@ -109,7 +115,13 @@ const WizardFaq: React.FC = () => {
 
                             {questionOpenedIndex === index && (
                                 <Answer key={'a' + index} onClick={(e) => e.stopPropagation()}>
-                                    <Trans i18nKey={qa.answer} />
+                                    <Trans
+                                        i18nKey={qa.answer}
+                                        components={{
+                                            b: <strong />,
+                                            s: <span />,
+                                        }}
+                                    />
                                 </Answer>
                             )}
                             <ToggleQuestion key={'tq' + index} questionOpened={questionOpenedIndex === index} />
@@ -150,6 +162,9 @@ const Question = styled.p`
     text-transform: capitalize;
     color: #ffffff;
     padding-left: 30px;
+    span {
+        text-transform: lowercase;
+    }
 `;
 
 const ToggleQuestion = styled.div<{ questionOpened: boolean }>`
@@ -171,6 +186,9 @@ const Answer = styled.p`
     text-transform: capitalize;
     color: #ffffff;
     cursor: text;
+    span {
+        text-transform: lowercase;
+    }
 `;
 
 const LineUnderQuestion = styled.div`
