@@ -42,7 +42,6 @@ const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
                         i18nKey="wizard-page.step3"
                         components={{
                             b: <strong />,
-                            s: <span />,
                         }}
                     />
                 </Text>
@@ -73,7 +72,6 @@ export const Text = styled.p`
     font-size: 16px;
     line-height: 24px;
     text-align: justify;
-    text-transform: capitalize;
     color: #ffffff;
     margin-bottom: 14px;
     strong {
@@ -81,9 +79,6 @@ export const Text = styled.p`
     }
     i {
         font-style: italic;
-    }
-    span {
-        text-transform: lowercase;
     }
 `;
 

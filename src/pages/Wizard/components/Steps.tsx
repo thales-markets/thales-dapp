@@ -56,12 +56,20 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     useEffect(() => {
-        if (typeof window.ethereum !== 'undefined' && isWalletConnected) {
-            setCurrentStep(WizardSteps.BUY);
+        if (isWalletConnected) {
+            const timer = setTimeout(() => {
+                setCurrentStep(WizardSteps.BUY);
+            }, 50);
+
+            return () => {
+                clearTimeout(timer);
+            };
+        } else if (typeof window.ethereum !== 'undefined') {
+            setCurrentStep(WizardSteps.CONNECT_METAMASK);
         }
     }, [isWalletConnected]);
 
-    // Check after every 1s if user installed Metamask
+    // After click on install check every 1s if user installed Metamask
     useInterval(
         () => {
             const mmInstaled = typeof window.ethereum !== 'undefined';
@@ -518,7 +526,6 @@ const IconText = styled.p`
     font-weight: 600;
     font-size: 14px;
     line-height: 21px;
-    text-transform: capitalize;
     color: #64d9fe;
     padding-top: 5px;
 `;
@@ -561,7 +568,6 @@ const Text = styled.p`
     font-weight: 400;
     font-size: 15px;
     line-height: 23px;
-    text-transform: capitalize;
     color: var(--color);
     a {
         font-weight: 700;
@@ -607,7 +613,6 @@ const BuyTitle = styled.div`
     line-height: 24px;
     position: relative;
     text-align: center;
-    text-transform: capitalize;
     color: #ffffff;
 `;
 
@@ -641,7 +646,6 @@ const Button = styled.div`
     color: #ffffff;
     background-color: transparent;
     padding: 5px 0px;
-    text-transform: capitalize;
     margin-left: 30px;
 `;
 

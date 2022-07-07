@@ -101,7 +101,6 @@ const WizardFaq: React.FC = () => {
                                     i18nKey={qa.question}
                                     components={{
                                         b: <strong />,
-                                        s: <span />,
                                     }}
                                 />
                                 {!!qa.linkUrl && (
@@ -119,7 +118,6 @@ const WizardFaq: React.FC = () => {
                                         i18nKey={qa.answer}
                                         components={{
                                             b: <strong />,
-                                            s: <span />,
                                         }}
                                     />
                                 </Answer>
@@ -140,7 +138,6 @@ const FaqHeader = styled.p`
     font-weight: 700;
     font-size: 22px;
     line-height: 33px;
-    text-transform: capitalize;
     color: #ffffff;
     margin-top: 30px;
     margin-bottom: 20px;
@@ -159,7 +156,6 @@ const Question = styled.p`
     font-weight: 700;
     font-size: 20px;
     line-height: 54px;
-    text-transform: capitalize;
     color: #ffffff;
     padding-left: 30px;
     span {
@@ -183,12 +179,8 @@ const Answer = styled.p`
     font-size: 16px;
     line-height: 19px;
     text-align: justify;
-    text-transform: capitalize;
     color: #ffffff;
     cursor: text;
-    span {
-        text-transform: lowercase;
-    }
 `;
 
 const LineUnderQuestion = styled.div`
