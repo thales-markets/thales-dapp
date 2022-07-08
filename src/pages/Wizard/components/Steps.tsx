@@ -245,6 +245,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                     window.open(ROUTES.Options.RangeMarkets, '_blank');
                                 }
                             }}
+                            pulseDelay="0.5s"
                         >
                             <Icon
                                 clickable={isWalletConnected && step === WizardSteps.TRADE}
@@ -516,10 +517,10 @@ const IconsWrapper = styled.div`
     gap: 10px;
 `;
 
-const IconWrapper = styled.div<{ clickable: boolean; active: boolean }>`
+const IconWrapper = styled.div<{ clickable: boolean; active: boolean; pulseDelay?: string }>`
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
 
-    animation: ${(props) => (props.active ? 'pulsing 1s ease-in;' : '')};
+    animation: ${(props) => (props.active ? 'pulsing 1s ease-in ' + (props.pulseDelay ?? '') + ';' : '')};
     animation-iteration-count: ${(props) => (props.active ? 'infinite;' : '')};
 
     @keyframes pulsing {
