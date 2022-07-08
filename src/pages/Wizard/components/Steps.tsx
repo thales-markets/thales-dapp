@@ -540,7 +540,7 @@ const IconWrapper = styled.div<{ clickable: boolean; active: boolean }>`
             opacity: 1;
         }
         50% {
-            transform: scale(1.1);
+            transform: scale(1.2);
             opacity: 1;
         }
         100% {
@@ -625,7 +625,7 @@ const BuyWrapper = styled.div`
     height: 441px;
     margin: auto;
     position: relative;
-    top: 200px;
+    top: 100px;
     background: #04045a;
     border: 2px solid #64d9fe;
     box-shadow: 0px 0px 90px 10px #64d9fe;

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
-import videoTutorial from 'assets/images/wizard/video-tutorial.png';
+import wizardScreenshot from 'assets/images/wizard/thales-wizard.jpg';
+import tutorialScreenshot from 'assets/images/wizard/thales-tutorial.jpg';
 
 const WizardVideo: React.FC<{ header: boolean; videoLink: string; videoTitle: string }> = ({
     header,
@@ -9,6 +10,7 @@ const WizardVideo: React.FC<{ header: boolean; videoLink: string; videoTitle: st
     videoTitle,
 }) => {
     const [showIframe, setShowIframe] = useState(false);
+    const videoScreenshot = header ? tutorialScreenshot : wizardScreenshot;
 
     return (
         <>
@@ -20,7 +22,7 @@ const WizardVideo: React.FC<{ header: boolean; videoLink: string; videoTitle: st
             {!showIframe && (
                 <VideoContainer>
                     <VideoTutorial
-                        src={videoTutorial}
+                        src={videoScreenshot}
                         onClick={() => {
                             setShowIframe(true);
                         }}
@@ -63,6 +65,7 @@ const VideoContainer = styled.div`
 `;
 
 const VideoTutorial = styled.img`
+    width: 100%;
     cursor: pointer;
 `;
 

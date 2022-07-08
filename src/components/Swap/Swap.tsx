@@ -109,7 +109,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
             setPreviewData(undefined);
             setShowSceleton(false);
         }
-    }, [fromToken, amount]);
+    }, [fromToken, toToken, amount]);
 
     useEffect(() => {
         const mappedToToken = mapTokenByNetwork(toToken.symbol, isL2, isPolygon);
