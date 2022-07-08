@@ -119,25 +119,26 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             }
         }
     };
-    const step2ClickHandler = async () => {
+    const step2ClickHandler = (navigateOnly: boolean) => {
         if (!isWalletConnected) return;
         scrollToSteps();
-        await delay(500);
-        if (step === WizardSteps.BUY) {
+        if (!navigateOnly && step === WizardSteps.BUY) {
             setShowBuyModal(true);
         } else {
             setCurrentStep(WizardSteps.BUY);
         }
     };
-    const step3ClickHandler = () => {
+    const step3ClickHandler = (navigateOnly = false) => {
         if (!isWalletConnected) return;
-        if (step === WizardSteps.EXCHANGE) {
+        scrollToSteps();
+        if (!navigateOnly && step === WizardSteps.EXCHANGE) {
             setShowSwap(true);
         } else {
             setCurrentStep(WizardSteps.EXCHANGE);
         }
     };
     const step4ClickHandler = () => {
+        scrollToSteps();
         if (!isWalletConnected) return;
         setCurrentStep(WizardSteps.TRADE);
     };
@@ -167,7 +168,11 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         {isStep1 && <ArrowImg clickable={isStep1} src={arrow} />}
                     </CardNameWrapper>
                 </Card>
-                <Card clickable={isWalletConnected} active={step === WizardSteps.BUY} onClick={step2ClickHandler}>
+                <Card
+                    clickable={isWalletConnected}
+                    active={step === WizardSteps.BUY}
+                    onClick={() => step2ClickHandler(true)}
+                >
                     <IconWrapper
                         clickable={isWalletConnected && step === WizardSteps.BUY}
                         active={step === WizardSteps.BUY}
@@ -183,7 +188,11 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         )}
                     </CardNameWrapper>
                 </Card>
-                <Card clickable={isWalletConnected} active={step === WizardSteps.EXCHANGE} onClick={step3ClickHandler}>
+                <Card
+                    clickable={isWalletConnected}
+                    active={step === WizardSteps.EXCHANGE}
+                    onClick={() => step3ClickHandler(false)}
+                >
                     <IconWrapper
                         clickable={isWalletConnected && step === WizardSteps.EXCHANGE}
                         active={step === WizardSteps.EXCHANGE}
@@ -259,31 +268,18 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 <Step
                     active={step === WizardSteps.BUY}
                     clickable={isWalletConnected}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        setCurrentStep(WizardSteps.BUY);
-                    }}
+                    onClick={() => step2ClickHandler(true)}
                 >
                     2
                 </Step>
                 <Step
                     active={step === WizardSteps.EXCHANGE}
                     clickable={isWalletConnected}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        setCurrentStep(WizardSteps.EXCHANGE);
-                    }}
+                    onClick={() => step3ClickHandler(true)}
                 >
                     3
                 </Step>
-                <Step
-                    active={step === WizardSteps.TRADE}
-                    clickable={isWalletConnected}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        setCurrentStep(WizardSteps.TRADE);
-                    }}
-                >
+                <Step active={step === WizardSteps.TRADE} clickable={isWalletConnected} onClick={step4ClickHandler}>
                     4
                 </Step>
             </CardWrapper>
@@ -294,30 +290,21 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 <NavItem
                     className={step === WizardSteps.BUY ? 'active' : ''}
                     clickable={isWalletConnected}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        setCurrentStep(WizardSteps.BUY);
-                    }}
+                    onClick={() => step2ClickHandler(true)}
                 >
                     {NavItems.STEP_2}
                 </NavItem>
                 <NavItem
                     className={step === WizardSteps.EXCHANGE ? 'active' : ''}
                     clickable={isWalletConnected}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        setCurrentStep(WizardSteps.EXCHANGE);
-                    }}
+                    onClick={() => step3ClickHandler(true)}
                 >
                     {NavItems.STEP_3}
                 </NavItem>
                 <NavItem
                     className={step === WizardSteps.TRADE ? 'active' : ''}
                     clickable={isWalletConnected}
-                    onClick={() => {
-                        if (!isWalletConnected) return;
-                        setCurrentStep(WizardSteps.TRADE);
-                    }}
+                    onClick={step4ClickHandler}
                 >
                     {NavItems.STEP_4}
                 </NavItem>
