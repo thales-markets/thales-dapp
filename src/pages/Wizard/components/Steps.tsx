@@ -119,10 +119,11 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             }
         }
     };
-    const step2ClickHandler = (navigateOnly: boolean) => {
+    const step2ClickHandler = async (navigateOnly: boolean) => {
         if (!isWalletConnected) return;
         scrollToSteps();
         if (!navigateOnly && step === WizardSteps.BUY) {
+            await delay(300);
             setShowBuyModal(true);
         } else {
             setCurrentStep(WizardSteps.BUY);
@@ -171,7 +172,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 <Card
                     clickable={isWalletConnected}
                     active={step === WizardSteps.BUY}
-                    onClick={() => step2ClickHandler(true)}
+                    onClick={() => step2ClickHandler(false)}
                 >
                     <IconWrapper
                         clickable={isWalletConnected && step === WizardSteps.BUY}
