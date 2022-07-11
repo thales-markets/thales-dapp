@@ -60,7 +60,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         if (isWalletConnected) {
             const timer = setTimeout(() => {
                 setCurrentStep(WizardSteps.BUY);
-            }, 50);
+            }, 100);
 
             return () => {
                 clearTimeout(timer);
@@ -114,7 +114,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 window.open(MMURL);
                 setInstallMetamask(true);
             } else {
-                await delay(600);
+                const delayMs = ref.current?.getBoundingClientRect().top || 500;
+                await delay(delayMs < 300 ? 300 : delayMs);
                 onboardConnector.connectWallet();
             }
         }
