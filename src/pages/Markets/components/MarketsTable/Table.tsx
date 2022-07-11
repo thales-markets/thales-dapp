@@ -209,9 +209,8 @@ const Table: React.FC<{
         let allAssets: Set<string> = new Set();
         optionsMarkets.forEach((market) => {
             if (!market.customMarket) allAssets.add(market.currencyKey);
-            // currentAssetPrice is required because it is part of GridSortFilters
         });
-        allAssets = new Set(Array.from(allAssets).sort(sortCurrencies).slice(0, 11));
+        allAssets = new Set(Array.from(allAssets).sort(sortCurrencies));
         setAllAssets(allAssets);
     }, [optionsMarkets]);
 

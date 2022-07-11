@@ -56,6 +56,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
+    const ref = useRef<null | HTMLDivElement>(null);
+
     useEffect(() => {
         if (isWalletConnected) {
             const timer = setTimeout(() => {
@@ -145,8 +147,6 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         setCurrentStep(WizardSteps.TRADE);
     };
 
-    const ref = useRef<null | HTMLDivElement>(null);
-
     return (
         <>
             <CardWrapper ref={ref}>
@@ -201,7 +201,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                     >
                         <Icon
                             clickable={isWalletConnected && step === WizardSteps.EXCHANGE}
-                            style={{ fontSize: 74 }}
+                            style={iconStyle}
                             className={`sidebar-icon icon--swap`}
                         />
                     </IconWrapper>
@@ -511,7 +511,7 @@ const CardNameWrapper = styled.div`
 `;
 
 const IconsWrapper = styled.div`
-    height: 88px;
+    height: 87px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -548,6 +548,7 @@ const Image = styled.img<{ clickable: boolean }>`
 
 const Icon = styled.i<{ clickable: boolean }>`
     font-size: 57px;
+    padding-top: 16px;
     color: var(--input-border-color);
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
 `;
@@ -592,7 +593,7 @@ const SeparatorImg = styled.img`
     background: #64d9fe;
     width: 4px;
     height: 72px;
-    margin-bottom: 15px;
+    margin-top: 5px;
 `;
 
 const Text = styled.p`
@@ -718,4 +719,9 @@ const IFrame = styled.iframe`
 
 const modalStyle = {
     backdropFilter: 'blur(10px)',
+};
+
+const iconStyle = {
+    fontSize: 74,
+    padding: '6.5px 0px',
 };
