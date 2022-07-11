@@ -9,6 +9,7 @@ const filters = [
     TransactionFilterEnum.START_UNSTAKE,
     TransactionFilterEnum.CANCEL_UNSTAKE,
     TransactionFilterEnum.UNSTAKE,
+    TransactionFilterEnum.MERGE_ACCOUNT,
 ];
 
 const YourTransactions: React.FC = () => {

@@ -693,7 +693,8 @@
                     "vest": "No vest transactions associated with this wallet.",
                     "lpStake": "No LP stake transactions associated with this wallet.",
                     "lpUnstake": "No LP unstake transactions associated with this wallet.",
-                    "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet."
+                    "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet.",
+                    "mergeAccount": "No merge account transactions associated with this wallet."
                 },
                 "types": {
                     "claimRetroAirdrop": "Claim retro airdrop",
@@ -709,7 +710,8 @@
                     "vest": "Vest",
                     "lpStake": "LP stake",
                     "lpUnstake": "LP unstake",
-                    "lpClaimStakingRewards": "Claim LP staking rewards"
+                    "lpClaimStakingRewards": "Claim LP staking rewards",
+                    "mergeAccount": "Merge account"
                 },
                 "filter": {
                     "all": "All",
@@ -726,7 +728,8 @@
                     "vest": "Vest",
                     "lpStake": "LP stake",
                     "lpUnstake": "LP unstake",
-                    "lpClaimStakingRewards": "LP staking rewards"
+                    "lpClaimStakingRewards": "LP staking rewards",
+                    "mergeAccount": "Merge account"
                 }
             },
             "overview": {

@@ -45,7 +45,8 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
                             <p>
-                                {cellProps.cell.row.original.type !== TransactionFilterEnum.CANCEL_UNSTAKE
+                                {cellProps.cell.row.original.type !== TransactionFilterEnum.CANCEL_UNSTAKE &&
+                                cellProps.cell.row.original.type !== TransactionFilterEnum.MERGE_ACCOUNT
                                     ? formatCurrencyWithKey(
                                           cellProps.cell.row.original.type === TransactionFilterEnum.LP_STAKE ||
                                               cellProps.cell.row.original.type === TransactionFilterEnum.LP_UNSTAKE

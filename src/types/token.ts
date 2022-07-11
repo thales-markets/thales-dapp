@@ -32,7 +32,8 @@ export type TokenTransactionType =
     | 'vest'
     | 'lpStake'
     | 'lpUnstake'
-    | 'lpClaimStakingRewards';
+    | 'lpClaimStakingRewards'
+    | 'mergeAccount';
 
 export type TokenTransaction = {
     hash: string;
@@ -59,6 +60,7 @@ export enum TransactionFilterEnum {
     LP_STAKE = 'lpStake',
     LP_UNSTAKE = 'lpUnstake',
     LP_CLAIM_STAKING_REWARDS = 'lpClaimStakingRewards',
+    MERGE_ACCOUNT = 'mergeAccount',
 }
 
 export type TokenTransactions = TokenTransaction[];
