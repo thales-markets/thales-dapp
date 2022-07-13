@@ -17,13 +17,13 @@ import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 
 import ROUTES from 'constants/routes';
+import { POLYGON_ID } from 'constants/network';
 import onboardConnector from 'utils/onboardConnector';
 
 import { WizardSteps } from '../Wizard';
 import { XButton } from 'theme/common';
 import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader';
-import { POLYGON_ID } from 'constants/network';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -87,9 +87,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const buyButtonHandler = (buttonType: Provider) => {
         switch (buttonType) {
             case Provider.BANXA:
-                // setIframe(Provider.BANXA.toString());
-                // setLoader(true);
-                window.open(Provider.BANXA.toString());
+                setIframe(Provider.BANXA.toString());
+                setLoader(true);
                 break;
             case Provider.MT_PELERIN:
                 const queryParams =
