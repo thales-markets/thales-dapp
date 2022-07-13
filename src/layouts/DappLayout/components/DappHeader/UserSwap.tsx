@@ -130,6 +130,15 @@ const SwapWrapper = styled.div`
     width: 130px;
     right: 234px;
     top: 40px;
+    @media (max-width: 1024px) {
+        right: 224px;
+        top: 22px;
+    }
+
+    @media (max-width: 400px) {
+        right: 194px;
+        top: 22px;
+    }
 `;
 
 const SwapButton = styled.div<{ isWalletConnected: boolean }>`
@@ -143,15 +152,7 @@ const SwapButton = styled.div<{ isWalletConnected: boolean }>`
     padding: 6px 7px;
     text-align: center;
     }
-    @media (max-width: 1024px) {
-        right: 224px;
-        top: 22px;
-    }
-
-    @media (max-width: 400px) {
-        right: 194px;
-        top: 22px;
-    }
+F
 `;
 
 const SwapButtonTextWrap = styled.div`
@@ -176,15 +177,6 @@ const BalanceContainer = styled.div`
     border-radius: 15px;
     padding: 5px 0;
     text-align: center;
-    @media (max-width: 1024px) {
-        right: 224px;
-        top: 60px;
-    }
-
-    @media (max-width: 400px) {
-        right: 194px;
-        top: 60px;
-    }
 `;
 
 const BalanceWrapper = styled.div`
