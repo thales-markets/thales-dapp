@@ -38,11 +38,12 @@ import {
     POLYGON_USDC,
     POLYGON_USDT,
     mapTokenByNetwork,
+    TokenSymbol,
 } from './tokens';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 
-const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
+const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -54,7 +55,14 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
     const signer = provider.getSigner();
     const [fromToken, _setFromToken] = useState(isL2 ? OP_Eth : isPolygon ? POLYGON_MATIC : ETH_Eth);
-    const [toToken, _setToToken] = useState(isL2 ? OP_sUSD : isPolygon ? POLYGON_USDC : ETH_sUSD);
+
+    const toTokenInitialState = mapTokenByNetwork(
+        TokenSymbol[initialToToken as keyof typeof TokenSymbol],
+        isL2,
+        isPolygon
+    );
+    const [toToken, _setToToken] = useState(toTokenInitialState);
+
     const [amount, setAmount] = useState('');
     const [previewData, setPreviewData] = useState(undefined);
     const [allowance, setAllowance] = useState(false);
@@ -259,7 +267,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                     className={Number(amount) > Number(balance) ? 'disabled primary' : 'primary'}
                     onClick={async () => {
                         await swapTx();
-                        handleClose(false);
+                        handleClose.bind(this, false);
                     }}
                     disabled={Number(amount) > Number(balance)}
                 >
