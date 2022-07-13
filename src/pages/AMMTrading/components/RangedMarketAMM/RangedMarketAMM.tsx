@@ -134,17 +134,17 @@ const AMM: React.FC = () => {
             : null;
 
     const rawParams = useLocation();
-    const queryParams = queryString.parse(rawParams?.search);
+    const queryParamSide = queryString.parse(rawParams?.search)?.side;
 
     useEffect(() => {
-        if (queryParams?.side == 'in') {
+        if (queryParamSide == 'in') {
             setRangeSide('in');
         }
 
-        if (queryParams?.side == 'out') {
+        if (queryParamSide == 'out') {
             setRangeSide('out');
         }
-    }, [queryParams]);
+    }, [queryParamSide]);
 
     const positionBalanceQuery = useRangedMarketPositionBalanceQuery(
         rangedMarketData?.address,
