@@ -3,6 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { formatCurrency } from 'utils/formatters/number';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 const LP_STAKING_WEEKLY_REWARDS = 45000;
 const LP_STAKING_WEEKLY_SECOND_REWARDS = 15750;
@@ -40,24 +41,25 @@ const getRates = async (): Promise<Rates> => {
     };
 };
 
-const useGelatoQuery = (totalGelatoLocked: number, options?: UseQueryOptions<Balance>) => {
+const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
     return useQuery<Balance>(
-        QUERY_KEYS.Token.Gelato(totalGelatoLocked),
+        QUERY_KEYS.Token.Gelato(),
         async () => {
             try {
-                const [balance, totalSupply, ratesResults] = await Promise.all([
+                const [balance, totalSupply, totalGelatoLocked, ratesResults] = await Promise.all([
                     snxJSConnector?.gelatoContract?.getUnderlyingBalances(),
                     snxJSConnector?.gelatoContract?.totalSupply(),
+                    snxJSConnector?.lpStakingRewardsContract?.totalSupply(),
                     getRates(),
                 ]);
 
-                const thales = Number(toNumber(balance[0]).toFixed(2));
-                const weth = Number(toNumber(balance[1]).toFixed(2));
+                const thales = bigNumberFormatter(balance[0]);
+                const weth = bigNumberFormatter(balance[1]);
 
                 const totalInUSD =
-                    (totalGelatoLocked *
-                        Number((weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd).toFixed(2))) /
-                    toNumber(totalSupply);
+                    (bigNumberFormatter(totalGelatoLocked) *
+                        (weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd)) /
+                    bigNumberFormatter(totalSupply);
 
                 const apr = (100 * (LP_STAKING_WEEKLY_REWARDS * ratesResults.thales.usd * 52)) / totalInUSD;
                 const secondApr =
@@ -80,7 +82,3 @@ const useGelatoQuery = (totalGelatoLocked: number, options?: UseQueryOptions<Bal
 };
 
 export default useGelatoQuery;
-
-const toNumber = (number: number) => {
-    return Number(ethers.utils.formatEther(number));
-};

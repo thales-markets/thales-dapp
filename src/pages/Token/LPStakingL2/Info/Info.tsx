@@ -5,14 +5,14 @@ import { FlexDivCentered, FlexDivColumn, FlexDivSpaceBetween, FlexDivStart } fro
 import { useTranslation } from 'react-i18next';
 import useGelatoQuery from 'queries/token/useGelatoQuery';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getIsAppReady } from 'redux/modules/app';
 
-type Properties = {
-    totalGelatoLocked: number;
-};
-
-const Info: React.FC<Properties> = ({ totalGelatoLocked }) => {
+const Info: React.FC = () => {
     const { t } = useTranslation();
-    const gelatoQuery = useGelatoQuery(totalGelatoLocked, { enabled: true });
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const gelatoQuery = useGelatoQuery({ enabled: isAppReady });
     const gelatoData = gelatoQuery.isSuccess ? gelatoQuery.data : undefined;
 
     return (
@@ -21,16 +21,16 @@ const Info: React.FC<Properties> = ({ totalGelatoLocked }) => {
                 <AprInfoContainer>
                     <TotalAprContainer>
                         <TotalAprTitle>{t('options.earn.lp-staking.info.total-apr')}</TotalAprTitle>
-                        <TotalAprAmount>{gelatoData?.totalApr}</TotalAprAmount>
+                        <TotalAprAmount>{gelatoQuery.isLoading ? '0%' : gelatoData?.totalApr}</TotalAprAmount>
                     </TotalAprContainer>
                     <FlexDivColumn>
                         <AprContainer>
                             <AprTitle>{t('options.earn.lp-staking.info.thales-apr')}</AprTitle>
-                            <AprAmount>{gelatoData?.apr}</AprAmount>
+                            <AprAmount>{gelatoQuery.isLoading ? '0%' : gelatoData?.apr}</AprAmount>
                         </AprContainer>
                         <AprContainer>
                             <AprTitle>{t('options.earn.lp-staking.info.op-apr')}</AprTitle>
-                            <AprAmount>{gelatoData?.secondApr}</AprAmount>
+                            <AprAmount>{gelatoQuery.isLoading ? '0%' : gelatoData?.secondApr}</AprAmount>
                         </AprContainer>
                     </FlexDivColumn>
                 </AprInfoContainer>
