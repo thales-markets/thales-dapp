@@ -7,6 +7,7 @@ import { bigNumberFormatter } from '../../utils/formatters/ethers';
 type LPStakingThalesQueryResponse = {
     staked: number;
     rewards: number;
+    secondRewards: number;
     paused: boolean;
     totalGelatoLocked: number;
 };
@@ -35,6 +36,7 @@ const useLPStakingThalesQuery = (
             const staking = {
                 staked: 0,
                 rewards: 0,
+                secondRewards: 0,
                 paused: false,
                 totalGelatoLocked: 0,
             };

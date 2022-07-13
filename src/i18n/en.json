@@ -661,7 +661,9 @@
                 },
                 "info": {
                     "tvl": "Total value locked (TVL)",
-                    "apr": "APR"
+                    "thales-apr": "THALES APR",
+                    "op-apr": "OP APR",
+                    "total-apr": "TOTAL APR"
                 },
                 "provide-liquidity": {
                     "description": "Obtain G-UNI LP tokens to stake by adding liquidity to the THALES/WETH pool.",

@@ -5,28 +5,37 @@ import { ethers } from 'ethers';
 import { formatCurrency } from 'utils/formatters/number';
 
 const LP_STAKING_WEEKLY_REWARDS = 45000;
+const LP_STAKING_WEEKLY_SECOND_REWARDS = 15750;
 
 export interface Balance {
     totalInUSD: number;
     apr: string;
+    secondApr: string;
+    totalApr: string;
 }
 
 const priceL2ThalesURL =
     'https://api.1inch.exchange/v3.0/10/quote?fromTokenAddress=0x217D47011b23BB961eB6D93cA9945B7501a5BB11&toTokenAddress=0x7f5c764cbc14f9669b88837ca1490cca17c31607&amount=100000000000000000000';
 
-type Rates = { ethereum: { usd: number }; thales: { usd: number } };
+type Rates = {
+    ethereum: { usd: number };
+    optimism: { usd: number };
+    thales: { usd: number };
+};
 
 const getRates = async (): Promise<Rates> => {
-    const [res1, res2] = await Promise.all([
+    const [resThales, resRewardTokens] = await Promise.all([
         fetch(priceL2ThalesURL),
-        fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'),
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum,optimism&vs_currencies=usd'),
     ]);
-    const data1 = await res1.json();
-    const data2 = await res2.json();
-    const toAmount = (Number(ethers.utils.formatUnits(data1.toTokenAmount, data1.toToken.decimals)) / 100).toFixed(4);
+    const dataThales = await resThales.json();
+    const dataRewardTokens = await resRewardTokens.json();
+    const toAmount = (
+        Number(ethers.utils.formatUnits(dataThales.toTokenAmount, dataThales.toToken.decimals)) / 100
+    ).toFixed(4);
 
     return {
-        ...data2,
+        ...dataRewardTokens,
         thales: { usd: Number(toAmount) },
     };
 };
@@ -50,15 +59,21 @@ const useGelatoQuery = (totalGelatoLocked: number, options?: UseQueryOptions<Bal
                         Number((weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd).toFixed(2))) /
                     toNumber(totalSupply);
 
-                const apr = ((100 * (LP_STAKING_WEEKLY_REWARDS * ratesResults.thales.usd * 52)) / totalInUSD).toFixed(
-                    0
-                );
+                const apr = (100 * (LP_STAKING_WEEKLY_REWARDS * ratesResults.thales.usd * 52)) / totalInUSD;
+                const secondApr =
+                    (100 * (LP_STAKING_WEEKLY_SECOND_REWARDS * ratesResults.optimism.usd * 52)) / totalInUSD;
+                const totalApr = apr + secondApr;
 
-                return { totalInUSD, apr: formatCurrency(apr) + '%' };
+                return {
+                    totalInUSD,
+                    apr: formatCurrency(apr) + '%',
+                    secondApr: formatCurrency(secondApr) + '%',
+                    totalApr: formatCurrency(totalApr) + '%',
+                };
             } catch (e) {
                 console.log(e);
             }
-            return { totalInUSD: 0, apr: '' };
+            return { totalInUSD: 0, apr: '', secondApr: '', totalApr: '' };
         },
         options
     );
