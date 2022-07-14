@@ -266,8 +266,10 @@
             "invalid-order-amount-max": "The UP amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
+            "enter-address": "Enter address",
             "enter-valid-slippage": "Enter a valid slippage percentage",
             "invalid-price": "Invalid price",
+            "invalid-address": "Invalid address",
             "invalid-price-max": "The price cannot be higher than ${{max}}",
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
@@ -745,6 +747,16 @@
                 "total-supply-label": "Total supply",
                 "celer-bridge": "Celer bridge",
                 "celer-bridge-tooltip": "Fast bridge THALES between chains"
+            },
+            "merge-account": {
+                "title": "Merge account",
+                "source-account-label": "Source account",
+                "destination-account-label": "Destination account",
+                "confirmation-message": "Account successfully merged",
+                "merge-button": {
+                    "label": "Merge account",
+                    "progress-label": "Merging in progress..."
+                }
             }
         },
         "quiz": {
