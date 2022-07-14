@@ -34,11 +34,13 @@ const useLPStakingThalesQuery = (
                         (snxJSConnector as any).lpStakingRewardsContract.balanceOf(walletAddress),
                         (snxJSConnector as any).lpStakingRewardsContract.earned(walletAddress),
                     ]);
-
                     staking.staked = bigNumberFormatter(staked);
-                    staking.rewards = bigNumberFormatter(rewards);
+                    staking.rewards = bigNumberFormatter(rewards[0]);
+                    staking.secondRewards = bigNumberFormatter(rewards[1]);
                 }
-            } catch {}
+            } catch (e) {
+                console.log(e);
+            }
 
             return staking;
         },
