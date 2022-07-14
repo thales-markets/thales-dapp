@@ -267,7 +267,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                     className={Number(amount) > Number(balance) ? 'disabled primary' : 'primary'}
                     onClick={async () => {
                         await swapTx();
-                        handleClose.bind(this, false);
+                        handleClose(false);
                     }}
                     disabled={Number(amount) > Number(balance)}
                 >
@@ -277,7 +277,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     };
 
     return (
-        <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, false)}>
+        <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {networkId !== 1 && networkId !== 10 && networkId !== 137 ? (
                 <SwapDialog
                     royaleTheme={royaleTheme}

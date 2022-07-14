@@ -28,6 +28,7 @@ export const UserSwap: React.FC = () => {
 
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '',
+        refetchInterval: 5000,
     });
 
     const multipleStableBalancesData =
@@ -62,19 +63,25 @@ export const UserSwap: React.FC = () => {
     };
 
     const mouseLeaveHandler = () => {
-        setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
-        setShowBalance(false);
+        if (!showSwap) {
+            setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
+            setShowBalance(false);
+        }
     };
 
     const mouseClickHandler = (coinType: StableCoins) => {
-        setSwapToStableCoin(coinType);
-        isWalletConnected ? setShowSwap(true) : '';
+        if (!showSwap) {
+            setSwapToStableCoin(coinType);
+            isWalletConnected ? setShowSwap(true) : '';
+        }
     };
 
-    const closeSwap = (showSwap: boolean) => {
-        setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
-        setShowBalance(false);
-        setShowSwap(showSwap);
+    const closeSwap = (isShowSwap: boolean) => {
+        if (!isShowSwap) {
+            setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
+            setShowBalance(false);
+            setShowSwap(isShowSwap);
+        }
     };
 
     const assetIcon = (type: string) => {
@@ -84,7 +91,7 @@ export const UserSwap: React.FC = () => {
 
     return (
         <SwapWrapper onMouseOver={mouseOverHandler} onMouseLeave={mouseLeaveHandler}>
-            <SwapButton isWalletConnected={isWalletConnected} onClick={() => mouseClickHandler(maxBalance.type)}>
+            <SwapButton clickable={isWalletConnected && !showSwap} onClick={() => mouseClickHandler(maxBalance.type)}>
                 {assetIcon(maxBalance.type)}
                 <SwapButtonTextWrap>
                     <SwapButtonText>{buttonText}</SwapButtonText>
@@ -93,7 +100,11 @@ export const UserSwap: React.FC = () => {
             {showBalance && (
                 <BalanceContainer>
                     {sortedUserData.map((coin, index) => (
-                        <BalanceWrapper key={index} onClick={() => mouseClickHandler(coin.type)}>
+                        <BalanceWrapper
+                            key={index}
+                            clickable={isWalletConnected && !showSwap}
+                            onClick={() => mouseClickHandler(coin.type)}
+                        >
                             {assetIcon(coin.type)}
                             <BalanceTextWrap>
                                 <BalanceText>
@@ -141,13 +152,13 @@ const SwapWrapper = styled.div`
     }
 `;
 
-const SwapButton = styled.div<{ isWalletConnected: boolean }>`
+const SwapButton = styled.div<{ clickable: boolean }>`
     display: -webkit-flex;
     background-color: var(--input-border-color);
     font-family: Sansation !important;
     color: var(--background);
     border-radius: 15px;
-    cursor: ${(props) => (props.isWalletConnected ? 'pointer' : 'default')};
+    cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
     padding: 6px 7px;
     text-align: center;
@@ -179,14 +190,14 @@ const BalanceContainer = styled.div`
     text-align: center;
 `;
 
-const BalanceWrapper = styled.div`
+const BalanceWrapper = styled.div<{ clickable: boolean }>`
     display: -webkit-flex;
     flex-direction: row;
     align-items: center;
     text-align: center;
     margin: 4px 7px;
     padding: 2px 0;
-    cursor: pointer;
+    cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
 `;
 
 const BalanceTextWrap = styled.div`

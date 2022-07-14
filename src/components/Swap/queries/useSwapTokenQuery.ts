@@ -48,7 +48,6 @@ const useSwapTokenQuery = (
             url = url + fromUrl + toUrl + amountUrl + fromAddUrl + slippage;
             const response = await fetch(url);
             const result = JSON.parse(await response.text());
-            console.log(result);
             return result;
         },
         options
