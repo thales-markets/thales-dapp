@@ -69,10 +69,8 @@ export const UserSwap: React.FC = () => {
     };
 
     const mouseLeaveHandler = () => {
-        if (!showSwap) {
-            setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
-            setShowBalance(false);
-        }
+        setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
+        setShowBalance(false);
     };
 
     const mouseClickHandler = (coinType: StableCoins) => {
@@ -96,35 +94,40 @@ export const UserSwap: React.FC = () => {
     };
 
     return (
-        <SwapWrapper onMouseOver={mouseOverHandler} onMouseLeave={mouseLeaveHandler}>
-            <SwapButton clickable={isWalletConnected && !showSwap} onClick={() => mouseClickHandler(maxBalance.type)}>
-                {assetIcon(maxBalance.type)}
-                <SwapButtonTextWrap>
-                    <SwapButtonText>{buttonText}</SwapButtonText>
-                </SwapButtonTextWrap>
-            </SwapButton>
-            {showBalance && (
-                <BalanceContainer>
-                    {sortedUserData.map((coin, index) => (
-                        <BalanceWrapper
-                            key={index}
-                            clickable={isWalletConnected && !showSwap}
-                            onClick={() => mouseClickHandler(coin.type)}
-                        >
-                            {assetIcon(coin.type)}
-                            <BalanceTextWrap>
-                                <BalanceText>
-                                    {formatCurrencyWithKey(
-                                        getStableCoinForNetwork(networkId, coin.type as StableCoins),
-                                        coin.balance,
-                                        2
-                                    )}
-                                </BalanceText>
-                            </BalanceTextWrap>
-                        </BalanceWrapper>
-                    ))}
-                </BalanceContainer>
-            )}
+        <>
+            <SwapWrapper onMouseOver={mouseOverHandler} onMouseLeave={mouseLeaveHandler}>
+                <SwapButton
+                    clickable={isWalletConnected && !showSwap}
+                    onClick={() => mouseClickHandler(maxBalance.type)}
+                >
+                    {assetIcon(maxBalance.type)}
+                    <SwapButtonTextWrap>
+                        <SwapButtonText>{buttonText}</SwapButtonText>
+                    </SwapButtonTextWrap>
+                </SwapButton>
+                {showBalance && (
+                    <BalanceContainer>
+                        {sortedUserData.map((coin, index) => (
+                            <BalanceWrapper
+                                key={index}
+                                clickable={isWalletConnected && !showSwap}
+                                onClick={() => mouseClickHandler(coin.type)}
+                            >
+                                {assetIcon(coin.type)}
+                                <BalanceTextWrap>
+                                    <BalanceText>
+                                        {formatCurrencyWithKey(
+                                            getStableCoinForNetwork(networkId, coin.type as StableCoins),
+                                            coin.balance,
+                                            2
+                                        )}
+                                    </BalanceText>
+                                </BalanceTextWrap>
+                            </BalanceWrapper>
+                        ))}
+                    </BalanceContainer>
+                )}
+            </SwapWrapper>
             {showSwap && (
                 <Modal
                     open={showSwap}
@@ -138,7 +141,7 @@ export const UserSwap: React.FC = () => {
                     </Suspense>
                 </Modal>
             )}
-        </SwapWrapper>
+        </>
     );
 };
 

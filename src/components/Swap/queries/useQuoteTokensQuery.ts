@@ -37,7 +37,6 @@ const useQuoteTokensQuery = (
     return useQuery<Preview>(
         QUERY_KEYS.Swap.Quote(networkId, amount),
         async () => {
-            console.log(protocols);
             let url = baseUrl + networkId + suffix;
             const fromUrl = 'fromTokenAddress=' + fromToken.address;
             const toUrl = '&toTokenAddress=' + toToken.address;
