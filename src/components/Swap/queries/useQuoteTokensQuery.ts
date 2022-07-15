@@ -31,6 +31,7 @@ const useQuoteTokensQuery = (
     fromToken: Token,
     toToken: Token,
     amount: BigNumber,
+    protocols?: string[], // if empty string all liquidity protocols will be used
     options?: UseQueryOptions<Preview>
 ) => {
     return useQuery<Preview>(
@@ -40,7 +41,8 @@ const useQuoteTokensQuery = (
             const fromUrl = 'fromTokenAddress=' + fromToken.address;
             const toUrl = '&toTokenAddress=' + toToken.address;
             const amountUrl = '&amount=' + amount;
-            url = url + fromUrl + toUrl + amountUrl;
+            const protocolsUrl = protocols?.length ? '&protocols=' + protocols?.toString() : '';
+            url = url + fromUrl + toUrl + amountUrl + protocolsUrl;
             const response = await fetch(url);
             const result = JSON.parse(await response.text());
             return result;

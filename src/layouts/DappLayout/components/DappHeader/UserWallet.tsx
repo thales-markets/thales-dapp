@@ -69,6 +69,7 @@ const Wrapper = styled.div`
     position: absolute;
     top: 40px;
     right: 90px;
+    width: 130px;
     @media (max-width: 1024px) {
         right: 70px;
         top: 20px;
@@ -82,14 +83,11 @@ const Wrapper = styled.div`
 
 const WalletContainer = styled.div<{ connected: boolean }>`
     border: 1px solid rgba(100, 217, 254, 0.5);
-    border-radius: 19.5349px;
+    border-radius: 15px;
     width: 100%;
     cursor: ${(_props) => (_props.connected ? 'text' : 'pointer')};
-    padding: 5px 12px;
-    padding-left: 5px;
+    padding: 5px 6px;
     display: flex;
-    align-items: center;
-    justify-content: center;
     max-width: 150px;
     cursor: pointer;
 `;
@@ -97,7 +95,6 @@ const WalletContainer = styled.div<{ connected: boolean }>`
 const WalletIcon = styled.i`
     color: var(--icon-color);
     font-size: 20px;
-    padding-right: 5px;
     display: inline;
 `;
 
@@ -110,6 +107,7 @@ const WalletAddress = styled.p`
     line-height: 14px;
     display: inline;
     text-align: center;
+    margin: auto;
 `;
 
 export default UserWallet;
