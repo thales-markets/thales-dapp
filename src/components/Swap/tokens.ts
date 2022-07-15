@@ -130,7 +130,7 @@ export const POLYGON_ETH = {
     logoURI: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
 };
 
-export const POLYGON_Dai = {
+export const POLYGON_DAI = {
     symbol: TokenSymbol.DAI,
     name: 'Dai Stablecoin',
     decimals: 18,
@@ -154,7 +154,7 @@ export const mapTokenByNetwork = (tokenSymbol: TokenSymbol, isL2: boolean, isPol
             mappedToken = isL2 ? OP_sUSD : isPolygon ? POLYGON_USDC : ETH_sUSD;
             break;
         case TokenSymbol.DAI:
-            mappedToken = isL2 ? OP_Dai : isPolygon ? POLYGON_Dai : ETH_Dai;
+            mappedToken = isL2 ? OP_Dai : isPolygon ? POLYGON_DAI : ETH_Dai;
             break;
         case TokenSymbol.USDC:
             mappedToken = isL2 ? OP_USDC : isPolygon ? POLYGON_USDC : ETH_USDC;

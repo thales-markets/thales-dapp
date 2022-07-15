@@ -127,7 +127,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         if (!isWalletConnected) return;
         scrollToSteps();
         if (!navigateOnly && step === WizardSteps.BUY) {
-            await delay(300);
+            const delayMs = ref.current?.getBoundingClientRect().top || 500;
+            await delay(delayMs < 300 ? 300 : delayMs);
             setShowBuyModal(true);
         } else {
             setCurrentStep(WizardSteps.BUY);
@@ -389,8 +390,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             {showSwap && (
                 <Modal
                     open={showSwap}
-                    onClose={() => {
-                        setShowSwap(false);
+                    onClose={(_, reason) => {
+                        if (reason !== 'backdropClick') setShowSwap(false);
                     }}
                     style={modalStyle}
                 >
