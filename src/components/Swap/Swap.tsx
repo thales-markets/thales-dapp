@@ -33,7 +33,7 @@ import {
     OP_sUSD,
     OP_USDC,
     OP_USDT,
-    POLYGON_Dai,
+    POLYGON_DAI,
     POLYGON_MATIC,
     POLYGON_USDC,
     POLYGON_USDT,
@@ -42,6 +42,7 @@ import {
 } from './tokens';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { OneInchLiquidityProtocol } from 'constants/network';
 
 const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const { t } = useTranslation();
@@ -88,6 +89,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
         fromToken,
         toToken,
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
+        isPolygon ? [] : [OneInchLiquidityProtocol.UNISWAP],
         { enabled: false }
     );
 
@@ -97,6 +99,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
         toToken,
         walletAddress ? walletAddress : '',
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
+        isPolygon ? [] : [OneInchLiquidityProtocol.UNISWAP],
         {
             enabled: false,
         }
@@ -124,7 +127,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
         isL2
             ? (setPreLoadTokens([OP_sUSD, OP_Dai, OP_USDC, OP_USDT]), _setFromToken(OP_Eth), _setToToken(mappedToToken))
             : isPolygon
-            ? (setPreLoadTokens([POLYGON_Dai, POLYGON_USDC, POLYGON_USDT]),
+            ? (setPreLoadTokens([POLYGON_DAI, POLYGON_USDC, POLYGON_USDT]),
               _setFromToken(POLYGON_MATIC),
               _setToToken(mappedToToken))
             : (setPreLoadTokens([ETH_sUSD, ETH_Dai, ETH_USDC, ETH_USDT]),

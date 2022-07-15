@@ -10,8 +10,10 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { StableCoins } from 'types/options';
+
 import { getAssetIcon, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { getIsPolygon } from 'utils/network';
 
 const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
 
@@ -39,12 +41,16 @@ export const UserSwap: React.FC = () => {
     const USDCBalance = getStableCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDC as StableCoins);
     const USDTBalance = getStableCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDT as StableCoins);
 
-    const userData = [
-        { type: SYNTHS_MAP.sUSD as StableCoins, balance: sUSDBalance },
+    const isPolygon = getIsPolygon(networkId);
+    const userData = [];
+    if (!isPolygon) {
+        userData.push({ type: SYNTHS_MAP.sUSD as StableCoins, balance: sUSDBalance });
+    }
+    userData.push(
+        { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance }, // default for Polygon
         { type: CRYPTO_CURRENCY_MAP.DAI as StableCoins, balance: DAIBalance },
-        { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance },
-        { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance },
-    ];
+        { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance }
+    );
 
     const sortedUserData = _.orderBy(userData, 'balance', 'desc');
     const maxBalance = sortedUserData[0];
