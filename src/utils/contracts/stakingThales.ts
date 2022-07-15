@@ -343,6 +343,12 @@ export const stakingThales = {
                     name: 'unstakeDurationPeriod',
                     type: 'uint256',
                 },
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'mergeAccountEnabled',
+                    type: 'bool',
+                },
             ],
             name: 'StakingParametersChanged',
             type: 'event',
@@ -1472,6 +1478,21 @@ export const stakingThales = {
             type: 'function',
         },
         {
+            constant: true,
+            inputs: [],
+            name: 'mergeAccountEnabled',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [
                 {
@@ -1718,6 +1739,11 @@ export const stakingThales = {
                     internalType: 'uint256',
                     name: '_unstakeDurationPeriod',
                     type: 'uint256',
+                },
+                {
+                    internalType: 'bool',
+                    name: '_mergeAccountEnabled',
+                    type: 'bool',
                 },
             ],
             name: 'setStakingParameters',

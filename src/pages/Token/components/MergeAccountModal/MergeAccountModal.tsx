@@ -10,12 +10,14 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { getIsAppReady } from 'redux/modules/app';
+import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 
 type MergeAccountModalProps = {
     onClose: () => void;
@@ -23,6 +25,8 @@ type MergeAccountModalProps = {
 
 const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '-';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [destAddress, setDestAddress] = useState<string>('');
@@ -34,6 +38,14 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
     const isDestAddressValid = destAddress === undefined || destAddress.trim() === '' || isAddress(destAddress);
 
     const isButtonDisabled = isMerging || !isDestAddressEntered || !isDestAddressValid || !isWalletConnected;
+
+    const srcStakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
+        enabled: isAppReady,
+    });
+
+    const destStakingThalesQuery = useStakingThalesQuery(destAddress, networkId, {
+        enabled: isAppReady && isDestAddressValid,
+    });
 
     const handleMerge = async () => {
         try {
