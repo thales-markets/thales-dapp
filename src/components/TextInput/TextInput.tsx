@@ -8,10 +8,19 @@ type TextInputProps = {
     onChange: any;
     className?: string;
     disabled?: boolean;
+    autoFocus?: boolean;
     style?: CSSProperties;
 };
 
-const TextInput: React.FC<TextInputProps> = ({ value, onChange, placeholder, className, disabled, ...rest }) => {
+const TextInput: React.FC<TextInputProps> = ({
+    value,
+    onChange,
+    placeholder,
+    className,
+    disabled,
+    autoFocus,
+    ...rest
+}) => {
     return (
         <StyledInput
             {...rest}
@@ -21,6 +30,7 @@ const TextInput: React.FC<TextInputProps> = ({ value, onChange, placeholder, cla
             placeholder={placeholder}
             className={className}
             disabled={disabled}
+            autoFocus={autoFocus}
         />
     );
 };

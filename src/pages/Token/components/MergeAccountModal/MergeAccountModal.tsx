@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { FlexDivColumnCentered, FlexDivRowCentered, XButton } from 'theme/common';
+import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered, XButton } from 'theme/common';
 import { Modal } from '@material-ui/core';
 import TextInput from 'components/TextInput';
 // import { getAddress } from 'utils/formatters/ethers';
@@ -18,6 +18,10 @@ import { dispatchMarketNotification } from 'utils/options';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getIsAppReady } from 'redux/modules/app';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
+import InfoMessage from 'components/InfoMessage';
+import InfoWarningMessage from 'components/InfoWarningMessage';
+import { ArrowContainer, Result, ResultContainer } from 'pages/Token/Migration/components';
+import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 
 type MergeAccountModalProps = {
     onClose: () => void;
@@ -35,9 +39,10 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
     const { stakingThalesContract } = snxJSConnector as any;
 
     const isDestAddressEntered = destAddress !== undefined && destAddress.trim() !== '';
-    const isDestAddressValid = destAddress === undefined || destAddress.trim() === '' || isAddress(destAddress);
-
-    const isButtonDisabled = isMerging || !isDestAddressEntered || !isDestAddressValid || !isWalletConnected;
+    const isDestAddressValid =
+        destAddress === undefined ||
+        destAddress.trim() === '' ||
+        (isAddress(destAddress) && getAddress(walletAddress) !== getAddress(destAddress));
 
     const srcStakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -46,6 +51,40 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
     const destStakingThalesQuery = useStakingThalesQuery(destAddress, networkId, {
         enabled: isAppReady && isDestAddressValid,
     });
+
+    const isAccountMergingEnabled =
+        srcStakingThalesQuery.isSuccess && srcStakingThalesQuery.data
+            ? srcStakingThalesQuery.data.mergeAccountEnabled
+            : true;
+
+    const hasSrcAccountSomethingToClaim =
+        srcStakingThalesQuery.isSuccess && srcStakingThalesQuery.data ? srcStakingThalesQuery.data.rewards > 0 : false;
+    const isSrcAccountUnstaking =
+        srcStakingThalesQuery.isSuccess && srcStakingThalesQuery.data
+            ? srcStakingThalesQuery.data.unstakingAmount > 0
+            : false;
+    const hasDestAccountSomethingToClaim =
+        srcStakingThalesQuery.isSuccess && destStakingThalesQuery.data
+            ? destStakingThalesQuery.data.rewards > 0
+            : false;
+    const isDestAccountUnstaking =
+        destStakingThalesQuery.isSuccess && destStakingThalesQuery.data
+            ? destStakingThalesQuery.data.unstakingAmount > 0
+            : false;
+
+    const isMergeBlocked =
+        hasSrcAccountSomethingToClaim ||
+        isSrcAccountUnstaking ||
+        hasDestAccountSomethingToClaim ||
+        isDestAccountUnstaking;
+
+    const isButtonDisabled =
+        isMerging ||
+        !isDestAddressEntered ||
+        !isDestAddressValid ||
+        !isWalletConnected ||
+        !isAccountMergingEnabled ||
+        isMergeBlocked;
 
     const handleMerge = async () => {
         try {
@@ -79,19 +118,40 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                 </DefaultSubmitButton>
             );
         }
-        if (!isDestAddressValid) {
+        if (!isDestAddressValid && isAccountMergingEnabled && !isMergeBlocked) {
             return <DefaultSubmitButton disabled={true}>{t(`common.errors.invalid-address`)}</DefaultSubmitButton>;
         }
-        if (!isDestAddressEntered) {
+        if (!isDestAddressEntered && isAccountMergingEnabled && !isMergeBlocked) {
             return <DefaultSubmitButton disabled={true}>{t(`common.errors.enter-address`)}</DefaultSubmitButton>;
         }
-
         return (
             <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleMerge}>
                 {!isMerging
                     ? t('options.earn.merge-account.merge-button.label')
                     : t('options.earn.merge-account.merge-button.progress-label')}
             </DefaultSubmitButton>
+        );
+    };
+
+    const getBlockedMergeMessage = () => {
+        return (
+            <>
+                <div>{t('options.earn.merge-account.merge-blocked-message.title')}:</div>
+                <ul>
+                    {hasSrcAccountSomethingToClaim && (
+                        <li>{t('options.earn.merge-account.merge-blocked-message.src-claim')}</li>
+                    )}
+                    {isSrcAccountUnstaking && (
+                        <li>{t('options.earn.merge-account.merge-blocked-message.src-unstaking')}</li>
+                    )}
+                    {hasDestAccountSomethingToClaim && (
+                        <li>{t('options.earn.merge-account.merge-blocked-message.dest-claim')}</li>
+                    )}
+                    {isDestAccountUnstaking && (
+                        <li>{t('options.earn.merge-account.merge-blocked-message.dest-unstaking')}</li>
+                    )}
+                </ul>
+            </>
         );
     };
 
@@ -108,16 +168,20 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                     <div>{t('options.earn.merge-account.title')}</div>
                     <XButton onClick={onClose} />
                 </Header>
-                <Source>
-                    <Label>{t('options.earn.merge-account.source-account-label')}:</Label>
-                    <Text>{walletAddress}</Text>
-                </Source>
+                <ResultContainer>
+                    <Result>{walletAddress}</Result>
+                    <InputLabel>{t('options.earn.merge-account.source-account-label')}:</InputLabel>
+                </ResultContainer>
+                <ArrowContainer>
+                    <ArrowDown />
+                </ArrowContainer>
                 <InputContainer>
                     <TextInput
                         value={destAddress}
                         onChange={(e: any) => setDestAddress(e.target.value)}
-                        disabled={isMerging}
+                        disabled={isMerging || !isAccountMergingEnabled}
                         className={isDestAddressValid ? '' : 'error'}
+                        autoFocus={true}
                     />
                     <InputLabel>{t('options.earn.merge-account.destination-account-label')}:</InputLabel>
                     <FieldValidationMessage
@@ -125,8 +189,18 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                         message={t(`common.errors.invalid-address`)}
                     />
                 </InputContainer>
+                <MessageContainer>
+                    <InfoMessage message={t('options.earn.merge-account.info-message')}></InfoMessage>
+                </MessageContainer>
+                <MessageContainer>
+                    <InfoWarningMessage message={t('options.earn.merge-account.warning-message')}></InfoWarningMessage>
+                </MessageContainer>
                 <ButtonContainer>
                     {getMergeButton()}
+                    {!isAccountMergingEnabled && (
+                        <Message>{t('options.earn.merge-account.merge-account-disabled-message')}</Message>
+                    )}
+                    {isMergeBlocked && <Message>{getBlockedMergeMessage()}</Message>}
                     <ValidationMessage
                         showValidation={txErrorMessage !== null}
                         message={txErrorMessage}
@@ -162,31 +236,29 @@ const Header = styled(FlexDivRowCentered)`
     padding: 0px 2px 50px 2px;
 `;
 
-const Source = styled(FlexDivColumnCentered)`
-    margin: 0 20px 25px 20px;
-`;
-
-const Label = styled(FlexDivRowCentered)`
-    font-weight: bold;
-    font-size: 9px;
-    line-height: 16px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #b8c6e5;
-`;
-
-const Text = styled(FlexDivRowCentered)`
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 30px;
-    letter-spacing: 0.25px;
-    color: #f6f6fe;
+const MessageContainer = styled(FlexDiv)`
+    margin-top: 10px;
 `;
 
 const ButtonContainer = styled(FlexDivColumnCentered)`
-    padding-top: 15px;
+    padding-top: 25px;
     padding-bottom: 10px;
     align-items: center;
+`;
+
+const Message = styled.div`
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    color: #ffcc00;
+    margin-top: 10px;
+    div {
+        margin-bottom: 5px;
+    }
+    ul {
+        list-style: initial;
+        margin-left: 15px;
+    }
 `;
 
 export default MergeAccountModal;
