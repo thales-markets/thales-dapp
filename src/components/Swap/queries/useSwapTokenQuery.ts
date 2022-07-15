@@ -33,6 +33,7 @@ const useSwapTokenQuery = (
     toToken: Token,
     fromAddress: string,
     amount: BigNumber,
+    protocols?: string[], // if empty string all liquidity protocols will be used
     options?: UseQueryOptions<Swap>
 ) => {
     return useQuery<Swap>(
@@ -43,12 +44,11 @@ const useSwapTokenQuery = (
             const toUrl = '&toTokenAddress=' + toToken.address;
             const fromAddUrl = '&fromAddress=' + fromAddress;
             const slippage = '&slippage=1';
-
             const amountUrl = '&amount=' + amount;
-            url = url + fromUrl + toUrl + amountUrl + fromAddUrl + slippage;
+            const protocolsUrl = protocols?.length ? '&protocols=' + protocols?.toString() : '';
+            url = url + fromUrl + toUrl + amountUrl + fromAddUrl + slippage + protocolsUrl;
             const response = await fetch(url);
             const result = JSON.parse(await response.text());
-            console.log(result);
             return result;
         },
         options

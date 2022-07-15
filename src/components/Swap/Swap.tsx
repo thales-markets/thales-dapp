@@ -33,17 +33,18 @@ import {
     OP_sUSD,
     OP_USDC,
     OP_USDT,
-    POLYGON_Dai,
+    POLYGON_DAI,
     POLYGON_MATIC,
     POLYGON_USDC,
     POLYGON_USDT,
     mapTokenByNetwork,
+    TokenSymbol,
 } from './tokens';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
-import { getStableCoinForNetwork } from '../../utils/currency';
+import { OneInchLiquidityProtocol } from 'constants/network';
 
-const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
+const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -55,7 +56,14 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
     const signer = provider.getSigner();
     const [fromToken, _setFromToken] = useState(isL2 ? OP_Eth : isPolygon ? POLYGON_MATIC : ETH_Eth);
-    const [toToken, _setToToken] = useState(isL2 ? OP_sUSD : isPolygon ? POLYGON_USDC : ETH_sUSD);
+
+    const toTokenInitialState = mapTokenByNetwork(
+        TokenSymbol[initialToToken as keyof typeof TokenSymbol],
+        isL2,
+        isPolygon
+    );
+    const [toToken, _setToToken] = useState(toTokenInitialState);
+
     const [amount, setAmount] = useState('');
     const [previewData, setPreviewData] = useState(undefined);
     const [allowance, setAllowance] = useState(false);
@@ -81,6 +89,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
         fromToken,
         toToken,
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
+        isPolygon ? [] : [OneInchLiquidityProtocol.UNISWAP],
         { enabled: false }
     );
 
@@ -90,6 +99,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
         toToken,
         walletAddress ? walletAddress : '',
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
+        isPolygon ? [] : [OneInchLiquidityProtocol.UNISWAP],
         {
             enabled: false,
         }
@@ -117,7 +127,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
         isL2
             ? (setPreLoadTokens([OP_sUSD, OP_Dai, OP_USDC, OP_USDT]), _setFromToken(OP_Eth), _setToToken(mappedToToken))
             : isPolygon
-            ? (setPreLoadTokens([POLYGON_Dai, POLYGON_USDC, POLYGON_USDT]),
+            ? (setPreLoadTokens([POLYGON_DAI, POLYGON_USDC, POLYGON_USDT]),
               _setFromToken(POLYGON_MATIC),
               _setToToken(mappedToToken))
             : (setPreLoadTokens([ETH_sUSD, ETH_Dai, ETH_USDC, ETH_USDT]),
@@ -203,10 +213,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                 await tx.wait();
                 refetchUserBalance(walletAddress as any, networkId);
                 setLoading(false);
-                toast.update(
-                    id,
-                    getSuccessToastOptions(t('options.swap.tx-success', { token: getStableCoinForNetwork(networkId) }))
-                );
+                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success', { token: toToken.symbol })));
                 return {
                     data: (data as any).tx.data,
                     from: (data as any).tx.from,
@@ -263,7 +270,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                     className={Number(amount) > Number(balance) ? 'disabled primary' : 'primary'}
                     onClick={async () => {
                         await swapTx();
-                        updateBalanceAndAllowance(fromToken).finally(() => handleClose(this, false));
+                        handleClose(false);
                     }}
                     disabled={Number(amount) > Number(balance)}
                 >
@@ -273,7 +280,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     };
 
     return (
-        <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, false)}>
+        <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {networkId !== 1 && networkId !== 10 && networkId !== 137 ? (
                 <SwapDialog
                     royaleTheme={royaleTheme}

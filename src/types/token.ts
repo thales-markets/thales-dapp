@@ -32,7 +32,8 @@ export type TokenTransactionType =
     | 'vest'
     | 'lpStake'
     | 'lpUnstake'
-    | 'lpClaimStakingRewards';
+    | 'lpClaimStakingRewards'
+    | 'lpClaimStakingRewardsSecond';
 
 export type TokenTransaction = {
     hash: string;
@@ -59,6 +60,7 @@ export enum TransactionFilterEnum {
     LP_STAKE = 'lpStake',
     LP_UNSTAKE = 'lpUnstake',
     LP_CLAIM_STAKING_REWARDS = 'lpClaimStakingRewards',
+    LP_CLAIM_STAKING_REWARDS_SECOND = 'lpClaimStakingRewardsSecond',
 }
 
 export type TokenTransactions = TokenTransaction[];
@@ -85,7 +87,6 @@ export type StakingReward = {
     totalBonus: number;
     snxBonus: number;
     ammBonus: number;
-    thalesRoyaleBonus: number;
     maxSnxBonusPercentage: number;
     maxAmmBonusPercentage: number;
     maxThalesRoyaleBonusPercentage: number;

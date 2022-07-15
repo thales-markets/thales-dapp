@@ -17,13 +17,13 @@ import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 
 import ROUTES from 'constants/routes';
+import { POLYGON_ID } from 'constants/network';
 import onboardConnector from 'utils/onboardConnector';
 
 import { WizardSteps } from '../Wizard';
 import { XButton } from 'theme/common';
 import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader';
-import { POLYGON_ID } from 'constants/network';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -127,7 +127,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         if (!isWalletConnected) return;
         scrollToSteps();
         if (!navigateOnly && step === WizardSteps.BUY) {
-            await delay(300);
+            const delayMs = ref.current?.getBoundingClientRect().top || 500;
+            await delay(delayMs < 300 ? 300 : delayMs);
             setShowBuyModal(true);
         } else {
             setCurrentStep(WizardSteps.BUY);
@@ -389,8 +390,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             {showSwap && (
                 <Modal
                     open={showSwap}
-                    onClose={() => {
-                        setShowSwap(false);
+                    onClose={(_, reason) => {
+                        if (reason !== 'backdropClick') setShowSwap(false);
                     }}
                     style={modalStyle}
                 >

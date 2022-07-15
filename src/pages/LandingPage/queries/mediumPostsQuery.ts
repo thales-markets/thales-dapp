@@ -1,6 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import Parser from 'rss-parser';
+import { LINKS } from 'constants/links';
 
 type Blog = {
     title: string;
@@ -28,9 +29,7 @@ const mediumPostsQuery = (options?: UseQueryOptions<Blog[]>) => {
         QUERY_KEYS.Medium.Posts,
         async () => {
             const parser: Parser<postsParserType> = new Parser();
-            const feed = await parser.parseURL(
-                'https://cors-anywhere.herokuapp.com/https://medium.com/feed/@thalesmarket'
-            );
+            const feed = await parser.parseURL(LINKS.ThalesAPI.medium);
             return feed?.items;
         },
         {

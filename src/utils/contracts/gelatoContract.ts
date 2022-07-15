@@ -125,7 +125,8 @@ export const gelatoContract = {
         // added to resolve error with typings
         [Network.Goerli]: '', // TODO: goerli network remove or implement
         [Network['Mainnet-Ovm']]: GELATO_POOL_ADDRESS,
-        [Network['Kovan-Ovm']]: 'TBD',
+        // sUSD address as LP token address for testing on OP Kovan
+        [Network['Kovan-Ovm']]: '0xaa5068dc2b3aade533d3e52c6eeaadc6a8154c57',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
     },

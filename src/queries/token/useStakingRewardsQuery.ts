@@ -65,7 +65,6 @@ const useStakingRewardsQuery = (
                 totalBonus: 0,
                 snxBonus: 0,
                 ammBonus: 0,
-                thalesRoyaleBonus: 0,
                 maxSnxBonus: 0,
                 maxAmmBonus: 0,
                 maxThalesRoyaleBonus: 0,
@@ -81,7 +80,6 @@ const useStakingRewardsQuery = (
                     totalBonus,
                     snxBonus,
                     ammBonus,
-                    thalesRoyaleBonus,
                     snxStaked,
                     ammVolume,
                     hasParticipatedInCurrentOrLastRoyale,
@@ -91,7 +89,6 @@ const useStakingRewardsQuery = (
                     (snxJSConnector as any).stakingThalesContract.getTotalBonus(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getSNXBonus(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getAMMBonus(walletAddress),
-                    (snxJSConnector as any).stakingThalesContract.getThalesRoyaleBonus(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getSNXStaked(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getAMMVolume(walletAddress),
                     (snxJSConnector as any).thalesRoyaleContract.hasParticipatedInCurrentOrLastRoyale(walletAddress),
@@ -107,7 +104,6 @@ const useStakingRewardsQuery = (
                 stakingRewards.totalBonus = bigNumberFormatter(totalBonus);
                 stakingRewards.snxBonus = bigNumberFormatter(snxBonus);
                 stakingRewards.ammBonus = bigNumberFormatter(ammBonus);
-                stakingRewards.thalesRoyaleBonus = bigNumberFormatter(thalesRoyaleBonus);
                 stakingRewards.maxSnxBonus = (bigNumberFormatter(baseRewards) * Number(maxSNXRewardsPercentage)) / 100;
                 stakingRewards.maxAmmBonus =
                     (bigNumberFormatter(baseRewards) * Number(maxAMMVolumeRewardsPercentage)) / 100;
