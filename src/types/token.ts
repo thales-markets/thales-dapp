@@ -87,7 +87,6 @@ export type StakingReward = {
     totalBonus: number;
     snxBonus: number;
     ammBonus: number;
-    thalesRoyaleBonus: number;
     maxSnxBonusPercentage: number;
     maxAmmBonusPercentage: number;
     maxThalesRoyaleBonusPercentage: number;
