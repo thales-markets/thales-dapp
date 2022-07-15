@@ -6,7 +6,7 @@ import { FlexDivCentered } from 'theme/common';
 import styled from 'styled-components';
 import onboardConnector from 'utils/onboardConnector';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { THALES_CURRENCY } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -22,9 +22,10 @@ import NetworkFees from '../../components/NetworkFees';
 
 type Properties = {
     rewards: number;
+    secondRewards: number;
 };
 
-const Rewards: React.FC<Properties> = ({ rewards }) => {
+const Rewards: React.FC<Properties> = ({ rewards, secondRewards }) => {
     const { t } = useTranslation();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -38,7 +39,7 @@ const Rewards: React.FC<Properties> = ({ rewards }) => {
     const { lpStakingRewardsContract } = snxJSConnector as any;
 
     const handleClaimStakingRewards = async () => {
-        if (rewards) {
+        if (rewards || secondRewards) {
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
@@ -73,12 +74,21 @@ const Rewards: React.FC<Properties> = ({ rewards }) => {
         }
 
         return (
-            <DefaultSubmitButton onClick={handleClaimStakingRewards} disabled={!rewards}>
+            <DefaultSubmitButton
+                onClick={handleClaimStakingRewards}
+                disabled={isClaiming || (!rewards && !secondRewards)}
+            >
                 {isClaiming
                     ? t('options.earn.lp-staking.rewards.claiming') +
-                      ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)}...`
+                      ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)} + ${formatCurrencyWithKey(
+                          CRYPTO_CURRENCY_MAP.OP,
+                          secondRewards
+                      )} ...`
                     : t('options.earn.lp-staking.rewards.claim') +
-                      ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)}`}
+                      ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)} + ${formatCurrencyWithKey(
+                          CRYPTO_CURRENCY_MAP.OP,
+                          secondRewards
+                      )}`}
             </DefaultSubmitButton>
         );
     };
@@ -96,9 +106,9 @@ const Rewards: React.FC<Properties> = ({ rewards }) => {
                 setGasLimit(null);
             }
         };
-        if (!isWalletConnected || !rewards) return;
+        if (!isWalletConnected || (!rewards && !secondRewards)) return;
         fetchGasLimit();
-    }, [isWalletConnected, rewards]);
+    }, [isWalletConnected, rewards, secondRewards]);
 
     return (
         <EarnSection
@@ -122,7 +132,10 @@ const Rewards: React.FC<Properties> = ({ rewards }) => {
                     <StakingRewardsLabel color="#FA8A6B">
                         {t('options.earn.lp-staking.rewards.lp-staking')}
                     </StakingRewardsLabel>
-                    <Amount>{Math.round(rewards * 100) / 100} THALES</Amount>
+                    <Amount>{`${formatCurrencyWithKey(THALES_CURRENCY, rewards)} + ${formatCurrencyWithKey(
+                        CRYPTO_CURRENCY_MAP.OP,
+                        secondRewards
+                    )}`}</Amount>
                 </LabelContainer>
                 <NetworkContainer>
                     <NetworkFees gasLimit={gasLimit} />

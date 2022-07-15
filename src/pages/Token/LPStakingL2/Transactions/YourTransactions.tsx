@@ -7,6 +7,7 @@ const filters = [
     TransactionFilterEnum.LP_STAKE,
     TransactionFilterEnum.LP_UNSTAKE,
     TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS,
+    TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND,
 ];
 
 const YourTransactions: React.FC = () => {

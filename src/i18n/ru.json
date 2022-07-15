@@ -560,7 +560,9 @@
                 },
                 "info": {
                     "tvl": "Общая заблокированная стоимость (TVL)",
-                    "apr": "годовых"
+                    "thales-apr": "THALES APR",
+                    "op-apr": "OP APR",
+                    "total-apr": "TOTAL APR"
                 },
                 "provide-liquidity": {
                     "here": "здесь",
