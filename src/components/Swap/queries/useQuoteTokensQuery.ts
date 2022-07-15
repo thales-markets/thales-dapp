@@ -37,12 +37,13 @@ const useQuoteTokensQuery = (
     return useQuery<Preview>(
         QUERY_KEYS.Swap.Quote(networkId, amount),
         async () => {
+            console.log(protocols);
             let url = baseUrl + networkId + suffix;
             const fromUrl = 'fromTokenAddress=' + fromToken.address;
             const toUrl = '&toTokenAddress=' + toToken.address;
             const amountUrl = '&amount=' + amount;
             const protocolsUrl = protocols?.length ? '&protocols=' + protocols?.toString() : '';
-            url = url + fromUrl + toUrl + amountUrl + protocolsUrl + protocolsUrl;
+            url = url + fromUrl + toUrl + amountUrl + protocolsUrl;
             const response = await fetch(url);
             const result = JSON.parse(await response.text());
             return result;
