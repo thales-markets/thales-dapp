@@ -205,8 +205,8 @@
             "profile-label": "轮廓",
             "exotic-markets-label": "异国市场",
             "ranged-markets": "范围市场",
-            "wizard": "板载向导",
-            "earn-label": "泰雷兹通证"
+            "earn-label": "泰雷兹通证",
+            "wizard": "入职向导"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -559,8 +559,10 @@
                     "lp-tokens": "LP 代币"
                 },
                 "info": {
-                    "apr": "年利率",
-                    "tvl": "锁定总值 (TVL)"
+                    "tvl": "锁定总值 (TVL)",
+                    "thales-apr": "THALES APR",
+                    "op-apr": "OP APR",
+                    "total-apr": "TOTAL APR"
                 },
                 "provide-liquidity": {
                     "here": "这里",

@@ -17,13 +17,13 @@ import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 
 import ROUTES from 'constants/routes';
+import { POLYGON_ID } from 'constants/network';
 import onboardConnector from 'utils/onboardConnector';
 
 import { WizardSteps } from '../Wizard';
 import { XButton } from 'theme/common';
 import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader';
-import { POLYGON_ID } from 'constants/network';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -56,11 +56,13 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
+    const ref = useRef<null | HTMLDivElement>(null);
+
     useEffect(() => {
         if (isWalletConnected) {
             const timer = setTimeout(() => {
                 setCurrentStep(WizardSteps.BUY);
-            }, 50);
+            }, 100);
 
             return () => {
                 clearTimeout(timer);
@@ -114,7 +116,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 window.open(MMURL);
                 setInstallMetamask(true);
             } else {
-                await delay(600);
+                const delayMs = ref.current?.getBoundingClientRect().top || 500;
+                await delay(delayMs < 300 ? 300 : delayMs);
                 onboardConnector.connectWallet();
             }
         }
@@ -143,8 +146,6 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         if (!isWalletConnected) return;
         setCurrentStep(WizardSteps.TRADE);
     };
-
-    const ref = useRef<null | HTMLDivElement>(null);
 
     return (
         <>
@@ -200,7 +201,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                     >
                         <Icon
                             clickable={isWalletConnected && step === WizardSteps.EXCHANGE}
-                            style={{ fontSize: 74 }}
+                            style={iconStyle}
                             className={`sidebar-icon icon--swap`}
                         />
                     </IconWrapper>
@@ -245,6 +246,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                     window.open(ROUTES.Options.RangeMarkets, '_blank');
                                 }
                             }}
+                            pulseDelay="0.5s"
                         >
                             <Icon
                                 clickable={isWalletConnected && step === WizardSteps.TRADE}
@@ -509,17 +511,17 @@ const CardNameWrapper = styled.div`
 `;
 
 const IconsWrapper = styled.div`
-    height: 88px;
+    height: 87px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
 `;
 
-const IconWrapper = styled.div<{ clickable: boolean; active: boolean }>`
+const IconWrapper = styled.div<{ clickable: boolean; active: boolean; pulseDelay?: string }>`
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
 
-    animation: ${(props) => (props.active ? 'pulsing 1s ease-in;' : '')};
+    animation: ${(props) => (props.active ? 'pulsing 1s ease-in ' + (props.pulseDelay ?? '') + ';' : '')};
     animation-iteration-count: ${(props) => (props.active ? 'infinite;' : '')};
 
     @keyframes pulsing {
@@ -546,6 +548,7 @@ const Image = styled.img<{ clickable: boolean }>`
 
 const Icon = styled.i<{ clickable: boolean }>`
     font-size: 57px;
+    padding-top: 16px;
     color: var(--input-border-color);
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
 `;
@@ -590,7 +593,7 @@ const SeparatorImg = styled.img`
     background: #64d9fe;
     width: 4px;
     height: 72px;
-    margin-bottom: 15px;
+    margin-top: 5px;
 `;
 
 const Text = styled.p`
@@ -716,4 +719,9 @@ const IFrame = styled.iframe`
 
 const modalStyle = {
     backdropFilter: 'blur(10px)',
+};
+
+const iconStyle = {
+    fontSize: 74,
+    padding: '6.5px 0px',
 };

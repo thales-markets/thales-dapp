@@ -206,7 +206,7 @@
             "exotic-markets-label": "Экзотические рынки",
             "ranged-markets": "Диапазонные рынки",
             "earn-label": "ЖЕЛЕЗНЫЙ ТОКЕН",
-            "wizard": "Встроенный мастер"
+            "wizard": "Мастер адаптации"
         },
         "coming-soon": "Скоро...",
         "of": "из",
@@ -560,7 +560,9 @@
                 },
                 "info": {
                     "tvl": "Общая заблокированная стоимость (TVL)",
-                    "apr": "годовых"
+                    "thales-apr": "THALES APR",
+                    "op-apr": "OP APR",
+                    "total-apr": "TOTAL APR"
                 },
                 "provide-liquidity": {
                     "here": "здесь",

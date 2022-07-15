@@ -45,11 +45,13 @@ const Title = styled(FlexDivCentered)`
     padding: 20px;
     font-family: Titillium Web;
     font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 20px;
     line-height: 24px;
-    color: #b8c6e5;
+    text-transform: uppercase;
+    color: #ffffff;
     top: 0;
+    text-align: center;
 `;
 const Amount = styled(FlexDivCentered)`
     position: relative;
@@ -60,6 +62,7 @@ const Amount = styled(FlexDivCentered)`
     font-size: 40px;
     line-height: 48px;
     color: #8208fc;
+    text-align: center;
 `;
 
 export default MyStake;

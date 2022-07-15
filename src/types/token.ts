@@ -33,6 +33,7 @@ export type TokenTransactionType =
     | 'lpStake'
     | 'lpUnstake'
     | 'lpClaimStakingRewards'
+    | 'lpClaimStakingRewardsSecond'
     | 'mergeAccount';
 
 export type TokenTransaction = {
@@ -60,6 +61,7 @@ export enum TransactionFilterEnum {
     LP_STAKE = 'lpStake',
     LP_UNSTAKE = 'lpUnstake',
     LP_CLAIM_STAKING_REWARDS = 'lpClaimStakingRewards',
+    LP_CLAIM_STAKING_REWARDS_SECOND = 'lpClaimStakingRewardsSecond',
     MERGE_ACCOUNT = 'mergeAccount',
 }
 

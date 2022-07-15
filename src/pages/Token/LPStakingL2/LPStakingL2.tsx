@@ -22,15 +22,15 @@ const LPStakingL2: React.FC = () => {
     const staked = lpStakingQuery.isSuccess && lpStakingQuery.data ? Number(lpStakingQuery.data.staked) : 0;
     const paused = lpStakingQuery.isSuccess && lpStakingQuery.data ? lpStakingQuery.data.paused : false;
     const rewards = lpStakingQuery.isSuccess && lpStakingQuery.data ? Number(lpStakingQuery.data.rewards) : 0;
-    const totalGelatoLocked =
-        lpStakingQuery.isSuccess && lpStakingQuery.data ? Number(lpStakingQuery.data.totalGelatoLocked) : 0;
+    const secondRewards =
+        lpStakingQuery.isSuccess && lpStakingQuery.data ? Number(lpStakingQuery.data.secondRewards) : 0;
 
     return (
         <>
-            <Info totalGelatoLocked={totalGelatoLocked} />
+            <Info />
             <ProvideLiquidity />
             <MyStake staked={staked} />
-            <Rewards rewards={rewards} />
+            <Rewards rewards={rewards} secondRewards={secondRewards} />
             <Stake isStakingPaused={paused} />
             <Unstake staked={staked} />
             <YourTransactions />

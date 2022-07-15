@@ -49,7 +49,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
         () =>
             filter === TransactionFilterEnum.ALL
                 ? userTokenTransactions
-                : userTokenTransactions.filter((tx: TokenTransaction) => tx.type === filter),
+                : userTokenTransactions.filter((tx: TokenTransaction) => tx.type.startsWith(filter)),
         [userTokenTransactions, filter]
     );
 
@@ -69,6 +69,8 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                         <DropDownWrapper hidden={!showFiltersMobile}>
                             <DropDown>
                                 {filters.map((filterItem) => {
+                                    if (filterItem === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND)
+                                        return null;
                                     return (
                                         <FilterText
                                             onClick={() => setFilter(filterItem)}
@@ -85,6 +87,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                 ) : (
                     <FilterContainer>
                         {filters.map((filterItem) => {
+                            if (filterItem === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND) return null;
                             return (
                                 <FilterButton
                                     className={filter === filterItem ? 'selected' : ''}

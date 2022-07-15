@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/Table';
@@ -34,7 +34,15 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         Header: <>{t('options.earn.table.type-col')}</>,
                         accessor: 'type',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['type']>) => (
-                            <p>{t(`options.earn.table.types.${cellProps.cell.value}`)}</p>
+                            <p>
+                                {t(
+                                    `options.earn.table.types.${
+                                        cellProps.cell.value === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND
+                                            ? TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS
+                                            : cellProps.cell.value
+                                    }`
+                                )}
+                            </p>
                         ),
                         width: 150,
                         sortable: true,
@@ -51,6 +59,9 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                                           cellProps.cell.row.original.type === TransactionFilterEnum.LP_STAKE ||
                                               cellProps.cell.row.original.type === TransactionFilterEnum.LP_UNSTAKE
                                               ? LP_TOKEN
+                                              : cellProps.cell.row.original.type ===
+                                                TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND
+                                              ? CRYPTO_CURRENCY_MAP.OP
                                               : THALES_CURRENCY,
                                           cellProps.cell.value
                                       )

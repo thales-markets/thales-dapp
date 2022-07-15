@@ -13,7 +13,7 @@ const ProvideLiquidity: React.FC = () => {
                 spanOnTablet={5}
                 orderOnMobile={4}
                 orderOnTablet={4}
-                style={{ padding: '16px', gridColumn: 'span 5', gridRow: 'span 2' }}
+                style={{ padding: '16px', gridColumn: 'span 5', gridRow: 'span 2', justifyContent: 'center' }}
             >
                 <Description>{t('options.earn.lp-staking.provide-liquidity.description')}</Description>
                 <Description>
@@ -29,7 +29,7 @@ const ProvideLiquidity: React.FC = () => {
                 <Description>
                     {t('options.earn.lp-staking.provide-liquidity.deposit')}
                     <StyledAnchor
-                        href="https://beta.arrakis.finance/#/vaults/0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5"
+                        href="https://beta.arrakis.finance/vaults/10/0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5"
                         target="_blank"
                         rel="noreferrer"
                     >
@@ -46,10 +46,9 @@ const Description = styled(FlexDivStart)`
     font-family: Roboto;
     font-style: normal;
     font-weight: 500;
-    font-size: 15px;
-    line-height: 24px;
+    font-size: 17px;
+    line-height: 32px;
     color: #ffffff;
-    flex: 1;
 `;
 
 const StyledAnchor = styled.a`
