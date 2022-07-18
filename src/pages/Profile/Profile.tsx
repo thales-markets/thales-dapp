@@ -24,6 +24,8 @@ import Loader from '../../components/Loader';
 import { getIsPolygon } from '../../utils/network';
 import useRangedPositions from 'queries/user/useRangedPositions';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import localStore from 'utils/localStore';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -76,9 +78,17 @@ const Profile: React.FC = () => {
     });
     const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
-    const [isSimpleView, setSimpleView] = useState(true);
+    const tableViewStorageKey = LOCAL_STORAGE_KEYS.PROFILE_TABLE_VIEW + networkId;
+    const tableViewLocalStorageValue: boolean = localStore.get(tableViewStorageKey) || false;
+
+    const [isSimpleView, setSimpleView] = useState<boolean>(!tableViewLocalStorageValue);
     const [searchText, setSearchText] = useState('');
     const [view, setView] = useState(NavItems.MyPositions);
+
+    const tableViewSwitchClickhandler = () => {
+        setSimpleView(!isSimpleView);
+        localStore.set(tableViewStorageKey, isSimpleView);
+    };
 
     const claimable = useMemo(() => {
         return positions.claimable + userRangePositions.claimable;
@@ -111,7 +121,7 @@ const Profile: React.FC = () => {
                     />
                     <TableGridSwitch
                         value={!isSimpleView}
-                        clickEventHandler={setSimpleView.bind(this, !isSimpleView)}
+                        clickEventHandler={tableViewSwitchClickhandler}
                         labels={['Grid', 'Table']}
                     />
                 </Container.Fixed>
