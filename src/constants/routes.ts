@@ -24,6 +24,7 @@ export const ROUTES = {
         Profile: '/profile',
         Referral: '/referral',
         Wizard: '/wizard',
+        OPRewards: '/op-rewards',
     },
     Governance: {
         Home: '/governance',

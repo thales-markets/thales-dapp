@@ -49,7 +49,8 @@ const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '.
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
 const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
-const Referral = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Referral'));
+const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
+const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
 
 const App = () => {
     const dispatch = useDispatch();
@@ -264,6 +265,14 @@ const App = () => {
                             <Route exact path={ROUTES.Options.Referral}>
                                 <DappLayout>
                                     <Referral />
+                                </DappLayout>
+                            </Route>
+                        )}
+
+                        {!isPolygon && (
+                            <Route exact path={ROUTES.Options.OPRewards}>
+                                <DappLayout>
+                                    <OPRewards />
                                 </DappLayout>
                             </Route>
                         )}
