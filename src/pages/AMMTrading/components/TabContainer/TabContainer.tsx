@@ -75,10 +75,14 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
             title: t('options.market.widgets.recent-transactions-widget'),
             index: 4,
         },
-        {
-            title: t('options.market.overview.similar-markets'),
-            index: 5,
-        },
+        ...(!inMaturity
+            ? [
+                  {
+                      title: t('options.market.overview.similar-markets'),
+                      index: 5,
+                  },
+              ]
+            : []),
     ];
 
     return (
