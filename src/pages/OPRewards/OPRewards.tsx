@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 
-import { HeaderWrapper, Wrapper } from './styled-components';
+import { Description, HeaderWrapper, Wrapper } from './styled-components';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
 
@@ -92,6 +92,7 @@ const OPRewards: React.FC = () => {
 
     return (
         <Wrapper>
+            <Description>{t('op-rewards.description')}</Description>
             <HeaderWrapper>
                 <SelectInput
                     options={options}
