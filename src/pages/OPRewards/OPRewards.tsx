@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Description, HeaderWrapper, Wrapper } from './styled-components';
 import SelectInput from 'components/SelectInput';
@@ -49,11 +49,6 @@ const OPRewards: React.FC = () => {
             break;
         }
     }
-
-    useEffect(() => {
-        const lastPeriod = options?.length - 1;
-        lastPeriod ? setPeriod(lastPeriod) : '';
-    }, [options?.length]);
 
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
