@@ -1822,5 +1822,11 @@
             "migrate": "Choose this option if you have LEGACY THALES on L1 and want to exchange it to THALES maintaining it on L1. Be mindful that most of the liquidity of THALES is on OP (L2)",
             "bridge": "Choose this option if you already have THALES on L1 and want to bridge it to OP (L2)"
         }
+    },
+    "op-rewards": {
+        "table": {
+            "wallet-address": "Wallet address",
+            "protocol-reward": "Protocol reward in OP tokens"
+        }
     }
 }
