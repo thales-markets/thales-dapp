@@ -185,7 +185,9 @@ const Profile: React.FC = () => {
                     </ContentWrapper>
                 </Container.Left>
                 <Container.Right layout={isSimpleView}>
-                    <PieChartOptionsAllocated claimable={positions.claimableAmount} />
+                    <PieChartOptionsAllocated
+                        claimable={positions.claimableAmount + userRangePositions.claimableAmount}
+                    />
                     <Wrapper>
                         <Wrapper.Row>
                             <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
