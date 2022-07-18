@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { Description, HeaderWrapper, Wrapper } from './styled-components';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
+import SearchField from 'components/TableInputs/SearchField';
 
 import useOPProtocolRewardQuery from 'queries/token/useOPProtocolRewardQuery';
 
@@ -18,6 +19,7 @@ const OPRewards: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const { t } = useTranslation();
 
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const [period, setPeriod] = useState<number>(0);
     const PERIOD_DURATION_IN_DAYS = 1;
     const START_DATE = new Date(2022, 6, 14, 20, 0, 0);
@@ -26,7 +28,7 @@ const OPRewards: React.FC = () => {
     let CALCULATED_START = new Date(START_DATE.getTime());
     let PERIOD_COUNTER = 0;
 
-    const options = [];
+    const options: Array<{ value: number; label: string }> = [];
     const periodRangeTimestamps = [];
 
     while (true) {
@@ -48,6 +50,11 @@ const OPRewards: React.FC = () => {
         }
     }
 
+    useEffect(() => {
+        const lastPeriod = options?.length - 1;
+        lastPeriod ? setPeriod(lastPeriod) : '';
+    }, [options?.length]);
+
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
 
@@ -63,9 +70,7 @@ const OPRewards: React.FC = () => {
                 .map((item) => item.account)
                 .filter((value, index, self) => self.indexOf(value) === index);
 
-            console.log('uniqueWalletAddresses ', uniqueWalletAddresses);
-
-            const data: Array<{ account: string; calculatedProtocolBonusForPeriod: string }> = [];
+            let data: Array<{ account: string; calculatedProtocolBonusForPeriod: string }> = [];
 
             uniqueWalletAddresses.forEach((walletAddress) => {
                 let sumOfRewards = 0;
@@ -80,15 +85,19 @@ const OPRewards: React.FC = () => {
                 });
             });
 
+            if (searchQuery !== '') {
+                data = data.filter((entry) => {
+                    return entry?.account.toLowerCase().includes(searchQuery.toLowerCase());
+                });
+            }
+
             return data;
         }
 
         return [];
-    }, [minTimestamp, maxTimestamp, period, opProtocolRewardsQuery?.data]);
+    }, [minTimestamp, maxTimestamp, period, opProtocolRewardsQuery?.data, searchQuery]);
 
     const isLoading = opProtocolRewardsQuery.isLoading;
-    console.log('opProtocolRewardsQuery.data ', opProtocolRewardsQuery?.data);
-    console.log('isLoading ', isLoading);
 
     return (
         <Wrapper>
@@ -97,10 +106,12 @@ const OPRewards: React.FC = () => {
                 <SelectInput
                     options={options}
                     handleChange={(value) => setPeriod(Number(value))}
-                    defaultValue={0}
+                    defaultValue={period}
                     width={300}
                 />
             </HeaderWrapper>
+            <br />
+            <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
             {isLoading ? (
                 <Loader />
             ) : (

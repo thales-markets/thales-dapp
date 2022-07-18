@@ -9,7 +9,8 @@ export const Wrapper = styled.div`
 export const HeaderWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 export const Description = styled.p`
