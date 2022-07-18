@@ -1827,5 +1827,11 @@
         "question9": "什么是多边形网络？",
         "question3": "什么是元掩码？",
         "intro": "现在，您可以使用 MtPelerin 集成并按照分步引导向导，<b>使用您的信用卡</b>在 Optimism 上<b>获得 sUSD</b> ，这是用于在 Thales 上交易的主要稳定币。<br/><br/>目前泰雷兹支持以太坊主网、Optimism 和 Polygon 网络（后两种是以太坊扩容解决方案，也称为 Layer-2 网络）。<br/><br/>支持的第 2 层网络 Optimism 和 Polygon 的交易费用都明显低于以太坊主网。<br/><br/>出于本指南的目的，我们将重点关注 Optimism 网络。如果您想使用 Polygon 网络，过程相同，但您需要获取 USDC 而不是 sUSD。<br/><br/>要在泰雷兹市场进行交易，您将需要一些先决条件：<br/> 1. 在你的浏览器上有一个 Metamask 钱包<br/>2. 保持乐观<br/>3. 购买以太坊 (ETH)<br/> 4. 购买 sUSD 或兑换一些以太坊 (ETH)<br/><br/>完成这些步骤后，您就可以使用我们所有的产品了。<br/><br/><i>开始吧！</i>"
+    },
+    "op-rewards": {
+        "table": {
+            "protocol-reward": "OP 代币中的协议奖励",
+            "wallet-address": "钱包地址"
+        }
     }
 }
