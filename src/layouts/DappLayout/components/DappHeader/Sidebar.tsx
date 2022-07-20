@@ -74,6 +74,17 @@ const Sidebar: React.FC = () => {
                 {!isPolygon && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.OPRewards ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.OPRewards)}
+                        iconName="token"
+                        label={t('common.sidebar.op-rewards')}
+                    />
+                )}
+
+                {!isPolygon && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
                         }`}
                         href={buildHref(ROUTES.Options.Wizard)}

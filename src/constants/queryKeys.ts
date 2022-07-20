@@ -139,6 +139,12 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        OPProtocolRewards: (networkId: NetworkId, minTimestamp?: number, maxTimestamp?: number) => [
+            'opprotocolreward',
+            networkId,
+            minTimestamp,
+            maxTimestamp,
+        ],
         VestingSchedule: (walletAddress: string, networkId: NetworkId) => [
             'token',
             'vesting',

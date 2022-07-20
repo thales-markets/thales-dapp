@@ -313,7 +313,8 @@
             "amm-mining-label": "AMM rewards",
             "amm-reporting-label": "AMM reporting",
             "exotic-markets-label": "Exotic markets",
-            "wizard": "Onboarding Wizard"
+            "wizard": "Onboarding Wizard",
+            "op-rewards": "OP Rewards"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -1821,6 +1822,14 @@
             "migrate-and-bridge": "Choose this option if you have LEGACY THALES on L1, want to exchange it to THALES and bridge it to Optimism (L2)",
             "migrate": "Choose this option if you have LEGACY THALES on L1 and want to exchange it to THALES maintaining it on L1. Be mindful that most of the liquidity of THALES is on OP (L2)",
             "bridge": "Choose this option if you already have THALES on L1 and want to bridge it to OP (L2)"
+        }
+    },
+    "op-rewards": {
+        "title": "OP Rewards",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "table": {
+            "wallet-address": "Wallet address",
+            "protocol-reward": "Protocol reward in OP tokens"
         }
     }
 }
