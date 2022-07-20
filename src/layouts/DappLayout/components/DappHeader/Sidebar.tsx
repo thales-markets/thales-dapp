@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { buildHref } from 'utils/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
@@ -13,6 +13,7 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { isMobile } from 'utils/device';
 
 const Sidebar: React.FC = () => {
     const location = useLocation();
@@ -21,6 +22,23 @@ const Sidebar: React.FC = () => {
     const isPolygon = getIsPolygon(networkId);
     const { t } = useTranslation();
     const [collapse, setCollapse] = useState(false);
+
+    const [isMobileState, setIsMobileState] = useState(isMobile());
+
+    const handleResize = () => {
+        if (isMobile()) {
+            setIsMobileState(true);
+        } else {
+            setIsMobileState(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
         <SidebarHtml id="sidebar">
@@ -71,7 +89,7 @@ const Sidebar: React.FC = () => {
                     />
                 )} */}
 
-                {!isPolygon && (
+                {!isPolygon && !isMobileState && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Wizard ? 'selected' : ''

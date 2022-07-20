@@ -705,10 +705,10 @@ const Logo = styled.div<{ logoType: Provider }>`
 
 const IFrameWrapper = styled.div`
     width: 530px;
-    height: 740px;
+    height: 635px;
     margin: auto;
     background: white;
-    margin-top: 100px;
+    margin-top: 50px;
     border-radius: 15px;
     outline: none;
 `;
