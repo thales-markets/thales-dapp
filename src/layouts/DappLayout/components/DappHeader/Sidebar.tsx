@@ -74,17 +74,6 @@ const Sidebar: React.FC = () => {
                 {!isPolygon && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.OPRewards ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.OPRewards)}
-                        iconName="token"
-                        label={t('common.sidebar.op-rewards')}
-                    />
-                )}
-
-                {!isPolygon && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
                         }`}
                         href={buildHref(ROUTES.Options.Wizard)}
@@ -112,6 +101,18 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.earn-label')}
                     />
                 )}
+
+                {!isPolygon && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.OPRewards ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.OPRewards)}
+                        iconName="optimism"
+                        label={t('common.sidebar.op-rewards')}
+                    />
+                )}
+
                 <DappHeaderItem
                     className={`${collapse ? 'show' : ''} ${
                         location.pathname === ROUTES.Governance.Home ? 'selected' : ''
