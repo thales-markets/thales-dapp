@@ -87,9 +87,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const buyButtonHandler = (buttonType: Provider) => {
         switch (buttonType) {
             case Provider.BANXA:
-                // setIframe(Provider.BANXA.toString());
-                // setLoader(true);
-                window.open(Provider.BANXA.toString());
+                setIframe(Provider.BANXA.toString());
+                setLoader(true);
                 break;
             case Provider.MT_PELERIN:
                 const queryParams =
