@@ -74,7 +74,7 @@ const Profile: React.FC = () => {
         : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
 
     const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
-        enabled: isAppReady,
+        enabled: isAppReady && walletAddress !== null,
     });
     const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
