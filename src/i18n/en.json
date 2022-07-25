@@ -752,6 +752,7 @@
             },
             "merge-account": {
                 "title": "Merge account",
+                "description": "<0>Account merging has been implemented per </0><1 />.",
                 "source-account-label": "Source account",
                 "destination-account-label": "Destination account",
                 "confirmation-message": "Account successfully merged",

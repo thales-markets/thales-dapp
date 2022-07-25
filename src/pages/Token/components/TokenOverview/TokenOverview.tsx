@@ -12,21 +12,19 @@ import { getIsAppReady } from 'redux/modules/app';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
 import thalesTokenIcon from 'assets/images/sidebar/thales-token-white.svg';
-import { DefaultSubmitButton, LightTooltip } from '../components';
+import { LightTooltip } from '../components';
 import { LINKS } from 'constants/links';
 import { getNetworkId } from 'redux/modules/wallet';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
 import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
 import { getIsOVM } from 'utils/network';
-import MergeAccountModal from '../MergeAccountModal';
 
 export const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | undefined>(undefined);
-    const [showMergeAccountModal, setShowMergeAccountModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
 
     const tokenInfoQuery = useTokenInfoQuery(networkId, {
@@ -104,7 +102,7 @@ export const TokentOverview: React.FC = () => {
                     <FlexDivCentered>
                         <LightTooltip title={t('options.earn.overview.celer-bridge-tooltip')}>
                             <StyledLink
-                                href="https://cbridge.celer.network/#/transfer?sourceChainId=1&destinationChainId=10&tokenSymbol=THALES"
+                                href="https://cbridge.celer.network/#/transfer"
                                 target="_blank"
                                 rel="noreferrer"
                             >
@@ -114,12 +112,6 @@ export const TokentOverview: React.FC = () => {
                         </LightTooltip>
                     </FlexDivCentered>
                 </ItemContainer>
-                <ItemContainer>
-                    <DefaultSubmitButton onClick={() => setShowMergeAccountModal(true)}>
-                        Merge Account
-                    </DefaultSubmitButton>
-                </ItemContainer>
-                {showMergeAccountModal && <MergeAccountModal onClose={() => setShowMergeAccountModal(false)} />}
             </Container>
         </>
     );

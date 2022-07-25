@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import { FlexDiv, FlexDivColumnCentered, FlexDivRowCentered, XButton } from 'theme/common';
-import { Modal } from '@material-ui/core';
+import { Trans, useTranslation } from 'react-i18next';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import TextInput from 'components/TextInput';
-// import { getAddress } from 'utils/formatters/ethers';
-import { DefaultSubmitButton, InputContainer, InputLabel } from '../components';
+import { DefaultSubmitButton, InputContainer, InputLabel } from '../components/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
@@ -22,12 +20,9 @@ import InfoMessage from 'components/InfoMessage';
 import InfoWarningMessage from 'components/InfoWarningMessage';
 import { ArrowContainer, Result, ResultContainer } from 'pages/Token/Migration/components';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
+import { Tip49Link } from 'pages/Token/components';
 
-type MergeAccountModalProps = {
-    onClose: () => void;
-};
-
-const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
+const MergeAccountModal: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -73,10 +68,11 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
             : false;
 
     const isMergeBlocked =
-        hasSrcAccountSomethingToClaim ||
-        isSrcAccountUnstaking ||
-        hasDestAccountSomethingToClaim ||
-        isDestAccountUnstaking;
+        isAccountMergingEnabled &&
+        (hasSrcAccountSomethingToClaim ||
+            isSrcAccountUnstaking ||
+            hasDestAccountSomethingToClaim ||
+            isDestAccountUnstaking);
 
     const isButtonDisabled =
         isMerging ||
@@ -102,7 +98,6 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                 dispatchMarketNotification(t('options.earn.merge-account.confirmation-message'));
                 setDestAddress('');
                 setIsMerging(false);
-                onClose();
             }
         } catch (e) {
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -156,18 +151,17 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
     };
 
     return (
-        <Modal
-            open={true}
-            onClose={(_, reason) => {
-                if (reason !== 'backdropClick') onClose();
-            }}
-            style={{ backdropFilter: 'blur(10px)' }}
-        >
+        <GridWrapper>
             <Container>
                 <Header>
                     <div>{t('options.earn.merge-account.title')}</div>
-                    <XButton onClick={onClose} />
                 </Header>
+                <Description>
+                    <Trans
+                        i18nKey={`options.earn.merge-account.description`}
+                        components={[<span key="1" />, <Tip49Link key="2" />]}
+                    />
+                </Description>
                 <ResultContainer>
                     <Result>{walletAddress}</Result>
                     <InputLabel>{t('options.earn.merge-account.source-account-label')}:</InputLabel>
@@ -208,24 +202,31 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                     />
                 </ButtonContainer>
             </Container>
-        </Modal>
+        </GridWrapper>
     );
 };
+
+const GridWrapper = styled(FlexDivColumnCentered)`
+    grid-column: span 10;
+    align-items: center;
+    margin: 40px 10px 40px 10px;
+    @media (max-width: 767px) {
+        margin: 10px;
+    }
+`;
 
 const Container = styled(FlexDivColumnCentered)`
     font-size: 12px;
     line-height: 24px;
     border-radius: 15px;
-    min-width: 70px;
+    max-width: 550px;
     background: #04045a;
-    border: 2px solid #64d9fe;
-    box-shadow: 0px 0px 90px 10px #64d9fe;
-    margin: auto;
-    position: relative;
-    top: 200px;
-    padding: 20px;
-    width: 460px;
-    height: fit-content;
+    border: 1px solid #64d9fe;
+    box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
+    padding: 40px 50px 40px 50px;
+    @media (max-width: 767px) {
+        padding: 20px;
+    }
 `;
 
 const Header = styled(FlexDivRowCentered)`
@@ -241,8 +242,8 @@ const MessageContainer = styled(FlexDiv)`
 `;
 
 const ButtonContainer = styled(FlexDivColumnCentered)`
-    padding-top: 25px;
-    padding-bottom: 10px;
+    padding-top: 40px;
+    padding-bottom: 5px;
     align-items: center;
 `;
 
@@ -259,6 +260,15 @@ const Message = styled.div`
         list-style: initial;
         margin-left: 15px;
     }
+`;
+
+const Description = styled(FlexDivCentered)`
+    font-size: 16px;
+    line-height: 20px;
+    padding: 0 2px 20px 2px;
+    text-align: start;
+    display: inline;
+    color: #f6f6fe;
 `;
 
 export default MergeAccountModal;
