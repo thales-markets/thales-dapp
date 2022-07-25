@@ -7,9 +7,10 @@ type SelectInputProps = {
     options: SelectOptions;
     handleChange: (value: number | undefined | null) => void;
     defaultValue?: number;
+    width?: number;
 };
 
-const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaultValue }) => {
+const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaultValue, width }) => {
     const defaultOption = options[defaultValue ? defaultValue : 0];
 
     const customStyled = {
@@ -36,6 +37,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
                 ...provided[':hover'],
                 boxShadow: '0px 1px 15px rgba(100, 217, 254, 0.7)',
             },
+            width: width,
         }),
         placeholder: (provided: any) => ({
             ...provided,
