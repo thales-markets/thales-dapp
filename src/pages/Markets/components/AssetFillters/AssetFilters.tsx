@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useState, useMemo } from 'react';
+import React, { lazy, Suspense, useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.svg';
@@ -20,20 +20,26 @@ const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilter
 }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const selectedAssetsCookie = localStorage.getItem('selectedAssets' + networkId);
+    const selectedAssetsLocalStorage = localStorage.getItem('selectedAssets' + networkId);
 
     const [selectedAssets, setSelectedAssets] = useState<string[]>(
-        selectedAssetsCookie ? JSON.parse(selectedAssetsCookie) : []
+        selectedAssetsLocalStorage ? JSON.parse(selectedAssetsLocalStorage) : []
     );
     const [assetsDropdownOpen, setAssetsDropdownOpen] = useState<boolean>(false);
 
-    useMemo(() => {
-        setSelectedAssets(
-            selectedAssetsCookie && JSON.parse(selectedAssetsCookie).length > 0
-                ? JSON.parse(selectedAssetsCookie)
-                : [...(allAssets as any)].slice(0, FILTERS_LENGTH)
-        );
-    }, [allAssets]);
+    useEffect(() => {
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedAssets' + networkId) || '[]');
+
+        if (selectedAssetsLocalStorage.length) {
+            const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
+                (asset: string) => allAssets.has(asset) || (assetFilters.length ? assetFilters.includes(asset) : false)
+            );
+            localStorage.setItem('selectedAssets' + networkId, JSON.stringify(newSelectedAssets));
+            setSelectedAssets(newSelectedAssets);
+        } else if (allAssets.size) {
+            setSelectedAssets([...allAssets].slice(0, FILTERS_LENGTH));
+        }
+    }, [allAssets, assetFilters]);
 
     const safeSetSelectedAssets = useCallback(
         (assets) => {

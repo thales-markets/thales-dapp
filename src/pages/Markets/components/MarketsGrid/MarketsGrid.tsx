@@ -132,12 +132,31 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({
 
     useEffect(() => {
         let allAssets: Set<string> = new Set();
-        optionsMarkets.forEach((market) => {
-            if (!market.customMarket) allAssets.add(market.currencyKey);
-        });
+        optionsMarkets
+            .filter((market) => {
+                if (!filters.showOnlyLiquid) return market;
+                if (market.availableLongs > 0 || market.availableShorts > 0) {
+                    return market;
+                }
+            })
+            .forEach((market) => {
+                if (!market.customMarket) allAssets.add(market.currencyKey);
+            });
         allAssets = new Set(Array.from(allAssets).sort(sortCurrencies));
-        setAllAssets(allAssets);
-    }, [optionsMarkets]);
+        setAllAssets((prevAllAssets: Set<string>) => {
+            if (prevAllAssets.size) {
+                if (
+                    prevAllAssets.size !== allAssets.size ||
+                    !Array.from(prevAllAssets).every((element) => allAssets.has(element))
+                ) {
+                    return allAssets;
+                }
+            } else {
+                return allAssets;
+            }
+            return prevAllAssets;
+        });
+    }, [optionsMarkets, filters.showOnlyLiquid]);
 
     useEffect(() => {
         setPageIndex(0);
@@ -181,7 +200,7 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({
     return (
         <>
             <ButtonWrapper>
-                <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
+                <FiltersButton onClick={() => setShowSorting(true)}>Sort</FiltersButton>
             </ButtonWrapper>
             {showSorting && (
                 <SortingMenu
