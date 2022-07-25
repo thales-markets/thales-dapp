@@ -215,9 +215,9 @@ const MergeAccountModal: React.FC = () => {
 const GridWrapper = styled(FlexDivColumnCentered)`
     grid-column: span 10;
     align-items: center;
-    margin: 40px 10px 40px 10px;
+    margin: 20px 10px 20px 10px;
     @media (max-width: 767px) {
-        margin: 10px;
+        margin: 10px 0;
     }
 `;
 
@@ -232,6 +232,7 @@ const Container = styled(FlexDivColumnCentered)`
     padding: 40px 50px 40px 50px;
     @media (max-width: 767px) {
         padding: 20px;
+        box-shadow: none;
     }
 `;
 
