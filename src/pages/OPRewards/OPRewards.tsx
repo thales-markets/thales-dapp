@@ -1,18 +1,17 @@
 import React, { useMemo, useState } from 'react';
 
-import { Description, HeaderWrapper, Wrapper } from './styled-components';
+import { BoldText, Description, HeaderWrapper, Wrapper, Tip56Link } from './styled-components';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
 import SearchField from 'components/TableInputs/SearchField';
-
-import useOPProtocolRewardQuery from 'queries/token/useOPProtocolRewardQuery';
 
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -53,30 +52,34 @@ const OPRewards: React.FC = () => {
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
 
-    const opProtocolRewardsQuery = useOPProtocolRewardQuery(networkId, minTimestamp, maxTimestamp, {
-        enabled: isAppReady,
-    });
+    // const opProtocolRewardsQuery = useOPProtocolRewardQuery(networkId, minTimestamp, maxTimestamp, {
+    //     enabled: isAppReady,
+    // });
+
+    const usersAmmBuyVolumeQuery = useUsersAmmBuyVolumeQuery(networkId, period, { enabled: isAppReady });
 
     const tableData = useMemo(() => {
-        if (opProtocolRewardsQuery?.data && opProtocolRewardsQuery?.isSuccess) {
-            const transactions = opProtocolRewardsQuery?.data;
+        if (usersAmmBuyVolumeQuery?.data && usersAmmBuyVolumeQuery?.isSuccess) {
+            console.log('pass');
+            const transactions = usersAmmBuyVolumeQuery?.data;
 
-            const uniqueWalletAddresses = transactions
-                .map((item) => item.account)
-                .filter((value, index, self) => self.indexOf(value) === index);
+            let data: Array<{
+                account: string;
+                upInfo: string;
+                downInfo: string;
+                rangedInfo: string;
+                calculatedProtocolBonusForPeriod: string;
+                totalRewards: number;
+            }> = [];
 
-            let data: Array<{ account: string; calculatedProtocolBonusForPeriod: string }> = [];
-
-            uniqueWalletAddresses.forEach((walletAddress) => {
-                let sumOfRewards = 0;
-                transactions.forEach((tx) => {
-                    if (tx?.account == walletAddress) {
-                        sumOfRewards += tx.protocolRewards;
-                    }
-                });
+            transactions.rewards.forEach((reward) => {
                 data.push({
-                    account: walletAddress,
-                    calculatedProtocolBonusForPeriod: sumOfRewards.toFixed(2),
+                    account: reward.address,
+                    upInfo: reward.upInfo,
+                    downInfo: reward.downInfo,
+                    rangedInfo: reward.rangedInfo,
+                    calculatedProtocolBonusForPeriod: reward.staking.toFixed(2),
+                    totalRewards: reward.totalRewards,
                 });
             });
 
@@ -90,13 +93,21 @@ const OPRewards: React.FC = () => {
         }
 
         return [];
-    }, [minTimestamp, maxTimestamp, period, opProtocolRewardsQuery?.data, searchQuery]);
+    }, [minTimestamp, maxTimestamp, period, usersAmmBuyVolumeQuery?.data, searchQuery]);
 
-    const isLoading = opProtocolRewardsQuery.isLoading;
+    const isLoading = usersAmmBuyVolumeQuery.isLoading;
 
     return (
         <Wrapper>
-            <Description>{t('op-rewards.description')}</Description>
+            <Description>
+                <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <br />
+                <Trans i18nKey={'op-rewards.description-2'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <Trans
+                    i18nKey={'op-rewards.description-3'}
+                    components={{ bold: <BoldText />, br: <br />, tipLink: <Tip56Link /> }}
+                ></Trans>
+            </Description>
             <HeaderWrapper>
                 <SelectInput
                     options={options}
@@ -111,6 +122,7 @@ const OPRewards: React.FC = () => {
                 <Loader />
             ) : (
                 <Table
+                    containerStyle={{ maxWidth: '100%' }}
                     data={tableData}
                     columns={[
                         {
@@ -118,8 +130,69 @@ const OPRewards: React.FC = () => {
                             accessor: 'account',
                         },
                         {
+                            Header: t('op-rewards.table.up-info'),
+                            accessor: 'upInfo',
+                            Cell: (cellProps: any) => (
+                                <p>
+                                    <Trans
+                                        i18nKey={'op-rewards.table.reward-text'}
+                                        values={{
+                                            volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                            percentage: Number(cellProps.cell.value.percentage).toFixed(2),
+                                            thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                            op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                        }}
+                                        components={[<br key="0" />]}
+                                    />
+                                </p>
+                            ),
+                            sortable: false,
+                        },
+                        {
+                            Header: t('op-rewards.table.down-info'),
+                            accessor: 'downInfo',
+                            Cell: (cellProps: any) => (
+                                <p>
+                                    <Trans
+                                        i18nKey={'op-rewards.table.reward-text'}
+                                        values={{
+                                            volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                            percentage: Number(cellProps.cell.value.percentage).toFixed(2),
+                                            thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                            op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                        }}
+                                        components={[<br key="0" />]}
+                                    />
+                                </p>
+                            ),
+                            sortable: false,
+                        },
+                        {
+                            Header: t('op-rewards.table.ranged-info'),
+                            accessor: 'rangedInfo',
+                            Cell: (cellProps: any) => (
+                                <p>
+                                    <Trans
+                                        i18nKey={'op-rewards.table.reward-text'}
+                                        values={{
+                                            volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                            percentage: Number(cellProps.cell.value.percentage).toFixed(2),
+                                            thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                            op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                        }}
+                                        components={[<br key="0" />]}
+                                    />
+                                </p>
+                            ),
+                            sortable: false,
+                        },
+                        {
                             Header: t('op-rewards.table.protocol-reward'),
                             accessor: 'calculatedProtocolBonusForPeriod',
+                        },
+                        {
+                            Header: t('op-rewards.table.total-rewards'),
+                            accessor: 'totalRewards',
                         },
                     ]}
                 />

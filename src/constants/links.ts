@@ -36,4 +36,7 @@ export const LINKS = {
     ThalesAPI: {
         medium: 'https://api.thales.market/medium',
     },
+    TradingIncentives: {
+        TIP56: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-56.md',
+    },
 };
