@@ -140,7 +140,7 @@ const OPRewards: React.FC = () => {
                                         i18nKey={'op-rewards.table.reward-text'}
                                         values={{
                                             volume: Number(cellProps.cell.value.volume).toFixed(2),
-                                            percentage: Number(cellProps.cell.value.percentage).toFixed(2),
+                                            percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                             thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
                                             op: Number(cellProps.cell.value.rewards.op).toFixed(2),
                                         }}
@@ -159,7 +159,7 @@ const OPRewards: React.FC = () => {
                                         i18nKey={'op-rewards.table.reward-text'}
                                         values={{
                                             volume: Number(cellProps.cell.value.volume).toFixed(2),
-                                            percentage: Number(cellProps.cell.value.percentage).toFixed(2),
+                                            percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                             thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
                                             op: Number(cellProps.cell.value.rewards.op).toFixed(2),
                                         }}
@@ -178,7 +178,7 @@ const OPRewards: React.FC = () => {
                                         i18nKey={'op-rewards.table.reward-text'}
                                         values={{
                                             volume: Number(cellProps.cell.value.volume).toFixed(2),
-                                            percentage: Number(cellProps.cell.value.percentage).toFixed(2),
+                                            percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                             thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
                                             op: Number(cellProps.cell.value.rewards.op).toFixed(2),
                                         }}
