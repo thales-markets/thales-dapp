@@ -21,13 +21,20 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
     const pending = proposal.state === StatusEnum.Pending;
     const active = proposal.state === StatusEnum.Active;
     const { numberOfCouncilMembers, proposalApprovalVotes } = getProposalApprovalData(proposal.start);
-    const isPassed = proposalResults && proposalResults.votes.length >= proposalApprovalVotes;
+    const isPassed =
+        proposalResults &&
+        proposalResults.results &&
+        proposalResults.results.resultsByVoteBalance &&
+        proposalResults.results.resultsByVoteBalance[0] >= proposalApprovalVotes;
 
     const chartColor = isPassed ? '#8208FC' : closed ? 'rgba(130, 8, 252, 0.6)' : '#64D9FE';
 
     const pieData = useMemo(() => {
         const data = [];
-        const numberOfVotes = proposalResults ? proposalResults.votes.length : 0;
+        const numberOfVotes =
+            proposalResults && proposalResults.results && proposalResults.results.resultsByVoteBalance
+                ? proposalResults.results.resultsByVoteBalance[0]
+                : 0;
 
         for (let index = 0; index < numberOfCouncilMembers; index++) {
             const piece = {
@@ -49,13 +56,21 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         ? ''
         : t(`governance.proposal.voting-approval-status.in-progress`);
 
+    const statusLabel = isPassed
+        ? t(`governance.proposal.voted-in-label`)
+        : closed
+        ? t(`governance.proposal.not-voted-in-label`)
+        : pending
+        ? ''
+        : t(`governance.proposal.voting-label`);
+
     return (
         <>
             {!isLoading && proposalResults && (
                 <Container>
                     <VotedIn>
                         <FlexDivColumnCentered>
-                            <VotedInLabel>{t(`governance.proposal.voted-in-label`)}</VotedInLabel>
+                            <VotedInLabel>{statusLabel}</VotedInLabel>
                             <VoteNote>
                                 (
                                 {t(`governance.proposal.vote-note`, {

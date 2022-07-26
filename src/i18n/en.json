@@ -597,7 +597,7 @@
                         "snx-staking-title": "SNX staking bonus",
                         "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{snxVolumeRewardsMultiplier}} SNX staked per THALES he would receive as base reward. If the staker has less SNX staked, he/she gets a bonus percentage multiplier based on the formula:",
                         "amm-title": "Protocol volume bonus",
-                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker has at least {{ammVolumeRewardsMultiplier}} sUSD AMM or exotic markets volume in last 4 periods per THALES he gets as base reward. If the staker did less volume, he/she gets a bonus percentage multiplier based on the formula:",
+                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker has at least {{ammVolumeRewardsMultiplier}} sUSD AMM, exotic or sport markets volume in last 4 periods per THALES he gets as base reward. If the staker did less volume, he/she gets a bonus percentage multiplier based on the formula:",
                         "thales-royale-title": "Thales Royale bonus",
                         "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
                     },
@@ -1576,6 +1576,8 @@
                 "weighted": "Weighted voting"
             },
             "voted-in-label": "Voted in",
+            "not-voted-in-label": "Not voted in",
+            "voting-label": "Voting",
             "votes": "{{votes}} Votes",
             "voting-approval-status": {
                 "passed": "Passed",

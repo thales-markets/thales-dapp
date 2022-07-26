@@ -535,12 +535,12 @@ export const currencyKeyToDataFeedSourceMap = {
         link: '',
     },
     [CRYPTO_CURRENCY_MAP.PERP]: {
-        source: 'TWAP',
-        link: 'https://optimistic.etherscan.io/address/0x535541f1aa08416e69dc4d610131099fa2ae7222',
+        source: 'CHAINLINK',
+        link: '',
     },
     [CRYPTO_CURRENCY_MAP.OP]: {
-        source: 'TWAP',
-        link: 'https://optimistic.etherscan.io/address/0x68f5c0a2de713a54991e01858fd27a3832401849',
+        source: 'CHAINLINK',
+        link: '',
     },
 };
 
