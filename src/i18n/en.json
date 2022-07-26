@@ -1838,7 +1838,8 @@
             "down-info": "DOWN tokens",
             "ranged-info": "Ranged tokens",
             "total-rewards": "Total rewards",
-            "reward-text": "Volume: {{volume}}<0/>Percentage: {{percentage}}%<0/>Rewards: {{thales}} THALES, {{op}} OP"
+            "reward-text": "Volume: {{volume}}<0/>Percentage: {{percentage}}%<0/>Rewards: {{thales}} THALES, {{op}} OP",
+            "total-text": "{{thales}} THALES, {{op}} OP"
         }
     }
 }

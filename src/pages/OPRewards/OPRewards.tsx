@@ -21,8 +21,8 @@ const OPRewards: React.FC = () => {
 
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [period, setPeriod] = useState<number>(0);
-    const PERIOD_DURATION_IN_DAYS = 14;
-    const START_DATE = new Date(2022, 7, 20, 11, 0, 0);
+    const PERIOD_DURATION_IN_DAYS = 7;
+    const START_DATE = new Date(2022, 6, 13, 14, 30, 0);
     const NOW = new Date();
 
     let CALCULATED_START = new Date(START_DATE.getTime());
@@ -58,6 +58,7 @@ const OPRewards: React.FC = () => {
     const tableData = useMemo(() => {
         if (usersAmmBuyVolumeQuery?.data && usersAmmBuyVolumeQuery?.isSuccess) {
             const transactions = usersAmmBuyVolumeQuery?.data;
+            console.log(transactions);
 
             let data: Array<{
                 account: string;
@@ -194,6 +195,18 @@ const OPRewards: React.FC = () => {
                         {
                             Header: t('op-rewards.table.total-rewards'),
                             accessor: 'totalRewards',
+                            Cell: (cellProps: any) => (
+                                <p style={{ width: '100%' }}>
+                                    <Trans
+                                        i18nKey={'op-rewards.table.total-text'}
+                                        values={{
+                                            thales: Number(cellProps.cell.value.thales).toFixed(2),
+                                            op: Number(cellProps.cell.value.op).toFixed(2),
+                                        }}
+                                        components={[<br key="0" />]}
+                                    />
+                                </p>
+                            ),
                         },
                     ]}
                 />

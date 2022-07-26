@@ -10,7 +10,7 @@ export type UsersAmmBuyVolume = {
             downInfo: any;
             rangedInfo: any;
             staking: number;
-            totalRewards: number;
+            totalRewards: any;
         }
     ];
 };
