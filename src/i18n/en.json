@@ -1835,7 +1835,7 @@
         "description-5": "Total amount of tokens allocated as Trading Incentives: 200,000 OP + 350,000 THALES",
         "table": {
             "wallet-address": "Wallet address",
-            "protocol-reward": "Protocol reward in OP tokens",
+            "protocol-reward": "Gamified staking bonus",
             "up-info": "UP tokens",
             "down-info": "DOWN tokens",
             "ranged-info": "Ranged tokens",

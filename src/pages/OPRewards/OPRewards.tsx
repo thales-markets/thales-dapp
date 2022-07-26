@@ -53,15 +53,10 @@ const OPRewards: React.FC = () => {
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
 
-    // const opProtocolRewardsQuery = useOPProtocolRewardQuery(networkId, minTimestamp, maxTimestamp, {
-    //     enabled: isAppReady,
-    // });
-
     const usersAmmBuyVolumeQuery = useUsersAmmBuyVolumeQuery(networkId, period, { enabled: isAppReady });
 
     const tableData = useMemo(() => {
         if (usersAmmBuyVolumeQuery?.data && usersAmmBuyVolumeQuery?.isSuccess) {
-            console.log('pass');
             const transactions = usersAmmBuyVolumeQuery?.data;
 
             let data: Array<{
@@ -123,7 +118,10 @@ const OPRewards: React.FC = () => {
                 <Loader />
             ) : (
                 <Table
-                    containerStyle={{ maxWidth: '100%' }}
+                    containerStyle={{
+                        width: '100%',
+                        maxWidth: '100%',
+                    }}
                     data={tableData}
                     columns={[
                         {
@@ -191,6 +189,7 @@ const OPRewards: React.FC = () => {
                         {
                             Header: t('op-rewards.table.protocol-reward'),
                             accessor: 'calculatedProtocolBonusForPeriod',
+                            Cell: (cellProps: any) => <p>{cellProps.cell.value} OP</p>,
                         },
                         {
                             Header: t('op-rewards.table.total-rewards'),
