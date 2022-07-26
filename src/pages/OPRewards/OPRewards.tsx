@@ -12,6 +12,7 @@ import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
 import { Trans, useTranslation } from 'react-i18next';
 import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
+import { truncateAddress } from 'utils/formatters/string';
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -128,6 +129,7 @@ const OPRewards: React.FC = () => {
                         {
                             Header: t('op-rewards.table.wallet-address'),
                             accessor: 'account',
+                            Cell: (cellProps: any) => <p>{truncateAddress(cellProps.cell.value)}</p>,
                         },
                         {
                             Header: t('op-rewards.table.up-info'),
@@ -146,7 +148,7 @@ const OPRewards: React.FC = () => {
                                     />
                                 </p>
                             ),
-                            sortable: false,
+                            disableSortBy: true,
                         },
                         {
                             Header: t('op-rewards.table.down-info'),
@@ -165,7 +167,7 @@ const OPRewards: React.FC = () => {
                                     />
                                 </p>
                             ),
-                            sortable: false,
+                            disableSortBy: true,
                         },
                         {
                             Header: t('op-rewards.table.ranged-info'),
@@ -184,7 +186,7 @@ const OPRewards: React.FC = () => {
                                     />
                                 </p>
                             ),
-                            sortable: false,
+                            disableSortBy: true,
                         },
                         {
                             Header: t('op-rewards.table.protocol-reward'),
