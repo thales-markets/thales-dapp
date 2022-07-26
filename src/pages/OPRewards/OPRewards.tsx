@@ -133,7 +133,7 @@ const OPRewards: React.FC = () => {
                             Header: t('op-rewards.table.up-info'),
                             accessor: 'upInfo',
                             Cell: (cellProps: any) => (
-                                <p>
+                                <p style={{ width: '100%' }}>
                                     <Trans
                                         i18nKey={'op-rewards.table.reward-text'}
                                         values={{
@@ -152,7 +152,7 @@ const OPRewards: React.FC = () => {
                             Header: t('op-rewards.table.down-info'),
                             accessor: 'downInfo',
                             Cell: (cellProps: any) => (
-                                <p>
+                                <p style={{ width: '100%' }}>
                                     <Trans
                                         i18nKey={'op-rewards.table.reward-text'}
                                         values={{
@@ -171,7 +171,7 @@ const OPRewards: React.FC = () => {
                             Header: t('op-rewards.table.ranged-info'),
                             accessor: 'rangedInfo',
                             Cell: (cellProps: any) => (
-                                <p>
+                                <p style={{ width: '100%' }}>
                                     <Trans
                                         i18nKey={'op-rewards.table.reward-text'}
                                         values={{
