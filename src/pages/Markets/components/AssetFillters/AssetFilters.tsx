@@ -13,11 +13,11 @@ const AssetsDropdown = lazy(() => import(/* webpackChunkName: "AssetsDropdown" *
 
 const FILTERS_LENGTH = 6;
 
-const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilters: any }> = ({
-    allAssets,
-    assetFilters,
-    setAssetFilters,
-}) => {
+const AssetFilters: React.FC<{
+    allAssets: Set<string>;
+    assetFilters: string[];
+    setAssetFilters: (assets: string[]) => void;
+}> = ({ allAssets, assetFilters, setAssetFilters }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const selectedAssetsLocalStorage = localStorage.getItem('selectedAssets' + networkId);
@@ -37,7 +37,7 @@ const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilter
             localStorage.setItem('selectedAssets' + networkId, JSON.stringify(newSelectedAssets));
             setSelectedAssets(newSelectedAssets);
         } else if (allAssets.size) {
-            setSelectedAssets([...allAssets].slice(0, FILTERS_LENGTH));
+            setSelectedAssets([...Array.from(allAssets)].slice(0, FILTERS_LENGTH));
         }
     }, [allAssets, assetFilters]);
 
@@ -68,7 +68,7 @@ const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilter
                 }}
                 className={'icon icon--left'}
             />
-            <Filters length={selectedAssets.length} id="asset-filters">
+            <Filters length={allAssets.size} id="asset-filters">
                 {selectedAssets.length > 0 &&
                     selectedAssets.map((value: string, index: number) => {
                         return (
@@ -136,7 +136,8 @@ const FilterContainer = styled.div`
 `;
 
 const Filters = styled.div<{ length: number }>`
-    width: ${FILTERS_LENGTH * ((isMobile() ? 26 : 40) + 5)}px;
+    width: ${(_props) =>
+        (_props.length < FILTERS_LENGTH ? _props.length : FILTERS_LENGTH) * ((isMobile() ? 26 : 40) + 5)}px;
     overflow: hidden;
     display: flex;
     height: 60px;
