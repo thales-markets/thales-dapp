@@ -57,14 +57,17 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     ];
 
     const chosenAsset = localStorage.getItem('chosenAsset' + networkId);
-
     const [assetFilters, setAssetFilters] = useState<string[]>(chosenAsset ? JSON.parse(chosenAsset) : []);
 
     useEffect(() => {
-        if (assetFilters !== (chosenAsset as any) || chosenAsset == undefined) {
-            localStorage.setItem('chosenAsset' + networkId, JSON.stringify(assetFilters?.length ? assetFilters : []));
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedAssets' + networkId) || '[]');
+        if (!selectedAssetsLocalStorage.length || allAssets.size > 0) {
+            const newAssetFilters = assetFilters.filter(
+                (asset: string) => allAssets.has(asset) || (assetFilters.length ? assetFilters.includes(asset) : false)
+            );
+            localStorage.setItem('chosenAsset' + networkId, JSON.stringify(newAssetFilters));
         }
-    }, [assetFilters]);
+    }, [allAssets, assetFilters]);
 
     useEffect(() => {
         if (showOnlyLiquidFromCookie !== '' + showOnlyLiquid || showOnlyLiquidFromCookie == undefined) {

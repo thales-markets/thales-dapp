@@ -173,6 +173,12 @@ const Table: React.FC<{
 
     const data = useMemo(() => {
         const processedMarkets = optionsMarkets
+            .filter((market) => {
+                if (!showOnlyLiquid) return market;
+                if (market.availableLongs > 0 || market.availableShorts > 0) {
+                    return market;
+                }
+            })
             .map((market) => {
                 return {
                     address: market.address,
@@ -190,12 +196,6 @@ const Table: React.FC<{
                 };
             })
             .filter((market) => {
-                if (!showOnlyLiquid) return market;
-                if (market.availableLongs > 0 || market.availableShorts > 0) {
-                    return market;
-                }
-            })
-            .filter((market) => {
                 if (assetFilters?.length) {
                     return assetFilters.includes(market.currencyKey);
                 }
@@ -207,12 +207,31 @@ const Table: React.FC<{
 
     useEffect(() => {
         let allAssets: Set<string> = new Set();
-        optionsMarkets.forEach((market) => {
-            if (!market.customMarket) allAssets.add(market.currencyKey);
-        });
+        optionsMarkets
+            .filter((market) => {
+                if (!showOnlyLiquid) return market;
+                if (market.availableLongs > 0 || market.availableShorts > 0) {
+                    return market;
+                }
+            })
+            .forEach((market) => {
+                if (!market.customMarket) allAssets.add(market.currencyKey);
+            });
         allAssets = new Set(Array.from(allAssets).sort(sortCurrencies));
-        setAllAssets(allAssets);
-    }, [optionsMarkets]);
+        setAllAssets((prevAllAssets: Set<string>) => {
+            if (prevAllAssets.size) {
+                if (
+                    prevAllAssets.size !== allAssets.size ||
+                    !Array.from(prevAllAssets).every((element) => allAssets.has(element))
+                ) {
+                    return allAssets;
+                }
+            } else {
+                return allAssets;
+            }
+            return prevAllAssets;
+        });
+    }, [optionsMarkets, showOnlyLiquid]);
 
     // Custom global search filter -> useTable
     const ourGlobalFilterFunction = useCallback((rows: any, _columnIds: string[], filterValue: any) => {
@@ -261,6 +280,10 @@ const Table: React.FC<{
         useSortBy,
         usePagination
     );
+
+    useEffect(() => {
+        gotoPage(0);
+    }, [assetFilters]);
 
     useEffect(() => {
         setGlobalFilter(searchText);

@@ -301,6 +301,12 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     const data = useMemo(() => {
         const set: Set<string> = new Set();
         const processedMarkets = optionsMarkets
+            .filter((market) => {
+                if (!showOnlyLiquid) return market;
+                if (market.availableIn > 0 || market.availableOut > 0) {
+                    return market;
+                }
+            })
             .map((market) => {
                 set.add(market.currencyKey);
                 return {
@@ -319,28 +325,30 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                 };
             })
             .filter((market) => {
-                if (!showOnlyLiquid) return market;
-                if (market.availableIn > 0 || market.availableOut > 0) {
-                    return market;
-                }
-            })
-            .filter((market) => {
                 if (assetFilters?.length) {
                     return assetFilters.includes(market.currencyKey);
                 }
                 return market;
             });
 
-        const result = new Set(Array.from(set).sort(sortCurrencies));
+        const allAssets = new Set(Array.from(set).sort(sortCurrencies));
+        setAllAssets(allAssets);
 
-        const selectedAssetsCookie = localStorage.getItem('selectedRangedAssets' + networkId);
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedRangedAssets' + networkId) || '[]');
+        if (!selectedAssetsLocalStorage.length || allAssets.size > 0) {
+            const chosenAssets: string[] = cookies.get('chosenAssetRanged' + networkId) || [];
 
-        setAllAssets(result);
-        setSelectedAssets(
-            selectedAssetsCookie
-                ? JSON.parse(selectedAssetsCookie).filter((a: string) => result.has(a))
-                : [...(allAssets as any)].slice(0, FILTERS_LENGTH)
-        );
+            if (selectedAssetsLocalStorage.length) {
+                const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
+                    (asset: string) =>
+                        allAssets.has(asset) || (chosenAssets.length ? chosenAssets.includes(asset) : false)
+                );
+                localStorage.setItem('selectedRangedAssets' + networkId, JSON.stringify(newSelectedAssets));
+                setSelectedAssets(newSelectedAssets);
+            } else {
+                setSelectedAssets([...(allAssets as any)].slice(0, FILTERS_LENGTH));
+            }
+        }
 
         return processedMarkets;
     }, [optionsMarkets, showOnlyLiquid, assetFilters]);
