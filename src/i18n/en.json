@@ -1836,6 +1836,7 @@
             "my-wallet-address": " My wallet address",
             "no-rewards-info": "No rewards for this address",
             "protocol-reward": "Gamified staking bonus",
+            "gamified-bonus-text": "Gamified Staking bonus rewards are triggered when you claim your weekly THALES staking rewards.",
             "up-info": "UP tokens",
             "down-info": "DOWN tokens",
             "ranged-info": "Ranged tokens",

@@ -170,16 +170,6 @@ const OPRewards: React.FC = () => {
                                             }}
                                             components={[<br key="0" />]}
                                         />
-                                        <Tooltip
-                                            message={t('op-rewards.table.info-text', {
-                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
-                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
-                                            })}
-                                            type={'info'}
-                                            iconColor={'var(--primary-color)'}
-                                            container={{ display: 'inline-block' }}
-                                            interactive={true}
-                                        />
                                     </p>
                                 ),
                                 sortType: upRewardsSort(),
@@ -240,7 +230,18 @@ const OPRewards: React.FC = () => {
                                 sortType: rangedRewardsSort(),
                             },
                             {
-                                Header: t('op-rewards.table.protocol-reward'),
+                                Header: () => (
+                                    <>
+                                        {t('op-rewards.table.protocol-reward')}
+                                        <Tooltip
+                                            message={t('op-rewards.table.gamified-bonus-text')}
+                                            type={'info'}
+                                            iconColor={'var(--primary-color)'}
+                                            container={{ display: 'inline-block' }}
+                                            interactive={true}
+                                        />
+                                    </>
+                                ),
                                 accessor: 'calculatedProtocolBonusForPeriod',
                                 Cell: (cellProps: any) => <p>{cellProps.cell.value} OP</p>,
                             },
