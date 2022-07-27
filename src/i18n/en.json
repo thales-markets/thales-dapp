@@ -1833,6 +1833,8 @@
         "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 11,000 OP + 20,000 THALES split between UP token Buyers <br/>    - 11,000 OP + 20,000 THALES split between DOWN token Buyers<br/>        - 6,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>",
         "table": {
             "wallet-address": "Wallet address",
+            "my-wallet-address": " My wallet address",
+            "no-rewards-info": "No rewards for this address",
             "protocol-reward": "Gamified staking bonus",
             "up-info": "UP tokens",
             "down-info": "DOWN tokens",
