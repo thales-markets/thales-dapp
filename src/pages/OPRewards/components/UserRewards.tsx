@@ -42,6 +42,7 @@ const UserRewards: React.FC<UserRewardsProps> = (userRewards) => {
                                     {truncateAddress(cellProps.cell.value)}
                                 </p>
                             ),
+                            disableSortBy: true,
                         },
                         {
                             Header: t('op-rewards.table.up-info'),
@@ -155,6 +156,7 @@ const UserRewards: React.FC<UserRewardsProps> = (userRewards) => {
                             Header: t('op-rewards.table.protocol-reward'),
                             accessor: 'calculatedProtocolBonusForPeriod',
                             Cell: (cellProps: any) => <p>{cellProps.cell.value} OP</p>,
+                            disableSortBy: true,
                         },
                         {
                             Header: t('op-rewards.table.total-rewards'),
@@ -171,6 +173,7 @@ const UserRewards: React.FC<UserRewardsProps> = (userRewards) => {
                                     />
                                 </p>
                             ),
+                            disableSortBy: true,
                         },
                     ]}
                 />
