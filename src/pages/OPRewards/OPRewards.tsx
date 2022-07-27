@@ -110,7 +110,7 @@ const OPRewards: React.FC = () => {
                 <SelectInput
                     options={options}
                     handleChange={(value) => setPeriod(Number(value))}
-                    defaultValue={period}
+                    defaultValue={options[options.length - 1].value}
                     width={300}
                 />
             </HeaderWrapper>
