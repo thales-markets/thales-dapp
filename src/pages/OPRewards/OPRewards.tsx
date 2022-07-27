@@ -181,8 +181,9 @@ const OPRewards: React.FC = () => {
                                         />
                                     </p>
                                 ),
-                                disableSortBy: true,
+                                sortType: upRewardsSort(),
                             },
+
                             {
                                 Header: t('op-rewards.table.down-info'),
                                 accessor: 'downInfo',
@@ -208,7 +209,7 @@ const OPRewards: React.FC = () => {
                                         />
                                     </p>
                                 ),
-                                disableSortBy: true,
+                                sortType: downRewardsSort(),
                             },
                             {
                                 Header: t('op-rewards.table.ranged-info'),
@@ -235,7 +236,7 @@ const OPRewards: React.FC = () => {
                                         />
                                     </p>
                                 ),
-                                disableSortBy: true,
+                                sortType: rangedRewardsSort(),
                             },
                             {
                                 Header: t('op-rewards.table.protocol-reward'),
@@ -257,6 +258,7 @@ const OPRewards: React.FC = () => {
                                         />
                                     </p>
                                 ),
+                                sortType: rewardsSort(),
                             },
                         ]}
                     />
@@ -264,6 +266,22 @@ const OPRewards: React.FC = () => {
             )}
         </Wrapper>
     );
+};
+
+const rewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.totalRewards.op - rowB.original.totalRewards.op;
+};
+
+const upRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.upInfo.rewards.op - rowB.original.upInfo.rewards.op;
+};
+
+const downRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.downInfo.rewards.op - rowB.original.downInfo.rewards.op;
+};
+
+const rangedRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.rangedInfo.rewards.op - rowB.original.rangedInfo.rewards.op;
 };
 
 export default OPRewards;
