@@ -42,10 +42,13 @@ const OPRewards: React.FC = () => {
                     1000,
             });
             CALCULATED_START = new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000);
-            options.push({
-                value: PERIOD_COUNTER,
-                label: `${PERIOD_COUNTER} period`,
-            });
+            if (PERIOD_COUNTER != 0) {
+                options.push({
+                    value: PERIOD_COUNTER,
+                    label: `${PERIOD_COUNTER} period`,
+                });
+            }
+
             PERIOD_COUNTER++;
         } else {
             break;
