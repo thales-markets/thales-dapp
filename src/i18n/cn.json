@@ -1479,7 +1479,9 @@
             },
             "pitch-by": "投球",
             "see-pitch": "看到这个音高",
-            "vote-confirmation": "您确定要投票"
+            "vote-confirmation": "您确定要投票",
+            "voting-label": "表决",
+            "not-voted-in-label": "未投票"
         },
         "no-votes": "对本提案无票",
         "view-more": "查看更多",
@@ -1831,10 +1833,21 @@
     },
     "op-rewards": {
         "table": {
-            "protocol-reward": "OP 代币中的协议奖励",
-            "wallet-address": "钱包地址"
+            "protocol-reward": "游戏化的赌注奖金",
+            "reward-text": "成交量：{{volume}}<0/>百分比：{{percentage}}%<0/>奖励：{{thales}} THALES，{{op}} OP",
+            "ranged-info": "远程令牌",
+            "up-info": "UP代币",
+            "total-rewards": "总奖励",
+            "wallet-address": "钱包地址",
+            "down-info": "DOWN 代币",
+            "info-text": "成交量：{{volume}}，百分比：{{percentage}}%",
+            "total-text": "{{thales}} THALES，{{op}} OP",
+            "no-rewards-info": "此地址无奖励",
+            "my-wallet-address": " 我的钱包地址"
         },
         "title": "OP 奖励",
-        "description": "痛本身就是爱的痛，主要的生态问题，但我给这种倒下的时间，让一些很大的痛和痛。为了达到最低限度，我们中的谁应该从事任何工作，除了利用它的后果。但电影中的痛苦是难以谴责的，在快感中它想逃避被困在痛苦中的痛苦，却一无所获。他们是盲人渴望的例外，他们看不到，他们是那些为了抚慰心灵苦难的过失而放弃责任的人。"
+        "description-2": "分配为交易奖励的代币总量：<bold> 200,000 欧普 + 350,000 泰雷兹</bold><br/><br/>",
+        "description": "<bold>交易激励计划</bold>分为单独的 14 天轮次。在每一轮之后，固定数量的 OP 代币 + THALES 代币将按比例分配给整个泰雷兹市场的所有购买量驱动程序。<br/><br/>",
+        "description-3": "每 14 天轮次的奖励分配如下：<br/> - 11,000 OP + 20,000 THALES 分配给 UP 代币买家<br/>- 11,000 OP + 20,000 THALES 分配给 DOWN 代币买家<br/>- 6,000 OP + 10,000 THALES 分配给 Ranged Markets IN/OUT 代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外的奖金奖励，根据<tipLink>"
     }
 }

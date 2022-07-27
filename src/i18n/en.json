@@ -1854,10 +1854,21 @@
     },
     "op-rewards": {
         "title": "OP Rewards",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "description": "<bold>The Trading Incentives program</bold> is split into separate 14 day rounds. After each round a fixed amount of OP tokens + THALES tokens are to be distributed proportionally among all Buy Volume drivers across the Thales marketplace.<br/><br/>",
+        "description-2": "Total amount of tokens allocated as Trading Incentives: <bold>200,000 OP + 350,000 THALES</bold> <br/><br/>",
+        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 11,000 OP + 20,000 THALES split between UP token Buyers <br/>    - 11,000 OP + 20,000 THALES split between DOWN token Buyers<br/>        - 6,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>",
         "table": {
             "wallet-address": "Wallet address",
-            "protocol-reward": "Protocol reward in OP tokens"
+            "my-wallet-address": " My wallet address",
+            "no-rewards-info": "No rewards for this address",
+            "protocol-reward": "Gamified staking bonus",
+            "up-info": "UP tokens",
+            "down-info": "DOWN tokens",
+            "ranged-info": "Ranged tokens",
+            "total-rewards": "Total rewards",
+            "reward-text": "Rewards:<0/> {{thales}} THALES, {{op}} OP",
+            "info-text": "Volume: {{volume}}, Percentage: {{percentage}}%",
+            "total-text": "{{thales}} THALES, {{op}} OP"
         }
     }
 }
