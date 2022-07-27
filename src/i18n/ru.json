@@ -1839,7 +1839,9 @@
             "reward-text": "Объем: {{volume}}<0/>Процент: {{percentage}}%<0/>Награды: {{thales}} THALES, {{op}} OP",
             "wallet-address": "Адрес кошелька",
             "ranged-info": "Жетоны дальнего боя",
-            "total-rewards": "Всего наград"
+            "total-rewards": "Всего наград",
+            "info-text": "Объем: {{объем}}, Процент: {{процент}}%",
+            "total-text": "{{thales}} THALES, {{op}} ОП"
         },
         "title": "ОП Награды",
         "description-2": "Общее количество токенов, выделенных в качестве торговых поощрений:<bold> 200 000 ОП + 350 000 ТАЛЕ</bold><br/><br/>",

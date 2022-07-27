@@ -32,10 +32,10 @@ export const TooltipLink = styled.a`
     }
 `;
 
-export const Tip56Link: React.FC = () => {
+export const Tip53Link: React.FC = () => {
     return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.TradingIncentives.TIP56}>
-            TIP-56
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.TradingIncentives.TIP53}>
+            TIP-53
         </TooltipLink>
     );
 };

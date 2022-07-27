@@ -1839,7 +1839,9 @@
             "up-info": "UP代币",
             "total-rewards": "总奖励",
             "wallet-address": "钱包地址",
-            "down-info": "DOWN 代币"
+            "down-info": "DOWN 代币",
+            "info-text": "成交量：{{volume}}，百分比：{{percentage}}%",
+            "total-text": "{{thales}} THALES，{{op}} OP"
         },
         "title": "OP 奖励",
         "description-2": "分配为交易奖励的代币总量：<bold> 200,000 欧普 + 350,000 泰雷兹</bold><br/><br/>",
