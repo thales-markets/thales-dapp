@@ -263,6 +263,14 @@ const OPRewards: React.FC = () => {
                                 sortType: rewardsSort(),
                             },
                         ]}
+                        initialState={{
+                            sortBy: [
+                                {
+                                    id: 'totalRewards',
+                                    desc: true,
+                                },
+                            ],
+                        }}
                     />
                 </>
             )}
