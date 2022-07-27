@@ -7,20 +7,18 @@ import SearchField from 'components/TableInputs/SearchField';
 
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
 import { Trans, useTranslation } from 'react-i18next';
 import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
 import { truncateAddress } from 'utils/formatters/string';
 import Tooltip from 'components/Tooltip';
-import UserRewards from './components';
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const walletAddress = '0xe966C59c15566A994391F6226fee5bc0eF70F87A';
     const { t } = useTranslation();
 
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -61,8 +59,6 @@ const OPRewards: React.FC = () => {
 
     const usersAmmBuyVolumeQuery = useUsersAmmBuyVolumeQuery(networkId, period, { enabled: isAppReady });
 
-    const [userData, setUserData] = useState<Array<any>>([]);
-
     const tableData = useMemo(() => {
         if (usersAmmBuyVolumeQuery?.data && usersAmmBuyVolumeQuery?.isSuccess) {
             const transactions = usersAmmBuyVolumeQuery?.data;
@@ -74,22 +70,10 @@ const OPRewards: React.FC = () => {
                 rangedInfo: string;
                 calculatedProtocolBonusForPeriod: string;
                 totalRewards: number;
+                sticky: boolean;
             }> = [];
 
             transactions.rewards.forEach((reward) => {
-                if (walletAddress === reward.address) {
-                    setUserData([
-                        {
-                            account: reward.address,
-                            upInfo: reward.upInfo,
-                            downInfo: reward.downInfo,
-                            rangedInfo: reward.rangedInfo,
-                            calculatedProtocolBonusForPeriod: reward.staking.toFixed(2),
-                            totalRewards: reward.totalRewards,
-                        },
-                    ]);
-                }
-
                 data.push({
                     account: reward.address,
                     upInfo: reward.upInfo,
@@ -97,6 +81,7 @@ const OPRewards: React.FC = () => {
                     rangedInfo: reward.rangedInfo,
                     calculatedProtocolBonusForPeriod: reward.staking.toFixed(2),
                     totalRewards: reward.totalRewards,
+                    sticky: walletAddress.toLowerCase() == reward.address.toLowerCase() ? true : false,
                 });
             });
 
@@ -139,20 +124,23 @@ const OPRewards: React.FC = () => {
                 <Loader />
             ) : (
                 <>
-                    {isWalletConnected && <UserRewards userRewards={userData} />}
                     <Table
                         containerStyle={{
                             width: '100%',
                             maxWidth: '100%',
                         }}
                         data={tableData}
+                        leaderboardView={true}
+                        hasStickyRow={true}
                         columns={[
                             {
                                 Header: t('op-rewards.table.wallet-address'),
                                 accessor: 'account',
                                 Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center' }}>
-                                        {truncateAddress(cellProps.cell.value)}
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
+                                            ? t('op-rewards.table.my-rewards')
+                                            : truncateAddress(cellProps.cell.value)}
                                     </p>
                                 ),
                                 disableSortBy: true,
@@ -161,7 +149,7 @@ const OPRewards: React.FC = () => {
                                 Header: t('op-rewards.table.up-info'),
                                 accessor: 'upInfo',
                                 Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center' }}>
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
                                         <Trans
                                             i18nKey={'op-rewards.table.reward-text'}
                                             values={{
@@ -169,6 +157,16 @@ const OPRewards: React.FC = () => {
                                                 op: Number(cellProps.cell.value.rewards.op).toFixed(2),
                                             }}
                                             components={[<br key="0" />]}
+                                        />
+                                        <Tooltip
+                                            message={t('op-rewards.table.info-text', {
+                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                            })}
+                                            type={'info'}
+                                            iconColor={'var(--primary-color)'}
+                                            container={{ display: 'inline-block' }}
+                                            interactive={true}
                                         />
                                     </p>
                                 ),
@@ -179,7 +177,7 @@ const OPRewards: React.FC = () => {
                                 Header: t('op-rewards.table.down-info'),
                                 accessor: 'downInfo',
                                 Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center' }}>
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
                                         <Trans
                                             i18nKey={'op-rewards.table.reward-text'}
                                             values={{
@@ -206,7 +204,7 @@ const OPRewards: React.FC = () => {
                                 Header: t('op-rewards.table.ranged-info'),
                                 accessor: 'rangedInfo',
                                 Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center' }}>
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
                                         <Trans
                                             i18nKey={'op-rewards.table.reward-text'}
                                             values={{
@@ -243,13 +241,17 @@ const OPRewards: React.FC = () => {
                                     </>
                                 ),
                                 accessor: 'calculatedProtocolBonusForPeriod',
-                                Cell: (cellProps: any) => <p>{cellProps.cell.value} OP</p>,
+                                Cell: (cellProps: any) => (
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        {cellProps.cell.value} OP
+                                    </p>
+                                ),
                             },
                             {
                                 Header: t('op-rewards.table.total-rewards'),
                                 accessor: 'totalRewards',
                                 Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center' }}>
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
                                         <Trans
                                             i18nKey={'op-rewards.table.total-text'}
                                             values={{
