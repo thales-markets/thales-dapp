@@ -1,28 +1,30 @@
 import React, { useMemo, useState } from 'react';
 
-import { Description, HeaderWrapper, Wrapper } from './styled-components';
+import { BoldText, Description, HeaderWrapper, Wrapper, Tip53Link } from './styled-components';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
 import SearchField from 'components/TableInputs/SearchField';
 
-import useOPProtocolRewardQuery from 'queries/token/useOPProtocolRewardQuery';
-
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
+import { truncateAddress } from 'utils/formatters/string';
+import Tooltip from 'components/Tooltip';
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const { t } = useTranslation();
 
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [period, setPeriod] = useState<number>(0);
+
     const PERIOD_DURATION_IN_DAYS = 14;
-    const START_DATE = new Date(2022, 7, 20, 11, 0, 0);
+    const START_DATE = new Date(2022, 6, 13, 14, 23, 0);
     const NOW = new Date();
 
     let CALCULATED_START = new Date(START_DATE.getTime());
@@ -40,43 +42,49 @@ const OPRewards: React.FC = () => {
                     1000,
             });
             CALCULATED_START = new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000);
-            options.push({
-                value: PERIOD_COUNTER,
-                label: `${PERIOD_COUNTER} period`,
-            });
+            if (PERIOD_COUNTER != 0) {
+                options.push({
+                    value: PERIOD_COUNTER,
+                    label: `${PERIOD_COUNTER} period`,
+                });
+            }
+
             PERIOD_COUNTER++;
         } else {
             break;
         }
     }
 
+    const [period, setPeriod] = useState<number>(options.length > 0 ? options[options.length - 1].value : 0);
+
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
 
-    const opProtocolRewardsQuery = useOPProtocolRewardQuery(networkId, minTimestamp, maxTimestamp, {
-        enabled: isAppReady,
-    });
+    const usersAmmBuyVolumeQuery = useUsersAmmBuyVolumeQuery(networkId, period, { enabled: isAppReady });
 
     const tableData = useMemo(() => {
-        if (opProtocolRewardsQuery?.data && opProtocolRewardsQuery?.isSuccess) {
-            const transactions = opProtocolRewardsQuery?.data;
+        if (usersAmmBuyVolumeQuery?.data && usersAmmBuyVolumeQuery?.isSuccess) {
+            const transactions = usersAmmBuyVolumeQuery?.data;
 
-            const uniqueWalletAddresses = transactions
-                .map((item) => item.account)
-                .filter((value, index, self) => self.indexOf(value) === index);
+            let data: Array<{
+                account: string;
+                upInfo: string;
+                downInfo: string;
+                rangedInfo: string;
+                calculatedProtocolBonusForPeriod: string;
+                totalRewards: number;
+                sticky: boolean;
+            }> = [];
 
-            let data: Array<{ account: string; calculatedProtocolBonusForPeriod: string }> = [];
-
-            uniqueWalletAddresses.forEach((walletAddress) => {
-                let sumOfRewards = 0;
-                transactions.forEach((tx) => {
-                    if (tx?.account == walletAddress) {
-                        sumOfRewards += tx.protocolRewards;
-                    }
-                });
+            transactions.rewards.forEach((reward) => {
                 data.push({
-                    account: walletAddress,
-                    calculatedProtocolBonusForPeriod: sumOfRewards.toFixed(2),
+                    account: reward.address,
+                    upInfo: reward.upInfo,
+                    downInfo: reward.downInfo,
+                    rangedInfo: reward.rangedInfo,
+                    calculatedProtocolBonusForPeriod: reward.staking.toFixed(2),
+                    totalRewards: reward.totalRewards,
+                    sticky: walletAddress.toLowerCase() == reward.address.toLowerCase() ? true : false,
                 });
             });
 
@@ -90,13 +98,21 @@ const OPRewards: React.FC = () => {
         }
 
         return [];
-    }, [minTimestamp, maxTimestamp, period, opProtocolRewardsQuery?.data, searchQuery]);
+    }, [minTimestamp, maxTimestamp, period, usersAmmBuyVolumeQuery?.data, searchQuery]);
 
-    const isLoading = opProtocolRewardsQuery.isLoading;
+    const isLoading = usersAmmBuyVolumeQuery.isLoading;
 
     return (
         <Wrapper>
-            <Description>{t('op-rewards.description')}</Description>
+            <Description>
+                <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <br />
+                <Trans i18nKey={'op-rewards.description-2'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <Trans
+                    i18nKey={'op-rewards.description-3'}
+                    components={{ bold: <BoldText />, br: <br />, tipLink: <Tip53Link /> }}
+                ></Trans>
+            </Description>
             <HeaderWrapper>
                 <SelectInput
                     options={options}
@@ -110,22 +126,177 @@ const OPRewards: React.FC = () => {
             {isLoading ? (
                 <Loader />
             ) : (
-                <Table
-                    data={tableData}
-                    columns={[
-                        {
-                            Header: t('op-rewards.table.wallet-address'),
-                            accessor: 'account',
-                        },
-                        {
-                            Header: t('op-rewards.table.protocol-reward'),
-                            accessor: 'calculatedProtocolBonusForPeriod',
-                        },
-                    ]}
-                />
+                <>
+                    <Table
+                        containerStyle={{
+                            width: '100%',
+                            maxWidth: '100%',
+                        }}
+                        data={tableData}
+                        leaderboardView={true}
+                        hasStickyRow={true}
+                        columns={[
+                            {
+                                Header: t('op-rewards.table.wallet-address'),
+                                accessor: 'account',
+                                Cell: (cellProps: any) => (
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
+                                            ? t('op-rewards.table.my-rewards')
+                                            : truncateAddress(cellProps.cell.value)}
+                                    </p>
+                                ),
+                                disableSortBy: true,
+                            },
+                            {
+                                Header: t('op-rewards.table.up-info'),
+                                accessor: 'upInfo',
+                                Cell: (cellProps: any) => (
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        <Trans
+                                            i18nKey={'op-rewards.table.reward-text'}
+                                            values={{
+                                                thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                                op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                            }}
+                                            components={[<br key="0" />]}
+                                        />
+                                        <Tooltip
+                                            message={t('op-rewards.table.info-text', {
+                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                            })}
+                                            type={'info'}
+                                            iconColor={'var(--primary-color)'}
+                                            container={{ display: 'inline-block' }}
+                                            interactive={true}
+                                        />
+                                    </p>
+                                ),
+                                sortType: upRewardsSort(),
+                            },
+
+                            {
+                                Header: t('op-rewards.table.down-info'),
+                                accessor: 'downInfo',
+                                Cell: (cellProps: any) => (
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        <Trans
+                                            i18nKey={'op-rewards.table.reward-text'}
+                                            values={{
+                                                thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                                op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                            }}
+                                            components={[<br key="0" />]}
+                                        />
+                                        <Tooltip
+                                            message={t('op-rewards.table.info-text', {
+                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                            })}
+                                            type={'info'}
+                                            iconColor={'var(--primary-color)'}
+                                            container={{ display: 'inline-block' }}
+                                            interactive={true}
+                                        />
+                                    </p>
+                                ),
+                                sortType: downRewardsSort(),
+                            },
+                            {
+                                Header: t('op-rewards.table.ranged-info'),
+                                accessor: 'rangedInfo',
+                                Cell: (cellProps: any) => (
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        <Trans
+                                            i18nKey={'op-rewards.table.reward-text'}
+                                            values={{
+                                                thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                                op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                            }}
+                                            components={[<br key="0" />]}
+                                        />
+                                        <Tooltip
+                                            message={t('op-rewards.table.info-text', {
+                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                            })}
+                                            type={'info'}
+                                            iconColor={'var(--primary-color)'}
+                                            container={{ display: 'inline-block' }}
+                                            interactive={true}
+                                        />
+                                    </p>
+                                ),
+                                sortType: rangedRewardsSort(),
+                            },
+                            {
+                                Header: () => (
+                                    <>
+                                        {t('op-rewards.table.protocol-reward')}
+                                        <Tooltip
+                                            message={t('op-rewards.table.gamified-bonus-text')}
+                                            type={'info'}
+                                            iconColor={'var(--primary-color)'}
+                                            container={{ display: 'inline-block' }}
+                                            interactive={true}
+                                        />
+                                    </>
+                                ),
+                                accessor: 'calculatedProtocolBonusForPeriod',
+                                Cell: (cellProps: any) => (
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        {cellProps.cell.value} OP
+                                    </p>
+                                ),
+                            },
+                            {
+                                Header: t('op-rewards.table.total-rewards'),
+                                accessor: 'totalRewards',
+                                Cell: (cellProps: any) => (
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        <Trans
+                                            i18nKey={'op-rewards.table.total-text'}
+                                            values={{
+                                                thales: Number(cellProps.cell.value.thales).toFixed(2),
+                                                op: Number(cellProps.cell.value.op).toFixed(2),
+                                            }}
+                                            components={[<br key="0" />]}
+                                        />
+                                    </p>
+                                ),
+                                sortType: rewardsSort(),
+                            },
+                        ]}
+                        initialState={{
+                            sortBy: [
+                                {
+                                    id: 'totalRewards',
+                                    desc: true,
+                                },
+                            ],
+                        }}
+                    />
+                </>
             )}
         </Wrapper>
     );
+};
+
+const rewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.totalRewards.op - rowB.original.totalRewards.op;
+};
+
+const upRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.upInfo.rewards.op - rowB.original.upInfo.rewards.op;
+};
+
+const downRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.downInfo.rewards.op - rowB.original.downInfo.rewards.op;
+};
+
+const rangedRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.rangedInfo.rewards.op - rowB.original.rangedInfo.rewards.op;
 };
 
 export default OPRewards;

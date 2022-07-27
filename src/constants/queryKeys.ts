@@ -145,6 +145,7 @@ export const QUERY_KEYS = {
             minTimestamp,
             maxTimestamp,
         ],
+        UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['transactions', networkId, period],
         VestingSchedule: (walletAddress: string, networkId: NetworkId) => [
             'token',
             'vesting',

@@ -381,7 +381,7 @@ const Table: React.FC<{
                 </tbody>
             </table>
             <PaginationWrapper
-                rowsPerPageOptions={[5, 10, 20, 25]}
+                rowsPerPageOptions={[10, 20, 30, 50]}
                 count={rows?.length ? rows.length : 0}
                 rowsPerPage={pageSize}
                 page={pageIndex}
