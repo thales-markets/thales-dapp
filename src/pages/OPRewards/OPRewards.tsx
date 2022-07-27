@@ -21,7 +21,7 @@ const OPRewards: React.FC = () => {
     const { t } = useTranslation();
 
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [period, setPeriod] = useState<number>(0);
+
     const PERIOD_DURATION_IN_DAYS = 7;
     const START_DATE = new Date(2022, 6, 13, 14, 30, 0);
     const NOW = new Date();
@@ -51,6 +51,8 @@ const OPRewards: React.FC = () => {
         }
     }
 
+    const [period, setPeriod] = useState<number>(options[options.length - 1].value);
+
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
 
@@ -59,7 +61,6 @@ const OPRewards: React.FC = () => {
     const tableData = useMemo(() => {
         if (usersAmmBuyVolumeQuery?.data && usersAmmBuyVolumeQuery?.isSuccess) {
             const transactions = usersAmmBuyVolumeQuery?.data;
-            console.log(transactions);
 
             let data: Array<{
                 account: string;
@@ -110,7 +111,7 @@ const OPRewards: React.FC = () => {
                 <SelectInput
                     options={options}
                     handleChange={(value) => setPeriod(Number(value))}
-                    defaultValue={options[options.length - 1].value}
+                    defaultValue={period}
                     width={300}
                 />
             </HeaderWrapper>
