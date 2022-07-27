@@ -155,6 +155,7 @@ const OPRewards: React.FC = () => {
                                         {truncateAddress(cellProps.cell.value)}
                                     </p>
                                 ),
+                                disableSortBy: true,
                             },
                             {
                                 Header: t('op-rewards.table.up-info'),
