@@ -313,7 +313,8 @@
             "amm-mining-label": "AMM rewards",
             "amm-reporting-label": "AMM reporting",
             "exotic-markets-label": "Exotic markets",
-            "wizard": "Onboarding Wizard"
+            "wizard": "Onboarding Wizard",
+            "op-rewards": "OP Rewards"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -596,7 +597,7 @@
                         "snx-staking-title": "SNX staking bonus",
                         "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{snxVolumeRewardsMultiplier}} SNX staked per THALES he would receive as base reward. If the staker has less SNX staked, he/she gets a bonus percentage multiplier based on the formula:",
                         "amm-title": "Protocol volume bonus",
-                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker has at least {{ammVolumeRewardsMultiplier}} sUSD AMM or exotic markets volume in last 4 periods per THALES he gets as base reward. If the staker did less volume, he/she gets a bonus percentage multiplier based on the formula:",
+                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker has at least {{ammVolumeRewardsMultiplier}} sUSD AMM, exotic or sport markets volume in last 4 periods per THALES he gets as base reward. If the staker did less volume, he/she gets a bonus percentage multiplier based on the formula:",
                         "thales-royale-title": "Thales Royale bonus",
                         "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
                     },
@@ -1575,6 +1576,8 @@
                 "weighted": "Weighted voting"
             },
             "voted-in-label": "Voted in",
+            "not-voted-in-label": "Not voted in",
+            "voting-label": "Voting",
             "votes": "{{votes}} Votes",
             "voting-approval-status": {
                 "passed": "Passed",
@@ -1821,6 +1824,27 @@
             "migrate-and-bridge": "Choose this option if you have LEGACY THALES on L1, want to exchange it to THALES and bridge it to Optimism (L2)",
             "migrate": "Choose this option if you have LEGACY THALES on L1 and want to exchange it to THALES maintaining it on L1. Be mindful that most of the liquidity of THALES is on OP (L2)",
             "bridge": "Choose this option if you already have THALES on L1 and want to bridge it to OP (L2)"
+        }
+    },
+    "op-rewards": {
+        "title": "OP Rewards",
+        "description": "<bold>The Trading Incentives program</bold> is split into separate 14 day rounds. After each round a fixed amount of OP tokens + THALES tokens are to be distributed proportionally among all Buy Volume drivers across the Thales marketplace.<br/><br/>",
+        "description-2": "Total amount of tokens allocated as Trading Incentives: <bold>200,000 OP + 350,000 THALES</bold> <br/><br/>",
+        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 11,000 OP + 20,000 THALES split between UP token Buyers <br/>    - 11,000 OP + 20,000 THALES split between DOWN token Buyers<br/>        - 6,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>",
+        "table": {
+            "wallet-address": "Wallet address",
+            "my-wallet-address": " My wallet address",
+            "no-rewards-info": "No rewards for this address",
+            "protocol-reward": "Gamified staking bonus",
+            "gamified-bonus-text": "Gamified Staking bonus rewards are triggered when you claim your weekly THALES staking rewards.",
+            "my-rewards": "My rewards",
+            "up-info": "UP tokens",
+            "down-info": "DOWN tokens",
+            "ranged-info": "Ranged tokens",
+            "total-rewards": "Total rewards",
+            "reward-text": "Rewards:<0/> {{thales}} THALES, {{op}} OP",
+            "info-text": "Volume: {{volume}}, Percentage: {{percentage}}%",
+            "total-text": "{{thales}} THALES, {{op}} OP"
         }
     }
 }

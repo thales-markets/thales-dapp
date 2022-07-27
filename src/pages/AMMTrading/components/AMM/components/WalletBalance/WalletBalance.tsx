@@ -45,11 +45,11 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
-        enabled: isAppReady && marketType == MARKET_TYPE[0],
+        enabled: isAppReady && walletAddress !== '' && marketType == MARKET_TYPE[0],
     });
 
     const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(optionsMarket?.address, walletAddress, networkId, {
-        enabled: isAppReady && marketType == MARKET_TYPE[1],
+        enabled: isAppReady && walletAddress !== '' && marketType == MARKET_TYPE[1],
     });
 
     if (

@@ -225,7 +225,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                             <TableFooter>
                                 <TableRow>
                                     <PaginationWrapper
-                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                        rowsPerPageOptions={[10, 20, 30, 50]}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
                                         labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                         count={sortedStakers.length}

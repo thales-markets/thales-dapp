@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { buildHref } from 'utils/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
@@ -13,6 +13,8 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { isMobile } from 'utils/device';
+import debounce from 'lodash/debounce';
 
 const Sidebar: React.FC = () => {
     const location = useLocation();
@@ -21,6 +23,24 @@ const Sidebar: React.FC = () => {
     const isPolygon = getIsPolygon(networkId);
     const { t } = useTranslation();
     const [collapse, setCollapse] = useState(false);
+
+    const [isMobileState, setIsMobileState] = useState(isMobile());
+
+    useEffect(() => {
+        const handleResize = debounce(() => {
+            if (isMobile()) {
+                setIsMobileState(true);
+            } else {
+                setIsMobileState(false);
+            }
+        }, 100);
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            handleResize.cancel();
+        };
+    }, []);
 
     return (
         <SidebarHtml id="sidebar">
@@ -71,7 +91,7 @@ const Sidebar: React.FC = () => {
                     />
                 )} */}
 
-                {!isPolygon && (
+                {!isPolygon && !isMobileState && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
@@ -101,6 +121,18 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.earn-label')}
                     />
                 )}
+
+                {!isPolygon && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.OPRewards ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.OPRewards)}
+                        iconName="optimism"
+                        label={t('common.sidebar.op-rewards')}
+                    />
+                )}
+
                 <DappHeaderItem
                     className={`${collapse ? 'show' : ''} ${
                         location.pathname === ROUTES.Governance.Home ? 'selected' : ''

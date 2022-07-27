@@ -36,4 +36,8 @@ export const LINKS = {
     ThalesAPI: {
         medium: 'https://api.thales.market/medium',
     },
+    TradingIncentives: {
+        TIP53:
+            'https://thalesmarket.io/governance/thalesgov.eth/0xc0dffa06291784ddfc2364d8534ef4d9300176050b374952f231d11989a805a1',
+    },
 };

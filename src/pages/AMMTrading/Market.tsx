@@ -25,6 +25,9 @@ import { getIsPolygon } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RangedMarketProvider } from './contexts/RangedMarketContext';
 import RangeMaturity from './components/Maturity/RangeMaturity';
+import { navigateTo } from 'utils/routes';
+import ROUTES from 'constants/routes';
+import { POLYGON_ID } from 'constants/network';
 
 type MarketProps = {
     marketAddress: string;
@@ -48,6 +51,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const [rangedMarket, setRangedMarket] = useState<RangedMarketData | null>(null);
     const [tradingType, setTradingType] = useState<TradingType>(TradingTypes[1].value as TradingType);
     const [inMaturityPhase, setMaturityPhase] = useState<boolean>(false);
+    const [networkSwitched, setNetworkSwitched] = useState(false);
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady && !isRangedMarket,
@@ -56,6 +60,15 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const rangedMarketQuery = useRangedMarketQuery(marketAddress, {
         enabled: isAppReady && isRangedMarket,
     });
+
+    useEffect(() => {
+        if (networkSwitched) {
+            isRangedMarket && networkId !== POLYGON_ID
+                ? navigateTo(ROUTES.Options.RangeMarkets)
+                : navigateTo(ROUTES.Options.Home);
+        }
+        setNetworkSwitched(true);
+    }, [networkId]);
 
     useEffect(() => {
         const fetchMarketData = async () => {
@@ -70,7 +83,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
         };
 
         fetchMarketData();
-    }, [marketQuery.isSuccess, rangedMarketQuery.isSuccess, marketAddress, networkId]);
+    }, [marketQuery.isSuccess, rangedMarketQuery.isSuccess, marketAddress]);
 
     useEffect(() => {
         if (!isRangedMarket && optionMarket?.phase == 'maturity') {

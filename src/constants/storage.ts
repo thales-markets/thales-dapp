@@ -6,4 +6,5 @@ export const LOCAL_STORAGE_KEYS = {
     MARKET_WIDGET_AMM_SELECTED: 'marketWidgetAmmSelected',
     MARKET_TABLE_SORTED_COLUMNS: 'marketTableSortedColumns',
     RANGED_MARKET_TABLE_SORTED_COLUMNS: 'rangedMarketTableSortedColumns',
+    PROFILE_TABLE_VIEW: 'profileTableView',
 };

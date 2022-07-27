@@ -87,9 +87,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const buyButtonHandler = (buttonType: Provider) => {
         switch (buttonType) {
             case Provider.BANXA:
-                // setIframe(Provider.BANXA.toString());
-                // setLoader(true);
-                window.open(Provider.BANXA.toString());
+                setIframe(Provider.BANXA.toString());
+                setLoader(true);
                 break;
             case Provider.MT_PELERIN:
                 const queryParams =
@@ -706,10 +705,10 @@ const Logo = styled.div<{ logoType: Provider }>`
 
 const IFrameWrapper = styled.div`
     width: 530px;
-    height: 740px;
+    height: 635px;
     margin: auto;
     background: white;
-    margin-top: 100px;
+    margin-top: 50px;
     border-radius: 15px;
     outline: none;
 `;
