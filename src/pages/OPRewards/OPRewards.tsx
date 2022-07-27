@@ -7,7 +7,7 @@ import SearchField from 'components/TableInputs/SearchField';
 
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
 import { Trans, useTranslation } from 'react-i18next';
@@ -18,7 +18,7 @@ import Tooltip from 'components/Tooltip';
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const walletAddress = '0xe966C59c15566A994391F6226fee5bc0eF70F87A';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const { t } = useTranslation();
 
     const [searchQuery, setSearchQuery] = useState<string>('');
