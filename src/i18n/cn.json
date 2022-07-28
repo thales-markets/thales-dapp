@@ -1843,7 +1843,9 @@
             "info-text": "成交量：{{volume}}，百分比：{{percentage}}%",
             "total-text": "{{thales}} THALES，{{op}} OP",
             "no-rewards-info": "此地址无奖励",
-            "my-wallet-address": " 我的钱包地址"
+            "my-wallet-address": " 我的钱包地址",
+            "gamified-bonus-text": "当您领取每周 THALES 质押奖励时，将触发游戏化质押奖励。",
+            "my-rewards": "我的奖励"
         },
         "title": "OP 奖励",
         "description-2": "分配为交易奖励的代币总量：<bold> 200,000 欧普 + 350,000 泰雷兹</bold><br/><br/>",

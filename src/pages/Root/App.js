@@ -12,13 +12,7 @@ import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
 import { setTheme } from 'redux/modules/ui';
-import {
-    getEthereumNetwork,
-    getIsOVM,
-    getIsPolygon,
-    isNetworkSupported,
-    SUPPORTED_NETWORKS_NAMES,
-} from 'utils/network';
+import { defaultNetwork, getIsOVM, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
@@ -85,25 +79,28 @@ const App = () => {
     const cookies = new Cookies();
 
     useEffect(() => {
-        const init = async () => {
-            const { networkId, name } = await getEthereumNetwork();
-            try {
-                dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
+        const provider = loadProvider({
+            infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
+            provider: window.ethereum,
+            networkId,
+        });
 
+        const init = async () => {
+            try {
+                const providerNetworkId = (await provider.getNetwork()).chainId;
+                const name = SUPPORTED_NETWORKS_NAMES[providerNetworkId];
+
+                dispatch(updateNetworkSettings({ networkId: providerNetworkId, networkName: name?.toLowerCase() }));
+
+                const useOvm = getIsOVM(providerNetworkId);
                 if (!snxJSConnector) {
                     import(/* webpackChunkName: "snxJSConnector" */ 'utils/snxJSConnector').then((snx) => {
-                        const provider = loadProvider({
-                            infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-                            provider: window.ethereum,
-                        });
-
-                        const useOvm = getIsOVM(networkId);
-
-                        snx.default.setContractSettings({ networkId, provider, useOvm });
-
+                        snx.default.setContractSettings({ networkId: providerNetworkId, provider, useOvm });
                         setSnxJSConnector(snx.default);
                         dispatch(setAppReady());
                     });
+                } else {
+                    snxJSConnector.setContractSettings({ networkId: providerNetworkId, provider, useOvm });
                 }
             } catch (e) {
                 dispatch(setAppReady());
@@ -119,7 +116,7 @@ const App = () => {
         return () => {
             document.removeEventListener('market-notification', handler);
         };
-    }, []);
+    }, [networkId]);
 
     useEffect(() => {
         // Init value of theme selected from the cookie
@@ -371,12 +368,11 @@ const App = () => {
     );
 };
 
-const loadProvider = ({ infuraId, provider }) => {
-    const network = { chainId: 1, name: 'homestead', ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e' };
-
+const loadProvider = ({ infuraId, provider, networkId }) => {
     if (!provider && !infuraId) throw new Error('No web3 provider');
-    if (provider) return new ethers.providers.Web3Provider(provider);
-    if (infuraId) return new ethers.providers.InfuraProvider(network, infuraId);
+    if (provider) return new ethers.providers.Web3Provider(provider, 'any');
+    if (infuraId)
+        return new ethers.providers.InfuraProvider(networkId ? networkId : defaultNetwork.networkId, infuraId);
 };
 
 export default App;
