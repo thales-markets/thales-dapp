@@ -102,7 +102,7 @@ export const TokentOverview: React.FC = () => {
                     <FlexDivCentered>
                         <LightTooltip title={t('options.earn.overview.celer-bridge-tooltip')}>
                             <StyledLink
-                                href="https://cbridge.celer.network/#/transfer?sourceChainId=1&destinationChainId=10&tokenSymbol=THALES"
+                                href="https://cbridge.celer.network/#/transfer"
                                 target="_blank"
                                 rel="noreferrer"
                             >

@@ -266,8 +266,10 @@
             "invalid-order-amount-max": "The UP amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
+            "enter-address": "Enter address",
             "enter-valid-slippage": "Enter a valid slippage percentage",
             "invalid-price": "Invalid price",
+            "invalid-address": "Invalid address",
             "invalid-price-max": "The price cannot be higher than ${{max}}",
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
@@ -696,7 +698,8 @@
                     "vest": "No vest transactions associated with this wallet.",
                     "lpStake": "No LP stake transactions associated with this wallet.",
                     "lpUnstake": "No LP unstake transactions associated with this wallet.",
-                    "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet."
+                    "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet.",
+                    "mergeAccount": "No merge account transactions associated with this wallet."
                 },
                 "types": {
                     "claimRetroAirdrop": "Claim retro airdrop",
@@ -712,7 +715,8 @@
                     "vest": "Vest",
                     "lpStake": "LP stake",
                     "lpUnstake": "LP unstake",
-                    "lpClaimStakingRewards": "Claim LP staking rewards"
+                    "lpClaimStakingRewards": "Claim LP staking rewards",
+                    "mergeAccount": "Merge account"
                 },
                 "filter": {
                     "all": "All",
@@ -729,7 +733,8 @@
                     "vest": "Vest",
                     "lpStake": "LP stake",
                     "lpUnstake": "LP unstake",
-                    "lpClaimStakingRewards": "LP staking rewards"
+                    "lpClaimStakingRewards": "LP staking rewards",
+                    "mergeAccount": "Merge account"
                 }
             },
             "overview": {
@@ -745,6 +750,27 @@
                 "total-supply-label": "Total supply",
                 "celer-bridge": "Celer bridge",
                 "celer-bridge-tooltip": "Fast bridge THALES between chains"
+            },
+            "merge-account": {
+                "title": "Merge account",
+                "description": "<0>Account merging has been implemented per </0><1 />.",
+                "source-account-label": "Source account",
+                "destination-account-label": "Destination account",
+                "confirmation-message": "Account successfully merged",
+                "merge-account-disabled-message": "Account merging is disabled.",
+                "info-message": "In order to merge account, you need to claim any outstanding staking rewards and cancel unstaking if any are in progress from both accounts.",
+                "warning-message": "Once merged, all staked and escrowed THALES balances will be transferred to the destination account and won't be accessible from the source account.",
+                "merge-blocked-message": {
+                    "title": "In order to merge account, you need to",
+                    "src-claim": "Claim the staking rewards from the source account.",
+                    "src-unstaking": "Cancel ustaking from the source account.",
+                    "dest-claim": "Claim the staking rewards from the destination account.",
+                    "dest-unstaking": "Cancel ustaking from the destination account."
+                },
+                "merge-button": {
+                    "label": "Merge account",
+                    "progress-label": "Merging in progress..."
+                }
             }
         },
         "quiz": {
