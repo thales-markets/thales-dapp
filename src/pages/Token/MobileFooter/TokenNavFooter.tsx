@@ -98,6 +98,20 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                                 : lpIcon
                         }
                     />
+                    {isL2 && (
+                        <Icon
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'merge-account',
+                                    }),
+                                });
+                                setSelectedTab('merge-account');
+                            }}
+                            src={selectedTab === 'merge-account' ? migrationActiveIcon : migrationIcon}
+                        />
+                    )}
 
                     {!isL2 && (
                         <Icon

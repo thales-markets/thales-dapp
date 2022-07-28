@@ -18,7 +18,7 @@ import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
 import { useSelector } from 'react-redux';
 import TokenNavFooter from './MobileFooter/TokenNavFooter';
-// import MigratedRewards from './MigratedRewards';
+import MergeAccount from './MergeAccount';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
@@ -46,11 +46,11 @@ const TokenPage: React.FC = () => {
     ];
 
     if (isL2) {
-        // tabs.push({
-        //     id: 'migrated-rewards',
-        //     name: t('migration.migrated-rewards-title'),
-        //     disabled: false,
-        // });
+        tabs.push({
+            id: 'merge-account',
+            name: t('options.earn.merge-account.title'),
+            disabled: false,
+        });
     } else {
         tabs.unshift({
             id: 'migration',
@@ -131,7 +131,7 @@ const TokenPage: React.FC = () => {
                                 {selectedTab === 'vesting' && <Vesting />}
                                 {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
                                 {selectedTab === 'migration' && !isL2 && <Migration />}
-                                {/* {selectedTab === 'migrated-rewards' && isL2 && <MigratedRewards />} */}
+                                {selectedTab === 'merge-account' && <MergeAccount />}
                             </InnerWidgetsContainer>
                         </WidgetsContainer>
                     </MainContentContainer>
