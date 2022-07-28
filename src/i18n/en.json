@@ -748,7 +748,7 @@
                 "earn-info-tooltip": "View guide on how to provide liquidity",
                 "circulating-supply-label": "Circulating supply",
                 "total-supply-label": "Total supply",
-                "celer-bridge": "Celer bridge",
+                "celer-bridge": "Celer cBridge",
                 "celer-bridge-tooltip": "Fast bridge THALES between chains"
             },
             "merge-account": {
