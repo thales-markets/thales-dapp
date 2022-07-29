@@ -15,6 +15,7 @@ import StatusDropdown from './components/StatusDropdown';
 import SidebarDetails from './ProposalDetails/SidebarDetails';
 import ThalesStakers from './ThalesStakers';
 import TabDropdown from './components/TabDropdown';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -133,6 +134,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
 
     return (
         <>
+            <OpRewardsBanner />
             <BackLinkWrapper isOverviewPage={isOverviewPage}>
                 {selectedProposal && (
                     <BackLink

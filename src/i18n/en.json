@@ -412,6 +412,7 @@
         "home": {
             "polygon-trading-competition-1": "Thales incentivized trading competition is live on<bold>Polygon</bold>",
             "polygon-trading-competition-2": " click <bold>here</bold> to learn more",
+            "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
             "market-card": {
                 "current-asset-price": "Current asset price",
                 "pool-size": "Pool size",

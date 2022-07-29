@@ -26,6 +26,7 @@ import useRangedPositions from 'queries/user/useRangedPositions';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import localStore from 'utils/localStore';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -112,6 +113,7 @@ const Profile: React.FC = () => {
 
     return (
         <>
+            <OpRewardsBanner />
             <Container layout={isSimpleView}>
                 <Container.Fixed>
                     <SearchField

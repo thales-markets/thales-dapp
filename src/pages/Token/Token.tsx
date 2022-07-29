@@ -19,6 +19,7 @@ import MigrationNotice from './components/MigrationNotice';
 import { useSelector } from 'react-redux';
 import TokenNavFooter from './MobileFooter/TokenNavFooter';
 import MergeAccount from './MergeAccount';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
@@ -89,6 +90,7 @@ const TokenPage: React.FC = () => {
 
     return (
         <>
+            <OpRewardsBanner />
             <Container>
                 <FlexDivColumn>
                     <TokenOverview />

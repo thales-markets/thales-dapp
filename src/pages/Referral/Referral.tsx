@@ -41,6 +41,7 @@ import { UI_COLORS } from 'constants/ui';
 import ReadMoreButton from 'components/ReadMoreButton';
 import Tooltip from 'components/Tooltip';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 
 const Tabs = [
     {
@@ -185,6 +186,7 @@ const Referral: React.FC = () => {
 
     return (
         <>
+            <OpRewardsBanner />
             <HeaderContainer>
                 <FormWrapper>
                     <Label>{t('referral-page.choose-landing')}</Label>
