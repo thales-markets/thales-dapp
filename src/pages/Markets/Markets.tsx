@@ -18,6 +18,7 @@ import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
@@ -86,6 +87,7 @@ const Markets: React.FC = () => {
 
     return (
         <>
+            <OpRewardsBanner width={90} />
             {INFORMATION_BANNER_ACTIVE && (
                 <BannerContainer>
                     <InfoBanner>

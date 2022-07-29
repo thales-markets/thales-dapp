@@ -14,6 +14,7 @@ import { formatCurrencyWithSignInRange } from 'utils/formatters/number';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
 import { RangedMarketUI } from 'types/options';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 
 const HotMarketsRanged = lazy(
     () => import(/* webpackChunkName: "HotMarketsRanged" */ './components/HotMarketsRanged/HotMarketsRanged')
@@ -116,6 +117,7 @@ const RangeMarkets: React.FC = () => {
                     />
                 </InfoBanner>
             </BannerContainer> */}
+            <OpRewardsBanner width={90} />
             <Suspense fallback={<></>}>
                 <HotMarketsRanged optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>
