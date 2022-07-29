@@ -131,11 +131,10 @@ export const QUERY_KEYS = {
     Staking: {
         Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],
         Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
-        ClaimOnBehalf: (walletAddress: string, account: string, networkId: NetworkId) => [
+        ClaimOnBehalf: (walletAddress: string, networkId: NetworkId) => [
             'staking',
             'claimOnBehalf',
             walletAddress,
-            account,
             networkId,
         ],
     },

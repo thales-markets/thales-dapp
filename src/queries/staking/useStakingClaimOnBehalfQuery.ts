@@ -2,29 +2,40 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { NetworkId } from '../../utils/network';
+import thalesData from 'thales-data';
+
+type StakingClaimOnBehalfResponse = {
+    enabledAddresses: string[];
+};
 
 const useStakingClaimOnBehalfQuery = (
     walletAddress: string,
-    account: string,
     networkId: NetworkId,
-    options?: UseQueryOptions<boolean>
+    options?: UseQueryOptions<StakingClaimOnBehalfResponse>
 ) => {
-    return useQuery<boolean>(
-        QUERY_KEYS.Staking.ClaimOnBehalf(walletAddress, account, networkId),
+    return useQuery<StakingClaimOnBehalfResponse>(
+        QUERY_KEYS.Staking.ClaimOnBehalf(walletAddress, networkId),
         async () => {
+            const response: StakingClaimOnBehalfResponse = {
+                enabledAddresses: [],
+            };
             try {
                 const { stakingThalesContract } = snxJSConnector as any;
-                let canClaimOnBehalf = false;
                 if (stakingThalesContract) {
-                    canClaimOnBehalf = await (snxJSConnector as any).stakingThalesContract.canClaimOnBehalf(
-                        walletAddress,
-                        account
-                    );
+                    const canClaimOnBehalfItems = await thalesData.binaryOptions.canClaimOnBehalfItems({
+                        sender: walletAddress,
+                        network: networkId,
+                    });
+                    canClaimOnBehalfItems.forEach((item: any) => {
+                        if (item.canClaimOnBehalf) {
+                            response.enabledAddresses.push(item.account.toLowerCase());
+                        }
+                    });
                 }
-                return canClaimOnBehalf;
+                return response;
             } catch (e) {
                 console.log(e);
-                return false;
+                return response;
             }
         },
         {

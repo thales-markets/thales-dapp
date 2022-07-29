@@ -40,14 +40,19 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
         account.trim() === '' ||
         (isAddress(account) && getAddress(walletAddress) !== getAddress(account));
 
-    const stakingClaimOnBehalfQuery = useStakingClaimOnBehalfQuery(walletAddress, account, networkId, {
-        enabled: isAppReady && isWalletConnected && isAddress(account),
+    const stakingClaimOnBehalfQuery = useStakingClaimOnBehalfQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
     });
 
     const canClaimOnBehalf =
-        stakingClaimOnBehalfQuery.isSuccess && stakingClaimOnBehalfQuery.data !== undefined
-            ? stakingClaimOnBehalfQuery.data
+        stakingClaimOnBehalfQuery.isSuccess && stakingClaimOnBehalfQuery.data !== undefined && isAddress(account)
+            ? stakingClaimOnBehalfQuery.data.enabledAddresses.includes(account.toLowerCase())
             : undefined;
+
+    const enabledAddresses =
+        stakingClaimOnBehalfQuery.isSuccess && stakingClaimOnBehalfQuery.data !== undefined
+            ? stakingClaimOnBehalfQuery.data.enabledAddresses
+            : [];
 
     const isButtonDisabled =
         isSubmitting || !isAccountEntered || !isAccountValid || !isWalletConnected || canClaimOnBehalf === undefined;
@@ -159,6 +164,16 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                         onDismiss={() => setTxErrorMessage(null)}
                     />
                 </ButtonContainer>
+                <EnabledAddressesTitle>
+                    {t('options.earn.claim-on-behalf.enabled-addresses-title')}:
+                </EnabledAddressesTitle>
+                {enabledAddresses.length > 0 || stakingClaimOnBehalfQuery.isLoading ? (
+                    enabledAddresses.map((address) => (
+                        <EnabledAddressesItem key={address}>{address}</EnabledAddressesItem>
+                    ))
+                ) : (
+                    <NoAddresses>{t('options.earn.claim-on-behalf.no-enabled-addresses-message')}</NoAddresses>
+                )}
             </Container>
         </Modal>
     );
@@ -213,6 +228,25 @@ const Description = styled(FlexDivCentered)`
 
 const Label = styled(Description)`
     font-size: 14px;
+`;
+
+const EnabledAddressesTitle = styled(Label)`
+    font-weight: bold;
+    padding: 30px 2px 4px 2px;
+    font-size: 14px;
+    border-bottom: 1px solid #f6f6fe;
+`;
+
+const EnabledAddressesItem = styled(Label)`
+    padding: 5px 2px 4px 2px;
+    border-bottom: 1px dotted #f6f6fe;
+    :last-child {
+        margin-bottom: 10px;
+    }
+`;
+
+const NoAddresses = styled(EnabledAddressesItem)`
+    text-align: center;
 `;
 
 export default MergeAccountModal;

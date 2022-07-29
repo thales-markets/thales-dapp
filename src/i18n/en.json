@@ -782,13 +782,15 @@
                 "enable-button": {
                     "label": "Enable",
                     "progress-label": "Enabling in progress...",
-                    "confirmation-message": "Claim on behalf successfully enabled"
+                    "confirmation-message": "Claim on behalf successfully enabled for the account"
                 },
                 "disable-button": {
                     "label": "Disable",
                     "progress-label": "Disabling in progress...",
-                    "confirmation-message": "Claim on behalf successfully disabled"
-                }
+                    "confirmation-message": "Claim on behalf successfully disabled for the account"
+                },
+                "enabled-addresses-title": "Accounts that are enabled to claim on your behalf",
+                "no-enabled-addresses-message": "No addresses assigned."
             }
         },
         "quiz": {
