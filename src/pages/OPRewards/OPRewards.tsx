@@ -27,8 +27,15 @@ import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
 import { truncateAddress } from 'utils/formatters/string';
 import Tooltip from 'components/Tooltip';
 import TimeRemaining from 'components/TimeRemaining';
-import { USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
+import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+
+const UP_OP_REWARDS = 11000;
+const DOWN_OP_REWARDS = 11000;
+const RANGED_OP_REWARDS = 6000;
+const UP_THALES_REWARDS = 20000;
+const DOWN_THALES_REWARDS = 20000;
+const RANGED_THALES_REWARDS = 10000;
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -120,10 +127,24 @@ const OPRewards: React.FC = () => {
         const downVolume = tableData.reduce((a, { downInfo }) => a + downInfo.volume, 0);
         const rangedVolume = tableData.reduce((a, { rangedInfo }) => a + rangedInfo.volume, 0);
 
+        const upOpRewardsPerVolume = (UP_OP_REWARDS / upVolume) * 1000;
+        const downOpRewardsPerVolume = (DOWN_OP_REWARDS / downVolume) * 1000;
+        const rangedOpRewardsPerVolume = (RANGED_OP_REWARDS / rangedVolume) * 1000;
+
+        const upThalesRewardsPerVolume = (UP_THALES_REWARDS / upVolume) * 1000;
+        const downThalesRewardsPerVolume = (DOWN_THALES_REWARDS / downVolume) * 1000;
+        const rangedThalesRewardsPerVolume = (RANGED_THALES_REWARDS / rangedVolume) * 1000;
+
         return {
             upVolume,
             downVolume,
             rangedVolume,
+            upOpRewardsPerVolume,
+            downOpRewardsPerVolume,
+            rangedOpRewardsPerVolume,
+            upThalesRewardsPerVolume,
+            downThalesRewardsPerVolume,
+            rangedThalesRewardsPerVolume,
         };
     }, [tableData]);
 
@@ -169,18 +190,51 @@ const OPRewards: React.FC = () => {
                 <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
             </HeaderWrapper>
             <SummaryWrapper>
-                <SummaryInfo>{`${t('op-rewards.up-volume-label')}: ${formatCurrencyWithSign(
-                    USD_SIGN,
-                    summaryData.upVolume
-                )}`}</SummaryInfo>
-                <SummaryInfo>{`${t('op-rewards.down-volume-label')}: ${formatCurrencyWithSign(
-                    USD_SIGN,
-                    summaryData.downVolume
-                )}`}</SummaryInfo>
-                <SummaryInfo>{`${t('op-rewards.ranged-volume-label')}: ${formatCurrencyWithSign(
-                    USD_SIGN,
-                    summaryData.rangedVolume
-                )}`}</SummaryInfo>
+                <SummaryInfo>
+                    {`${t('op-rewards.up-volume-label')}: ${formatCurrencyWithSign(USD_SIGN, summaryData.upVolume)}`}
+                    <Tooltip
+                        message={t('op-rewards.volume-tooltip', {
+                            op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.upOpRewardsPerVolume),
+                            thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.upThalesRewardsPerVolume),
+                        })}
+                        type={'info'}
+                        iconColor={'var(--primary-color)'}
+                        container={{ display: 'inline-block' }}
+                        interactive={true}
+                    />
+                </SummaryInfo>
+                <SummaryInfo>
+                    {`${t('op-rewards.down-volume-label')}: ${formatCurrencyWithSign(
+                        USD_SIGN,
+                        summaryData.downVolume
+                    )}`}
+                    <Tooltip
+                        message={t('op-rewards.volume-tooltip', {
+                            op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.downOpRewardsPerVolume),
+                            thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.downThalesRewardsPerVolume),
+                        })}
+                        type={'info'}
+                        iconColor={'var(--primary-color)'}
+                        container={{ display: 'inline-block' }}
+                        interactive={true}
+                    />
+                </SummaryInfo>
+                <SummaryInfo>
+                    {`${t('op-rewards.ranged-volume-label')}: ${formatCurrencyWithSign(
+                        USD_SIGN,
+                        summaryData.rangedVolume
+                    )}`}
+                    <Tooltip
+                        message={t('op-rewards.volume-tooltip', {
+                            op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.rangedOpRewardsPerVolume),
+                            thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.rangedThalesRewardsPerVolume),
+                        })}
+                        type={'info'}
+                        iconColor={'var(--primary-color)'}
+                        container={{ display: 'inline-block' }}
+                        interactive={true}
+                    />
+                </SummaryInfo>
             </SummaryWrapper>
             {isLoading ? (
                 <Loader />
