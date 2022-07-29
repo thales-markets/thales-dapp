@@ -1,6 +1,18 @@
 import React, { useMemo, useState } from 'react';
 
-import { BoldText, Description, HeaderWrapper, Wrapper, Tip53Link } from './styled-components';
+import {
+    BoldText,
+    Description,
+    HeaderWrapper,
+    RoundWrapper,
+    RoundEndWrapper,
+    RoundEndLabel,
+    SummaryWrapper,
+    SummaryInfo,
+    Wrapper,
+    Tip53Link,
+    GuidelinesLink,
+} from './styled-components';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
 import SearchField from 'components/TableInputs/SearchField';
@@ -14,6 +26,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
 import { truncateAddress } from 'utils/formatters/string';
 import Tooltip from 'components/Tooltip';
+import TimeRemaining from 'components/TimeRemaining';
+import { USD_SIGN } from 'constants/currency';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -45,7 +60,7 @@ const OPRewards: React.FC = () => {
             if (PERIOD_COUNTER != 0) {
                 options.push({
                     value: PERIOD_COUNTER,
-                    label: `${PERIOD_COUNTER} period`,
+                    label: `Round ${PERIOD_COUNTER}`,
                 });
             }
 
@@ -68,9 +83,9 @@ const OPRewards: React.FC = () => {
 
             let data: Array<{
                 account: string;
-                upInfo: string;
-                downInfo: string;
-                rangedInfo: string;
+                upInfo: any;
+                downInfo: any;
+                rangedInfo: any;
                 calculatedProtocolBonusForPeriod: string;
                 totalRewards: number;
                 sticky: boolean;
@@ -100,6 +115,18 @@ const OPRewards: React.FC = () => {
         return [];
     }, [minTimestamp, maxTimestamp, period, usersAmmBuyVolumeQuery?.data, searchQuery]);
 
+    const summaryData = useMemo(() => {
+        const upVolume = tableData.reduce((a, { upInfo }) => a + upInfo.volume, 0);
+        const downVolume = tableData.reduce((a, { downInfo }) => a + downInfo.volume, 0);
+        const rangedVolume = tableData.reduce((a, { rangedInfo }) => a + rangedInfo.volume, 0);
+
+        return {
+            upVolume,
+            downVolume,
+            rangedVolume,
+        };
+    }, [tableData]);
+
     const isLoading = usersAmmBuyVolumeQuery.isLoading;
 
     return (
@@ -112,17 +139,49 @@ const OPRewards: React.FC = () => {
                     i18nKey={'op-rewards.description-3'}
                     components={{ bold: <BoldText />, br: <br />, tipLink: <Tip53Link /> }}
                 ></Trans>
+                .
+                <Trans
+                    i18nKey={'op-rewards.description-4'}
+                    components={{ br: <br />, guidelinesLink: <GuidelinesLink /> }}
+                ></Trans>
+                .
             </Description>
             <HeaderWrapper>
-                <SelectInput
-                    options={options}
-                    handleChange={(value) => setPeriod(Number(value))}
-                    defaultValue={period}
-                    width={300}
-                />
+                <RoundWrapper>
+                    <SelectInput
+                        options={options}
+                        handleChange={(value) => setPeriod(Number(value))}
+                        defaultValue={period - 1}
+                        width={300}
+                    />
+                    {maxTimestamp &&
+                        (NOW.getTime() < maxTimestamp * 1000 ? (
+                            <RoundEndWrapper>
+                                <RoundEndLabel>{t('op-rewards.round-end-label')}:</RoundEndLabel>
+                                <TimeRemaining end={maxTimestamp * 1000} fontSize={20} showFullCounter />
+                            </RoundEndWrapper>
+                        ) : (
+                            <RoundEndWrapper>
+                                <RoundEndLabel>{t('op-rewards.round-ended-label')}</RoundEndLabel>
+                            </RoundEndWrapper>
+                        ))}
+                </RoundWrapper>
+                <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
             </HeaderWrapper>
-            <br />
-            <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
+            <SummaryWrapper>
+                <SummaryInfo>{`${t('op-rewards.up-volume-label')}: ${formatCurrencyWithSign(
+                    USD_SIGN,
+                    summaryData.upVolume
+                )}`}</SummaryInfo>
+                <SummaryInfo>{`${t('op-rewards.down-volume-label')}: ${formatCurrencyWithSign(
+                    USD_SIGN,
+                    summaryData.downVolume
+                )}`}</SummaryInfo>
+                <SummaryInfo>{`${t('op-rewards.ranged-volume-label')}: ${formatCurrencyWithSign(
+                    USD_SIGN,
+                    summaryData.rangedVolume
+                )}`}</SummaryInfo>
+            </SummaryWrapper>
             {isLoading ? (
                 <Loader />
             ) : (

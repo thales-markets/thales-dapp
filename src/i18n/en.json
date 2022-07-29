@@ -1856,7 +1856,8 @@
         "title": "OP Rewards",
         "description": "<bold>The Trading Incentives program</bold> is split into separate 14 day rounds. After each round a fixed amount of OP tokens + THALES tokens are to be distributed proportionally among all Buy Volume drivers across the Thales marketplace.<br/><br/>",
         "description-2": "Total amount of tokens allocated as Trading Incentives: <bold>200,000 OP + 350,000 THALES</bold> <br/><br/>",
-        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 11,000 OP + 20,000 THALES split between UP token Buyers <br/>    - 11,000 OP + 20,000 THALES split between DOWN token Buyers<br/>        - 6,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>",
+        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 11,000 OP + 20,000 THALES split between UP token Buyers <br/>    - 11,000 OP + 20,000 THALES split between DOWN token Buyers<br/>        - 6,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
+        "description-4": "<br/><br/>You can find all the detailed infomation on how to participate in <guidelinesLink>.",
         "table": {
             "wallet-address": "Wallet address",
             "my-wallet-address": " My wallet address",
@@ -1871,6 +1872,11 @@
             "reward-text": "Rewards:<0/> {{thales}} THALES, {{op}} OP",
             "info-text": "Volume: {{volume}}, Percentage: {{percentage}}%",
             "total-text": "{{thales}} THALES, {{op}} OP"
-        }
+        },
+        "round-end-label": "The round ends in",
+        "round-ended-label": "Round ended",
+        "up-volume-label": "UP Volume",
+        "down-volume-label": "DOWN Volume",
+        "ranged-volume-label": "RANGED Volume"
     }
 }

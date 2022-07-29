@@ -41,5 +41,6 @@ export const LINKS = {
     TradingIncentives: {
         TIP53:
             'https://thalesmarket.io/governance/thalesgov.eth/0xc0dffa06291784ddfc2364d8534ef4d9300176050b374952f231d11989a805a1',
+        Guidelines: 'https://thalesmarket.medium.com/thales-op-rewards-distribution-all-you-need-to-know-b566eff3b708',
     },
 };
