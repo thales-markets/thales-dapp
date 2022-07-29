@@ -12,17 +12,33 @@ export const Wrapper = styled.div`
 export const HeaderWrapper = styled(FlexDivRow)`
     margin: 10px 0 20px 0;
     align-items: center;
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+        div {
+            align-self: center;
+        }
+    }
 `;
 
 export const RoundWrapper = styled(FlexDivStart)`
     font-size: 20px;
     color: var(--primary-color);
     align-items: center;
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+    }
 `;
 
 export const RoundEndWrapper = styled(FlexDivStart)`
     margin-left: 15px;
+    margin-right: 15px;
     color: var(--primary-color);
+    @media screen and (max-width: 767px) {
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 6px;
+        margin-bottom: 10px;
+    }
 `;
 
 export const RoundEndLabel = styled.span`
@@ -36,11 +52,20 @@ export const SummaryWrapper = styled(FlexDivStart)`
     color: var(--primary-color);
     align-items: center;
     margin-bottom: 10px;
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+    }
 `;
 
 export const SummaryInfo = styled(FlexDivStart)`
     :not(:last-child) {
         margin-right: 40px;
+    }
+    @media screen and (max-width: 767px) {
+        :not(:last-child) {
+            margin-right: 0px;
+            margin-bottom: 4px;
+        }
     }
 `;
 
