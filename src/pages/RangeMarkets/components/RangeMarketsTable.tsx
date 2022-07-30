@@ -338,7 +338,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         if (!selectedAssetsLocalStorage.length || allAssets.size > 0) {
             const chosenAssets: string[] = cookies.get('chosenAssetRanged' + networkId) || [];
 
-            if (selectedAssetsLocalStorage.length) {
+            if (selectedAssetsLocalStorage.length & allAssets.size) {
                 const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
                     (asset: string) =>
                         allAssets.has(asset) || (chosenAssets.length ? chosenAssets.includes(asset) : false)
@@ -488,7 +488,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                         }}
                         className={'icon icon--left'}
                     />
-                    <Filters length={selectedAssets.length} id="asset-filters">
+                    <Filters length={allAssets.size} id="asset-filters">
                         {selectedAssets.length > 0 &&
                             selectedAssets.map((value: string, index: number) => {
                                 return (
@@ -765,7 +765,8 @@ const FilterContainer = styled.div`
 `;
 
 const Filters = styled.div<{ length: number }>`
-    width: ${FILTERS_LENGTH * ((isMobile() ? 26 : 40) + 5)}px;
+    width: ${(_props) =>
+        (_props.length < FILTERS_LENGTH ? _props.length : FILTERS_LENGTH) * ((isMobile() ? 26 : 40) + 5)}px;
     overflow: hidden;
     display: flex;
     height: 60px;

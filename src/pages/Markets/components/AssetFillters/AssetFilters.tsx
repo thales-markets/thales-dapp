@@ -29,14 +29,13 @@ const AssetFilters: React.FC<{
 
     useEffect(() => {
         const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedAssets' + networkId) || '[]');
-
-        if (selectedAssetsLocalStorage.length) {
+        if (selectedAssetsLocalStorage.length & allAssets.size) {
             const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
                 (asset: string) => allAssets.has(asset) || (assetFilters.length ? assetFilters.includes(asset) : false)
             );
             localStorage.setItem('selectedAssets' + networkId, JSON.stringify(newSelectedAssets));
             setSelectedAssets(newSelectedAssets);
-        } else if (allAssets.size) {
+        } else {
             setSelectedAssets([...Array.from(allAssets)].slice(0, FILTERS_LENGTH));
         }
     }, [allAssets, assetFilters]);
