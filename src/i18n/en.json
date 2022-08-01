@@ -773,6 +773,26 @@
                     "label": "Merge account",
                     "progress-label": "Merging in progress..."
                 }
+            },
+            "claim-on-behalf": {
+                "title": "Claim on behalf",
+                "description": "<0>Claim on behalf has been implemented per </0><1 />.",
+                "label": "Enter account for which you want to enable/disable claim on your behalf",
+                "account-label": "Account",
+                "enable-message": "Enable claim on your behalf for this account?",
+                "disable-message": "Claim on your behalf is enabled for this account. Disable?",
+                "enable-button": {
+                    "label": "Enable",
+                    "progress-label": "Enabling in progress...",
+                    "confirmation-message": "Claim on behalf successfully enabled for the account"
+                },
+                "disable-button": {
+                    "label": "Disable",
+                    "progress-label": "Disabling in progress...",
+                    "confirmation-message": "Claim on behalf successfully disabled for the account"
+                },
+                "enabled-addresses-title": "Accounts that are enabled to claim on your behalf",
+                "no-enabled-addresses-message": "No addresses assigned."
             }
         },
         "quiz": {

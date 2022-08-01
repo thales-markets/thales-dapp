@@ -53,6 +53,7 @@ import { DefaultSubmitButton } from 'pages/Token/components/components';
 import onboardConnector from 'utils/onboardConnector';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { FlexDivCentered, FlexDivRowCentered } from 'theme/common';
+import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 
 const StakingRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -69,6 +70,7 @@ const StakingRewards: React.FC = () => {
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
     const { stakingThalesContract } = snxJSConnector as any;
+    const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
 
     const stakingRewardsQuery = useStakingRewardsQuery(walletAddress, networkId, {
         enabled: isAppReady && !!stakingThalesContract,
@@ -241,7 +243,7 @@ const StakingRewards: React.FC = () => {
             style={{ gridColumn: 'span 10', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
         >
             <SectionHeader>
-                <div>
+                <FlexDivCentered>
                     {t('options.earn.thales-staking.staking-rewards.title')}
                     <StyledMaterialTooltip
                         arrow={true}
@@ -250,7 +252,10 @@ const StakingRewards: React.FC = () => {
                     >
                         <StyledInfoIcon />
                     </StyledMaterialTooltip>
-                </div>
+                    <ClosePeriodButton onClick={() => setShowClaimOnBehalfModal(true)}>
+                        Enable/disable claim on behalf
+                    </ClosePeriodButton>
+                </FlexDivCentered>
                 <PeriodContainer>
                     <FlexDivCentered>
                         <PeriodLabel>{t('options.earn.thales-staking.staking-rewards.period')}:</PeriodLabel>
@@ -435,6 +440,7 @@ const StakingRewards: React.FC = () => {
                     />
                 </GridAction>
             </GridContainer>
+            {showClaimOnBehalfModal && <ClaimOnBehalfModal onClose={() => setShowClaimOnBehalfModal(false)} />}
         </EarnSection>
     );
 };
