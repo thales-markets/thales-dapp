@@ -36,9 +36,10 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
 
     const isAccountEntered = account !== undefined && account.trim() !== '';
     const isAccountValid =
+        !isWalletConnected ||
         account === undefined ||
         account.trim() === '' ||
-        (isAddress(account) && getAddress(walletAddress) !== getAddress(account));
+        (isAddress(walletAddress) && isAddress(account) && getAddress(walletAddress) !== getAddress(account));
 
     const stakingClaimOnBehalfQuery = useStakingClaimOnBehalfQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -139,7 +140,7 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                     <TextInput
                         value={account}
                         onChange={(e: any) => setAccount(e.target.value)}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !isWalletConnected}
                         className={isAccountValid ? '' : 'error'}
                         autoFocus={true}
                     />
