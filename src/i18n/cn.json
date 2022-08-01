@@ -672,6 +672,26 @@
                 "merge-account-disabled-message": "帐户合并已禁用。",
                 "destination-account-label": "目的地帐户",
                 "warning-message": "合并后，所有质押和托管的 THALES 余额将转移到目标账户，并且无法从源账户访问。"
+            },
+            "claim-on-behalf": {
+                "enable-button": {
+                    "label": "使能够",
+                    "confirmation-message": "已成功为该帐户启用代偿",
+                    "progress-label": "正在启用..."
+                },
+                "disable-button": {
+                    "progress-label": "正在禁用...",
+                    "confirmation-message": "已成功为该帐户停用代销",
+                    "label": "禁用"
+                },
+                "title": "代为索赔",
+                "no-enabled-addresses-message": "未分配地址。",
+                "enable-message": "代表您为此帐户启用声明？",
+                "description": "<0>已按 </0><1 /> 实施代偿。",
+                "enabled-addresses-title": "可以代表您申领的帐户",
+                "disable-message": "此帐户已启用代表您的索赔。禁用？",
+                "label": "输入您要代表您启用/禁用声明的帐户",
+                "account-label": "帐户"
             }
         },
         "quiz": {

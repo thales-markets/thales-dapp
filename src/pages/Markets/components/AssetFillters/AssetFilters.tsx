@@ -29,7 +29,7 @@ const AssetFilters: React.FC<{
 
     useEffect(() => {
         const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedAssets' + networkId) || '[]');
-        if (selectedAssetsLocalStorage.length & allAssets.size) {
+        if (selectedAssetsLocalStorage.length && allAssets.size) {
             const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
                 (asset: string) => allAssets.has(asset) || (assetFilters.length ? assetFilters.includes(asset) : false)
             );
