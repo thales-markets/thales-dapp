@@ -338,7 +338,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         if (!selectedAssetsLocalStorage.length || allAssets.size > 0) {
             const chosenAssets: string[] = cookies.get('chosenAssetRanged' + networkId) || [];
 
-            if (selectedAssetsLocalStorage.length & allAssets.size) {
+            if (selectedAssetsLocalStorage.length && allAssets.size) {
                 const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
                     (asset: string) =>
                         allAssets.has(asset) || (chosenAssets.length ? chosenAssets.includes(asset) : false)
