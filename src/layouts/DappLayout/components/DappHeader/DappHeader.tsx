@@ -43,7 +43,6 @@ const Container = styled.div`
     margin-left: auto;
     margin-right: auto;
     padding: 40px 20px 0px 92px;
-    z-index: 9999;
 `;
 
 const PageTitle = styled.p`

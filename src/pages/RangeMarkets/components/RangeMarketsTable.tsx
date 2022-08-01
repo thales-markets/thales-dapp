@@ -476,7 +476,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     return (
         <>
             <Wrapper>
-                <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
+                <FiltersButton onClick={() => setShowSorting(true)}>Sort</FiltersButton>
                 <FilterContainer>
                     <ArrowIcon
                         visible={selectedAssets.length > FILTERS_LENGTH}
