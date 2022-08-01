@@ -19,7 +19,7 @@ import { getSynthName, sortCurrencies } from 'utils/currency';
 import { PaginationWrapper } from './MarketsTable';
 import { UI_COLORS } from 'constants/ui';
 import { OptionsMarkets } from 'types/options';
-import { get } from 'utils/localStore';
+import { get, set } from 'utils/localStore';
 import { saveTableSort } from 'utils/table';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 
@@ -44,6 +44,8 @@ const ammPriceSort = () => (rowA: any, rowB: any, columnId: string, desc: boolea
         return +rowA.values[columnId].props.green.slice(1) < +rowB.values[columnId].props.green.slice(1) ? 1 : -1;
     }
 };
+
+const DEFAULT_PAGE_SIZE = 20;
 
 const Table: React.FC<{
     optionsMarkets: OptionsMarkets;
@@ -304,18 +306,22 @@ const Table: React.FC<{
         gotoPage(newPage);
     };
 
+    const pageSizeLocalStorageKey = LOCAL_STORAGE_KEYS.MARKET_TABLE_PAGE_SIZE + networkId;
     const handleChangeRowsPerPage = (event: any) => {
-        setPageSize(parseInt(event.target.value, 10));
+        const userPageSize = parseInt(event.target.value, 10);
+        setPageSize(userPageSize);
         gotoPage(0);
+        set(pageSizeLocalStorageKey, userPageSize);
     };
+
+    useEffect(() => {
+        const userPageSize: number | undefined = get(pageSizeLocalStorageKey);
+        setPageSize(userPageSize ? userPageSize : DEFAULT_PAGE_SIZE);
+    }, []);
 
     useEffect(() => {
         gotoPage(0);
     }, [globalFilter, showOnlyLiquid]);
-
-    useEffect(() => {
-        setPageSize(20);
-    }, []);
 
     return (
         <>

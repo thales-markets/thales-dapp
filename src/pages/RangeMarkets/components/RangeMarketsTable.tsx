@@ -37,7 +37,7 @@ import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
 import SearchField from 'components/TableInputs/SearchField';
 import PhaseComponent from 'components/Phase/Phase';
 import { sortCurrencies } from 'utils/currency';
-import { get } from 'utils/localStore';
+import { get, set } from 'utils/localStore';
 import { mapGridToTableSort, mapTableToGridSort, TableColumnSort } from 'utils/table';
 import { saveTableSort } from 'utils/table';
 
@@ -48,6 +48,7 @@ type RangeMarketsTableProps = {
 };
 
 const FILTERS_LENGTH = 6;
+const DEFAULT_PAGE_SIZE = 20;
 let scrolling: NodeJS.Timeout;
 const cookies = new Cookies();
 
@@ -435,9 +436,12 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         gotoPage(newPage);
     };
 
+    const pageSizeLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_PAGE_SIZE + networkId;
     const handleChangeRowsPerPage = (event: any) => {
-        setPageSize(parseInt(event.target.value, 10));
+        const userPageSize = parseInt(event.target.value, 10);
+        setPageSize(userPageSize);
         gotoPage(0);
+        set(pageSizeLocalStorageKey, userPageSize);
     };
 
     useEffect(() => {
@@ -445,7 +449,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     }, [globalFilter, showOnlyLiquid, assetFilters]);
 
     useEffect(() => {
-        setPageSize(20);
+        const userPageSize: number | undefined = get(pageSizeLocalStorageKey);
+        setPageSize(userPageSize ? userPageSize : DEFAULT_PAGE_SIZE);
     }, []);
 
     const filters = useMemo(() => {

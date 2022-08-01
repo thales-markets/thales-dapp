@@ -1,12 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import _ from 'lodash';
-import { GridFilters, RangedMarketUI } from 'types/options';
-import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import { FlexDiv } from 'theme/common';
-import SPAAnchor from 'components/SPAAnchor';
-import { buildRangeMarketLink } from 'utils/routes';
 import RangeMarketCard from 'components/RangeMarketCard';
+import SPAAnchor from 'components/SPAAnchor';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import _ from 'lodash';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDiv } from 'theme/common';
+import { GridFilters, RangedMarketUI } from 'types/options';
+import { get, set } from 'utils/localStore';
+import { buildRangeMarketLink } from 'utils/routes';
 import { PaginationWrapper } from './RangeMarketsTable';
 
 type MarketsGridProps = {
@@ -16,6 +21,7 @@ type MarketsGridProps = {
 };
 
 const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates, filters }) => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [rowsPerPage, setRowsPerPage] = useState<number>(9);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const [dataCount, setDataCount] = useState<number>(optionsMarkets?.length || 0);
@@ -79,6 +85,21 @@ const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exc
         setPageIndex(0);
     }, [filters]);
 
+    const pageSizeLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_GRID_PAGE_SIZE + networkId;
+    const handleChangeRowsPerPage = (event: any) => {
+        const userPageSize = parseInt(event.target.value, 10);
+        setRowsPerPage(userPageSize);
+        setPageIndex(0);
+        set(pageSizeLocalStorageKey, userPageSize);
+    };
+
+    useEffect(() => {
+        const userPageSize: number | undefined = get(pageSizeLocalStorageKey);
+        if (userPageSize) {
+            setRowsPerPage(userPageSize);
+        }
+    }, []);
+
     return (
         <Wrapper>
             {options &&
@@ -95,7 +116,7 @@ const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exc
                 rowsPerPage={rowsPerPage}
                 page={pageIndex}
                 onPageChange={(_event: any, newPage: number) => setPageIndex(newPage)}
-                onRowsPerPageChange={(event: any) => setRowsPerPage(parseInt(event.target.value, 10))}
+                onRowsPerPageChange={handleChangeRowsPerPage}
             />
         </Wrapper>
     );
