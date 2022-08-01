@@ -1,10 +1,16 @@
 export const LOCAL_STORAGE_KEYS = {
     SELECTED_WALLET: 'selectedWallet',
+    REFERRAL_WALLET: 'referralId',
     MARKET_WIDGET_CURRENT_LAYOUT: 'marketWidgetCurrentLayout',
     MARKET_WIDGET_FULL_LAYOUT: 'marketWidgetFullLayout',
     MARKET_WIDGET_VISIBILITY_MAP: 'marketWidgetVisibilityMap',
     MARKET_WIDGET_AMM_SELECTED: 'marketWidgetAmmSelected',
+    MARKET_SHOW_ONLY_LIQUID: 'showOnlyLiquid',
+    MARKET_SELECTED_ASSETS: 'selectedAssets',
+    MARKET_CHOSEN_ASSET: 'chosenAsset',
     MARKET_TABLE_SORTED_COLUMNS: 'marketTableSortedColumns',
+    MARKET_TABLE_VIEW: 'showTableView',
+    RANGED_MARKET_SELECTED_ASSETS: 'selectedRangedAssets',
     RANGED_MARKET_TABLE_SORTED_COLUMNS: 'rangedMarketTableSortedColumns',
     PROFILE_TABLE_VIEW: 'profileTableView',
 };

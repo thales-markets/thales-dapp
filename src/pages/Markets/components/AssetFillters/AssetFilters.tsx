@@ -8,6 +8,7 @@ import { isMobile } from 'utils/device';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 
 const AssetsDropdown = lazy(() => import(/* webpackChunkName: "AssetsDropdown" */ 'components/AssetsDropdown'));
 
@@ -20,7 +21,8 @@ const AssetFilters: React.FC<{
 }> = ({ allAssets, assetFilters, setAssetFilters }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const selectedAssetsLocalStorage = localStorage.getItem('selectedAssets' + networkId);
+    const selectedAssetsLocalStorageKey = LOCAL_STORAGE_KEYS.MARKET_SELECTED_ASSETS + networkId;
+    const selectedAssetsLocalStorage = localStorage.getItem(selectedAssetsLocalStorageKey);
 
     const [selectedAssets, setSelectedAssets] = useState<string[]>(
         selectedAssetsLocalStorage ? JSON.parse(selectedAssetsLocalStorage) : []
@@ -28,12 +30,12 @@ const AssetFilters: React.FC<{
     const [assetsDropdownOpen, setAssetsDropdownOpen] = useState<boolean>(false);
 
     useEffect(() => {
-        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedAssets' + networkId) || '[]');
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem(selectedAssetsLocalStorageKey) || '[]');
         if (selectedAssetsLocalStorage.length && allAssets.size) {
             const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
                 (asset: string) => allAssets.has(asset) || (assetFilters.length ? assetFilters.includes(asset) : false)
             );
-            localStorage.setItem('selectedAssets' + networkId, JSON.stringify(newSelectedAssets));
+            localStorage.setItem(selectedAssetsLocalStorageKey, JSON.stringify(newSelectedAssets));
             setSelectedAssets(newSelectedAssets);
         } else {
             setSelectedAssets([...Array.from(allAssets)].slice(0, FILTERS_LENGTH));
@@ -111,7 +113,7 @@ const AssetFilters: React.FC<{
                             {assetsDropdownOpen && (
                                 <AssetsDropdown
                                     assets={[...(allAssets as any)]}
-                                    cookieKey={'selectedAssets'}
+                                    cookieKey={LOCAL_STORAGE_KEYS.MARKET_SELECTED_ASSETS}
                                     selectedAssets={selectedAssets}
                                     setSelectedAssets={safeSetSelectedAssets}
                                 />

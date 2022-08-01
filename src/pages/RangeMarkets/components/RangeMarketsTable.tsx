@@ -334,7 +334,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         const allAssets = new Set(Array.from(set).sort(sortCurrencies));
         setAllAssets(allAssets);
 
-        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedRangedAssets' + networkId) || '[]');
+        const selectedAssetsLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_SELECTED_ASSETS + networkId;
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem(selectedAssetsLocalStorageKey) || '[]');
         if (!selectedAssetsLocalStorage.length || allAssets.size > 0) {
             const chosenAssets: string[] = cookies.get('chosenAssetRanged' + networkId) || [];
 
@@ -343,7 +344,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                     (asset: string) =>
                         allAssets.has(asset) || (chosenAssets.length ? chosenAssets.includes(asset) : false)
                 );
-                localStorage.setItem('selectedRangedAssets' + networkId, JSON.stringify(newSelectedAssets));
+                localStorage.setItem(selectedAssetsLocalStorageKey, JSON.stringify(newSelectedAssets));
                 setSelectedAssets(newSelectedAssets);
             } else {
                 setSelectedAssets([...(allAssets as any)].slice(0, FILTERS_LENGTH));
@@ -538,7 +539,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                             {assetsDropdownOpen && (
                                 <AssetsDropdown
                                     assets={[...(allAssets as any)]}
-                                    cookieKey={'selectedRangedAssets'}
+                                    cookieKey={LOCAL_STORAGE_KEYS.RANGED_MARKET_SELECTED_ASSETS}
                                     selectedAssets={selectedAssets}
                                     setSelectedAssets={safeSetSelectedAssets}
                                 />
