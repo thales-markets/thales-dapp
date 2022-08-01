@@ -55,7 +55,6 @@ import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
-import { ZERO_ADDRESS } from 'constants/network';
 import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
@@ -64,8 +63,8 @@ import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
 import { createOneInchLimitOrder } from 'utils/1inch';
 import ApprovalModal from 'components/ApprovalModal';
 
-const MIN_FUNDING_AMOUNT_ROPSTEN = 1;
-const MIN_FUNDING_AMOUNT_MAINNET = 1000;
+const MIN_FUNDING_AMOUNT_ROPSTEN = 0;
+const MIN_FUNDING_AMOUNT_MAINNET = 0;
 
 const roundMinutes = (date: Date) => {
     date.setUTCHours(12, 0, 0, 0);
@@ -162,15 +161,10 @@ export const CreateMarket: React.FC = () => {
                 ),
             [synthsMap]
         );
-        const isButtonDisabled =
-            !hasAllowance ||
-            currencyKey === null ||
-            strikePrice === '' ||
-            maturityDate === null ||
-            initialFundingAmount === '';
+        const isButtonDisabled = !hasAllowance || currencyKey === null || strikePrice === '' || maturityDate === null;
 
         const formatCreateMarketArguments = () => {
-            const initialMint = ethers.utils.parseEther(initialFundingAmount.toString());
+            const initialMint = ethers.utils.parseEther(Number(initialFundingAmount).toString());
             const oracleKey = bytesFormatter((currencyKey as CurrencyKeyOptionType).value);
             const price = ethers.utils.parseEther(strikePrice.toString());
             const maturity = Math.round((maturityDate as Date).getTime() / 1000);
@@ -209,17 +203,9 @@ export const CreateMarket: React.FC = () => {
                 const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
                     (snxJSConnector as any).signer
                 );
-                const tx = (await BOMMContractWithSigner.createMarket(
-                    oracleKey,
-                    price,
-                    maturity,
-                    initialMint,
-                    false,
-                    ZERO_ADDRESS,
-                    {
-                        gasLimit,
-                    }
-                )) as ethers.ContractTransaction;
+                const tx = (await BOMMContractWithSigner.createMarket(oracleKey, price, maturity, initialMint, {
+                    gasLimit,
+                })) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
                 if (txResult && txResult.events) {
                     const rawData = txResult.events[txResult.events?.length - (isPolygon ? 2 : 1)];
@@ -254,9 +240,7 @@ export const CreateMarket: React.FC = () => {
                     oracleKey,
                     price,
                     maturity,
-                    initialMint,
-                    false,
-                    ZERO_ADDRESS
+                    initialMint
                 );
                 return getL1FeeInWei(txRequest, snxJSConnector);
             };
@@ -270,30 +254,19 @@ export const CreateMarket: React.FC = () => {
                     );
                     if (isL2) {
                         const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            BOMMContractWithSigner.estimateGas.createMarket(
-                                oracleKey,
-                                price,
-                                maturity,
-                                initialMint,
-                                false,
-                                ZERO_ADDRESS
-                            ),
+                            BOMMContractWithSigner.estimateGas.createMarket(oracleKey, price, maturity, initialMint),
                             fetchL1Fee(BOMMContractWithSigner, oracleKey, price, maturity, initialMint),
                         ]);
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setUserHasEnoughFunds(true);
                         setL1Fee(l1FeeInWei);
                     } else {
-                        console.log('dadssd', oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS);
                         const gasEstimate = await BOMMContractWithSigner.estimateGas.createMarket(
                             oracleKey,
                             price,
                             maturity,
-                            initialMint,
-                            false,
-                            ZERO_ADDRESS
+                            initialMint
                         );
-                        console.log('122222');
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setUserHasEnoughFunds(true);
                     }
@@ -698,17 +671,17 @@ export const CreateMarket: React.FC = () => {
                                         className={!isAmountValid || !userHasEnoughFunds ? 'error' : ''}
                                         value={initialFundingAmount}
                                         onChange={(e) => {
-                                            setInitialFundingAmount(parseInt(e.target.value, 10));
+                                            setInitialFundingAmount(e.target.value);
                                             setLongAmount(parseInt(e.target.value, 10));
                                             setShortAmount(parseInt(e.target.value, 10));
-                                            parseInt(e.target.value) >=
+                                            Number(e.target.value) >=
                                             (networkId === 1 ? MIN_FUNDING_AMOUNT_MAINNET : MIN_FUNDING_AMOUNT_ROPSTEN)
                                                 ? setIsAmountValid(true)
                                                 : setIsAmountValid(false);
                                         }}
                                         id="funding-amount"
                                         onBlur={() => {
-                                            initialFundingAmount >=
+                                            Number(initialFundingAmount) >=
                                             (networkId === 1 ? MIN_FUNDING_AMOUNT_MAINNET : MIN_FUNDING_AMOUNT_ROPSTEN)
                                                 ? setIsAmountValid(true)
                                                 : setIsAmountValid(false);
