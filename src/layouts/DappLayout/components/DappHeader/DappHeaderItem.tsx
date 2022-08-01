@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SPAAnchor from 'components/SPAAnchor';
 import styled from 'styled-components';
+import overtimeIcon from 'assets/images/sidebar/overtime.svg';
 
 type MenuItem = {
     className?: string;
@@ -49,10 +50,14 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
     return (
         <SPAAnchor href={href || ''} onClick={onClick} simpleOnClick={simpleOnClick}>
             <MenuItem className={className}>
-                <i
-                    className={`sidebar-icon icon--${iconName}`}
-                    style={iconName == 'optimism' ? { color: 'white' } : {}}
-                />
+                {iconName === 'overtime-markets' ? (
+                    <Icon src={overtimeIcon} />
+                ) : (
+                    <i
+                        className={`sidebar-icon icon--${iconName}`}
+                        style={iconName == 'optimism' ? { color: 'white' } : {}}
+                    />
+                )}
                 <Text>{label}</Text>
             </MenuItem>
         </SPAAnchor>
@@ -120,6 +125,11 @@ const Arrow = styled.i<{ open: boolean }>`
     right: 10px;
     transform: rotate(${(props) => (props.open ? 90 : -90)}deg);
     font-size: 14px;
+`;
+
+const Icon = styled.img`
+    min-width: 32px;
+    display: block;
 `;
 
 export default DappHeaderItem;

@@ -10,6 +10,7 @@ import WizardVideo from './components/WizardVideo';
 import WizardFooter from './components/WizardFooter';
 import Loader from 'components/Loader';
 import styled from 'styled-components';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 
 export enum WizardSteps {
     INSTALL_METAMASK,
@@ -29,6 +30,7 @@ const Wizard: React.FC = () => {
 
     return (
         <>
+            <OpRewardsBanner width={70} />
             <Wrapper>
                 <TextHeader>{t('wizard-page.header')}</TextHeader>
                 <TextIntro>

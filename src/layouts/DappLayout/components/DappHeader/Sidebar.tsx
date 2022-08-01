@@ -141,18 +141,7 @@ const Sidebar: React.FC = () => {
                     iconName="governance"
                     label={t('common.sidebar.governance-label')}
                 />
-
                 <Divider />
-                {!isPolygon && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Royal ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Royal)}
-                        iconName="thales-royale"
-                        label={t('common.sidebar.royale-label')}
-                    />
-                )}
                 <DappHeaderItem
                     className={`${collapse ? 'show' : ''} ${
                         location.pathname === ROUTES.Options.Game ? 'selected' : ''
@@ -183,6 +172,21 @@ const Sidebar: React.FC = () => {
                             window.location.replace(LINKS.ExoticMarkets);
                         } else {
                             window.open(LINKS.ExoticMarkets);
+                        }
+                    }}
+                    simpleOnClick={true}
+                />
+                <DappHeaderItem
+                    className={collapse ? 'show' : ''}
+                    href={LINKS.SportMarkets}
+                    iconName="overtime-markets"
+                    label={t('common.sidebar.sport-markets-label')}
+                    onClick={(event: any) => {
+                        event.preventDefault();
+                        if (window.innerWidth <= 767) {
+                            window.location.replace(LINKS.SportMarkets);
+                        } else {
+                            window.open(LINKS.SportMarkets);
                         }
                     }}
                     simpleOnClick={true}
