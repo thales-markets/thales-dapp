@@ -301,7 +301,6 @@
             "short": "Короткий",
             "my-trades": "Мои сделки",
             "amm": "AMM",
-            "orderbook": "Таблица заказов",
             "trade-type": "Тип торговли",
             "search-placeholder-for-mining": "Попробуйте адрес",
             "search-placeholder-for-reporting": "Попробуйте рынок",
@@ -801,7 +800,6 @@
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",
                 "maturity-phase-widget": "Использовать опционы",
-                "orderbook-widget": "Таблица заказов",
                 "trade-widget": "Торговля",
                 "chart-trading-view-widget": "Торговая точка зрения",
                 "chart-options-price-widget": "Цена опционов",
@@ -881,43 +879,6 @@
                 "market-tab-title": "Рыночнный",
                 "limit-tab-title": "Лимит",
                 "mint-tab-title": "Чеканить",
-                "orderbook": {
-                    "title": "Таблица заказов",
-                    "buy": {
-                        "no-results": "Заказы на покупку не найдены"
-                    },
-                    "sell": {
-                        "no-results": "Заказы на продажу не найдены"
-                    },
-                    "filter": {
-                        "my-orders": {
-                            "tooltip-connected": "Заказы, которые вы создали. Подключите кошелек, чтобы начать.",
-                            "tooltip-not-connected": "Заказы, которые вы создали. Нажмите на строку, чтобы ввести или отменить заказ",
-                            "buy": {
-                                "no-results": "Вы еще не создали заказа на покупку."
-                            },
-                            "sell": {
-                                "no-results": "Вы еще не создали заказа на продажу."
-                            }
-                        },
-                        "tooltips": {
-                            "all": "Просмотреть все заказы. Нажмите на строку для заполнения заказа.",
-                            "buy": "Просмотреть заказов на покупку. Нажмите на строку для заполнения заказа.",
-                            "sell": "Просмотреть заказов на продажу. Нажмите на строку для заполнения заказа."
-                        }
-                    },
-                    "table": {
-                        "type-col": "Тип",
-                        "price-col": "ЦЕНА ({{token}})",
-                        "amount-col": "СУММА ({{currencyKey}})",
-                        "filled-col": "ИСПОЛНЕНО (%)",
-                        "return-col": "ПРИБЫЛЬ",
-                        "return-col-tooltip": "Потенциальная прибыль, если этот опцион выиграет",
-                        "total-col": "В СУММЕ ({{token}})",
-                        "time-remaining-col": "ОСТАВШЕЕСЯ ВРЕМЯ",
-                        "cancel-col-tooltip": "Нажмите, чтобы отменить заказ"
-                    }
-                },
                 "place-order": {
                     "modal": {
                         "buy": {
@@ -1023,7 +984,6 @@
                 }
             },
             "header": {
-                "orderbook": "Таблица заказов",
                 "amm": "AMM"
             },
             "your-activity": {
@@ -1453,18 +1413,6 @@
                 "paid": "Оплаченный",
                 "expired": "Истекший",
                 "expires": "Истекает @"
-            }
-        },
-        "order-book": {
-            "trade-up": "Варианты обмена",
-            "trade-down": "Варианты торговли вниз",
-            "amount-to": "Сумма до {{тип}}",
-            "select-to": "Выберите {{type}}",
-            "filters": {
-                "my-orders": "Мои заказы",
-                "all": "Все",
-                "buy-orders": "Заказы на покупку",
-                "sell-orders": "Заказы на продажу"
             }
         }
     },

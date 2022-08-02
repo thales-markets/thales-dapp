@@ -16,8 +16,6 @@ export type OrderSideOptionType = { value: OrderSide; label?: string; i18nLabel?
 
 export type TooltipType = 'error' | 'success' | 'info';
 
-export type TradingType = 'AMM' | 'Orderbook';
-
 export type MarketType = 'positional' | 'ranged';
 
 export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT';
@@ -254,11 +252,6 @@ export type TradeCardPhaseProps = {
 export type CurrentPosition = {
     bid: number;
     payout: number;
-};
-
-export type OrderbookInfo = {
-    buyOrders: Orders;
-    sellOrders: Orders;
 };
 
 export type Orders = OrderItem[];

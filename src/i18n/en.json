@@ -406,7 +406,6 @@
             "short": "Down",
             "my-trades": "My Trades",
             "amm": "AMM",
-            "orderbook": "Order book",
             "trade-type": "Trade type"
         },
         "home": {
@@ -863,7 +862,6 @@
         },
         "market": {
             "header": {
-                "orderbook": "Order book",
                 "amm": "AMM"
             },
             "ranged-markets": {
@@ -924,7 +922,6 @@
                 "amm-widget": "AMM",
                 "trading-phase-widget": "Claim options",
                 "maturity-phase-widget": "Exercise options",
-                "orderbook-widget": "Order book",
                 "trade-widget": "Trade",
                 "chart-trading-view-widget": "Trading view",
                 "chart": "{{currencyKey}} chart",
@@ -1003,43 +1000,6 @@
                 "market-tab-title": "Market",
                 "limit-tab-title": "Limit",
                 "mint-tab-title": "Mint",
-                "orderbook": {
-                    "title": "Order book",
-                    "buy": {
-                        "no-results": "No buy orders found."
-                    },
-                    "sell": {
-                        "no-results": "No sell orders found."
-                    },
-                    "filter": {
-                        "my-orders": {
-                            "tooltip-connected": "Orders you’ve created. Connect a wallet to start.",
-                            "tooltip-not-connected": "Orders you’ve created. Click on the row to enter or cancel order.",
-                            "buy": {
-                                "no-results": "You haven't created any buy order yet."
-                            },
-                            "sell": {
-                                "no-results": "You haven't created any sell order yet."
-                            }
-                        },
-                        "tooltips": {
-                            "all": "View all orders. Click on the row to fill order.",
-                            "buy": "View buy orders. Click on the row to fill order.",
-                            "sell": "View sell orders. Click on the row to fill order."
-                        }
-                    },
-                    "table": {
-                        "type-col": "Type",
-                        "price-col": "PRICE ({{token}})",
-                        "amount-col": "AMOUNT ({{currencyKey}})",
-                        "filled-col": "FILLED (%)",
-                        "return-col": "RETURN",
-                        "return-col-tooltip": "Potential return if this option wins",
-                        "total-col": "TOTAL ({{token}})",
-                        "time-remaining-col": "TIME REMAINING",
-                        "cancel-col-tooltip": "Click to cancel your order"
-                    }
-                },
                 "place-order": {
                     "modal": {
                         "buy": {
@@ -1555,18 +1515,6 @@
                 "paid": "Paid",
                 "expired": "Expired",
                 "expires": "Expires @"
-            }
-        },
-        "order-book": {
-            "trade-up": "Trade Up Positions",
-            "trade-down": "Trade Down Positions",
-            "select-to": "Select to {{type}}",
-            "amount-to": "Amount to {{type}}",
-            "filters": {
-                "all": "All",
-                "buy-orders": "Buy orders",
-                "sell-orders": "Sell orders",
-                "my-orders": "My orders"
             }
         }
     },

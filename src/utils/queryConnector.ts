@@ -44,10 +44,6 @@ export const refetchRangeMarketQueries = (
     }
 };
 
-export const refetchOrderbook = (optionsTokenAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress));
-};
-
 export const refetchTrades = (marketAddress: string) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Trades(marketAddress));
 };

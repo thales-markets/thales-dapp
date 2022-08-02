@@ -48,7 +48,6 @@ import { COLORS } from 'constants/ui';
 import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
-import { refetchOrderbook } from 'utils/queryConnector';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
 import { OptionsMarketInfo } from 'types/options';
@@ -436,7 +435,6 @@ export const CreateMarket: React.FC = () => {
                     takerAmount,
                     expiry
                 );
-                refetchOrderbook(makerToken);
                 isLong ? setIsLongSubmitted(true) : setIsShortSubmitted(true);
                 if ((isLong && !sellShort) || !isLong) {
                     navigateToOptionsMarket(market);

@@ -87,7 +87,6 @@ export const QUERY_KEYS = {
             networkId,
         ],
         OptionPrices: (marketAddress: string) => ['binaryOptions', marketAddress],
-        MarketOrderBook: (optionsTokenAddress: string) => ['binaryOptions', 'marketOrderBook', optionsTokenAddress],
         AllTrades: (networkId: NetworkId) => ['binaryOptions', 'allTrades', networkId],
         Trades: (marketAddress: string) => ['binaryOptions', 'trades', marketAddress],
         UserTrades: (marketAddress: string, walletAddress: string) => [

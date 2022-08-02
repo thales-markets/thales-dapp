@@ -301,7 +301,6 @@
             "short": "空头",
             "my-trades": "我的交易",
             "amm": "AMM",
-            "orderbook": "订单簿",
             "trade-type": "交易类型",
             "search-placeholder-for-mining": "试试地址",
             "search-placeholder-for-reporting": "尝试市场",
@@ -801,7 +800,6 @@
             "widgets": {
                 "trading-phase-widget": "领取选项",
                 "maturity-phase-widget": "行权选项",
-                "orderbook-widget": "订单簿",
                 "trade-widget": "交易",
                 "chart-trading-view-widget": "交易视图",
                 "chart-options-price-widget": "选项价格",
@@ -881,43 +879,6 @@
                 "market-tab-title": "市场",
                 "limit-tab-title": "限额",
                 "mint-tab-title": "铸造",
-                "orderbook": {
-                    "title": "订单簿",
-                    "buy": {
-                        "no-results": "未找到购买订单。"
-                    },
-                    "sell": {
-                        "no-results": "未找到出售订单。"
-                    },
-                    "filter": {
-                        "my-orders": {
-                            "tooltip-connected": "您已创建的订单。连接钱包即可启动。",
-                            "tooltip-not-connected": "您已创建订单。单击该行可输入或取消订单。",
-                            "buy": {
-                                "no-results": "您尚未创建任何购买订单。"
-                            },
-                            "sell": {
-                                "no-results": "您尚未创建任何出售订单。"
-                            }
-                        },
-                        "tooltips": {
-                            "all": "查看所有订单。单击该行以填写订单",
-                            "buy": "查看购买订单。单击该行填写订单",
-                            "sell": "查看销售订单。单击该行以填写订单"
-                        }
-                    },
-                    "table": {
-                        "type-col": "类型",
-                        "price-col": "价格({{token}})",
-                        "amount-col": "金额（{{currencyKey}}）",
-                        "filled-col": "填充（%）",
-                        "return-col": "返回",
-                        "return-col-tooltip": "如果此选项获胜，则可能返回",
-                        "total-col": "总计({{token}})",
-                        "time-remaining-col": "剩余时间",
-                        "cancel-col-tooltip": "单击以取消订单"
-                    }
-                },
                 "place-order": {
                     "modal": {
                         "buy": {
@@ -1023,7 +984,6 @@
                 }
             },
             "header": {
-                "orderbook": "订单簿",
                 "amm": "AMM"
             },
             "your-activity": {
@@ -1453,18 +1413,6 @@
                 "amount": "数量",
                 "paid": "有薪酬的",
                 "expires": "过期@"
-            }
-        },
-        "order-book": {
-            "trade-down": "交易选项",
-            "trade-up": "以旧换新",
-            "amount-to": "金额为 {{type}}",
-            "select-to": "选择 {{type}}",
-            "filters": {
-                "all": "全部",
-                "my-orders": "我的订单",
-                "buy-orders": "购买订单",
-                "sell-orders": "卖单"
             }
         }
     },
