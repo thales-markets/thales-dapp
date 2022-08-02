@@ -16,7 +16,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getIsAppReady } from 'redux/modules/app';
-import { Tip66Link } from 'pages/Token/components';
+import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/components';
 import useStakingClaimOnBehalfQuery from 'queries/staking/useStakingClaimOnBehalfQuery';
 
 type MergeAccountModalProps = {
@@ -133,6 +133,12 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                     <Trans
                         i18nKey={`options.earn.claim-on-behalf.description`}
                         components={[<span key="1" />, <Tip66Link key="2" />]}
+                    />
+                </Description>
+                <Description>
+                    <Trans
+                        i18nKey={`options.earn.claim-on-behalf.guide`}
+                        components={[<span key="1" />, <ClaimOnBehalfGuideLink key="2" />]}
                     />
                 </Description>
                 <Label>{t('options.earn.claim-on-behalf.label')}:</Label>

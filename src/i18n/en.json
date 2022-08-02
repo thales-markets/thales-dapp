@@ -776,6 +776,7 @@
             "claim-on-behalf": {
                 "title": "Claim on behalf",
                 "description": "<0>Claim on behalf has been implemented per </0><1 />.",
+                "guide": "<1 /><0> on how to automate your weekly claims</0>.",
                 "label": "Enter account for which you want to enable/disable claim on your behalf",
                 "account-label": "Account",
                 "enable-message": "Enable claim on your behalf for this account?",

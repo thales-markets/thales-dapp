@@ -272,3 +272,11 @@ export const Tip66Link: React.FC = () => {
         </TooltipLink>
     );
 };
+
+export const ClaimOnBehalfGuideLink: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.ClaimOnBehalfGuide}>
+            Guide
+        </TooltipLink>
+    );
+};
