@@ -81,7 +81,7 @@ const BungeeWrapper = styled.div`
     box-sizing: border-box;
     position: absolute;
     width: 390px;
-    height: 450px;
+    height: 440px;
     margin: auto;
     position: relative;
     top: 100px;
