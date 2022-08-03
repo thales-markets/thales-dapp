@@ -87,7 +87,6 @@ export const QUERY_KEYS = {
             networkId,
         ],
         OptionPrices: (marketAddress: string) => ['binaryOptions', marketAddress],
-        MarketOrderBook: (optionsTokenAddress: string) => ['binaryOptions', 'marketOrderBook', optionsTokenAddress],
         AllTrades: (networkId: NetworkId) => ['binaryOptions', 'allTrades', networkId],
         Trades: (marketAddress: string) => ['binaryOptions', 'trades', marketAddress],
         UserTrades: (marketAddress: string, walletAddress: string) => [
@@ -131,6 +130,12 @@ export const QUERY_KEYS = {
     Staking: {
         Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],
         Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
+        ClaimOnBehalf: (walletAddress: string, networkId: NetworkId) => [
+            'staking',
+            'claimOnBehalf',
+            walletAddress,
+            networkId,
+        ],
     },
     Token: {
         Transactions: (walletAddress: string, networkId: NetworkId) => [

@@ -106,6 +106,10 @@
     content: '\0070';
 }
 
+.icon--overtime-markets:before {
+    content: '\0076';
+}
+
 .icon--referral-page:before {
     content: '\0073';
 }

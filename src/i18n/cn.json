@@ -168,7 +168,9 @@
             "max-limit-exceeded": "金额超过 AMM 上的可用金额",
             "user-rejected-tx": "用户拒绝交易",
             "insufficient-staking-balance": "质押余额不足",
-            "try-again": "再试一次。 AMM 数据已更改。"
+            "try-again": "再试一次。 AMM 数据已更改。",
+            "enter-address": "输入地址",
+            "invalid-address": "无效地址"
         },
         "search": "搜索",
         "buy": "买",
@@ -207,7 +209,8 @@
             "ranged-markets": "范围市场",
             "earn-label": "泰雷兹通证",
             "wizard": "入职向导",
-            "op-rewards": "OP 奖励"
+            "op-rewards": "OP 奖励",
+            "sport-markets-label": "加班市场"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -298,7 +301,6 @@
             "short": "空头",
             "my-trades": "我的交易",
             "amm": "AMM",
-            "orderbook": "订单簿",
             "trade-type": "交易类型",
             "search-placeholder-for-mining": "试试地址",
             "search-placeholder-for-reporting": "尝试市场",
@@ -374,7 +376,8 @@
                 "range-markets-tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买目前具有最高潜在利润的远程定位代币。"
             },
             "polygon-trading-competition-2": " 点击<bold>这里</bold>了解更多",
-            "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播"
+            "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播",
+            "op-rewards-banner-message": "OP 奖励已开始，请在<bold>OP 奖励页面</bold>查看如何获得奖励"
         },
         "earn": {
             "snx-stakers": {
@@ -595,7 +598,8 @@
                     "lpStake": "没有与此钱包相关的 LP 股权交易。",
                     "lpClaimStakingRewards": "没有 LP 质押奖励与此钱包相关的交易。",
                     "lpUnstake": "没有与此钱包相关的 LP 取消质押交易。",
-                    "claimMigratedRetroRewards": "没有与此钱包相关的迁移复古奖励交易。"
+                    "claimMigratedRetroRewards": "没有与此钱包相关的迁移复古奖励交易。",
+                    "mergeAccount": "没有与此钱包关联的合并账户交易。"
                 },
                 "types": {
                     "claimRetroAirdrop": "领取追溯空投",
@@ -611,7 +615,8 @@
                     "lpClaimStakingRewards": "领取 LP 质押奖励",
                     "claimMigratedRewards": "领取迁移奖励",
                     "lpStake": "LP股权",
-                    "claimMigratedRetroRewards": "领取迁移的复古奖励"
+                    "claimMigratedRetroRewards": "领取迁移的复古奖励",
+                    "mergeAccount": "合并账户"
                 },
                 "filter": {
                     "all": "全部",
@@ -628,7 +633,8 @@
                     "claimMigratedRewards": "迁移奖励",
                     "lpUnstake": "LP 解除质押",
                     "lpStake": "LP股权",
-                    "claimMigratedRetroRewards": "迁移的复古奖励"
+                    "claimMigratedRetroRewards": "迁移的复古奖励",
+                    "mergeAccount": "合并账户"
                 }
             },
             "overview": {
@@ -644,6 +650,47 @@
                 "total-supply-label": "总供应",
                 "celer-bridge": "赛勒桥",
                 "celer-bridge-tooltip": "链条之间的快速桥梁 THALES"
+            },
+            "merge-account": {
+                "merge-blocked-message": {
+                    "src-unstaking": "取消源账户的取款。",
+                    "title": "为了合并帐户，您需要",
+                    "dest-unstaking": "取消从目的地账户取款。",
+                    "src-claim": "索取源账户的质押奖励。",
+                    "dest-claim": "从目标账户领取 Staking 奖励。"
+                },
+                "merge-button": {
+                    "label": "合并账户",
+                    "progress-label": "正在合并..."
+                },
+                "title": "合并账户",
+                "description": "<0>帐户合并已按</0><1 />实施。",
+                "source-account-label": "来源账户",
+                "confirmation-message": "账号合并成功",
+                "info-message": "为了合并账户，您需要从两个账户中领取任何未完成的质押奖励并取消取消质押（如果有的话）。",
+                "merge-account-disabled-message": "帐户合并已禁用。",
+                "destination-account-label": "目的地帐户",
+                "warning-message": "合并后，所有质押和托管的 THALES 余额将转移到目标账户，并且无法从源账户访问。"
+            },
+            "claim-on-behalf": {
+                "enable-button": {
+                    "label": "使能够",
+                    "confirmation-message": "已成功为该帐户启用代偿",
+                    "progress-label": "正在启用..."
+                },
+                "disable-button": {
+                    "progress-label": "正在禁用...",
+                    "confirmation-message": "已成功为该帐户停用代销",
+                    "label": "禁用"
+                },
+                "title": "代为索赔",
+                "no-enabled-addresses-message": "未分配地址。",
+                "enable-message": "代表您为此帐户启用声明？",
+                "description": "<0>已按 </0><1 /> 实施代偿。",
+                "enabled-addresses-title": "可以代表您申领的帐户",
+                "disable-message": "此帐户已启用代表您的索赔。禁用？",
+                "label": "输入您要代表您启用/禁用声明的帐户",
+                "account-label": "帐户"
             }
         },
         "quiz": {
@@ -753,7 +800,6 @@
             "widgets": {
                 "trading-phase-widget": "领取选项",
                 "maturity-phase-widget": "行权选项",
-                "orderbook-widget": "订单簿",
                 "trade-widget": "交易",
                 "chart-trading-view-widget": "交易视图",
                 "chart-options-price-widget": "选项价格",
@@ -833,43 +879,6 @@
                 "market-tab-title": "市场",
                 "limit-tab-title": "限额",
                 "mint-tab-title": "铸造",
-                "orderbook": {
-                    "title": "订单簿",
-                    "buy": {
-                        "no-results": "未找到购买订单。"
-                    },
-                    "sell": {
-                        "no-results": "未找到出售订单。"
-                    },
-                    "filter": {
-                        "my-orders": {
-                            "tooltip-connected": "您已创建的订单。连接钱包即可启动。",
-                            "tooltip-not-connected": "您已创建订单。单击该行可输入或取消订单。",
-                            "buy": {
-                                "no-results": "您尚未创建任何购买订单。"
-                            },
-                            "sell": {
-                                "no-results": "您尚未创建任何出售订单。"
-                            }
-                        },
-                        "tooltips": {
-                            "all": "查看所有订单。单击该行以填写订单",
-                            "buy": "查看购买订单。单击该行填写订单",
-                            "sell": "查看销售订单。单击该行以填写订单"
-                        }
-                    },
-                    "table": {
-                        "type-col": "类型",
-                        "price-col": "价格({{token}})",
-                        "amount-col": "金额（{{currencyKey}}）",
-                        "filled-col": "填充（%）",
-                        "return-col": "返回",
-                        "return-col-tooltip": "如果此选项获胜，则可能返回",
-                        "total-col": "总计({{token}})",
-                        "time-remaining-col": "剩余时间",
-                        "cancel-col-tooltip": "单击以取消订单"
-                    }
-                },
                 "place-order": {
                     "modal": {
                         "buy": {
@@ -975,7 +984,6 @@
                 }
             },
             "header": {
-                "orderbook": "订单簿",
                 "amm": "AMM"
             },
             "your-activity": {
@@ -1405,18 +1413,6 @@
                 "amount": "数量",
                 "paid": "有薪酬的",
                 "expires": "过期@"
-            }
-        },
-        "order-book": {
-            "trade-down": "交易选项",
-            "trade-up": "以旧换新",
-            "amount-to": "金额为 {{type}}",
-            "select-to": "选择 {{type}}",
-            "filters": {
-                "all": "全部",
-                "my-orders": "我的订单",
-                "buy-orders": "购买订单",
-                "sell-orders": "卖单"
             }
         }
     },
@@ -1850,6 +1846,13 @@
         "title": "OP 奖励",
         "description-2": "分配为交易奖励的代币总量：<bold> 200,000 欧普 + 350,000 泰雷兹</bold><br/><br/>",
         "description": "<bold>交易激励计划</bold>分为单独的 14 天轮次。在每一轮之后，固定数量的 OP 代币 + THALES 代币将按比例分配给整个泰雷兹市场的所有购买量驱动程序。<br/><br/>",
-        "description-3": "每 14 天轮次的奖励分配如下：<br/> - 11,000 OP + 20,000 THALES 分配给 UP 代币买家<br/>- 11,000 OP + 20,000 THALES 分配给 DOWN 代币买家<br/>- 6,000 OP + 10,000 THALES 分配给 Ranged Markets IN/OUT 代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外的奖金奖励，根据<tipLink>"
+        "description-3": "每 14 天轮次的奖励分配如下：<br/> - 11,000 OP + 20,000 THALES 分配给 UP 代币买家<br/>- 11,000 OP + 20,000 THALES 分配给 DOWN 代币买家<br/>- 6,000 OP + 10,000 THALES 分配给 Ranged Markets IN/OUT 代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外的奖金奖励，根据<tipLink>",
+        "description-4": "<br/><br/>您可以找到有关如何参与的所有详细信息<guidelinesLink>.",
+        "round-ended-label": "回合结束",
+        "ranged-volume-label": "远程音量",
+        "round-end-label": "回合结束于",
+        "up-volume-label": "提高音量",
+        "down-volume-label": "降低音量",
+        "volume-tooltip": "目前的奖励：\n 每 1,000 美元的购买量 {{op}} + {{thales}}"
     }
 }

@@ -36,9 +36,10 @@ const MergeAccountModal: React.FC = () => {
 
     const isDestAddressEntered = destAddress !== undefined && destAddress.trim() !== '';
     const isDestAddressValid =
+        !isWalletConnected ||
         destAddress === undefined ||
         destAddress.trim() === '' ||
-        (isAddress(destAddress) && getAddress(walletAddress) !== getAddress(destAddress));
+        (isAddress(walletAddress) && isAddress(destAddress) && getAddress(walletAddress) !== getAddress(destAddress));
 
     const srcStakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -175,7 +176,7 @@ const MergeAccountModal: React.FC = () => {
                         <TextInput
                             value={destAddress}
                             onChange={(e: any) => setDestAddress(e.target.value)}
-                            disabled={isMerging || !isAccountMergingEnabled}
+                            disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
                             className={isDestAddressValid ? '' : 'error'}
                             autoFocus={true}
                         />

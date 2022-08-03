@@ -37,7 +37,7 @@ import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
 import SearchField from 'components/TableInputs/SearchField';
 import PhaseComponent from 'components/Phase/Phase';
 import { sortCurrencies } from 'utils/currency';
-import { get } from 'utils/localStore';
+import { get, set } from 'utils/localStore';
 import { mapGridToTableSort, mapTableToGridSort, TableColumnSort } from 'utils/table';
 import { saveTableSort } from 'utils/table';
 
@@ -48,6 +48,7 @@ type RangeMarketsTableProps = {
 };
 
 const FILTERS_LENGTH = 6;
+const DEFAULT_PAGE_SIZE = 20;
 let scrolling: NodeJS.Timeout;
 const cookies = new Cookies();
 
@@ -334,16 +335,17 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         const allAssets = new Set(Array.from(set).sort(sortCurrencies));
         setAllAssets(allAssets);
 
-        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedRangedAssets' + networkId) || '[]');
+        const selectedAssetsLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_SELECTED_ASSETS + networkId;
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem(selectedAssetsLocalStorageKey) || '[]');
         if (!selectedAssetsLocalStorage.length || allAssets.size > 0) {
             const chosenAssets: string[] = cookies.get('chosenAssetRanged' + networkId) || [];
 
-            if (selectedAssetsLocalStorage.length) {
+            if (selectedAssetsLocalStorage.length && allAssets.size) {
                 const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
                     (asset: string) =>
                         allAssets.has(asset) || (chosenAssets.length ? chosenAssets.includes(asset) : false)
                 );
-                localStorage.setItem('selectedRangedAssets' + networkId, JSON.stringify(newSelectedAssets));
+                localStorage.setItem(selectedAssetsLocalStorageKey, JSON.stringify(newSelectedAssets));
                 setSelectedAssets(newSelectedAssets);
             } else {
                 setSelectedAssets([...(allAssets as any)].slice(0, FILTERS_LENGTH));
@@ -434,9 +436,12 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         gotoPage(newPage);
     };
 
+    const pageSizeLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_PAGE_SIZE + networkId;
     const handleChangeRowsPerPage = (event: any) => {
-        setPageSize(parseInt(event.target.value, 10));
+        const userPageSize = parseInt(event.target.value, 10);
+        setPageSize(userPageSize);
         gotoPage(0);
+        set(pageSizeLocalStorageKey, userPageSize);
     };
 
     useEffect(() => {
@@ -444,7 +449,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     }, [globalFilter, showOnlyLiquid, assetFilters]);
 
     useEffect(() => {
-        setPageSize(20);
+        const userPageSize: number | undefined = get(pageSizeLocalStorageKey);
+        setPageSize(userPageSize ? userPageSize : DEFAULT_PAGE_SIZE);
     }, []);
 
     const filters = useMemo(() => {
@@ -470,7 +476,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     return (
         <>
             <Wrapper>
-                <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
+                <FiltersButton onClick={() => setShowSorting(true)}>Sort</FiltersButton>
                 <FilterContainer>
                     <ArrowIcon
                         visible={selectedAssets.length > FILTERS_LENGTH}
@@ -488,7 +494,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                         }}
                         className={'icon icon--left'}
                     />
-                    <Filters length={selectedAssets.length} id="asset-filters">
+                    <Filters length={allAssets.size} id="asset-filters">
                         {selectedAssets.length > 0 &&
                             selectedAssets.map((value: string, index: number) => {
                                 return (
@@ -538,7 +544,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                             {assetsDropdownOpen && (
                                 <AssetsDropdown
                                     assets={[...(allAssets as any)]}
-                                    cookieKey={'selectedRangedAssets'}
+                                    cookieKey={LOCAL_STORAGE_KEYS.RANGED_MARKET_SELECTED_ASSETS}
                                     selectedAssets={selectedAssets}
                                     setSelectedAssets={safeSetSelectedAssets}
                                 />
@@ -765,7 +771,8 @@ const FilterContainer = styled.div`
 `;
 
 const Filters = styled.div<{ length: number }>`
-    width: ${FILTERS_LENGTH * ((isMobile() ? 26 : 40) + 5)}px;
+    width: ${(_props) =>
+        (_props.length < FILTERS_LENGTH ? _props.length : FILTERS_LENGTH) * ((isMobile() ? 26 : 40) + 5)}px;
     overflow: hidden;
     display: flex;
     height: 60px;

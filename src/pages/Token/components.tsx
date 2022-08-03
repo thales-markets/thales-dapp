@@ -264,3 +264,19 @@ export const Tip49Link: React.FC = () => {
         </TooltipLink>
     );
 };
+
+export const Tip66Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP66}>
+            TIP-66
+        </TooltipLink>
+    );
+};
+
+export const ClaimOnBehalfGuideLink: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.ClaimOnBehalfGuide}>
+            Guide
+        </TooltipLink>
+    );
+};

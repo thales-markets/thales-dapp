@@ -15,7 +15,7 @@ import { sortCurrencies } from 'utils/currency';
 import { useTranslation } from 'react-i18next';
 import SortingMenu from 'components/SortingMenu';
 
-import { get } from 'utils/localStore';
+import { get, set } from 'utils/localStore';
 import { mapGridToTableSort, mapTableToGridSort, TableColumnSort } from 'utils/table';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import { NetworkId } from 'utils/network';
@@ -197,6 +197,21 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({
         localStorage.setItem(tableSortLocalStorageKey, JSON.stringify(tableSortFormat));
     };
 
+    const pageSizeLocalStorageKey = LOCAL_STORAGE_KEYS.MARKET_GRID_PAGE_SIZE + networkId;
+    const handleChangeRowsPerPage = (event: any) => {
+        const userPageSize = parseInt(event.target.value, 10);
+        setRowsPerPage(userPageSize);
+        setPageIndex(0);
+        set(pageSizeLocalStorageKey, userPageSize);
+    };
+
+    useEffect(() => {
+        const userPageSize: number | undefined = get(pageSizeLocalStorageKey);
+        if (userPageSize) {
+            setRowsPerPage(userPageSize);
+        }
+    }, []);
+
     return (
         <>
             <ButtonWrapper>
@@ -224,7 +239,7 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({
                     rowsPerPage={rowsPerPage}
                     page={pageIndex}
                     onPageChange={(_event: any, newPage: number) => setPageIndex(newPage)}
-                    onRowsPerPageChange={(event: any) => setRowsPerPage(parseInt(event.target.value, 10))}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Wrapper>
         </>
