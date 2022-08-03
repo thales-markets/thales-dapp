@@ -258,13 +258,11 @@ const App = () => {
                             </Route>
                         )}
 
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.Referral}>
-                                <DappLayout>
-                                    <Referral />
-                                </DappLayout>
-                            </Route>
-                        )}
+                        <Route exact path={ROUTES.Options.Referral}>
+                            <DappLayout>
+                                <Referral />
+                            </DappLayout>
+                        </Route>
 
                         {!isPolygon && (
                             <Route exact path={ROUTES.Options.OPRewards}>
