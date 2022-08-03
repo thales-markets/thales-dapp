@@ -24,7 +24,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import SPAAnchor from 'components/SPAAnchor';
 import { XButton } from 'theme/common';
 import { WizardSteps } from '../Wizard';
-import BungeeWidget from './BungeeWidget';
+import BungeeWidget from 'components/BungeeWidget';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -36,7 +36,7 @@ enum NavItems {
 enum Provider {
     BANXA = 'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY&coinType=ETH&fiatType=EUR&blockchain=OPTIMISM',
     MT_PELERIN = 'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg',
-    BUNGEE = 'https://multitx.bungee.exchange/',
+    BUNGEE = '',
     LAYER_SWAP = 'https://www.layerswap.io/?destNetwork=optimism_mainnet&lockNetwork=true&sourceExchangeName=binance&asset=usdc',
 }
 
@@ -562,7 +562,6 @@ const IconWrapper = styled.div<{ clickable: boolean; active: boolean; pulseDelay
 `;
 
 const Image = styled.img<{ clickable: boolean }>`
-    // display: initial;
     width: 84px;
     height: 84px;
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
