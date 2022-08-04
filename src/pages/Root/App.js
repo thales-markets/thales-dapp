@@ -21,6 +21,7 @@ import Cookies from 'universal-cookie';
 import { ethers } from 'ethers';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
