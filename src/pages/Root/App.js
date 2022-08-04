@@ -83,7 +83,7 @@ const App = () => {
     useEffect(() => {
         const provider = loadProvider({
             infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-            provider: isLedgerDappBrowserProvider ? new IFrameEthereumProvider() : window.ethereum,
+            provider: isLedgerDappBrowserProvider() ? new IFrameEthereumProvider() : window.ethereum,
             networkId,
         });
 
