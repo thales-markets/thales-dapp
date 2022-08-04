@@ -100,14 +100,14 @@ const App = () => {
                         dispatch(setAppReady());
                     });
                 } else {
-                    snxJSConnector.setContractSettings({ networkId: providerNetworkId, provider, useOvm });
+                    snxJSConnector.setContractSettings({ ...snxJSConnector, networkId: providerNetworkId, provider });
                 }
             } catch (e) {
                 dispatch(setAppReady());
                 console.log(e);
             }
         };
-        init().then(() => console.log('rdy'));
+        init();
 
         const handler = (e) => {
             setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
