@@ -20,6 +20,7 @@ import ROUTES from 'constants/routes';
 import Cookies from 'universal-cookie';
 import { ethers } from 'ethers';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -81,7 +82,7 @@ const App = () => {
     useEffect(() => {
         const provider = loadProvider({
             infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-            provider: window.ethereum,
+            provider: isLedgerDappBrowserProvider ? new IFrameEthereumProvider() : window.ethereum,
             networkId,
         });
 
