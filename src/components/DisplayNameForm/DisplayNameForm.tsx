@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import Web3 from 'web3';
 import axios from 'axios';
 
 import { FlexDiv, UserCardSectionHeader } from 'theme/common';
@@ -12,17 +11,10 @@ import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const DISPLAY_NAME_REGEX = /^[a-zA-Z0-9 ]+$/;
 const AVATAR_LINK_REGEX = /^(.*?)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF|webp)$/;
-
-const ethEnabled = () => {
-    if (window.ethereum) {
-        window.web3 = new Web3(Web3.givenProvider) as any;
-        return true;
-    }
-    return false;
-};
 
 const DisplayNameForm: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -52,25 +44,16 @@ const DisplayNameForm: React.FC = () => {
     }, [displayName, avatar]);
 
     const dispatchDisplayName = async (walletAddress: string, avatar: string, name: string) => {
-        if (window.ethereum) {
-            window.web3 = new Web3(Web3.givenProvider) as any;
-
-            if (!ethEnabled()) {
-                alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
-            }
-
-            (window.web3?.eth as any).personal.sign(name, walletAddress, async (_test: any, signature: any) => {
-                try {
-                    await axios.post('https://api.thales.market/royale-user-data', {
-                        walletAddress,
-                        name,
-                        avatar,
-                        signature,
-                    });
-                } catch (e) {
-                    console.log(e);
-                }
+        const signature = await (snxJSConnector as any).signer.signMessage(name);
+        try {
+            await axios.post('https://api.thales.market/royale-user-data', {
+                walletAddress,
+                name,
+                avatar,
+                signature,
             });
+        } catch (e) {
+            console.log(e);
         }
     };
 
