@@ -43,6 +43,7 @@ import {
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { OneInchLiquidityProtocol } from 'constants/network';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const { t } = useTranslation();
@@ -53,8 +54,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const [preLoadTokens, setPreLoadTokens] = useState([] as any);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
-    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-    const signer = provider.getSigner();
+    const signer = (snxJSConnector as any).signer;
     const [fromToken, _setFromToken] = useState(isL2 ? OP_Eth : isPolygon ? POLYGON_MATIC : ETH_Eth);
 
     const toTokenInitialState = mapTokenByNetwork(

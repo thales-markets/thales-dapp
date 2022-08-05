@@ -81,9 +81,16 @@ const App = () => {
     const cookies = new Cookies();
 
     useEffect(() => {
+        let ledgerProvider = null;
+        const isLedgerLive = isLedgerDappBrowserProvider();
+
+        if (isLedgerLive) {
+            ledgerProvider = new IFrameEthereumProvider();
+        }
+
         const provider = loadProvider({
             infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-            provider: isLedgerDappBrowserProvider() ? new IFrameEthereumProvider() : window.ethereum,
+            provider: isLedgerDappBrowserProvider() ? ledgerProvider : window.ethereum,
             networkId,
         });
 
@@ -92,12 +99,32 @@ const App = () => {
                 const providerNetworkId = (await provider.getNetwork()).chainId;
                 const name = SUPPORTED_NETWORKS_NAMES[providerNetworkId];
 
+                let account = '';
+                if (isLedgerLive) {
+                    const accounts = await ledgerProvider.enable();
+                    account = accounts[0];
+                    ledgerProvider.on('accountsChanged', (accounts) => {
+                        if (accounts.length > 0) {
+                            dispatch(updateWallet({ walletAddress: accounts[0] }));
+                        }
+                    });
+                }
+
                 dispatch(updateNetworkSettings({ networkId: providerNetworkId, networkName: name?.toLowerCase() }));
 
                 const useOvm = getIsOVM(providerNetworkId);
                 if (!snxJSConnector) {
                     import(/* webpackChunkName: "snxJSConnector" */ 'utils/snxJSConnector').then((snx) => {
-                        snx.default.setContractSettings({ networkId: providerNetworkId, provider, useOvm });
+                        if (isLedgerLive) {
+                            snx.default.setContractSettings({
+                                networkId: providerNetworkId,
+                                provider,
+                                signer: provider.getSigner(),
+                            });
+                            dispatch(updateWallet({ walletAddress: account }));
+                        } else {
+                            snx.default.setContractSettings({ networkId: providerNetworkId, provider, useOvm });
+                        }
                         setSnxJSConnector(snx.default);
                         dispatch(setAppReady());
                     });
@@ -245,7 +272,7 @@ const App = () => {
                                 <TaleOfThales />
                             </DappLayout>
                         </Route>
-                        {selectedWallet && (
+                        {walletAddress && (
                             <Route exact path={ROUTES.Options.Profile}>
                                 <DappLayout>
                                     <Profile />
