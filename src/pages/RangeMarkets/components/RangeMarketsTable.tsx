@@ -27,7 +27,6 @@ import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { UI_COLORS } from 'constants/ui';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import GridViewRangedMarkets from './GridViewRangedMarkets';
-import Cookies from 'universal-cookie';
 import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.svg';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { isMobile } from 'utils/device';
@@ -37,7 +36,7 @@ import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
 import SearchField from 'components/TableInputs/SearchField';
 import PhaseComponent from 'components/Phase/Phase';
 import { sortCurrencies } from 'utils/currency';
-import { get } from 'utils/localStore';
+import { get, set } from 'utils/localStore';
 import { mapGridToTableSort, mapTableToGridSort, TableColumnSort } from 'utils/table';
 import { saveTableSort } from 'utils/table';
 
@@ -48,8 +47,8 @@ type RangeMarketsTableProps = {
 };
 
 const FILTERS_LENGTH = 6;
+const DEFAULT_PAGE_SIZE = 20;
 let scrolling: NodeJS.Timeout;
-const cookies = new Cookies();
 
 const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -90,9 +89,13 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         },
     ];
 
-    const showOnlyLiquidFromCookie = cookies.get('showOnlyLiquidRanged' + networkId);
-    const tableViewFromCookie = cookies.get('showTableViewRanged' + networkId);
-    const chosenAsset = cookies.get('chosenAssetRanged' + networkId);
+    const showOnlyLiquidFromLocalStorage = localStorage.getItem(
+        LOCAL_STORAGE_KEYS.RANGED_MARKET_SHOW_ONLY_LIQUID + networkId
+    );
+    const tableViewFromLocalStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_VIEW + networkId);
+    const chosenAsset = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_KEYS.RANGED_MARKET_CHOSEN_ASSET + networkId) || '[]'
+    );
 
     const isWideDesktop = window.innerWidth > 1250;
 
@@ -101,17 +104,21 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     const [sortOptions, setSortOptions] = useState(GridSortFilters);
     const [tableView, setTableView] = useState<boolean>(
         isWideDesktop
-            ? tableViewFromCookie !== undefined
-                ? tableViewFromCookie === 'false'
+            ? tableViewFromLocalStorage !== undefined
+                ? tableViewFromLocalStorage === 'false'
                     ? false
                     : true
                 : isWideDesktop
             : isWideDesktop
     );
     const [showSorting, setShowSorting] = useState<boolean>(window.innerWidth > 768);
-    const [assetFilters, setAssetFilters] = useState<string[]>(chosenAsset ? chosenAsset : []);
+    const [assetFilters, setAssetFilters] = useState<string[]>(chosenAsset);
     const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(
-        showOnlyLiquidFromCookie !== undefined ? (showOnlyLiquidFromCookie === 'false' ? false : true) : true
+        showOnlyLiquidFromLocalStorage !== undefined
+            ? showOnlyLiquidFromLocalStorage === 'false'
+                ? false
+                : true
+            : true
     );
     const [assetsDropdownOpen, setAssetsDropdownOpen] = useState<boolean>(false);
 
@@ -128,6 +135,37 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         },
         [setSelectedAssets, setAssetFilters, assetFilters]
     );
+
+    useEffect(() => {
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem(selectedAssetsLocalStorageKey) || '[]');
+        if (!selectedAssetsLocalStorage.length) {
+            setSelectedAssets([...(allAssets as any)].slice(0, FILTERS_LENGTH));
+        }
+    }, [allAssets]);
+
+    useEffect(() => {
+        setTableView(
+            isWideDesktop
+                ? tableViewFromLocalStorage !== undefined
+                    ? tableViewFromLocalStorage === 'false'
+                        ? false
+                        : true
+                    : isWideDesktop
+                : isWideDesktop
+        );
+        setOnlyLiquid(
+            showOnlyLiquidFromLocalStorage !== undefined
+                ? showOnlyLiquidFromLocalStorage === 'false'
+                    ? false
+                    : true
+                : true
+        );
+
+        const chosenAssetsLocalStorage = JSON.parse(
+            localStorage.getItem(LOCAL_STORAGE_KEYS.RANGED_MARKET_CHOSEN_ASSET + networkId) || '[]'
+        );
+        chosenAssetsLocalStorage.length ? setAssetFilters(chosenAssetsLocalStorage) : setAssetFilters([]);
+    }, [networkId]);
 
     const tableSortLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_SORTED_COLUMNS + networkId;
     const tableSortLocalStorageValue: TableColumnSort[] = get(tableSortLocalStorageKey) as [];
@@ -298,6 +336,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         ];
     }, [optionsMarkets]);
 
+    const selectedAssetsLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_SELECTED_ASSETS + networkId;
+
     const data = useMemo(() => {
         const set: Set<string> = new Set();
         const processedMarkets = optionsMarkets
@@ -332,45 +372,60 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
             });
 
         const allAssets = new Set(Array.from(set).sort(sortCurrencies));
-        setAllAssets(allAssets);
+        setAllAssets((prevAllAssets: Set<string>) => {
+            if (prevAllAssets.size) {
+                if (
+                    prevAllAssets.size !== allAssets.size ||
+                    !Array.from(prevAllAssets).every((element) => allAssets.has(element))
+                ) {
+                    return allAssets;
+                }
+            } else {
+                return allAssets;
+            }
+            return prevAllAssets;
+        });
 
-        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem('selectedRangedAssets' + networkId) || '[]');
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem(selectedAssetsLocalStorageKey) || '[]');
         if (!selectedAssetsLocalStorage.length || allAssets.size > 0) {
-            const chosenAssets: string[] = cookies.get('chosenAssetRanged' + networkId) || [];
+            const chosenAssetsLocalStorage = JSON.parse(
+                localStorage.getItem(LOCAL_STORAGE_KEYS.RANGED_MARKET_CHOSEN_ASSET + networkId) || '[]'
+            );
 
-            if (selectedAssetsLocalStorage.length) {
+            if (selectedAssetsLocalStorage.length && allAssets.size) {
                 const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
                     (asset: string) =>
-                        allAssets.has(asset) || (chosenAssets.length ? chosenAssets.includes(asset) : false)
+                        allAssets.has(asset) ||
+                        (chosenAssetsLocalStorage.length ? chosenAssetsLocalStorage.includes(asset) : false)
                 );
-                localStorage.setItem('selectedRangedAssets' + networkId, JSON.stringify(newSelectedAssets));
+                localStorage.setItem(selectedAssetsLocalStorageKey, JSON.stringify(newSelectedAssets));
                 setSelectedAssets(newSelectedAssets);
-            } else {
-                setSelectedAssets([...(allAssets as any)].slice(0, FILTERS_LENGTH));
             }
         }
 
         return processedMarkets;
     }, [optionsMarkets, showOnlyLiquid, assetFilters]);
 
-    // Get/Set asset and other filters in/from cookie
     useEffect(() => {
         if (assetFilters !== chosenAsset) {
-            cookies.set('chosenAssetRanged' + networkId, assetFilters?.length ? assetFilters : '', {
-                path: '/',
-            });
+            localStorage.setItem(
+                LOCAL_STORAGE_KEYS.RANGED_MARKET_CHOSEN_ASSET + networkId,
+                JSON.stringify(assetFilters?.length ? assetFilters : [])
+            );
         }
 
-        if (showOnlyLiquidFromCookie !== showOnlyLiquid || showOnlyLiquidFromCookie == undefined) {
-            cookies.set('showOnlyLiquidRanged' + networkId, showOnlyLiquid, {
-                path: '/',
-            });
+        if (
+            showOnlyLiquidFromLocalStorage == undefined ||
+            showOnlyLiquidFromLocalStorage !== showOnlyLiquid.toString()
+        ) {
+            localStorage.setItem(
+                LOCAL_STORAGE_KEYS.RANGED_MARKET_SHOW_ONLY_LIQUID + networkId,
+                JSON.stringify(showOnlyLiquid)
+            );
         }
 
-        if (tableViewFromCookie !== tableView || tableViewFromCookie == undefined) {
-            cookies.set('showTableViewRanged' + networkId, tableView, {
-                path: '/',
-            });
+        if (tableViewFromLocalStorage == undefined || tableViewFromLocalStorage !== tableView.toString()) {
+            localStorage.setItem(LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_VIEW + networkId, JSON.stringify(tableView));
         }
     }, [assetFilters, showOnlyLiquid, tableView]);
 
@@ -434,9 +489,12 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
         gotoPage(newPage);
     };
 
+    const pageSizeLocalStorageKey = LOCAL_STORAGE_KEYS.RANGED_MARKET_TABLE_PAGE_SIZE + networkId;
     const handleChangeRowsPerPage = (event: any) => {
-        setPageSize(parseInt(event.target.value, 10));
+        const userPageSize = parseInt(event.target.value, 10);
+        setPageSize(userPageSize);
         gotoPage(0);
+        set(pageSizeLocalStorageKey, userPageSize);
     };
 
     useEffect(() => {
@@ -444,7 +502,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     }, [globalFilter, showOnlyLiquid, assetFilters]);
 
     useEffect(() => {
-        setPageSize(20);
+        const userPageSize: number | undefined = get(pageSizeLocalStorageKey);
+        setPageSize(userPageSize ? userPageSize : DEFAULT_PAGE_SIZE);
     }, []);
 
     const filters = useMemo(() => {
@@ -470,7 +529,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
     return (
         <>
             <Wrapper>
-                <FiltersButton onClick={() => setShowSorting(true)}>Filters</FiltersButton>
+                <FiltersButton onClick={() => setShowSorting(true)}>Sort</FiltersButton>
                 <FilterContainer>
                     <ArrowIcon
                         visible={selectedAssets.length > FILTERS_LENGTH}
@@ -488,7 +547,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                         }}
                         className={'icon icon--left'}
                     />
-                    <Filters length={selectedAssets.length} id="asset-filters">
+                    <Filters length={allAssets.size} id="asset-filters">
                         {selectedAssets.length > 0 &&
                             selectedAssets.map((value: string, index: number) => {
                                 return (
@@ -538,7 +597,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                             {assetsDropdownOpen && (
                                 <AssetsDropdown
                                     assets={[...(allAssets as any)]}
-                                    cookieKey={'selectedRangedAssets'}
+                                    localStorageKey={LOCAL_STORAGE_KEYS.RANGED_MARKET_SELECTED_ASSETS}
                                     selectedAssets={selectedAssets}
                                     setSelectedAssets={safeSetSelectedAssets}
                                 />
@@ -765,7 +824,8 @@ const FilterContainer = styled.div`
 `;
 
 const Filters = styled.div<{ length: number }>`
-    width: ${FILTERS_LENGTH * ((isMobile() ? 26 : 40) + 5)}px;
+    width: ${(_props) =>
+        (_props.length < FILTERS_LENGTH ? _props.length : FILTERS_LENGTH) * ((isMobile() ? 26 : 40) + 5)}px;
     overflow: hidden;
     display: flex;
     height: 60px;

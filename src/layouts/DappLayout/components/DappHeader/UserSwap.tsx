@@ -47,10 +47,14 @@ export const UserSwap: React.FC = () => {
         userData.push({ type: SYNTHS_MAP.sUSD as StableCoins, balance: sUSDBalance });
     }
     userData.push(
-        { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance }, // default for Polygon
-        { type: CRYPTO_CURRENCY_MAP.DAI as StableCoins, balance: DAIBalance },
-        { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance }
+        { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance } // default for Polygon
     );
+    if (!isPolygon) {
+        userData.push(
+            { type: CRYPTO_CURRENCY_MAP.DAI as StableCoins, balance: DAIBalance },
+            { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance }
+        );
+    }
 
     const sortedUserData = _.orderBy(userData, 'balance', 'desc');
     const maxBalance = sortedUserData[0];
@@ -63,8 +67,12 @@ export const UserSwap: React.FC = () => {
 
     const mouseOverHandler = () => {
         if (isWalletConnected) {
-            setButtonText(t('options.swap.button-text', { token: 'Stablecoin' }));
-            setShowBalance(true);
+            setButtonText(
+                t('options.swap.button-text', { token: isPolygon ? CRYPTO_CURRENCY_MAP.USDC : 'Stablecoin' })
+            );
+            if (!isPolygon) {
+                setShowBalance(true);
+            }
         }
     };
 

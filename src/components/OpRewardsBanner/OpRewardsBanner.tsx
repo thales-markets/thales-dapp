@@ -6,13 +6,20 @@ import { FlexDiv } from 'theme/common';
 import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';
+import { getIsPolygon } from 'utils/network';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
+import { useSelector } from 'react-redux';
 
 type OpRewardsBannerProps = {
     width?: number;
 };
 
 const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ width }) => {
-    return (
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isPolygon = getIsPolygon(networkId);
+
+    return isPolygon ? null : (
         <BannerContainer width={width}>
             <InfoBanner>
                 <Trans

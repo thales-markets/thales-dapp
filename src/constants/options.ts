@@ -108,11 +108,6 @@ export const ORDER_PERIOD_ITEMS_MAP: OrderPeriodItem[] = [
     },
 ];
 
-export enum OrderbookFilterEnum {
-    ALL = 'all',
-    BUY = 'buy',
-    SELL = 'sell',
-}
 export enum OneInchErrorReason {
     INSUFFICIENT_LIQUIDITY = 'insufficient liquidity',
     TRANSACTION_INVALID = 105,
@@ -123,8 +118,6 @@ export enum Zero0xErrorReason {
     MAKER_WALLET_INSUFFICIENT_BALANCE = 'WalletExecuteDelegateCallFailedError',
     TAKER_WALLET_INSUFFICIENT_BALANCE = 'SpenderERC20TransferFromFailedError',
 }
-
-export const ORDERBOOK_AMOUNT_THRESHOLD = 0.01;
 
 export const MINIMUM_AMM_LIQUIDITY = 2;
 export const MAX_L2_GAS_LIMIT = 15000000;

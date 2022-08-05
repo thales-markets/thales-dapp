@@ -68,7 +68,6 @@ const defaultMarketWidgetVisibility: Record<MarketWidgetKey, boolean> = {
     [MarketWidgetKey.AMM]: true,
     [MarketWidgetKey.MATURITY_PHASE]: true,
     [MarketWidgetKey.TRADE]: true,
-    [MarketWidgetKey.ORDERBOOK]: true,
     [MarketWidgetKey.CHART_TRADING_VIEW]: true,
     [MarketWidgetKey.CUSTOM_MARKET_RESULTS]: true,
     [MarketWidgetKey.CHART_OPTIONS_PRICE]: true,

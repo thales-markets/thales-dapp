@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Orderbook from '../OrderbookView/components/Orderbook';
 import OptionPriceTab from '../Tabs/OptionPriceTab';
 import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
@@ -12,19 +11,15 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import SimilarMarkets from '../Tabs/SimilarMarkets';
 import RowCard from '../RowCard';
 
-import { MarketType, OptionSide } from 'types/options';
+import { MarketType } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { MARKET_TYPE } from 'constants/options';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-type TabContainerProps = {
-    optionSide?: OptionSide;
-};
-
-const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
+const TabContainer: React.FC = () => {
     const marketInfo = useMarketContext();
-    const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
+    const [currentTab, setCurrentTab] = useState<number>(1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
     const { trackEvent } = useMatomo();
@@ -39,14 +34,6 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const { t } = useTranslation();
 
     const tabItems = [
-        ...(optionSide && !inMaturity
-            ? [
-                  {
-                      title: t('options.market.widgets.orderbook-widget'),
-                      index: 0,
-                  },
-              ]
-            : []),
         ...(!inMaturity
             ? [
                   {
@@ -142,7 +129,6 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
                         })}
                 </Container.Main>
                 <Container.Tab>
-                    {currentTab == 0 && (optionSide ? <Orderbook optionSide={optionSide} /> : <></>)}
                     {currentTab == 1 && <TradingView />}
                     {currentTab == 2 && <OptionPriceTab marketType={MARKET_TYPE[0] as MarketType} />}
                     {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[0] as MarketType} />}

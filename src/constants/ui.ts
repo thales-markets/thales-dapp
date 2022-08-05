@@ -3,7 +3,6 @@ import { ToastPosition, TypeOptions } from 'react-toastify';
 
 export enum MarketWidgetKey {
     MATURITY_PHASE = 'maturity-phase-widget',
-    ORDERBOOK = 'orderbook-widget',
     AMM = 'amm-widget',
     TRADE = 'trade-widget',
     CHART_TRADING_VIEW = 'chart-trading-view-widget',
@@ -15,7 +14,6 @@ export enum MarketWidgetKey {
 
 export const MarketWidgetDefaultLayoutMap: Record<MarketWidgetKey, Layout> = {
     [MarketWidgetKey.MATURITY_PHASE]: { i: MarketWidgetKey.MATURITY_PHASE, x: 0, y: 0, w: 12, h: 16 },
-    [MarketWidgetKey.ORDERBOOK]: { i: MarketWidgetKey.ORDERBOOK, x: 0, y: 1, w: 6, h: 19 },
     [MarketWidgetKey.TRADE]: { i: MarketWidgetKey.TRADE, x: 6, y: 1, w: 6, h: 19 },
     [MarketWidgetKey.CHART_TRADING_VIEW]: { i: MarketWidgetKey.CHART_TRADING_VIEW, x: 0, y: 2, w: 6, h: 11 },
     [MarketWidgetKey.CUSTOM_MARKET_RESULTS]: { i: MarketWidgetKey.CUSTOM_MARKET_RESULTS, x: 0, y: 2, w: 6, h: 11 },

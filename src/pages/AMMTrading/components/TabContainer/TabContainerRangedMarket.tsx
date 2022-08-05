@@ -11,19 +11,15 @@ import RowCardRangedMarket from '../RowCard/RowCardRangedMarket';
 
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
-import { MarketType, OptionSide } from 'types/options';
+import { MarketType } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { MARKET_TYPE } from 'constants/options';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 
-type TabContainerProps = {
-    optionSide?: OptionSide;
-};
-
-const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
+const TabContainer: React.FC = () => {
     const marketInfo = useRangedMarketContext();
-    const [currentTab, setCurrentTab] = useState<number>(optionSide ? 0 : 1);
+    const [currentTab, setCurrentTab] = useState<number>(1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
     const { trackEvent } = useMatomo();
@@ -37,14 +33,6 @@ const TabContainer: React.FC<TabContainerProps> = ({ optionSide }) => {
     const { t } = useTranslation();
 
     const tabItems = [
-        ...(optionSide && !inMaturity
-            ? [
-                  {
-                      title: t('options.market.widgets.orderbook-widget'),
-                      index: 0,
-                  },
-              ]
-            : []),
         ...(!inMaturity
             ? [
                   {

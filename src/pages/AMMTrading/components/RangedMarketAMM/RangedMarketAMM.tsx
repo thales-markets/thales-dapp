@@ -129,7 +129,7 @@ const AMM: React.FC = () => {
     const isNonDefaultStable = selectedStableIndex !== 0 && !isPolygon && orderSide.value === 'buy';
 
     const referral =
-        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase() && !isPolygon
+        walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
             ? getReferralWallet()
             : null;
 
