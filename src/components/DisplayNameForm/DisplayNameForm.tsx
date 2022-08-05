@@ -1,13 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-
 import { FlexDiv, UserCardSectionHeader } from 'theme/common';
-
 import { useTranslation } from 'react-i18next';
-
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
-
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';

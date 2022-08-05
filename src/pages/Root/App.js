@@ -54,10 +54,10 @@ const App = () => {
     const walletAddress = useSelector((state) => getWalletAddress(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
-    // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const [snxJSConnector, setSnxJSConnector] = useState();
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
+    const isLedgerLive = isLedgerDappBrowserProvider();
 
     const { trackPageView } = useMatomo();
 
@@ -82,15 +82,12 @@ const App = () => {
 
     useEffect(() => {
         let ledgerProvider = null;
-        const isLedgerLive = isLedgerDappBrowserProvider();
-
         if (isLedgerLive) {
             ledgerProvider = new IFrameEthereumProvider();
         }
-
         const provider = loadProvider({
             infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-            provider: isLedgerDappBrowserProvider() ? ledgerProvider : window.ethereum,
+            provider: isLedgerLive ? ledgerProvider : window.ethereum,
             networkId,
         });
 
@@ -99,10 +96,10 @@ const App = () => {
                 const providerNetworkId = (await provider.getNetwork()).chainId;
                 const name = SUPPORTED_NETWORKS_NAMES[providerNetworkId];
 
-                let account = '';
                 if (isLedgerLive) {
                     const accounts = await ledgerProvider.enable();
-                    account = accounts[0];
+                    const account = accounts[0];
+                    dispatch(updateWallet({ walletAddress: account }));
                     ledgerProvider.on('accountsChanged', (accounts) => {
                         if (accounts.length > 0) {
                             dispatch(updateWallet({ walletAddress: accounts[0] }));
@@ -112,7 +109,6 @@ const App = () => {
 
                 dispatch(updateNetworkSettings({ networkId: providerNetworkId, networkName: name?.toLowerCase() }));
 
-                const useOvm = getIsOVM(providerNetworkId);
                 if (!snxJSConnector) {
                     import(/* webpackChunkName: "snxJSConnector" */ 'utils/snxJSConnector').then((snx) => {
                         if (isLedgerLive) {
@@ -121,9 +117,8 @@ const App = () => {
                                 provider,
                                 signer: provider.getSigner(),
                             });
-                            dispatch(updateWallet({ walletAddress: account }));
                         } else {
-                            snx.default.setContractSettings({ networkId: providerNetworkId, provider, useOvm });
+                            snx.default.setContractSettings({ networkId: providerNetworkId, provider });
                         }
                         setSnxJSConnector(snx.default);
                         dispatch(setAppReady());
