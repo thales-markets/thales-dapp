@@ -38,17 +38,21 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const screenSize = useSelector((state: RootState) => getUISize(state));
     const { t } = useTranslation();
 
-    const showOnlyLiquidFromCookie = localStorage.getItem(LOCAL_STORAGE_KEYS.MARKET_SHOW_ONLY_LIQUID + networkId);
-    const tableViewFromCookie = localStorage.getItem(LOCAL_STORAGE_KEYS.MARKET_TABLE_VIEW + networkId);
+    const showOnlyLiquidFromLocalStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.MARKET_SHOW_ONLY_LIQUID + networkId);
+    const tableViewFromLocalStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.MARKET_TABLE_VIEW + networkId);
     const [allAssets, setAllAssets] = useState<Set<string>>(new Set());
 
     const [globalFilter, setGlobalFilter] = useState('');
     const [tableView, setTableView] = useState<boolean>(
-        screenSize === UISize.Large ? (tableViewFromCookie === 'false' ? false : true) : false
+        screenSize === UISize.Large ? (tableViewFromLocalStorage === 'false' ? false : true) : false
     );
 
     const [showOnlyLiquid, setOnlyLiquid] = useState<boolean>(
-        showOnlyLiquidFromCookie !== undefined ? (showOnlyLiquidFromCookie === 'false' ? false : true) : true
+        showOnlyLiquidFromLocalStorage !== undefined
+            ? showOnlyLiquidFromLocalStorage === 'false'
+                ? false
+                : true
+            : true
     );
 
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
@@ -73,14 +77,25 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     }, [allAssets, assetFilters]);
 
     useEffect(() => {
-        if (showOnlyLiquidFromCookie !== '' + showOnlyLiquid || showOnlyLiquidFromCookie == undefined) {
+        if (showOnlyLiquidFromLocalStorage !== '' + showOnlyLiquid || showOnlyLiquidFromLocalStorage == undefined) {
             localStorage.setItem(LOCAL_STORAGE_KEYS.MARKET_SHOW_ONLY_LIQUID + networkId, '' + showOnlyLiquid);
         }
 
-        if (tableViewFromCookie !== '' + tableView || tableViewFromCookie == undefined) {
+        if (tableViewFromLocalStorage !== '' + tableView || tableViewFromLocalStorage == undefined) {
             localStorage.setItem(LOCAL_STORAGE_KEYS.MARKET_TABLE_VIEW + networkId, '' + tableView);
         }
     }, [showOnlyLiquid, tableView]);
+
+    useEffect(() => {
+        setTableView(screenSize === UISize.Large ? (tableViewFromLocalStorage === 'false' ? false : true) : false);
+        setOnlyLiquid(
+            showOnlyLiquidFromLocalStorage !== undefined
+                ? showOnlyLiquidFromLocalStorage === 'false'
+                    ? false
+                    : true
+                : true
+        );
+    }, [networkId]);
 
     const filters = useMemo(() => {
         return {
