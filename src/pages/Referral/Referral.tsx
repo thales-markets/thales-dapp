@@ -458,15 +458,15 @@ const Footer = styled.div`
     width: 90%;
     color: var(--primary-color);
     bottom: 0;
-    margin-bottom: 100px;
+    margin-bottom: 20px;
     @media screen and (max-width: 520px) {
         margin-top: 50px;
         margin-bottom: 10px;
         position: relative;
         display: inline-block;
-    }
-    div {
-        display: inline;
+        div {
+            display: inline;
+        }
     }
 `;
 
