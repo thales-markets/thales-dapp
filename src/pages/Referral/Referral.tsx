@@ -458,7 +458,16 @@ const Footer = styled.div`
     width: 90%;
     color: var(--primary-color);
     bottom: 0;
-    margin-bottom: 10px;
+    margin-bottom: 100px;
+    @media screen and (max-width: 520px) {
+        margin-top: 50px;
+        margin-bottom: 10px;
+        position: relative;
+        display: inline-block;
+    }
+    div {
+        display: inline;
+    }
 `;
 
 // const TextGradient = styled.div`
