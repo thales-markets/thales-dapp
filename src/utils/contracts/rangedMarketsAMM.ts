@@ -11,7 +11,7 @@ export const rangedMarketAMMContract = {
         [Network['Mainnet-Ovm']]: '0x2d356b114cbCA8DEFf2d8783EAc2a5A5324fE1dF',
         [Network['Kovan-Ovm']]: '0x0690F410FB54d76268e4fa97486CBD605e68dC62',
         [Network['POLYGON-MUMBAI']]: 'TBD',
-        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network['POLYGON-MAINNET']]: '0xe8e022405505a9F2b0B7452C844F1e64423849fC',
     },
     abi: [
         {

@@ -71,14 +71,12 @@ const Sidebar: React.FC = () => {
                     label={t('common.sidebar.markets')}
                 />
 
-                {!isPolygon && (
-                    <DappHeaderItem
-                        className={`show ${location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.RangeMarkets)}
-                        iconName="ranged-markets"
-                        label={t('common.sidebar.ranged-markets')}
-                    />
-                )}
+                <DappHeaderItem
+                    className={`show ${location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}`}
+                    href={buildHref(ROUTES.Options.RangeMarkets)}
+                    iconName="ranged-markets"
+                    label={t('common.sidebar.ranged-markets')}
+                />
 
                 {/* {isPolygon && (
                     <DappHeaderItem
@@ -101,17 +99,14 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.wizard')}
                     />
                 )}
-
-                {!isPolygon && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Referral ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Referral)}
-                        iconName="referral-page"
-                        label={t('referral-page.title')}
-                    />
-                )}
+                <DappHeaderItem
+                    className={`${collapse ? 'show' : ''} ${
+                        location.pathname === ROUTES.Options.Referral ? 'selected' : ''
+                    }`}
+                    href={buildHref(ROUTES.Options.Referral)}
+                    iconName="referral-page"
+                    label={t('referral-page.title')}
+                />
                 <Divider />
                 {!isPolygon && (
                     <DappHeaderItem

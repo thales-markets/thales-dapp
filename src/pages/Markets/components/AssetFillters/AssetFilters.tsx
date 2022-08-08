@@ -37,10 +37,22 @@ const AssetFilters: React.FC<{
             );
             localStorage.setItem(selectedAssetsLocalStorageKey, JSON.stringify(newSelectedAssets));
             setSelectedAssets(newSelectedAssets);
-        } else {
-            setSelectedAssets([...Array.from(allAssets)].slice(0, FILTERS_LENGTH));
         }
     }, [allAssets, assetFilters]);
+
+    useEffect(() => {
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem(selectedAssetsLocalStorageKey) || '[]');
+        if (!selectedAssetsLocalStorage.length) {
+            setSelectedAssets([...Array.from(allAssets)].slice(0, FILTERS_LENGTH));
+        }
+    }, [allAssets]);
+
+    useEffect(() => {
+        const chosenAssetsLocalStorage = JSON.parse(
+            localStorage.getItem(LOCAL_STORAGE_KEYS.MARKET_CHOSEN_ASSET + networkId) || '[]'
+        );
+        chosenAssetsLocalStorage.length ? setAssetFilters(chosenAssetsLocalStorage) : setAssetFilters([]);
+    }, [networkId]);
 
     const safeSetSelectedAssets = useCallback(
         (assets) => {
@@ -113,7 +125,7 @@ const AssetFilters: React.FC<{
                             {assetsDropdownOpen && (
                                 <AssetsDropdown
                                     assets={[...(allAssets as any)]}
-                                    cookieKey={LOCAL_STORAGE_KEYS.MARKET_SELECTED_ASSETS}
+                                    localStorageKey={LOCAL_STORAGE_KEYS.MARKET_SELECTED_ASSETS}
                                     selectedAssets={selectedAssets}
                                     setSelectedAssets={safeSetSelectedAssets}
                                 />
