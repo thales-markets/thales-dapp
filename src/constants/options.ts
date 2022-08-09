@@ -123,3 +123,5 @@ export const MINIMUM_AMM_LIQUIDITY = 2;
 export const MAX_L2_GAS_LIMIT = 15000000;
 export const L2_EXERCISE_GAS_LIMIT = 1000000;
 export const MIN_SCEW_IMPACT = 0.0;
+
+export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;

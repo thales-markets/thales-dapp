@@ -233,7 +233,7 @@ const Table: React.FC<{
             }
             return prevAllAssets;
         });
-    }, [optionsMarkets, showOnlyLiquid]);
+    }, [networkId, optionsMarkets, showOnlyLiquid]);
 
     // Custom global search filter -> useTable
     const ourGlobalFilterFunction = useCallback((rows: any, _columnIds: string[], filterValue: any) => {
