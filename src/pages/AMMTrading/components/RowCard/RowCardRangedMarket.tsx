@@ -316,22 +316,24 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
             {!positionCurrentValue?.outPositionValue && !positionCurrentValue?.inPositionValue && (
                 <>
                     N/A
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={
-                            <Trans
-                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
-                                components={[
-                                    <span key="1">
-                                        <UsingAmmLink key="2" />
-                                    </span>,
-                                ]}
-                            />
-                        }
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                    {(optBalances?.in > 0 || optBalances?.out > 0) && (
+                        <StyledMaterialTooltip
+                            arrow={true}
+                            title={
+                                <Trans
+                                    i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                    components={[
+                                        <span key="1">
+                                            <UsingAmmLink key="2" />
+                                        </span>,
+                                    ]}
+                                />
+                            }
+                            interactive
+                        >
+                            <StyledInfoIcon />
+                        </StyledMaterialTooltip>
+                    )}
                 </>
             )}
         </>
