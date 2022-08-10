@@ -46,7 +46,7 @@ const OPRewards: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
 
     const PERIOD_DURATION_IN_DAYS = 14;
-    const START_DATE = new Date(2022, 6, 13, 14, 23, 0);
+    const START_DATE = new Date(Date.UTC(2022, 6, 13, 12, 23, 0));
     const NOW = new Date();
 
     let CALCULATED_START = new Date(START_DATE.getTime());
