@@ -17,11 +17,14 @@ import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOpt
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import { getIsBuyState } from 'redux/modules/marketWidgets';
 import Tooltip from 'components/Tooltip';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import { StyledMaterialTooltip, UsingAmmLink } from 'pages/Profile/components/MyPositions/MyPositions';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import styled from 'styled-components';
 
 const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
@@ -310,6 +313,7 @@ type PositionPriceProps = {
 };
 
 const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue }) => {
+    const { t } = useTranslation();
     if (marketInfo?.phase == 'maturity' && marketInfo?.result) {
         return <>{`${formatCurrencyWithSign(USD_SIGN, optBalances[marketInfo?.result])}`}</>;
     }
@@ -323,9 +327,36 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
             {optBalances.short > 0 &&
                 positionCurrentValue?.shortPositionValue &&
                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
-            {!positionCurrentValue?.shortPositionValue && !positionCurrentValue?.longPositionValue && 'N/A'}
+            {!positionCurrentValue?.shortPositionValue && !positionCurrentValue?.longPositionValue && (
+                <>
+                    N/A
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                components={[
+                                    <span key="1">
+                                        <UsingAmmLink key="2" />
+                                    </span>,
+                                ]}
+                            />
+                        }
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </>
+            )}
         </>
     );
 };
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    min-width: 20px;
+    min-height: 20px;
+    margin-left: 6px;
+    margin-top: 3px;
+`;
 
 export default RowCard;
