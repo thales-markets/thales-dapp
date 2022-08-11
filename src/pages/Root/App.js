@@ -26,6 +26,7 @@ const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'compo
 
 const CreateMarket = lazy(() => import(/* webpackChunkName: "CreateMarket" */ '../CreateMarket'));
 const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../LandingPage/Home'));
+const SalesLanding = lazy(() => import(/* webpackChunkName: "Home" */ '../SalesLanding'));
 const Governance = lazy(() => import(/* webpackChunkName: "Governance" */ '../LandingPage/articles/Governance'));
 const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../LandingPage/articles/Whitepaper'));
 const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
@@ -321,6 +322,12 @@ const App = () => {
                         <Route exact path={ROUTES.Home}>
                             <MainLayout>
                                 <Home />
+                            </MainLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.SalesLanding}>
+                            <MainLayout>
+                                <SalesLanding />
                             </MainLayout>
                         </Route>
 
