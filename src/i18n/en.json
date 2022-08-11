@@ -583,6 +583,7 @@
                     "thales-royale-label": "Thales Royale",
                     "max-reward-label": "Max reward: {{max}}",
                     "op-rewards-tooltip": "OP rewards for gamified staking are calculated per <tip /> and airdropped every two weeks, check details on <page>the OP rewards page</page>.",
+                    "enable-disable-claim-on-behalf-label": "Enable/disable claim on behalf",
                     "bonus-info": {
                         "current-snx-staking-label": "Current SNX staked",
                         "additional-snx-staking-label": "Additional SNX to stake for max bonus",

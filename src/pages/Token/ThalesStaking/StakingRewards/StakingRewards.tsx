@@ -258,7 +258,7 @@ const StakingRewards: React.FC = () => {
                         <StyledInfoIcon />
                     </StyledMaterialTooltip>
                     <ClosePeriodButton onClick={() => setShowClaimOnBehalfModal(true)}>
-                        Enable/disable claim on behalf
+                        {t('options.earn.thales-staking.staking-rewards.enable-disable-claim-on-behalf-label')}
                     </ClosePeriodButton>
                 </FlexDivCentered>
                 <PeriodContainer>
