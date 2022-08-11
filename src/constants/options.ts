@@ -125,3 +125,4 @@ export const L2_EXERCISE_GAS_LIMIT = 1000000;
 export const MIN_SCEW_IMPACT = 0.0;
 
 export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;
+export const OP_REWARDS_MULTIPLIER = 0.64;
