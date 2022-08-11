@@ -83,13 +83,17 @@ const RowCardRangedMarket: React.FC = () => {
                 inPositionValue:
                     inPosition.sellPrice && inPosition.sellPrice > 0 && optBalances?.in > 0
                         ? inPosition.sellPrice * optBalances?.in
-                        : null,
+                        : 0,
                 outPositionValue:
                     outPosition.sellPrice && outPosition.sellPrice > 0 && optBalances?.out > 0
                         ? outPosition.sellPrice * optBalances?.out
-                        : null,
+                        : 0,
             };
         }
+        return {
+            inPositionValue: 0,
+            outPositionValue: 0,
+        };
     }, [ammMaxLimitsQuery.isLoading, optBalances?.in, optBalances?.out]);
 
     return (
@@ -286,12 +290,10 @@ type PositionPriceProps = {
         in: number;
         out: number;
     };
-    positionCurrentValue:
-        | undefined
-        | {
-              inPositionValue: number | null;
-              outPositionValue: number | null;
-          };
+    positionCurrentValue: {
+        inPositionValue: number;
+        outPositionValue: number;
+    };
 };
 
 const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue }) => {
@@ -300,42 +302,67 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
         return <>{`${formatCurrencyWithSign(USD_SIGN, optBalances[marketInfo?.result])}`}</>;
     }
 
+    const noPositions = optBalances.in == 0 && optBalances.out == 0;
+    const hasBothPositions = optBalances.in > 0 && optBalances.out > 0;
+    const isInOutOfLiqudity = optBalances.in > 0 && positionCurrentValue.inPositionValue == 0;
+    const isOutOutOfLiqudity = optBalances.out > 0 && positionCurrentValue.outPositionValue == 0;
+    const areBothOutOfLiqudity = isInOutOfLiqudity && isOutOutOfLiqudity;
+
     return (
         <>
             {optBalances.in > 0 &&
-                positionCurrentValue?.inPositionValue &&
-                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.inPositionValue)}`}
-            {positionCurrentValue?.outPositionValue &&
-                positionCurrentValue?.outPositionValue > 0 &&
-                positionCurrentValue?.inPositionValue &&
-                positionCurrentValue?.inPositionValue > 0 &&
-                ' / '}
-            {optBalances.out > 0 &&
-                positionCurrentValue?.outPositionValue &&
-                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.outPositionValue)}`}
-            {!positionCurrentValue?.outPositionValue && !positionCurrentValue?.inPositionValue && (
+                positionCurrentValue.inPositionValue > 0 &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue.inPositionValue)}`}
+            {(isInOutOfLiqudity || areBothOutOfLiqudity) && (
                 <>
                     N/A
-                    {(optBalances?.in > 0 || optBalances?.out > 0) && (
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={
-                                <Trans
-                                    i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
-                                    components={[
-                                        <span key="1">
-                                            <UsingAmmLink key="2" />
-                                        </span>,
-                                    ]}
-                                />
-                            }
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
-                    )}
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                components={[
+                                    <span key="1">
+                                        <UsingAmmLink key="2" />
+                                    </span>,
+                                ]}
+                            />
+                        }
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
                 </>
             )}
+
+            {hasBothPositions && !areBothOutOfLiqudity && ' / '}
+
+            {optBalances.out > 0 &&
+                positionCurrentValue.outPositionValue > 0 &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue.outPositionValue)}`}
+            {isOutOutOfLiqudity && !areBothOutOfLiqudity && (
+                <>
+                    N/A
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                components={[
+                                    <span key="1">
+                                        <UsingAmmLink key="2" />
+                                    </span>,
+                                ]}
+                            />
+                        }
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </>
+            )}
+
+            {noPositions && <>N/A</>}
         </>
     );
 };
