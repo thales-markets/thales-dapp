@@ -40,7 +40,11 @@ export const StatLabel = styled.span<{ color?: string }>`
 export const StatValue = styled(StatLabel)<{ customColor?: string }>`
     font-weight: 700;
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
-    margin-left: 100px;
+    padding-left: 100px;
+    text-align: right;
+    @media screen and (max-width: 520px) {
+        padding-left: 0px;
+    }
 `;
 
 export const HeaderContainer = styled.div`
@@ -81,6 +85,7 @@ export const TableWrapper = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
+    margin-bottom: 100px;
 `;
 
 export const RowContrainer = styled.div`

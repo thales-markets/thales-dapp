@@ -156,7 +156,7 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({
             }
             return prevAllAssets;
         });
-    }, [optionsMarkets, filters.showOnlyLiquid]);
+    }, [networkId, optionsMarkets, filters.showOnlyLiquid]);
 
     useEffect(() => {
         setPageIndex(0);

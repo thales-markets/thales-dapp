@@ -265,6 +265,14 @@ export const Tip49Link: React.FC = () => {
     );
 };
 
+export const Tip53Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP53}>
+            TIP-53
+        </TooltipLink>
+    );
+};
+
 export const Tip66Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP66}>
@@ -277,6 +285,14 @@ export const ClaimOnBehalfGuideLink: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.ClaimOnBehalfGuide}>
             Guide
+        </TooltipLink>
+    );
+};
+
+export const OpRewardsPageLink: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.OpRewardsPage}>
+            the OP rewards page
         </TooltipLink>
     );
 };
