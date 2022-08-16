@@ -121,7 +121,6 @@ export const ListWrapper = styled.div`
     border: 1px solid var(--color);
     border-radius: 7px;
     width: 38em;
-    margin-bottom: 4em;
     @media (max-width: 600px) {
         width: 100%;
     }

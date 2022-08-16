@@ -29,6 +29,7 @@ import INMarket from 'assets/images/sales-funnel/INmarket.svg';
 import INChart from 'assets/images/sales-funnel/INchart.svg';
 import OUTMarket from 'assets/images/sales-funnel/OUTmarket.svg';
 import OUTChart from 'assets/images/sales-funnel/OUTchart.svg';
+import GroupImg from 'assets/images/sales-funnel/Group606.svg';
 
 const cookies = new Cookies();
 
@@ -46,27 +47,50 @@ const SalesLanding: React.FC = () => {
                     {salesFunnelType == 0 && (
                         <>
                             <H1>{t('sales-landing.title')}</H1>
-                            <ListWrapper>
-                                <List>
-                                    <NestedList>
-                                        <ListItem>
-                                            <HashLink to="#section1">{t('sales-landing.sections.1.heading')}</HashLink>
-                                        </ListItem>
-                                        <ListItem>
-                                            <HashLink to="#section2">{t('sales-landing.sections.2.heading')}</HashLink>
-                                        </ListItem>
-                                        <ListItem>
-                                            <HashLink to="#section3">{t('sales-landing.sections.3.heading')}</HashLink>
-                                        </ListItem>
-                                        <ListItem>
-                                            <HashLink to="#section4">{t('sales-landing.sections.4.heading')}</HashLink>
-                                        </ListItem>
-                                        <ListItem>
-                                            <HashLink to="#section5">{t('sales-landing.sections.5.heading')}</HashLink>
-                                        </ListItem>
-                                    </NestedList>
-                                </List>
-                            </ListWrapper>
+                            <SectionWrapper>
+                                <ListWrapper>
+                                    <List>
+                                        <NestedList>
+                                            <ListItem>
+                                                <HashLink to="#section1">
+                                                    {t('sales-landing.sections.1.heading')}
+                                                </HashLink>
+                                            </ListItem>
+                                            <ListItem>
+                                                <HashLink to="#section2">
+                                                    {t('sales-landing.sections.2.heading')}
+                                                </HashLink>
+                                            </ListItem>
+                                            <ListItem>
+                                                <HashLink to="#section3">
+                                                    {t('sales-landing.sections.3.heading')}
+                                                </HashLink>
+                                            </ListItem>
+                                            <ListItem>
+                                                <HashLink to="#section4">
+                                                    {t('sales-landing.sections.4.heading')}
+                                                </HashLink>
+                                            </ListItem>
+                                            <ListItem>
+                                                <HashLink to="#section5">
+                                                    {t('sales-landing.sections.5.heading')}
+                                                </HashLink>
+                                            </ListItem>
+                                        </NestedList>
+                                    </List>
+                                </ListWrapper>
+                                <IllustrationContainer
+                                    width="40%"
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginLeft: '20px',
+                                    }}
+                                >
+                                    <AnimationSvg type="image/svg+xml" data={GroupImg}></AnimationSvg>
+                                </IllustrationContainer>
+                            </SectionWrapper>
                             <H2 id="section1">{t('sales-landing.sections.1.heading')}</H2>
                             <SectionWrapper>
                                 <ParagraphContainer width="30%">
