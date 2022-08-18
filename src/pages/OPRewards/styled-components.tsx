@@ -86,6 +86,13 @@ export const TooltipLink = styled.a`
     }
 `;
 
+export const AddressLink = styled.a`
+    color: #f6f6fe;
+    &:hover {
+        color: #00f9ff;
+    }
+`;
+
 export const Tip53Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.TradingIncentives.TIP53}>
