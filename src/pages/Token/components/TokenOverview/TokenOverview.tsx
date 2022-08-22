@@ -91,6 +91,14 @@ export const TokentOverview: React.FC = () => {
                     </Content>
                 </ItemContainer>
                 <ItemContainer>
+                    <Title>{t('options.earn.overview.total-burned-label')}</Title>
+                    <Content>
+                        {tokenInfo
+                            ? formatCurrencyWithKey(THALES_CURRENCY, tokenInfo.thalesBurned, 0, true)
+                            : EMPTY_VALUE}
+                    </Content>
+                </ItemContainer>
+                <ItemContainer>
                     <Title>{t('options.earn.overview.total-supply-label')}</Title>
                     <Content>
                         {tokenInfo
@@ -235,9 +243,9 @@ const StyledLink = styled.a`
         fill: #f6f6fe;
     }
     &:hover {
-        color: #00f9ff;
+        color: #64d9fe;
         & path {
-            fill: #00f9ff;
+            fill: #64d9fe;
         }
     }
 `;

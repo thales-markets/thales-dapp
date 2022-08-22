@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
@@ -17,6 +17,24 @@ type TransactionsTableProps = {
 
 export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
+
+    const amountSort = useMemo(
+        () => (rowA: any, rowB: any, columnId: any, desc: any) => {
+            let a = rowA.values[columnId];
+            let b = rowB.values[columnId];
+
+            if (a === 0) {
+                // Zeros to bottom
+                a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            }
+            if (b === 0) {
+                b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            }
+            return a > b ? 1 : a < b ? -1 : 0;
+        },
+        []
+    );
+
     return (
         <>
             <Table
@@ -41,15 +59,14 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                                             ? TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS
                                             : cellProps.cell.value
                                     }`
-                                )}
+                                ).toUpperCase()}
                             </p>
                         ),
-                        width: 150,
                         sortable: true,
                     },
                     {
                         Header: <>{t('options.earn.table.amount-col')}</>,
-                        sortType: 'basic',
+                        sortType: amountSort,
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
                             <p>
@@ -68,7 +85,6 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                                     : EMPTY_VALUE}
                             </p>
                         ),
-                        width: 150,
                         sortable: true,
                     },
                     {
@@ -77,13 +93,12 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         Cell: (cellProps: CellProps<TokenTransaction>) => (
                             <ViewEtherscanLink hash={cellProps.cell.row.original.hash} />
                         ),
-                        // ),
-                        width: 150,
                     },
                 ]}
                 data={transactions}
                 isLoading={isLoading}
                 noResultsMessage={noResultsMessage}
+                tableHeadCellStyles={{ color: '#64D9FE' }}
             />
         </>
     );

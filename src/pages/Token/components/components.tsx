@@ -18,18 +18,17 @@ export const GridContainer = styled(GridDivCol)`
 `;
 
 export const Input = styled.input`
-    background: #0a2e66;
-    border: 2px solid #0a2e66;
+    background: #04045a;
+    border: 1px solid #64d9fe;
     box-sizing: border-box;
     mix-blend-mode: normal;
     border-radius: 12px;
-    height: 64px;
-    padding: 14px 68px 0 20px;
+    height: 78px;
+    padding: 14px 68px 0 15px;
     outline: 0;
-    font-size: 16px;
     font-weight: 600;
-    font-size: 14px;
-    line-height: 16px;
+    font-size: 20px;
+    line-height: 18px;
     letter-spacing: 0.25px;
     color: #f6f6fe;
     &::selection {
@@ -50,12 +49,11 @@ export const Input = styled.input`
 `;
 
 export const InputLabel = styled.label`
-    font-weight: bold;
-    font-size: 9px;
+    font-weight: 400;
+    font-size: 14px;
     line-height: 16px;
-    letter-spacing: 1px;
-    color: #748bc6;
-    padding: 8px 0 0 22px;
+    color: #64d9fe;
+    padding: 8px 0 0 15px;
     pointer-events: none;
     z-index: 3;
     position: absolute;
@@ -64,11 +62,11 @@ export const InputLabel = styled.label`
 
 export const CurrencyLabel = styled.label`
     font-weight: 600;
-    font-size: 14px;
-    line-height: 16px;
+    font-size: 20px;
+    line-height: 18px;
     letter-spacing: 0.25px;
     color: #f6f6fe;
-    padding: 31px 16px 17px 0;
+    padding: 36px 16px 17px 0;
     pointer-events: none;
     position: absolute;
     right: 0;
@@ -78,10 +76,11 @@ export const CurrencyLabel = styled.label`
     }
 `;
 
-export const InputContainer = styled.div`
+export const InputContainer = styled.div<{ marginTop?: number }>`
     display: flex;
     flex-direction: column;
     position: relative;
+    ${(_props) => (_props.marginTop ? 'margin-top: ' + _props.marginTop + 'px;' : '')}
     margin-bottom: 20px;
 `;
 

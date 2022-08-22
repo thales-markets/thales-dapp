@@ -45,7 +45,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                 <>
                     {gasLimit.map((gas, index: number) => (
                         <div key={gas.label}>
-                            <NetworkFeeSummaryItem key={gas.label}>
+                            <NetworkFeeSummaryItem key={gas.label} marginTop={index === 0 ? 10 : 0}>
                                 <NetworkFeeSummaryLabel>{`${t('common.network-fee-gas')} - ${
                                     gas.label
                                 }`}</NetworkFeeSummaryLabel>
@@ -65,22 +65,20 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                     ))}
                 </>
             ) : (
-                <>
-                    <NetworkFeeSummaryItem>
-                        <NetworkFeeSummaryLabel>{t('common.network-fee-gas')}</NetworkFeeSummaryLabel>
-                        <NetworkFeeSummaryContent>
-                            {formatCurrencyWithSign(
-                                USD_SIGN,
-                                getTransactionPrice(
-                                    gasPrice,
-                                    gasLimit as number,
-                                    ethRate,
-                                    l1Fee && l1Fee !== null ? (l1Fee as number) : l1Fee
-                                )
-                            )}
-                        </NetworkFeeSummaryContent>
-                    </NetworkFeeSummaryItem>
-                </>
+                <NetworkFeeSummaryItem marginTop={10}>
+                    <NetworkFeeSummaryLabel>{t('common.network-fee-gas')}</NetworkFeeSummaryLabel>
+                    <NetworkFeeSummaryContent>
+                        {formatCurrencyWithSign(
+                            USD_SIGN,
+                            getTransactionPrice(
+                                gasPrice,
+                                gasLimit as number,
+                                ethRate,
+                                l1Fee && l1Fee !== null ? (l1Fee as number) : l1Fee
+                            )
+                        )}
+                    </NetworkFeeSummaryContent>
+                </NetworkFeeSummaryItem>
             )}
             <NetworkFeeSummaryItem key="Gas Price">
                 <NetworkFeeSummaryLabel key={0}>{t('common.gas-price-gwei')}</NetworkFeeSummaryLabel>
@@ -92,18 +90,23 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
     );
 };
 
-const NetworkFeeSummaryItem = styled(SummaryItem)`
-    margin-bottom: 10px;
+const NetworkFeeSummaryItem = styled(SummaryItem)<{ marginTop?: number }>`
+    ${(_props) => (_props.marginTop ? 'margin-top: ' + _props.marginTop + 'px;' : '')}
+    margin-bottom: 0px;
 `;
 
 const NetworkFeeSummaryLabel = styled(SummaryLabel)`
-    font-size: 13px;
-    line-height: 24px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    text-transform: uppercase;
 `;
 
 const NetworkFeeSummaryContent = styled(SummaryContent)`
-    font-size: 13px;
-    line-height: 24px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    text-transform: uppercase;
     flex: 1;
 `;
 

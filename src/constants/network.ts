@@ -8,6 +8,7 @@ import { Network } from 'utils/network';
 
 export const GWEI_UNIT = 1000000000;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
 export const POLYGON_GWEI_INCREASE_PERCENTAGE = 0.2;
 
 export type NetworkMapper = Record<number, number>;

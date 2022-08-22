@@ -40,7 +40,7 @@ export const ThalesWalletAmountLabel = styled(InputLabel)`
     right: 0px;
     top: 0px;
     padding: 8px 14px 0 0;
-    text-transform: none;
+    text-transform: uppercase;
     display: flex;
 `;
 

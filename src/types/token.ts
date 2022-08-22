@@ -45,6 +45,13 @@ export type TokenTransaction = {
     blockNumber: number;
 };
 
+export enum TokenTabEnum {
+    GAMIFIED_STAKING = 'gamified-staking',
+    LP_STAKING = 'lp-staking',
+    MIGRATION = 'migration',
+    STRATEGIC_INVESTORS = 'strategic-investors',
+}
+
 export enum TransactionFilterEnum {
     ALL = 'all',
     CLAIM_RETRO_AIRDROP = 'claimRetroAirdrop',
@@ -99,6 +106,10 @@ export type StakingReward = {
     snxVolumeRewardsMultiplier: number;
     snxStaked: number;
     ammVolume: number;
+    thalesAmmVolume: number;
+    rangedAmmVolume: number;
+    sportsAmmVolume: number;
+    exoticVolume: number;
     hasParticipatedInCurrentOrLastRoyale: boolean;
 };
 
@@ -122,6 +133,7 @@ export type MigratedReward = {
 export type TokenInfo = {
     totalSupply: number;
     circulatingSupply: number;
+    thalesBurned: number;
     price?: number;
     marketCap?: number;
 };

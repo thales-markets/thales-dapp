@@ -627,6 +627,100 @@
                     "info-tooltip": "Unclaimed weekly rewards are forfeit."
                 }
             },
+            "gamified-staking": {
+                "tab-title": "Gamified Staking",
+                "staking": {
+                    "section-title": "Staking",
+                    "section-description": "The Staking rewards shows the THALES rewards you have available for claiming.",
+                    "apy-tooltip": "Annual Percentage Yield in THALES tokens from Staking THALES tokens.",
+                    "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
+                    "total-thales-staked": "Total THALES Staked",
+                    "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract.",
+                    "staked-share": "My Staked Share",
+                    "staked-share-tooltip": "Your percentage (%) of the Total Staked Thales pool.",
+                    "wallet-balance": "My Wallet Balance",
+                    "wallet-balance-tooltip": "Amount of non-staked THALES in your wallet.",
+                    "staked-balance": "My Staked Balance",
+                    "staked-balance-tooltip": "Amount of THALES tokens you are currently staking.",
+                    "staked-directly": "Staked directly",
+                    "escrow-balance": "Escrowed balance",
+                    "stake": {
+                        "name": "Stake",
+                        "staking": "Staking",
+                        "available-to-stake": "Available to stake",
+                        "amount-to-stake": "Amount to stake:",
+                        "balance": "Balance:",
+                        "confirmation-message": "Tokens successfully staked",
+                        "info-tooltip": "Available staking rewards will be claimed as part of the stake transaction.",
+                        "paused-message": "Staking is paused."
+                    },
+                    "unstake": {
+                        "name": "Unstake",
+                        "unlock-cooldown-text": "Start unlocking cooldown during which the amount being unstaked is not counted in your staked balance.",
+                        "cooldown-started-text": "You can unstake {{amount}} in",
+                        "cooldown-ended-text": "You can now unstake {{amount}}",
+                        "cooldown-label": "Cooldown",
+                        "start-unstaking": "Start unstaking",
+                        "cooldown-confirmation-message": "Unstaking successfully started",
+                        "unstake-confirmation-message": "Tokens successfully unstaked",
+                        "unstaking": "Unstaking",
+                        "amount-to-unstake": "Amount to unstake:",
+                        "balance": "Balance:",
+                        "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
+                        "cancel": "Cancel unstaking",
+                        "canceling": "Canceling unstaking",
+                        "cancel-confirmation-message": "Unstaking successfully canceled",
+                        "network-fee-cancel": "Cancel",
+                        "network-fee-unstake": "Unstake",
+                        "info-tooltip": "Available staking rewards will be claimed as part of the start unstaking transaction.",
+                        "paused-message": "Unstaking is paused."
+                    }
+                },
+                "rewards": {
+                    "section-title": "Rewards",
+                    "section-description": "The Staking rewards shows the THALES rewards you have available for claiming.",
+                    "info-base": "As base rewards",
+                    "info-base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
+                    "info-bonus": "As bonus rewards",
+                    "info-bonus-description": "Maximum bonus rewards on top of base rewards is 50%. 21k or 70% to Protocol Usage bucket. This counts sUSD volume from AMM trading, ranged AMM trading, sport's AMM trading and exotic markets bidding and 9k or 30% to SNX stakers. <0 />",
+                    "volume-amm-label": "AMM markets",
+                    "volume-amm-desc": "Current AMM market volume:",
+                    "volume-ranged-label": "Ranged markets",
+                    "volume-ranged-desc": "Current Ranged market volume",
+                    "volume-sports-desc": "Current Sports market volume",
+                    "volume-exotic-desc": "Current Exotic market volume",
+                    "protocol-label": "Protocol usage bucket",
+                    "protocol-volume": "Volume",
+                    "protocol-bonus": "Additional sUSD for max bonus",
+                    "protocol-rewards": "Max reward",
+                    "snx-label": "SNX Staking",
+                    "snx-volume": "Volume",
+                    "snx-bonus": "Additional sUSD for max bonus",
+                    "snx-rewards": "Max reward",
+                    "enable-disable-claim-on-behalf-label": "Enable/disable claim on behalf",
+                    "total-label": "Total claimable",
+                    "claim": "Claim Thales rewards",
+                    "claiming": "Claiming",
+                    "claim-button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
+                    "claim-confirmation-message": "Tokens successfully claimed",
+                    "period": "Time left:",
+                    "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
+                    "not-eligible-message": "You are not eligible for these rewards.",
+                    "paused-message": "Claiming is paused.",
+                    "close-period": {
+                        "label": "Close period",
+                        "progress-label": "Closing period...",
+                        "confirmation-message": "Period successfully closed"
+                    },
+                    "lp-staking-label-1": "thales/eth",
+                    "lp-staking-label-2": "LP Staking",
+                    "base-label": "Thales staking base rewards"
+                },
+                "vesting": {
+                    "section-title": "Vesting",
+                    "section-description": "Vest your THALES staking rewards in escrow. THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
+                }
+            },
             "vesting": {
                 "tab-title": "Vesting",
                 "schedule": {
@@ -654,6 +748,7 @@
             },
             "lp-staking": {
                 "tab-title": "LP staking",
+                "section-title": "How LP Staking works?",
                 "rewards": {
                     "title": "Rewards",
                     "lp-staking": "LP staking",
@@ -687,6 +782,7 @@
                 "type-col": "type",
                 "amount-col": "amount",
                 "tx-status-col": "tx status",
+                "no-activity": "No activity to show",
                 "no-results": {
                     "all": "No transactions associated with this wallet.",
                     "claimRetroAirdrop": "No retro airdrop transactions associated with this wallet.",
@@ -723,10 +819,11 @@
                     "mergeAccount": "Merge account"
                 },
                 "filter": {
+                    "button": "filters",
                     "all": "All",
                     "claimRetroAirdrop": "Retro airdrop",
                     "claimRetroUnlocked": "Retro unlock",
-                    "claimStakingRewards": "Staking rewards",
+                    "claimStakingRewards": "Reward claims",
                     "claimMigratedRewards": "Migrated rewards",
                     "claimMigratedRetroRewards": "Migrated retro rewards",
                     "stake": "Stake",
@@ -751,6 +848,7 @@
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",
                 "earn-info-tooltip": "View guide on how to provide liquidity",
                 "circulating-supply-label": "Circulating supply",
+                "total-burned-label": "Total Thales Burned",
                 "total-supply-label": "Total supply",
                 "celer-bridge": "Celer cBridge",
                 "celer-bridge-tooltip": "Fast bridge THALES between chains"
