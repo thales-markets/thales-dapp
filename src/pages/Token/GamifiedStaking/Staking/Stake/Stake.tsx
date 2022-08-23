@@ -282,7 +282,7 @@ const Stake: React.FC = () => {
                         message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
                     />
                 </InputContainer>
-                <Line margin={'40px 0 0 0'} />
+                <Line margin={'40px 0 10px 0'} />
                 <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />
                 <StakeButtonDiv>
                     {getStakeButton()}

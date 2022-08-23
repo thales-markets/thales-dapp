@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import OutsideClickHandler from 'react-outside-click-handler';
 import { useTranslation } from 'react-i18next';
 import TransactionsTable from '../TransactionsTable';
 import styled from 'styled-components';
@@ -31,6 +30,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
     const [showFilters, setShowFilters] = useState<boolean>(false);
     const [showFiltersMobile, setShowFiltersMobile] = useState<boolean>(false);
+
     const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
@@ -65,7 +65,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
             <SectionHeader>{t('options.earn.table.title')}</SectionHeader>
             {!noUserTx ? (
                 <>
-                    {isMobile() ? (
+                    {isMobile() ? ( // TODO
                         <FiltersWrapper onClick={() => setShowFiltersMobile(!showFiltersMobile)}>
                             {`${t(`options.market.transactions-card.filter.filter`)}: ${t(
                                 `options.earn.table.filter.${filter}`
@@ -89,17 +89,17 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                             </DropDownWrapper>
                         </FiltersWrapper>
                     ) : (
-                        <OutsideClickHandler onOutsideClick={() => setShowFilters(false)}>
+                        <FilterWrapper>
                             <FilterContainer
-                                onMouseOver={() => setShowFilters(true)}
+                                onMouseEnter={() => setShowFilters(true)}
                                 onMouseLeave={() => setShowFilters(false)}
                             >
                                 <Button
                                     height={'32px'}
                                     padding={'5px 40px'}
-                                    margin={'0 20px 0 65px'}
                                     fontSize={'15px'}
                                     onClickHandler={() => setShowFilters(!showFilters)}
+                                    additionalStyles={{ float: 'right' }}
                                 >
                                     {t(`options.earn.table.filter.button`)}
                                 </Button>
@@ -124,7 +124,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                                     </DropDown>
                                 </DropDownWrapper>
                             </FilterContainer>
-                        </OutsideClickHandler>
+                        </FilterWrapper>
                     )}
                     <SectionContent>
                         <TransactionsTable
@@ -148,7 +148,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
 const NoResultsContainer = styled.div<{ gridColumns?: number }>`
     box-sizing: border-box;
     border-radius: 15px;
-    grid-column: span ${(_props) => (_props.gridColumns ? _props.gridColumns : '8')};
+    grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : '8')};
     grid-row: span 3;
     background: #64d9fe80;
     padding: 2px;
@@ -157,14 +157,14 @@ const NoResultsContainer = styled.div<{ gridColumns?: number }>`
 
 const NoResultsText = styled.div<{ background?: boolean }>`
     display: grid;
-    background: ${(_props) => (_props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
     align-items: center;
     padding: 30px 15px;
 `;
 
 const SectionContainer = styled.section<{ gridColumns?: number }>`
-    grid-column: span ${(_props) => (_props.gridColumns ? _props.gridColumns : '8')};
+    grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : '8')};
     grid-row: span 1;
     height: 590px;
     margin-bottom: 0;
@@ -175,18 +175,22 @@ const SectionContent = styled(FlexDivColumn)`
     height: calc(100% - 30px);
 `;
 
+const FilterWrapper = styled.div`
+    position: relative;
+`;
+
 const FilterContainer = styled.div`
     position: absolute;
-    right: 20px;
+    right: 40px;
+    width: 136px;
 `;
 
 const DropDownWrapper = styled.div`
     position: relative;
-    top: 5px;
+    top: 37px;
     background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
     width: 220px;
-    max-width: 100%;
-    right: 0;
+    right: 64px;
     padding: 2px;
     z-index: 100;
     border-radius: 15px;

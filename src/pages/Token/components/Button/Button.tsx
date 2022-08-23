@@ -66,7 +66,7 @@ const Button: React.FC<ButtonProps> = ({
     const defaultFontWeight = type === ButtonType.label ? '500' : undefined;
     const defaultMinHeight =
         type === ButtonType.submit || type === ButtonType.default
-            ? '32px'
+            ? '36px'
             : type === ButtonType.label
             ? '15px'
             : additionalStyles?.minHeight;
@@ -125,37 +125,37 @@ const Wrapper = styled.button<{
     text-transform: uppercase;
     align-items: center;
     justify-content: center;
-    ${(_props) => (_props?.width ? `width: ${_props.width}` : '')};
-    ${(_props) => (_props?.height ? `height: ${_props.height}` : '')};
-    ${(_props) => (_props?.activeBg ? 'border: 0' : 'border: 1px solid var(--button-bg-active)')};
+    ${(props) => (props?.width ? `width: ${props.width}` : '')};
+    ${(props) => (props?.height ? `height: ${props.height}` : '')};
+    ${(props) => (props?.activeBg ? 'border: 0' : 'border: 1px solid var(--button-bg-active)')};
     border-radius: 30px;
     font-family: Roboto !important;
-    font-weight: ${(_props) => (_props?.fontWeight ? _props.fontWeight : '700')};
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
-    cursor: ${(_props) => (_props?.disabled ? 'not-allowed' : 'pointer')};
-    color: ${(_props) =>
-        _props?.active
-            ? _props.activeTextColor
-                ? _props.activeTextColor
+    font-weight: ${(props) => (props?.fontWeight ? props.fontWeight : '700')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '')};
+    cursor: ${(props) => (props?.disabled ? 'not-allowed' : 'pointer')};
+    color: ${(props) =>
+        props?.active
+            ? props.activeTextColor
+                ? props.activeTextColor
                 : 'var(--button-text-active)'
-            : _props.inactiveTextColor
-            ? _props.inactiveTextColor
+            : props.inactiveTextColor
+            ? props.inactiveTextColor
             : 'var(--button-text-inactive)'};
-    background-color: ${(_props) =>
-        _props?.active
-            ? _props.activeBgColor
-                ? _props.activeBgColor
+    background-color: ${(props) =>
+        props?.active
+            ? props.activeBgColor
+                ? props.activeBgColor
                 : 'var(--button-bg-active)'
-            : _props.inactiveBgColor
-            ? _props.inactiveBgColor
+            : props.inactiveBgColor
+            ? props.inactiveBgColor
             : 'var(--button-bg-inactive)'};
-    ${(_props) => (_props?.active && _props.activeBg ? `background:${_props.activeBg}` : '')};
-    ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
-    ${(_props) => (_props?.padding ? `padding: ${_props.padding}` : '')};
+    ${(props) => (props.activeBg ? `background:${props.activeBg}` : '')};
+    ${(props) => (props?.margin ? `margin: ${props.margin}` : '')};
+    ${(props) => (props?.padding ? `padding: ${props.padding}` : '')};
     &:hover {
-        ${(_props) => (_props?.hoverShadow && !_props?.disabled ? `box-shadow:${_props.hoverShadow}` : '')}
-        ${(_props) => (_props?.hoverBorderEffect && !_props?.disabled ? `border:var(--primary-color)` : '')}
-        ${(_props) => (_props?.active && _props.activeBg ? `background: #7119e1` : '')};
+        ${(props) => (props?.hoverShadow && !props?.disabled ? `box-shadow:${props.hoverShadow}` : '')}
+        ${(props) => (props?.hoverBorderEffect && !props?.disabled ? `border:var(--primary-color)` : '')}
+        ${(props) => (props?.active && props.activeBg ? `background: #7119e1` : '')};
     }
     &:disabled {
         opacity: 0.6;

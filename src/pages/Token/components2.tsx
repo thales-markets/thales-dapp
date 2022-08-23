@@ -40,7 +40,7 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     color: #f6f6fe;
     text-transform: uppercase;
     min-height: 30px;
-    padding: 0px 20px 0 20px;
+    padding: 0 20px;
     @media (max-width: 767px) {
         font-size: 16px;
         padding: 0px 5px;
@@ -238,15 +238,15 @@ export const StyledInfoIcon = styled(InfoIcon)`
 export const Line = styled.hr<{ margin?: string }>`
     height: 1px;
     color: #ffffff;
-    ${(_props) => (_props.margin ? `margin: ${_props.margin}` : '')};
+    ${(props) => (props.margin ? `margin: ${props.margin}` : '')};
 `;
 
 export const DashedLine = styled.hr<{ gridRow: number; widthPer: number }>`
     border: none;
     border-bottom: 2px dashed #64d9fe80;
-    grid-row: ${(_props) => _props.gridRow};
+    grid-row: ${(props) => props.gridRow};
     grid-column: 1 / 13;
-    width: ${(_props) => _props.widthPer}%;
+    width: ${(props) => props.widthPer}%;
 `;
 
 export const DashedLineVertical = styled.hr<{
@@ -258,11 +258,11 @@ export const DashedLineVertical = styled.hr<{
 }>`
     border: none;
     border-left: 2px dashed #64d9fe80;
-    grid-row: ${(_props) => _props.gridRow};
-    grid-column-start: ${(_props) => _props.columnStart};
-    margin-top: ${(_props) => _props.marginTop}px;
-    height: ${(_props) => _props.heightPer}%;
-    ${(_props) => (_props.marginLeft ? `margin-left: ${_props.marginLeft}px;` : '')}
+    grid-row: ${(props) => props.gridRow};
+    grid-column-start: ${(props) => props.columnStart};
+    margin-top: ${(props) => props.marginTop}px;
+    height: ${(props) => props.heightPer}%;
+    ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
 `;
 
 export const Tip23Link: React.FC = () => {

@@ -247,12 +247,11 @@ const Staking: React.FC = () => {
 const SectionWrapper = styled.section<{ columns?: number; rows?: number; border?: boolean }>`
     box-sizing: border-box;
     border-radius: 15px;
-    ${(_props) =>
-        _props.rows ? 'display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; grid-gap: 24px;' : ''}
-    grid-column: span ${(_props) => (_props.columns ? _props.columns : 4)};
-    grid-row: span ${(_props) => (_props.rows ? _props.rows : 1)};
-    background: ${(_props) =>
-        _props.border ?? true
+    ${(props) => (props.rows ? 'display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; grid-gap: 24px;' : '')}
+    grid-column: span ${(props) => (props.columns ? props.columns : 4)};
+    grid-row: span ${(props) => (props.rows ? props.rows : 1)};
+    background: ${(props) =>
+        props.border ?? true
             ? 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)'
             : 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)'};
     padding: 2px;
@@ -260,7 +259,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; border?
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
     display: grid;
-    background: ${(_props) => (_props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
     align-items: center;
 `;
@@ -300,7 +299,7 @@ const SectionValueContent = styled(SectionContent)`
 `;
 
 const SectionDetails = styled.div<{ positionUp: boolean }>`
-    padding: ${(_props) => (_props.positionUp ? '20px 15px 0 15px' : '0 15px 20px 15px')};
+    padding: ${(props) => (props.positionUp ? '20px 15px 0 15px' : '0 15px 20px 15px')};
 `;
 
 const SectionDetailsLabel = styled.span`

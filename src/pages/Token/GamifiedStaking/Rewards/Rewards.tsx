@@ -46,6 +46,7 @@ enum SectionType {
     VOLUME,
     REWARD,
     CLAIM,
+    CLAIM_ON_BEHALF,
 }
 
 const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => void }> = ({
@@ -325,23 +326,25 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 title={t('options.earn.gamified-staking.rewards.claim-button-tooltip') as string}
                 open={showTooltip}
             >
-                <Button
-                    type={ButtonType.submit}
-                    active={isClaimAvailable}
-                    disabled={!isClaimAvailable}
-                    width={'50%'}
-                    onMouseOverHandler={() => {
-                        setShowTooltip(true);
-                    }}
-                    onMouseOutHandler={() => {
-                        setShowTooltip(false);
-                    }}
-                    onClickHandler={handleClaimStakingRewards}
-                >
-                    {isClaiming
-                        ? t('options.earn.gamified-staking.rewards.claiming')
-                        : t('options.earn.gamified-staking.rewards.claim')}
-                </Button>
+                <ButtonWrapperTooltip>
+                    <Button
+                        type={ButtonType.submit}
+                        active={isClaimAvailable}
+                        disabled={!isClaimAvailable}
+                        width={'100%'}
+                        onMouseOverHandler={() => {
+                            setShowTooltip(true);
+                        }}
+                        onMouseOutHandler={() => {
+                            setShowTooltip(false);
+                        }}
+                        onClickHandler={handleClaimStakingRewards}
+                    >
+                        {isClaiming
+                            ? t('options.earn.gamified-staking.rewards.claiming')
+                            : t('options.earn.gamified-staking.rewards.claim')}
+                    </Button>
+                </ButtonWrapperTooltip>
             </StyledMaterialTooltip>
         );
     };
@@ -382,8 +385,10 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                             formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus)}
                     </SectionValueContent>
                 </SectionValue>
-                <Line margin={'10px 0 0 0'} />
-                <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
+                <NetworkFeesWrapper>
+                    <Line margin={'10px 0'} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
+                </NetworkFeesWrapper>
                 <ButtonContainer>
                     {getClaimButton()}
                     {stakingRewards && stakingRewards.isClaimPaused && (
@@ -530,20 +535,27 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             <DashedLineVertical gridRow={5} columnStart={7} marginTop={gridGap} heightPer={100} marginLeft={-10} />
 
             {/* Fourth row */}
-            <SectionWrapper
-                columns={3}
-                backgroundType={BackgroundType.CLAIM_ON_BEHALF}
-                onClick={() => setShowClaimOnBehalfModal(true)}
-            >
-                <SectionContentWrapper background={false}>
-                    <SectionLabel type={SectionType.REWARD} marginTop={'34px'}>
-                        <SectionLabelContent type={SectionType.REWARD}>
-                            {t('options.earn.gamified-staking.rewards.enable-disable-claim-on-behalf-label')}
+            <SectionWrapper columns={3} onClick={() => setShowClaimOnBehalfModal(true)}>
+                <SectionContentWrapper>
+                    <SectionLabel type={SectionType.CLAIM_ON_BEHALF} marginTop={'24px'}>
+                        <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
+                            {t('options.earn.gamified-staking.rewards.enable-claim-on-behalf-label')}
                         </SectionLabelContent>
                     </SectionLabel>
-                    <ArrowWrapper marginTop={'110px'}>
-                        <ArrowLink src={arrowLink} widthPer={7} />
-                    </ArrowWrapper>
+                    <Button
+                        type={ButtonType.default}
+                        active={true}
+                        width={'100%'}
+                        margin={'76px 0 10px auto'}
+                        activeTextColor={'#ffffff'}
+                        hoverShadow={false}
+                        activeBg={'linear-gradient(270deg, #516aff 0%, #8208fc 100%)'}
+                        inactiveBgColor={'linear-gradient(270deg, #516aff 0%, #8208fc 100%)'}
+                        fontSize={'20px'}
+                        onClickHandler={() => setShowClaimOnBehalfModal(true)}
+                    >
+                        {t('options.earn.gamified-staking.rewards.enable-claim-on-behalf-button')}
+                    </Button>
                 </SectionContentWrapper>
             </SectionWrapper>
             <SectionWrapper columns={6}>{getClaimSection()}</SectionWrapper>
@@ -607,7 +619,6 @@ enum BackgroundType {
     SPORTS,
     EXOTIC,
     LP_STAKING,
-    CLAIM_ON_BEHALF,
 }
 
 const SectionWrapper = styled.section<{
@@ -618,17 +629,16 @@ const SectionWrapper = styled.section<{
 }>`
     box-sizing: border-box;
     border-radius: 15px;
-    grid-column: ${(_props) =>
-        `${_props.startColumn ? _props.startColumn + ' / ' : ''} span ${_props.columns ? _props.columns : 4}`};
+    grid-column: ${(props) =>
+        `${props.startColumn ? props.startColumn + ' / ' : ''} span ${props.columns ? props.columns : 4}`};
     grid-row: span 1;
     padding: 2px;
-    background: ${(_props) => {
-        switch (_props.backgroundType) {
+    background: ${(props) => {
+        switch (props.backgroundType) {
             case BackgroundType.AMM:
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.RANGED:
             case BackgroundType.LP_STAKING:
-            case BackgroundType.CLAIM_ON_BEHALF:
                 return 'linear-gradient(-20deg, #801BF2 0%, #464DCF 100%)';
             case BackgroundType.SPORTS:
                 return '#303656';
@@ -638,13 +648,14 @@ const SectionWrapper = styled.section<{
                 return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
         }
     }};
-    ${(_props) => (_props.marginTop ? `margin-top: ${_props.marginTop}px;` : '')};
-    cursor: ${(_props) => (_props.backgroundType !== undefined ? 'pointer' : 'default')};
+    ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
+    cursor: ${(props) => (props.backgroundType !== undefined ? 'pointer' : 'default')};
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
     display: grid;
-    background: ${(_props) => (_props.background ?? true ? '#04045a' : 'none')};
+    height: 100%;
+    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;
@@ -657,9 +668,9 @@ const SectionContent = styled.span`
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; marginTop?: string }>`
-    ${(_props) => (_props.marginTop ? `margin-top: ${_props.marginTop};` : '')}
-    ${(_props) => {
-        switch (_props.type) {
+    ${(props) => (props.marginTop ? `margin-top: ${props.marginTop};` : '')}
+    ${(props) => {
+        switch (props.type) {
             case SectionType.INFO:
                 return 'padding-bottom: 15px;';
             case SectionType.VOLUME:
@@ -673,6 +684,7 @@ const SectionLabel = styled.div<{ type: SectionType; marginTop?: string }>`
             case SectionType.REWARD:
                 return 'padding-bottom: 20px;';
             case SectionType.CLAIM:
+            case SectionType.CLAIM_ON_BEHALF:
                 return 'padding: 10px 0;';
             default:
                 return '';
@@ -681,18 +693,25 @@ const SectionLabel = styled.div<{ type: SectionType; marginTop?: string }>`
 `;
 
 const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: string }>`
-    text-transform: uppercase;
-    ${(_props) => (_props.logo ? `content: url(${_props.logo});` : '')}
-    ${(_props) => {
-        switch (_props.type) {
+    ${(props) => (props.logo ? `content: url(${props.logo});` : '')}
+    ${(props) => {
+        switch (props.type) {
             case SectionType.INFO:
             case SectionType.VOLUME:
                 return `
+                    text-transform: uppercase;
                     font-weight: 600;
                     font-size: 15px;
                 `;
             case SectionType.REWARD:
             case SectionType.CLAIM:
+                return `
+                    text-transform: uppercase;
+                    font-weight: 700;
+                    font-size: 18px;
+                    line-height: 24px;
+                `;
+            case SectionType.CLAIM_ON_BEHALF:
                 return `
                     font-weight: 700;
                     font-size: 18px;
@@ -705,8 +724,8 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
 `;
 
 const SectionValue = styled.div<{ type: SectionType }>`
-    ${(_props) => {
-        switch (_props.type) {
+    ${(props) => {
+        switch (props.type) {
             case SectionType.INFO:
                 return 'padding-bottom: 10px;';
             case SectionType.VOLUME:
@@ -723,8 +742,8 @@ const SectionValue = styled.div<{ type: SectionType }>`
 const SectionValueContent = styled(SectionContent)<{ type: SectionType }>`
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    ${(_props) => {
-        switch (_props.type) {
+    ${(props) => {
+        switch (props.type) {
             case SectionType.INFO:
                 return `
                     font-weight: 700;
@@ -750,8 +769,8 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType }>`
 `;
 
 const SectionDescription = styled.div<{ type: SectionType }>`
-    ${(_props) => {
-        switch (_props.type) {
+    ${(props) => {
+        switch (props.type) {
             case SectionType.INFO:
                 return `
                     min-height: 70px; 
@@ -793,11 +812,11 @@ const SectionDetailsValue = styled.span<{ bonus?: boolean }>`
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(_props) => (_props.bonus ? '#50ce99' : '#ffffff')};
+    color: ${(props) => (props.bonus ? '#50ce99' : '#ffffff')};
 `;
 
 const ArrowWrapper = styled.div<{ marginTop: string }>`
-    margin-top: ${(_props) => _props.marginTop};
+    margin-top: ${(props) => props.marginTop};
     text-align: end;
 `;
 
@@ -805,7 +824,7 @@ const ArrowLink = styled.img<{ widthPer?: number }>`
     margin-left: 8px;
     cursor: pointer;
     filter: brightness(0) invert(1);
-    ${(_props) => (_props.widthPer ? `width: ${_props.widthPer}%;` : '')}
+    ${(props) => (props.widthPer ? `width: ${props.widthPer}%;` : '')}
 `;
 
 const StyledInfoIcon = styled(InfoIcon)`
@@ -814,6 +833,12 @@ const StyledInfoIcon = styled(InfoIcon)`
     width: 14px;
     height: 14px;
     margin-left: 6px;
+`;
+
+const ButtonWrapperTooltip = styled.div`
+    width: 50%;
+    display: flex;
+    justify-content: center;
 `;
 
 const RewardPeriod = styled(FlexDivEnd)`
@@ -826,6 +851,10 @@ const PeriodLabel = styled(SectionContent)`
     font-size: 15px;
     text-transform: uppercase;
     color: #64d9fe;
+`;
+
+const NetworkFeesWrapper = styled.div`
+    margin: 0 50px;
 `;
 
 export default Rewards;

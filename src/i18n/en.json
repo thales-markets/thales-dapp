@@ -697,7 +697,8 @@
                     "snx-volume": "Volume",
                     "snx-bonus": "Additional sUSD for max bonus",
                     "snx-rewards": "Max reward",
-                    "enable-disable-claim-on-behalf-label": "Enable/disable claim on behalf",
+                    "enable-claim-on-behalf-label": "Whitelist an address that can trigger a claim of staking rewards on your behalf",
+                    "enable-claim-on-behalf-button": "Enable claim on behalf",
                     "total-label": "Total claimable",
                     "claim": "Claim Thales rewards",
                     "claiming": "Claiming",
@@ -718,7 +719,15 @@
                 },
                 "vesting": {
                     "section-title": "Vesting",
-                    "section-description": "Vest your THALES staking rewards in escrow. THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
+                    "section-description": "Vest your THALES staking rewards in escrow. THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance.",
+                    "vest": {
+                        "available-to-vest": "Available to vest",
+                        "vest": "Vest",
+                        "vesting": "Vesting",
+                        "confirmation-message": "Tokens successfully vested"
+                    },
+                    "schedule-label": "Vesting schedule",
+                    "schedule-no-results": "No vesting schedule found."
                 }
             },
             "vesting": {

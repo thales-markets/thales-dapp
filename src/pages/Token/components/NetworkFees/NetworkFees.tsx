@@ -45,7 +45,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                 <>
                     {gasLimit.map((gas, index: number) => (
                         <div key={gas.label}>
-                            <NetworkFeeSummaryItem key={gas.label} marginTop={index === 0 ? 10 : 0}>
+                            <NetworkFeeSummaryItem key={gas.label}>
                                 <NetworkFeeSummaryLabel>{`${t('common.network-fee-gas')} - ${
                                     gas.label
                                 }`}</NetworkFeeSummaryLabel>
@@ -65,7 +65,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                     ))}
                 </>
             ) : (
-                <NetworkFeeSummaryItem marginTop={10}>
+                <NetworkFeeSummaryItem>
                     <NetworkFeeSummaryLabel>{t('common.network-fee-gas')}</NetworkFeeSummaryLabel>
                     <NetworkFeeSummaryContent>
                         {formatCurrencyWithSign(
@@ -90,9 +90,8 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
     );
 };
 
-const NetworkFeeSummaryItem = styled(SummaryItem)<{ marginTop?: number }>`
-    ${(_props) => (_props.marginTop ? 'margin-top: ' + _props.marginTop + 'px;' : '')}
-    margin-bottom: 0px;
+const NetworkFeeSummaryItem = styled(SummaryItem)`
+    margin-bottom: 0;
 `;
 
 const NetworkFeeSummaryLabel = styled(SummaryLabel)`

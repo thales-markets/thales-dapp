@@ -80,7 +80,7 @@ export const InputContainer = styled.div<{ marginTop?: number }>`
     display: flex;
     flex-direction: column;
     position: relative;
-    ${(_props) => (_props.marginTop ? 'margin-top: ' + _props.marginTop + 'px;' : '')}
+    ${(props) => (props.marginTop ? 'margin-top: ' + props.marginTop + 'px;' : '')}
     margin-bottom: 20px;
 `;
 

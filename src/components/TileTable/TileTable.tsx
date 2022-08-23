@@ -18,7 +18,7 @@ type Cell = {
 };
 
 export type TileRow = {
-    asset: AssetInfoProps;
+    asset?: AssetInfoProps;
     backgroundColor?: string;
     dotColor?: string;
     cells: Cell[];
@@ -31,6 +31,7 @@ type Properties = {
     lastColumnRenderer?: (row: TileRow | string) => ReactElement;
     rows: (TileRow | string)[];
     isLoading?: boolean;
+    noResultsMessage?: string;
 };
 
 const wrapInAnchor = (child: JSX.Element, index: number, href?: string) => {
@@ -43,12 +44,18 @@ const wrapInAnchor = (child: JSX.Element, index: number, href?: string) => {
     );
 };
 
-const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRenderer, rows, isLoading }) => {
+const TileTable: React.FC<Properties> = ({
+    firstColumnRenderer,
+    lastColumnRenderer,
+    rows,
+    isLoading,
+    noResultsMessage,
+}) => {
     const { t } = useTranslation();
     if (!isLoading && !rows?.length) {
         return (
             <NoDataContainer>
-                <NoDataText>{t('common.no-data-available')}</NoDataText>
+                <NoDataText>{noResultsMessage ? noResultsMessage : t('common.no-data-available')}</NoDataText>
             </NoDataContainer>
         );
     }
@@ -62,7 +69,7 @@ const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRender
                     );
 
                     return wrapInAnchor(
-                        <FlexDiv>
+                        <FlexDiv key={index}>
                             {firstColumnRenderer && firstColumnRenderer(row)}
                             <Tile
                                 lineHidden={index === 0}
@@ -71,7 +78,7 @@ const TileTable: React.FC<Properties> = ({ firstColumnRenderer, lastColumnRender
                                 backgroundColor={row.backgroundColor}
                                 key={index}
                             >
-                                <AssetInfo {...row.asset} />
+                                {row.asset && <AssetInfo {...row.asset} />}
                                 {cells.map((cell, index) => (
                                     <Tile.Cell direction={cell.flexDirection} key={index}>
                                         {cell.title && (
