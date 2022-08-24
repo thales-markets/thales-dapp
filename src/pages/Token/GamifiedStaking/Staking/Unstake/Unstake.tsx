@@ -508,8 +508,8 @@ const Unstake: React.FC = () => {
                 </InputContainer>
                 <Line
                     margin={
-                        isUnstakingInContract && unstakingEnded
-                            ? '16px 0 10px 0' // 16px = 40px - 34px(button height)
+                        isUnstakingInContract && unstakingEnded // two buttons
+                            ? '16px 0 10px 0'
                             : '40px 0 10px 0'
                     }
                 />
@@ -583,7 +583,7 @@ const UnstakingTitleText = styled.span`
 `;
 
 const ButtonsContainer = styled(FlexDivColumnCentered)`
-    padding: 50px 0 55px 0;
+    padding: 50px 0 60px 0;
     align-items: center;
     > * {
         &:nth-child(2) {

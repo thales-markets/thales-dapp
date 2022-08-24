@@ -84,7 +84,7 @@ const Button: React.FC<ButtonProps> = ({
             typedHowerShadow = 'var(--button-shadow)';
             break;
         case ButtonType.submit:
-            typedWidth = '90%';
+            typedWidth = '94%';
             typedHeight = '';
             typedPadding = '5px 15px';
             typedMargin = '0 10px';

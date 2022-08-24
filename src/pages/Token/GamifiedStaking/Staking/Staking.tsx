@@ -220,7 +220,7 @@ const Staking: React.FC = () => {
                         active={stakeOption !== stakeOptions.stake.value}
                         width={'94px'}
                         height={'32px'}
-                        margin={'80px 0 40px 0'}
+                        margin={'85px 0 40px 0'}
                         dotSize={'22px'}
                         label={{
                             firstLabel: stakeOptions.stake.label.toUpperCase(),

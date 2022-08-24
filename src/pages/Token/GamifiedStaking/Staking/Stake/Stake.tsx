@@ -312,7 +312,7 @@ const Stake: React.FC = () => {
 };
 
 const StakeButtonDiv = styled(FlexDivColumnCentered)`
-    padding: 50px 0 55px 0;
+    padding: 50px 0 60px 0;
     align-items: center;
     @media (max-width: 1024px) {
         padding-top: 15px;
