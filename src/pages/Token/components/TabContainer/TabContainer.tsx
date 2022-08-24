@@ -1,5 +1,6 @@
+import MergeAccount from 'pages/Token/MergeAccount';
 import queryString from 'query-string';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -20,12 +21,13 @@ const TabContainer: React.FC<{
     selectedTab: string;
     setSelectedTab: (tabId: string) => void;
 }> = ({ tabItems, selectedTab, setSelectedTab }) => {
-    const { t } = useTranslation();
-
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
+    const { t } = useTranslation();
     const location = useLocation();
+
+    const [showMergeAccountModal, setShowMergeAccountModal] = useState<boolean>(false);
 
     return (
         <Container>
@@ -53,12 +55,19 @@ const TabContainer: React.FC<{
                         );
                     })}
                 {isL2 && (
-                    <Button type={ButtonType.popup} active={true} width={'250px'}>
+                    <Button
+                        type={ButtonType.popup}
+                        active={true}
+                        width={'250px'}
+                        onClickHandler={() => setShowMergeAccountModal(true)}
+                    >
                         {t('options.earn.merge-account.title')}
                     </Button>
                 )}
             </MenuContainer>
             <Tab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+
+            {showMergeAccountModal && <MergeAccount onClose={() => setShowMergeAccountModal(false)} />}
         </Container>
     );
 };

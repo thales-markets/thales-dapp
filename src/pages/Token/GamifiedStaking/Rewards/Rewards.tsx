@@ -534,7 +534,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             <DashedLineVertical gridRow={5} columnStart={7} marginTop={gridGap} heightPer={100} marginLeft={-10} />
 
             {/* Fourth row */}
-            <SectionWrapper columns={3} onClick={() => setShowClaimOnBehalfModal(true)}>
+            <SectionWrapper columns={3}>
                 <SectionContentWrapper>
                     <SectionLabel type={SectionType.CLAIM_ON_BEHALF} marginTop={'24px'}>
                         <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, XButton } from 'theme/common';
 import TextInput from 'components/TextInput';
 import { DefaultSubmitButton, InputContainer, InputLabel } from '../components/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
@@ -21,9 +21,13 @@ import InfoWarningMessage from 'components/InfoWarningMessage';
 import { ArrowContainer, Result, ResultContainer } from 'pages/Token/Migration/components';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { Tip49Link } from 'pages/Token/components';
-import YourTransactions from './Transactions';
+import { Modal } from '@material-ui/core';
 
-const MergeAccountModal: React.FC = () => {
+type MergeAccountModalProps = {
+    onClose: () => void;
+};
+
+const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -153,84 +157,80 @@ const MergeAccountModal: React.FC = () => {
     };
 
     return (
-        <>
-            <GridWrapper>
-                <Container>
-                    <Header>
-                        <div>{t('options.earn.merge-account.title')}</div>
-                    </Header>
-                    <Description>
-                        <Trans
-                            i18nKey={`options.earn.merge-account.description`}
-                            components={[<span key="1" />, <Tip49Link key="2" />]}
-                        />
-                    </Description>
-                    <ResultContainer>
-                        <Result>{walletAddress}</Result>
-                        <InputLabel>{t('options.earn.merge-account.source-account-label')}:</InputLabel>
-                    </ResultContainer>
-                    <ArrowContainer>
-                        <ArrowDown />
-                    </ArrowContainer>
-                    <InputContainer>
-                        <TextInput
-                            value={destAddress}
-                            onChange={(e: any) => setDestAddress(e.target.value)}
-                            disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
-                            className={isDestAddressValid ? '' : 'error'}
-                            autoFocus={true}
-                        />
-                        <InputLabel>{t('options.earn.merge-account.destination-account-label')}:</InputLabel>
-                        <FieldValidationMessage
-                            showValidation={!isDestAddressValid}
-                            message={t(`common.errors.invalid-address`)}
-                        />
-                    </InputContainer>
-                    <MessageContainer>
-                        <InfoMessage message={t('options.earn.merge-account.info-message')}></InfoMessage>
-                    </MessageContainer>
-                    <MessageContainer>
-                        <InfoWarningMessage
-                            message={t('options.earn.merge-account.warning-message')}
-                        ></InfoWarningMessage>
-                    </MessageContainer>
-                    <ButtonContainer>
-                        {getMergeButton()}
-                        {!isAccountMergingEnabled && (
-                            <Message>{t('options.earn.merge-account.merge-account-disabled-message')}</Message>
-                        )}
-                        {isMergeBlocked && <Message>{getBlockedMergeMessage()}</Message>}
-                        <ValidationMessage
-                            showValidation={txErrorMessage !== null}
-                            message={txErrorMessage}
-                            onDismiss={() => setTxErrorMessage(null)}
-                        />
-                    </ButtonContainer>
-                </Container>
-            </GridWrapper>
-            <YourTransactions />
-        </>
+        <Modal
+            open={true}
+            onClose={(_, reason) => {
+                if (reason !== 'backdropClick') onClose();
+            }}
+            style={{ backdropFilter: 'blur(10px)' }}
+        >
+            <Container>
+                <Header>
+                    <div>{t('options.earn.merge-account.title')}</div>
+                    <XButton onClick={onClose} />
+                </Header>
+                <Description>
+                    <Trans
+                        i18nKey={`options.earn.merge-account.description`}
+                        components={[<span key="1" />, <Tip49Link key="2" />]}
+                    />
+                </Description>
+                <ResultContainer>
+                    <Result>{walletAddress}</Result>
+                    <InputLabel>{t('options.earn.merge-account.source-account-label')}:</InputLabel>
+                </ResultContainer>
+                <ArrowContainer>
+                    <ArrowDown />
+                </ArrowContainer>
+                <InputContainer>
+                    <TextInput
+                        value={destAddress}
+                        onChange={(e: any) => setDestAddress(e.target.value)}
+                        disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
+                        className={isDestAddressValid ? '' : 'error'}
+                        autoFocus={true}
+                    />
+                    <InputLabel>{t('options.earn.merge-account.destination-account-label')}:</InputLabel>
+                    <FieldValidationMessage
+                        showValidation={!isDestAddressValid}
+                        message={t(`common.errors.invalid-address`)}
+                    />
+                </InputContainer>
+                <MessageContainer>
+                    <InfoMessage message={t('options.earn.merge-account.info-message')}></InfoMessage>
+                </MessageContainer>
+                <MessageContainer>
+                    <InfoWarningMessage message={t('options.earn.merge-account.warning-message')}></InfoWarningMessage>
+                </MessageContainer>
+                <ButtonContainer>
+                    {getMergeButton()}
+                    {!isAccountMergingEnabled && (
+                        <Message>{t('options.earn.merge-account.merge-account-disabled-message')}</Message>
+                    )}
+                    {isMergeBlocked && <Message>{getBlockedMergeMessage()}</Message>}
+                    <ValidationMessage
+                        showValidation={txErrorMessage !== null}
+                        message={txErrorMessage}
+                        onDismiss={() => setTxErrorMessage(null)}
+                    />
+                </ButtonContainer>
+            </Container>
+        </Modal>
     );
 };
-
-const GridWrapper = styled(FlexDivColumnCentered)`
-    grid-column: span 10;
-    align-items: center;
-    margin: 20px 10px 20px 10px;
-    @media (max-width: 767px) {
-        margin: 10px 0;
-    }
-`;
 
 const Container = styled(FlexDivColumnCentered)`
     font-size: 12px;
     line-height: 24px;
     border-radius: 15px;
-    max-width: 550px;
+    max-width: 500px;
     background: #04045a;
     border: 1px solid #64d9fe;
     box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
-    padding: 40px 50px 40px 50px;
+    margin: auto;
+    position: relative;
+    top: calc(50% - 300px);
+    padding: 15px;
     @media (max-width: 767px) {
         padding: 20px;
         box-shadow: none;

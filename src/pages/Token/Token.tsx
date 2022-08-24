@@ -133,7 +133,7 @@ const TokenPage: React.FC = () => {
                                 {selectedTab === 'vesting' && <Vesting />}
                                 {selectedTab === 'lp-staking' && (isL2 ? <LPStakingL2 /> : <LPStaking />)}
                                 {selectedTab === 'migration' && !isL2 && <Migration />}
-                                {selectedTab === 'merge-account' && <MergeAccount />}
+                                {selectedTab === 'merge-account' && <MergeAccount onClose={() => {}} />}
                             </InnerWidgetsContainer>
                         </WidgetsContainer>
                     </MainContentContainer>
