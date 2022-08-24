@@ -8,7 +8,7 @@ import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { ButtonContainer, Line } from 'pages/Token/components2';
-import YourTransactions from 'pages/Token/GamifiedStaking/Transactions';
+import YourTransactions from './Transactions';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 import useVestingScheduleQuery from 'queries/token/useVestingScheduleQuery';
 import React, { useEffect, useMemo, useState } from 'react';

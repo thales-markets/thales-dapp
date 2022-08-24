@@ -1,10 +1,10 @@
+import TransactionsWithFilters from 'pages/Token/components/TransactionsWithFilters';
 import React from 'react';
-import TransactionsWithFilters from '../../components/TransactionsWithFilters';
+
 import { TransactionFilterEnum } from 'types/token';
 
 const filters = [
     TransactionFilterEnum.ALL,
-    TransactionFilterEnum.CLAIM_STAKING_REWARDS,
     TransactionFilterEnum.STAKE,
     TransactionFilterEnum.UNSTAKE,
     TransactionFilterEnum.START_UNSTAKE,

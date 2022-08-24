@@ -13,7 +13,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
 import { Line } from '../../components2';
-import YourTransactions from '../../GamifiedStaking/Transactions';
+import YourTransactions from './Transactions';
 import Stake from './Stake';
 import Unstake from './Unstake';
 

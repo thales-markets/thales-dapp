@@ -95,11 +95,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                                 onMouseEnter={() => setShowFilters(true)}
                                 onMouseLeave={() => setShowFilters(false)}
                             >
-                                <Button
-                                    type={ButtonType.default}
-                                    onClickHandler={() => setShowFilters(!showFilters)}
-                                    additionalStyles={{ float: 'right' }}
-                                >
+                                <Button type={ButtonType.default} onClickHandler={() => setShowFilters(!showFilters)}>
                                     {t(`options.earn.table.filter.button`)}
                                 </Button>
                                 <DropDownWrapper hidden={!showFilters}>
@@ -186,7 +182,7 @@ const FilterContainer = styled.div`
 
 const DropDownWrapper = styled.div`
     position: relative;
-    top: 40px;
+    top: 5px;
     background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
     width: 220px;
     right: 64px;
@@ -198,13 +194,13 @@ const DropDown = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 15px;
-    padding: 10px;
+    padding: 15px;
     .selected {
         color: #00f9ff !important;
         &:before {
             content: url(${checkmark});
             position: absolute;
-            right: 10px;
+            right: 15px;
             transform: scale(0.9);
         }
     }
@@ -231,7 +227,9 @@ const FilterText = styled(Text)`
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
-    padding: 7px 0;
+    &:not(:first-child) {
+        padding-top: 15px;
+    }
 `;
 
 export default TransactionsWithFilters;

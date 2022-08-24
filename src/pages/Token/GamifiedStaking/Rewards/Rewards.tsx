@@ -22,7 +22,7 @@ import {
     StyledMaterialTooltip,
     Tip48Link,
 } from 'pages/Token/components2';
-import YourTransactions from 'pages/Token/GamifiedStaking/Transactions';
+import YourTransactions from './Transactions';
 import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import useStakingRewardsQuery from 'queries/token/useStakingRewardsQuery';
 import React, { ReactElement, useEffect, useState } from 'react';
