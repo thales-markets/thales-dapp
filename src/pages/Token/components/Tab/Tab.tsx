@@ -7,6 +7,7 @@ import Vesting from 'pages/Token/GamifiedStaking/Vesting';
 import { useTranslation } from 'react-i18next';
 import Button from '../Button';
 import { TokenTabEnum } from 'types/token';
+import { ButtonType } from '../Button/Button';
 
 const GRID_GAP = 20;
 
@@ -62,12 +63,10 @@ const Tab: React.FC<{
                                     return (
                                         <Button
                                             key={index}
-                                            width={'48%'}
-                                            height={'32px'}
+                                            type={ButtonType.default}
                                             active={activeButton == el.id}
-                                            padding={'5px 40px'}
+                                            width={'48%'}
                                             margin={'0 20px'}
-                                            fontSize={'15px'}
                                             onClickHandler={() => setActiveButton(el.id)}
                                         >
                                             {el.title}

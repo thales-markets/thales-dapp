@@ -5,6 +5,7 @@ export enum ButtonType {
     default = 'default',
     submit = 'submit',
     label = 'label',
+    popup = 'popup',
 }
 
 type ButtonProps = {
@@ -17,7 +18,7 @@ type ButtonProps = {
     activeBgColor?: string;
     inactiveTextColor?: string;
     inactiveBgColor?: string;
-    hoverShadow?: boolean;
+    hoverShadow?: string;
     hoverBorderEffect?: boolean;
     margin?: string;
     onClickHandler?: () => void;
@@ -52,51 +53,120 @@ const Button: React.FC<ButtonProps> = ({
     children,
     type = ButtonType.default,
 }) => {
-    const defaultWidth = width ? width : type === ButtonType.submit ? '90%' : width;
-    const defaultHeight = height
-        ? height
-        : type === ButtonType.default
-        ? '32px'
-        : type === ButtonType.label
-        ? '20px'
-        : height;
-    const defaultPadding = padding ? padding : type === ButtonType.submit ? '5px 15px' : padding;
-    const defaultMargin = type === ButtonType.submit ? '0 10px' : type === ButtonType.label ? '2px 0 2px 4px' : margin;
-    const defaultFontSize = type === ButtonType.submit ? '20px' : type === ButtonType.label ? '10px' : fontSize;
-    const defaultFontWeight = type === ButtonType.label ? '500' : undefined;
-    const defaultMinHeight =
-        type === ButtonType.submit || type === ButtonType.default
-            ? '36px'
-            : type === ButtonType.label
-            ? '15px'
-            : additionalStyles?.minHeight;
+    let typedWidth: string;
+    let typedHeight: string;
+    let typedPadding: string;
+    let typedMargin: string;
+    let typedFontSize: string;
+    let typedFontWeight: string;
+    let typedMinHeight: string;
+    let typedActiveBg: string;
+    let typedActiveBgColor: string;
+    let typedActiveTextColor: string;
+    let typedInactiveBgColor: string;
+    let typedInactiveTextColor: string;
+    let typedHowerShadow: string;
 
-    const defaultActivBg = type === ButtonType.label ? 'linear-gradient(-20deg,#801BF2 0%,#464DCF 100%);' : activeBg;
-    const defaultActiveTextColor = type === ButtonType.label ? '#ffffff' : activeTextColor;
+    switch (type) {
+        case ButtonType.default:
+            typedWidth = '100%';
+            typedHeight = '32px';
+            typedPadding = '5px 40px';
+            typedMargin = '';
+            typedFontSize = '15px';
+            typedFontWeight = '700';
+            typedMinHeight = '36px';
+            typedActiveBg = '';
+            typedActiveBgColor = 'var(--button-bg-active)';
+            typedActiveTextColor = 'var(--button-text-active)';
+            typedInactiveBgColor = 'var(--button-bg-inactive)';
+            typedInactiveTextColor = 'var(--button-text-inactive)';
+            typedHowerShadow = 'var(--button-shadow)';
+            break;
+        case ButtonType.submit:
+            typedWidth = '90%';
+            typedHeight = '';
+            typedPadding = '5px 15px';
+            typedMargin = '0 10px';
+            typedFontSize = '20px';
+            typedFontWeight = '700';
+            typedMinHeight = '36px';
+            typedActiveBg = '';
+            typedActiveBgColor = 'var(--button-bg-active)';
+            typedActiveTextColor = 'var(--button-text-active)';
+            typedInactiveBgColor = 'var(--button-bg-inactive)';
+            typedInactiveTextColor = 'var(--button-text-inactive)';
+            typedHowerShadow = 'var(--button-shadow)';
+            break;
+        case ButtonType.label:
+            typedWidth = '';
+            typedHeight = '20px';
+            typedPadding = '';
+            typedMargin = '2px 0 2px 4px';
+            typedFontSize = '10px';
+            typedFontWeight = '500';
+            typedMinHeight = '15px';
+            typedActiveBg = 'linear-gradient(-20deg,#801BF2 0%,#464DCF 100%)';
+            typedActiveBgColor = '';
+            typedActiveTextColor = '#ffffff';
+            typedInactiveBgColor = '';
+            typedInactiveTextColor = '';
+            typedHowerShadow = '';
+            break;
+        case ButtonType.popup:
+            typedWidth = '100%';
+            typedHeight = '32px';
+            typedPadding = '';
+            typedMargin = '0 0 0 auto';
+            typedFontSize = '20px';
+            typedFontWeight = '700';
+            typedMinHeight = '36px';
+            typedActiveBg = 'linear-gradient(270deg, #516aff 0%, #8208fc 100%)';
+            typedActiveBgColor = '';
+            typedActiveTextColor = '#ffffff';
+            typedInactiveBgColor = 'linear-gradient(270deg, #516aff 0%, #8208fc 100%)';
+            typedInactiveTextColor = '';
+            typedHowerShadow = '';
+            break;
+        default:
+            typedWidth = '';
+            typedHeight = '';
+            typedPadding = '';
+            typedMargin = '';
+            typedFontSize = '';
+            typedFontWeight = '700';
+            typedMinHeight = '';
+            typedActiveBg = '';
+            typedActiveBgColor = 'var(--button-bg-active)';
+            typedActiveTextColor = 'var(--button-text-active)';
+            typedInactiveBgColor = 'var(--button-bg-inactive)';
+            typedInactiveTextColor = 'var(--button-text-inactive)';
+            typedHowerShadow = '';
+    }
 
     return (
         <Wrapper
-            width={defaultWidth}
-            height={defaultHeight}
-            padding={defaultPadding}
+            width={width ? width : typedWidth}
+            height={height ? height : typedHeight}
+            padding={padding ? padding : typedPadding}
             active={active}
-            activeTextColor={defaultActiveTextColor}
-            activeBg={defaultActivBg}
-            activeBgColor={activeBgColor}
-            inactiveTextColor={inactiveTextColor}
-            inactiveBgColor={inactiveBgColor}
-            hoverShadow={hoverShadow ?? true ? 'var(--button-shadow)' : ''}
+            activeTextColor={activeTextColor ? activeTextColor : typedActiveTextColor}
+            activeBg={activeBg ? activeBg : typedActiveBg}
+            activeBgColor={activeBgColor ? activeBgColor : typedActiveBgColor}
+            inactiveTextColor={inactiveTextColor ? inactiveTextColor : typedInactiveTextColor}
+            inactiveBgColor={inactiveBgColor ? inactiveBgColor : typedInactiveBgColor}
+            hoverShadow={hoverShadow ? hoverShadow : typedHowerShadow}
             hoverBorderEffect={hoverBorderEffect}
-            margin={defaultMargin}
+            margin={margin ? margin : typedMargin}
             onClick={() => (onClickHandler ? onClickHandler() : '')}
             onMouseOver={() => (onMouseOverHandler ? onMouseOverHandler() : '')}
             onMouseOut={() => (onMouseOutHandler ? onMouseOutHandler() : '')}
             disabled={disabled}
-            fontSize={defaultFontSize}
-            fontWeight={defaultFontWeight}
+            fontSize={fontSize ? fontSize : typedFontSize}
+            fontWeight={typedFontWeight}
             style={{
                 ...additionalStyles,
-                minHeight: defaultMinHeight,
+                minHeight: additionalStyles?.minHeight ? additionalStyles?.minHeight : typedMinHeight,
             }}
         >
             {children}
@@ -127,34 +197,20 @@ const Wrapper = styled.button<{
     justify-content: center;
     ${(props) => (props?.width ? `width: ${props.width}` : '')};
     ${(props) => (props?.height ? `height: ${props.height}` : '')};
-    ${(props) => (props?.activeBg ? 'border: 0' : 'border: 1px solid var(--button-bg-active)')};
+    border: ${(props) => (props?.activeBg ? '0' : '1px solid var(--button-bg-active)')};
     border-radius: 30px;
     font-family: Roboto !important;
-    font-weight: ${(props) => (props?.fontWeight ? props.fontWeight : '700')};
+    font-weight: ${(props) => props?.fontWeight};
     font-size: ${(props) => (props?.fontSize ? props.fontSize : '')};
     cursor: ${(props) => (props?.disabled ? 'not-allowed' : 'pointer')};
-    color: ${(props) =>
-        props?.active
-            ? props.activeTextColor
-                ? props.activeTextColor
-                : 'var(--button-text-active)'
-            : props.inactiveTextColor
-            ? props.inactiveTextColor
-            : 'var(--button-text-inactive)'};
-    background-color: ${(props) =>
-        props?.active
-            ? props.activeBgColor
-                ? props.activeBgColor
-                : 'var(--button-bg-active)'
-            : props.inactiveBgColor
-            ? props.inactiveBgColor
-            : 'var(--button-bg-inactive)'};
-    ${(props) => (props.activeBg ? `background:${props.activeBg}` : '')};
+    color: ${(props) => (props?.active ? props.activeTextColor : props.inactiveTextColor)};
+    background-color: ${(props) => (props?.active ? props.activeBgColor : props.inactiveBgColor)};
+    ${(props) => (props.activeBg ? `background: ${props.activeBg}` : '')};
     ${(props) => (props?.margin ? `margin: ${props.margin}` : '')};
     ${(props) => (props?.padding ? `padding: ${props.padding}` : '')};
     &:hover {
-        ${(props) => (props?.hoverShadow && !props?.disabled ? `box-shadow:${props.hoverShadow}` : '')}
-        ${(props) => (props?.hoverBorderEffect && !props?.disabled ? `border:var(--primary-color)` : '')}
+        ${(props) => (props?.hoverShadow && !props?.disabled ? `box-shadow: ${props.hoverShadow}` : '')}
+        ${(props) => (props?.hoverBorderEffect && !props?.disabled ? `border: var(--primary-color)` : '')}
         ${(props) => (props?.active && props.activeBg ? `background: #7119e1` : '')};
     }
     &:disabled {

@@ -365,7 +365,6 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                             onClickHandler={handleClosePeriod}
                             active={isClosingPeriodAvailable}
                             disabled={!isClosingPeriodAvailable}
-                            additionalStyles={{ minHeight: '15px' }}
                         >
                             {isClosingPeriod
                                 ? t('options.earn.gamified-staking.rewards.close-period.progress-label')
@@ -543,15 +542,9 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                         </SectionLabelContent>
                     </SectionLabel>
                     <Button
-                        type={ButtonType.default}
+                        type={ButtonType.popup}
                         active={true}
-                        width={'100%'}
                         margin={'76px 0 10px auto'}
-                        activeTextColor={'#ffffff'}
-                        hoverShadow={false}
-                        activeBg={'linear-gradient(270deg, #516aff 0%, #8208fc 100%)'}
-                        inactiveBgColor={'linear-gradient(270deg, #516aff 0%, #8208fc 100%)'}
-                        fontSize={'20px'}
                         onClickHandler={() => setShowClaimOnBehalfModal(true)}
                     >
                         {t('options.earn.gamified-staking.rewards.enable-claim-on-behalf-button')}

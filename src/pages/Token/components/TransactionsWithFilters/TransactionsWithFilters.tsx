@@ -15,6 +15,7 @@ import arrowDown from 'assets/images/filters/arrow-down.svg';
 import { orderBy } from 'lodash';
 import { isMobile } from 'utils/device';
 import Button from '../Button';
+import { ButtonType } from '../Button/Button';
 
 type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];
@@ -95,9 +96,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                                 onMouseLeave={() => setShowFilters(false)}
                             >
                                 <Button
-                                    height={'32px'}
-                                    padding={'5px 40px'}
-                                    fontSize={'15px'}
+                                    type={ButtonType.default}
                                     onClickHandler={() => setShowFilters(!showFilters)}
                                     additionalStyles={{ float: 'right' }}
                                 >
@@ -171,7 +170,7 @@ const SectionContainer = styled.section<{ gridColumns?: number }>`
 `;
 
 const SectionContent = styled(FlexDivColumn)`
-    margin-top: 40px;
+    margin-top: 50px;
     height: calc(100% - 30px);
 `;
 
@@ -187,7 +186,7 @@ const FilterContainer = styled.div`
 
 const DropDownWrapper = styled.div`
     position: relative;
-    top: 37px;
+    top: 40px;
     background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
     width: 220px;
     right: 64px;

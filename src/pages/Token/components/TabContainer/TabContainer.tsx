@@ -53,16 +53,7 @@ const TabContainer: React.FC<{
                         );
                     })}
                 {isL2 && (
-                    <Button
-                        type={ButtonType.default}
-                        active={true}
-                        width={'250px'}
-                        margin={'0 0 0 auto'}
-                        activeTextColor={'#ffffff'}
-                        hoverShadow={false}
-                        activeBg={'linear-gradient(270deg, #516aff 0%, #8208fc 100%)'}
-                        fontSize={'20px'}
-                    >
+                    <Button type={ButtonType.popup} active={true} width={'250px'}>
                         {t('options.earn.merge-account.title')}
                     </Button>
                 )}
