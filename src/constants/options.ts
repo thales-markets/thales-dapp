@@ -52,6 +52,7 @@ export const STABLE_DECIMALS = {
     DAI: 18,
     USDC: 6,
     USDT: 6,
+    BUSD: 18,
 };
 
 export const PHASES = ['trading', 'maturity', 'expiry'] as Phase[];

@@ -165,6 +165,7 @@ export const CRYPTO_CURRENCY = [
     'LOOKS',
     'DYDX',
     'ETC',
+    'BUSD',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 

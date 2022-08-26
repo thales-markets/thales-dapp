@@ -33,7 +33,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     69: 'KOVAN-OPTIMISTIC',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
-    56: 'BSC',
+    56: 'BINANCE SMART CHAIN MAINNET',
 };
 
 export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
@@ -44,7 +44,7 @@ export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     69: 'OPTIMISM-KOVAN',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
-    56: 'BSC',
+    56: 'BINANCE SMART CHAIN MAINNET',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
@@ -55,7 +55,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     69: 'OPTIMISM KOVAN',
     80001: 'POLYGON MUMBAI',
     137: 'POLYGON',
-    56: 'BSC',
+    56: 'BINANCE SMART CHAIN MAINNET',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
@@ -111,6 +111,10 @@ export const getInfuraRpcURL = (networkId: NetworkId) => {
 export const isNetworkSupported = (networkId: NetworkId): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
 };
+
+export const getIsMultiCollateralSupported = (networkId: NetworkId): boolean => !!~[10].indexOf(networkId);
+
+export const getIsBSC = (networkId: number): boolean => !!~[56].indexOf(networkId);
 
 export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(networkId);
 

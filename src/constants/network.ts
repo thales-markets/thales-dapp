@@ -88,6 +88,16 @@ export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
     },
 };
 
+export const BSC_NETWORK: Record<number, OptimismNetwork> = {
+    56: {
+        chainId: '0x38',
+        chainName: 'BSC',
+        rpcUrls: ['https://polygon-rpc.com'],
+        blockExplorerUrls: ['https://bscscan.com/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+    },
+};
+
 export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> = {
     10: {
         name: 'Optimism',
@@ -170,6 +180,24 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                     await (window.ethereum as any).request({
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: formattedChainId }],
+                    });
+                } catch (switchError: any) {
+                    console.log(switchError);
+                }
+            }
+        },
+    },
+    56: {
+        name: 'BSC',
+        icon: EthereumLogo,
+        changeNetwork: async (networkId: number) => {
+            const bscNetworkParams = BSC_NETWORK[networkId];
+
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await (window.ethereum as any).request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: bscNetworkParams.chainId }],
                     });
                 } catch (switchError: any) {
                     console.log(switchError);

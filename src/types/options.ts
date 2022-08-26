@@ -20,6 +20,8 @@ export type MarketType = 'positional' | 'ranged';
 
 export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT';
 
+export type AvailableStablecoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT' | 'BUSD';
+
 export type OptionsTransaction = {
     hash: string;
     type: OptionsTransactionType;
