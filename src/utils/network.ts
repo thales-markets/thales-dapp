@@ -5,7 +5,7 @@ import { GWEI_UNIT } from 'constants/network';
 import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
 import { serializeTransaction } from 'ethers/lib/utils';
 
-export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137;
+export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137 | 56;
 
 export enum Network {
     Mainnet = 1,
@@ -17,6 +17,7 @@ export enum Network {
     'Kovan-Ovm' = 69,
     'POLYGON-MUMBAI' = 80001,
     'POLYGON-MAINNET' = 137,
+    BSC = 56,
 }
 
 type EthereumProvider = {
@@ -32,6 +33,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     69: 'KOVAN-OPTIMISTIC',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
+    56: 'BSC',
 };
 
 export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
@@ -42,6 +44,7 @@ export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     69: 'OPTIMISM-KOVAN',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
+    56: 'BSC',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
@@ -52,6 +55,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     69: 'OPTIMISM KOVAN',
     80001: 'POLYGON MUMBAI',
     137: 'POLYGON',
+    56: 'BSC',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
