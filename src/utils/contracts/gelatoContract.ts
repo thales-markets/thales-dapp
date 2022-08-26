@@ -129,5 +129,6 @@ export const gelatoContract = {
         [Network['Kovan-Ovm']]: '0xaa5068dc2b3aade533d3e52c6eeaadc6a8154c57',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
     },
 };

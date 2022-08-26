@@ -12,6 +12,7 @@ export const thalesRoyalePassportContract = {
         [Network['Kovan-Ovm']]: '0x8363a01892dE85BC871005570B481c374f2aB3e6',
         [Network['POLYGON-MUMBAI']]: '0xF28fb48647bAa9dc434187bded9433D3436c2621',
         [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
     },
     abi: [
         {

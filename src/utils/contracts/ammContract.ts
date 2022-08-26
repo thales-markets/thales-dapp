@@ -12,6 +12,7 @@ export const ammContract = {
         [Network['Kovan-Ovm']]: '0xfed727f37e921Faac22e36E0bbaA8504B45F6e3f',
         [Network['POLYGON-MUMBAI']]: '0xdf0A5bf80E8009f2702E7d164A7bdeaa79013eba',
         [Network['POLYGON-MAINNET']]: '0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213',
+        [Network.BSC]: '0x85f1B57A1D3Ac7605de3Df8AdA056b3dB9676eCE',
     },
     abi: [
         {

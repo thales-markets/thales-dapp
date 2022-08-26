@@ -12,6 +12,7 @@ export const stakingThales = {
         [Network['Kovan-Ovm']]: '0x8417D248274439360CC38Be84CfFDc01226600F8',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
     },
     abi: [
         {

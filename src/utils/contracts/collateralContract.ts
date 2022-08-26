@@ -12,6 +12,7 @@ export const erc20Contract = {
         [Network['Kovan-Ovm']]: '0xaA5068dC2B3AADE533d3e52C6eeaadC6a8154c57', // sUSD
         [Network['POLYGON-MUMBAI']]: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', //USDC
         [Network['POLYGON-MAINNET']]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', //USDC
+        [Network.BSC]: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', //BUSD
     },
     abi: [
         { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
