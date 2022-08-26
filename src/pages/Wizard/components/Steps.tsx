@@ -483,7 +483,6 @@ const Step = styled.div<{ active?: boolean; clickable: boolean }>`
     border: 4px solid var(--input-border-color);
     color: var(--input-border-color);
     text-align: center;
-    position: relative;
     font-style: normal;
     font-weight: 700;
     font-size: 50px;

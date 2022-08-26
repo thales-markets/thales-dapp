@@ -679,42 +679,57 @@
                 "rewards": {
                     "section-title": "Rewards",
                     "section-description": "The Staking rewards shows the THALES rewards you have available for claiming.",
-                    "info-base": "As base rewards",
-                    "info-base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
-                    "info-bonus": "As bonus rewards",
-                    "info-bonus-description": "Maximum bonus rewards on top of base rewards is 50%. 21k or 70% to Protocol Usage bucket. This counts sUSD volume from AMM trading, ranged AMM trading, sport's AMM trading and exotic markets bidding and 9k or 30% to SNX stakers. <0 />",
-                    "volume-amm-label": "AMM markets",
-                    "volume-amm-desc": "Current AMM market volume:",
-                    "volume-ranged-label": "Ranged markets",
-                    "volume-ranged-desc": "Current Ranged market volume",
-                    "volume-sports-desc": "Current Sports market volume",
-                    "volume-exotic-desc": "Current Exotic market volume",
-                    "protocol-label": "Protocol usage bucket",
-                    "protocol-volume": "Volume",
-                    "protocol-bonus": "Additional sUSD for max bonus",
-                    "protocol-rewards": "Max reward",
-                    "snx-label": "SNX Staking",
-                    "snx-volume": "Volume",
-                    "snx-bonus": "Additional sUSD for max bonus",
-                    "snx-rewards": "Max reward",
-                    "enable-claim-on-behalf-label": "Whitelist an address that can trigger a claim of staking rewards on your behalf",
-                    "enable-claim-on-behalf-button": "Enable claim on behalf",
-                    "total-label": "Total claimable",
-                    "claim": "Claim Thales rewards",
-                    "claiming": "Claiming",
-                    "claim-button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
-                    "claim-confirmation-message": "Tokens successfully claimed",
-                    "period": "Time left:",
-                    "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
-                    "not-eligible-message": "You are not eligible for these rewards.",
-                    "paused-message": "Claiming is paused.",
-                    "close-period": {
-                        "label": "Close period",
-                        "progress-label": "Closing period...",
-                        "confirmation-message": "Period successfully closed"
+                    "info": {
+                        "base": "As base rewards",
+                        "base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
+                        "bonus": "As bonus rewards",
+                        "bonus-description": "Maximum bonus rewards on top of base rewards is 50%. 21k or 70% to Protocol Usage bucket. This counts sUSD volume from AMM trading, ranged AMM trading, sport's AMM trading and exotic markets bidding and 9k or 30% to SNX stakers. <0 />"
                     },
-                    "lp-staking-label-1": "thales/eth",
-                    "lp-staking-label-2": "LP Staking",
+                    "volume": {
+                        "amm-label": "AMM markets",
+                        "amm-desc": "Current AMM market volume:",
+                        "ranged-label": "Ranged markets",
+                        "ranged-desc": "Current Ranged market volume",
+                        "sports-desc": "Current Sports market volume",
+                        "exotic-desc": "Current Exotic market volume"
+                    },
+                    "protocol": {
+                        "label": "Protocol usage bucket",
+                        "volume": "Volume",
+                        "bonus": "Additional sUSD for max bonus",
+                        "rewards": "Max reward"
+                    },
+                    "snx": {
+                        "label": "SNX Staking",
+                        "volume": "Volume",
+                        "bonus": "Additional sUSD for max bonus",
+                        "rewards": "Max reward"
+                    },
+                    "claim": {
+                        "total-label": "Total claimable",
+                        "claim": "Claim Thales rewards",
+                        "claiming": "Claiming",
+                        "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
+                        "confirmation-message": "Tokens successfully claimed",
+                        "period": "Time left:",
+                        "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
+                        "paused-message": "Claiming is paused.",
+                        "not-eligible-message": "You are not eligible for these rewards.",
+                        "close-period": {
+                            "label": "Close period",
+                            "progress-label": "Closing period...",
+                            "confirmation-message": "Period successfully closed"
+                        }
+                    },
+                    "claim-on-behalf": {
+                        "label-1": "Looking to automate your claim?",
+                        "label-2": "Whitelist an address to claim on your behalf here",
+                        "enable": "Enable claim on behalf"
+                    },
+                    "lp-staking": {
+                        "label-1": "thales/eth",
+                        "label-2": "LP Staking"
+                    },
                     "base-label": "Thales staking base rewards"
                 },
                 "vesting": {
@@ -728,6 +743,27 @@
                     },
                     "schedule-label": "Vesting schedule",
                     "schedule-no-results": "No vesting schedule found."
+                },
+                "merge-account": {
+                    "section-title": "Merge account",
+                    "section-description": "<0>Account merging has been implemented per </0><1 />.",
+                    "source-account-label": "Source account",
+                    "destination-account-label": "Destination account",
+                    "confirmation-message": "Account successfully merged",
+                    "merge-account-disabled-message": "Account merging is disabled.",
+                    "info-message": "In order to merge account, you need to claim any outstanding staking rewards and cancel unstaking if any are in progress from both accounts.",
+                    "warning-message": "Once merged, all staked and escrowed THALES balances will be transferred to the destination account and won't be accessible from the source account.",
+                    "merge-blocked-message": {
+                        "title": "In order to merge account, you need to",
+                        "src-claim": "Claim the staking rewards from the source account.",
+                        "src-unstaking": "Cancel ustaking from the source account.",
+                        "dest-claim": "Claim the staking rewards from the destination account.",
+                        "dest-unstaking": "Cancel ustaking from the destination account."
+                    },
+                    "merge-button": {
+                        "label": "Merge account",
+                        "progress-label": "Merging in progress..."
+                    }
                 }
             },
             "vesting": {
@@ -758,6 +794,18 @@
             "lp-staking": {
                 "tab-title": "LP staking",
                 "section-title": "How LP Staking works?",
+                "info-steps": {
+                    "step1-label": "Connect wallet",
+                    "step1-desc": "Connect your wallet to Optimism network.",
+                    "step2-label": "Wrap Ethereum",
+                    "step2-desc": "To provide liquidity and be eligible for LP incentives, you need to have Wrapped Ethereum that will be used to pair with your THALES tokens. You can wrap your ETH to WETH on Optimism using the Uniswap exchange.",
+                    "step3-label": "Provide liquidity",
+                    "step3-desc": "Provide THALES+WETH liquidity to the G-UNI pool on Sorbet Finance UI (link). Once the transaction is confirmed, you should get a certain amount of Gelato Uniswap THALES/WETH LP (G-UNI) tokens in your wallet that represent your share of the liquidity pool.",
+                    "step4-label": "Stake",
+                    "step4-desc": "Now that you've staked your LP tokens you'll be able to stake your THALES.",
+                    "step5-label": "Claim",
+                    "step5-desc": "Now that you've staked your LP tokens you'll see your rewards accruing in the Rewards card of the LP staking page."
+                },
                 "rewards": {
                     "title": "Rewards",
                     "lp-staking": "LP staking",

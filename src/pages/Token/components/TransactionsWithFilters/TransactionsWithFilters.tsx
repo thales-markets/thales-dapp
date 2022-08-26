@@ -161,13 +161,13 @@ const NoResultsText = styled.div<{ background?: boolean }>`
 const SectionContainer = styled.section<{ gridColumns?: number }>`
     grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : '8')};
     grid-row: span 1;
-    height: 590px;
+    height: 390px;
     margin-bottom: 0;
 `;
 
 const SectionContent = styled(FlexDivColumn)`
-    margin-top: 50px;
-    height: calc(100% - 30px);
+    margin-top: 20px;
+    height: 100%;
 `;
 
 const FilterWrapper = styled.div`
@@ -176,6 +176,7 @@ const FilterWrapper = styled.div`
 
 const FilterContainer = styled.div`
     position: absolute;
+    top: -30px;
     right: 40px;
     width: 136px;
 `;

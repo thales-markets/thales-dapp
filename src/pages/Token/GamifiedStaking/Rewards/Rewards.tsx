@@ -1,5 +1,4 @@
 import arrowLink from 'assets/images/arrow-link.svg';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import logoExotic from 'assets/images/token/logo-exotic.svg';
 import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import ValidationMessage from 'components/ValidationMessage';
@@ -19,6 +18,7 @@ import {
     DashedLine,
     DashedLineVertical,
     Line,
+    StyledInfoIcon,
     StyledMaterialTooltip,
     Tip48Link,
 } from 'pages/Token/components2';
@@ -47,6 +47,7 @@ enum SectionType {
     REWARD,
     CLAIM,
     CLAIM_ON_BEHALF,
+    LP_STAKING,
 }
 
 const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => void }> = ({
@@ -230,7 +231,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
         );
     };
 
-    const getDetailedSection = (
+    const getRewardSection = (
         label: { full: string; volume: string; bonus: string; rewards: string },
         value: { full: string; volume: string; bonus: string; rewards: string }
     ) => {
@@ -248,10 +249,12 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                     <SectionDetailsLabel>{label.volume}</SectionDetailsLabel>
                     <SectionDetailsValue>{value.volume}</SectionDetailsValue>
                 </SectionDetails>
-                <SectionDetails>
-                    <SectionDetailsLabel>{label.bonus}</SectionDetailsLabel>
-                    <SectionDetailsValue bonus={true}>{value.bonus}</SectionDetailsValue>
-                </SectionDetails>
+                {value.bonus && (
+                    <SectionDetails>
+                        <SectionDetailsLabel>{label.bonus}</SectionDetailsLabel>
+                        <SectionDetailsValue bonus={true}>{value.bonus}</SectionDetailsValue>
+                    </SectionDetails>
+                )}
                 <Line margin={'0 0 10px 0'} />
                 <SectionDetails>
                     <SectionDetailsLabel>{label.rewards}</SectionDetailsLabel>
@@ -274,7 +277,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    dispatchMarketNotification(t('options.earn.gamified-staking.rewards.claim-confirmation-message'));
+                    dispatchMarketNotification(t('options.earn.gamified-staking.rewards.claim.confirmation-message'));
                     refetchTokenQueries(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setIsClaiming(false);
@@ -323,7 +326,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
         return (
             <StyledMaterialTooltip
                 arrow
-                title={t('options.earn.gamified-staking.rewards.claim-button-tooltip') as string}
+                title={t('options.earn.gamified-staking.rewards.claim.button-tooltip') as string}
                 open={showTooltip}
             >
                 <ButtonWrapperTooltip>
@@ -331,7 +334,6 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                         type={ButtonType.submit}
                         active={isClaimAvailable}
                         disabled={!isClaimAvailable}
-                        width={'100%'}
                         onMouseOverHandler={() => {
                             setShowTooltip(true);
                         }}
@@ -341,8 +343,8 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                         onClickHandler={handleClaimStakingRewards}
                     >
                         {isClaiming
-                            ? t('options.earn.gamified-staking.rewards.claiming')
-                            : t('options.earn.gamified-staking.rewards.claim')}
+                            ? t('options.earn.gamified-staking.rewards.claim.claiming')
+                            : t('options.earn.gamified-staking.rewards.claim.claim')}
                     </Button>
                 </ButtonWrapperTooltip>
             </StyledMaterialTooltip>
@@ -353,7 +355,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
         return (
             <SectionContentWrapper>
                 <RewardPeriod>
-                    <PeriodLabel>{t('options.earn.gamified-staking.rewards.period')}</PeriodLabel>
+                    <PeriodLabel>{t('options.earn.gamified-staking.rewards.claim.period')}</PeriodLabel>
                     {stakingRewards ? (
                         <TimeRemaining end={stakingRewards.closingDate} fontSize={15} showFullCounter />
                     ) : (
@@ -367,14 +369,14 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                             disabled={!isClosingPeriodAvailable}
                         >
                             {isClosingPeriod
-                                ? t('options.earn.gamified-staking.rewards.close-period.progress-label')
-                                : t('options.earn.gamified-staking.rewards.close-period.label')}
+                                ? t('options.earn.gamified-staking.rewards.claim.close-period.progress-label')
+                                : t('options.earn.gamified-staking.rewards.claim.close-period.label')}
                         </Button>
                     )}
                 </RewardPeriod>
                 <SectionLabel type={SectionType.CLAIM}>
                     <SectionLabelContent type={SectionType.CLAIM}>
-                        {t('options.earn.gamified-staking.rewards.total-label')}
+                        {t('options.earn.gamified-staking.rewards.claim.total-label')}
                     </SectionLabelContent>
                 </SectionLabel>
                 <SectionValue type={SectionType.CLAIM}>
@@ -391,10 +393,10 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 <ButtonContainer>
                     {getClaimButton()}
                     {stakingRewards && stakingRewards.isClaimPaused && (
-                        <ClaimMessage>{t('options.earn.gamified-staking.rewards.paused-message')}</ClaimMessage>
+                        <ClaimMessage>{t('options.earn.gamified-staking.rewards.claim.paused-message')}</ClaimMessage>
                     )}
                     {stakingRewards && !stakingRewards.isClaimPaused && stakingRewards.claimed && (
-                        <ClaimMessage>{t('options.earn.gamified-staking.rewards.claimed-message')}</ClaimMessage>
+                        <ClaimMessage>{t('options.earn.gamified-staking.rewards.claim.claimed-message')}</ClaimMessage>
                     )}
                     {stakingRewards &&
                         !stakingRewards.isClaimPaused &&
@@ -402,7 +404,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                         !stakingRewards.hasClaimRights &&
                         isWalletConnected && (
                             <ClaimMessage>
-                                {t('options.earn.gamified-staking.rewards.not-eligible-message')}
+                                {t('options.earn.gamified-staking.rewards.claim.not-eligible-message')}
                             </ClaimMessage>
                         )}
                 </ButtonContainer>
@@ -415,24 +417,75 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
         );
     };
 
+    const getClaimOnBehalfSection = () => {
+        return (
+            <SectionContentWrapper>
+                <SectionLabel type={SectionType.CLAIM_ON_BEHALF} marginTop={'24px'}>
+                    <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
+                        {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-1')}
+                    </SectionLabelContent>
+                </SectionLabel>
+                <SectionLabel type={SectionType.CLAIM_ON_BEHALF} marginTop={'46px'}>
+                    <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
+                        {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-2')}
+                    </SectionLabelContent>
+                </SectionLabel>
+                <Button
+                    type={ButtonType.popup}
+                    active={true}
+                    margin={'30px 0 10px auto'}
+                    onClickHandler={() => setShowClaimOnBehalfModal(true)}
+                >
+                    {t('options.earn.gamified-staking.rewards.claim-on-behalf.enable')}
+                </Button>
+            </SectionContentWrapper>
+        );
+    };
+
+    const getLpStakingSection = () => {
+        return (
+            <SectionContentWrapper background={false} noHeight={true}>
+                <SectionLabel type={SectionType.LP_STAKING} marginTop={'34px'}>
+                    <SectionLabelContent type={SectionType.LP_STAKING}>
+                        {t('options.earn.gamified-staking.rewards.lp-staking.label-1')}
+                    </SectionLabelContent>
+                    <StyledMaterialTooltip arrow={true} title={<Trans i18nKey="???" />} interactive>
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </SectionLabel>
+                <SectionLabel type={SectionType.LP_STAKING}>
+                    <SectionLabelContent type={SectionType.LP_STAKING}>
+                        {t('options.earn.gamified-staking.rewards.lp-staking.label-2')}
+                    </SectionLabelContent>
+                </SectionLabel>
+                <SectionValue type={SectionType.LP_STAKING}>
+                    <SectionValueContent type={SectionType.LP_STAKING}>{lpStakingReward}</SectionValueContent>
+                </SectionValue>
+                <ArrowWrapper marginTop={'100px'}>
+                    <ArrowLink src={arrowLink} widthPer={7} />
+                </ArrowWrapper>
+            </SectionContentWrapper>
+        );
+    };
+
     return (
         <>
             {/* First row */}
             <SectionWrapper columns={4}>
                 {getInfoSection(
-                    t('options.earn.gamified-staking.rewards.info-base'),
+                    t('options.earn.gamified-staking.rewards.info.base'),
                     baseRewardsFormatted,
-                    t('options.earn.gamified-staking.rewards.info-base-description', {
+                    t('options.earn.gamified-staking.rewards.info.base-description', {
                         baseRewards: baseRewardsFormatted,
                     })
                 )}
             </SectionWrapper>
             <SectionWrapper columns={8}>
                 {getInfoSection(
-                    t('options.earn.gamified-staking.rewards.info-bonus'),
+                    t('options.earn.gamified-staking.rewards.info.bonus'),
                     bonusRewardsFormatted,
                     <Trans
-                        i18nKey="options.earn.gamified-staking.rewards.info-bonus-description"
+                        i18nKey="options.earn.gamified-staking.rewards.info.bonus-description"
                         components={[<Tip48Link key="1" />]}
                     />
                 )}
@@ -445,9 +498,9 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 onClick={() => window.open(ROUTES.Options.Home, '_blank')}
             >
                 {getVolumeSection(
-                    t('options.earn.gamified-staking.rewards.volume-amm-label'),
+                    t('options.earn.gamified-staking.rewards.volume.amm-label'),
                     ammVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume-amm-desc')
+                    t('options.earn.gamified-staking.rewards.volume.amm-desc')
                 )}
             </SectionWrapper>
             <SectionWrapper
@@ -456,9 +509,9 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 onClick={() => window.open(ROUTES.Options.RangeMarkets, '_blank')}
             >
                 {getVolumeSection(
-                    t('options.earn.gamified-staking.rewards.volume-ranged-label'),
+                    t('options.earn.gamified-staking.rewards.volume.ranged-label'),
                     rangedVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume-ranged-desc')
+                    t('options.earn.gamified-staking.rewards.volume.ranged-desc')
                 )}
             </SectionWrapper>
             <SectionWrapper
@@ -469,7 +522,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 {getVolumeSection(
                     '',
                     sportsVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume-sports-desc'),
+                    t('options.earn.gamified-staking.rewards.volume.sports-desc'),
                     logoOvertime
                 )}
             </SectionWrapper>
@@ -481,7 +534,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 {getVolumeSection(
                     '',
                     exoticVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume-exotic-desc'),
+                    t('options.earn.gamified-staking.rewards.volume.exotic-desc'),
                     logoExotic
                 )}
             </SectionWrapper>
@@ -492,16 +545,15 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             <DashedLineVertical gridRow={3} columnStart={8} marginTop={-gridGap} heightPer={135} />
             <DashedLineVertical gridRow={3} columnStart={11} marginTop={-gridGap} heightPer={135} />
             <DashedLineVertical gridRow={3} columnStart={4} marginTop={gridGap} heightPer={100} />
-            <DashedLineVertical gridRow={3} columnStart={9} marginTop={gridGap} heightPer={100} />
 
             {/* Third row */}
             <SectionWrapper columns={5} startColumn={2}>
-                {getDetailedSection(
+                {getRewardSection(
                     {
-                        full: t('options.earn.gamified-staking.rewards.protocol-label'),
-                        volume: t('options.earn.gamified-staking.rewards.protocol-volume'),
-                        bonus: t('options.earn.gamified-staking.rewards.protocol-bonus'),
-                        rewards: t('options.earn.gamified-staking.rewards.protocol-rewards'),
+                        full: t('options.earn.gamified-staking.rewards.protocol.label'),
+                        volume: t('options.earn.gamified-staking.rewards.protocol.volume'),
+                        bonus: t('options.earn.gamified-staking.rewards.protocol.bonus'),
+                        rewards: t('options.earn.gamified-staking.rewards.protocol.rewards'),
                     },
                     {
                         full: protocolRewardFormatted,
@@ -512,12 +564,12 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 )}
             </SectionWrapper>
             <SectionWrapper columns={5}>
-                {getDetailedSection(
+                {getRewardSection(
                     {
-                        full: t('options.earn.gamified-staking.rewards.snx-label'),
-                        volume: t('options.earn.gamified-staking.rewards.snx-volume'),
-                        bonus: t('options.earn.gamified-staking.rewards.snx-bonus'),
-                        rewards: t('options.earn.gamified-staking.rewards.snx-rewards'),
+                        full: t('options.earn.gamified-staking.rewards.snx.label'),
+                        volume: t('options.earn.gamified-staking.rewards.snx.volume'),
+                        bonus: t('options.earn.gamified-staking.rewards.snx.bonus'),
+                        rewards: t('options.earn.gamified-staking.rewards.snx.rewards'),
                     },
                     {
                         full: snxRewardFormatted,
@@ -534,49 +586,14 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             <DashedLineVertical gridRow={5} columnStart={7} marginTop={gridGap} heightPer={100} marginLeft={-10} />
 
             {/* Fourth row */}
-            <SectionWrapper columns={3}>
-                <SectionContentWrapper>
-                    <SectionLabel type={SectionType.CLAIM_ON_BEHALF} marginTop={'24px'}>
-                        <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
-                            {t('options.earn.gamified-staking.rewards.enable-claim-on-behalf-label')}
-                        </SectionLabelContent>
-                    </SectionLabel>
-                    <Button
-                        type={ButtonType.popup}
-                        active={true}
-                        margin={'76px 0 10px auto'}
-                        onClickHandler={() => setShowClaimOnBehalfModal(true)}
-                    >
-                        {t('options.earn.gamified-staking.rewards.enable-claim-on-behalf-button')}
-                    </Button>
-                </SectionContentWrapper>
-            </SectionWrapper>
+            <SectionWrapper columns={3}>{getClaimOnBehalfSection()}</SectionWrapper>
             <SectionWrapper columns={6}>{getClaimSection()}</SectionWrapper>
             <SectionWrapper
                 columns={3}
                 backgroundType={BackgroundType.LP_STAKING}
                 onClick={() => setSelectedTab(TokenTabEnum.LP_STAKING)}
             >
-                <SectionContentWrapper background={false}>
-                    <SectionLabel type={SectionType.REWARD} marginTop={'34px'}>
-                        <SectionLabelContent type={SectionType.REWARD}>
-                            {t('options.earn.gamified-staking.rewards.lp-staking-label-1')}
-                        </SectionLabelContent>
-                        <StyledMaterialTooltip arrow={true} title={<Trans i18nKey="???" />} interactive>
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
-                        <br />
-                        <SectionLabelContent type={SectionType.REWARD}>
-                            {t('options.earn.gamified-staking.rewards.lp-staking-label-2')}
-                        </SectionLabelContent>
-                    </SectionLabel>
-                    <SectionValue type={SectionType.REWARD}>
-                        <SectionValueContent type={SectionType.REWARD}>{lpStakingReward}</SectionValueContent>
-                    </SectionValue>
-                    <ArrowWrapper marginTop={'70px'}>
-                        <ArrowLink src={arrowLink} widthPer={7} />
-                    </ArrowWrapper>
-                </SectionContentWrapper>
+                {getLpStakingSection()}
             </SectionWrapper>
 
             <DashedLine gridRow={7} widthPer={0} />
@@ -614,6 +631,18 @@ enum BackgroundType {
     LP_STAKING,
 }
 
+const ArrowWrapper = styled.div<{ marginTop: string }>`
+    margin-top: ${(props) => props.marginTop};
+    text-align: end;
+`;
+
+const ArrowLink = styled.img<{ widthPer?: number }>`
+    margin-left: 10px;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+    ${(props) => (props.widthPer ? `width: ${props.widthPer}%;` : '')}
+`;
+
 const SectionWrapper = styled.section<{
     columns?: number;
     startColumn?: number;
@@ -643,11 +672,31 @@ const SectionWrapper = styled.section<{
     }};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
     cursor: ${(props) => (props.backgroundType !== undefined ? 'pointer' : 'default')};
+
+    &:hover ${ArrowLink} {
+        animation: pulsing 1s ease-in;
+        animation-iteration-count: infinite;
+
+        @keyframes pulsing {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    }
 `;
 
-const SectionContentWrapper = styled.div<{ background?: boolean }>`
+const SectionContentWrapper = styled.div<{ background?: boolean; noHeight?: boolean }>`
     display: grid;
-    height: 100%;
+    ${(props) => (props.noHeight ? '' : 'height: 100%')};
     background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
     align-items: center;
@@ -679,6 +728,12 @@ const SectionLabel = styled.div<{ type: SectionType; marginTop?: string }>`
             case SectionType.CLAIM:
             case SectionType.CLAIM_ON_BEHALF:
                 return 'padding: 10px 0;';
+            case SectionType.LP_STAKING:
+                return `
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                `;
             default:
                 return '';
         }
@@ -698,6 +753,7 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
                 `;
             case SectionType.REWARD:
             case SectionType.CLAIM:
+            case SectionType.LP_STAKING:
                 return `
                     text-transform: uppercase;
                     font-weight: 700;
@@ -726,6 +782,8 @@ const SectionValue = styled.div<{ type: SectionType }>`
             case SectionType.REWARD:
             case SectionType.CLAIM:
                 return 'padding-bottom: 10px;';
+            case SectionType.LP_STAKING:
+                return 'padding-top: 20px;';
             default:
                 return '';
         }
@@ -750,6 +808,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType }>`
                 `;
             case SectionType.REWARD:
             case SectionType.CLAIM:
+            case SectionType.LP_STAKING:
                 return `
                     font-weight: 700;
                     font-size: 30px;
@@ -806,26 +865,6 @@ const SectionDetailsValue = styled.span<{ bonus?: boolean }>`
     font-size: 15px;
     line-height: 15px;
     color: ${(props) => (props.bonus ? '#50ce99' : '#ffffff')};
-`;
-
-const ArrowWrapper = styled.div<{ marginTop: string }>`
-    margin-top: ${(props) => props.marginTop};
-    text-align: end;
-`;
-
-const ArrowLink = styled.img<{ widthPer?: number }>`
-    margin-left: 8px;
-    cursor: pointer;
-    filter: brightness(0) invert(1);
-    ${(props) => (props.widthPer ? `width: ${props.widthPer}%;` : '')}
-`;
-
-const StyledInfoIcon = styled(InfoIcon)`
-    position: absolute;
-    margin-top: -3px;
-    width: 14px;
-    height: 14px;
-    margin-left: 6px;
 `;
 
 const ButtonWrapperTooltip = styled.div`

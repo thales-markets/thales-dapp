@@ -77,26 +77,26 @@ const Button: React.FC<ButtonProps> = ({
             typedFontWeight = '700';
             typedMinHeight = '36px';
             typedActiveBg = '';
-            typedActiveBgColor = 'var(--button-bg-active)';
-            typedActiveTextColor = 'var(--button-text-active)';
-            typedInactiveBgColor = 'var(--button-bg-inactive)';
-            typedInactiveTextColor = 'var(--button-text-inactive)';
-            typedHowerShadow = 'var(--button-shadow)';
+            typedActiveBgColor = '#64d9fe';
+            typedActiveTextColor = '#04045a';
+            typedInactiveBgColor = '#00000000';
+            typedInactiveTextColor = '#64d9fe';
+            typedHowerShadow = '0px 1px 30pxrgba(100,217,254,0.7)';
             break;
         case ButtonType.submit:
-            typedWidth = '94%';
+            typedWidth = '100%';
             typedHeight = '';
             typedPadding = '5px 15px';
-            typedMargin = '0 10px';
+            typedMargin = '0';
             typedFontSize = '20px';
             typedFontWeight = '700';
             typedMinHeight = '36px';
             typedActiveBg = '';
-            typedActiveBgColor = 'var(--button-bg-active)';
-            typedActiveTextColor = 'var(--button-text-active)';
-            typedInactiveBgColor = 'var(--button-bg-inactive)';
-            typedInactiveTextColor = 'var(--button-text-inactive)';
-            typedHowerShadow = 'var(--button-shadow)';
+            typedActiveBgColor = '#64d9fe';
+            typedActiveTextColor = '#04045a';
+            typedInactiveBgColor = '#00000000';
+            typedInactiveTextColor = '#64d9fe';
+            typedHowerShadow = '0px 1px 30px rgba(100,217,254,0.7)';
             break;
         case ButtonType.label:
             typedWidth = '';
@@ -110,7 +110,7 @@ const Button: React.FC<ButtonProps> = ({
             typedActiveBgColor = '';
             typedActiveTextColor = '#ffffff';
             typedInactiveBgColor = '';
-            typedInactiveTextColor = '';
+            typedInactiveTextColor = '#f6f6fe';
             typedHowerShadow = '';
             break;
         case ButtonType.popup:
@@ -137,10 +137,10 @@ const Button: React.FC<ButtonProps> = ({
             typedFontWeight = '700';
             typedMinHeight = '';
             typedActiveBg = '';
-            typedActiveBgColor = 'var(--button-bg-active)';
-            typedActiveTextColor = 'var(--button-text-active)';
-            typedInactiveBgColor = 'var(--button-bg-inactive)';
-            typedInactiveTextColor = 'var(--button-text-inactive)';
+            typedActiveBgColor = '#64d9fe';
+            typedActiveTextColor = '#04045a';
+            typedInactiveBgColor = '#00000000';
+            typedInactiveTextColor = '#64d9fe';
             typedHowerShadow = '';
     }
 
@@ -197,7 +197,7 @@ const Wrapper = styled.button<{
     justify-content: center;
     ${(props) => (props?.width ? `width: ${props.width}` : '')};
     ${(props) => (props?.height ? `height: ${props.height}` : '')};
-    border: ${(props) => (props?.activeBg ? '0' : '1px solid var(--button-bg-active)')};
+    border: ${(props) => (props?.activeBg ? '0' : '1px solid #64d9fe')};
     border-radius: 30px;
     font-family: Roboto !important;
     font-weight: ${(props) => props?.fontWeight};
@@ -210,7 +210,7 @@ const Wrapper = styled.button<{
     ${(props) => (props?.padding ? `padding: ${props.padding}` : '')};
     &:hover {
         ${(props) => (props?.hoverShadow && !props?.disabled ? `box-shadow: ${props.hoverShadow}` : '')}
-        ${(props) => (props?.hoverBorderEffect && !props?.disabled ? `border: var(--primary-color)` : '')}
+        ${(props) => (props?.hoverBorderEffect && !props?.disabled ? `border: #f7f7f7` : '')}
         ${(props) => (props?.active && props.activeBg ? `background: #7119e1` : '')};
     }
     &:disabled {

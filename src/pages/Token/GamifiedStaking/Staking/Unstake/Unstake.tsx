@@ -428,7 +428,7 @@ const Unstake: React.FC = () => {
     return (
         <EarnSection spanOnTablet={5} orderOnMobile={5} orderOnTablet={5}>
             <SectionContentContainer>
-                <UnstakingContainer>
+                <UnstakingContainer twoButtons={isUnstakingInContract && unstakingEnded}>
                     <UnstakingTitleText>
                         {isUnstakingInContract
                             ? unstakingEnded
@@ -467,6 +467,7 @@ const Unstake: React.FC = () => {
                         onChange={(_, value) => setAmountToUnstake(value)}
                         disabled={isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused}
                         className={isAmountValid ? '' : 'error'}
+                        autoFocus={true}
                     />
                     <InputLabel>{t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}</InputLabel>
                     <CurrencyLabel
@@ -506,15 +507,11 @@ const Unstake: React.FC = () => {
                         message={t(`common.errors.insufficient-staking-balance`, { currencyKey: THALES_CURRENCY })}
                     />
                 </InputContainer>
-                <Line
-                    margin={
-                        isUnstakingInContract && unstakingEnded // two buttons
-                            ? '16px 0 10px 0'
-                            : '40px 0 10px 0'
-                    }
-                />
-                <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />
-                <ButtonsContainer>
+                <Line margin={'0 0 10px 0'} />
+                <div style={{ minHeight: '63px' }}>
+                    <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />
+                </div>
+                <ButtonsContainer twoButtons={isUnstakingInContract && unstakingEnded}>
                     {getSubmitButton()}
                     {isStakingPaused && (
                         <ClaimMessage>{t('options.earn.gamified-staking.staking.unstake.paused-message')}</ClaimMessage>
@@ -532,8 +529,9 @@ const Unstake: React.FC = () => {
     );
 };
 
-const UnstakingContainer = styled(FlexDivRowCentered)`
-    margin-bottom: 35px;
+const UnstakingContainer = styled(FlexDivRowCentered)<{ twoButtons: boolean }>`
+    margin-bottom: 15px;
+    min-height: ${(props) => (props.twoButtons ? '30px' : '66px')};
     @media (max-width: 767px) {
         flex-direction: column;
     }
@@ -582,8 +580,9 @@ const UnstakingTitleText = styled.span`
     }
 `;
 
-const ButtonsContainer = styled(FlexDivColumnCentered)`
-    padding: 50px 0 60px 0;
+const ButtonsContainer = styled(FlexDivColumnCentered)<{ twoButtons: boolean }>`
+    padding-top: 10px;
+    padding-bottom: ${(props) => (props.twoButtons ? '10px' : '25px')};
     align-items: center;
     > * {
         &:nth-child(2) {

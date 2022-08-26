@@ -12,6 +12,7 @@ type NumericInputProps = {
     step?: string;
     max?: string;
     style?: CSSProperties;
+    autoFocus?: boolean;
 };
 
 const INVALID_CHARS = ['-', '+', 'e'];

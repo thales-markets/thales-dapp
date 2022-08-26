@@ -169,7 +169,7 @@ const Vesting: React.FC = () => {
                 </SectionContentWrapper>
             </SectionWrapper>
 
-            <SectionWrapper columns={5} startColumn={8} rows={2} background={false}>
+            <SectionWrapper columns={5} startColumn={8} rows={3} background={false}>
                 <SectionContentWrapper>
                     <ScheduleLabel>
                         <SectionLabelContent>

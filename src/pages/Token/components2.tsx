@@ -16,7 +16,6 @@ export const EarnSection = styled.section<{
     display: flex;
     flex-direction: column;
     position: relative;
-    background: #04045a;
     border-radius: 15px;
     color: white;
     padding: 15px;
@@ -227,11 +226,6 @@ export const DescriptionLink = styled.a`
 `;
 
 export const StyledInfoIcon = styled(InfoIcon)`
-    margin-top: 5px;
-    width: 12px;
-    height: 12px;
-    min-width: 12px;
-    min-height: 12px;
     margin-left: 6px;
 `;
 

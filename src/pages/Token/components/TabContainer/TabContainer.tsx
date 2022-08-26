@@ -1,17 +1,9 @@
-import MergeAccount from 'pages/Token/MergeAccount';
 import queryString from 'query-string';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
 import styled, { StyledComponent } from 'styled-components';
 import { FlexDiv } from 'theme/common';
-import { getIsOVM } from 'utils/network';
 import { history } from 'utils/routes';
-import Button from '../Button';
-import { ButtonType } from '../Button/Button';
 import Tab from '../Tab';
 
 type TabItem = { id: string; name: string; disabled: boolean };
@@ -21,13 +13,7 @@ const TabContainer: React.FC<{
     selectedTab: string;
     setSelectedTab: (tabId: string) => void;
 }> = ({ tabItems, selectedTab, setSelectedTab }) => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2 = getIsOVM(networkId);
-
-    const { t } = useTranslation();
     const location = useLocation();
-
-    const [showMergeAccountModal, setShowMergeAccountModal] = useState<boolean>(false);
 
     return (
         <Container>
@@ -54,20 +40,8 @@ const TabContainer: React.FC<{
                             </MenuItem>
                         );
                     })}
-                {isL2 && (
-                    <Button
-                        type={ButtonType.popup}
-                        active={true}
-                        width={'250px'}
-                        onClickHandler={() => setShowMergeAccountModal(true)}
-                    >
-                        {t('options.earn.merge-account.title')}
-                    </Button>
-                )}
             </MenuContainer>
             <Tab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-
-            {showMergeAccountModal && <MergeAccount onClose={() => setShowMergeAccountModal(false)} />}
         </Container>
     );
 };

@@ -1,61 +1,89 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-
+import { Tip49Link } from 'pages/Token/components';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
-import { useTranslation } from 'react-i18next';
-import Button from '../Button';
+import LpStaking from 'pages/Token/LpStaking2';
+import MergeAccount from 'pages/Token/MergeAccount';
+import React, { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { TokenTabEnum } from 'types/token';
+import { getIsOVM } from 'utils/network';
+import Button from '../Button';
 import { ButtonType } from '../Button/Button';
 
 const GRID_GAP = 20;
+
+enum SectionIdEnum {
+    STAKING = 'staking',
+    REWARDS = 'rewards',
+    VESTING = 'vesting',
+    MERGE_ACCOUNT = 'merge-account',
+    LP_STAKING = 'lp-staking',
+}
 
 const Tab: React.FC<{
     selectedTab: string;
     setSelectedTab: (tabId: string) => void;
 }> = ({ selectedTab, setSelectedTab }) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
 
     const sections = [
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: 'staking',
+            id: SectionIdEnum.STAKING,
             title: t('options.earn.gamified-staking.staking.section-title'),
             description: t('options.earn.gamified-staking.staking.section-description'),
             isButton: true,
         },
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: 'rewards',
+            id: SectionIdEnum.REWARDS,
             title: t('options.earn.gamified-staking.rewards.section-title'),
             description: t('options.earn.gamified-staking.rewards.section-description'),
             isButton: true,
         },
         {
             tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: 'vesting',
+            id: SectionIdEnum.VESTING,
             title: t('options.earn.gamified-staking.vesting.section-title'),
             description: t('options.earn.gamified-staking.vesting.section-description'),
             isButton: true,
         },
         {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: SectionIdEnum.MERGE_ACCOUNT,
+            title: t('options.earn.gamified-staking.merge-account.section-title'),
+            description: (
+                <Trans
+                    i18nKey={`options.earn.gamified-staking.merge-account.section-description`}
+                    components={[<span key="1" />, <Tip49Link key="2" />]}
+                />
+            ),
+            isButton: true,
+        },
+        {
             tab: TokenTabEnum.LP_STAKING,
-            id: 'lp-staking',
+            id: SectionIdEnum.LP_STAKING,
             title: t('options.earn.lp-staking.section-title'),
             description: '',
             isButton: false,
         },
     ];
 
-    const [activeButton, setActiveButton] = useState(sections[0].id);
+    const [activeButtonId, setActiveButtonId] = useState(sections[0].id);
 
     return (
         <Container>
             {selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
                 <>
                     <SectionRow>
-                        <SectionHeader>{sections.find((el) => el.id === activeButton)?.title}</SectionHeader>
+                        <SectionHeader>{sections.find((el) => el.id === activeButtonId)?.title}</SectionHeader>
                         <SectionButtons>
                             {sections
                                 .filter((el) => el.isButton)
@@ -64,10 +92,11 @@ const Tab: React.FC<{
                                         <Button
                                             key={index}
                                             type={ButtonType.default}
-                                            active={activeButton == el.id}
-                                            width={'48%'}
-                                            margin={'0 20px'}
-                                            onClickHandler={() => setActiveButton(el.id)}
+                                            active={activeButtonId == el.id}
+                                            width={'170px'}
+                                            margin={'0 20px 0 0'}
+                                            padding={'5px 20px'}
+                                            onClickHandler={() => setActiveButtonId(el.id)}
                                         >
                                             {el.title}
                                         </Button>
@@ -77,13 +106,16 @@ const Tab: React.FC<{
                     </SectionRow>
                     <SectionRow>
                         <SectionDescription>
-                            {sections.find((el) => el.id === activeButton)?.description}
+                            {sections.find((el) => el.id === activeButtonId)?.description}
                         </SectionDescription>
                     </SectionRow>
                     <SectionContent>
-                        {activeButton === 'staking' && <Staking />}
-                        {activeButton === 'rewards' && <Rewards gridGap={GRID_GAP} setSelectedTab={setSelectedTab} />}
-                        {activeButton === 'vesting' && <Vesting />}
+                        {activeButtonId === SectionIdEnum.STAKING && <Staking />}
+                        {activeButtonId === SectionIdEnum.REWARDS && (
+                            <Rewards gridGap={GRID_GAP} setSelectedTab={setSelectedTab} />
+                        )}
+                        {activeButtonId === SectionIdEnum.VESTING && <Vesting />}
+                        {activeButtonId === SectionIdEnum.MERGE_ACCOUNT && isL2 && <MergeAccount />}
                     </SectionContent>
                 </>
             )}
@@ -92,7 +124,9 @@ const Tab: React.FC<{
                     <SectionRow>
                         <SectionHeader>{sections.find((el) => el.tab === selectedTab)?.title}</SectionHeader>
                     </SectionRow>
-                    <SectionContent></SectionContent>
+                    <SectionContent>
+                        <LpStaking />
+                    </SectionContent>
                 </>
             )}
         </Container>
@@ -120,7 +154,7 @@ const SectionHeader = styled.p`
 const SectionDescription = styled.p`
     font-family: Roboto;
     font-weight: 400;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 36px;
     color: #ffffff;
 `;

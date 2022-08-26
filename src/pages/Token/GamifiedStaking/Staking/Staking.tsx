@@ -131,8 +131,7 @@ const Staking: React.FC = () => {
                     {getSectionLabel('options.earn.gamified-staking.staking.apy', 'APY')}
                     <SectionValue>
                         <SectionValueContent>
-                            {formattedAPY}
-                            <BonusInfo>+</BonusInfo>
+                            {formattedAPY}%<BonusInfo>+</BonusInfo>
                             <BonusInfo>{formattedBonusAPY}%</BonusInfo>
                         </SectionValueContent>
                         <StyledMaterialTooltip
@@ -220,7 +219,7 @@ const Staking: React.FC = () => {
                         active={stakeOption !== stakeOptions.stake.value}
                         width={'94px'}
                         height={'32px'}
-                        margin={'85px 0 40px 0'}
+                        margin={'30px 0 10px 0'}
                         dotSize={'22px'}
                         label={{
                             firstLabel: stakeOptions.stake.label.toUpperCase(),
@@ -247,7 +246,14 @@ const Staking: React.FC = () => {
 const SectionWrapper = styled.section<{ columns?: number; rows?: number; border?: boolean }>`
     box-sizing: border-box;
     border-radius: 15px;
-    ${(props) => (props.rows ? 'display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; grid-gap: 24px;' : '')}
+    ${(props) =>
+        props.rows
+            ? `
+                display: grid; 
+                grid-template-columns: 1fr; 
+                grid-auto-rows: 1fr; 
+                grid-gap: 24px;` // page GRID_GAP + borders(2 x 2px)
+            : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
     background: ${(props) =>
@@ -266,14 +272,13 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
 
 const SectionLabel = styled.div`
     display: flex;
-    padding-bottom: 10px;
-    padding-left: 15px;
+    padding: 10px 15px;
 `;
 
 const SectionValue = styled.div`
     display: flex;
-    padding-bottom: 10px;
-    padding-left: 15px;
+    padding: 10px 15px;
+    align-items: center;
 `;
 
 const SectionContent = styled.span`
@@ -287,7 +292,6 @@ const SectionLabelContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 20px;
     line-height: 20px;
-    padding-top: 10px;
 `;
 
 const SectionValueContent = styled(SectionContent)`
@@ -295,7 +299,6 @@ const SectionValueContent = styled(SectionContent)`
     font-size: 30px;
     line-height: 30px;
     letter-spacing: 0.035em;
-    padding-top: 10px;
 `;
 
 const SectionDetails = styled.div<{ positionUp: boolean }>`

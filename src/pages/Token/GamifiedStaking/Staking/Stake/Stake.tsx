@@ -247,12 +247,13 @@ const Stake: React.FC = () => {
     return (
         <EarnSection spanOnTablet={5} orderOnMobile={4} orderOnTablet={4}>
             <SectionContentContainer>
-                <InputContainer marginTop={101}>
+                <InputContainer marginTop={40}>
                     <NumericInput
                         value={amountToStake}
                         onChange={(_, value) => setAmountToStake(value)}
                         disabled={isStaking || isUnstaking || isStakingPaused}
                         className={isAmountValid ? '' : 'error'}
+                        autoFocus={true}
                     />
                     <InputLabel>{t('options.earn.gamified-staking.staking.stake.amount-to-stake')}</InputLabel>
                     <CurrencyLabel className={isStaking || isUnstaking || isStakingPaused ? 'disabled' : ''}>
@@ -282,7 +283,7 @@ const Stake: React.FC = () => {
                         message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
                     />
                 </InputContainer>
-                <Line margin={'40px 0 10px 0'} />
+                <Line margin={'41px 0 10px 0'} />
                 <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />
                 <StakeButtonDiv>
                     {getStakeButton()}
@@ -312,7 +313,8 @@ const Stake: React.FC = () => {
 };
 
 const StakeButtonDiv = styled(FlexDivColumnCentered)`
-    padding: 50px 0 60px 0;
+    padding-top: 31px;
+    padding-bottom: 25px;
     align-items: center;
     @media (max-width: 1024px) {
         padding-top: 15px;
