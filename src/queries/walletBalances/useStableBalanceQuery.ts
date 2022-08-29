@@ -17,9 +17,11 @@ const useStableBalanceQuery = (walletAddress: string, networkId: NetworkId, opti
 
                 let usdBalance = await collateral?.balanceOf(walletAddress);
                 usdBalance = usdBalance
-                    ? parseInt(usdBalance) / 10 ** STABLE_DECIMALS[collateralKey as StableCoins]
-                        ? STABLE_DECIMALS[collateralKey as StableCoins]
-                        : 18
+                    ? parseInt(usdBalance) /
+                      10 **
+                          (STABLE_DECIMALS[collateralKey as StableCoins]
+                              ? STABLE_DECIMALS[collateralKey as StableCoins]
+                              : 18)
                     : 0;
 
                 return {

@@ -21,6 +21,9 @@ export const getCurrencyKeyUSDBalanceBN = (balances, currencyKey) =>
         ? get(balances, getSynthBalancePath(currencyKey, 'balanceBN'))
         : get(balances, getCryptoCurrencyBalancePath(currencyKey, 'balanceBN'));
 
-export const getCurrencyKeyStableBalance = (balance, currencyKey) => {
-    return balance[currencyKey] ? balance[currencyKey] : 0;
+export const getCurrencyKeyStableBalance = (balanceData, currencyKey) => {
+    if (!balanceData) {
+        return null;
+    }
+    return balanceData[currencyKey]?.balance ? balanceData[currencyKey]?.balance : 0;
 };

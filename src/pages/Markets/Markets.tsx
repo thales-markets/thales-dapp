@@ -56,7 +56,6 @@ const Markets: React.FC = () => {
             const markets = openOrdersQuery.data
                 ? marketsQuery.data.map((m) => {
                       const apiData = (openOrdersQuery.data as any).get(m.address.toLowerCase());
-
                       return {
                           ...m,
                           openOrders: apiData?.ordersCount ?? 0,

@@ -25,7 +25,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import useRangedAMMMaxLimitsQuery, {
     RangeAmmMaxLimits,
 } from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
-import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
@@ -48,7 +47,14 @@ import {
     RANGE_SIDE,
     SLIPPAGE_PERCENTAGE,
 } from 'constants/options';
-import { checkAllowance, formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
+import {
+    checkAllowance,
+    formatGasLimit,
+    getIsMultiCollateralSupported,
+    getIsOVM,
+    getIsPolygon,
+    getL1FeeInWei,
+} from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
 import WalletBalance from '../AMM/components/WalletBalance';
@@ -73,6 +79,7 @@ import {
     prepareTransactionForAMM,
 } from 'utils/amm';
 import CollateralSelector from 'components/CollateralSelector';
+import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -126,7 +133,8 @@ const AMM: React.FC = () => {
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
-    const isNonDefaultStable = selectedStableIndex !== 0 && !isPolygon && orderSide.value === 'buy';
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
+    const isNonDefaultStable = selectedStableIndex !== 0 && !isMultiCollateralSupported && orderSide.value === 'buy';
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
@@ -164,7 +172,7 @@ const AMM: React.FC = () => {
         optBalances = positionBalanceQuery.data as RangedMarketBalanceInfo;
     }
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && walletAddress !== '',
+        enabled: isAppReady && isWalletConnected && isMultiCollateralSupported,
     });
 
     useEffect(() => {
@@ -181,8 +189,8 @@ const AMM: React.FC = () => {
 
     const tokenBalance = rangeSide === 'in' ? optBalances.in : optBalances.out;
 
-    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+    const synthsWalletBalancesQuery = useStableBalanceQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
     });
     const walletBalancesMap =
         synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
@@ -269,14 +277,7 @@ const AMM: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const parsedSellAmount = parseSellAmount(
-                    sellAmount,
-                    isNonDefaultStable,
-                    isBuy,
-                    isPolygon,
-                    selectedStableIndex,
-                    networkId
-                );
+                const parsedSellAmount = parseSellAmount(sellAmount, selectedStableIndex, networkId);
 
                 const allowance = await checkAllowance(
                     parsedSellAmount,
@@ -395,9 +396,9 @@ const AMM: React.FC = () => {
         const amountToApprove = getAmountToApprove(
             approveAmount,
             isNonDefaultStable,
-            isPolygon,
             isBuy,
-            selectedStableIndex
+            selectedStableIndex,
+            networkId
         );
 
         const gasPrice = await snxJSConnector.provider?.getGasPrice();
