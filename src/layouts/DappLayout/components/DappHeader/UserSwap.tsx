@@ -48,8 +48,7 @@ export const UserSwap: React.FC = () => {
         enabled: isAppReady && walletAddress !== '' && !isMultiCollateralSupported,
     });
 
-    const stableBalance =
-        stableBalanceQuery?.isSuccess && stableBalanceQuery?.data ? stableBalanceQuery.data : { busd: 12 };
+    const stableBalance = stableBalanceQuery?.isSuccess && stableBalanceQuery?.data ? stableBalanceQuery.data : null;
     const balance = getCurrencyKeyStableBalance(stableBalance, getStableCoinForNetwork(networkId));
 
     const userData = [];
@@ -63,7 +62,7 @@ export const UserSwap: React.FC = () => {
             { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance }
         );
     } else {
-        userData.push({ type: CRYPTO_CURRENCY_MAP.BUSD as StableCoins, balance: balance });
+        userData.push({ type: getStableCoinForNetwork(networkId) as StableCoins, balance: balance });
     }
 
     const sortedUserData = _.orderBy(userData, 'balance', 'desc');
@@ -82,7 +81,7 @@ export const UserSwap: React.FC = () => {
                     token: isMultiCollateralSupported ? getStableCoinForNetwork(networkId) : 'Stablecoin',
                 })
             );
-            if (!isMultiCollateralSupported) {
+            if (isMultiCollateralSupported) {
                 setShowBalance(true);
             }
         }
