@@ -7,7 +7,7 @@ import {
     currencyKeyToNameMap,
 } from 'constants/currency';
 import { COLLATERALS_INDEX } from 'constants/options';
-import { AvailableStablecoins, StableCoins } from 'types/options';
+import { StableCoins } from 'types/options';
 import { getIsBSC, getIsPolygon } from './network';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
@@ -32,7 +32,7 @@ export const getSynthAsset = (currencyKey: string) =>
 
 export const getStableCoinForNetwork = (networkId: number, customStable?: StableCoins) => {
     if (customStable) {
-        return customStable as AvailableStablecoins;
+        return customStable as StableCoins;
     }
 
     if (getIsBSC(networkId)) {

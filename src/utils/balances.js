@@ -20,3 +20,7 @@ export const getCurrencyKeyUSDBalanceBN = (balances, currencyKey) =>
     isSynth(currencyKey)
         ? get(balances, getSynthBalancePath(currencyKey, 'balanceBN'))
         : get(balances, getCryptoCurrencyBalancePath(currencyKey, 'balanceBN'));
+
+export const getCurrencyKeyStableBalance = (balance, currencyKey) => {
+    return balance[currencyKey] ? balance[currencyKey] : 0;
+};

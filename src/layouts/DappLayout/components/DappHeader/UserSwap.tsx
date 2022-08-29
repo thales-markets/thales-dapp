@@ -2,6 +2,7 @@ import { Modal } from '@material-ui/core';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import _ from 'lodash';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
+import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -10,10 +11,11 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { StableCoins } from 'types/options';
+import { getCurrencyKeyStableBalance } from 'utils/balances';
 
 import { getAssetIcon, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getIsPolygon } from 'utils/network';
+import { getIsMultiCollateralSupported } from 'utils/network';
 
 const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
 
@@ -23,13 +25,14 @@ export const UserSwap: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
 
     const [showSwap, setShowSwap] = useState(false);
     const [showBalance, setShowBalance] = useState(false);
     const [swapToStableCoin, setSwapToStableCoin] = useState(SYNTHS_MAP.sUSD as StableCoins);
 
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && walletAddress !== '',
+        enabled: isAppReady && walletAddress !== '' && isMultiCollateralSupported,
         refetchInterval: 5000,
     });
 
@@ -41,19 +44,26 @@ export const UserSwap: React.FC = () => {
     const USDCBalance = getStableCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDC as StableCoins);
     const USDTBalance = getStableCoinBalance(multipleStableBalancesData, CRYPTO_CURRENCY_MAP.USDT as StableCoins);
 
-    const isPolygon = getIsPolygon(networkId);
+    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
+        enabled: isAppReady && walletAddress !== '' && !isMultiCollateralSupported,
+    });
+
+    const stableBalance =
+        stableBalanceQuery?.isSuccess && stableBalanceQuery?.data ? stableBalanceQuery.data : { busd: 12 };
+    const balance = getCurrencyKeyStableBalance(stableBalance, getStableCoinForNetwork(networkId));
+
     const userData = [];
-    if (!isPolygon) {
+    if (isMultiCollateralSupported) {
         userData.push({ type: SYNTHS_MAP.sUSD as StableCoins, balance: sUSDBalance });
-    }
-    userData.push(
-        { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance } // default for Polygon
-    );
-    if (!isPolygon) {
+        userData.push(
+            { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance } // default for Polygon
+        );
         userData.push(
             { type: CRYPTO_CURRENCY_MAP.DAI as StableCoins, balance: DAIBalance },
             { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance }
         );
+    } else {
+        userData.push({ type: CRYPTO_CURRENCY_MAP.BUSD as StableCoins, balance: balance });
     }
 
     const sortedUserData = _.orderBy(userData, 'balance', 'desc');
@@ -68,9 +78,11 @@ export const UserSwap: React.FC = () => {
     const mouseOverHandler = () => {
         if (isWalletConnected) {
             setButtonText(
-                t('options.swap.button-text', { token: isPolygon ? CRYPTO_CURRENCY_MAP.USDC : 'Stablecoin' })
+                t('options.swap.button-text', {
+                    token: isMultiCollateralSupported ? getStableCoinForNetwork(networkId) : 'Stablecoin',
+                })
             );
-            if (!isPolygon) {
+            if (!isMultiCollateralSupported) {
                 setShowBalance(true);
             }
         }
@@ -179,8 +191,6 @@ const SwapButton = styled.div<{ clickable: boolean }>`
     white-space: pre;
     padding: 6px 7px;
     text-align: center;
-    }
-F
 `;
 
 const SwapButtonTextWrap = styled.div`

@@ -44,7 +44,7 @@ export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     69: 'OPTIMISM-KOVAN',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
-    56: 'BINANCE SMART CHAIN MAINNET',
+    56: '',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
@@ -105,7 +105,13 @@ export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
 
 export const getInfuraRpcURL = (networkId: NetworkId) => {
     const network = INFURA_SUPPORTED_NETWORKS[networkId];
+    if (!network) return '';
     return `https://${network?.toLowerCase()}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
+};
+
+export const getPublicRpc = (networkId: NetworkId) => {
+    if (networkId == Network.BSC) return 'https://bsc-dataseed.binance.org/';
+    return 'https://mainnet.optimism.io';
 };
 
 export const isNetworkSupported = (networkId: NetworkId): boolean => {

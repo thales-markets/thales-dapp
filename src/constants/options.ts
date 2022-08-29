@@ -43,6 +43,7 @@ export enum COLLATERALS_INDEX {
     'DAI' = 1,
     'USDC' = 2,
     'USDT' = 3,
+    'BUSD' = 4,
 }
 
 export const COLLATERALS = ['sUSD', 'DAI', 'USDC', 'USDT'];
