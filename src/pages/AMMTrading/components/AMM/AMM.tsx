@@ -373,6 +373,7 @@ const AMM: React.FC = () => {
         const gasPrice = await snxJSConnector.provider?.getGasPrice();
         const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
 
+        const id = toast.loading(t('amm.progress'));
         try {
             setIsAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, amountToApprove);
@@ -386,10 +387,12 @@ const AMM: React.FC = () => {
             setOpenApprovalModal(false);
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
+                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`)));
                 setIsAllowing(false);
             }
         } catch (e) {
             console.log(e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
             setIsAllowing(false);
             setOpenApprovalModal(false);
         }

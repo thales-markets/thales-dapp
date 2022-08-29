@@ -1523,7 +1523,9 @@
         "max-amount": "最大金额 {{amount}}",
         "progress": "请稍等...",
         "max-button-tooltip": "使用所有可用的抵押品减去相当于滑点容限的缓冲区",
-        "pay-with": "使用。。。支付"
+        "pay-with": "使用。。。支付",
+        "transaction-successful": "交易成功",
+        "allowing-in-progress": "进行中..."
     },
     "articles": {
         "token": {

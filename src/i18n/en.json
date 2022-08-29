@@ -1611,6 +1611,8 @@
         "type-label": "type",
         "total-buy-label": "Total to pay",
         "pay-with": "Pay with",
+        "allowing-in-progress": "In progress...",
+        "transaction-successful": "Transaction successful",
         "total-sell-label": "Total to receive",
         "return-label": "Potential profit",
         "return-tooltip": "Potential profit if this position wins",
