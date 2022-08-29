@@ -60,6 +60,7 @@ import { ReactComponent as USDTIcon } from 'assets/currencies/crypto/USDT.svg';
 import { ReactComponent as LOOKSIcon } from 'assets/currencies/crypto/LOOKS.svg';
 import { ReactComponent as DYDXIcon } from 'assets/currencies/crypto/DYDX.svg';
 import { ReactComponent as ETCIcon } from 'assets/currencies/crypto/ETC.svg';
+import { ReactComponent as BUSDIcon } from 'assets/currencies/crypto/BUSD.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -256,6 +257,7 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.LOOKS]: LOOKSIcon,
     [CRYPTO_CURRENCY_MAP.DYDX]: DYDXIcon,
     [CRYPTO_CURRENCY_MAP.ETC]: ETCIcon,
+    [CRYPTO_CURRENCY_MAP.BUSD]: BUSDIcon,
 };
 
 export const currencyKeyToNameMap = {
