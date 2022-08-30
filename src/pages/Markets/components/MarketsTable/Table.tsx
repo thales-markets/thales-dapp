@@ -4,7 +4,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
-import { getIsOVM, getIsPolygon } from 'utils/network';
+import { getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -56,7 +56,7 @@ const Table: React.FC<{
     setAllAssets: any;
 }> = ({ optionsMarkets, showOnlyLiquid, assetFilters, searchText, exchangeRates, setAllAssets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2OrPolygon = getIsOVM(networkId) || getIsPolygon(networkId);
+    const isL2OrPolygon = getIsOVM(networkId) || getIsPolygon(networkId) || getIsBSC(networkId);
 
     const { t } = useTranslation();
 
