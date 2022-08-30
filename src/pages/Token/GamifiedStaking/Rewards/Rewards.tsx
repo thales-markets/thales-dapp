@@ -301,7 +301,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
 
                 if (txResult && txResult.transactionHash) {
                     dispatchMarketNotification(
-                        t('options.earn.gamified-staking.rewards.close-period.confirmation-message')
+                        t('options.earn.gamified-staking.rewards.claim.close-period.confirmation-message')
                     );
                     refetchTokenQueries(walletAddress, networkId);
                     setIsClosingPeriod(false);
@@ -381,32 +381,44 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 </SectionLabel>
                 <SectionValue type={SectionType.CLAIM}>
                     <SectionValueContent type={SectionType.CLAIM}>
-                        {formatCurrencyWithKey(THALES_CURRENCY, totalThalesRewards) +
-                            ' + ' +
-                            formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus)}
+                        {formatCurrencyWithKey(THALES_CURRENCY, totalThalesRewards)}
                     </SectionValueContent>
+                    <SectionValueContent type={SectionType.CLAIM} isOp={true}>
+                        {' + ' + formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus)}
+                    </SectionValueContent>
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={<Trans i18nKey="options.earn.gamified-staking.rewards.claim.op-tooltip" />}
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
                 </SectionValue>
                 <NetworkFeesWrapper>
                     <Line margin={'10px 0'} />
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                 </NetworkFeesWrapper>
                 <ButtonContainer>
-                    {getClaimButton()}
                     {stakingRewards && stakingRewards.isClaimPaused && (
-                        <ClaimMessage>{t('options.earn.gamified-staking.rewards.claim.paused-message')}</ClaimMessage>
+                        <ClaimMessage above={true}>
+                            {t('options.earn.gamified-staking.rewards.claim.paused-message')}
+                        </ClaimMessage>
                     )}
                     {stakingRewards && !stakingRewards.isClaimPaused && stakingRewards.claimed && (
-                        <ClaimMessage>{t('options.earn.gamified-staking.rewards.claim.claimed-message')}</ClaimMessage>
+                        <ClaimMessage above={true}>
+                            {t('options.earn.gamified-staking.rewards.claim.claimed-message')}
+                        </ClaimMessage>
                     )}
                     {stakingRewards &&
                         !stakingRewards.isClaimPaused &&
                         !stakingRewards.claimed &&
                         !stakingRewards.hasClaimRights &&
                         isWalletConnected && (
-                            <ClaimMessage>
+                            <ClaimMessage above={true}>
                                 {t('options.earn.gamified-staking.rewards.claim.not-eligible-message')}
                             </ClaimMessage>
                         )}
+                    {getClaimButton()}
                 </ButtonContainer>
                 <ValidationMessage
                     showValidation={txErrorMessage !== null}
@@ -420,13 +432,13 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
     const getClaimOnBehalfSection = () => {
         return (
             <SectionContentWrapper>
-                <SectionLabel type={SectionType.CLAIM_ON_BEHALF} marginTop={'24px'}>
+                <SectionLabel type={SectionType.CLAIM_ON_BEHALF} margin={'24px 0 0 0'}>
                     <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
                         {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-1')}
                     </SectionLabelContent>
                 </SectionLabel>
-                <SectionLabel type={SectionType.CLAIM_ON_BEHALF} marginTop={'46px'}>
-                    <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
+                <SectionLabel type={SectionType.CLAIM_ON_BEHALF} margin={'20px 0 0 0'} textDefault={true}>
+                    <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF} textDefault={true}>
                         {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-2')}
                     </SectionLabelContent>
                 </SectionLabel>
@@ -445,11 +457,22 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
     const getLpStakingSection = () => {
         return (
             <SectionContentWrapper background={false} noHeight={true}>
-                <SectionLabel type={SectionType.LP_STAKING} marginTop={'34px'}>
+                <SectionLabel type={SectionType.LP_STAKING} margin={'34px 0 0 0'}>
                     <SectionLabelContent type={SectionType.LP_STAKING}>
                         {t('options.earn.gamified-staking.rewards.lp-staking.label-1')}
                     </SectionLabelContent>
-                    <StyledMaterialTooltip arrow={true} title={<Trans i18nKey="???" />} interactive>
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey="options.earn.gamified-staking.rewards.lp-staking.tooltip"
+                                components={[
+                                    <LpStakingLink key="1" onClick={() => setSelectedTab(TokenTabEnum.LP_STAKING)} />,
+                                ]}
+                            />
+                        }
+                        interactive
+                    >
                         <StyledInfoIcon />
                     </StyledMaterialTooltip>
                 </SectionLabel>
@@ -586,8 +609,12 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             <DashedLineVertical gridRow={5} columnStart={7} marginTop={gridGap} heightPer={100} marginLeft={-10} />
 
             {/* Fourth row */}
-            <SectionWrapper columns={3}>{getClaimOnBehalfSection()}</SectionWrapper>
-            <SectionWrapper columns={6}>{getClaimSection()}</SectionWrapper>
+            <SectionWrapper columns={3} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
+                {getClaimOnBehalfSection()}
+            </SectionWrapper>
+            <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM}>
+                {getClaimSection()}
+            </SectionWrapper>
             <SectionWrapper
                 columns={3}
                 backgroundType={BackgroundType.LP_STAKING}
@@ -628,6 +655,8 @@ enum BackgroundType {
     RANGED,
     SPORTS,
     EXOTIC,
+    CLAIM,
+    CLAIM_ON_BEHALF,
     LP_STAKING,
 }
 
@@ -666,6 +695,9 @@ const SectionWrapper = styled.section<{
                 return '#303656';
             case BackgroundType.EXOTIC:
                 return 'linear-gradient(-20deg, #EE5782 0%, #B81B8F 100%)';
+            case BackgroundType.CLAIM:
+            case BackgroundType.CLAIM_ON_BEHALF:
+                return '#64d9fe80';
             default:
                 return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
         }
@@ -709,8 +741,9 @@ const SectionContent = styled.span`
     color: #ffffff;
 `;
 
-const SectionLabel = styled.div<{ type: SectionType; marginTop?: string }>`
-    ${(props) => (props.marginTop ? `margin-top: ${props.marginTop};` : '')}
+const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefault?: boolean }>`
+    ${(props) => (props.textDefault ? 'text-align: left;' : '')}
+    ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
     ${(props) => {
         switch (props.type) {
             case SectionType.INFO:
@@ -727,7 +760,10 @@ const SectionLabel = styled.div<{ type: SectionType; marginTop?: string }>`
                 return 'padding-bottom: 20px;';
             case SectionType.CLAIM:
             case SectionType.CLAIM_ON_BEHALF:
-                return 'padding: 10px 0;';
+                return `                
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                `;
             case SectionType.LP_STAKING:
                 return `
                     display: flex;
@@ -740,14 +776,14 @@ const SectionLabel = styled.div<{ type: SectionType; marginTop?: string }>`
     }}
 `;
 
-const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: string }>`
+const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: string; textDefault?: boolean }>`
+    text-transform: ${(props) => (props.textDefault ? 'none' : 'uppercase')};
     ${(props) => (props.logo ? `content: url(${props.logo});` : '')}
     ${(props) => {
         switch (props.type) {
             case SectionType.INFO:
             case SectionType.VOLUME:
                 return `
-                    text-transform: uppercase;
                     font-weight: 600;
                     font-size: 15px;
                 `;
@@ -755,7 +791,6 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
             case SectionType.CLAIM:
             case SectionType.LP_STAKING:
                 return `
-                    text-transform: uppercase;
                     font-weight: 700;
                     font-size: 18px;
                     line-height: 24px;
@@ -790,7 +825,7 @@ const SectionValue = styled.div<{ type: SectionType }>`
     }}
 `;
 
-const SectionValueContent = styled(SectionContent)<{ type: SectionType }>`
+const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: boolean }>`
     letter-spacing: 0.035em;
     text-transform: uppercase;
     ${(props) => {
@@ -812,7 +847,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType }>`
                 return `
                     font-weight: 700;
                     font-size: 30px;
-                    color: #64D9FE
+                    color: ${props.isOp ? '#ffffff' : '#64D9FE'};
                 `;
             default:
                 return '';
@@ -827,6 +862,7 @@ const SectionDescription = styled.div<{ type: SectionType }>`
                 return `
                     min-height: 70px; 
                     padding-top: 10px;
+                    text-align: start;
                 `;
             case SectionType.VOLUME:
                 return 'min-height: 10px;';
@@ -887,6 +923,12 @@ const PeriodLabel = styled(SectionContent)`
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 50px;
+`;
+
+const LpStakingLink = styled.span`
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
 `;
 
 export default Rewards;

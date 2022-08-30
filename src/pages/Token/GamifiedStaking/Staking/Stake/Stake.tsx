@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../components2';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line, BalanceIcon } from '../../../components2';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
@@ -260,13 +260,14 @@ const Stake: React.FC = () => {
                         {THALES_CURRENCY}
                     </CurrencyLabel>
                     <ThalesWalletAmountLabel>
+                        <BalanceIcon />
                         {isWalletConnected ? (
                             thalesBalanceQuery.isLoading ? (
                                 <SimpleLoader />
                             ) : (
                                 t('options.earn.gamified-staking.staking.stake.balance') +
                                 ' ' +
-                                formatCurrencyWithKey('', thalesBalance)
+                                formatCurrency(thalesBalance)
                             )
                         ) : (
                             '-'

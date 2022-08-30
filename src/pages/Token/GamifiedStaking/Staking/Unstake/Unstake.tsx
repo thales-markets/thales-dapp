@@ -6,6 +6,7 @@ import {
     SectionContentContainer,
     StyledMaterialTooltip,
     Line,
+    BalanceIcon,
 } from '../../../components2';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
@@ -23,7 +24,7 @@ import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryCo
 import { ethers } from 'ethers';
 import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
 
@@ -478,13 +479,14 @@ const Unstake: React.FC = () => {
                         {THALES_CURRENCY}
                     </CurrencyLabel>
                     <ThalesWalletAmountLabel>
+                        <BalanceIcon />
                         {isWalletConnected ? (
                             stakingThalesQuery.isLoading ? (
                                 <SimpleLoader />
                             ) : (
                                 t('options.earn.gamified-staking.staking.unstake.balance') +
                                 ' ' +
-                                formatCurrencyWithKey('', thalesStaked)
+                                formatCurrency(thalesStaked)
                             )
                         ) : (
                             '-'

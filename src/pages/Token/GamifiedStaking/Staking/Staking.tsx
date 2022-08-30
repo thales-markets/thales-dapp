@@ -1,17 +1,16 @@
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import { THALES_CURRENCY } from 'constants/currency';
-import { StyledInfoIcon, StyledMaterialTooltip, Tip17Link } from 'pages/Token/components2';
+import { StyledInfoIcon, StyledInfoIconGreen, StyledMaterialTooltip, Tip17Link } from 'pages/Token/components2';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
-import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
 import { Line } from '../../components2';
 import YourTransactions from './Transactions';
 import Stake from './Stake';
@@ -42,14 +41,12 @@ const Staking: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const stakeOptions = {
         stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
         unstake: { value: 'unstake', label: t('options.earn.gamified-staking.staking.unstake.name') },
     };
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
-    const [thalesBalance, setThalesBalance] = useState(0);
 
     const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -57,15 +54,6 @@ const Staking: React.FC = () => {
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
         enabled: isAppReady,
     });
-    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
-
-    useEffect(() => {
-        if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
-            setThalesBalance(Number(thalesBalanceQuery.data.balance));
-        }
-    }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
 
     const totalStakedAmount =
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.totalStakedAmount) : 0;
@@ -83,6 +71,8 @@ const Staking: React.FC = () => {
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.thalesStaked) : 0;
     const escrowedBalance =
         escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.escrowedBalance) : 0;
+    const unstakingAmount =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.unstakingAmount) : 0;
 
     const APR = useMemo(
         () =>
@@ -112,16 +102,29 @@ const Staking: React.FC = () => {
         [thalesStaked, totalThalesStaked, escrowedBalance]
     );
 
-    const getSectionLabel = (labelTransKey: string, defaultValue?: string) => {
+    const getSectionLabel = (labelTransKey: string, defaultValue?: string, noIcon?: boolean) => {
         return (
             <SectionLabel>
                 <SectionLabelContent>{t(labelTransKey, defaultValue)}</SectionLabelContent>
-                <StyledMaterialTooltip arrow={true} title={<Trans i18nKey={labelTransKey + '-tooltip'} />} interactive>
-                    <StyledInfoIcon />
-                </StyledMaterialTooltip>
+                {!noIcon && (
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={<Trans i18nKey={labelTransKey + '-tooltip'} />}
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                )}
             </SectionLabel>
         );
     };
+
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * Number(fixedPeriodReward), [myStakedShare]);
+    const bonusEstimatedRewards = useMemo(() => (estimatedRewards * maxBonusRewardsPercentage) / 100, [
+        estimatedRewards,
+    ]);
+
+    const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 
     return (
         <>
@@ -132,37 +135,37 @@ const Staking: React.FC = () => {
                     <SectionValue>
                         <SectionValueContent>
                             {formattedAPY}%<BonusInfo>+</BonusInfo>
-                            <BonusInfo>{formattedBonusAPY}%</BonusInfo>
+                            <BonusInfo>
+                                {formattedBonusAPY}%
+                                <StyledMaterialTooltip
+                                    arrow={true}
+                                    title={
+                                        <Trans
+                                            i18nKey="options.earn.gamified-staking.staking.bonus-apy-tooltip"
+                                            components={[<span key="1" />, <Tip17Link key="2" />]}
+                                            values={{ max: maxBonusRewardsPercentage }}
+                                        />
+                                    }
+                                    interactive
+                                >
+                                    <StyledInfoIconGreen />
+                                </StyledMaterialTooltip>
+                            </BonusInfo>
                         </SectionValueContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={
-                                <Trans
-                                    i18nKey="options.earn.gamified-staking.staking.bonus-apy-tooltip"
-                                    components={[<span key="1" />, <Tip17Link key="2" />]}
-                                    values={{ max: maxBonusRewardsPercentage }}
-                                />
-                            }
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
                     </SectionValue>
                 </SectionContentWrapper>
             </SectionWrapper>
             <SectionWrapper>
                 <SectionContentWrapper>
-                    {getSectionLabel('options.earn.gamified-staking.staking.total-thales-staked')}
+                    {getSectionLabel('options.earn.gamified-staking.staking.staked-share')}
                     <SectionValue>
-                        <SectionValueContent>
-                            {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
-                        </SectionValueContent>
+                        <SectionValueContent>{formatCurrencyWithPrecision(myStakedShare)}%</SectionValueContent>
                     </SectionValue>
                 </SectionContentWrapper>
             </SectionWrapper>
 
             {/* First and Second row */}
-            <SectionWrapper rows={2} border={false}>
+            <SectionWrapper rows={2} backgroundType={BackgroundType.INFO}>
                 <SectionContentWrapper background={false}>
                     {getSectionLabel('options.earn.gamified-staking.staking.staked-balance')}
                     <SectionValue>
@@ -171,12 +174,24 @@ const Staking: React.FC = () => {
                         </SectionValueContent>
                     </SectionValue>
                 </SectionContentWrapper>
+                {notEligibleForStakingRewards && (
+                    <StakedBalanceInfo>
+                        {t('options.earn.gamified-staking.staking.not-eligible-message')}
+                    </StakedBalanceInfo>
+                )}
                 <SectionContentWrapper background={false}>
                     <SectionDetails positionUp={true}>
                         <SectionDetailsLabel>
                             {t('options.earn.gamified-staking.staking.staked-directly')}
                         </SectionDetailsLabel>
-                        <SectionDetailsValue>
+                        {unstakingAmount > 0 && (
+                            <UnstakingInfo>
+                                {`${t(
+                                    'options.earn.gamified-staking.staking.unstake.unstaking'
+                                )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}`}
+                            </UnstakingInfo>
+                        )}
+                        <SectionDetailsValue unavailable={notEligibleForStakingRewards}>
                             {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
                         </SectionDetailsValue>
                     </SectionDetails>
@@ -195,25 +210,44 @@ const Staking: React.FC = () => {
             {/* Second row */}
             <SectionWrapper>
                 <SectionContentWrapper>
-                    {getSectionLabel('options.earn.gamified-staking.staking.wallet-balance')}
+                    {getSectionLabel('options.earn.gamified-staking.staking.total-thales-staked')}
                     <SectionValue>
                         <SectionValueContent>
-                            {formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}
+                            {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
                         </SectionValueContent>
                     </SectionValue>
                 </SectionContentWrapper>
             </SectionWrapper>
             <SectionWrapper>
                 <SectionContentWrapper>
-                    {getSectionLabel('options.earn.gamified-staking.staking.staked-share')}
+                    {getSectionLabel('options.earn.gamified-staking.staking.estimated-rewards', '', true)}
                     <SectionValue>
-                        <SectionValueContent>{formatCurrencyWithPrecision(myStakedShare)}%</SectionValueContent>
+                        <SectionValueContent>
+                            {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
+                            {/* <BonusInfo>+</BonusInfo> */}
+                            <BonusInfo>
+                                {'+ ' + formatCurrency(bonusEstimatedRewards)}
+                                <StyledMaterialTooltip
+                                    arrow={true}
+                                    title={
+                                        <Trans
+                                            i18nKey="options.earn.gamified-staking.staking.bonus-estimated-rewards-tooltip"
+                                            components={[<span key="1" />, <Tip17Link key="2" />]}
+                                            values={{ max: maxBonusRewardsPercentage }}
+                                        />
+                                    }
+                                    interactive
+                                >
+                                    <StyledInfoIconGreen />
+                                </StyledMaterialTooltip>
+                            </BonusInfo>
+                        </SectionValueContent>
                     </SectionValue>
                 </SectionContentWrapper>
             </SectionWrapper>
 
             {/* Third row */}
-            <SectionWrapper>
+            <SectionWrapper backgroundType={BackgroundType.STAKE}>
                 <SectionContentWrapper>
                     <Switch
                         active={stakeOption !== stakeOptions.stake.value}
@@ -243,7 +277,12 @@ const Staking: React.FC = () => {
     );
 };
 
-const SectionWrapper = styled.section<{ columns?: number; rows?: number; border?: boolean }>`
+enum BackgroundType {
+    INFO,
+    STAKE,
+}
+
+const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgroundType?: BackgroundType }>`
     box-sizing: border-box;
     border-radius: 15px;
     ${(props) =>
@@ -256,15 +295,22 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; border?
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
-    background: ${(props) =>
-        props.border ?? true
-            ? 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)'
-            : 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)'};
+    background: ${(props) => {
+        switch (props.backgroundType) {
+            case BackgroundType.INFO:
+                return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
+            case BackgroundType.STAKE:
+                return '#64d9fe80';
+            default:
+                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+        }
+    }};
     padding: 2px;
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
     display: grid;
+    height: 100%;
     background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
     align-items: center;
@@ -296,7 +342,7 @@ const SectionLabelContent = styled(SectionContent)`
 
 const SectionValueContent = styled(SectionContent)`
     font-weight: 700;
-    font-size: 30px;
+    font-size: 25px;
     line-height: 30px;
     letter-spacing: 0.035em;
 `;
@@ -307,6 +353,7 @@ const SectionDetails = styled.div<{ positionUp: boolean }>`
 
 const SectionDetailsLabel = styled.span`
     display: block;
+    padding-top: 2px;
     float: left;
     font-weight: 300;
     font-size: 15px;
@@ -315,18 +362,37 @@ const SectionDetailsLabel = styled.span`
     color: #ffffff;
 `;
 
-const SectionDetailsValue = styled.span`
+const SectionDetailsValue = styled.span<{ unavailable?: boolean }>`
     display: block;
+    padding-top: 2px;
     float: right;
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: #ffffff;
+    color: ${(props) => (props.unavailable ? '#ffcc00' : '#ffffff')};
 `;
 
 const BonusInfo = styled.span`
     margin-left: 10px;
     color: #50ce99;
+`;
+
+const StakedBalanceInfo = styled.div`
+    position: absolute;
+    top: 100px;
+    padding: 10px 15px;
+    color: #ffcc00;
+    font-size: 14px;
+`;
+
+const UnstakingInfo = styled.span`
+    font-weight: 400;
+    font-size: 12px;
+    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+    border-radius: 5px;
+    padding: 3px 5px;
+    margin-left: 5px;
+    float: right;
 `;
 
 export default Staking;

@@ -102,7 +102,12 @@ export const TokentOverview: React.FC = () => {
                     <Title>{t('options.earn.overview.total-supply-label')}</Title>
                     <Content>
                         {tokenInfo
-                            ? formatCurrencyWithKey(THALES_CURRENCY, tokenInfo.totalSupply, 0, true)
+                            ? formatCurrencyWithKey(
+                                  THALES_CURRENCY,
+                                  tokenInfo.totalSupply - tokenInfo.thalesBurned,
+                                  0,
+                                  true
+                              )
                             : EMPTY_VALUE}
                     </Content>
                 </ItemContainer>

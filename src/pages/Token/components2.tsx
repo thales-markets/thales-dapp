@@ -4,7 +4,9 @@ import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDiv
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { ReactComponent as InfoIconGreen } from 'assets/images/info-circle-green.svg';
 import { LINKS } from 'constants/links';
+import balanceIcon from 'assets/images/token/balance-icon.svg';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -97,12 +99,12 @@ export const ButtonContainerBottom = styled(ButtonContainer)`
     justify-content: flex-end;
 `;
 
-export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string }>`
+export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string; above?: boolean }>`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
     color: ${(props) => (props.color ? props.color : '#ffcc00')};
-    margin-top: 10px;
+    ${(props) => (props.above ? 'margin-bottom: 10px;' : 'margin-top: 10px;')}
     visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
 `;
 
@@ -183,7 +185,6 @@ export const StyledMaterialTooltip = withStyles(() => ({
         letterSpacing: '0.4px',
         color: '#F6F6FE',
         maxWidth: window.innerWidth < 768 ? 350 : 400,
-        boxShadow: '-2px -2px 10px rgba(100, 217, 254, 0.25), 2px 2px 10px rgba(100, 217, 254, 0.25)',
     },
 }))(MaterialTooltip);
 
@@ -227,6 +228,18 @@ export const DescriptionLink = styled.a`
 
 export const StyledInfoIcon = styled(InfoIcon)`
     margin-left: 6px;
+`;
+
+export const StyledInfoIconGreen = styled(InfoIconGreen)`
+    min-width: 20px;
+    min-height: 20px;
+    margin-left: 6px;
+    margin-bottom: -1px;
+`;
+
+export const BalanceIcon = styled.span`
+    content: url(${balanceIcon});
+    margin: 0 4px 2px 0;
 `;
 
 export const Line = styled.hr<{ margin?: string }>`

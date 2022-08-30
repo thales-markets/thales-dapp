@@ -177,7 +177,7 @@ const Vesting: React.FC = () => {
                         </SectionLabelContent>
                     </ScheduleLabel>
                     <TileTable
-                        firstColumnRenderer={(row: TileRow | string) => <SchedulrFirstColumn value={row} />}
+                        firstColumnRenderer={(row: TileRow | string) => <SchedulerFirstColumn value={row} />}
                         rows={generateRows(scheduleData)}
                         isLoading={scheduleQuery.isLoading}
                         noResultsMessage={
@@ -194,7 +194,7 @@ const Vesting: React.FC = () => {
     );
 };
 
-const SchedulrFirstColumn: React.FC<{ value: TileRow | string }> = ({ value }) => {
+const SchedulerFirstColumn: React.FC<{ value: TileRow | string }> = ({ value }) => {
     if (typeof value !== 'string') {
         return (
             <DateTimeContainer>
@@ -224,7 +224,7 @@ const SectionWrapper = styled.section<{
     ${(props) => (props.rows ? 'display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; grid-gap: 24px;' : '')}
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
     padding: 2px;
-    background: ${(props) => (props.background ?? true ? 'linear-gradient(160deg, #801bf2 0%, #1bab9c 100%)' : 'none')};
+    background: ${(props) => (props.background ?? true ? '#64d9fe80' : 'none')};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
 `;
 

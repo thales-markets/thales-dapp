@@ -634,16 +634,19 @@
                     "section-description": "The Staking rewards shows the THALES rewards you have available for claiming.",
                     "apy-tooltip": "Annual Percentage Yield in THALES tokens from Staking THALES tokens.",
                     "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
+                    "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />.",
                     "total-thales-staked": "Total THALES Staked",
                     "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract.",
                     "staked-share": "My Staked Share",
-                    "staked-share-tooltip": "Your percentage (%) of the Total Staked Thales pool.",
+                    "staked-share-tooltip": "Your percentage (%) of the Total Staked THALES pool.",
                     "wallet-balance": "My Wallet Balance",
                     "wallet-balance-tooltip": "Amount of non-staked THALES in your wallet.",
                     "staked-balance": "My Staked Balance",
+                    "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
                     "staked-balance-tooltip": "Amount of THALES tokens you are currently staking.",
                     "staked-directly": "Staked directly",
                     "escrow-balance": "Escrowed balance",
+                    "estimated-rewards": "Estimated rewards for this period",
                     "stake": {
                         "name": "Stake",
                         "staking": "Staking",
@@ -719,16 +722,18 @@
                             "label": "Close period",
                             "progress-label": "Closing period...",
                             "confirmation-message": "Period successfully closed"
-                        }
+                        },
+                        "op-tooltip": "OP token rewards for Gamified Staking are distributed directly to your wallet every 2 weeks."
                     },
                     "claim-on-behalf": {
                         "label-1": "Looking to automate your claim?",
-                        "label-2": "Whitelist an address to claim on your behalf here",
+                        "label-2": "Whitelist an address to claim on your behalf",
                         "enable": "Enable claim on behalf"
                     },
                     "lp-staking": {
                         "label-1": "thales/eth",
-                        "label-2": "LP Staking"
+                        "label-2": "LP Staking",
+                        "tooltip": "Provide THALES/WETH Liquidity to earn THALES+OP dual rewards. More info <0>here</0>."
                     },
                     "base-label": "Thales staking base rewards"
                 },

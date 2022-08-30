@@ -232,7 +232,7 @@ const SectionWrapper = styled.section`
     box-sizing: border-box;
     border-radius: 15px;
     grid-column: 4 / span 6;
-    background: linear-gradient(160deg, #801bf2 0%, #1bab9c 100%);
+    background: #64d9fe80;
     padding: 2px;
 `;
 

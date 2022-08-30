@@ -35,7 +35,7 @@ const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ width }) => {
 
 const BannerContainer = styled(FlexDiv)<{ width?: number }>`
     width: ${(props) => props.width || 100}%;
-    padding-bottom: 40px;
+    padding-bottom: 20px;
     strong {
         font-weight: bold;
         cursor: pointer;
