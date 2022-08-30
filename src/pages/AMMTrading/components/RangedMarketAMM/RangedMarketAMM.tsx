@@ -50,6 +50,7 @@ import {
 import {
     checkAllowance,
     formatGasLimit,
+    // getIsBSC,
     getIsMultiCollateralSupported,
     getIsOVM,
     getIsPolygon,
@@ -132,6 +133,7 @@ const AMM: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
+    // const isBSC = getIsBSC(networkId);
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isNonDefaultStable = selectedStableIndex !== 0 && !isMultiCollateralSupported && orderSide.value === 'buy';
@@ -830,7 +832,7 @@ const AMM: React.FC = () => {
     const formDisabled = isSubmitting || isAmmTradingDisabled;
     return (
         <Wrapper>
-            {isBuy && !isPolygon && (
+            {isBuy && isMultiCollateralSupported && (
                 <CollateralSelector
                     collateralArray={COLLATERALS}
                     selectedItem={selectedStableIndex}
