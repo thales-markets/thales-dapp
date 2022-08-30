@@ -49,6 +49,7 @@ import {
 } from 'constants/options';
 import {
     checkAllowance,
+    getIsBSC,
     getIsMultiCollateralSupported,
     getIsOVM,
     getIsPolygon,
@@ -70,6 +71,7 @@ import CollateralSelector from 'components/CollateralSelector';
 import { getSellToken, getSellTokenCurrency } from 'utils/options';
 import {
     getAmountToApprove,
+    getEstimatedGasFees,
     getQuoteFromAMM,
     parseSellAmount,
     preparePopulateTransactionForAMM,
@@ -129,6 +131,7 @@ const AMM: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
+    const isBSC = getIsBSC(networkId);
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isNonDefaultStable =
@@ -320,7 +323,25 @@ const AMM: React.FC = () => {
                 setGasLimit(MAX_L2_GAS_LIMIT);
                 setL1Fee(l1FeeInWei ? l1FeeInWei : 0);
                 return MAX_L2_GAS_LIMIT;
-            } else if (!getIsMultiCollateralSupported(networkId)) {
+            } else if (isBSC) {
+                const gasLimit = await getEstimatedGasFees(
+                    isNonDefaultStable,
+                    isBuy,
+                    ammContractWithSigner,
+                    marketAddress,
+                    side,
+                    parsedAmount,
+                    parsedTotal,
+                    parsedSlippage,
+                    sellToken,
+                    referral
+                );
+
+                const gasLimitNumber = ethers.utils.formatUnits(gasLimit, 0);
+                const safeGasLimit = Math.round(+gasLimitNumber + 0.2 * +gasLimitNumber);
+                setGasLimit(safeGasLimit);
+                return safeGasLimit;
+            } else if (isPolygon) {
                 const gasLimit = isBuy
                     ? await ammContractWithSigner.estimateGas.buyFromAMM(
                           marketAddress,

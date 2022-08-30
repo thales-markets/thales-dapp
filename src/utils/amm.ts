@@ -221,3 +221,57 @@ export const parseSellAmount = (
 ) => {
     return stableCoinParser(Number(sellAmount)?.toString(), networkId, COLLATERALS[selectedStableIndex]);
 };
+
+export const getEstimatedGasFees = async (
+    isNonDefaultStable: boolean,
+    isBuy: boolean,
+    ammContractWithSigner: any,
+    marketAddress: string,
+    side: number | OptionSide | RangedMarketPositionType,
+    parsedAmount: BigNumber,
+    parsedTotal: BigNumber,
+    parsedSlippage: BigNumber,
+    sellToken: string | undefined,
+    referral: string
+) => {
+    let txRequest: any;
+
+    if (isNonDefaultStable) {
+        txRequest = await ammContractWithSigner.estimateGas.buyFromAMMWithDifferentCollateralAndReferrer(
+            marketAddress,
+            side,
+            parsedAmount,
+            parsedTotal,
+            parsedSlippage,
+            sellToken,
+            referral ? referral : ZERO_ADDRESS
+        );
+    } else {
+        txRequest = isBuy
+            ? !referral
+                ? await ammContractWithSigner.estimateGas.buyFromAMM(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage
+                  )
+                : await ammContractWithSigner.estimateGas.buyFromAMMWithReferrer(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage,
+                      referral
+                  )
+            : await ammContractWithSigner.estimateGas.sellToAMM(
+                  marketAddress,
+                  side,
+                  parsedAmount,
+                  parsedTotal,
+                  parsedSlippage
+              );
+    }
+
+    return txRequest;
+};
