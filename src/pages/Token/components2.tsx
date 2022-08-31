@@ -227,13 +227,13 @@ export const DescriptionLink = styled.a`
 `;
 
 export const StyledInfoIcon = styled(InfoIcon)`
-    margin-left: 6px;
+    margin-left: 5px;
 `;
 
 export const StyledInfoIconGreen = styled(InfoIconGreen)`
     min-width: 20px;
     min-height: 20px;
-    margin-left: 6px;
+    margin-left: 5px;
     margin-bottom: -1px;
 `;
 
@@ -304,10 +304,10 @@ export const Tip37Link: React.FC = () => {
     );
 };
 
-export const Tip48Link: React.FC = () => {
+export const Tip48Link: React.FC = (props) => {
     return (
         <DescriptionLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP48}>
-            Learn More.
+            {props.children}
         </DescriptionLink>
     );
 };
@@ -349,5 +349,21 @@ export const OpRewardsPageLink: React.FC = () => {
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.OpRewardsPage}>
             the OP rewards page
         </TooltipLink>
+    );
+};
+
+export const UniswapExchangeLink: React.FC = (props) => {
+    return (
+        <DescriptionLink target="_blank" rel="noreferrer" href={LINKS.Token.UniswapWrapEth}>
+            {props.children}
+        </DescriptionLink>
+    );
+};
+
+export const ProvideLiquidityLink: React.FC = (props) => {
+    return (
+        <DescriptionLink target="_blank" rel="noreferrer" href={LINKS.Token.Liquidity}>
+            {props.children}
+        </DescriptionLink>
     );
 };

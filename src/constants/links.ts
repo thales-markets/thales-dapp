@@ -39,6 +39,9 @@ export const LINKS = {
             'https://app.uniswap.org/#/swap?outputCurrency=0x8947da500Eb47F82df21143D0C01A29862a8C3c5&chain=mainnet',
         UniswapL2:
             'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11&chain=optimism',
+        UniswapWrapEth:
+            'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x4200000000000000000000000000000000000006&chain=optimism',
+        Liquidity: 'https://beta.arrakis.finance/vaults/10/0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5',
     },
     AMM: {
         Tip: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-11.md',

@@ -510,9 +510,9 @@ const Unstake: React.FC = () => {
                     />
                 </InputContainer>
                 <Line margin={'0 0 10px 0'} />
-                <div style={{ minHeight: '63px' }}>
+                <NetworkFeesWrapper>
                     <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />
-                </div>
+                </NetworkFeesWrapper>
                 <ButtonsContainer twoButtons={isUnstakingInContract && unstakingEnded}>
                     {getSubmitButton()}
                     {isStakingPaused && (
@@ -595,6 +595,10 @@ const ButtonsContainer = styled(FlexDivColumnCentered)<{ twoButtons: boolean }>`
 
 const ButtonWrapperTooltip = styled.div`
     width: 100%;
+`;
+
+const NetworkFeesWrapper = styled.div`
+    min-height: 63px;
 `;
 
 export default Unstake;

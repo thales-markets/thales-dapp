@@ -484,7 +484,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 <SectionValue type={SectionType.LP_STAKING}>
                     <SectionValueContent type={SectionType.LP_STAKING}>{lpStakingReward}</SectionValueContent>
                 </SectionValue>
-                <ArrowWrapper marginTop={'100px'}>
+                <ArrowWrapper marginTop={'40px'}>
                     <ArrowLink src={arrowLink} widthPer={7} />
                 </ArrowWrapper>
             </SectionContentWrapper>
@@ -703,7 +703,10 @@ const SectionWrapper = styled.section<{
         }
     }};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
-    cursor: ${(props) => (props.backgroundType !== undefined ? 'pointer' : 'default')};
+    cursor: ${(props) =>
+        ![BackgroundType.CLAIM, BackgroundType.CLAIM_ON_BEHALF].includes(props.backgroundType ?? BackgroundType.CLAIM)
+            ? 'pointer'
+            : 'default'};
 
     &:hover ${ArrowLink} {
         animation: pulsing 1s ease-in;

@@ -686,7 +686,7 @@
                         "base": "As base rewards",
                         "base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
                         "bonus": "As bonus rewards",
-                        "bonus-description": "Maximum bonus rewards on top of base rewards is 50%. 21k or 70% to Protocol Usage bucket. This counts sUSD volume from AMM trading, ranged AMM trading, sport's AMM trading and exotic markets bidding and 9k or 30% to SNX stakers. <0 />"
+                        "bonus-description": "Maximum bonus rewards on top of base rewards is 50%. 21k or 70% to Protocol Usage bucket. This counts sUSD volume from AMM trading, ranged AMM trading, sport's AMM trading and exotic markets bidding and 9k or 30% to SNX stakers. <0>Learn More.</0>"
                     },
                     "volume": {
                         "amm-label": "AMM markets",
@@ -799,43 +799,41 @@
             "lp-staking": {
                 "tab-title": "LP staking",
                 "section-title": "How LP Staking works?",
-                "info-steps": {
+                "instructions": {
                     "step1-label": "Connect wallet",
-                    "step1-desc": "Connect your wallet to Optimism network.",
-                    "step2-label": "Wrap Ethereum",
-                    "step2-desc": "To provide liquidity and be eligible for LP incentives, you need to have Wrapped Ethereum that will be used to pair with your THALES tokens. You can wrap your ETH to WETH on Optimism using the Uniswap exchange.",
+                    "step1-desc": "Connect your wallet to Optimism network and the Thales dapp in the top right corner of this page.",
+                    "step2-label": "Wrap ETH into WETH",
+                    "step2-desc": "To be able to provide liquidity and be eligible for LP rewards, you need to have Wrapped Ethereum. You can wrap your ETH to WETH on Optimism using this <0>Uniswap page</0>.",
                     "step3-label": "Provide liquidity",
-                    "step3-desc": "Provide THALES+WETH liquidity to the G-UNI pool on Sorbet Finance UI (link). Once the transaction is confirmed, you should get a certain amount of Gelato Uniswap THALES/WETH LP (G-UNI) tokens in your wallet that represent your share of the liquidity pool.",
+                    "step3-desc": "Provide THALES+WETH liquidity to the G-UNI pool on Arrakis Finance UI (<0>here</0>). Once the transaction is confirmed, you will receive THALES/WETH G-UNI LP tokens in your wallet that represent your share of the liquidity pool.",
                     "step4-label": "Stake",
-                    "step4-desc": "Now that you've staked your LP tokens you'll be able to stake your THALES.",
-                    "step5-label": "Claim",
+                    "step4-desc": "Now that you have your G-UNI LP tokens, you need to stake them on this page to start receiving THALES+OP rewards.",
+                    "step5-label": "Claim rewards",
                     "step5-desc": "Now that you've staked your LP tokens you'll see your rewards accruing in the Rewards card of the LP staking page."
                 },
-                "rewards": {
-                    "title": "Rewards",
-                    "lp-staking": "LP staking",
-                    "claim": "Claim",
-                    "claiming": "Claiming",
-                    "claimed": "Successfully claimed"
-                },
-                "my-stake": {
-                    "title": "My staked tokens",
-                    "total-staked": "Total staked",
-                    "lp-tokens": "LP Tokens"
-                },
                 "info": {
-                    "tvl": "Total value locked (TVL)",
-                    "thales-apr": "THALES APR",
-                    "op-apr": "OP APR",
-                    "total-apr": "TOTAL APR"
+                    "staked-balance": "My staked LP tokens balance",
+                    "staked-balance-tooltip": "???",
+                    "lp-tokens": "LP tokens",
+                    "tvl": "Total value locked (tvl)",
+                    "tvl-tooltip": "???",
+                    "share": "My staked share",
+                    "share-tooltip": "???"
                 },
-                "provide-liquidity": {
-                    "description": "Obtain G-UNI LP tokens to stake by adding liquidity to the THALES/WETH pool.",
-                    "wrap-your-eth": "1. Wrap your ETH",
-                    "deposit": "2. Deposit THALES and WETH to the G-UNI pool",
-                    "stake-here": "3. Stake LP tokens on this page",
-                    "here": "here",
-                    "button-text": "Link to add liquidity"
+                "apr": {
+                    "total": "APR in total",
+                    "total-tooltip": "???",
+                    "thales": "THALES APR",
+                    "thales-tooltip": "???",
+                    "op": "OP APR",
+                    "op-tooltip": "???"
+                },
+                "claim": {
+                    "title": "Unclaimed rewards",
+                    "total-label": "Total claimable",
+                    "claim-rewards": "Claim rewards",
+                    "claiming-rewards": "Claiming rewards",
+                    "claimed": "Successfully claimed"
                 }
             },
             "table": {
