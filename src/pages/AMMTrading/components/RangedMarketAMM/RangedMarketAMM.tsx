@@ -25,7 +25,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import useRangedAMMMaxLimitsQuery, {
     RangeAmmMaxLimits,
 } from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
-import { getCurrencyKeyBalance } from 'utils/balances';
+import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import {
@@ -39,7 +39,7 @@ import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimal
 import onboardConnector from 'utils/onboardConnector';
 
 import { OrderSide, RangedMarketBalanceInfo, RangedMarketPositionType, StableCoins } from 'types/options';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import {
     COLLATERALS,
     MAX_L2_GAS_LIMIT,
@@ -191,16 +191,13 @@ const AMM: React.FC = () => {
 
     const tokenBalance = rangeSide === 'in' ? optBalances.in : optBalances.out;
 
-    const synthsWalletBalancesQuery = useStableBalanceQuery(walletAddress, networkId, {
+    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
     });
-    const walletBalancesMap =
-        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
-            ? { synths: synthsWalletBalancesQuery.data }
-            : null;
-    const stableBalance = isNonDefaultStable
+    const walletBalancesMap = stableBalanceQuery.isSuccess && stableBalanceQuery.data ? stableBalanceQuery.data : null;
+    const stableBalance = isMultiCollateralSupported
         ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[selectedStableIndex] as StableCoins)
-        : getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD);
+        : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId) as StableCoins);
 
     const ammMaxLimitsQuery = useRangedAMMMaxLimitsQuery(rangedMarketData?.address, networkId, {
         enabled: isAppReady,
