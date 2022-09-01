@@ -2,8 +2,11 @@ import { Tip49Link } from 'pages/Token/components';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
+import LPStaking from 'pages/Token/LPStaking';
 import LpStaking from 'pages/Token/LpStaking2';
 import MergeAccount from 'pages/Token/MergeAccount';
+import Migration from 'pages/Token/Migration';
+import SnxStaking from 'pages/Token/SnxStaking';
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -14,6 +17,7 @@ import { TokenTabEnum } from 'types/token';
 import { getIsOVM } from 'utils/network';
 import Button from '../Button';
 import { ButtonType } from '../Button/Button';
+import MigrationInfo from '../MigrationInfo';
 
 const GRID_GAP = 20;
 
@@ -80,7 +84,8 @@ const Tab: React.FC<{
 
     return (
         <Container>
-            {selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
+            {selectedTab === TokenTabEnum.MIGRATION && <Migration />}
+            {isL2 && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
                 <>
                     <SectionRow>
                         <SectionHeader>{sections.find((el) => el.id === activeButtonId)?.title}</SectionHeader>
@@ -119,7 +124,8 @@ const Tab: React.FC<{
                     </SectionContent>
                 </>
             )}
-            {selectedTab === TokenTabEnum.LP_STAKING && (
+            {!isL2 && selectedTab === TokenTabEnum.GAMIFIED_STAKING && <MigrationInfo messageKey="staking" />}
+            {isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
                 <>
                     <SectionRow>
                         <SectionHeader>{sections.find((el) => el.tab === selectedTab)?.title}</SectionHeader>
@@ -129,6 +135,8 @@ const Tab: React.FC<{
                     </SectionContent>
                 </>
             )}
+            {!isL2 && selectedTab === TokenTabEnum.LP_STAKING && <LPStaking />}
+            {selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && <SnxStaking />}
         </Container>
     );
 };

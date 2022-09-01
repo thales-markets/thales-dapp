@@ -813,20 +813,20 @@
                 },
                 "info": {
                     "staked-balance": "My staked LP tokens balance",
-                    "staked-balance-tooltip": "???",
+                    "staked-balance-tooltip": "How much liquidity you have staked in the LP staking contract.",
                     "lp-tokens": "LP tokens",
                     "tvl": "Total value locked (tvl)",
-                    "tvl-tooltip": "???",
+                    "tvl-tooltip": "Total amount of liquidity staked in the LP staking contract.",
                     "share": "My staked share",
-                    "share-tooltip": "???"
+                    "share-tooltip": "My percentage share of the total staked liquidity in the LP staking contract."
                 },
                 "apr": {
                     "total": "APR in total",
-                    "total-tooltip": "???",
+                    "total-tooltip": "Total current Annual Percentage Return as sum of both OP and THALES rewards.",
                     "thales": "THALES APR",
-                    "thales-tooltip": "???",
+                    "thales-tooltip": "Current Annual Percentage Return in THALES tokens.",
                     "op": "OP APR",
-                    "op-tooltip": "???"
+                    "op-tooltip": "Current Annual Percentage Return in OP tokens."
                 },
                 "claim": {
                     "title": "Unclaimed rewards",
