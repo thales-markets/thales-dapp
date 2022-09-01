@@ -20,7 +20,7 @@ export const EarnSection = styled.section<{
     position: relative;
     border-radius: 15px;
     color: white;
-    padding: 15px;
+    padding: 15px 15px 10px 15px;
     max-width: 100%;
     @media screen and (max-width: 1024px) {
         grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;

@@ -198,30 +198,58 @@ const LpStaking: React.FC = () => {
 
     const getClaimSection = () => {
         return (
-            <SectionContentWrapper columnsSpan={2} padding={true}>
-                <SectionLabel type={SectionType.CLAIM}>
-                    <SectionLabelContent type={SectionType.CLAIM}>
-                        {t('options.earn.lp-staking.claim.total-label')}
-                    </SectionLabelContent>
-                </SectionLabel>
-                <SectionValue type={SectionType.CLAIM}>
-                    <SectionValueContent type={SectionType.CLAIM}>
-                        {`${formatCurrencyWithKey(THALES_CURRENCY, rewards)} + ${formatCurrencyWithKey(
-                            CRYPTO_CURRENCY_MAP.OP,
-                            secondRewards
-                        )}`}
-                    </SectionValueContent>
-                </SectionValue>
-                <Line margin={'10px 0'} />
-                <NetworkFees gasLimit={gasLimit} />
-                <ButtonContainer>
-                    {getClaimButton()}
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </ButtonContainer>
+            <SectionContentWrapper columnsTemplate={2}>
+                <SectionWrapper columns={1} backgroundType={BackgroundType.CLAIM}>
+                    <SectionContentWrapper columnsSpan={1} padding={true}>
+                        <SectionValue type={SectionType.CLAIM_INFO}>
+                            <SectionValueContent type={SectionType.CLAIM_INFO}>
+                                {formatCurrencyWithKey(THALES_CURRENCY, rewards)}
+                            </SectionValueContent>
+                        </SectionValue>
+                    </SectionContentWrapper>
+                </SectionWrapper>
+                <SectionWrapper columns={1} backgroundType={BackgroundType.CLAIM}>
+                    <SectionContentWrapper columnsSpan={1} padding={true}>
+                        <SectionValue type={SectionType.CLAIM_INFO}>
+                            <SectionValueContent type={SectionType.CLAIM_INFO}>
+                                {formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, secondRewards)}
+                            </SectionValueContent>
+                        </SectionValue>
+                    </SectionContentWrapper>
+                </SectionWrapper>
+                <VerticalLineWrapper>
+                    <VerticalLineCenter />
+                </VerticalLineWrapper>
+                <VerticalLineWrapper>
+                    <VerticalLineCenter />
+                </VerticalLineWrapper>
+                <SectionWrapper columns={2} backgroundType={BackgroundType.CLAIM}>
+                    <SectionContentWrapper columnsSpan={2} padding={true}>
+                        <SectionLabel type={SectionType.CLAIM}>
+                            <SectionLabelContent type={SectionType.CLAIM}>
+                                {t('options.earn.lp-staking.claim.total-label')}
+                            </SectionLabelContent>
+                        </SectionLabel>
+                        <SectionValue type={SectionType.CLAIM}>
+                            <SectionValueContent type={SectionType.CLAIM}>
+                                {`${formatCurrencyWithKey(THALES_CURRENCY, rewards)} + ${formatCurrencyWithKey(
+                                    CRYPTO_CURRENCY_MAP.OP,
+                                    secondRewards
+                                )}`}
+                            </SectionValueContent>
+                        </SectionValue>
+                        <Line margin={'10px 0'} />
+                        <NetworkFees gasLimit={gasLimit} />
+                        <ButtonContainer>
+                            {getClaimButton()}
+                            <ValidationMessage
+                                showValidation={txErrorMessage !== null}
+                                message={txErrorMessage}
+                                onDismiss={() => setTxErrorMessage(null)}
+                            />
+                        </ButtonContainer>
+                    </SectionContentWrapper>
+                </SectionWrapper>
             </SectionContentWrapper>
         );
     };
@@ -263,7 +291,7 @@ const LpStaking: React.FC = () => {
             </SectionWrapper>
 
             {/* Third row */}
-            <SectionWrapper columns={6} backgroundType={BackgroundType.INSTRUCTIONS}>
+            <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                 <SectionContentWrapper>
                     <SectionLabelContent type={SectionType.CLAIM_INFO}>
                         {t('options.earn.lp-staking.claim.title')}
@@ -314,36 +342,8 @@ const LpStaking: React.FC = () => {
             </SectionWrapper>
 
             {/* Fourth row */}
-            <SectionWrapper columns={6} backgroundType={BackgroundType.INSTRUCTIONS} noPadding={true}>
-                <SectionContentWrapper columnsTemplate={2}>
-                    <SectionWrapper columns={1} backgroundType={BackgroundType.CLAIM}>
-                        <SectionContentWrapper columnsSpan={1} padding={true}>
-                            <SectionValue type={SectionType.CLAIM_INFO}>
-                                <SectionValueContent type={SectionType.CLAIM_INFO}>
-                                    {formatCurrencyWithKey(THALES_CURRENCY, rewards)}
-                                </SectionValueContent>
-                            </SectionValue>
-                        </SectionContentWrapper>
-                    </SectionWrapper>
-                    <SectionWrapper columns={1} backgroundType={BackgroundType.CLAIM}>
-                        <SectionContentWrapper columnsSpan={1} padding={true}>
-                            <SectionValue type={SectionType.CLAIM_INFO}>
-                                <SectionValueContent type={SectionType.CLAIM_INFO}>
-                                    {formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, secondRewards)}
-                                </SectionValueContent>
-                            </SectionValue>
-                        </SectionContentWrapper>
-                    </SectionWrapper>
-                    <VerticalLineWrapper>
-                        <VerticalLineCenter />
-                    </VerticalLineWrapper>
-                    <VerticalLineWrapper>
-                        <VerticalLineCenter />
-                    </VerticalLineWrapper>
-                    <SectionWrapper columns={2} backgroundType={BackgroundType.CLAIM}>
-                        {getClaimSection()}
-                    </SectionWrapper>
-                </SectionContentWrapper>
+            <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER} noPadding={true}>
+                {getClaimSection()}
             </SectionWrapper>
             <SectionWrapper columns={6} backgroundType={BackgroundType.STAKE}>
                 <SectionContentWrapper>
@@ -382,6 +382,7 @@ enum BackgroundType {
     INFO,
     STAKE,
     CLAIM,
+    CLAIM_CONTAINER,
 }
 
 const SectionWrapper = styled.section<{
@@ -406,6 +407,7 @@ const SectionWrapper = styled.section<{
     background: ${(props) => {
         switch (props.backgroundType) {
             case BackgroundType.INSTRUCTIONS:
+            case BackgroundType.CLAIM_CONTAINER:
                 return 'none';
             case BackgroundType.INFO:
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
