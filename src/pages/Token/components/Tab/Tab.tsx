@@ -2,7 +2,6 @@ import { Tip49Link } from 'pages/Token/components';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
-import LPStaking from 'pages/Token/LPStaking';
 import LpStaking from 'pages/Token/LpStaking2';
 import MergeAccount from 'pages/Token/MergeAccount';
 import Migration from 'pages/Token/Migration';
@@ -135,7 +134,9 @@ const Tab: React.FC<{
                     </SectionContent>
                 </>
             )}
-            {!isL2 && selectedTab === TokenTabEnum.LP_STAKING && <LPStaking />}
+            {!isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
+                <MigrationInfo messageKey="lp-staking" tipNumber={23} />
+            )}
             {selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && <SnxStaking />}
         </Container>
     );

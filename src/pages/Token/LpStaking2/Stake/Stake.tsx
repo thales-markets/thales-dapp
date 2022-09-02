@@ -248,7 +248,6 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         onChange={(_, value) => setAmountToStake(value)}
                         disabled={isStaking}
                         className={isAmountValid ? '' : 'error'}
-                        autoFocus={true}
                     />
                     <InputLabel>{t('options.earn.gamified-staking.staking.stake.amount-to-stake')}</InputLabel>
                     <CurrencyLabel className={isStaking ? 'disabled' : ''}>{LP_TOKEN}</CurrencyLabel>
