@@ -176,14 +176,16 @@ export const StyledMaterialTooltip = withStyles(() => ({
         marginLeft: '0px!important',
     },
     tooltip: {
-        background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
-        borderRadius: '15px',
-        border: '1px solid #64D9FE',
-        padding: '20px',
+        background:
+            'linear-gradient(#04045a 0%, #04045a 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
+        border: '1px solid transparent',
+        borderRadius: '5px',
+        padding: '10px 15px',
+        fontWeight: 400,
         fontSize: '16px',
-        lineHeight: '24px',
+        lineHeight: '20px',
         letterSpacing: '0.4px',
-        color: '#F6F6FE',
+        color: '#ffffff',
         maxWidth: window.innerWidth < 768 ? 350 : 400,
     },
 }))(MaterialTooltip);

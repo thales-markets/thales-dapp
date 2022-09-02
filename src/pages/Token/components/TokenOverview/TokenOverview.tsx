@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/common';
@@ -19,6 +19,8 @@ import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
 import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
 import { getIsOVM } from 'utils/network';
+import Lottie from 'lottie-react';
+import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
 
 export const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -91,8 +93,11 @@ export const TokentOverview: React.FC = () => {
                     </Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t('options.earn.overview.total-burned-label')}</Title>
-                    <Content>
+                    <ThalesBurnedWrapper>
+                        <Title color={'#E26565'}>{t('options.earn.overview.total-burned-label')}</Title>
+                        <Lottie animationData={thalesBurnedAnimation} style={thalesBurnedStyle} />
+                    </ThalesBurnedWrapper>
+                    <Content color={'#E26565'}>
                         {tokenInfo
                             ? formatCurrencyWithKey(THALES_CURRENCY, tokenInfo.thalesBurned, 0, true)
                             : EMPTY_VALUE}
@@ -213,24 +218,24 @@ const Item = styled(FlexDivColumnCentered)`
     flex: initial;
 `;
 
-const Title = styled.p`
+const Title = styled.p<{ color?: string }>`
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
     line-height: 18px;
-    color: #b8c6e5;
+    color: ${(props) => props.color || '#b8c6e5'};
     @media (max-width: 767px) {
         font-size: 12px;
         line-height: 16px;
     }
 `;
 
-const Content = styled.div<{ fontSize?: number }>`
+const Content = styled.div<{ fontSize?: number; color?: string }>`
     font-style: normal;
     font-weight: bold;
     font-size: ${(props) => props.fontSize || 16}px;
     line-height: 18px;
-    color: #f6f6fe;
+    color: ${(props) => props.color || '#f6f6fe'};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -282,5 +287,17 @@ export const StyledInfoIcon = styled(InfoIcon)`
         display: none;
     }
 `;
+
+const ThalesBurnedWrapper = styled.div`
+    display: flex;
+    position: relative;
+`;
+
+const thalesBurnedStyle: CSSProperties = {
+    height: 40,
+    position: 'absolute',
+    right: -7,
+    top: -23,
+};
 
 export default TokentOverview;
