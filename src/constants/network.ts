@@ -1,6 +1,7 @@
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
+import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
@@ -189,7 +190,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     },
     56: {
         name: 'BSC',
-        icon: EthereumLogo,
+        icon: BSCLogo,
         changeNetwork: async (networkId: number) => {
             const bscNetworkParams = BSC_NETWORK[networkId];
 
