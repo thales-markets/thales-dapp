@@ -326,6 +326,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.LOOKS]: 'LooksRare',
     [CRYPTO_CURRENCY_MAP.DYDX]: 'dYdX',
     [CRYPTO_CURRENCY_MAP.ETC]: 'Ethereum Classic',
+    [CRYPTO_CURRENCY_MAP.BNB]: 'Binance Coin',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
