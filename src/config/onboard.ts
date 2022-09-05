@@ -88,6 +88,7 @@ export const initOnboard = (networkId: LocalNetworkId, subscriptions: Subscripti
                         [POLYGON_MUMBAI_ID]: getInfuraRpcURL(POLYGON_MUMBAI_ID),
                         [POLYGON_ID]: getInfuraRpcURL(POLYGON_ID),
                         [Network.BSC]: getPublicRpc(Network.BSC),
+                        [Network.Arbitrum]: getInfuraRpcURL(Network.Arbitrum),
                     },
                     preferred: true,
                     svg: walletConnectIcon,
