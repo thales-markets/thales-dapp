@@ -2,6 +2,7 @@ import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
+import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
@@ -95,6 +96,16 @@ export const BSC_NETWORK: Record<number, OptimismNetwork> = {
         chainName: 'BSC',
         rpcUrls: ['https://polygon-rpc.com'],
         blockExplorerUrls: ['https://bscscan.com/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+    },
+};
+
+export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
+    56: {
+        chainId: '0xA4B1',
+        chainName: 'Arbitrum One',
+        rpcUrls: ['https://arb1.arbitrum.io/rpc	'],
+        blockExplorerUrls: ['https://arbiscan.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
     },
 };
@@ -199,6 +210,24 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                     await (window.ethereum as any).request({
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: bscNetworkParams.chainId }],
+                    });
+                } catch (switchError: any) {
+                    console.log(switchError);
+                }
+            }
+        },
+    },
+    42161: {
+        name: 'Arbitrum',
+        icon: ArbitrumLogo,
+        changeNetwork: async (networkId: number) => {
+            const arbNetworkParams = ARBITRUM_NETWORK[networkId];
+
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await (window.ethereum as any).request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: arbNetworkParams.chainId }],
                     });
                 } catch (switchError: any) {
                     console.log(switchError);
