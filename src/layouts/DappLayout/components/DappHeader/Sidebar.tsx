@@ -5,7 +5,7 @@ import logoIcon from 'assets/images/logo-light.svg';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
-import { getIsBSC, getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
@@ -22,14 +22,16 @@ const Sidebar: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+
     const { t } = useTranslation();
     const [collapse, setCollapse] = useState(false);
 
     const [isMobileState, setIsMobileState] = useState(isMobile());
 
-    const showWizardPage = !isPolygon && !isMobileState && !isBSC;
-    const showTokenPage = !isPolygon && !isBSC;
-    const showOPRewardsPage = !isPolygon && !isBSC;
+    const showWizardPage = !isPolygon && !isMobileState && !isBSC && !isArbitrum;
+    const showTokenPage = !isPolygon && !isBSC && !isArbitrum;
+    const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
 
     useEffect(() => {
         const handleResize = debounce(() => {
