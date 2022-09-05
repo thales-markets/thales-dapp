@@ -6,7 +6,7 @@ import { GWEI_UNIT, POLYGON_GWEI_INCREASE_PERCENTAGE, POLYGON_ID, POLYGON_MUMBAI
 import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
 import { serializeTransaction } from 'ethers/lib/utils';
 
-export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137 | 56;
+export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137 | 56 | 42161;
 
 export enum Network {
     Mainnet = 1,
@@ -35,7 +35,8 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     69: 'KOVAN-OPTIMISTIC',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
-    56: 'BINANCE SMART CHAIN MAINNET',
+    56: 'BSC-MAINNET',
+    42161: 'ARBITRUM-ONE',
 };
 
 export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
@@ -47,6 +48,7 @@ export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
     56: '',
+    42161: 'ARBITRUM-ONE',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
@@ -58,6 +60,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     80001: 'POLYGON MUMBAI',
     137: 'POLYGON',
     56: 'BINANCE SMART CHAIN MAINNET',
+    42161: 'ARBITRUM ONE',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
@@ -128,6 +131,8 @@ export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(netw
 
 export const getIsPolygon = (networkId: number): boolean => !!~[137, 80001].indexOf(networkId);
 
+export const getIsArbitrum = (networkId: number): boolean => !!~[42161].indexOf(networkId);
+
 export const formatGwei = (wei: number) => wei / GWEI_UNIT;
 
 export const formatGasLimit = (gasEstimate: ethers.BigNumber | number, networkId: number): number =>
@@ -193,7 +198,7 @@ export const getProvider = (gasEstimate: BigNumber, gasInGwei: string, networkId
 };
 
 export const getDefaultCollateral = (networkId: NetworkId) => {
-    if (getIsPolygon(networkId)) {
+    if (getIsPolygon(networkId) || getIsArbitrum(networkId)) {
         return CRYPTO_CURRENCY_MAP.USDC;
     }
     if (networkId == Network.BSC) {
