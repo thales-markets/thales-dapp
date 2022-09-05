@@ -8,7 +8,7 @@ import {
 } from 'constants/currency';
 import { COLLATERALS_INDEX } from 'constants/options';
 import { StableCoins } from 'types/options';
-import { getIsBSC, getIsOVM, getIsPolygon, NetworkId } from './network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId } from './network';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
 export const isCryptoCurrency = (currencyKey: CurrencyKey) => !!CRYPTO_CURRENCY_MAP[currencyKey];
@@ -33,6 +33,10 @@ export const getSynthAsset = (currencyKey: string) =>
 export const getStableCoinForNetwork = (networkId: number, customStable?: StableCoins) => {
     if (customStable) {
         return customStable as StableCoins;
+    }
+
+    if (getIsArbitrum(networkId)) {
+        return CRYPTO_CURRENCY_MAP.USDC;
     }
 
     if (getIsBSC(networkId)) {
