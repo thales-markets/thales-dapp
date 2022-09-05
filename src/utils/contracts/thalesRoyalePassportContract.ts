@@ -13,6 +13,7 @@ export const thalesRoyalePassportContract = {
         [Network['POLYGON-MUMBAI']]: '0xF28fb48647bAa9dc434187bded9433D3436c2621',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
     },
     abi: [
         {

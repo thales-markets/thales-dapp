@@ -13,6 +13,7 @@ export const thalesRoyaleContract = {
         [Network['POLYGON-MUMBAI']]: '0x27aAdff477FB85855A7a753d02C44cEF3ec25BF9',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
     },
     abi: [
         {

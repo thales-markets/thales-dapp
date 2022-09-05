@@ -1116,6 +1116,7 @@ export const multipleCollateral = {
             [Network['POLYGON-MUMBAI']]: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', //USDC
             [Network['POLYGON-MAINNET']]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', //USDC TODO: why defined in sUSD, shouldn't be in USDC object?
             [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: 'TBD',
         },
         abi: sUSDABI,
     },
@@ -1131,6 +1132,7 @@ export const multipleCollateral = {
             [Network['POLYGON-MUMBAI']]: 'TBD',
             [Network['POLYGON-MAINNET']]: POLYGON_DAI.address,
             [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: 'TBD',
         },
         abi: DAIABI,
     },
@@ -1146,6 +1148,7 @@ export const multipleCollateral = {
             [Network['POLYGON-MUMBAI']]: 'TBD',
             [Network['POLYGON-MAINNET']]: POLYGON_USDC.address,
             [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
         },
         abi,
     },
@@ -1161,6 +1164,7 @@ export const multipleCollateral = {
             [Network['POLYGON-MUMBAI']]: 'TBD',
             [Network['POLYGON-MAINNET']]: POLYGON_USDT.address,
             [Network.BSC]: 'TBD',
+            [Network.Arbitrum]: 'TBD',
         },
         abi,
     },

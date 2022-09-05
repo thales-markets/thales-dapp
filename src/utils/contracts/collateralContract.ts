@@ -13,6 +13,7 @@ export const erc20Contract = {
         [Network['POLYGON-MUMBAI']]: '0xe11A86849d99F524cAC3E7A0Ec1241828e332C62', //USDC
         [Network['POLYGON-MAINNET']]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', //USDC
         [Network.BSC]: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', //BUSD
+        [Network.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', //USDC
     },
     abi: [
         { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },

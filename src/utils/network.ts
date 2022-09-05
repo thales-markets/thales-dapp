@@ -19,7 +19,7 @@ export enum Network {
     'POLYGON-MUMBAI' = 80001,
     'POLYGON-MAINNET' = 137,
     BSC = 56,
-    ARB = 42161,
+    Arbitrum = 42161,
 }
 
 type EthereumProvider = {

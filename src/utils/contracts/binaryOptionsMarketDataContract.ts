@@ -13,6 +13,7 @@ export const binaryOptionsMarketDataContract = {
         [Network['POLYGON-MUMBAI']]: '0xd6BEd7D753DCbbbb8937Dd009788d6c815aE3094',
         [Network['POLYGON-MAINNET']]: '0xAF662BB75e9c1b6bb3e6EF9c0BD4Ac3507646B9A',
         [Network.BSC]: '0x308C5B6E489B693e1e582157aaBaF2d6df187aa1',
+        [Network.Arbitrum]: '0x3124A11216273018C8F37181b4505d36573D9701',
     },
     abi: [
         {

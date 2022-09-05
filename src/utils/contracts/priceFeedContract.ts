@@ -13,6 +13,7 @@ export const priceFeedContract = {
         [Network['POLYGON-MUMBAI']]: '0x9E0B492F029F969affBFd78cA17302c2da2604E6',
         [Network['POLYGON-MAINNET']]: '0xCd9c0E99396627C7746b4363B880939Ac2828d3E',
         [Network.BSC]: '0x4A5A6f3a79589305786DA6d4e03D82b95942602A',
+        [Network.Arbitrum]: '0x563cCaBfBaCCb1a2e00d21704570cFc1AF21f47f',
     },
     abi: [
         {

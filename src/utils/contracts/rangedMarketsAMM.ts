@@ -13,6 +13,7 @@ export const rangedMarketAMMContract = {
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: '0xe8e022405505a9F2b0B7452C844F1e64423849fC',
         [Network.BSC]: '0xda5Bd4aBAFbE249bdC5684eAD594B0ac379687fd',
+        [Network.Arbitrum]: '0x5cf3b1882357BB66Cf3cd2c85b81AbBc85553962',
     },
     abi: [
         {
