@@ -20,6 +20,10 @@ export const stableCoinFormatter = (value: BigNumberish, networkId: number, curr
         return Number(ethers.utils.formatUnits(value, 18));
     }
 
+    if (networkId == Network.Arbitrum) {
+        return Number(ethers.utils.formatUnits(value, 6));
+    }
+
     if (currency && STABLE_DECIMALS[currency as StableCoins]) {
         return Number(ethers.utils.formatUnits(value, STABLE_DECIMALS[currency as StableCoins]));
     }
