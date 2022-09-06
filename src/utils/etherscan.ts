@@ -1,4 +1,4 @@
-import { SUPPORTED_NETWORKS, isMainNet, NetworkId, getIsBSC } from './network';
+import { SUPPORTED_NETWORKS, isMainNet, NetworkId, getIsBSC, getIsArbitrum } from './network';
 import { POLYGON_ID } from '../constants/network';
 
 const getEtherScanBaseURL = (networkId: NetworkId) => {
@@ -9,6 +9,8 @@ const getEtherScanBaseURL = (networkId: NetworkId) => {
         return 'https://etherscan.io';
     } else if (isBSC) {
         return 'https://bscscan.com';
+    } else if (getIsArbitrum(networkId)) {
+        return 'https://arbiscan.io';
     } else if (networkId === POLYGON_ID) {
         return 'https://polygonscan.com';
     }
