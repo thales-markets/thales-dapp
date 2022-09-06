@@ -82,7 +82,7 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) 
         enabled: isAppReady && isWalletConnected,
     });
 
-    const walletBalancesMap = stableBalanceQuery.isSuccess && stableBalanceQuery.data ? stableBalanceQuery : null;
+    const walletBalancesMap = stableBalanceQuery.isSuccess && stableBalanceQuery.data ? stableBalanceQuery.data : null;
 
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '' && stableIndex !== 0,
