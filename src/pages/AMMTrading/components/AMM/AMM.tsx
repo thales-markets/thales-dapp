@@ -49,6 +49,7 @@ import {
 } from 'constants/options';
 import {
     checkAllowance,
+    getIsArbitrum,
     getIsBSC,
     getIsMultiCollateralSupported,
     getIsOVM,
@@ -129,9 +130,12 @@ const AMM: React.FC = () => {
     const [maxLimit, setMaxLimit] = useState<number>(0);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
+
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isNonDefaultStable =
@@ -323,7 +327,7 @@ const AMM: React.FC = () => {
                 setGasLimit(MAX_L2_GAS_LIMIT);
                 setL1Fee(l1FeeInWei ? l1FeeInWei : 0);
                 return MAX_L2_GAS_LIMIT;
-            } else if (isBSC) {
+            } else if (isBSC || isPolygon || isArbitrum) {
                 const gasLimit = await getEstimatedGasFees(
                     isNonDefaultStable,
                     isBuy,
@@ -337,29 +341,8 @@ const AMM: React.FC = () => {
                     referral
                 );
 
-                const gasLimitNumber = ethers.utils.formatUnits(gasLimit, 0);
-                const safeGasLimit = Math.round(+gasLimitNumber + 0.2 * +gasLimitNumber);
-                setGasLimit(safeGasLimit);
-                return safeGasLimit;
-            } else if (isPolygon) {
-                const gasLimit = isBuy
-                    ? await ammContractWithSigner.estimateGas.buyFromAMM(
-                          marketAddress,
-                          side,
-                          parsedAmount,
-                          parsedTotal,
-                          parsedSlippage
-                      )
-                    : await ammContractWithSigner.estimateGas.sellToAMM(
-                          marketAddress,
-                          side,
-                          parsedAmount,
-                          parsedTotal,
-                          parsedSlippage
-                      );
+                const safeGasLimit = Number(+gasLimit + 0.2 * +gasLimit);
 
-                const gasLimitNumber = ethers.utils.formatUnits(gasLimit, 0);
-                const safeGasLimit = Math.round(+gasLimitNumber + 0.2 * +gasLimitNumber);
                 setGasLimit(safeGasLimit);
                 return safeGasLimit;
             } else {
@@ -440,7 +423,6 @@ const AMM: React.FC = () => {
                 const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
                 const parsedAmount = ethers.utils.parseEther(amount.toString());
-
                 const promises = getQuoteFromAMM(
                     isNonDefaultStable,
                     isBuy,

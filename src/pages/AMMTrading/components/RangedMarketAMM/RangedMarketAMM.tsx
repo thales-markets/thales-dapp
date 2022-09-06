@@ -50,7 +50,8 @@ import {
 import {
     checkAllowance,
     formatGasLimit,
-    // getIsBSC,
+    getIsArbitrum,
+    getIsBSC,
     getIsMultiCollateralSupported,
     getIsOVM,
     getIsPolygon,
@@ -74,6 +75,7 @@ import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipl
 import { getSellToken, getSellTokenCurrency } from 'utils/options';
 import {
     getAmountToApprove,
+    getEstimatedGasFees,
     getQuoteFromRangedAMM,
     parseSellAmount,
     preparePopulateTransactionForAMM,
@@ -131,9 +133,12 @@ const AMM: React.FC = () => {
     const [maxLimit, setMaxLimit] = useState<number>(0);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
+
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
-    // const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+    const isBSC = getIsBSC(networkId);
+
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isNonDefaultStable = selectedStableIndex !== 0 && !isMultiCollateralSupported && orderSide.value === 'buy';
@@ -350,25 +355,21 @@ const AMM: React.FC = () => {
                 setGasLimit(MAX_L2_GAS_LIMIT);
                 setL1Fee(l1FeeInWei ? l1FeeInWei : 0);
                 return MAX_L2_GAS_LIMIT;
-            } else if (isPolygon) {
-                const gasLimit = isBuy
-                    ? await ammContractWithSigner.estimateGas.buyFromAMM(
-                          marketAddress,
-                          side,
-                          parsedAmount,
-                          parsedTotal,
-                          parsedSlippage
-                      )
-                    : await ammContractWithSigner.estimateGas.sellToAMM(
-                          marketAddress,
-                          side,
-                          parsedAmount,
-                          parsedTotal,
-                          parsedSlippage
-                      );
+            } else if (isPolygon || isArbitrum || isBSC) {
+                const gasLimit = await getEstimatedGasFees(
+                    isNonDefaultStable,
+                    isBuy,
+                    ammContractWithSigner,
+                    marketAddress,
+                    side,
+                    parsedAmount,
+                    parsedTotal,
+                    parsedSlippage,
+                    sellToken,
+                    referral
+                );
 
-                const gasLimitNumber = ethers.utils.formatUnits(gasLimit, 0);
-                const safeGasLimit = Math.round(+gasLimitNumber + 0.2 * +gasLimitNumber);
+                const safeGasLimit = Number(+gasLimit + 0.2 * +gasLimit);
                 setGasLimit(safeGasLimit);
                 return safeGasLimit;
             } else {
