@@ -341,8 +341,7 @@ const AMM: React.FC = () => {
                     referral
                 );
 
-                const safeGasLimit = Number(+gasLimit + 0.2 * +gasLimit);
-
+                const safeGasLimit = Math.round(Number(+gasLimit + 0.1 * +gasLimit));
                 setGasLimit(safeGasLimit);
                 return safeGasLimit;
             } else {
