@@ -206,3 +206,9 @@ export const getDefaultCollateral = (networkId: NetworkId) => {
     }
     return SYNTHS_MAP.sUSD;
 };
+
+export const getFeeCollateral = (networkId: NetworkId) => {
+    if (getIsPolygon(networkId)) return CRYPTO_CURRENCY_MAP.MATIC;
+    if (getIsBSC(networkId)) return CRYPTO_CURRENCY_MAP.BNB;
+    return CRYPTO_CURRENCY_MAP.ETH;
+};
