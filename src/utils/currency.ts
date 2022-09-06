@@ -99,8 +99,11 @@ export const getDefaultCurrencyIconClassByNetworkId = (networkId: NetworkId) => 
     const isOP = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+
     if (isOP) return 'v2-icon v2-icon--op';
     if (isPolygon) return 'currency-icon icon--polygon';
     if (isBSC) return 'currency-icon icon--binance';
+    if (isArbitrum) return 'currency-icon icon--arbitrum';
     return 'sidebar-icon icon--ethereum';
 };

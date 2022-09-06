@@ -13,3 +13,7 @@
 .icon--binance:before {
     content: '\004C';
 }
+
+.icon--arbitrum::before {
+    content: '\0065';
+}
