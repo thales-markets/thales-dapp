@@ -101,7 +101,7 @@ export const BSC_NETWORK: Record<number, OptimismNetwork> = {
 };
 
 export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
-    56: {
+    42161: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',
         rpcUrls: ['https://arb1.arbitrum.io/rpc	'],
