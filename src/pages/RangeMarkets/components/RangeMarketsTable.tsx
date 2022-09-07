@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import Currency from 'components/Currency/v2';
 import { FlexDivRow } from 'theme/common';
 import PriceChart from 'components/Charts/PriceChart';
@@ -52,7 +52,8 @@ let scrolling: NodeJS.Timeout;
 
 const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, optionsMarkets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2OrPolygon = getIsOVM(networkId) || getIsPolygon(networkId) || getIsBSC(networkId);
+    const showLiquidity =
+        getIsOVM(networkId) || getIsPolygon(networkId) || getIsBSC(networkId) || getIsArbitrum(networkId);
 
     const { t } = useTranslation();
 
@@ -275,7 +276,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                 accessor: 'timeRemaining',
                 Cell: (_props: any) => <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />,
             },
-            ...(isL2OrPolygon
+            ...(showLiquidity
                 ? [
                       {
                           Header: t(`options.home.markets-table.amm-size-col`),
@@ -300,7 +301,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                       },
                   ]
                 : []),
-            ...(isL2OrPolygon
+            ...(showLiquidity
                 ? [
                       {
                           Header: t(`options.home.markets-table.price-in-out-col`),
