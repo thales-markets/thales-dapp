@@ -138,8 +138,7 @@ const AMM: React.FC = () => {
 
     const [selectedStableIndex, setStableIndex] = useState<number>(0);
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
-    const isNonDefaultStable =
-        selectedStableIndex !== 0 && !getIsMultiCollateralSupported(networkId) && orderSide.value === 'buy';
+    const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported && orderSide.value === 'buy';
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
