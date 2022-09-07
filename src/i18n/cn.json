@@ -323,8 +323,7 @@
                 "claimed": "声称",
                 "claim": "宣称",
                 "rip": "RIP",
-                "position-value": "位置值",
-                "no-liquidity-tooltip": "<0>我们无法从 AMM 获取该头寸的报价，因为它可能已没有流动性。要了解有关 AMM 流动性规则的更多信息，请访问 <0/ ></0>。"
+                "position-value": "位置值"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场"
@@ -521,9 +520,7 @@
                         "claimed-message": "您已领取迁移奖励。",
                         "rewards-label": "迁移奖励",
                         "info-tooltip": "<0>战略投资者每</0><1 />的无人认领奖励。"
-                    },
-                    "enable-disable-claim-on-behalf-label": "代表启用/禁用声明",
-                    "op-rewards-tooltip": "游戏化质押的 OP 奖励按 <tip /> 计算，每两周空投一次，详情请查看 <page>OP 奖励页面</page>。"
+                    }
                 }
             },
             "vesting": {
