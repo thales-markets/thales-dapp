@@ -1,1 +1,1 @@
-export { default } from './LPStaking';
+export { default } from './LpStaking';

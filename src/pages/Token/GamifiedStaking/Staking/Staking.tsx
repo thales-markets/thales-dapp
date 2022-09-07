@@ -1,6 +1,6 @@
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import { THALES_CURRENCY } from 'constants/currency';
-import { StyledInfoIcon, StyledInfoIconGreen, StyledMaterialTooltip, Tip17Link } from 'pages/Token/components2';
+import { StyledInfoIcon, StyledInfoIconGreen, StyledMaterialTooltip, Tip17Link } from 'pages/Token/components';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -11,7 +11,7 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
-import { Line } from '../../components2';
+import { Line } from '../../components';
 import YourTransactions from './Transactions';
 import Stake from './Stake';
 import Unstake from './Unstake';

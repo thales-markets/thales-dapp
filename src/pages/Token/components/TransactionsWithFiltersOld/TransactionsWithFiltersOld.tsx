@@ -10,7 +10,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import { EarnSection, SectionHeader } from '../../components';
+import { EarnSection, SectionHeader } from '../../componentsOld';
 import checkmark from 'assets/images/checkmark.svg';
 import arrowDown from 'assets/images/filters/arrow-down.svg';
 import { orderBy } from 'lodash';

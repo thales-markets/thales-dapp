@@ -26,7 +26,7 @@ import {
     StyledInfoIcon,
     StyledMaterialTooltip,
     Tip48Link,
-} from 'pages/Token/components2';
+} from 'pages/Token/components';
 import YourTransactions from './Transactions';
 import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import useStakingRewardsQuery from 'queries/token/useStakingRewardsQuery';

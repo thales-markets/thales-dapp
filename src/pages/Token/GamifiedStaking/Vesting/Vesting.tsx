@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import { ButtonContainer, Line } from 'pages/Token/components2';
+import { ButtonContainer, Line } from 'pages/Token/components';
 import YourTransactions from './Transactions';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 import useVestingScheduleQuery from 'queries/token/useVestingScheduleQuery';

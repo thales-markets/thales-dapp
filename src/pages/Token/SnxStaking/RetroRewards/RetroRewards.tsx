@@ -15,15 +15,17 @@ import { formatShortDateWithTime } from 'utils/formatters/date';
 import {
     ButtonContainerBottom,
     EarnSection,
-    PieChartCenterDiv,
-    PieChartCenterText,
-    PieChartContainer,
     SectionHeader,
-    LearnMore,
-    StyledMaterialTooltip,
     ClaimMessage,
     StyledInfoIcon,
     SectionContentContainer,
+} from '../../componentsOld';
+import {
+    PieChartCenterDiv,
+    PieChartCenterText,
+    PieChartContainer,
+    LearnMore,
+    StyledMaterialTooltip,
     Tip37Link,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';

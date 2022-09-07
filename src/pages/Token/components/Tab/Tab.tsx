@@ -1,8 +1,8 @@
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
-import LpStaking from 'pages/Token/LpStaking2';
-import MergeAccount from 'pages/Token/MergeAccount';
+import LpStaking from 'pages/Token/LpStaking';
+import MergeAccount from 'pages/Token/GamifiedStaking/MergeAccount';
 import Migration from 'pages/Token/Migration';
 import SnxStaking from 'pages/Token/SnxStaking';
 import React, { useEffect, useState } from 'react';
