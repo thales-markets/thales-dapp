@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -15,9 +15,11 @@ import {
     ButtonContainer,
     ClaimMessage,
     EarnSection,
+    OpRewardsPageLink,
     SectionHeader,
     StyledInfoIcon,
     StyledMaterialTooltip,
+    Tip53Link,
 } from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Token/components/NetworkFees';
@@ -51,7 +53,7 @@ import SnxStakingTooltip from './components/SnxStakingTooltip';
 import AmmTooltip from './components/AmmTooltip';
 import { DefaultSubmitButton } from 'pages/Token/components/components';
 import onboardConnector from 'utils/onboardConnector';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { MAX_L2_GAS_LIMIT, OP_REWARDS_MULTIPLIER } from 'constants/options';
 import { FlexDivCentered, FlexDivRowCentered } from 'theme/common';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 
@@ -236,6 +238,9 @@ const StakingRewards: React.FC = () => {
     const snxStakedMaxBonus = additionalSnxStaked === 0 && baseRewards > 0;
     const ammVolumeMaxBonus = additionalAmmVolume === 0 && baseRewards > 0;
 
+    const opAmmBonus = ammBonus * OP_REWARDS_MULTIPLIER;
+    const maxOpAmmBonus = maxAmmBonus * OP_REWARDS_MULTIPLIER;
+
     return (
         <EarnSection
             orderOnMobile={3}
@@ -253,7 +258,7 @@ const StakingRewards: React.FC = () => {
                         <StyledInfoIcon />
                     </StyledMaterialTooltip>
                     <ClosePeriodButton onClick={() => setShowClaimOnBehalfModal(true)}>
-                        Enable/disable claim on behalf
+                        {t('options.earn.thales-staking.staking-rewards.enable-disable-claim-on-behalf-label')}
                     </ClosePeriodButton>
                 </FlexDivCentered>
                 <PeriodContainer>
@@ -372,10 +377,33 @@ const StakingRewards: React.FC = () => {
                     </StakingRewardsLabel>
                     <StakingRewardsNotice>
                         {t('options.earn.thales-staking.staking-rewards.max-reward-label', {
-                            max: formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus),
+                            max: `${formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus)} + ${formatCurrencyWithKey(
+                                CRYPTO_CURRENCY_MAP.OP,
+                                maxOpAmmBonus
+                            )}`,
                         })}
                     </StakingRewardsNotice>
-                    <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, ammBonus)}</StakingRewardsContent>
+                    <StakingRewardsContent>
+                        {`${formatCurrencyWithKey(THALES_CURRENCY, ammBonus)} + ${formatCurrencyWithKey(
+                            CRYPTO_CURRENCY_MAP.OP,
+                            opAmmBonus
+                        )}`}
+                        <StyledMaterialTooltip
+                            arrow
+                            interactive
+                            title={
+                                <Trans
+                                    i18nKey="options.earn.thales-staking.staking-rewards.op-rewards-tooltip"
+                                    components={{
+                                        tip: <Tip53Link />,
+                                        page: <OpRewardsPageLink />,
+                                    }}
+                                />
+                            }
+                        >
+                            <OpRewardsInfoIcon />
+                        </StyledMaterialTooltip>
+                    </StakingRewardsContent>
                     <BonusInfo>
                         <BonusCurrent>
                             <BonusCurrentLabel>
@@ -462,6 +490,14 @@ const BonusInfoIcon = styled(InfoIcon)`
     min-height: 14px;
     margin-left: 4px;
     margin-bottom: -2px;
+`;
+
+const OpRewardsInfoIcon = styled(StyledInfoIcon)`
+    min-width: 18px;
+    min-height: 18px;
+    max-width: 18px;
+    max-height: 18px;
+    margin-left: 6px;
 `;
 
 const ClosePeriodButton = styled(DefaultSubmitButton)`

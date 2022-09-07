@@ -21,10 +21,13 @@ export const LINKS = {
             'https://thalesmarket.io/governance/thalesgov.eth/0x19c02d0a14ffa5c7685a635f78a9911b757b8b1545ebcfa6a26a7684793a2fa9',
         TIP49:
             'https://thalesmarket.io/governance/thalesgov.eth/0x93439cea87dd7c7f3949aa1961997015e249e9841532294c82034e25d67b0506',
+        TIP53:
+            'https://thalesmarket.io/governance/thalesgov.eth/0xc0dffa06291784ddfc2364d8534ef4d9300176050b374952f231d11989a805a1',
         TIP66:
             'https://thalesmarket.io/governance/thalesgov.eth/0xa925cddfe73b58911c3a9308a0e9d70dff21e31e4d428247ac084e8cffa4eb4f',
         ClaimOnBehalfGuide:
             'https://docs.thalesmarket.io/thales-token/staking-thales-on-optimism-guide/automate-staking-rewards-claiming-using-gelato-guide',
+        OpRewardsPage: 'https://thalesmarket.io/op-rewards',
         Bonus: {
             SnxStaking: 'https://staking.synthetix.io/',
             AMM: 'https://thalesmarket.io/markets',
@@ -37,6 +40,7 @@ export const LINKS = {
     },
     AMM: {
         Tip: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-11.md',
+        UsingAmm: 'https://docs.thalesmarket.io/using-thales/using-the-thales-amm',
     },
     ExoticMarkets: 'https://exoticmarkets.xyz/',
     SportMarkets: 'https://overtimemarkets.xyz/',

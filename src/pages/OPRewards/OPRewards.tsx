@@ -12,6 +12,7 @@ import {
     Wrapper,
     Tip53Link,
     GuidelinesLink,
+    AddressLink,
 } from './styled-components';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
@@ -29,6 +30,7 @@ import Tooltip from 'components/Tooltip';
 import TimeRemaining from 'components/TimeRemaining';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 
 const UP_OP_REWARDS = 11000;
 const DOWN_OP_REWARDS = 11000;
@@ -46,7 +48,7 @@ const OPRewards: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
 
     const PERIOD_DURATION_IN_DAYS = 14;
-    const START_DATE = new Date(2022, 6, 13, 14, 23, 0);
+    const START_DATE = new Date(Date.UTC(2022, 6, 13, 12, 23, 0));
     const NOW = new Date();
 
     let CALCULATED_START = new Date(START_DATE.getTime());
@@ -254,9 +256,15 @@ const OPRewards: React.FC = () => {
                                 accessor: 'account',
                                 Cell: (cellProps: any) => (
                                     <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
-                                        {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
-                                            ? t('op-rewards.table.my-rewards')
-                                            : truncateAddress(cellProps.cell.value)}
+                                        <AddressLink
+                                            href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
+                                                ? t('op-rewards.table.my-rewards')
+                                                : truncateAddress(cellProps.cell.value)}
+                                        </AddressLink>
                                     </p>
                                 ),
                                 disableSortBy: true,

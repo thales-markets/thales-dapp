@@ -11,8 +11,7 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
-import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
-import { CONVERT_TO_6_DECIMALS } from 'constants/token';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import InfoBanner from 'components/InfoBanner';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
@@ -62,14 +61,8 @@ const Markets: React.FC = () => {
                           openOrders: apiData?.ordersCount ?? 0,
                           availableLongs: apiData?.availableLongs ?? 0,
                           availableShorts: apiData?.availableShorts ?? 0,
-                          longPrice:
-                              +(networkId === POLYGON_ID
-                                  ? apiData?.longPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.longPrice) ?? 0,
-                          shortPrice:
-                              +(networkId === POLYGON_ID
-                                  ? apiData?.shortPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.shortPrice) ?? 0,
+                          longPrice: apiData?.longPrice ?? 0,
+                          shortPrice: apiData?.shortPrice ?? 0,
                           ammLiquidity: Number(apiData?.availableLongs ?? 0) + Number(apiData?.availableShorts ?? 0),
                       };
                   })

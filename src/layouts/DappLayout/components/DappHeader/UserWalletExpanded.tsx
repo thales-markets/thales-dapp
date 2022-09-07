@@ -1,24 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import { truncateAddress } from 'utils/formatters/string';
 import { useTranslation } from 'react-i18next';
-
 import { UserCardSectionHeader } from 'theme/common';
-
 import onboardConnector from 'utils/onboardConnector';
-
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
+
+const truncateAddressNumberOfCharacters = 5;
 
 const UserWalletExpanded: React.FC = () => {
-    const truncateAddressNumberOfCharacters = 5;
-
     const { t } = useTranslation();
-
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isLedgerLive = isLedgerDappBrowserProvider();
 
     return (
         <Wrapper>
@@ -36,7 +33,7 @@ const UserWalletExpanded: React.FC = () => {
                             : t('common.wallet.connect-your-wallet')}
                     </WalletAddress>
                 </WalletContainer>
-                {isWalletConnected && (
+                {isWalletConnected && !isLedgerLive && (
                     <WalletOptions>
                         <Button style={{ marginRight: '3px' }} onClick={() => onboardConnector.onboard.walletSelect()}>
                             {t('common.user-info-card.switch')}
@@ -98,11 +95,8 @@ const WalletContainer = styled.div`
     width: 100%;
     margin: 9px auto;
     padding: 4px 12px;
-
     border: 2px solid var(--icon-color);
     border-radius: 20px;
-    cursor: pointer;
-
     @media (max-width: 1024px) {
         flex: 1;
         width: auto;
