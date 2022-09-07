@@ -92,7 +92,9 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification(t('options.earn.thales-staking.unstake.unstake-confirmation-message'));
+                dispatchMarketNotification(
+                    t('options.earn.gaimfied-staking.staking.unstake.unstake-confirmation-message')
+                );
                 refetchTokenQueries(walletAddress, networkId);
                 refetchUserTokenTransactions(walletAddress, networkId);
                 setUnstakingEnded(true);

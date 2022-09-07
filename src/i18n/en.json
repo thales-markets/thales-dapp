@@ -519,112 +519,20 @@
                 "olympus-button-text": "Olympus PRO"
             },
             "thales-staking": {
-                "tab-title": "Staking",
-                "stake": {
-                    "stake": "Stake",
-                    "staking": "Staking",
-                    "available-to-stake": "Available to stake",
-                    "amount-to-stake": "Amount to stake",
-                    "confirmation-message": "Tokens successfully staked",
-                    "info-tooltip": "Available staking rewards will be claimed as part of the stake transaction.",
-                    "paused-message": "Staking is paused."
-                },
-                "my-stake": {
-                    "my-stake": "My Staking Balance",
-                    "staked-in-contract": "Staked directly",
-                    "locked-in-escrow": "Escrowed balance",
-                    "total-staked": "Total staked balance",
-                    "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
-                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards",
-                    "global-staking-stats": "Global staking stats",
-                    "total-thales-staked": "Total THALES Staked",
-                    "my-staked-share": "My Staked Share",
-                    "estimated-rewards": "Estimated rewards for this period",
-                    "bonus-apr-tooltip": "<0>Maximum bonus APR of {{max}}% per </0><1 />.",
-                    "bonus-apy-tooltip": "<0>Maximum bonus APY of {{max}}% per </0><1 />.",
-                    "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />."
-                },
-                "unstake": {
-                    "unstake": "Unstake",
-                    "unlock-cooldown-text": "Start unlocking cooldown during which the amount being unstaked is not counted in your staked balance",
-                    "cooldown-started-text": "You can unstake {{amount}} in",
-                    "cooldown-ended-text": "You can now unstake {{amount}}",
-                    "cooldown-label": "Cooldown",
-                    "start-unstaking": "Start unstaking",
-                    "cooldown-confirmation-message": "Unstaking successfully started",
-                    "unstake-confirmation-message": "Tokens successfully unstaked",
-                    "unstaking": "Unstaking",
-                    "amount-to-unstake": "Amount to unstake",
-                    "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
-                    "cancel": "Cancel unstaking",
-                    "canceling": "Canceling unstaking",
-                    "cancel-confirmation-message": "Unstaking successfully canceled",
-                    "network-fee-cancel": "Cancel",
-                    "network-fee-unstake": "Unstake",
-                    "info-tooltip": "Available staking rewards will be claimed as part of the start unstaking transaction.",
-                    "paused-message": "Unstaking is paused."
-                },
                 "staking-rewards": {
-                    "title": "Staking Rewards",
-                    "period": "Period",
-                    "total": "Total",
-                    "claim": "Claim",
-                    "claiming": "Claiming",
-                    "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
+                    "confirmation-message": "Tokens successfully claimed",
                     "not-eligible-message": "You are not eligible for these rewards.",
                     "paused-message": "Claiming is paused.",
-                    "confirmation-message": "Tokens successfully claimed",
-                    "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
-                    "weekly-base-rewards": "Weekly base rewards pool",
-                    "weekly-bonus-rewards": "Maximum bonus rewards on top of base rewards",
-                    "thales-staking-label": "Thales staking",
-                    "snx-staking-label": "SNX staking",
-                    "amm-label": "Protocol volume",
-                    "thales-royale-label": "Thales Royale",
-                    "max-reward-label": "Max reward: {{max}}",
-                    "op-rewards-tooltip": "OP rewards for gamified staking are calculated per <tip /> and airdropped every two weeks, check details on <page>the OP rewards page</page>.",
-                    "enable-disable-claim-on-behalf-label": "Enable/disable claim on behalf",
-                    "bonus-info": {
-                        "current-snx-staking-label": "Current SNX staked",
-                        "additional-snx-staking-label": "Additional SNX to stake for max bonus",
-                        "current-amm-label": "Current protocol volume",
-                        "additional-amm-label": "Additional protocol volume for max bonus",
-                        "current-thales-royale-label": "Current participation",
-                        "thales-royale-participation-yes": "YES",
-                        "thales-royale-participation-no": "NO",
-                        "max-bonus-notice": "Eligible for maximum bonus"
-                    },
-                    "bonus-button": {
-                        "snx-staking-label": "Stake more SNX to get more THALES bonus",
-                        "amm-label": "Trade more to get more THALES bonus",
-                        "thales-royale-label": "Join Thales Royale and get THALES bonus"
-                    },
-                    "bonus-tooltip": {
-                        "snx-staking-title": "SNX staking bonus",
-                        "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{snxVolumeRewardsMultiplier}} SNX staked per THALES he would receive as base reward. If the staker has less SNX staked, he/she gets a bonus percentage multiplier based on the formula:",
-                        "amm-title": "Protocol volume bonus",
-                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker has at least {{ammVolumeRewardsMultiplier}} sUSD AMM, exotic or sport markets volume in last 4 periods per THALES he gets as base reward. If the staker did less volume, he/she gets a bonus percentage multiplier based on the formula:",
-                        "thales-royale-title": "Thales Royale bonus",
-                        "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
-                    },
-                    "close-period": {
-                        "label": "Close period",
-                        "progress-label": "Closing period...",
-                        "confirmation-message": "Period successfully closed"
-                    },
+                    "claim": "Claim",
+                    "claiming": "Claiming",
                     "migrated-rewards": {
-                        "title": "Migrated retro rewards",
-                        "rewards-label": "Migrated retro rewards",
-                        "claimed-message": "You have already claimed migrated retro rewards.",
-                        "info-tooltip": "<0>Unclaimed retro rewards from L1 have been migrated to L2 per </0><1 />."
+                        "claimed-message": "You have already claimed migrated retro rewards."
                     },
                     "unclaimed-rewards": {
                         "title": "Migrated rewards",
                         "rewards-label": "Migrated rewards",
-                        "claimed-message": "You have already claimed migrated rewards.",
                         "info-tooltip": "<0>Unclaimed rewards for strategic investors per </0><1 />."
-                    },
-                    "info-tooltip": "Unclaimed weekly rewards are forfeit."
+                    }
                 }
             },
             "gamified-staking": {
@@ -771,31 +679,6 @@
                     }
                 }
             },
-            "vesting": {
-                "tab-title": "Vesting",
-                "schedule": {
-                    "title": "Vesting schedule",
-                    "table": {
-                        "date-time-col": "vesting date | time",
-                        "amount-col": "amount",
-                        "no-results": "No vesting schedule found."
-                    }
-                },
-                "vest": {
-                    "available-to-vest": "Available to vest",
-                    "vest": "Vest",
-                    "vesting": "Vesting",
-                    "confirmation-message": "Tokens successfully vested"
-                },
-                "info": {
-                    "title": "Vest your THALES staking rewards in escrow",
-                    "text": "THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
-                },
-                "lp-staking": {
-                    "title": "You can provide liquidity for THALES/ETH pair and earn THALES rewards",
-                    "button-text": "Click here to earn THALES rewards"
-                }
-            },
             "lp-staking": {
                 "tab-title": "LP staking",
                 "section-title": "How LP Staking works?",
@@ -912,27 +795,6 @@
                 "total-supply-label": "Total supply",
                 "celer-bridge": "Celer cBridge",
                 "celer-bridge-tooltip": "Fast bridge THALES between chains"
-            },
-            "merge-account": {
-                "title": "Merge account",
-                "description": "<0>Account merging has been implemented per </0><1 />.",
-                "source-account-label": "Source account",
-                "destination-account-label": "Destination account",
-                "confirmation-message": "Account successfully merged",
-                "merge-account-disabled-message": "Account merging is disabled.",
-                "info-message": "In order to merge account, you need to claim any outstanding staking rewards and cancel unstaking if any are in progress from both accounts.",
-                "warning-message": "Once merged, all staked and escrowed THALES balances will be transferred to the destination account and won't be accessible from the source account.",
-                "merge-blocked-message": {
-                    "title": "In order to merge account, you need to",
-                    "src-claim": "Claim the staking rewards from the source account.",
-                    "src-unstaking": "Cancel ustaking from the source account.",
-                    "dest-claim": "Claim the staking rewards from the destination account.",
-                    "dest-unstaking": "Cancel ustaking from the destination account."
-                },
-                "merge-button": {
-                    "label": "Merge account",
-                    "progress-label": "Merging in progress..."
-                }
             },
             "claim-on-behalf": {
                 "title": "Claim on behalf",
