@@ -59,14 +59,8 @@ const RangeMarkets: React.FC = () => {
                           asset: m.currencyKey,
                           availableIn: apiData?.availableIn ?? 0,
                           availableOut: apiData?.availableOut ?? 0,
-                          inPrice:
-                              +(networkId === POLYGON_ID
-                                  ? apiData?.inPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.inPrice) ?? 0,
-                          outPrice:
-                              +(networkId === POLYGON_ID
-                                  ? apiData?.outPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.outPrice) ?? 0,
+                          inPrice: apiData?.inPrice ?? 0,
+                          outPrice: apiData?.outPrice ?? 0,
                           ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
                           range: formatCurrencyWithSignInRange(USD_SIGN, m.leftPrice, m.rightPrice, 2),
                       };
