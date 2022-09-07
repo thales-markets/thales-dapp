@@ -126,3 +126,5 @@ export const MIN_SCEW_IMPACT = 0.0;
 
 export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;
 export const OP_REWARDS_MULTIPLIER = 0.64;
+export const VOLUME_REWARDS_MULTIPLIER = 0.7;
+export const SNX_REWARDS_MULTIPLIER = 0.3;

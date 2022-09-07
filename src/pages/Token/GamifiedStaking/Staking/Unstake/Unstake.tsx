@@ -40,6 +40,7 @@ import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
+import { isMobile } from 'utils/device';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -468,7 +469,7 @@ const Unstake: React.FC = () => {
                         onChange={(_, value) => setAmountToUnstake(value)}
                         disabled={isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused}
                         className={isAmountValid ? '' : 'error'}
-                        autoFocus={true}
+                        autoFocus={!isMobile()}
                     />
                     <InputLabel>{t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}</InputLabel>
                     <CurrencyLabel
@@ -479,7 +480,7 @@ const Unstake: React.FC = () => {
                         {THALES_CURRENCY}
                     </CurrencyLabel>
                     <ThalesWalletAmountLabel>
-                        <BalanceIcon />
+                        {!isMobile() && <BalanceIcon />}
                         {isWalletConnected ? (
                             stakingThalesQuery.isLoading ? (
                                 <SimpleLoader />
@@ -534,9 +535,6 @@ const Unstake: React.FC = () => {
 const UnstakingContainer = styled(FlexDivRowCentered)<{ twoButtons: boolean }>`
     margin-bottom: 15px;
     min-height: ${(props) => (props.twoButtons ? '30px' : '66px')};
-    @media (max-width: 767px) {
-        flex-direction: column;
-    }
 `;
 
 const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
@@ -546,6 +544,9 @@ const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
     padding: 1px;
     min-width: 160px;
     max-width: 160px;
+    @media (max-width: 767px) {
+        min-width: 110px;
+    }
 `;
 
 const UnstakingPeriodConatiner = styled(FlexDivColumnCentered)`
@@ -577,6 +578,7 @@ const UnstakingTitleText = styled.span`
     line-height: 18px;
     margin-right: 10px;
     @media (max-width: 767px) {
+        font-size: 12px;
         margin-right: 0px;
         margin-bottom: 10px;
     }
@@ -590,6 +592,10 @@ const ButtonsContainer = styled(FlexDivColumnCentered)<{ twoButtons: boolean }>`
         &:nth-child(2) {
             margin-top: 15px;
         }
+    }
+    @media (max-width: 1024px) {
+        padding-top: 15px;
+        padding-bottom: 5px;
     }
 `;
 

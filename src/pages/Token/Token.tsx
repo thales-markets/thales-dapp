@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import TokenNavFooter from './MobileFooter/TokenNavFooter';
 import MergeAccount from './MergeAccount';
 import OpRewardsBanner from 'components/OpRewardsBanner';
+import { TokenTabSectionIdEnum } from 'types/token';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
@@ -139,7 +140,12 @@ const TokenPage: React.FC = () => {
                     </MainContentContainer>
                 </FlexDivColumn>
             </Container>
-            <TokenNavFooter selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+            <TokenNavFooter
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+                selectedSection={TokenTabSectionIdEnum.STAKING}
+                setSelectedSection={() => {}}
+            />
         </>
     );
 };

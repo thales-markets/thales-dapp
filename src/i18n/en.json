@@ -692,20 +692,20 @@
                         "amm-label": "AMM markets",
                         "amm-desc": "Current AMM market volume:",
                         "ranged-label": "Ranged markets",
-                        "ranged-desc": "Current Ranged market volume",
-                        "sports-desc": "Current Sports market volume",
-                        "exotic-desc": "Current Exotic market volume"
+                        "ranged-desc": "Current Ranged market volume:",
+                        "sports-desc": "Current Sports market volume:",
+                        "exotic-desc": "Current Exotic market volume:"
                     },
                     "protocol": {
                         "label": "Protocol usage bucket",
                         "volume": "Volume",
-                        "bonus": "Additional sUSD for max bonus",
+                        "bonus": "Additional protocol volume for max possible rewards",
                         "rewards": "Max reward"
                     },
                     "snx": {
                         "label": "SNX Staking",
-                        "volume": "Volume",
-                        "bonus": "Additional sUSD for max bonus",
+                        "staked": "SNX Staked",
+                        "bonus": "Additional SNX to stake for max possible rewards",
                         "rewards": "Max reward"
                     },
                     "claim": {
@@ -815,7 +815,7 @@
                     "staked-balance": "My staked LP tokens balance",
                     "staked-balance-tooltip": "How much liquidity you have staked in the LP staking contract.",
                     "lp-tokens": "LP tokens",
-                    "tvl": "Total value locked (tvl)",
+                    "tvl": "Total value locked<0/>",
                     "tvl-tooltip": "Total amount of liquidity staked in the LP staking contract.",
                     "share": "My staked share",
                     "share-tooltip": "My percentage share of the total staked liquidity in the LP staking contract."

@@ -24,6 +24,7 @@ export type TileRow = {
     cells: Cell[];
     disabled?: boolean;
     link?: string;
+    heightSmall?: boolean;
 };
 
 type Properties = {
@@ -76,6 +77,7 @@ const TileTable: React.FC<Properties> = ({
                                 disabled={row.disabled}
                                 dotColor={row.dotColor}
                                 backgroundColor={row.backgroundColor}
+                                heightSmall={row.heightSmall}
                                 key={index}
                             >
                                 {row.asset && <AssetInfo {...row.asset} />}

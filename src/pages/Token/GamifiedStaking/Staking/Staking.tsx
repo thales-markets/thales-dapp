@@ -3,7 +3,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { StyledInfoIcon, StyledInfoIconGreen, StyledMaterialTooltip, Tip17Link } from 'pages/Token/components2';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -15,6 +15,8 @@ import { Line } from '../../components2';
 import YourTransactions from './Transactions';
 import Stake from './Stake';
 import Unstake from './Unstake';
+import { isMobile } from 'utils/device';
+import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -35,7 +37,7 @@ function getNumberLabel(label: number) {
 
 const aprToApy = (interest: number, frequency: number) => ((1 + interest / 100 / frequency) ** frequency - 1) * 100;
 
-const Staking: React.FC = () => {
+const Staking: React.FC<{ setEstimatedRewards: (estimatedRewards: number) => void }> = ({ setEstimatedRewards }) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -124,19 +126,23 @@ const Staking: React.FC = () => {
         estimatedRewards,
     ]);
 
+    useEffect(() => {
+        setEstimatedRewards(bonusEstimatedRewards);
+    }, [bonusEstimatedRewards, networkId]);
+
     const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 
     return (
         <>
             {/* First row */}
             <SectionWrapper>
-                <SectionContentWrapper>
+                <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     {getSectionLabel('options.earn.gamified-staking.staking.apy', 'APY')}
                     <SectionValue>
                         <SectionValueContent>
-                            {formattedAPY}%<BonusInfo>+</BonusInfo>
+                            {formattedAPY}%
                             <BonusInfo>
-                                {formattedBonusAPY}%
+                                {' + ' + formattedBonusAPY}%
                                 <StyledMaterialTooltip
                                     arrow={true}
                                     title={
@@ -156,7 +162,7 @@ const Staking: React.FC = () => {
                 </SectionContentWrapper>
             </SectionWrapper>
             <SectionWrapper>
-                <SectionContentWrapper>
+                <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     {getSectionLabel('options.earn.gamified-staking.staking.staked-share')}
                     <SectionValue>
                         <SectionValueContent>{formatCurrencyWithPrecision(myStakedShare)}%</SectionValueContent>
@@ -195,7 +201,7 @@ const Staking: React.FC = () => {
                             {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
                         </SectionDetailsValue>
                     </SectionDetails>
-                    <Line margin={'0 15px'} />
+                    <Line margin={isMobile() ? '0 10px' : '0 15px'} />
                     <SectionDetails positionUp={false}>
                         <SectionDetailsLabel>
                             {t('options.earn.gamified-staking.staking.escrow-balance')}
@@ -209,7 +215,7 @@ const Staking: React.FC = () => {
 
             {/* Second row */}
             <SectionWrapper>
-                <SectionContentWrapper>
+                <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     {getSectionLabel('options.earn.gamified-staking.staking.total-thales-staked')}
                     <SectionValue>
                         <SectionValueContent>
@@ -219,14 +225,13 @@ const Staking: React.FC = () => {
                 </SectionContentWrapper>
             </SectionWrapper>
             <SectionWrapper>
-                <SectionContentWrapper>
+                <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     {getSectionLabel('options.earn.gamified-staking.staking.estimated-rewards', '', true)}
                     <SectionValue>
                         <SectionValueContent>
                             {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
-                            {/* <BonusInfo>+</BonusInfo> */}
                             <BonusInfo>
-                                {'+ ' + formatCurrency(bonusEstimatedRewards)}
+                                {' + ' + formatCurrency(bonusEstimatedRewards)}
                                 <StyledMaterialTooltip
                                     arrow={true}
                                     title={
@@ -262,6 +267,7 @@ const Staking: React.FC = () => {
                         }}
                         shadow={true}
                         dotBackground={'var(--amm-switch-circle)'}
+                        spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value
                                 ? setStakeOption(stakeOptions.unstake.value)
@@ -291,7 +297,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
                 display: grid; 
                 grid-template-columns: 1fr; 
                 grid-auto-rows: 1fr; 
-                grid-gap: 24px;` // page GRID_GAP + borders(2 x 2px)
+                grid-gap: ${(isMobile() ? GRID_GAP_MOBILE : GRID_GAP) + 4}px;` // page GRID_GAP + borders(2 x 2px)
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
@@ -306,25 +312,38 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
         }
     }};
     padding: 2px;
+    @media (max-width: 768px) {
+        grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
+        ${(props) => (props.backgroundType === BackgroundType.STAKE ? '' : 'background: #464dcf')};
+    }
 `;
 
-const SectionContentWrapper = styled.div<{ background?: boolean }>`
+const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?: BackgroundType }>`
     display: grid;
     height: 100%;
     background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
     align-items: center;
+    @media (max-width: 768px) {
+        ${(props) => (props.backgroundType === BackgroundType.INFO ? 'background: none' : '')};
+    }
 `;
 
 const SectionLabel = styled.div`
     display: flex;
     padding: 10px 15px;
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 
 const SectionValue = styled.div`
     display: flex;
     padding: 10px 15px;
     align-items: center;
+    @media (max-width: 768px) {
+        padding: 0 10px 10px 10px;
+    }
 `;
 
 const SectionContent = styled.span`
@@ -338,6 +357,10 @@ const SectionLabelContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 20px;
     line-height: 20px;
+    @media (max-width: 768px) {
+        font-size: 12px;
+        line-height: 12px;
+    }
 `;
 
 const SectionValueContent = styled(SectionContent)`
@@ -345,10 +368,17 @@ const SectionValueContent = styled(SectionContent)`
     font-size: 25px;
     line-height: 30px;
     letter-spacing: 0.035em;
+    @media (max-width: 768px) {
+        font-size: 15px;
+        line-height: 20px;
+    }
 `;
 
 const SectionDetails = styled.div<{ positionUp: boolean }>`
     padding: ${(props) => (props.positionUp ? '20px 15px 0 15px' : '0 15px 20px 15px')};
+    @media (max-width: 768px) {
+        padding: ${(props) => (props.positionUp ? '10px 10px 0 10px' : '0 10px 10px 10px')};
+    }
 `;
 
 const SectionDetailsLabel = styled.span`
@@ -360,6 +390,9 @@ const SectionDetailsLabel = styled.span`
     line-height: 15px;
     letter-spacing: 0.035em;
     color: #ffffff;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const SectionDetailsValue = styled.span<{ unavailable?: boolean }>`
@@ -370,10 +403,12 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean }>`
     font-size: 15px;
     line-height: 15px;
     color: ${(props) => (props.unavailable ? '#ffcc00' : '#ffffff')};
+    @media (max-width: 768px) {
+        font-size: 14px;
+    }
 `;
 
 const BonusInfo = styled.span`
-    margin-left: 10px;
     color: #50ce99;
 `;
 
@@ -383,6 +418,11 @@ const StakedBalanceInfo = styled.div`
     padding: 10px 15px;
     color: #ffcc00;
     font-size: 14px;
+    @media (max-width: 768px) {
+        padding: 10px;
+        top: 142px;
+        font-size: 12px;
+    }
 `;
 
 const UnstakingInfo = styled.span`

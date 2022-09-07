@@ -8,7 +8,7 @@ import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { RootState } from 'redux/rootReducer';
 import { getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
-import { SummaryContent, SummaryItem, SummaryLabel } from 'components/OldVersion/old-components';
+import { SummaryContent, SummaryItem, SummaryLabel } from '../components';
 import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -99,6 +99,9 @@ const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     font-size: 14px;
     line-height: 21px;
     text-transform: uppercase;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const NetworkFeeSummaryContent = styled(SummaryContent)`
@@ -107,6 +110,9 @@ const NetworkFeeSummaryContent = styled(SummaryContent)`
     line-height: 21px;
     text-transform: uppercase;
     flex: 1;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 export default NetworkFees;

@@ -80,7 +80,7 @@ export const TokentOverview: React.FC = () => {
                     <Title>{t('options.earn.overview.market-cap-label')}</Title>
                     <Content>
                         {tokenInfo && tokenInfo.marketCap
-                            ? formatCurrencyWithSign(USD_SIGN, tokenInfo.marketCap)
+                            ? formatCurrencyWithSign(USD_SIGN, Math.round(tokenInfo.marketCap), 0, true)
                             : EMPTY_VALUE}
                     </Content>
                 </ItemContainer>
@@ -88,7 +88,7 @@ export const TokentOverview: React.FC = () => {
                     <Title>{t('options.earn.overview.circulating-supply-label')}</Title>
                     <Content>
                         {tokenInfo
-                            ? formatCurrencyWithKey(THALES_CURRENCY, tokenInfo.circulatingSupply, 0, true)
+                            ? formatCurrencyWithKey(THALES_CURRENCY, Math.round(tokenInfo.circulatingSupply), 0, true)
                             : EMPTY_VALUE}
                     </Content>
                 </ItemContainer>
@@ -99,7 +99,7 @@ export const TokentOverview: React.FC = () => {
                     </ThalesBurnedWrapper>
                     <Content color={'#E26565'}>
                         {tokenInfo
-                            ? formatCurrencyWithKey(THALES_CURRENCY, tokenInfo.thalesBurned, 0, true)
+                            ? formatCurrencyWithKey(THALES_CURRENCY, Math.round(tokenInfo.thalesBurned), 0, true)
                             : EMPTY_VALUE}
                     </Content>
                 </ItemContainer>
@@ -109,7 +109,7 @@ export const TokentOverview: React.FC = () => {
                         {tokenInfo
                             ? formatCurrencyWithKey(
                                   THALES_CURRENCY,
-                                  tokenInfo.totalSupply - tokenInfo.thalesBurned,
+                                  Math.round(tokenInfo.totalSupply - tokenInfo.thalesBurned),
                                   0,
                                   true
                               )
@@ -160,38 +160,42 @@ const Container = styled(FlexDiv)`
             padding: 10px;
             border: none !important;
             &:nth-child(1) {
-                flex-basis: 100%;
+                flex-basis: 50%;
                 order: 1;
                 border-bottom: 1px solid rgba(1, 38, 81, 0.8) !important;
+                justify-content: flex-start;
             }
             &:nth-child(2) {
-                flex-basis: 40%;
+                flex-basis: 50%;
                 order: 2;
                 justify-content: flex-start;
             }
             &:nth-child(3) {
-                flex-basis: 40%;
-                order: 4;
+                flex-basis: 50%;
+                order: 3;
                 justify-content: flex-start;
             }
             &:nth-child(4) {
-                flex-basis: 60%;
-                order: 3;
-                justify-content: flex-end;
-                text-align: right;
+                flex-basis: 50%;
+                order: 4;
+                justify-content: flex-start;
             }
             &:nth-child(5) {
-                flex-basis: 60%;
+                flex-basis: 50%;
                 order: 5;
-                justify-content: flex-end;
-                text-align: right;
+                justify-content: flex-start;
             }
             &:nth-child(6) {
-                flex-basis: 100%;
+                flex-basis: 50%;
                 order: 6;
+                justify-content: flex-start;
+            }
+            &:nth-child(7) {
+                flex-basis: 100%;
+                order: 7;
                 border-top: 1px solid rgba(1, 38, 81, 0.8) !important;
             }
-            &:nth-child(6) span {
+            &:nth-child(7) span {
                 font-size: 14px;
                 line-height: 16px;
             }
@@ -258,11 +262,17 @@ const StyledLink = styled.a`
             fill: #64d9fe;
         }
     }
+    @media (max-width: 767px) {
+        color: #64d9fe;
+    }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
     @media (max-width: 767px) {
-        display: none;
+        color: #64d9fe;
+        & path {
+            fill: #64d9fe;
+        }
     }
 `;
 
@@ -296,7 +306,7 @@ const ThalesBurnedWrapper = styled.div`
 const thalesBurnedStyle: CSSProperties = {
     height: 40,
     position: 'absolute',
-    right: -7,
+    right: -28,
     top: -23,
 };
 

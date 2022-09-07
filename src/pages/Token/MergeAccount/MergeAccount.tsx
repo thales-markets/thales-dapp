@@ -22,8 +22,10 @@ import { ArrowContainer } from 'pages/Token/Migration/components';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import Button from '../components/Button';
 import { ButtonType } from '../components/Button/Button';
+import { isMobile } from 'utils/device';
+import YourTransactions from './Transactions';
 
-const MergeAccountModal: React.FC = () => {
+const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -112,7 +114,7 @@ const MergeAccountModal: React.FC = () => {
             return (
                 <Button
                     type={ButtonType.submit}
-                    width={'50%'}
+                    width={isMobile() ? '100%' : '50%'}
                     active={true}
                     onClickHandler={() => onboardConnector.connectWallet()}
                 >
@@ -122,14 +124,14 @@ const MergeAccountModal: React.FC = () => {
         }
         if (!isDestAddressValid && isAccountMergingEnabled && !isMergeBlocked) {
             return (
-                <Button type={ButtonType.submit} width={'50%'} disabled={true}>
+                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
                     {t(`common.errors.invalid-address`)}
                 </Button>
             );
         }
         if (!isDestAddressEntered && isAccountMergingEnabled && !isMergeBlocked) {
             return (
-                <Button type={ButtonType.submit} width={'50%'} disabled={true}>
+                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
                     {t(`common.errors.enter-address`)}
                 </Button>
             );
@@ -137,7 +139,7 @@ const MergeAccountModal: React.FC = () => {
         return (
             <Button
                 type={ButtonType.submit}
-                width={'50%'}
+                width={isMobile() ? '100%' : '50%'}
                 active={!isButtonDisabled}
                 disabled={isButtonDisabled}
                 onClickHandler={handleMerge}
@@ -172,59 +174,65 @@ const MergeAccountModal: React.FC = () => {
     };
 
     return (
-        <SectionWrapper>
-            <SectionContentWrapper>
-                <InputContainer>
-                    <TextInput value={walletAddress} disabled={true} onChange={undefined} />
-                    <InputLabel>{t('options.earn.gamified-staking.merge-account.source-account-label')}:</InputLabel>
-                </InputContainer>
-                <ArrowContainer>
-                    <ArrowDown />
-                </ArrowContainer>
-                <InputContainer>
-                    <TextInput
-                        value={destAddress}
-                        onChange={(e: any) => setDestAddress(e.target.value)}
-                        disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
-                        className={isDestAddressValid ? '' : 'error'}
-                        autoFocus={true}
-                    />
-                    <InputLabel>
-                        {t('options.earn.gamified-staking.merge-account.destination-account-label')}:
-                    </InputLabel>
-                    <FieldValidationMessage
-                        showValidation={!isDestAddressValid}
-                        message={t(`common.errors.invalid-address`)}
-                    />
-                </InputContainer>
-                <MessageContainer>
-                    <InfoMessage
-                        message={t('options.earn.gamified-staking.merge-account.info-message')}
-                        fontSize={'16px'}
-                    ></InfoMessage>
-                </MessageContainer>
-                <MessageContainer>
-                    <InfoWarningMessage
-                        message={t('options.earn.gamified-staking.merge-account.warning-message')}
-                        fontSize={'16px'}
-                    ></InfoWarningMessage>
-                </MessageContainer>
-                <ButtonContainer>
-                    {getMergeButton()}
-                    {!isAccountMergingEnabled && (
-                        <Message>
-                            {t('options.earn.gamified-staking.merge-account.merge-account-disabled-message')}
-                        </Message>
-                    )}
-                    {isMergeBlocked && <Message>{getBlockedMergeMessage()}</Message>}
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </ButtonContainer>
-            </SectionContentWrapper>
-        </SectionWrapper>
+        <>
+            <SectionWrapper>
+                <SectionContentWrapper>
+                    <InputContainer>
+                        <TextInput value={walletAddress} disabled={true} onChange={undefined} />
+                        <InputLabel>
+                            {t('options.earn.gamified-staking.merge-account.source-account-label')}:
+                        </InputLabel>
+                    </InputContainer>
+                    <ArrowContainer>
+                        <ArrowDown />
+                    </ArrowContainer>
+                    <InputContainer>
+                        <TextInput
+                            value={destAddress}
+                            onChange={(e: any) => setDestAddress(e.target.value)}
+                            disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
+                            className={isDestAddressValid ? '' : 'error'}
+                            autoFocus={true}
+                        />
+                        <InputLabel>
+                            {t('options.earn.gamified-staking.merge-account.destination-account-label')}:
+                        </InputLabel>
+                        <FieldValidationMessage
+                            showValidation={!isDestAddressValid}
+                            message={t(`common.errors.invalid-address`)}
+                        />
+                    </InputContainer>
+                    <MessageContainer>
+                        <InfoMessage
+                            message={t('options.earn.gamified-staking.merge-account.info-message')}
+                            fontSize={isMobile() ? '12px' : '16px'}
+                        ></InfoMessage>
+                    </MessageContainer>
+                    <MessageContainer>
+                        <InfoWarningMessage
+                            message={t('options.earn.gamified-staking.merge-account.warning-message')}
+                            fontSize={isMobile() ? '12px' : '16px'}
+                        ></InfoWarningMessage>
+                    </MessageContainer>
+                    <ButtonContainer>
+                        {getMergeButton()}
+                        {!isAccountMergingEnabled && (
+                            <Message>
+                                {t('options.earn.gamified-staking.merge-account.merge-account-disabled-message')}
+                            </Message>
+                        )}
+                        {isMergeBlocked && <Message>{getBlockedMergeMessage()}</Message>}
+                        <ValidationMessage
+                            showValidation={txErrorMessage !== null}
+                            message={txErrorMessage}
+                            onDismiss={() => setTxErrorMessage(null)}
+                        />
+                    </ButtonContainer>
+                </SectionContentWrapper>
+            </SectionWrapper>
+
+            <YourTransactions gridColumns={isMobile() ? 12 : 6} gridColumnStart={4} />
+        </>
     );
 };
 
@@ -234,6 +242,9 @@ const SectionWrapper = styled.section`
     grid-column: 4 / span 6;
     background: #64d9fe80;
     padding: 2px;
+    @media (max-width: 767px) {
+        grid-column: span 12;
+    }
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
@@ -241,7 +252,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     border-radius: 15px;
     padding: 40px;
     @media (max-width: 767px) {
-        padding: 20px;
+        padding: 10px;
         box-shadow: none;
     }
 `;
@@ -271,4 +282,4 @@ const Message = styled.div`
     }
 `;
 
-export default MergeAccountModal;
+export default MergeAccount;

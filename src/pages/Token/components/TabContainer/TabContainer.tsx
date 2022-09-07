@@ -3,6 +3,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import styled, { StyledComponent } from 'styled-components';
 import { FlexDiv } from 'theme/common';
+import { TokenTabSection, TokenTabSectionIdEnum } from 'types/token';
 import { history } from 'utils/routes';
 import Tab from '../Tab';
 
@@ -12,7 +13,9 @@ const TabContainer: React.FC<{
     tabItems: TabItem[];
     selectedTab: string;
     setSelectedTab: (tabId: string) => void;
-}> = ({ tabItems, selectedTab, setSelectedTab }) => {
+    tabSections: TokenTabSection[];
+    selectedSection?: TokenTabSectionIdEnum;
+}> = ({ tabItems, selectedTab, setSelectedTab, tabSections, selectedSection }) => {
     const location = useLocation();
 
     return (
@@ -41,7 +44,12 @@ const TabContainer: React.FC<{
                         );
                     })}
             </MenuContainer>
-            <Tab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+            <Tab
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+                sections={tabSections}
+                selectedSection={selectedSection}
+            />
         </Container>
     );
 };

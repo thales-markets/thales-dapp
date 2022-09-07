@@ -46,6 +46,11 @@ export const Input = styled.input`
     &.error {
         border: 2px solid #e53720;
     }
+
+    @media (max-width: 767px) {
+        height: 60px;
+        font-size: 13px;
+    }
 `;
 
 export const InputLabel = styled.label`
@@ -58,6 +63,10 @@ export const InputLabel = styled.label`
     z-index: 3;
     position: absolute;
     text-transform: uppercase;
+    @media (max-width: 768px) {
+        font-size: 12px;
+        padding-left: 10px;
+    }
 `;
 
 export const CurrencyLabel = styled.label`
@@ -73,6 +82,10 @@ export const CurrencyLabel = styled.label`
     &.disabled {
         opacity: 0.4;
         cursor: default;
+    }
+    @media (max-width: 767px) {
+        font-size: 18px;
+        padding-top: 33px;
     }
 `;
 
@@ -285,6 +298,9 @@ export const SummaryContent = styled.div<{ color?: string }>`
     width: 200px;
     text-align: end;
     color: ${(props) => props.color ?? '#f6f6fe'};
+    @media (max-width: 768px) {
+        width: 100px;
+    }
 `;
 
 export const FilterButton = styled.button`

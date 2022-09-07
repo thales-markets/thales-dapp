@@ -4,7 +4,12 @@ import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { MAX_L2_GAS_LIMIT, OP_REWARDS_MULTIPLIER } from 'constants/options';
+import {
+    MAX_L2_GAS_LIMIT,
+    OP_REWARDS_MULTIPLIER,
+    SNX_REWARDS_MULTIPLIER,
+    VOLUME_REWARDS_MULTIPLIER,
+} from 'constants/options';
 import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
 import Button from 'pages/Token/components/Button';
@@ -40,6 +45,7 @@ import onboardConnector from 'utils/onboardConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
+import { isMobile } from 'utils/device';
 
 enum SectionType {
     INFO,
@@ -50,9 +56,10 @@ enum SectionType {
     LP_STAKING,
 }
 
-const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => void }> = ({
+const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => void; estimatedRewards: number }> = ({
     gridGap,
     setSelectedTab,
+    estimatedRewards,
 }) => {
     const { t } = useTranslation();
 
@@ -165,10 +172,10 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
     const bonusRewardsFormatted = formatCurrencyWithKey(THALES_CURRENCY, 0.5 * baseRewardsPool, 0, true);
 
     // Market volume
-    const ammVolumeFormatted = formatCurrencyWithKey(THALES_CURRENCY, thalesAmmVolume, 0, true);
-    const rangedVolumeFormatted = formatCurrencyWithKey(THALES_CURRENCY, rangedAmmVolume, 0, true);
-    const sportsVolumeFormatted = formatCurrencyWithKey(THALES_CURRENCY, sportsAmmVolume, 0, true);
-    const exoticVolumeFormatted = formatCurrencyWithKey(THALES_CURRENCY, exoticVolume, 0, true);
+    const ammVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, thalesAmmVolume, 0, true);
+    const rangedVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, rangedAmmVolume, 0, true);
+    const sportsVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, sportsAmmVolume, 0, true);
+    const exoticVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, exoticVolume, 0, true);
 
     // Protocol usage
     const protocolRewardFormatted =
@@ -178,17 +185,25 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
     const protocolVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume);
     const protocolMaxBonusFormatted =
         additionalAmmVolume > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, additionalAmmVolume) : '';
-    const protocolMaxRewardFormatted =
-        formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
-        ' + ' +
-        formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, maxOpAmmBonus);
+    const protocolMaxRewardFormatted = isClaimAvailable
+        ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
+          ' + ' +
+          formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, maxOpAmmBonus)
+        : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * VOLUME_REWARDS_MULTIPLIER) +
+          ' + ' +
+          formatCurrencyWithKey(
+              CRYPTO_CURRENCY_MAP.OP,
+              estimatedRewards * VOLUME_REWARDS_MULTIPLIER * OP_REWARDS_MULTIPLIER
+          );
 
     // SNX staking
     const snxRewardFormatted = formatCurrencyWithKey(THALES_CURRENCY, snxBonus);
     const snxVolumeFormatted = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, snxStaked);
     const snxMaxBonusFormatted =
         additionalSnxStaked > 0 ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, additionalSnxStaked) : '';
-    const snxMaxRewardFormatted = formatCurrencyWithKey(THALES_CURRENCY, maxSnxBonus);
+    const snxMaxRewardFormatted = isClaimAvailable
+        ? formatCurrencyWithKey(THALES_CURRENCY, maxSnxBonus)
+        : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * SNX_REWARDS_MULTIPLIER);
 
     const lpStakingReward =
         formatCurrencyWithKey(THALES_CURRENCY, lpStakingRewards) +
@@ -353,11 +368,15 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
 
     const getClaimSection = () => {
         return (
-            <SectionContentWrapper>
+            <SectionContentWrapper noGrid={true}>
                 <RewardPeriod>
                     <PeriodLabel>{t('options.earn.gamified-staking.rewards.claim.period')}</PeriodLabel>
                     {stakingRewards ? (
-                        <TimeRemaining end={stakingRewards.closingDate} fontSize={15} showFullCounter />
+                        <TimeRemaining
+                            end={stakingRewards.closingDate}
+                            fontSize={isMobile() ? 12 : 15}
+                            showFullCounter
+                        />
                     ) : (
                         '-'
                     )}
@@ -395,29 +414,25 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                     </StyledMaterialTooltip>
                 </SectionValue>
                 <NetworkFeesWrapper>
-                    <Line margin={'10px 0'} />
+                    <Line margin={isMobile() ? '0 0 10px 0' : '10px 0'} />
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                 </NetworkFeesWrapper>
                 <ButtonContainer>
-                    {stakingRewards && stakingRewards.isClaimPaused && (
-                        <ClaimMessage above={true}>
-                            {t('options.earn.gamified-staking.rewards.claim.paused-message')}
-                        </ClaimMessage>
-                    )}
-                    {stakingRewards && !stakingRewards.isClaimPaused && stakingRewards.claimed && (
-                        <ClaimMessage above={true}>
-                            {t('options.earn.gamified-staking.rewards.claim.claimed-message')}
-                        </ClaimMessage>
-                    )}
-                    {stakingRewards &&
+                    <ClaimMessage above={true}>
+                        {stakingRewards && stakingRewards.isClaimPaused
+                            ? t('options.earn.gamified-staking.rewards.claim.paused-message')
+                            : ''}
+                        {stakingRewards && !stakingRewards.isClaimPaused && stakingRewards.claimed
+                            ? t('options.earn.gamified-staking.rewards.claim.claimed-message')
+                            : ''}
+                        {stakingRewards &&
                         !stakingRewards.isClaimPaused &&
                         !stakingRewards.claimed &&
                         !stakingRewards.hasClaimRights &&
-                        isWalletConnected && (
-                            <ClaimMessage above={true}>
-                                {t('options.earn.gamified-staking.rewards.claim.not-eligible-message')}
-                            </ClaimMessage>
-                        )}
+                        isWalletConnected
+                            ? t('options.earn.gamified-staking.rewards.claim.not-eligible-message')
+                            : ''}
+                    </ClaimMessage>
                     {getClaimButton()}
                 </ButtonContainer>
                 <ValidationMessage
@@ -446,6 +461,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                     type={ButtonType.popup}
                     active={true}
                     margin={'30px 0 10px auto'}
+                    fontSize={'18px'}
                     onClickHandler={() => setShowClaimOnBehalfModal(true)}
                 >
                     {t('options.earn.gamified-staking.rewards.claim-on-behalf.enable')}
@@ -456,7 +472,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
 
     const getLpStakingSection = () => {
         return (
-            <SectionContentWrapper background={false} noHeight={true}>
+            <SectionContentWrapper background={false} noGrid={true}>
                 <SectionLabel type={SectionType.LP_STAKING} margin={'34px 0 0 0'}>
                     <SectionLabelContent type={SectionType.LP_STAKING}>
                         {t('options.earn.gamified-staking.rewards.lp-staking.label-1')}
@@ -484,7 +500,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 <SectionValue type={SectionType.LP_STAKING}>
                     <SectionValueContent type={SectionType.LP_STAKING}>{lpStakingReward}</SectionValueContent>
                 </SectionValue>
-                <ArrowWrapper marginTop={'40px'}>
+                <ArrowWrapper>
                     <ArrowLink src={arrowLink} widthPer={7} />
                 </ArrowWrapper>
             </SectionContentWrapper>
@@ -537,6 +553,8 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                     t('options.earn.gamified-staking.rewards.volume.ranged-desc')
                 )}
             </SectionWrapper>
+            {isMobile() && <DashedLineVertical gridRow={4} columnStart={4} marginTop={-gridGap} heightPer={135} />}
+            {isMobile() && <DashedLineVertical gridRow={4} columnStart={9} marginTop={-gridGap} heightPer={135} />}
             <SectionWrapper
                 columns={3}
                 backgroundType={BackgroundType.SPORTS}
@@ -562,12 +580,21 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 )}
             </SectionWrapper>
 
-            <DashedLine gridRow={3} widthPer={76.2} />
-            <DashedLineVertical gridRow={3} columnStart={2} marginTop={-gridGap} heightPer={135} />
-            <DashedLineVertical gridRow={3} columnStart={5} marginTop={-gridGap} heightPer={135} />
-            <DashedLineVertical gridRow={3} columnStart={8} marginTop={-gridGap} heightPer={135} />
-            <DashedLineVertical gridRow={3} columnStart={11} marginTop={-gridGap} heightPer={135} />
-            <DashedLineVertical gridRow={3} columnStart={4} marginTop={gridGap} heightPer={100} />
+            {isMobile() ? (
+                <>
+                    <DashedLineVertical gridRow={6} columnStart={4} marginTop={-gridGap} heightPer={135} />
+                    <DashedLineVertical gridRow={6} columnStart={9} marginTop={-gridGap} heightPer={135} />
+                </>
+            ) : (
+                <>
+                    <DashedLine gridRow={3} widthPer={76.2} />
+                    <DashedLineVertical gridRow={3} columnStart={2} marginTop={-gridGap} heightPer={135} />
+                    <DashedLineVertical gridRow={3} columnStart={5} marginTop={-gridGap} heightPer={135} />
+                    <DashedLineVertical gridRow={3} columnStart={8} marginTop={-gridGap} heightPer={135} />
+                    <DashedLineVertical gridRow={3} columnStart={11} marginTop={-gridGap} heightPer={135} />
+                    <DashedLineVertical gridRow={3} columnStart={4} marginTop={gridGap} heightPer={100} />
+                </>
+            )}
 
             {/* Third row */}
             <SectionWrapper columns={5} startColumn={2}>
@@ -586,11 +613,12 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                     }
                 )}
             </SectionWrapper>
+            {isMobile() && <PlusSectionConnect>+</PlusSectionConnect>}
             <SectionWrapper columns={5}>
                 {getRewardSection(
                     {
                         full: t('options.earn.gamified-staking.rewards.snx.label'),
-                        volume: t('options.earn.gamified-staking.rewards.snx.volume'),
+                        volume: t('options.earn.gamified-staking.rewards.snx.staked'),
                         bonus: t('options.earn.gamified-staking.rewards.snx.bonus'),
                         rewards: t('options.earn.gamified-staking.rewards.snx.rewards'),
                     },
@@ -602,29 +630,51 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                     }
                 )}
             </SectionWrapper>
+            {isMobile() && (
+                <DashedLineVertical gridRow={10} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
+            )}
 
-            <DashedLine gridRow={5} widthPer={42.5} />
-            <DashedLineVertical gridRow={5} columnStart={4} marginTop={-gridGap} heightPer={135} />
-            <DashedLineVertical gridRow={5} columnStart={9} marginTop={-gridGap} heightPer={135} />
-            <DashedLineVertical gridRow={5} columnStart={7} marginTop={gridGap} heightPer={100} marginLeft={-10} />
+            {!isMobile() && (
+                <>
+                    <DashedLine gridRow={5} widthPer={42.5} />
+                    <DashedLineVertical gridRow={5} columnStart={4} marginTop={-gridGap} heightPer={135} />
+                    <DashedLineVertical gridRow={5} columnStart={9} marginTop={-gridGap} heightPer={135} />
+                    <DashedLineVertical
+                        gridRow={5}
+                        columnStart={7}
+                        marginTop={gridGap}
+                        heightPer={100}
+                        marginLeft={-10}
+                    />
+                </>
+            )}
 
             {/* Fourth row */}
-            <SectionWrapper columns={3} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
-                {getClaimOnBehalfSection()}
-            </SectionWrapper>
+            {!isMobile() && (
+                <SectionWrapper columns={3} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
+                    {getClaimOnBehalfSection()}
+                </SectionWrapper>
+            )}
             <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM}>
                 {getClaimSection()}
             </SectionWrapper>
-            <SectionWrapper
-                columns={3}
-                backgroundType={BackgroundType.LP_STAKING}
-                onClick={() => setSelectedTab(TokenTabEnum.LP_STAKING)}
-            >
-                {getLpStakingSection()}
-            </SectionWrapper>
+            {!isMobile() && (
+                <SectionWrapper
+                    columns={3}
+                    backgroundType={BackgroundType.LP_STAKING}
+                    onClick={() => setSelectedTab(TokenTabEnum.LP_STAKING)}
+                >
+                    {getLpStakingSection()}
+                </SectionWrapper>
+            )}
 
             <DashedLine gridRow={7} widthPer={0} />
-            <DashedLineVertical gridRow={7} columnStart={7} marginTop={-gridGap} heightPer={210} marginLeft={-10} />
+            {!isMobile() && (
+                <DashedLineVertical gridRow={7} columnStart={7} marginTop={-gridGap} heightPer={210} marginLeft={-10} />
+            )}
+            {isMobile() && (
+                <DashedLineVertical gridRow={12} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
+            )}
 
             {/* Fifth row */}
             <SectionWrapper columns={12} marginTop={-gridGap}>
@@ -660,8 +710,11 @@ enum BackgroundType {
     LP_STAKING,
 }
 
-const ArrowWrapper = styled.div<{ marginTop: string }>`
-    margin-top: ${(props) => props.marginTop};
+const ArrowWrapper = styled.div`
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+    right: 20px;
     text-align: end;
 `;
 
@@ -727,16 +780,31 @@ const SectionWrapper = styled.section<{
             }
         }
     }
+
+    @media (max-width: 768px) {
+        grid-column: span
+            ${(props) =>
+                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS, BackgroundType.EXOTIC].includes(
+                    props.backgroundType ?? -1
+                )
+                    ? 6
+                    : 12};
+        margin-top: 0;
+    }
 `;
 
-const SectionContentWrapper = styled.div<{ background?: boolean; noHeight?: boolean }>`
-    display: grid;
-    ${(props) => (props.noHeight ? '' : 'height: 100%')};
+const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolean }>`
+    ${(props) => (props.noGrid ? '' : 'display: grid;')};
+    position: relative;
+    height: 100%;
     background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;
     padding: 10px 15px;
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 
 const SectionContent = styled.span`
@@ -777,6 +845,9 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefaul
                 return '';
         }
     }}
+    @media (max-width: 768px) {
+        padding-bottom: 10px;
+    }
 `;
 
 const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: string; textDefault?: boolean }>`
@@ -808,6 +879,9 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
                 return '';
         }
     }}
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const SectionValue = styled.div<{ type: SectionType }>`
@@ -830,13 +904,13 @@ const SectionValue = styled.div<{ type: SectionType }>`
 
 const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: boolean }>`
     letter-spacing: 0.035em;
-    text-transform: uppercase;
     ${(props) => {
         switch (props.type) {
             case SectionType.INFO:
                 return `
                     font-weight: 700;
                     font-size: 20px;
+                    text-transform: uppercase;
                 `;
             case SectionType.VOLUME:
                 return `
@@ -851,9 +925,13 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                     font-weight: 700;
                     font-size: 30px;
                     color: ${props.isOp ? '#ffffff' : '#64D9FE'};
+                    text-transform: uppercase;
+                    @media (max-width: 768px) {
+                        font-size: 20px;
+                    }
                 `;
             default:
-                return '';
+                return 'text-transform: uppercase;';
         }
     }}
 `;
@@ -881,6 +959,9 @@ const SectionDescriptionContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 15px;
     line-height: 20px;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const SectionDetails = styled.div`
@@ -895,6 +976,9 @@ const SectionDetailsLabel = styled.span`
     line-height: 15px;
     letter-spacing: 0.035em;
     color: #ffffff;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const SectionDetailsValue = styled.span<{ bonus?: boolean }>`
@@ -910,6 +994,9 @@ const ButtonWrapperTooltip = styled.div`
     width: 50%;
     display: flex;
     justify-content: center;
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `;
 
 const RewardPeriod = styled(FlexDivEnd)`
@@ -922,16 +1009,30 @@ const PeriodLabel = styled(SectionContent)`
     font-size: 15px;
     text-transform: uppercase;
     color: #64d9fe;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 50px;
+    @media (max-width: 768px) {
+        margin: auto;
+    }
 `;
 
 const LpStakingLink = styled.span`
     cursor: pointer;
     text-decoration: underline;
     font-weight: bold;
+`;
+
+const PlusSectionConnect = styled.div`
+    text-align: center;
+    grid-column: span 12;
+    color: #64d9fe;
+    font-weight: 700;
+    font-size: 30px;
 `;
 
 export default Rewards;

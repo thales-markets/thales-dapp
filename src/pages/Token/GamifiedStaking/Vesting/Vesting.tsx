@@ -24,6 +24,7 @@ import { getIsOVM, getL1FeeInWei, formatGasLimit } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import DateTimeContainer from './styled-components/TimeDateContainer';
+import { isMobile } from 'utils/device';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
@@ -94,6 +95,7 @@ const Vesting: React.FC = () => {
         const rows: TileRow[] = sortedData.map((row) => {
             return {
                 cells: [{ value: row.date }, { value: `${formatCurrencyWithKey(THALES_CURRENCY, row.amount)}` }],
+                heightSmall: true,
             };
         });
 
@@ -128,7 +130,7 @@ const Vesting: React.FC = () => {
         return (
             <Button
                 type={ButtonType.submit}
-                width={'50%'}
+                width={isMobile() ? '100%' : '50%'}
                 onClickHandler={handleVest}
                 active={!disabled}
                 disabled={disabled}
@@ -157,7 +159,7 @@ const Vesting: React.FC = () => {
                         </SectionValueContent>
                     </SectionValue>
                     <NetworkFeesWrapper>
-                        <Line margin={'10px 0'} />
+                        <Line margin={isMobile() ? '0 0 10px 0' : '10px 0'} />
                         <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     </NetworkFeesWrapper>
                     <ButtonContainer>{getVestButton()}</ButtonContainer>
@@ -172,9 +174,9 @@ const Vesting: React.FC = () => {
             <SectionWrapper columns={5} startColumn={8} rows={3} background={false}>
                 <SectionContentWrapper>
                     <ScheduleLabel>
-                        <SectionLabelContent>
+                        <ScheduleLabelContent>
                             {t('options.earn.gamified-staking.vesting.schedule-label')}
-                        </SectionLabelContent>
+                        </ScheduleLabelContent>
                     </ScheduleLabel>
                     <TileTable
                         firstColumnRenderer={(row: TileRow | string) => <SchedulerFirstColumn value={row} />}
@@ -189,7 +191,7 @@ const Vesting: React.FC = () => {
                 </SectionContentWrapper>
             </SectionWrapper>
 
-            <YourTransactions gridColumns={7} />
+            <YourTransactions gridColumns={isMobile() ? 12 : 7} />
         </>
     );
 };
@@ -226,6 +228,10 @@ const SectionWrapper = styled.section<{
     padding: 2px;
     background: ${(props) => (props.background ?? true ? '#64d9fe80' : 'none')};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
+
+    @media (max-width: 768px) {
+        grid-column: span 12;
+    }
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
@@ -235,15 +241,9 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-`;
-
-const ScheduleLabel = styled.div`
-    display: flex;
-    padding-bottom: 20px;
-`;
-
-const SectionLabel = styled.div`
-    padding-bottom: 20px;
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 
 const SectionContent = styled.span`
@@ -253,10 +253,34 @@ const SectionContent = styled.span`
     color: #ffffff;
 `;
 
+const ScheduleLabel = styled.div`
+    display: flex;
+    padding-bottom: 20px;
+`;
+
+const ScheduleLabelContent = styled(SectionContent)`
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 20px;
+    @media (max-width: 768px) {
+        font-size: 16px;
+    }
+`;
+
+const SectionLabel = styled.div`
+    padding-bottom: 20px;
+    @media (max-width: 768px) {
+        padding-bottom: 10px;
+    }
+`;
+
 const SectionLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const SectionValue = styled.div`
@@ -269,10 +293,16 @@ const SectionValueContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 30px;
     color: #64d9fe;
+    @media (max-width: 768px) {
+        font-size: 20px;
+    }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 80px;
+    @media (max-width: 768px) {
+        margin: auto;
+    }
 `;
 
 export default Vesting;

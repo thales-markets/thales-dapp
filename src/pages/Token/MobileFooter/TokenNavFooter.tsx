@@ -19,13 +19,21 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
+import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
 
 type TokenNavProps = {
     setSelectedTab: any;
     selectedTab: any;
+    setSelectedSection: (sectionId: TokenTabSectionIdEnum) => void;
+    selectedSection: TokenTabSectionIdEnum | undefined;
 };
 
-const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }) => {
+const TokenNavFooter: React.FC<TokenNavProps> = ({
+    selectedTab,
+    setSelectedTab,
+    selectedSection,
+    setSelectedSection,
+}) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
@@ -40,18 +48,66 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
             </BurgerWrapper>
             {showNav && (
                 <Container>
-                    {!isL2 && (
+                    <Icon
+                        onClick={() => {
+                            history.push({
+                                pathname: location.pathname,
+                                search: queryString.stringify({
+                                    tab: TokenTabEnum.GAMIFIED_STAKING,
+                                }),
+                            });
+                            setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                            setSelectedSection(TokenTabSectionIdEnum.STAKING);
+                        }}
+                        src={selectedSection === TokenTabSectionIdEnum.STAKING ? stakingActiveIcon : stakingIcon}
+                    />
+                    {isL2 && (
                         <Icon
                             onClick={() => {
                                 history.push({
                                     pathname: location.pathname,
                                     search: queryString.stringify({
-                                        tab: 'migration',
+                                        tab: TokenTabEnum.GAMIFIED_STAKING,
                                     }),
                                 });
-                                setSelectedTab('migration');
+                                setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                setSelectedSection(TokenTabSectionIdEnum.REWARDS);
                             }}
-                            src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
+                            src={selectedSection === TokenTabSectionIdEnum.REWARDS ? vestingActiveIcon : vestingIcon} // TODO: rewards icon
+                        />
+                    )}
+                    {isL2 && (
+                        <Icon
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: TokenTabEnum.GAMIFIED_STAKING,
+                                    }),
+                                });
+                                setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                setSelectedSection(TokenTabSectionIdEnum.VESTING);
+                            }}
+                            src={selectedSection === TokenTabSectionIdEnum.VESTING ? vestingActiveIcon : vestingIcon}
+                        />
+                    )}
+                    {isL2 && (
+                        <Icon
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: TokenTabEnum.GAMIFIED_STAKING,
+                                    }),
+                                });
+                                setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                setSelectedSection(TokenTabSectionIdEnum.MERGE_ACCOUNT);
+                            }}
+                            src={
+                                selectedSection === TokenTabSectionIdEnum.MERGE_ACCOUNT
+                                    ? migrationActiveIcon
+                                    : migrationIcon
+                            }
                         />
                     )}
                     <Icon
@@ -59,37 +115,14 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                             history.push({
                                 pathname: location.pathname,
                                 search: queryString.stringify({
-                                    tab: 'staking',
+                                    tab: TokenTabEnum.LP_STAKING,
                                 }),
                             });
-                            setSelectedTab('staking');
-                        }}
-                        src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
-                    />
-                    <Icon
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: 'vesting',
-                                }),
-                            });
-                            setSelectedTab('vesting');
-                        }}
-                        src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
-                    />
-                    <Icon
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: 'lp-staking',
-                                }),
-                            });
-                            setSelectedTab('lp-staking');
+                            setSelectedTab(TokenTabEnum.LP_STAKING);
+                            setSelectedSection(TokenTabSectionIdEnum.LP_STAKING);
                         }}
                         src={
-                            selectedTab === 'lp-staking'
+                            selectedTab === TokenTabEnum.LP_STAKING
                                 ? isL2
                                     ? lpl2ActiveIcon
                                     : lpActiveIcon
@@ -98,20 +131,6 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                                 : lpIcon
                         }
                     />
-                    {isL2 && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'merge-account',
-                                    }),
-                                });
-                                setSelectedTab('merge-account');
-                            }}
-                            src={selectedTab === 'merge-account' ? migrationActiveIcon : migrationIcon}
-                        />
-                    )}
 
                     {!isL2 && (
                         <Icon
@@ -119,12 +138,28 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({ selectedTab, setSelectedTab }
                                 history.push({
                                     pathname: location.pathname,
                                     search: queryString.stringify({
-                                        tab: 'strategic-investors',
+                                        tab: TokenTabEnum.MIGRATION,
                                     }),
                                 });
-                                setSelectedTab('strategic-investors');
+                                setSelectedTab(TokenTabEnum.MIGRATION);
                             }}
-                            src={selectedTab === 'strategic-investors' ? snxStakingActiveIcon : snxStakingIcon}
+                            src={selectedTab === TokenTabEnum.MIGRATION ? migrationActiveIcon : migrationIcon}
+                        />
+                    )}
+                    {!isL2 && (
+                        <Icon
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: TokenTabEnum.STRATEGIC_INVESTORS,
+                                    }),
+                                });
+                                setSelectedTab(TokenTabEnum.STRATEGIC_INVESTORS);
+                            }}
+                            src={
+                                selectedTab === TokenTabEnum.STRATEGIC_INVESTORS ? snxStakingActiveIcon : snxStakingIcon
+                            }
                         />
                     )}
                 </Container>

@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 type AccountInfo = {
     balance: number;
     rawBalance: string;
@@ -51,6 +53,22 @@ export enum TokenTabEnum {
     MIGRATION = 'migration',
     STRATEGIC_INVESTORS = 'strategic-investors',
 }
+
+export enum TokenTabSectionIdEnum {
+    STAKING = 'staking',
+    REWARDS = 'rewards',
+    VESTING = 'vesting',
+    MERGE_ACCOUNT = 'merge-account',
+    LP_STAKING = 'lp-staking',
+}
+
+export type TokenTabSection = {
+    tab: TokenTabEnum;
+    id: TokenTabSectionIdEnum;
+    title: string;
+    description: string | ReactElement;
+    isButton: boolean;
+};
 
 export enum TransactionFilterEnum {
     ALL = 'all',

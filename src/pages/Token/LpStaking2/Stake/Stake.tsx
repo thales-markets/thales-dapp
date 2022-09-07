@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BalanceIcon, ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../components2';
-import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,7 @@ import { LP_TOKEN } from 'constants/currency';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
+import { isMobile } from 'utils/device';
 
 type Properties = {
     isStakingPaused: boolean;
@@ -170,7 +171,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                     active={true}
                     onClickHandler={() => onboardConnector.connectWallet()}
                     type={ButtonType.submit}
-                    width={'60%'}
+                    width={isMobile() ? '100%' : '60%'}
                 >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
@@ -178,14 +179,14 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
         }
         if (insufficientBalance) {
             return (
-                <Button disabled={true} type={ButtonType.submit} width={'60%'}>
+                <Button disabled={true} type={ButtonType.submit} width={isMobile() ? '100%' : '60%'}>
                     {t(`common.errors.insufficient-balance`)}
                 </Button>
             );
         }
         if (!isAmountEntered) {
             return (
-                <Button disabled={true} type={ButtonType.submit} width={'60%'}>
+                <Button disabled={true} type={ButtonType.submit} width={isMobile() ? '100%' : '60%'}>
                     {t(`common.errors.enter-amount`)}
                 </Button>
             );
@@ -197,7 +198,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                     disabled={isAllowingStake}
                     onClickHandler={() => setOpenApprovalModal(true)}
                     type={ButtonType.submit}
-                    width={'60%'}
+                    width={isMobile() ? '100%' : '60%'}
                 >
                     {!isAllowingStake
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: LP_TOKEN })
@@ -214,7 +215,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                 disabled={isButtonDisabled}
                 onClickHandler={handleStakeThales}
                 type={ButtonType.submit}
-                width={'60%'}
+                width={isMobile() ? '100%' : '60%'}
             >
                 {!isStaking
                     ? `${t('options.earn.gamified-staking.staking.stake.name')} ${formatCurrencyWithKey(
@@ -252,14 +253,14 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                     <InputLabel>{t('options.earn.gamified-staking.staking.stake.amount-to-stake')}</InputLabel>
                     <CurrencyLabel className={isStaking ? 'disabled' : ''}>{LP_TOKEN}</CurrencyLabel>
                     <ThalesWalletAmountLabel>
-                        <BalanceIcon />
+                        {!isMobile() && <BalanceIcon />}
                         {isWalletConnected ? (
                             lpTokensBalanceQuery.isLoading ? (
                                 <SimpleLoader />
                             ) : (
                                 t('options.earn.gamified-staking.staking.stake.balance') +
                                 ' ' +
-                                formatCurrencyWithKey(LP_TOKEN, lpTokensBalance)
+                                formatCurrency(lpTokensBalance)
                             )
                         ) : (
                             '-'

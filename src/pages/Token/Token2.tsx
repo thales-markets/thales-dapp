@@ -1,18 +1,19 @@
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
-import { TokenTabEnum } from 'types/token';
+import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
 import { getIsOVM } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TabContainer from './components/TabContainer';
 import TokenOverview from './components/TokenOverview';
+import { Tip49Link } from './components2';
 import TokenNavFooter from './MobileFooter/TokenNavFooter';
 
 const TokenPage: React.FC = () => {
@@ -35,8 +36,51 @@ const TokenPage: React.FC = () => {
         },
     ];
 
+    const tabSections = [
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.STAKING,
+            title: t('options.earn.gamified-staking.staking.section-title'),
+            description: t('options.earn.gamified-staking.staking.section-description'),
+            isButton: true,
+        },
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.REWARDS,
+            title: t('options.earn.gamified-staking.rewards.section-title'),
+            description: t('options.earn.gamified-staking.rewards.section-description'),
+            isButton: true,
+        },
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.VESTING,
+            title: t('options.earn.gamified-staking.vesting.section-title'),
+            description: t('options.earn.gamified-staking.vesting.section-description'),
+            isButton: true,
+        },
+        {
+            tab: TokenTabEnum.GAMIFIED_STAKING,
+            id: TokenTabSectionIdEnum.MERGE_ACCOUNT,
+            title: t('options.earn.gamified-staking.merge-account.section-title'),
+            description: (
+                <Trans
+                    i18nKey={`options.earn.gamified-staking.merge-account.section-description`}
+                    components={[<span key="1" />, <Tip49Link key="2" />]}
+                />
+            ),
+            isButton: true,
+        },
+        {
+            tab: TokenTabEnum.LP_STAKING,
+            id: TokenTabSectionIdEnum.LP_STAKING,
+            title: t('options.earn.lp-staking.section-title'),
+            description: '',
+            isButton: false,
+        },
+    ];
+
     if (!isL2) {
-        tabs.unshift({
+        tabs.push({
             id: TokenTabEnum.MIGRATION,
             name: t('migration.title'),
             disabled: false,
@@ -58,6 +102,13 @@ const TokenPage: React.FC = () => {
     const paramTab = queryString.parse(location.search).tab;
     const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
     const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : defaultTab);
+    const defaultSection =
+        selectedTab === TokenTabEnum.GAMIFIED_STAKING
+            ? TokenTabSectionIdEnum.STAKING
+            : selectedTab === TokenTabEnum.LP_STAKING
+            ? TokenTabSectionIdEnum.LP_STAKING
+            : undefined;
+    const [selectedSection, setSelectedSection] = useState(defaultSection);
 
     useEffect(() => {
         const paramTab = queryString.parse(location.search).tab;
@@ -74,11 +125,22 @@ const TokenPage: React.FC = () => {
                     {!isL2 && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
 
                     <MainContentContainer>
-                        <TabContainer tabItems={tabs} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+                        <TabContainer
+                            tabItems={tabs}
+                            selectedTab={selectedTab}
+                            setSelectedTab={setSelectedTab}
+                            tabSections={tabSections}
+                            selectedSection={selectedSection}
+                        />
                     </MainContentContainer>
                 </FlexDivColumn>
             </Container>
-            <TokenNavFooter selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+            <TokenNavFooter
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+                selectedSection={selectedSection}
+                setSelectedSection={setSelectedSection}
+            />
         </>
     );
 };

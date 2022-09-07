@@ -28,6 +28,7 @@ import { FlexDivColumnCentered } from 'theme/common';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
+import { isMobile } from 'utils/device';
 
 const Stake: React.FC = () => {
     const { t } = useTranslation();
@@ -247,20 +248,20 @@ const Stake: React.FC = () => {
     return (
         <EarnSection spanOnTablet={5} orderOnMobile={4} orderOnTablet={4}>
             <SectionContentContainer>
-                <InputContainer marginTop={40}>
+                <InputContainer marginTop={isMobile() ? 20 : 40}>
                     <NumericInput
                         value={amountToStake}
                         onChange={(_, value) => setAmountToStake(value)}
                         disabled={isStaking || isUnstaking || isStakingPaused}
                         className={isAmountValid ? '' : 'error'}
-                        autoFocus={true}
+                        autoFocus={!isMobile()}
                     />
                     <InputLabel>{t('options.earn.gamified-staking.staking.stake.amount-to-stake')}</InputLabel>
                     <CurrencyLabel className={isStaking || isUnstaking || isStakingPaused ? 'disabled' : ''}>
                         {THALES_CURRENCY}
                     </CurrencyLabel>
                     <ThalesWalletAmountLabel>
-                        <BalanceIcon />
+                        {!isMobile() && <BalanceIcon />}
                         {isWalletConnected ? (
                             thalesBalanceQuery.isLoading ? (
                                 <SimpleLoader />
@@ -284,7 +285,7 @@ const Stake: React.FC = () => {
                         message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
                     />
                 </InputContainer>
-                <Line margin={'41px 0 10px 0'} />
+                <Line margin={isMobile() ? '10px 0' : '41px 0 10px 0'} />
                 <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />
                 <StakeButtonDiv>
                     {getStakeButton()}
@@ -319,6 +320,7 @@ const StakeButtonDiv = styled(FlexDivColumnCentered)`
     align-items: center;
     @media (max-width: 1024px) {
         padding-top: 15px;
+        padding-bottom: 5px;
     }
 `;
 

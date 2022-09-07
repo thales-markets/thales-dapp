@@ -16,13 +16,14 @@ type Children = {
 const Tile: StyledComponent<
     'div',
     any,
-    { disabled?: boolean; lineHidden?: boolean; dotColor?: string; backgroundColor?: string }
+    { disabled?: boolean; lineHidden?: boolean; dotColor?: string; backgroundColor?: string; heightSmall?: boolean }
 > &
     Children = styled(FlexDiv)<{
     dotColor?: string;
     backgroundColor?: string;
     disabled?: boolean;
     lineHidden?: boolean;
+    heightSmall?: boolean;
 }>`
     position: relative;
     background: ${(props) => props.backgroundColor || 'transparent'};
@@ -63,13 +64,13 @@ const Tile: StyledComponent<
         opacity: ${(props) => (props.disabled ? '1' : '0.5')} !important;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: 767px) {
-            height: 68px;
+            height: ${(props) => (props.heightSmall ? '44px' : '68px')};
         }
     }
     @media screen and (max-width: 767px) {
         flex-direction: column;
         flex-wrap: wrap;
-        min-height: 100px;
+        min-height: ${(props) => (props.heightSmall ? '50px' : '100px')};
     }
 `;
 

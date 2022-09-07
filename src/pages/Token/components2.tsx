@@ -29,7 +29,7 @@ export const EarnSection = styled.section<{
     @media (max-width: 767px) {
         grid-column: span 10 !important;
         order: ${(props) => props.orderOnMobile ?? 10};
-        padding: ${(props) => props.paddingOnMobile ?? 15}px;
+        padding: ${(props) => props.paddingOnMobile ?? 2}px;
     }
 `;
 
@@ -93,6 +93,9 @@ export const ButtonContainer = styled(FlexDivColumnCentered)`
     margin-top: 20px;
     margin-bottom: 10px;
     align-items: center;
+    @media (max-width: 768px) {
+        margin-top: 10px;
+    }
 `;
 
 export const ButtonContainerBottom = styled(ButtonContainer)`
@@ -106,6 +109,10 @@ export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string; ab
     color: ${(props) => (props.color ? props.color : '#ffcc00')};
     ${(props) => (props.above ? 'margin-bottom: 10px;' : 'margin-top: 10px;')}
     visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
+    min-height: 16px;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 export const FullRow = styled(FlexDiv)`
@@ -230,6 +237,9 @@ export const DescriptionLink = styled.a`
 
 export const StyledInfoIcon = styled(InfoIcon)`
     margin-left: 5px;
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export const StyledInfoIconGreen = styled(InfoIconGreen)`
@@ -237,6 +247,9 @@ export const StyledInfoIconGreen = styled(InfoIconGreen)`
     min-height: 20px;
     margin-left: 5px;
     margin-bottom: -1px;
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export const BalanceIcon = styled.span`
@@ -256,6 +269,9 @@ export const DashedLine = styled.hr<{ gridRow: number; widthPer: number }>`
     grid-row: ${(props) => props.gridRow};
     grid-column: 1 / 13;
     width: ${(props) => props.widthPer}%;
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export const DashedLineVertical = styled.hr<{
@@ -272,6 +288,12 @@ export const DashedLineVertical = styled.hr<{
     margin-top: ${(props) => props.marginTop}px;
     height: ${(props) => props.heightPer}%;
     ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
+    @media (max-width: 768px) {
+        height: 20px;
+        margin-top: -10px;
+        margin-bottom: -10px;
+        ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
+    }
 `;
 
 export const Tip23Link: React.FC = () => {

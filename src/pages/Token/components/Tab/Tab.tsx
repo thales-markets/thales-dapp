@@ -1,4 +1,3 @@
-import { Tip49Link } from 'pages/Token/components';
 import Rewards from 'pages/Token/GamifiedStaking/Rewards';
 import Staking from 'pages/Token/GamifiedStaking/Staking';
 import Vesting from 'pages/Token/GamifiedStaking/Vesting';
@@ -6,84 +5,35 @@ import LpStaking from 'pages/Token/LpStaking2';
 import MergeAccount from 'pages/Token/MergeAccount';
 import Migration from 'pages/Token/Migration';
 import SnxStaking from 'pages/Token/SnxStaking';
-import React, { useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { TokenTabEnum } from 'types/token';
+import { TokenTabEnum, TokenTabSectionIdEnum, TokenTabSection } from 'types/token';
 import { getIsOVM } from 'utils/network';
 import Button from '../Button';
 import { ButtonType } from '../Button/Button';
 import MigrationInfo from '../MigrationInfo';
 
-const GRID_GAP = 20;
-
-enum SectionIdEnum {
-    STAKING = 'staking',
-    REWARDS = 'rewards',
-    VESTING = 'vesting',
-    MERGE_ACCOUNT = 'merge-account',
-    LP_STAKING = 'lp-staking',
-}
-
 const Tab: React.FC<{
     selectedTab: string;
     setSelectedTab: (tabId: string) => void;
-}> = ({ selectedTab, setSelectedTab }) => {
-    const { t } = useTranslation();
+    sections: TokenTabSection[];
+    selectedSection?: TokenTabSectionIdEnum;
+}> = ({ selectedTab, setSelectedTab, sections, selectedSection }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
-    const sections = [
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: SectionIdEnum.STAKING,
-            title: t('options.earn.gamified-staking.staking.section-title'),
-            description: t('options.earn.gamified-staking.staking.section-description'),
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: SectionIdEnum.REWARDS,
-            title: t('options.earn.gamified-staking.rewards.section-title'),
-            description: t('options.earn.gamified-staking.rewards.section-description'),
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: SectionIdEnum.VESTING,
-            title: t('options.earn.gamified-staking.vesting.section-title'),
-            description: t('options.earn.gamified-staking.vesting.section-description'),
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.GAMIFIED_STAKING,
-            id: SectionIdEnum.MERGE_ACCOUNT,
-            title: t('options.earn.gamified-staking.merge-account.section-title'),
-            description: (
-                <Trans
-                    i18nKey={`options.earn.gamified-staking.merge-account.section-description`}
-                    components={[<span key="1" />, <Tip49Link key="2" />]}
-                />
-            ),
-            isButton: true,
-        },
-        {
-            tab: TokenTabEnum.LP_STAKING,
-            id: SectionIdEnum.LP_STAKING,
-            title: t('options.earn.lp-staking.section-title'),
-            description: '',
-            isButton: false,
-        },
-    ];
+    const [stakingEstimatedRewards, setStakingEstimatedRewards] = useState(0);
+    const [activeButtonId, setActiveButtonId] = useState(selectedSection || sections[0].id);
 
-    const [activeButtonId, setActiveButtonId] = useState(sections[0].id);
+    useEffect(() => {
+        setActiveButtonId(selectedSection || sections[0].id);
+    }, [selectedSection]);
 
     return (
         <Container>
-            {selectedTab === TokenTabEnum.MIGRATION && <Migration />}
             {isL2 && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
                 <>
                     <SectionRow>
@@ -114,12 +64,18 @@ const Tab: React.FC<{
                         </SectionDescription>
                     </SectionRow>
                     <SectionContent>
-                        {activeButtonId === SectionIdEnum.STAKING && <Staking />}
-                        {activeButtonId === SectionIdEnum.REWARDS && (
-                            <Rewards gridGap={GRID_GAP} setSelectedTab={setSelectedTab} />
+                        {activeButtonId === TokenTabSectionIdEnum.STAKING && (
+                            <Staking setEstimatedRewards={setStakingEstimatedRewards} />
                         )}
-                        {activeButtonId === SectionIdEnum.VESTING && <Vesting />}
-                        {activeButtonId === SectionIdEnum.MERGE_ACCOUNT && isL2 && <MergeAccount />}
+                        {activeButtonId === TokenTabSectionIdEnum.REWARDS && (
+                            <Rewards
+                                gridGap={GRID_GAP}
+                                setSelectedTab={setSelectedTab}
+                                estimatedRewards={stakingEstimatedRewards}
+                            />
+                        )}
+                        {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
+                        {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && isL2 && <MergeAccount />}
                     </SectionContent>
                 </>
             )}
@@ -137,13 +93,20 @@ const Tab: React.FC<{
             {!isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
                 <MigrationInfo messageKey="lp-staking" tipNumber={23} />
             )}
+            {selectedTab === TokenTabEnum.MIGRATION && <Migration />}
             {selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && <SnxStaking />}
         </Container>
     );
 };
 
+export const GRID_GAP = 20;
+export const GRID_GAP_MOBILE = 10;
+
 const Container = styled.div`
     margin-top: 10px;
+    @media (max-width: 768px) {
+        margin-top: 0;
+    }
 `;
 
 const SectionRow = styled.div`
@@ -158,6 +121,13 @@ const SectionHeader = styled.p`
     font-size: 35px;
     line-height: 35px;
     color: #ffffff;
+    @media (max-width: 768px) {
+        height: auto;
+        padding-top: 0;
+        padding-bottom: 10px;
+        font-size: 25px;
+        line-height: 25px;
+    }
 `;
 
 const SectionDescription = styled.p`
@@ -166,6 +136,11 @@ const SectionDescription = styled.p`
     font-size: 16px;
     line-height: 36px;
     color: #ffffff;
+    @media (max-width: 768px) {
+        font-size: 15px;
+        line-height: 20px;
+        padding-bottom: 10px;
+    }
 `;
 
 const SectionButtons = styled.div`
@@ -175,6 +150,9 @@ const SectionButtons = styled.div`
     justify-content: space-between;
     margin-bottom: 10px;
     margin-top: 20px;
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 const SectionContent = styled.div`
@@ -194,6 +172,7 @@ const SectionContent = styled.div`
         background: transparent;
         border: none;
         padding: 1px;
+        grid-gap: ${GRID_GAP_MOBILE}px;
     }
 `;
 

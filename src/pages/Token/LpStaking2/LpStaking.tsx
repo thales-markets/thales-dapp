@@ -26,6 +26,7 @@ import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchLPStakingQuery } from 'utils/queryConnector';
+import { isMobile } from 'utils/device';
 
 enum SectionType {
     INFO,
@@ -91,8 +92,8 @@ const LpStaking: React.FC = () => {
 
     const getAprSection = () => {
         return (
-            <SectionContentWrapper columnsTemplate={3}>
-                <SectionContentWrapper columnsSpan={1}>
+            <SectionContentWrapper columnsTemplate={3} backgroundType={BackgroundType.INFO}>
+                <SectionContentWrapper columnsSpan={1} backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
                             {t('options.earn.lp-staking.apr.total')}
@@ -113,7 +114,7 @@ const LpStaking: React.FC = () => {
                     <VerticalLineRight />
                 </SectionContentWrapper>
 
-                <SectionContentWrapper columnsSpan={2}>
+                <SectionContentWrapper columnsSpan={2} backgroundType={BackgroundType.INFO}>
                     <SectionDetails positionUp={true}>
                         <SectionDetailsLabel>{t('options.earn.lp-staking.apr.thales')}</SectionDetailsLabel>
                         <StyledMaterialTooltip
@@ -173,7 +174,12 @@ const LpStaking: React.FC = () => {
     const getClaimButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button type={ButtonType.submit} active={true} onClickHandler={() => onboardConnector.connectWallet()}>
+                <Button
+                    width={isMobile() ? '100%' : '50%'}
+                    type={ButtonType.submit}
+                    active={true}
+                    onClickHandler={() => onboardConnector.connectWallet()}
+                >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
@@ -187,7 +193,7 @@ const LpStaking: React.FC = () => {
                 onClickHandler={handleClaimStakingRewards}
                 active={!buttonDisabled}
                 disabled={buttonDisabled}
-                width={'50%'}
+                width={isMobile() ? '100%' : '50%'}
             >
                 {isClaiming
                     ? t('options.earn.lp-staking.claim.claiming-rewards') + ` ...`
@@ -199,8 +205,17 @@ const LpStaking: React.FC = () => {
     const getClaimSection = () => {
         return (
             <SectionContentWrapper columnsTemplate={2}>
-                <SectionWrapper columns={1} backgroundType={BackgroundType.CLAIM}>
-                    <SectionContentWrapper columnsSpan={1} padding={true}>
+                {isMobile() && (
+                    <SectionWrapper columnsOnMobile={2} backgroundType={BackgroundType.CLAIM_CONTAINER}>
+                        <SectionContentWrapper>
+                            <SectionLabelContent type={SectionType.CLAIM_INFO}>
+                                {t('options.earn.lp-staking.claim.title')}
+                            </SectionLabelContent>
+                        </SectionContentWrapper>
+                    </SectionWrapper>
+                )}
+                <SectionWrapper columns={1} columnsOnMobile={1} backgroundType={BackgroundType.CLAIM_INFO}>
+                    <SectionContentWrapper columnsSpan={1} backgroundType={BackgroundType.CLAIM_INFO}>
                         <SectionValue type={SectionType.CLAIM_INFO}>
                             <SectionValueContent type={SectionType.CLAIM_INFO}>
                                 {formatCurrencyWithKey(THALES_CURRENCY, rewards)}
@@ -208,8 +223,8 @@ const LpStaking: React.FC = () => {
                         </SectionValue>
                     </SectionContentWrapper>
                 </SectionWrapper>
-                <SectionWrapper columns={1} backgroundType={BackgroundType.CLAIM}>
-                    <SectionContentWrapper columnsSpan={1} padding={true}>
+                <SectionWrapper columns={1} columnsOnMobile={1} backgroundType={BackgroundType.CLAIM_INFO}>
+                    <SectionContentWrapper columnsSpan={1} backgroundType={BackgroundType.CLAIM_INFO}>
                         <SectionValue type={SectionType.CLAIM_INFO}>
                             <SectionValueContent type={SectionType.CLAIM_INFO}>
                                 {formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, secondRewards)}
@@ -223,8 +238,8 @@ const LpStaking: React.FC = () => {
                 <VerticalLineWrapper>
                     <VerticalLineCenter />
                 </VerticalLineWrapper>
-                <SectionWrapper columns={2} backgroundType={BackgroundType.CLAIM}>
-                    <SectionContentWrapper columnsSpan={2} padding={true}>
+                <SectionWrapper columns={2} columnsOnMobile={2} backgroundType={BackgroundType.CLAIM}>
+                    <SectionContentWrapper columnsSpan={2} backgroundType={BackgroundType.CLAIM}>
                         <SectionLabel type={SectionType.CLAIM}>
                             <SectionLabelContent type={SectionType.CLAIM}>
                                 {t('options.earn.lp-staking.claim.total-label')}
@@ -238,7 +253,7 @@ const LpStaking: React.FC = () => {
                                 )}`}
                             </SectionValueContent>
                         </SectionValue>
-                        <Line margin={'10px 0'} />
+                        <Line margin={isMobile() ? '0 0 10px 0' : '10px 0'} />
                         <NetworkFees gasLimit={gasLimit} />
                         <ButtonContainer>
                             {getClaimButton()}
@@ -257,15 +272,15 @@ const LpStaking: React.FC = () => {
     return (
         <>
             {/* First row */}
-            <SectionWrapper backgroundType={BackgroundType.INSTRUCTIONS}>
+            <SectionWrapper backgroundType={BackgroundType.INSTRUCTIONS} orderOnMobile={1}>
                 <SectionContentWrapper>
                     <Instructions />
                 </SectionContentWrapper>
             </SectionWrapper>
 
             {/* Second row */}
-            <SectionWrapper columns={6} backgroundType={BackgroundType.INFO}>
-                <SectionContentWrapper background={false}>
+            <SectionWrapper columns={6} backgroundType={BackgroundType.INFO} orderOnMobile={2}>
+                <SectionContentWrapper background={false} backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
                             {t('options.earn.lp-staking.info.staked-balance')}
@@ -286,23 +301,28 @@ const LpStaking: React.FC = () => {
                     </SectionValue>
                 </SectionContentWrapper>
             </SectionWrapper>
-            <SectionWrapper columns={6} backgroundType={BackgroundType.INFO}>
+            <SectionWrapper columns={6} backgroundType={BackgroundType.INFO} orderOnMobile={3}>
                 {getAprSection()}
             </SectionWrapper>
 
             {/* Third row */}
-            <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER}>
-                <SectionContentWrapper>
-                    <SectionLabelContent type={SectionType.CLAIM_INFO}>
-                        {t('options.earn.lp-staking.claim.title')}
-                    </SectionLabelContent>
-                </SectionContentWrapper>
-            </SectionWrapper>
-            <SectionWrapper columns={3} backgroundType={BackgroundType.INFO}>
-                <SectionContentWrapper>
+            {!isMobile() && (
+                <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER}>
+                    <SectionContentWrapper>
+                        <SectionLabelContent type={SectionType.CLAIM_INFO}>
+                            {t('options.earn.lp-staking.claim.title')}
+                        </SectionLabelContent>
+                    </SectionContentWrapper>
+                </SectionWrapper>
+            )}
+            <SectionWrapper columns={3} columnsOnMobile={6} backgroundType={BackgroundType.INFO} orderOnMobile={4}>
+                <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            {t('options.earn.lp-staking.info.tvl')}
+                            <Trans
+                                i18nKey="options.earn.lp-staking.info.tvl"
+                                components={[isMobile() ? '' : ' (tvl)']}
+                            />
                         </SectionLabelContent>
                         <StyledMaterialTooltip
                             arrow={true}
@@ -319,8 +339,8 @@ const LpStaking: React.FC = () => {
                     </SectionValue>
                 </SectionContentWrapper>
             </SectionWrapper>
-            <SectionWrapper columns={3} backgroundType={BackgroundType.INFO}>
-                <SectionContentWrapper>
+            <SectionWrapper columns={3} columnsOnMobile={6} backgroundType={BackgroundType.INFO} orderOnMobile={5}>
+                <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
                             {t('options.earn.lp-staking.info.share')}
@@ -342,10 +362,15 @@ const LpStaking: React.FC = () => {
             </SectionWrapper>
 
             {/* Fourth row */}
-            <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER} noPadding={true}>
+            <SectionWrapper
+                columns={6}
+                backgroundType={BackgroundType.CLAIM_CONTAINER}
+                noPadding={true}
+                orderOnMobile={7}
+            >
                 {getClaimSection()}
             </SectionWrapper>
-            <SectionWrapper columns={6} backgroundType={BackgroundType.STAKE}>
+            <SectionWrapper columns={6} backgroundType={BackgroundType.STAKE} orderOnMobile={6}>
                 <SectionContentWrapper>
                     <Switch
                         active={stakeOption !== stakeOptions.stake.value}
@@ -360,6 +385,7 @@ const LpStaking: React.FC = () => {
                         }}
                         shadow={true}
                         dotBackground={'var(--amm-switch-circle)'}
+                        spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value
                                 ? setStakeOption(stakeOptions.unstake.value)
@@ -382,6 +408,7 @@ enum BackgroundType {
     INFO,
     STAKE,
     CLAIM,
+    CLAIM_INFO,
     CLAIM_CONTAINER,
 }
 
@@ -390,6 +417,8 @@ const SectionWrapper = styled.section<{
     rows?: number;
     backgroundType?: BackgroundType;
     noPadding?: boolean;
+    columnsOnMobile?: number;
+    orderOnMobile?: number;
 }>`
     box-sizing: border-box;
     border-radius: 15px;
@@ -410,6 +439,7 @@ const SectionWrapper = styled.section<{
             case BackgroundType.CLAIM_CONTAINER:
                 return 'none';
             case BackgroundType.INFO:
+            case BackgroundType.CLAIM_INFO:
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.STAKE:
             case BackgroundType.CLAIM:
@@ -419,13 +449,32 @@ const SectionWrapper = styled.section<{
         }
     }};
     ${(props) => (props.noPadding ? '' : 'padding: 2px;')}
+
+    @media (max-width: 768px) {
+        grid-column: span ${(props) => (props.columnsOnMobile ? props.columnsOnMobile : 12)};
+        order: ${(props) => props.orderOnMobile ?? 10};
+        ${(props) => {
+            switch (props.backgroundType) {
+                case BackgroundType.STAKE:
+                case BackgroundType.CLAIM:
+                case BackgroundType.INSTRUCTIONS:
+                    return '';
+                case BackgroundType.CLAIM_CONTAINER:
+                    return 'background: none';
+                case BackgroundType.INFO:
+                    return 'background: #464dcf';
+                default:
+                    return 'background: #464dcf';
+            }
+        }}
+    }
 `;
 
 const SectionContentWrapper = styled.div<{
     columnsTemplate?: number;
     columnsSpan?: number;
     background?: boolean;
-    padding?: boolean;
+    backgroundType?: BackgroundType;
 }>`
     display: grid;
     position: relative;
@@ -442,7 +491,38 @@ const SectionContentWrapper = styled.div<{
     background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
     align-items: center;
-    ${(props) => (props.padding ? 'padding: 10px 15px;' : '')}
+    ${(props) => {
+        switch (props.backgroundType) {
+            case BackgroundType.STAKE:
+            case BackgroundType.INSTRUCTIONS:
+            case BackgroundType.INFO:
+                return '';
+            case BackgroundType.CLAIM:
+            case BackgroundType.CLAIM_INFO:
+                return 'padding: 10px 15px;';
+            default:
+                return '';
+        }
+    }}
+    @media (max-width: 768px) {
+        ${(props) => {
+            switch (props.backgroundType) {
+                case BackgroundType.STAKE:
+                case BackgroundType.CLAIM:
+                case BackgroundType.INSTRUCTIONS:
+                    return '';
+                case BackgroundType.INFO:
+                    return `
+                        grid-gap: 0;
+                        background: none;
+                    `;
+                case BackgroundType.CLAIM_INFO:
+                    return 'padding: 10px;';
+                default:
+                    return '';
+            }
+        }}
+    }
 `;
 
 const SectionContent = styled.span`
@@ -469,9 +549,13 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string }>`
                 return '';
         }
     }}
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 
 const SectionLabelContent = styled(SectionContent)<{ type?: SectionType }>`
+    text-transform: uppercase;
     ${(props) => {
         switch (props.type) {
             case SectionType.INFO:
@@ -479,14 +563,12 @@ const SectionLabelContent = styled(SectionContent)<{ type?: SectionType }>`
                     font-weight: 400;
                     font-size: 20px;
                     line-height: 20px;
-                    text-transform: uppercase;
                 `;
             case SectionType.CLAIM:
                 return `
                     font-weight: 700;
                     font-size: 18px;
                     line-height: 24px;
-                    text-transform: uppercase;
                 `;
             case SectionType.CLAIM_INFO:
                 return `
@@ -500,6 +582,10 @@ const SectionLabelContent = styled(SectionContent)<{ type?: SectionType }>`
                 return '';
         }
     }}
+    @media (max-width: 768px) {
+        font-size: ${(props) => (props.type === SectionType.CLAIM_INFO ? 16 : 12)}px;
+        ${(props) => (props.type === SectionType.CLAIM_INFO ? 'padding-top: 0' : '')};
+    }
 `;
 
 const SectionValue = styled.div<{ type: SectionType }>`
@@ -522,6 +608,20 @@ const SectionValue = styled.div<{ type: SectionType }>`
                 return '';
         }
     }}
+    @media (max-width: 768px) {
+        ${(props) => {
+            switch (props.type) {
+                case SectionType.INFO:
+                    return 'padding: 0 10px 10px 10px;';
+                case SectionType.CLAIM:
+                    return 'padding: 0 0 10px 0;';
+                case SectionType.CLAIM_INFO:
+                    return '';
+                default:
+                    return '';
+            }
+        }}
+    }
 `;
 
 const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?: boolean }>`
@@ -552,6 +652,10 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
                 return '';
         }
     }}
+    @media (max-width: 768px) {
+        font-size: ${(props) => (props.type === SectionType.CLAIM ? 18 : 15)}px;
+        line-height: 20px;
+    }
 `;
 
 const SectionDetails = styled.div<{ positionUp: boolean }>`
@@ -566,6 +670,9 @@ const SectionDetailsLabel = styled.span`
     line-height: 22px;
     letter-spacing: 0.035em;
     color: #ffffff;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const SectionDetailsValue = styled.span`
@@ -574,6 +681,9 @@ const SectionDetailsValue = styled.span`
     font-size: 20px;
     line-height: 22px;
     color: #50ce99;
+    @media (max-width: 768px) {
+        font-size: 15px;
+    }
 `;
 
 const VerticalLineRight = styled.hr`
@@ -585,6 +695,9 @@ const VerticalLineRight = styled.hr`
 
 const VerticalLineWrapper = styled.div`
     position: relative;
+    @media (max-width: 768px) {
+        order: 10;
+    }
 `;
 
 const VerticalLineCenter = styled.hr`
