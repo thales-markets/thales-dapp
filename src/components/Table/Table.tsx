@@ -147,6 +147,7 @@ const TableRow = styled(FlexDiv)`
     font-weight: 600;
     font-size: 12px;
     @media (max-width: 512px) {
+        min-height: 50px;
         font-size: 10px;
         & > div {
             justify-content: center;
