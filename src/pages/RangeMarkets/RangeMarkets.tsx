@@ -6,8 +6,6 @@ import { getIsAppReady } from 'redux/modules/app';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
-import { POLYGON_ID } from 'constants/network';
-import { CONVERT_TO_6_DECIMALS } from 'constants/token';
 import { USD_SIGN } from 'constants/currency';
 import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import { formatCurrencyWithSignInRange } from 'utils/formatters/number';
