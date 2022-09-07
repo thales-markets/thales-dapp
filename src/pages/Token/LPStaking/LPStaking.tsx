@@ -90,6 +90,10 @@ const LpStaking: React.FC = () => {
         fetchGasLimit();
     }, [isWalletConnected, rewards, secondRewards]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     const getAprSection = () => {
         return (
             <SectionContentWrapper columnsTemplate={3} backgroundType={BackgroundType.INFO}>
@@ -653,8 +657,10 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
         }
     }}
     @media (max-width: 768px) {
-        font-size: ${(props) => (props.type === SectionType.CLAIM ? 18 : 15)}px;
+        font-size: ${(props) =>
+            props.type === SectionType.CLAIM || props.type === SectionType.CLAIM_INFO ? 18 : 15}px;
         line-height: 20px;
+        ${(props) => (props.type === SectionType.CLAIM_INFO ? 'color: #ffffff' : 'color: #64D9FE')};
     }
 `;
 

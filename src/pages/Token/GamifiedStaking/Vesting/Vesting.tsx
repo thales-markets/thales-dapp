@@ -256,6 +256,9 @@ const SectionContent = styled.span`
 const ScheduleLabel = styled.div`
     display: flex;
     padding-bottom: 20px;
+    @media (max-width: 768px) {
+        padding-bottom: 10px;
+    }
 `;
 
 const ScheduleLabelContent = styled(SectionContent)`

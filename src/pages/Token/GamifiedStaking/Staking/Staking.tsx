@@ -371,6 +371,7 @@ const SectionValueContent = styled(SectionContent)`
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;
+        color: #64d9fe;
     }
 `;
 

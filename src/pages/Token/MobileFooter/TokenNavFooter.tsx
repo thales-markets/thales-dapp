@@ -73,7 +73,11 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                 setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
                                 setSelectedSection(TokenTabSectionIdEnum.REWARDS);
                             }}
-                            src={selectedSection === TokenTabSectionIdEnum.REWARDS ? vestingActiveIcon : vestingIcon} // TODO: rewards icon
+                            src={
+                                selectedSection === TokenTabSectionIdEnum.REWARDS
+                                    ? snxStakingActiveIcon
+                                    : snxStakingIcon
+                            }
                         />
                     )}
                     {isL2 && (
