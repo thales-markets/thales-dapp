@@ -171,7 +171,12 @@ const AMM: React.FC = () => {
 
     // If sUSD balance is zero, select first stable with nonzero value as default
     useEffect(() => {
-        if (multipleStableBalances?.data && multipleStableBalances?.isSuccess && selectedStableIndex == 0) {
+        if (
+            multipleStableBalances?.data &&
+            multipleStableBalances?.isSuccess &&
+            selectedStableIndex == 0 &&
+            isMultiCollateralSupported
+        ) {
             const defaultStableBalance = checkMultipleStableBalances(multipleStableBalances?.data);
             setStableIndex(defaultStableBalance);
         }
