@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TransactionsTable from '../TransactionsTable';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, Text } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivRowCentered, Text } from 'theme/common';
 import { FilterButton } from '../components';
 import { TokenTransaction, TransactionFilterEnum } from 'types/token';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,6 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import { EarnSection, SectionHeader } from '../../componentsOld';
 import checkmark from 'assets/images/checkmark.svg';
 import arrowDown from 'assets/images/filters/arrow-down.svg';
 import { orderBy } from 'lodash';
@@ -112,11 +111,51 @@ const TransactionsWithFiltersOld: React.FC<TransactionsWithFiltersProps> = ({ fi
     );
 };
 
-const SectionContainer = styled(EarnSection)`
+const SectionContainer = styled.section<{
+    orderOnMobile?: number;
+    orderOnTablet?: number;
+    paddingOnMobile?: number;
+    spanOnTablet?: number;
+}>`
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #04045a;
+    border-radius: 15px;
+    color: white;
     grid-column: span 10;
     grid-row: span 3;
-    height: 400px;
+    border: 1px solid rgba(100, 217, 254, 0.6);
+    padding: 10px;
     margin-bottom: 0;
+    max-width: 100%;
+    @media screen and (max-width: 1024px) {
+        grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;
+        order: ${(props) => props.orderOnTablet ?? 10};
+    }
+    @media (max-width: 767px) {
+        grid-column: span 10 !important;
+        order: ${(props) => props.orderOnMobile ?? 10};
+        padding: ${(props) => props.paddingOnMobile ?? 15}px;
+    }
+`;
+
+const SectionHeader = styled(FlexDivRowCentered)`
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 0.15px;
+    color: #f6f6fe;
+    min-height: 50px;
+    padding: 0px 20px 0 20px;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        padding: 0px 5px;
+        min-height: 25px;
+        margin-bottom: 10px;
+        flex-direction: column;
+        align-items: start;
+    }
 `;
 
 const SectionContent = styled(FlexDivColumn)`

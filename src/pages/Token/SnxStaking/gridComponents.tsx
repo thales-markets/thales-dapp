@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'theme/common';
 
 export const GridContainer = styled.div`
     position: relative;
@@ -63,10 +63,4 @@ export const GridAction = styled(FlexDivColumnCentered)`
         padding: 20px 20px;
         order: 10;
     }
-`;
-
-export const BonusInfo = styled(FlexDiv)`
-    border-top: 1px solid #b8c6e5;
-    margin-top: 6px;
-    padding-top: 10px;
 `;

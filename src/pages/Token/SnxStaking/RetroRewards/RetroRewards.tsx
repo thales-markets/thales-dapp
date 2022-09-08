@@ -19,7 +19,7 @@ import {
     ClaimMessage,
     StyledInfoIcon,
     SectionContentContainer,
-} from '../../componentsOld';
+} from '../componentsOld';
 import {
     PieChartCenterDiv,
     PieChartCenterText,
@@ -37,7 +37,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import i18n from 'i18n';
 import { DefaultSubmitButton } from 'pages/Token/components/components';
-import { GridContainer } from 'pages/Token/gridComponents';
+import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
 
 const initialVestingInfo = {
     unlocked: 0,
