@@ -208,7 +208,7 @@ export const getTokenForSwap = (networkId: NetworkId, initialToToken: any) => {
 
     if (isPolygon) {
         return {
-            preloadTokens: [POLYGON_DAI, POLYGON_USDC, POLYGON_USDT],
+            preloadTokens: [POLYGON_USDC],
             fromToken: POLYGON_MATIC,
             toToken,
         };
