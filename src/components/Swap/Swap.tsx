@@ -16,7 +16,7 @@ import { RootState } from 'redux/rootReducer';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { checkAllowance, getIsBSC, getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
+import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
 import { refetchUserBalance } from 'utils/queryConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
@@ -31,6 +31,7 @@ import {
     getTokenForSwap,
     getFromTokenSwap,
     BSC_BNB,
+    ARB_ETH,
 } from './tokens';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
@@ -47,6 +48,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
     const signer = (snxJSConnector as any).signer;
     const [fromToken, _setFromToken] = useState(getFromTokenSwap(networkId));
 
@@ -73,6 +75,9 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const ethRate = get(exchangeRates, isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : SYNTHS_MAP.sETH, null);
 
+    const unsupportedNetwork =
+        networkId !== 1 && networkId !== 10 && networkId !== 137 && networkId !== 56 && networkId !== 42161;
+
     const approveSpenderQuery = useApproveSpender(networkId, {
         enabled: false,
     });
@@ -82,7 +87,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
         fromToken,
         toToken,
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
-        isPolygon || isBSC ? [] : [OneInchLiquidityProtocol.UNISWAP],
+        isPolygon || isBSC || isArbitrum ? [] : [OneInchLiquidityProtocol.UNISWAP],
         { enabled: false }
     );
 
@@ -92,7 +97,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
         toToken,
         walletAddress ? walletAddress : '',
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
-        isPolygon || isBSC ? [] : [OneInchLiquidityProtocol.UNISWAP],
+        isPolygon || isBSC || isArbitrum ? [] : [OneInchLiquidityProtocol.UNISWAP],
         {
             enabled: false,
         }
@@ -103,7 +108,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
             setShowSceleton(true);
             quoteQuery.refetch().then((resp) => {
                 if (resp.data) {
-                    console.log('resp.data ', resp?.data);
                     setPreviewData(resp.data as any);
                     setShowSceleton(false);
                 }
@@ -140,7 +144,13 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
 
     const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
-            if (token === ETH_Eth || token === OP_Eth || token === POLYGON_MATIC || token == BSC_BNB) {
+            if (
+                token === ETH_Eth ||
+                token === OP_Eth ||
+                token === POLYGON_MATIC ||
+                token == BSC_BNB ||
+                token == ARB_ETH
+            ) {
                 setAllowance(true);
                 signer
                     .getBalance()
@@ -280,7 +290,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
 
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
-            {networkId !== 1 && networkId !== 10 && networkId !== 137 && networkId !== 56 ? (
+            {unsupportedNetwork ? (
                 <SwapDialog
                     royaleTheme={royaleTheme}
                     contentType="unsupported"

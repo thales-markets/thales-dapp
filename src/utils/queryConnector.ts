@@ -85,6 +85,7 @@ export const refetchUserTokenTransactions = (walletAddress: string, networkId: N
 
 export const refetchUserBalance = (walletAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Synths(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Balance(walletAddress, networkId));
 };
 
 export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress: string) => {
