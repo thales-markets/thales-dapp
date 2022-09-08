@@ -10,11 +10,11 @@ import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
 import { getIsOVM } from 'utils/network';
+import { Tip49Link } from './components';
 import MigrationNotice from './components/MigrationNotice';
+import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
 import TokenOverview from './components/TokenOverview';
-import { Tip49Link } from './components';
-import TokenNavFooter from './MobileFooter/TokenNavFooter';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
