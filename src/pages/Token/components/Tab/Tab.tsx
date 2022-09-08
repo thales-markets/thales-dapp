@@ -47,7 +47,7 @@ const Tab: React.FC<{
                                             key={index}
                                             type={ButtonType.default}
                                             active={activeButtonId == el.id}
-                                            width={'170px'}
+                                            width={'172px'}
                                             margin={'0 20px 0 0'}
                                             padding={'5px 20px'}
                                             onClickHandler={() => setActiveButtonId(el.id)}

@@ -178,10 +178,6 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
     const exoticVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, exoticVolume, 0, true);
 
     // Protocol usage
-    const protocolRewardFormatted =
-        formatCurrencyWithKey(THALES_CURRENCY, ammBonus) +
-        ' + ' +
-        formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
     const protocolVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume);
     const protocolMaxBonusFormatted =
         additionalAmmVolume > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, additionalAmmVolume) : '';
@@ -227,37 +223,45 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
         );
     };
 
-    const getVolumeSection = (label: string, value: string, desc: string, logo?: string) => {
+    const getVolumeSection = (link: string, label: string, value: string, desc: string, logo?: string) => {
         return (
-            <SectionContentWrapper background={false}>
-                <SectionLabel type={SectionType.VOLUME}>
-                    <SectionLabelContent type={SectionType.VOLUME} logo={logo}>
-                        {label}
-                    </SectionLabelContent>
-                    <ArrowLink src={arrowLink} />
-                </SectionLabel>
-                <SectionDescription type={SectionType.VOLUME}>
-                    <SectionDescriptionContent>{desc}</SectionDescriptionContent>
-                </SectionDescription>
-                <SectionValue type={SectionType.VOLUME}>
-                    <SectionValueContent type={SectionType.VOLUME}>{value}</SectionValueContent>
-                </SectionValue>
-            </SectionContentWrapper>
+            <a href={link} rel="noopener noreferrer" target="_blank">
+                <SectionContentWrapper background={false}>
+                    <SectionLabel type={SectionType.VOLUME}>
+                        <SectionLabelContent type={SectionType.VOLUME} logo={logo}>
+                            {label}
+                        </SectionLabelContent>
+                        <ArrowLink src={arrowLink} />
+                    </SectionLabel>
+                    <SectionDescription type={SectionType.VOLUME}>
+                        <SectionDescriptionContent>{desc}</SectionDescriptionContent>
+                    </SectionDescription>
+                    <SectionValue type={SectionType.VOLUME}>
+                        <SectionValueContent type={SectionType.VOLUME}>{value}</SectionValueContent>
+                    </SectionValue>
+                </SectionContentWrapper>
+            </a>
         );
     };
 
     const getRewardSection = (
-        label: { full: string; volume: string; bonus: string; rewards: string },
-        value: { full: string; volume: string; bonus: string; rewards: string }
+        label: { main: string; volume: string; bonus: string; rewards: string },
+        value: { main: string; volume: string; bonus: string; rewards: string; mainPart?: string }
     ) => {
         return (
             <SectionContentWrapper>
                 <SectionLabel type={SectionType.REWARD}>
-                    <SectionLabelContent type={SectionType.REWARD}>{label.full}</SectionLabelContent>
+                    <SectionLabelContent type={SectionType.REWARD}>{label.main}</SectionLabelContent>
                 </SectionLabel>
                 <SectionValue type={SectionType.REWARD}>
-                    <SectionValueContent type={SectionType.REWARD}>{value.full}</SectionValueContent>
+                    <SectionValueContent type={SectionType.REWARD}>{value.main}</SectionValueContent>
+                    {value.mainPart && (
+                        <SectionValueContent type={SectionType.REWARD} isOp={true}>
+                            {' + ' + value.mainPart}
+                        </SectionValueContent>
+                    )}
                 </SectionValue>
+
                 <Line margin={'0 0 10px 0'} />
 
                 <SectionDetails>
@@ -531,23 +535,17 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             </SectionWrapper>
 
             {/* Second row */}
-            <SectionWrapper
-                columns={3}
-                backgroundType={BackgroundType.AMM}
-                onClick={() => window.open(ROUTES.Options.Home, '_blank')}
-            >
+            <SectionWrapper columns={3} backgroundType={BackgroundType.AMM}>
                 {getVolumeSection(
+                    ROUTES.Options.Home,
                     t('options.earn.gamified-staking.rewards.volume.amm-label'),
                     ammVolumeFormatted,
                     t('options.earn.gamified-staking.rewards.volume.amm-desc')
                 )}
             </SectionWrapper>
-            <SectionWrapper
-                columns={3}
-                backgroundType={BackgroundType.RANGED}
-                onClick={() => window.open(ROUTES.Options.RangeMarkets, '_blank')}
-            >
+            <SectionWrapper columns={3} backgroundType={BackgroundType.RANGED}>
                 {getVolumeSection(
+                    ROUTES.Options.RangeMarkets,
                     t('options.earn.gamified-staking.rewards.volume.ranged-label'),
                     rangedVolumeFormatted,
                     t('options.earn.gamified-staking.rewards.volume.ranged-desc')
@@ -555,24 +553,18 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             </SectionWrapper>
             {isMobile() && <DashedLineVertical gridRow={4} columnStart={4} marginTop={-gridGap} heightPer={135} />}
             {isMobile() && <DashedLineVertical gridRow={4} columnStart={9} marginTop={-gridGap} heightPer={135} />}
-            <SectionWrapper
-                columns={3}
-                backgroundType={BackgroundType.SPORTS}
-                onClick={() => window.open(LINKS.SportMarkets, '_blank')}
-            >
+            <SectionWrapper columns={3} backgroundType={BackgroundType.SPORTS}>
                 {getVolumeSection(
+                    LINKS.SportMarkets,
                     '',
                     sportsVolumeFormatted,
                     t('options.earn.gamified-staking.rewards.volume.sports-desc'),
                     logoOvertime
                 )}
             </SectionWrapper>
-            <SectionWrapper
-                columns={3}
-                backgroundType={BackgroundType.EXOTIC}
-                onClick={() => window.open(LINKS.ExoticMarkets, '_blank')}
-            >
+            <SectionWrapper columns={3} backgroundType={BackgroundType.EXOTIC}>
                 {getVolumeSection(
+                    LINKS.ExoticMarkets,
                     '',
                     exoticVolumeFormatted,
                     t('options.earn.gamified-staking.rewards.volume.exotic-desc'),
@@ -600,16 +592,17 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             <SectionWrapper columns={5} startColumn={2}>
                 {getRewardSection(
                     {
-                        full: t('options.earn.gamified-staking.rewards.protocol.label'),
+                        main: t('options.earn.gamified-staking.rewards.protocol.label'),
                         volume: t('options.earn.gamified-staking.rewards.protocol.volume'),
                         bonus: t('options.earn.gamified-staking.rewards.protocol.bonus'),
                         rewards: t('options.earn.gamified-staking.rewards.protocol.rewards'),
                     },
                     {
-                        full: protocolRewardFormatted,
+                        main: formatCurrencyWithKey(THALES_CURRENCY, ammBonus),
                         volume: protocolVolumeFormatted,
                         bonus: protocolMaxBonusFormatted,
                         rewards: protocolMaxRewardFormatted,
+                        mainPart: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus),
                     }
                 )}
             </SectionWrapper>
@@ -617,13 +610,13 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
             <SectionWrapper columns={5}>
                 {getRewardSection(
                     {
-                        full: t('options.earn.gamified-staking.rewards.snx.label'),
+                        main: t('options.earn.gamified-staking.rewards.snx.label'),
                         volume: t('options.earn.gamified-staking.rewards.snx.staked'),
                         bonus: t('options.earn.gamified-staking.rewards.snx.bonus'),
                         rewards: t('options.earn.gamified-staking.rewards.snx.rewards'),
                     },
                     {
-                        full: snxRewardFormatted,
+                        main: snxRewardFormatted,
                         volume: snxVolumeFormatted,
                         bonus: snxMaxBonusFormatted,
                         rewards: snxMaxRewardFormatted,
