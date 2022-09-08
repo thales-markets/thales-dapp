@@ -413,6 +413,18 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                                 }}
                                 isDisabled={false}
                                 value={toToken}
+                                components={
+                                    preLoadTokens?.length == 1
+                                        ? {
+                                              Menu: () => null,
+                                              MenuList: () => null,
+                                              DropdownIndicator: () => null,
+                                              IndicatorSeparator: () => null,
+                                          }
+                                        : {
+                                              IndicatorSeparator: () => null,
+                                          }
+                                }
                                 onChange={(option: any) => {
                                     _setToToken(option);
                                 }}
