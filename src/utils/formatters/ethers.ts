@@ -33,7 +33,7 @@ export const stableCoinFormatter = (value: BigNumberish, networkId: number, curr
 
 export const stableCoinParser = (value: string, networkId: number, currency?: string) => {
     try {
-        if (networkId == POLYGON_ID) {
+        if (networkId == POLYGON_ID || networkId == Network.Arbitrum) {
             return ethers.utils.parseUnits(value, 6);
         }
         if (networkId == Network.BSC) {
