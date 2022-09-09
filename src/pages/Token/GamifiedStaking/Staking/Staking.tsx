@@ -415,13 +415,13 @@ const BonusInfo = styled.span`
 
 const StakedBalanceInfo = styled.div`
     position: absolute;
-    top: 100px;
+    top: 70px;
     padding: 10px 15px;
     color: #ffcc00;
     font-size: 14px;
     @media (max-width: 768px) {
         padding: 10px;
-        top: 142px;
+        top: 120px;
         font-size: 12px;
     }
 `;
