@@ -109,7 +109,7 @@ const StepsWrapper = styled.div<{ firstRow?: boolean }>`
             ? `
                 align-items: center; 
                 margin-bottom: 20px;
-    `
+              `
             : ''};
     justify-content: ${(props) => (props.firstRow ? 'center' : 'space-around')};
     @media (max-width: 768px) {
@@ -146,6 +146,9 @@ const StepInfo = styled.div`
     border: 1px dashed var(--input-border-color);
     border-radius: 15px;
     padding: 15px 10px;
+    @media (min-width: 768px) and (max-width: 1192px) {
+        width: 180px;
+    }
 `;
 
 const StepInfoLabel = styled.span`

@@ -15,6 +15,7 @@ import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
 import TokenOverview from './components/TokenOverview';
+import { history } from 'utils/routes';
 
 const TokenPage: React.FC = () => {
     const { t } = useTranslation();
@@ -113,6 +114,14 @@ const TokenPage: React.FC = () => {
     useEffect(() => {
         const paramTab = queryString.parse(location.search).tab;
         const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
+        if (!isTabAvailable) {
+            history.push({
+                pathname: location.pathname,
+                search: queryString.stringify({
+                    tab: defaultTab,
+                }),
+            });
+        }
         setSelectedTab(isTabAvailable ? paramTab : defaultTab);
     }, [location, isL2]);
 

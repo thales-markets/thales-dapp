@@ -37,7 +37,11 @@ const TextInput: React.FC<TextInputProps> = ({
 
 export const StyledInput = styled(Input)`
     text-overflow: ellipsis;
-    padding: 14px 20px 0 20px;
+    padding: 14px 15px 0 15px;
+    @media (max-width: 1192px) {
+        height: 60px;
+        font-size: 15px;
+    }
     @media (max-width: 767px) {
         padding: 14px 10px 0 10px;
     }

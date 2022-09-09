@@ -258,12 +258,12 @@ const Staking: React.FC<{ setEstimatedRewards: (estimatedRewards: number) => voi
                         active={stakeOption !== stakeOptions.stake.value}
                         width={'94px'}
                         height={'32px'}
-                        margin={'30px 0 10px 0'}
+                        margin={'25px 0 10px 0'}
                         dotSize={'22px'}
                         label={{
                             firstLabel: stakeOptions.stake.label.toUpperCase(),
                             secondLabel: stakeOptions.unstake.label.toUpperCase(),
-                            fontSize: '25px',
+                            fontSize: '23px',
                         }}
                         shadow={true}
                         dotBackground={'var(--amm-switch-circle)'}
@@ -331,7 +331,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?
 
 const SectionLabel = styled.div`
     display: flex;
-    padding: 10px 15px;
+    padding: 10px 15px 5px 15px;
     @media (max-width: 768px) {
         padding: 10px;
     }
@@ -339,7 +339,7 @@ const SectionLabel = styled.div`
 
 const SectionValue = styled.div`
     display: flex;
-    padding: 10px 15px;
+    padding: 5px 15px 10px 15px;
     align-items: center;
     @media (max-width: 768px) {
         padding: 0 10px 10px 10px;
@@ -355,8 +355,8 @@ const SectionContent = styled.span`
 
 const SectionLabelContent = styled(SectionContent)`
     font-weight: 400;
-    font-size: 20px;
-    line-height: 20px;
+    font-size: 15px;
+    line-height: 17px;
     @media (max-width: 768px) {
         font-size: 12px;
         line-height: 12px;
@@ -365,7 +365,7 @@ const SectionLabelContent = styled(SectionContent)`
 
 const SectionValueContent = styled(SectionContent)`
     font-weight: 700;
-    font-size: 25px;
+    font-size: 23px;
     line-height: 30px;
     letter-spacing: 0.035em;
     @media (max-width: 768px) {
@@ -376,7 +376,7 @@ const SectionValueContent = styled(SectionContent)`
 `;
 
 const SectionDetails = styled.div<{ positionUp: boolean }>`
-    padding: ${(props) => (props.positionUp ? '20px 15px 0 15px' : '0 15px 20px 15px')};
+    padding: ${(props) => (props.positionUp ? '15px 15px 5px 15px' : '5px 15px 15px 15px')};
     @media (max-width: 768px) {
         padding: ${(props) => (props.positionUp ? '10px 10px 0 10px' : '0 10px 10px 10px')};
     }

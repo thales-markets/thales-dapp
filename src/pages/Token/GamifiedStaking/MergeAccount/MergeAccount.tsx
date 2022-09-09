@@ -176,7 +176,7 @@ const MergeAccount: React.FC = () => {
         <>
             <SectionWrapper>
                 <SectionContentWrapper>
-                    <InputContainer>
+                    <InputContainer mediaMarginBottom={10}>
                         <TextInput value={walletAddress} disabled={true} onChange={undefined} />
                         <InputLabel>
                             {t('options.earn.gamified-staking.merge-account.source-account-label')}:
@@ -185,7 +185,7 @@ const MergeAccount: React.FC = () => {
                     <ArrowContainer>
                         <ArrowDown />
                     </ArrowContainer>
-                    <InputContainer>
+                    <InputContainer mediaMarginBottom={10}>
                         <TextInput
                             value={destAddress}
                             onChange={(e: any) => setDestAddress(e.target.value)}
@@ -249,7 +249,10 @@ const SectionWrapper = styled.section`
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
     background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
     border-radius: 15px;
-    padding: 40px;
+    padding: 20px;
+    @media (max-width: 1192px) {
+        padding: 10px 15px;
+    }
     @media (max-width: 767px) {
         padding: 10px;
         box-shadow: none;
@@ -261,7 +264,7 @@ const MessageContainer = styled(FlexDiv)`
 `;
 
 const ButtonContainer = styled(FlexDivColumnCentered)`
-    padding-top: 40px;
+    padding-top: 20px;
     padding-bottom: 5px;
     align-items: center;
 `;

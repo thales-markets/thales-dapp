@@ -791,7 +791,7 @@
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",
                 "earn-info-tooltip": "View guide on how to provide liquidity",
                 "circulating-supply-label": "Circulating supply",
-                "total-burned-label": "Total Thales Burned",
+                "total-burned-label": "Total THALES burned",
                 "total-supply-label": "Total supply",
                 "celer-bridge": "Celer cBridge",
                 "celer-bridge-tooltip": "Fast bridge THALES between chains"

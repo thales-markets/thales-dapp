@@ -257,7 +257,7 @@ const LpStaking: React.FC = () => {
                                 )}`}
                             </SectionValueContent>
                         </SectionValue>
-                        <Line margin={isMobile() ? '0 0 10px 0' : '10px 0'} />
+                        <Line margin={'0 0 10px 0'} />
                         <NetworkFees gasLimit={gasLimit} />
                         <ButtonContainer>
                             {getClaimButton()}
@@ -487,7 +487,7 @@ const SectionContentWrapper = styled.div<{
             ? `
                 grid-template-columns: repeat(${props.columnsTemplate},1fr);
                 grid-template-rows: auto min-content;
-                grid-gap: 10px;
+                ${props.backgroundType === BackgroundType.INFO ? '' : 'grid-gap: 10px;'}
             `
             : ''}
     ${(props) => (props.columnsSpan ? `grid-column: span ${props.columnsSpan};` : '')}
@@ -565,20 +565,20 @@ const SectionLabelContent = styled(SectionContent)<{ type?: SectionType }>`
             case SectionType.INFO:
                 return `
                     font-weight: 400;
-                    font-size: 20px;
-                    line-height: 20px;
+                    font-size: 15px;
+                    line-height: 17px;
                 `;
             case SectionType.CLAIM:
                 return `
                     font-weight: 700;
-                    font-size: 18px;
-                    line-height: 24px;
+                    font-size: 15px;
+                    line-height: 17px;
                 `;
             case SectionType.CLAIM_INFO:
                 return `
                     font-weight: 600;
-                    font-size: 35px;
-                    line-height: 37px;
+                    font-size: 25px;
+                    line-height: 27px;
                     letter-spacing: 0.035em;
                     padding-top: 30px;
                 `;
@@ -637,19 +637,19 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
             case SectionType.INFO:
                 return `
                     font-weight: 700;
-                    font-size: 25px;
-                    line-height: 30px;
+                    font-size: 23px;
+                    line-height: 23px;
                 `;
             case SectionType.CLAIM:
                 return `
                     font-weight: 700;
-                    font-size: 33px;
+                    font-size: 25px;
                     color: #64D9FE;
                 `;
             case SectionType.CLAIM_INFO:
                 return `
                     font-weight: 700;
-                    font-size: 28px;
+                    font-size: 25px;
                     color: #64D9FE;
                 `;
             default:
@@ -660,7 +660,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
         font-size: ${(props) =>
             props.type === SectionType.CLAIM || props.type === SectionType.CLAIM_INFO ? 18 : 15}px;
         line-height: 20px;
-        ${(props) => (props.type === SectionType.CLAIM_INFO ? 'color: #ffffff' : 'color: #64D9FE')};
+        color: #64d9fe;
     }
 `;
 
@@ -672,8 +672,8 @@ const SectionDetails = styled.div<{ positionUp: boolean }>`
 const SectionDetailsLabel = styled.span`
     float: left;
     font-weight: 300;
-    font-size: 20px;
-    line-height: 22px;
+    font-size: 15px;
+    line-height: 17px;
     letter-spacing: 0.035em;
     color: #ffffff;
     @media (max-width: 768px) {
@@ -684,8 +684,8 @@ const SectionDetailsLabel = styled.span`
 const SectionDetailsValue = styled.span`
     float: right;
     font-weight: 500;
-    font-size: 20px;
-    line-height: 22px;
+    font-size: 15px;
+    line-height: 17px;
     color: #50ce99;
     @media (max-width: 768px) {
         font-size: 15px;

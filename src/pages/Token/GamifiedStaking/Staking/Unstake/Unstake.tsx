@@ -544,6 +544,9 @@ const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
     padding: 1px;
     min-width: 160px;
     max-width: 160px;
+    @media (max-width: 1192px) {
+        min-width: 110px;
+    }
     @media (max-width: 767px) {
         min-width: 110px;
     }
@@ -577,6 +580,10 @@ const UnstakingTitleText = styled.span`
     font-size: 14px;
     line-height: 18px;
     margin-right: 10px;
+    @media (max-width: 1192px) {
+        font-size: 12px;
+        line-height: 15px;
+    }
     @media (max-width: 767px) {
         font-size: 12px;
         margin-right: 0px;

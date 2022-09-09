@@ -64,6 +64,9 @@ const NumericInput: React.FC<NumericInputProps> = ({
 
 export const StyledInput = styled(Input)`
     text-overflow: ellipsis;
+    @media (max-width: 1192px) {
+        padding-right: 40px;
+    }
     @media (max-width: 767px) {
         font-size: 18px;
         padding: 19px 0 0 10px;

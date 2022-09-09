@@ -34,6 +34,9 @@ export const Result = styled.div`
 export const ArrowContainer = styled(FlexDivCentered)`
     margin-bottom: 15px;
     margin-top: -5px;
+    @media (max-width: 1192px) {
+        margin-bottom: 5px;
+    }
 `;
 
 export const ThalesWalletAmountLabel = styled(InputLabel)`
@@ -42,6 +45,9 @@ export const ThalesWalletAmountLabel = styled(InputLabel)`
     padding: 8px 14px 0 0;
     text-transform: uppercase;
     display: flex;
+    @media (max-width: 1192px) {
+        font-size: 9px;
+    }
 `;
 
 export const MaxButton = styled(DefaultSubmitButton)`

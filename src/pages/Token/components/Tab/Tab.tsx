@@ -114,13 +114,18 @@ const SectionRow = styled.div`
 `;
 
 const SectionHeader = styled.p`
-    height: 67px;
-    padding-top: 20px;
+    height: 57px;
+    padding-top: 10px;
     font-family: Roboto;
     font-weight: 600;
-    font-size: 35px;
+    font-size: 32px;
     line-height: 35px;
     color: #ffffff;
+    @media (max-width: 1192px) {
+        height: 47px;
+        font-size: 25px;
+        line-height: 25px;
+    }
     @media (max-width: 768px) {
         height: auto;
         padding-top: 0;
@@ -134,7 +139,7 @@ const SectionDescription = styled.p`
     font-family: Roboto;
     font-weight: 400;
     font-size: 16px;
-    line-height: 36px;
+    line-height: 25px;
     color: #ffffff;
     @media (max-width: 768px) {
         font-size: 15px;
@@ -149,7 +154,11 @@ const SectionButtons = styled.div`
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
+    @media (max-width: 1192px) {
+        margin-bottom: 0;
+        margin-top: 5px;
+    }
     @media (max-width: 768px) {
         display: none;
     }
@@ -161,7 +170,7 @@ const SectionContent = styled.div`
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: auto min-content;
     grid-gap: ${GRID_GAP}px;
-    padding: 20px 0;
+    padding: 10px 0;
     border-radius: 10px;
     background: #04045a;
     z-index: 0;

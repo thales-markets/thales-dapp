@@ -418,7 +418,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                     </StyledMaterialTooltip>
                 </SectionValue>
                 <NetworkFeesWrapper>
-                    <Line margin={isMobile() ? '0 0 10px 0' : '10px 0'} />
+                    <Line margin={'0 0 10px 0'} />
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                 </NetworkFeesWrapper>
                 <ButtonContainer>
@@ -451,7 +451,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
     const getClaimOnBehalfSection = () => {
         return (
             <SectionContentWrapper>
-                <SectionLabel type={SectionType.CLAIM_ON_BEHALF} margin={'24px 0 0 0'}>
+                <SectionLabel type={SectionType.CLAIM_ON_BEHALF} margin={'20px 0 0 0'}>
                     <SectionLabelContent type={SectionType.CLAIM_ON_BEHALF}>
                         {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-1')}
                     </SectionLabelContent>
@@ -464,8 +464,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 <Button
                     type={ButtonType.popup}
                     active={true}
-                    margin={'30px 0 10px auto'}
-                    fontSize={'18px'}
+                    margin={'30px 0 5px auto'}
                     onClickHandler={() => setShowClaimOnBehalfModal(true)}
                 >
                     {t('options.earn.gamified-staking.rewards.claim-on-behalf.enable')}
@@ -821,7 +820,7 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefaul
                     justify-content: center;
                 `;
             case SectionType.REWARD:
-                return 'padding-bottom: 20px;';
+                return 'padding-bottom: 10px;';
             case SectionType.CLAIM:
             case SectionType.CLAIM_ON_BEHALF:
                 return `                
@@ -859,14 +858,14 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
             case SectionType.LP_STAKING:
                 return `
                     font-weight: 700;
-                    font-size: 18px;
-                    line-height: 24px;
+                    font-size: 15px;
+                    line-height: 17px;
                 `;
             case SectionType.CLAIM_ON_BEHALF:
                 return `
                     font-weight: 700;
-                    font-size: 18px;
-                    line-height: 24px;
+                    font-size: 15px;
+                    line-height: 17px;
                 `;
             default:
                 return '';
@@ -916,7 +915,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
             case SectionType.LP_STAKING:
                 return `
                     font-weight: 700;
-                    font-size: 30px;
+                    font-size: 23px;
                     color: ${props.isOp ? '#ffffff' : '#64D9FE'};
                     text-transform: uppercase;
                     @media (max-width: 768px) {
@@ -984,7 +983,7 @@ const SectionDetailsValue = styled.span<{ bonus?: boolean }>`
 `;
 
 const ButtonWrapperTooltip = styled.div`
-    width: 50%;
+    width: 70%;
     display: flex;
     justify-content: center;
     @media (max-width: 768px) {

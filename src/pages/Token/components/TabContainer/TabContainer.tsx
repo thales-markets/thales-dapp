@@ -121,8 +121,12 @@ const MenuItem = styled.div<{
                 : '0px 4px var(--primary-filter-menu-active)'
             : ''};
     text-transform: uppercase;
-    padding: ${(props) => (props?.padding ? props.padding : '12px 5px')};
+    padding: ${(props) => (props?.padding ? props.padding : '10px 5px')};
     cursor: pointer;
+    @media (max-width: 1192px) {
+        font-size: 23px;
+        padding: 5px;
+    }
 `;
 
 export default TabContainer;

@@ -115,10 +115,10 @@ const Button: React.FC<ButtonProps> = ({
             break;
         case ButtonType.popup:
             typedWidth = '100%';
-            typedHeight = '32px';
+            typedHeight = '';
             typedPadding = '';
             typedMargin = '0 0 0 auto';
-            typedFontSize = '20px';
+            typedFontSize = '14px';
             typedFontWeight = '700';
             typedMinHeight = '36px';
             typedActiveBg = 'linear-gradient(270deg, #516aff 0%, #8208fc 100%)';

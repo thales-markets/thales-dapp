@@ -157,16 +157,18 @@ export const DescriptionLink = styled.a`
 
 export const StyledInfoIcon = styled(InfoIcon)`
     margin-left: 5px;
+    width: 15px;
+    height: 15px;
     @media (max-width: 768px) {
         display: none;
     }
 `;
 
 export const StyledInfoIconGreen = styled(InfoIconGreen)`
-    min-width: 20px;
-    min-height: 20px;
+    min-width: 15px;
+    min-height: 15px;
     margin-left: 5px;
-    margin-bottom: -1px;
+    margin-bottom: 1px;
     @media (max-width: 768px) {
         display: none;
     }

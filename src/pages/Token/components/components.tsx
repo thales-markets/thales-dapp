@@ -63,6 +63,9 @@ export const InputLabel = styled.label`
     z-index: 3;
     position: absolute;
     text-transform: uppercase;
+    @media (max-width: 1192px) {
+        font-size: 9px;
+    }
     @media (max-width: 768px) {
         font-size: 12px;
         padding-left: 10px;
@@ -89,12 +92,15 @@ export const CurrencyLabel = styled.label`
     }
 `;
 
-export const InputContainer = styled.div<{ marginTop?: number }>`
+export const InputContainer = styled.div<{ marginTop?: number; mediaMarginBottom?: number }>`
     display: flex;
     flex-direction: column;
     position: relative;
     ${(props) => (props.marginTop ? 'margin-top: ' + props.marginTop + 'px;' : '')}
     margin-bottom: 20px;
+    @media (max-width: 1192px) {
+        ${(props) => (props.mediaMarginBottom ? 'margin-bottom: ' + props.mediaMarginBottom + 'px;' : '')}
+    }
 `;
 
 export const ShortInputContainer = styled(InputContainer)`
