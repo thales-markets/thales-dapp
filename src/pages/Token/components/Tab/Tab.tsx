@@ -114,15 +114,15 @@ const SectionRow = styled.div`
 `;
 
 const SectionHeader = styled.p`
-    height: 57px;
-    padding-top: 10px;
+    height: 50px;
+    padding-top: 7px;
     font-family: Roboto;
     font-weight: 600;
     font-size: 32px;
     line-height: 35px;
     color: #ffffff;
     @media (max-width: 1192px) {
-        height: 47px;
+        height: 40px;
         font-size: 25px;
         line-height: 25px;
     }
@@ -139,7 +139,8 @@ const SectionDescription = styled.p`
     font-family: Roboto;
     font-weight: 400;
     font-size: 16px;
-    line-height: 25px;
+    line-height: 20px;
+    padding-top: 5px;
     color: #ffffff;
     @media (max-width: 768px) {
         font-size: 15px;

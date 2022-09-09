@@ -7,7 +7,7 @@ import { TokenTabSection, TokenTabSectionIdEnum } from 'types/token';
 import { history } from 'utils/routes';
 import Tab from '../Tab';
 
-type TabItem = { id: string; name: string; disabled: boolean };
+type TabItem = { id: string; name: string };
 
 const TabContainer: React.FC<{
     tabItems: TabItem[];
@@ -29,7 +29,6 @@ const TabContainer: React.FC<{
                                 key={index}
                                 noStrech={true}
                                 onClick={() => {
-                                    if (tab.disabled) return;
                                     history.push({
                                         pathname: location.pathname,
                                         search: queryString.stringify({

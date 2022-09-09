@@ -70,12 +70,12 @@ const Button: React.FC<ButtonProps> = ({
     switch (type) {
         case ButtonType.default:
             typedWidth = '100%';
-            typedHeight = '32px';
+            typedHeight = '30px';
             typedPadding = '5px 40px';
             typedMargin = '';
             typedFontSize = '15px';
             typedFontWeight = '700';
-            typedMinHeight = '36px';
+            typedMinHeight = '30px';
             typedActiveBg = '';
             typedActiveBgColor = '#64d9fe';
             typedActiveTextColor = '#04045a';

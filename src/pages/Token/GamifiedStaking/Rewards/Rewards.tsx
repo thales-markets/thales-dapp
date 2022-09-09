@@ -594,7 +594,9 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                         main: t('options.earn.gamified-staking.rewards.protocol.label'),
                         volume: t('options.earn.gamified-staking.rewards.protocol.volume'),
                         bonus: t('options.earn.gamified-staking.rewards.protocol.bonus'),
-                        rewards: t('options.earn.gamified-staking.rewards.protocol.rewards'),
+                        rewards: isClaimAvailable
+                            ? t('options.earn.gamified-staking.rewards.protocol.rewards')
+                            : t('options.earn.gamified-staking.rewards.protocol.estimated-rewards'),
                     },
                     {
                         main: formatCurrencyWithKey(THALES_CURRENCY, ammBonus),
@@ -612,7 +614,9 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                         main: t('options.earn.gamified-staking.rewards.snx.label'),
                         volume: t('options.earn.gamified-staking.rewards.snx.staked'),
                         bonus: t('options.earn.gamified-staking.rewards.snx.bonus'),
-                        rewards: t('options.earn.gamified-staking.rewards.snx.rewards'),
+                        rewards: isClaimAvailable
+                            ? t('options.earn.gamified-staking.rewards.snx.rewards')
+                            : t('options.earn.gamified-staking.rewards.snx.estimated-rewards'),
                     },
                     {
                         main: snxRewardFormatted,
