@@ -7,7 +7,9 @@ import { LINKS } from 'constants/links';
 import {
     MAX_L2_GAS_LIMIT,
     OP_REWARDS_MULTIPLIER,
+    SNX_FOR_MAX_BONUS_MULTIPLIER,
     SNX_REWARDS_MULTIPLIER,
+    VOLUME_FOR_MAX_BONUS_MULTIPLIER,
     VOLUME_REWARDS_MULTIPLIER,
 } from 'constants/options';
 import ROUTES from 'constants/routes';
@@ -56,11 +58,14 @@ enum SectionType {
     LP_STAKING,
 }
 
-const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => void; estimatedRewards: number }> = ({
-    gridGap,
-    setSelectedTab,
-    estimatedRewards,
-}) => {
+type RewardsProperties = {
+    gridGap: number;
+    setSelectedTab: (tabId: string) => void;
+    estimatedRewards: number;
+    stakedBalance: number;
+};
+
+const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimatedRewards, stakedBalance }) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -178,7 +183,11 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
     const exoticVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, exoticVolume, 0, true);
 
     // Protocol usage
-    const protocolVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume);
+    const protocolRewardThales = formatCurrencyWithKey(THALES_CURRENCY, ammBonus);
+    const protocolRewardOp = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
+    const protocolVolumeFormatted = isClaimAvailable
+        ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume)
+        : formatCurrencyWithKey(SYNTHS_MAP.sUSD, stakedBalance * VOLUME_FOR_MAX_BONUS_MULTIPLIER);
     const protocolMaxBonusFormatted =
         additionalAmmVolume > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, additionalAmmVolume) : '';
     const protocolMaxRewardFormatted = isClaimAvailable
@@ -194,7 +203,9 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
 
     // SNX staking
     const snxRewardFormatted = formatCurrencyWithKey(THALES_CURRENCY, snxBonus);
-    const snxVolumeFormatted = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, snxStaked);
+    const snxVolumeFormatted = isClaimAvailable
+        ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, snxStaked)
+        : formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, stakedBalance * SNX_FOR_MAX_BONUS_MULTIPLIER);
     const snxMaxBonusFormatted =
         additionalSnxStaked > 0 ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, additionalSnxStaked) : '';
     const snxMaxRewardFormatted = isClaimAvailable
@@ -246,7 +257,7 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
 
     const getRewardSection = (
         label: { main: string; volume: string; bonus: string; rewards: string },
-        value: { main: string; volume: string; bonus: string; rewards: string; mainPart?: string }
+        value: { main: string; volume: string; bonus: string; rewards: string; mainAddition?: string }
     ) => {
         return (
             <SectionContentWrapper>
@@ -255,9 +266,9 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 </SectionLabel>
                 <SectionValue type={SectionType.REWARD}>
                     <SectionValueContent type={SectionType.REWARD}>{value.main}</SectionValueContent>
-                    {value.mainPart && (
+                    {value.mainAddition && (
                         <SectionValueContent type={SectionType.REWARD} isOp={true}>
-                            {' + ' + value.mainPart}
+                            {' + ' + value.mainAddition}
                         </SectionValueContent>
                     )}
                 </SectionValue>
@@ -592,18 +603,20 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 {getRewardSection(
                     {
                         main: t('options.earn.gamified-staking.rewards.protocol.label'),
-                        volume: t('options.earn.gamified-staking.rewards.protocol.volume'),
+                        volume: isClaimAvailable
+                            ? t('options.earn.gamified-staking.rewards.protocol.volume')
+                            : t('options.earn.gamified-staking.rewards.protocol.volume-needed'),
                         bonus: t('options.earn.gamified-staking.rewards.protocol.bonus'),
                         rewards: isClaimAvailable
                             ? t('options.earn.gamified-staking.rewards.protocol.rewards')
                             : t('options.earn.gamified-staking.rewards.protocol.estimated-rewards'),
                     },
                     {
-                        main: formatCurrencyWithKey(THALES_CURRENCY, ammBonus),
+                        main: protocolRewardThales,
                         volume: protocolVolumeFormatted,
                         bonus: protocolMaxBonusFormatted,
                         rewards: protocolMaxRewardFormatted,
-                        mainPart: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus),
+                        mainAddition: protocolRewardOp,
                     }
                 )}
             </SectionWrapper>
@@ -612,7 +625,9 @@ const Rewards: React.FC<{ gridGap: number; setSelectedTab: (tabId: string) => vo
                 {getRewardSection(
                     {
                         main: t('options.earn.gamified-staking.rewards.snx.label'),
-                        volume: t('options.earn.gamified-staking.rewards.snx.staked'),
+                        volume: isClaimAvailable
+                            ? t('options.earn.gamified-staking.rewards.snx.staked')
+                            : t('options.earn.gamified-staking.rewards.snx.staked-needed'),
                         bonus: t('options.earn.gamified-staking.rewards.snx.bonus'),
                         rewards: isClaimAvailable
                             ? t('options.earn.gamified-staking.rewards.snx.rewards')

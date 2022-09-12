@@ -125,6 +125,9 @@ const Container = styled.span<{ fontSize?: number; duration: Duration; showBorde
     z-index: 3;
     white-space: pre;
     text-transform: uppercase;
+    @media (max-width: 1192px) {
+        font-size: 12px;
+    }
 `;
 
 export default TimeRemaining;

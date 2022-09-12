@@ -37,7 +37,12 @@ function getNumberLabel(label: number) {
 
 const aprToApy = (interest: number, frequency: number) => ((1 + interest / 100 / frequency) ** frequency - 1) * 100;
 
-const Staking: React.FC<{ setEstimatedRewards: (estimatedRewards: number) => void }> = ({ setEstimatedRewards }) => {
+type StakingProperties = {
+    setEstimatedRewards: (estimatedRewards: number) => void;
+    setThalesStakedBalance: (stakedBalance: number) => void;
+};
+
+const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards, setThalesStakedBalance }) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -75,6 +80,8 @@ const Staking: React.FC<{ setEstimatedRewards: (estimatedRewards: number) => voi
         escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.escrowedBalance) : 0;
     const unstakingAmount =
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.unstakingAmount) : 0;
+
+    const thalesStakedBalance = escrowedBalance + thalesStaked;
 
     const APR = useMemo(
         () =>
@@ -128,7 +135,8 @@ const Staking: React.FC<{ setEstimatedRewards: (estimatedRewards: number) => voi
 
     useEffect(() => {
         setEstimatedRewards(bonusEstimatedRewards);
-    }, [bonusEstimatedRewards, networkId]);
+        setThalesStakedBalance(thalesStakedBalance);
+    }, [bonusEstimatedRewards, thalesStakedBalance, networkId]);
 
     const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 
@@ -190,6 +198,9 @@ const Staking: React.FC<{ setEstimatedRewards: (estimatedRewards: number) => voi
                         <SectionDetailsLabel>
                             {t('options.earn.gamified-staking.staking.staked-directly')}
                         </SectionDetailsLabel>
+                        <SectionDetailsValue unavailable={notEligibleForStakingRewards} floatNone={unstakingAmount > 0}>
+                            {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
+                        </SectionDetailsValue>
                         {unstakingAmount > 0 && (
                             <UnstakingInfo>
                                 {`${t(
@@ -197,11 +208,8 @@ const Staking: React.FC<{ setEstimatedRewards: (estimatedRewards: number) => voi
                                 )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}`}
                             </UnstakingInfo>
                         )}
-                        <SectionDetailsValue unavailable={notEligibleForStakingRewards}>
-                            {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
-                        </SectionDetailsValue>
                     </SectionDetails>
-                    <Line margin={isMobile() ? '0 10px' : '0 15px'} />
+                    <Line margin={isMobile() ? '3px 10px' : '0 15px'} />
                     <SectionDetails positionUp={false}>
                         <SectionDetailsLabel>
                             {t('options.earn.gamified-staking.staking.escrow-balance')}
@@ -377,6 +385,7 @@ const SectionValueContent = styled(SectionContent)`
 
 const SectionDetails = styled.div<{ positionUp: boolean }>`
     padding: ${(props) => (props.positionUp ? '15px 15px 5px 15px' : '5px 15px 15px 15px')};
+    text-align: end;
     @media (max-width: 768px) {
         padding: ${(props) => (props.positionUp ? '10px 10px 0 10px' : '0 10px 10px 10px')};
     }
@@ -396,10 +405,10 @@ const SectionDetailsLabel = styled.span`
     }
 `;
 
-const SectionDetailsValue = styled.span<{ unavailable?: boolean }>`
-    display: block;
+const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boolean }>`
+    display: inline-block;
     padding-top: 2px;
-    float: right;
+    float: ${(props) => (props.floatNone ? 'none' : 'right')};
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
@@ -415,13 +424,13 @@ const BonusInfo = styled.span`
 
 const StakedBalanceInfo = styled.div`
     position: absolute;
-    top: 70px;
+    top: 80px;
     padding: 10px 15px;
     color: #ffcc00;
     font-size: 14px;
     @media (max-width: 768px) {
         padding: 10px;
-        top: 120px;
+        top: 130px;
         font-size: 12px;
     }
 `;

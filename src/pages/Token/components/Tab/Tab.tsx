@@ -25,7 +25,8 @@ const Tab: React.FC<{
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
-    const [stakingEstimatedRewards, setStakingEstimatedRewards] = useState(0);
+    const [estimatedRewards, setEstimatedRewards] = useState(0);
+    const [thalesStakedBalance, setThalesStakedBalance] = useState(0);
     const [activeButtonId, setActiveButtonId] = useState(selectedSection || sections[0].id);
 
     useEffect(() => {
@@ -65,13 +66,17 @@ const Tab: React.FC<{
                     </SectionRow>
                     <SectionContent>
                         {activeButtonId === TokenTabSectionIdEnum.STAKING && (
-                            <Staking setEstimatedRewards={setStakingEstimatedRewards} />
+                            <Staking
+                                setEstimatedRewards={setEstimatedRewards}
+                                setThalesStakedBalance={setThalesStakedBalance}
+                            />
                         )}
                         {activeButtonId === TokenTabSectionIdEnum.REWARDS && (
                             <Rewards
                                 gridGap={GRID_GAP}
                                 setSelectedTab={setSelectedTab}
-                                estimatedRewards={stakingEstimatedRewards}
+                                estimatedRewards={estimatedRewards}
+                                stakedBalance={thalesStakedBalance}
                             />
                         )}
                         {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
