@@ -3,9 +3,10 @@ import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { OptionsMarkets } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getIsPolygon, NetworkId } from 'utils/network';
+import { NetworkId } from 'utils/network';
 import { ethers } from 'ethers';
 import { buildOptionsMarketLink } from 'utils/routes';
+import { stableCoinFormatter } from 'utils/formatters/ethers';
 
 type PositionsData = {
     claimed: any[];
@@ -38,13 +39,13 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             await Promise.all(
                 livePosition.map(async (balance: any) => {
                     try {
-                        const positionValue = ethers.utils.formatUnits(
+                        const positionValue = stableCoinFormatter(
                             await (snxJSConnector as any).ammContract.sellToAmmQuote(
                                 balance.position.market.id,
                                 balance.position.side === 'long' ? 0 : 1,
                                 balance.amount
                             ),
-                            getIsPolygon(networkId) ? 6 : 18
+                            networkId
                         );
                         live.push({
                             link: buildOptionsMarketLink(balance.position.market.id),
