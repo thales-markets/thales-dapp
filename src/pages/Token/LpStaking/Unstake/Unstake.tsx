@@ -93,7 +93,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
 
             if (txResult && txResult.transactionHash) {
                 dispatchMarketNotification(
-                    t('options.earn.gaimfied-staking.staking.unstake.unstake-confirmation-message')
+                    t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message')
                 );
                 refetchTokenQueries(walletAddress, networkId);
                 refetchUserTokenTransactions(walletAddress, networkId);

@@ -39,10 +39,9 @@ const aprToApy = (interest: number, frequency: number) => ((1 + interest / 100 /
 
 type StakingProperties = {
     setEstimatedRewards: (estimatedRewards: number) => void;
-    setThalesStakedBalance: (stakedBalance: number) => void;
 };
 
-const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards, setThalesStakedBalance }) => {
+const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards }) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -80,8 +79,6 @@ const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards, setThalesSt
         escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.escrowedBalance) : 0;
     const unstakingAmount =
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.unstakingAmount) : 0;
-
-    const thalesStakedBalance = escrowedBalance + thalesStaked;
 
     const APR = useMemo(
         () =>
@@ -134,9 +131,8 @@ const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards, setThalesSt
     ]);
 
     useEffect(() => {
-        setEstimatedRewards(bonusEstimatedRewards);
-        setThalesStakedBalance(thalesStakedBalance);
-    }, [bonusEstimatedRewards, thalesStakedBalance, networkId]);
+        setEstimatedRewards(estimatedRewards);
+    }, [estimatedRewards, networkId]);
 
     const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 

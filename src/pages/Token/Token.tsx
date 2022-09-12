@@ -108,7 +108,7 @@ const TokenPage: React.FC = () => {
     }, [location, isL2]);
 
     useEffect(() => {
-        const section = tabSections.find((section) => (section.tab = selectedTab));
+        const section = tabSections.find((section) => section.tab === selectedTab);
         setSelectedSection(section?.id);
     }, [selectedTab]);
 

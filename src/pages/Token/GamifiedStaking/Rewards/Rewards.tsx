@@ -4,14 +4,7 @@ import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import {
-    MAX_L2_GAS_LIMIT,
-    OP_REWARDS_MULTIPLIER,
-    SNX_FOR_MAX_BONUS_MULTIPLIER,
-    SNX_REWARDS_MULTIPLIER,
-    VOLUME_FOR_MAX_BONUS_MULTIPLIER,
-    VOLUME_REWARDS_MULTIPLIER,
-} from 'constants/options';
+import { MAX_L2_GAS_LIMIT, OP_REWARDS_MULTIPLIER } from 'constants/options';
 import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
 import Button from 'pages/Token/components/Button';
@@ -62,10 +55,9 @@ type RewardsProperties = {
     gridGap: number;
     setSelectedTab: (tabId: string) => void;
     estimatedRewards: number;
-    stakedBalance: number;
 };
 
-const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimatedRewards, stakedBalance }) => {
+const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimatedRewards }) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -155,6 +147,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     const snxStaked = stakingRewards ? stakingRewards.snxStaked : 0;
     const maxSnxBonus = stakingRewards ? stakingRewards.maxSnxBonus : 0;
     const snxVolumeRewardsMultiplier = stakingRewards ? stakingRewards.snxVolumeRewardsMultiplier : 0;
+    const maxAmmBonusPercentage = stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
+    const maxSnxBonusPercentage = stakingRewards ? stakingRewards.maxSnxBonusPercentage : 0;
 
     const opAmmBonus = ammBonus * OP_REWARDS_MULTIPLIER;
     const maxOpAmmBonus = maxAmmBonus * OP_REWARDS_MULTIPLIER;
@@ -187,30 +181,30 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     const protocolRewardOp = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
     const protocolVolumeFormatted = isClaimAvailable
         ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume)
-        : formatCurrencyWithKey(SYNTHS_MAP.sUSD, stakedBalance * VOLUME_FOR_MAX_BONUS_MULTIPLIER);
+        : formatCurrencyWithKey(SYNTHS_MAP.sUSD, estimatedRewards * ammVolumeRewardsMultiplier);
     const protocolMaxBonusFormatted =
         additionalAmmVolume > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, additionalAmmVolume) : '';
     const protocolMaxRewardFormatted = isClaimAvailable
         ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
           ' + ' +
           formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, maxOpAmmBonus)
-        : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * VOLUME_REWARDS_MULTIPLIER) +
+        : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100)) +
           ' + ' +
           formatCurrencyWithKey(
               CRYPTO_CURRENCY_MAP.OP,
-              estimatedRewards * VOLUME_REWARDS_MULTIPLIER * OP_REWARDS_MULTIPLIER
+              estimatedRewards * (maxAmmBonusPercentage / 100) * OP_REWARDS_MULTIPLIER
           );
 
     // SNX staking
     const snxRewardFormatted = formatCurrencyWithKey(THALES_CURRENCY, snxBonus);
     const snxVolumeFormatted = isClaimAvailable
         ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, snxStaked)
-        : formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, stakedBalance * SNX_FOR_MAX_BONUS_MULTIPLIER);
+        : formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, estimatedRewards * snxVolumeRewardsMultiplier);
     const snxMaxBonusFormatted =
         additionalSnxStaked > 0 ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, additionalSnxStaked) : '';
     const snxMaxRewardFormatted = isClaimAvailable
         ? formatCurrencyWithKey(THALES_CURRENCY, maxSnxBonus)
-        : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * SNX_REWARDS_MULTIPLIER);
+        : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxSnxBonusPercentage / 100));
 
     const lpStakingReward =
         formatCurrencyWithKey(THALES_CURRENCY, lpStakingRewards) +

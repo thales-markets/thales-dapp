@@ -233,7 +233,7 @@ const Bridge: React.FC = () => {
     return (
         <>
             <InfoSection>{t('migration.info-messages.bridge')}</InfoSection>
-            <InputContainer>
+            <InputContainer mediaMarginBottom={10}>
                 <NumericInput
                     value={amount}
                     onChange={(_, value) => setAmount(value)}
