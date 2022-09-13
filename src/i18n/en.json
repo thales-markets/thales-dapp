@@ -604,6 +604,7 @@
                         "sports-desc": "Current Sports market volume:",
                         "exotic-desc": "Current Exotic market volume:"
                     },
+                    "no-thales-staked": "You have no thales staked",
                     "protocol": {
                         "label": "Protocol usage bucket",
                         "volume": "Volume",

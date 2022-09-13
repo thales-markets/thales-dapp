@@ -163,6 +163,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     const snxNeededForMaxBonus =
         (additionalSnxStaked > 0 ? additionalSnxStaked : estimatedRewards * snxVolumeRewardsMultiplier) - snxStaked;
 
+    const hasUserStaked = estimatedRewards > 0;
+
     const lpStakingQuery = useLPStakingQuery(walletAddress, networkId, {
         enabled: isAppReady,
     });
@@ -250,7 +252,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     };
 
     const getRewardSection = (
-        label: { main: string; volume: string; bonus: string; rewards: string },
+        label: { main: string; volume: string; bonus: string; rewards: string; bonusEligible?: boolean },
         value: { main: string; volume: string; bonus: string; rewards: string; mainAddition?: string }
     ) => {
         return (
@@ -274,7 +276,9 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
                     <SectionDetailsValue>{value.volume}</SectionDetailsValue>
                 </SectionDetails>
                 <SectionDetails>
-                    <SectionDetailsLabel bonus={!value.bonus}>{label.bonus}</SectionDetailsLabel>
+                    <SectionDetailsLabel bonus={!value.bonus} notEligible={!label.bonusEligible}>
+                        {label.bonus}
+                    </SectionDetailsLabel>
                     {value.bonus && <SectionDetailsValue bonus={true}>{value.bonus}</SectionDetailsValue>}
                 </SectionDetails>
                 <Line margin={'0 0 10px 0'} />
@@ -598,10 +602,13 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
                         volume: t('options.earn.gamified-staking.rewards.protocol.volume'),
                         bonus: protocolVolumeNeededForBonusFormatted.length
                             ? t('options.earn.gamified-staking.rewards.protocol.bonus')
-                            : t('options.earn.gamified-staking.rewards.protocol.bonus-eligible'),
+                            : hasUserStaked
+                            ? t('options.earn.gamified-staking.rewards.protocol.bonus-eligible')
+                            : t('options.earn.gamified-staking.rewards.no-thales-staked'),
                         rewards: isClaimAvailable
                             ? t('options.earn.gamified-staking.rewards.protocol.rewards')
                             : t('options.earn.gamified-staking.rewards.protocol.estimated-rewards'),
+                        bonusEligible: hasUserStaked,
                     },
                     {
                         main: protocolRewardThales,
@@ -620,10 +627,13 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
                         volume: t('options.earn.gamified-staking.rewards.snx.staked'),
                         bonus: snxNeededForMaxBonusFormatted.length
                             ? t('options.earn.gamified-staking.rewards.snx.bonus')
-                            : t('options.earn.gamified-staking.rewards.snx.bonus-eligible'),
+                            : hasUserStaked
+                            ? t('options.earn.gamified-staking.rewards.snx.bonus-eligible')
+                            : t('options.earn.gamified-staking.rewards.no-thales-staked'),
                         rewards: isClaimAvailable
                             ? t('options.earn.gamified-staking.rewards.snx.rewards')
                             : t('options.earn.gamified-staking.rewards.snx.estimated-rewards'),
+                        bonusEligible: hasUserStaked,
                     },
                     {
                         main: snxRewardFormatted,
@@ -971,14 +981,14 @@ const SectionDetails = styled.div`
     padding-bottom: 10px;
 `;
 
-const SectionDetailsLabel = styled.span<{ bonus?: boolean }>`
+const SectionDetailsLabel = styled.span<{ bonus?: boolean; notEligible?: boolean }>`
     display: block;
     float: left;
     font-weight: 300;
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: ${(props) => (props.bonus ? '#50ce99' : '#ffffff')};
+    color: ${(props) => (props.notEligible ? '#ffcc00' : props.bonus ? '#50ce99' : '#ffffff')};
     @media (max-width: 768px) {
         font-size: 12px;
     }
