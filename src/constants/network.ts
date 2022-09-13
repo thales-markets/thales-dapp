@@ -1,7 +1,7 @@
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
-import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
+// import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
@@ -199,24 +199,24 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
             }
         },
     },
-    56: {
-        name: 'BSC',
-        icon: BSCLogo,
-        changeNetwork: async (networkId: number) => {
-            const bscNetworkParams = BSC_NETWORK[networkId];
+    // 56: {
+    //     name: 'BSC',
+    //     icon: BSCLogo,
+    //     changeNetwork: async (networkId: number) => {
+    //         const bscNetworkParams = BSC_NETWORK[networkId];
 
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    await (window.ethereum as any).request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: bscNetworkParams.chainId }],
-                    });
-                } catch (switchError: any) {
-                    console.log(switchError);
-                }
-            }
-        },
-    },
+    //         if (typeof window.ethereum !== 'undefined') {
+    //             try {
+    //                 await (window.ethereum as any).request({
+    //                     method: 'wallet_switchEthereumChain',
+    //                     params: [{ chainId: bscNetworkParams.chainId }],
+    //                 });
+    //             } catch (switchError: any) {
+    //                 console.log(switchError);
+    //             }
+    //         }
+    //     },
+    // },
     42161: {
         name: 'Arbitrum',
         icon: ArbitrumLogo,

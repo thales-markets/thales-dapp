@@ -120,6 +120,7 @@ export const getPublicRpc = (networkId: NetworkId) => {
 };
 
 export const isNetworkSupported = (networkId: NetworkId): boolean => {
+    if (networkId == Network.BSC) return false;
     return !!SUPPORTED_NETWORKS[networkId];
 };
 
