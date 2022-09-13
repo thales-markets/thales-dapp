@@ -93,7 +93,9 @@ export const TokentOverview: React.FC = () => {
             </ItemContainer>
             <ItemContainer>
                 <ThalesBurnedWrapper>
-                    <Title color={'#E26565'}>{t('options.earn.overview.total-burned-label')}</Title>
+                    <Title color={'#E26565'} noWrap={true}>
+                        {t('options.earn.overview.total-burned-label')}
+                    </Title>
                     <Lottie animationData={thalesBurnedAnimation} style={thalesBurnedStyle} />
                 </ThalesBurnedWrapper>
                 <Content color={'#E26565'}>
@@ -223,12 +225,13 @@ const Item = styled(FlexDivColumnCentered)`
     flex: initial;
 `;
 
-const Title = styled.p<{ color?: string }>`
+const Title = styled.p<{ color?: string; noWrap?: boolean }>`
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
     line-height: 18px;
     color: ${(props) => props.color || '#b8c6e5'};
+    ${(props) => (props.noWrap ? 'white-space: nowrap;' : '')};
     @media (max-width: 767px) {
         font-size: 12px;
         line-height: 16px;
@@ -311,6 +314,7 @@ const ThalesBurnedWrapper = styled.div`
 
 const thalesBurnedStyle: CSSProperties = {
     height: 40,
+    width: 40,
     position: 'absolute',
     right: -30,
     top: -23,
