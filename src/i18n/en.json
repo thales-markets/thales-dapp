@@ -607,8 +607,8 @@
                     "protocol": {
                         "label": "Protocol usage bucket",
                         "volume": "Volume",
-                        "bonus": "Additional protocol volume for max possible rewards",
-                        "volume-needed": "Total protocol volume needed for max bonus",
+                        "bonus": "Additional volume needed for max possible rewards",
+                        "bonus-eligible": "You are eligible for max bonus rewards",
                         "rewards": "Max reward",
                         "estimated-rewards": "Estimated max reward"
                     },
@@ -616,7 +616,7 @@
                         "label": "SNX Staking",
                         "staked": "SNX Staked",
                         "bonus": "Additional SNX to stake for max possible rewards",
-                        "staked-needed": "Total staked SNX needed for max bonus",
+                        "bonus-eligible": "You are eligible for max bonus rewards",
                         "rewards": "Max reward",
                         "estimated-rewards": "Estimated max reward"
                     },

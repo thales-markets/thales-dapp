@@ -183,6 +183,7 @@ const SectionContent = styled.div`
         border: none;
         padding: 1px;
         grid-gap: ${GRID_GAP_MOBILE}px;
+        margin-bottom: 0;
     }
 `;
 

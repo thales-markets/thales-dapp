@@ -155,9 +155,13 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
 
     const maxAmmVolume = baseRewards * ammVolumeRewardsMultiplier;
     const additionalAmmVolume = maxAmmVolume - ammVolume > 0 ? maxAmmVolume - ammVolume : 0;
+    const ammVolumeNeededForMaxBonus =
+        (additionalAmmVolume > 0 ? additionalAmmVolume : estimatedRewards * ammVolumeRewardsMultiplier) - ammVolume;
 
     const maxSnxStaked = baseRewards * snxVolumeRewardsMultiplier;
     const additionalSnxStaked = maxSnxStaked - snxStaked > 0 ? maxSnxStaked - snxStaked : 0;
+    const snxNeededForMaxBonus =
+        (additionalSnxStaked > 0 ? additionalSnxStaked : estimatedRewards * snxVolumeRewardsMultiplier) - snxStaked;
 
     const lpStakingQuery = useLPStakingQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -179,11 +183,9 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     // Protocol usage
     const protocolRewardThales = formatCurrencyWithKey(THALES_CURRENCY, ammBonus);
     const protocolRewardOp = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
-    const protocolVolumeFormatted = isClaimAvailable
-        ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume)
-        : formatCurrencyWithKey(SYNTHS_MAP.sUSD, estimatedRewards * ammVolumeRewardsMultiplier);
-    const protocolMaxBonusFormatted =
-        additionalAmmVolume > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, additionalAmmVolume) : '';
+    const protocolVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume);
+    const protocolVolumeNeededForBonusFormatted =
+        ammVolumeNeededForMaxBonus > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolumeNeededForMaxBonus) : '';
     const protocolMaxRewardFormatted = isClaimAvailable
         ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
           ' + ' +
@@ -197,11 +199,9 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
 
     // SNX staking
     const snxRewardFormatted = formatCurrencyWithKey(THALES_CURRENCY, snxBonus);
-    const snxVolumeFormatted = isClaimAvailable
-        ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, snxStaked)
-        : formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, estimatedRewards * snxVolumeRewardsMultiplier);
-    const snxMaxBonusFormatted =
-        additionalSnxStaked > 0 ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, additionalSnxStaked) : '';
+    const snxStakedFormatted = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, snxStaked);
+    const snxNeededForMaxBonusFormatted =
+        snxNeededForMaxBonus > 0 ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, snxNeededForMaxBonus) : '';
     const snxMaxRewardFormatted = isClaimAvailable
         ? formatCurrencyWithKey(THALES_CURRENCY, maxSnxBonus)
         : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxSnxBonusPercentage / 100));
@@ -273,12 +273,10 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
                     <SectionDetailsLabel>{label.volume}</SectionDetailsLabel>
                     <SectionDetailsValue>{value.volume}</SectionDetailsValue>
                 </SectionDetails>
-                {value.bonus && (
-                    <SectionDetails>
-                        <SectionDetailsLabel>{label.bonus}</SectionDetailsLabel>
-                        <SectionDetailsValue bonus={true}>{value.bonus}</SectionDetailsValue>
-                    </SectionDetails>
-                )}
+                <SectionDetails>
+                    <SectionDetailsLabel bonus={!value.bonus}>{label.bonus}</SectionDetailsLabel>
+                    {value.bonus && <SectionDetailsValue bonus={true}>{value.bonus}</SectionDetailsValue>}
+                </SectionDetails>
                 <Line margin={'0 0 10px 0'} />
                 <SectionDetails>
                     <SectionDetailsLabel>{label.rewards}</SectionDetailsLabel>
@@ -597,10 +595,10 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
                 {getRewardSection(
                     {
                         main: t('options.earn.gamified-staking.rewards.protocol.label'),
-                        volume: isClaimAvailable
-                            ? t('options.earn.gamified-staking.rewards.protocol.volume')
-                            : t('options.earn.gamified-staking.rewards.protocol.volume-needed'),
-                        bonus: t('options.earn.gamified-staking.rewards.protocol.bonus'),
+                        volume: t('options.earn.gamified-staking.rewards.protocol.volume'),
+                        bonus: protocolVolumeNeededForBonusFormatted.length
+                            ? t('options.earn.gamified-staking.rewards.protocol.bonus')
+                            : t('options.earn.gamified-staking.rewards.protocol.bonus-eligible'),
                         rewards: isClaimAvailable
                             ? t('options.earn.gamified-staking.rewards.protocol.rewards')
                             : t('options.earn.gamified-staking.rewards.protocol.estimated-rewards'),
@@ -608,7 +606,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
                     {
                         main: protocolRewardThales,
                         volume: protocolVolumeFormatted,
-                        bonus: protocolMaxBonusFormatted,
+                        bonus: protocolVolumeNeededForBonusFormatted,
                         rewards: protocolMaxRewardFormatted,
                         mainAddition: protocolRewardOp,
                     }
@@ -619,18 +617,18 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
                 {getRewardSection(
                     {
                         main: t('options.earn.gamified-staking.rewards.snx.label'),
-                        volume: isClaimAvailable
-                            ? t('options.earn.gamified-staking.rewards.snx.staked')
-                            : t('options.earn.gamified-staking.rewards.snx.staked-needed'),
-                        bonus: t('options.earn.gamified-staking.rewards.snx.bonus'),
+                        volume: t('options.earn.gamified-staking.rewards.snx.staked'),
+                        bonus: snxNeededForMaxBonusFormatted.length
+                            ? t('options.earn.gamified-staking.rewards.snx.bonus')
+                            : t('options.earn.gamified-staking.rewards.snx.bonus-eligible'),
                         rewards: isClaimAvailable
                             ? t('options.earn.gamified-staking.rewards.snx.rewards')
                             : t('options.earn.gamified-staking.rewards.snx.estimated-rewards'),
                     },
                     {
                         main: snxRewardFormatted,
-                        volume: snxVolumeFormatted,
-                        bonus: snxMaxBonusFormatted,
+                        volume: snxStakedFormatted,
+                        bonus: snxNeededForMaxBonusFormatted,
                         rewards: snxMaxRewardFormatted,
                     }
                 )}
@@ -973,14 +971,14 @@ const SectionDetails = styled.div`
     padding-bottom: 10px;
 `;
 
-const SectionDetailsLabel = styled.span`
+const SectionDetailsLabel = styled.span<{ bonus?: boolean }>`
     display: block;
     float: left;
     font-weight: 300;
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: #ffffff;
+    color: ${(props) => (props.bonus ? '#50ce99' : '#ffffff')};
     @media (max-width: 768px) {
         font-size: 12px;
     }
