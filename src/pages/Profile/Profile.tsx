@@ -21,7 +21,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import Loader from '../../components/Loader';
-import { getIsPolygon } from '../../utils/network';
+import { getIsOVM, getIsPolygon } from '../../utils/network';
 import useRangedPositions from 'queries/user/useRangedPositions';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
@@ -46,6 +46,8 @@ const Profile: React.FC = () => {
     const markets = marketsQuery.isSuccess ? marketsQuery.data : [];
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
     const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
+
+    const showOPBanner = getIsOVM(networkId);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
@@ -113,7 +115,7 @@ const Profile: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner />
+            {showOPBanner && <OpRewardsBanner />}
             <Container layout={isSimpleView}>
                 <Container.Fixed>
                     <SearchField

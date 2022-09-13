@@ -16,7 +16,7 @@ import InfoBanner from 'components/InfoBanner';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
-import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsOVM, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
@@ -29,6 +29,8 @@ const Markets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
+    const showOPBanner = getIsOVM(networkId);
 
     const dispatch = useDispatch();
 
@@ -79,7 +81,7 @@ const Markets: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner width={90} />
+            {showOPBanner && <OpRewardsBanner width={90} />}
             {INFORMATION_BANNER_ACTIVE && (
                 <BannerContainer>
                     <InfoBanner>
