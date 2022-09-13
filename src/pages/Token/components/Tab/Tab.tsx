@@ -72,6 +72,7 @@ const Tab: React.FC<{
                                 gridGap={GRID_GAP}
                                 setSelectedTab={setSelectedTab}
                                 estimatedRewards={estimatedRewards}
+                                setActiveButtonId={setActiveButtonId}
                             />
                         )}
                         {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}

@@ -33,7 +33,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivEnd } from 'theme/common';
-import { StakingReward, TokenTabEnum } from 'types/token';
+import { StakingReward, TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
@@ -55,9 +55,10 @@ type RewardsProperties = {
     gridGap: number;
     setSelectedTab: (tabId: string) => void;
     estimatedRewards: number;
+    setActiveButtonId: (activeButtonId: TokenTabSectionIdEnum) => void;
 };
 
-const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimatedRewards }) => {
+const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimatedRewards, setActiveButtonId }) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -74,6 +75,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
+    const [initialWalletAddress, setInitialWalletAddress] = useState(walletAddress);
+    const [initialNetwork, setInitialNetwork] = useState(networkId);
 
     const { stakingThalesContract } = snxJSConnector as any;
 
@@ -131,6 +134,14 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
         if (!isClaimAvailable) return;
         fetchGasLimit();
     }, [walletAddress, isClaimAvailable]);
+
+    useEffect(() => {
+        if (initialWalletAddress !== walletAddress || initialNetwork !== networkId) {
+            setActiveButtonId(TokenTabSectionIdEnum.STAKING);
+            setInitialWalletAddress(walletAddress);
+            setInitialNetwork(networkId);
+        }
+    }, [walletAddress, networkId]);
 
     const totalThalesRewards = stakingRewards ? stakingRewards.rewards : 0;
     const baseRewards = stakingRewards ? stakingRewards.baseRewards : 0;
