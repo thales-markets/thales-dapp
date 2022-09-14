@@ -12,6 +12,8 @@ export const lpStakingRewardsContract = {
         [Network['Kovan-Ovm']]: '0x44d55a58211b2120Dc9f280ae68B99ffcaC03c7C',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
     },
     abi: [
         {

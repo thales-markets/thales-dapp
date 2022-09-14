@@ -4,7 +4,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
-import { getIsOVM, getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -56,7 +56,8 @@ const Table: React.FC<{
     setAllAssets: any;
 }> = ({ optionsMarkets, showOnlyLiquid, assetFilters, searchText, exchangeRates, setAllAssets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2OrPolygon = getIsOVM(networkId) || getIsPolygon(networkId);
+    const displayLiquidity =
+        getIsOVM(networkId) || getIsPolygon(networkId) || getIsBSC(networkId) || getIsArbitrum(networkId);
 
     const { t } = useTranslation();
 
@@ -112,7 +113,7 @@ const Table: React.FC<{
                     return <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />;
                 },
             },
-            ...(isL2OrPolygon
+            ...(displayLiquidity
                 ? [
                       {
                           Header: t(`options.home.markets-table.amm-size-col`),
@@ -137,7 +138,7 @@ const Table: React.FC<{
                       },
                   ]
                 : []),
-            ...(isL2OrPolygon
+            ...(displayLiquidity
                 ? [
                       {
                           Header: t(`options.home.markets-table.price-up-down-col`),

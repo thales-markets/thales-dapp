@@ -12,6 +12,8 @@ export const escrowThales = {
         [Network['Kovan-Ovm']]: '0xEeDe0f1D1d70009348f3D9a66Fe03BA3CA0Aeef7',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
     },
     abi: [
         {
