@@ -2,7 +2,7 @@ import { AnimationSvg } from 'pages/LandingPage/articles/Token/Token';
 import Header from 'pages/LandingPage/components/Header/Header';
 import { Theme } from 'pages/LandingPage/Home';
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { HashLink } from 'react-router-hash-link';
 import Cookies from 'universal-cookie';
 import {
@@ -19,6 +19,9 @@ import {
     SectionWrapper,
     IllustrationContainer,
     Wrapper,
+    OrderedListContrainer,
+    OrderedList,
+    OrderedItem,
 } from './styled-components';
 
 import UPMarket from 'assets/images/sales-funnel/UPmarket.svg';
@@ -62,6 +65,9 @@ const SalesLanding: React.FC = () => {
                                     <ListItem>
                                         <HashLink to="#section5">{t('sales-landing.sections.5.heading')}</HashLink>
                                     </ListItem>
+                                    <ListItem>
+                                        <HashLink to="#section6">{t('sales-landing.sections.6.heading')}</HashLink>
+                                    </ListItem>
                                 </NestedList>
                             </List>
                         </ListWrapper>
@@ -71,111 +77,110 @@ const SalesLanding: React.FC = () => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                marginLeft: '20px',
+                                marginLeft: '30px',
                             }}
                         >
                             <AnimationSvg type="image/svg+xml" data={GroupImg}></AnimationSvg>
                         </IllustrationContainer>
                     </SectionWrapper>
                     <H2 id="section1">{t('sales-landing.sections.1.heading')}</H2>
-                    <SectionWrapper>
-                        <ParagraphContainer width="30%">
-                            <Paragraph>{t('sales-landing.sections.1.content')}</Paragraph>
+                    <SectionWrapper flexDirection={'column'}>
+                        <ParagraphContainer width="100%">
+                            <Paragraph>
+                                <Trans i18nKey={'sales-landing.sections.1.first-paragraph'} />
+                            </Paragraph>
                         </ParagraphContainer>
-                        <IllustrationContainer width="70%">
-                            <iframe
-                                width="100%"
-                                height="480"
-                                src="https://www.youtube.com/embed/e8EKlUeQGLA"
-                                frameBorder="0"
-                                allowFullScreen
-                            ></iframe>
-                        </IllustrationContainer>
+                        <OrderedListContrainer>
+                            <OrderedList>
+                                <OrderedItem>
+                                    <Trans i18nKey={'sales-landing.sections.1.ordered-list.1'} />
+                                </OrderedItem>
+                                <OrderedItem>
+                                    <Trans i18nKey={'sales-landing.sections.1.ordered-list.2'} />
+                                </OrderedItem>
+                                <OrderedItem>
+                                    <Trans i18nKey={'sales-landing.sections.1.ordered-list.3'} />
+                                </OrderedItem>
+                                <OrderedItem>
+                                    <Trans i18nKey={'sales-landing.sections.1.ordered-list.4'} />
+                                </OrderedItem>
+                                <OrderedItem>
+                                    <Trans i18nKey={'sales-landing.sections.1.ordered-list.5'} />
+                                </OrderedItem>
+                            </OrderedList>
+                        </OrderedListContrainer>
+                        <ParagraphContainer width="100%">
+                            <Paragraph>
+                                <Trans i18nKey={'sales-landing.sections.1.second-paragraph'} />
+                            </Paragraph>
+                        </ParagraphContainer>
                     </SectionWrapper>
-                    <H2 id="section2">{t('sales-landing.sections.2.heading')}</H2>
+                    <H2 id="section2">{t('sales-landing.sections.2.content-heading')}</H2>
                     <SectionWrapper>
                         <ParagraphContainer width="60%">
-                            <Paragraph>{t('sales-landing.sections.2.content')}</Paragraph>
+                            <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
+                                <AnimationSvg type="image/svg+xml" data={UPMarket}></AnimationSvg>
+                            </IllustrationContainer>
+                            <Paragraph>
+                                <Trans i18nKey={'sales-landing.sections.2.content'} />
+                            </Paragraph>
                         </ParagraphContainer>
-                        <IllustrationContainer width="40%">
-                            <AnimationSvg type="image/svg+xml" data={UPMarket}></AnimationSvg>
-                        </IllustrationContainer>
-                    </SectionWrapper>
-                    <SectionWrapper>
                         <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
                             <AnimationSvg type="image/svg+xml" data={UPChart}></AnimationSvg>
                         </IllustrationContainer>
-                        <ParagraphContainer width="60%">
-                            <H2 id="section3">{t('sales-landing.sections.3.heading')}</H2>
-                            <Paragraph>{t('sales-landing.sections.3.content')}</Paragraph>
-                        </ParagraphContainer>
                     </SectionWrapper>
+                    <H2 id="section3">{t('sales-landing.sections.3.content-heading')}</H2>
                     <SectionWrapper>
                         <ParagraphContainer width="60%">
-                            <H2 id="section4">{t('sales-landing.sections.4.heading')}</H2>
-                            <Paragraph>{t('sales-landing.sections.4.content')}</Paragraph>
+                            <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
+                                <AnimationSvg type="image/svg+xml" data={DOWNMarket}></AnimationSvg>
+                            </IllustrationContainer>
+                            <Paragraph>
+                                <Trans i18nKey={'sales-landing.sections.3.content'} />
+                            </Paragraph>
                         </ParagraphContainer>
                         <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
                             <AnimationSvg type="image/svg+xml" data={DOWNChart}></AnimationSvg>
                         </IllustrationContainer>
                     </SectionWrapper>
+                    <H2 id="section4">{t('sales-landing.sections.4.content-heading')}</H2>
                     <SectionWrapper>
-                        <IllustrationContainer width="40%">
-                            <AnimationSvg type="image/svg+xml" data={DOWNMarket}></AnimationSvg>
-                        </IllustrationContainer>
                         <ParagraphContainer width="60%">
-                            <H2 id="section5">{t('sales-landing.sections.5.heading')}</H2>
-                            <Paragraph>{t('sales-landing.sections.5.content')}</Paragraph>
+                            <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
+                                <AnimationSvg type="image/svg+xml" data={INMarket}></AnimationSvg>
+                            </IllustrationContainer>
+                            <Paragraph>
+                                <Trans i18nKey={'sales-landing.sections.4.content'} />
+                            </Paragraph>
                         </ParagraphContainer>
-                    </SectionWrapper>
-                    <SectionWrapper>
-                        <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
-                            <iframe
-                                width="100%"
-                                height="480"
-                                src="https://www.youtube.com/embed/8oIgCT8GTd0"
-                                frameBorder="0"
-                                allowFullScreen
-                            ></iframe>
-                        </IllustrationContainer>
-                    </SectionWrapper>
-                    <SectionWrapper style={{ marginTop: '80px' }}>
-                        <ParagraphContainer width="60%">
-                            <H2 id="section6">{t('sales-landing.sections.6.heading')}</H2>
-                            <Paragraph>{t('sales-landing.sections.5.content')}</Paragraph>
-                        </ParagraphContainer>
-                        <IllustrationContainer width="40%">
-                            <AnimationSvg type="image/svg+xml" data={INMarket}></AnimationSvg>
-                        </IllustrationContainer>
-                    </SectionWrapper>
-                    <SectionWrapper>
                         <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
                             <AnimationSvg type="image/svg+xml" data={INChart}></AnimationSvg>
                         </IllustrationContainer>
-                        <ParagraphContainer width="60%">
-                            <H2 id="section7">{t('sales-landing.sections.7.heading')}</H2>
-                            <Paragraph>{t('sales-landing.sections.7.content')}</Paragraph>
-                        </ParagraphContainer>
                     </SectionWrapper>
-                    <SectionWrapper style={{ marginTop: '80px' }}>
-                        <ParagraphContainer width="60%">
-                            <H2 id="section8">{t('sales-landing.sections.8.heading')}</H2>
-                            <Paragraph>{t('sales-landing.sections.8.content')}</Paragraph>
-                        </ParagraphContainer>
-                        <IllustrationContainer width="40%">
-                            <AnimationSvg type="image/svg+xml" data={OUTMarket}></AnimationSvg>
-                        </IllustrationContainer>
-                    </SectionWrapper>
+                    <H2 id="section5">{t('sales-landing.sections.5.content-heading')}</H2>
                     <SectionWrapper>
+                        <ParagraphContainer width="60%">
+                            <IllustrationContainer width="100%" style={{ marginTop: '20px', marginBottom: '40px' }}>
+                                <AnimationSvg type="image/svg+xml" data={OUTMarket}></AnimationSvg>
+                            </IllustrationContainer>
+                            <Paragraph>
+                                <Trans i18nKey={'sales-landing.sections.5.content'} />
+                            </Paragraph>
+                        </ParagraphContainer>
                         <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
                             <AnimationSvg type="image/svg+xml" data={OUTChart}></AnimationSvg>
                         </IllustrationContainer>
-                        <ParagraphContainer width="60%">
-                            <H2 id="section9">{t('sales-landing.sections.9.heading')}</H2>
-                            <Paragraph>{t('sales-landing.sections.9.content')}</Paragraph>
-                        </ParagraphContainer>
                     </SectionWrapper>
-                    <SectionWrapper>
+                    <H2 id="section6">{t('sales-landing.sections.6.content-heading')}</H2>
+                    <SectionWrapper flexDirection={'column'} style={{ marginTop: '80px' }}>
+                        <ParagraphContainer width="100%">
+                            <Paragraph>
+                                <Trans
+                                    i18nKey={'sales-landing.sections.6.first-paragraph'}
+                                    components={{ a: <a href="#" /> }}
+                                />
+                            </Paragraph>
+                        </ParagraphContainer>
                         <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
                             <iframe
                                 width="100%"
@@ -185,11 +190,52 @@ const SalesLanding: React.FC = () => {
                                 allowFullScreen
                             ></iframe>
                         </IllustrationContainer>
-                    </SectionWrapper>
-                    <SectionWrapper>
                         <ParagraphContainer width="100%">
-                            <H2 id="section10">{t('sales-landing.sections.10.heading')}</H2>
-                            <Paragraph>{t('sales-landing.sections.10.content')}</Paragraph>
+                            <Paragraph>
+                                <Trans
+                                    i18nKey={'sales-landing.sections.6.second-paragraph'}
+                                    components={{ this: <a href="#" /> }}
+                                />
+                            </Paragraph>
+                        </ParagraphContainer>
+                    </SectionWrapper>
+                    <H2 id="section7">{t('sales-landing.sections.7.content-heading')}</H2>
+                    <SectionWrapper flexDirection={'column'}>
+                        <ParagraphContainer width="100%">
+                            <Paragraph>
+                                <Trans
+                                    i18nKey={'sales-landing.sections.7.first-paragraph'}
+                                    components={{ poslink: <a href="#" />, rangelink: <a href="#" /> }}
+                                />
+                            </Paragraph>
+                        </ParagraphContainer>
+                        <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
+                            <iframe
+                                width="100%"
+                                height="480"
+                                src="https://www.youtube.com/embed/8oIgCT8GTd0"
+                                frameBorder="0"
+                                allowFullScreen
+                            ></iframe>
+                        </IllustrationContainer>
+                        <ParagraphContainer width="100%">
+                            <Paragraph>
+                                <Trans i18nKey={'sales-landing.sections.7.second-paragraph'} />
+                            </Paragraph>
+                        </ParagraphContainer>
+                        <IllustrationContainer width="90%" style={{ margin: '70px auto' }}>
+                            <iframe
+                                width="100%"
+                                height="480"
+                                src="https://www.youtube.com/embed/MXqt3itSCgw"
+                                frameBorder="0"
+                                allowFullScreen
+                            ></iframe>
+                        </IllustrationContainer>
+                        <ParagraphContainer width="100%">
+                            <Paragraph>
+                                <Trans i18nKey={'sales-landing.sections.7.third-paragraph'} />
+                            </Paragraph>
                         </ParagraphContainer>
                     </SectionWrapper>
                 </Content>
