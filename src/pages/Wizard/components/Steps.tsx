@@ -409,7 +409,7 @@ const Nav = styled.div<{ justifyContent: string }>`
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: ${(_props) => _props.justifyContent};
+    justify-content: ${(props) => props.justifyContent};
     @media (max-width: 768px) {
         margin-top: 20px;
     }
@@ -483,7 +483,6 @@ const Step = styled.div<{ active?: boolean; clickable: boolean }>`
     border: 4px solid var(--input-border-color);
     color: var(--input-border-color);
     text-align: center;
-    position: relative;
     font-style: normal;
     font-weight: 700;
     font-size: 50px;
@@ -699,7 +698,7 @@ const handleLogoType = (logoType: Provider) => {
 };
 
 const Logo = styled.div<{ logoType: Provider }>`
-    content: url(${(_props) => handleLogoType(_props.logoType)});
+    content: url(${(props) => handleLogoType(props.logoType)});
     margin-left: 20px;
 `;
 

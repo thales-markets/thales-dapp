@@ -15,15 +15,17 @@ import { formatShortDateWithTime } from 'utils/formatters/date';
 import {
     ButtonContainerBottom,
     EarnSection,
-    PieChartCenterDiv,
-    PieChartCenterText,
-    PieChartContainer,
     SectionHeader,
-    LearnMore,
-    StyledMaterialTooltip,
     ClaimMessage,
     StyledInfoIcon,
     SectionContentContainer,
+} from '../componentsOld';
+import {
+    PieChartCenterDiv,
+    PieChartCenterText,
+    PieChartContainer,
+    LearnMore,
+    StyledMaterialTooltip,
     Tip37Link,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
@@ -35,7 +37,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import i18n from 'i18n';
 import { DefaultSubmitButton } from 'pages/Token/components/components';
-import { GridContainer } from 'pages/Token/gridComponents';
+import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
 
 const initialVestingInfo = {
     unlocked: 0,

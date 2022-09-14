@@ -11,15 +11,8 @@ import { MigratedRetroReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchMigratedInvestorsRetroRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
-import {
-    StyledInfoIcon,
-    ButtonContainer,
-    ClaimMessage,
-    EarnSection,
-    SectionHeader,
-    StyledMaterialTooltip,
-    Tip37Link,
-} from '../../components';
+import { StyledInfoIcon, ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../componentsOld';
+import { StyledMaterialTooltip, Tip37Link } from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
@@ -29,7 +22,7 @@ import {
     StakingRewardsItem,
     StakingRewardsLabel,
     GridAction,
-} from '../../gridComponents';
+} from '../gridComponents';
 import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInvestorsRetroRewardsQuery';
 import { DefaultSubmitButton } from 'pages/Token/components/components';
 import styled from 'styled-components';

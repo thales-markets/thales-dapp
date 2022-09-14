@@ -1,5 +1,5 @@
 import React, { useMemo, DependencyList, CSSProperties } from 'react';
-import { useTable, useSortBy, Column, Row } from 'react-table';
+import { useTable, useSortBy, Column, Row, SortByFn, DefaultSortTypes } from 'react-table';
 import { ReactComponent as SortDownIcon } from 'assets/images/sort-down.svg';
 import { ReactComponent as SortUpIcon } from 'assets/images/sort-up.svg';
 import { ReactComponent as SortIcon } from 'assets/images/sort.svg';
@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 
 type ColumnWithSorting<D extends Record<string, unknown>> = Column<D> & {
-    sortType?: string;
+    sortType?: string | SortByFn<D> | DefaultSortTypes;
     sortable?: boolean;
 };
 
@@ -56,7 +56,11 @@ const Table: React.FC<TableProps> = ({
                         <TableCellHead
                             {...column.getHeaderProps(column.sortable ? column.getSortByToggleProps() : undefined)}
                             key={headerIndex}
-                            style={column.sortable ? { cursor: 'pointer', ...tableHeadCellStyles } : {}}
+                            style={
+                                column.sortable
+                                    ? { cursor: 'pointer', ...tableHeadCellStyles }
+                                    : { ...tableHeadCellStyles }
+                            }
                         >
                             {column.render('Header')}
                             {column.sortable && (
@@ -124,11 +128,11 @@ const TableBody = styled.div`
         width: 5px;
     }
     ::-webkit-scrollbar-track {
-        background: #04045a;
+        background: #4673bd;
     }
     ::-webkit-scrollbar-thumb {
         border-radius: 15px;
-        background: #355dff;
+        background: #ffffff;
     }
     ::-webkit-scrollbar-thumb:active {
         background: #44e1e2;
@@ -139,10 +143,11 @@ const TableBody = styled.div`
 `;
 
 const TableRow = styled(FlexDiv)`
-    min-height: 40px;
+    min-height: 35px;
     font-weight: 600;
     font-size: 12px;
     @media (max-width: 512px) {
+        min-height: 50px;
         font-size: 10px;
         & > div {
             justify-content: center;
@@ -173,7 +178,7 @@ const TableCell = styled(FlexDivCentered)`
     flex: 1;
     min-width: 0px;
     width: 150px;
-    justify-content: left;
+    justify-content: center;
     &:first-child {
         padding-left: 18px;
     }

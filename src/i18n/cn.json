@@ -323,8 +323,7 @@
                 "claimed": "声称",
                 "claim": "宣称",
                 "rip": "RIP",
-                "position-value": "位置值",
-                "no-liquidity-tooltip": "<0>我们无法从 AMM 获取此头寸的报价，因为它可能已没有流动性。要了解有关 AMM 流动性规则的更多信息，请访问 <0/ ></0>。"
+                "position-value": "位置值"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场"
@@ -521,9 +520,7 @@
                         "claimed-message": "您已领取迁移奖励。",
                         "rewards-label": "迁移奖励",
                         "info-tooltip": "<0>战略投资者每</0><1 />的无人认领奖励。"
-                    },
-                    "op-rewards-tooltip": "游戏化质押的 OP 奖励按 <tip /> 计算，每两周空投一次，详情请查看 <page>OP 奖励页面</page>。",
-                    "enable-disable-claim-on-behalf-label": "代表启用/禁用声明"
+                    }
                 }
             },
             "vesting": {
@@ -578,7 +575,8 @@
                     "wrap-your-eth": "1. 包裹你的 ETH",
                     "stake-here": "3. 在此页面质押LP代币",
                     "deposit": "2. 将THALES和WETH存入G-UNI矿池"
-                }
+                },
+                "section-title": "LP Staking 是如何运作的？"
             },
             "table": {
                 "title": "您的活动",
@@ -637,8 +635,10 @@
                     "lpUnstake": "LP 解除质押",
                     "lpStake": "LP股权",
                     "claimMigratedRetroRewards": "迁移的复古奖励",
-                    "mergeAccount": "合并账户"
-                }
+                    "mergeAccount": "合并账户",
+                    "button": "过滤器"
+                },
+                "no-activity": "没有活动可显示"
             },
             "overview": {
                 "token-tooltip": "查看泰勒斯合同",
@@ -652,7 +652,8 @@
                 "circulating-supply-label": "市场供应",
                 "total-supply-label": "总供应",
                 "celer-bridge": "赛勒桥",
-                "celer-bridge-tooltip": "链条之间的快速桥梁 THALES"
+                "celer-bridge-tooltip": "链条之间的快速桥梁 THALES",
+                "total-burned-label": "泰雷兹烧毁总数"
             },
             "merge-account": {
                 "merge-blocked-message": {
@@ -695,6 +696,109 @@
                 "label": "输入您要代表您启用/禁用声明的帐户",
                 "account-label": "帐户",
                 "guide": "<1 /><0>关于如何自动化您的每周理赔</0>。"
+            },
+            "gamified-staking": {
+                "staking": {
+                    "stake": {
+                        "staking": "质押",
+                        "info-tooltip": "可用的质押奖励将作为质押交易的一部分索取。",
+                        "name": "赌注",
+                        "available-to-stake": "可供质押",
+                        "balance": "平衡：",
+                        "paused-message": "质押暂停。",
+                        "confirmation-message": "代币成功质押",
+                        "amount-to-stake": "质押金额："
+                    },
+                    "unstake": {
+                        "info-tooltip": "可用的质押奖励将作为开始解除质押交易的一部分索取。",
+                        "balance": "平衡：",
+                        "cancel-confirmation-message": "Unstaking 已成功取消",
+                        "name": "取消抵押",
+                        "cooldown-confirmation-message": "Unstaking 成功开始",
+                        "start-unstaking": "开始下注",
+                        "cooldown-started-text": "您可以取消质押 {{amount}}",
+                        "unlock-cooldown-text": "开始解锁冷却时间，在此期间未质押的金额不计入您的质押余额。",
+                        "cancel": "取消质押",
+                        "unstaking": "取消抵押",
+                        "amount-to-unstake": "取消质押金额：",
+                        "network-fee-unstake": "取消抵押",
+                        "canceling": "取消取消抵押",
+                        "unstake-confirmation-message": "代币成功解除抵押",
+                        "cooldown-label": "冷却",
+                        "network-fee-cancel": "取消",
+                        "paused-message": "取消质押已暂停。",
+                        "start-unstaking-tooltip": "在取消抵押冷却期间，您将无法抵押或取消抵押更多 THALES。",
+                        "cooldown-ended-text": "您现在可以取消质押 {{amount}}"
+                    },
+                    "wallet-balance": "我的钱包余额",
+                    "staked-balance": "我的质押余额",
+                    "bonus-apy-tooltip": "<0>根据 </0><1 />，通过协议使用或 Staking SNX 赚取 +{{max}}% 的额外 Staking Rewards。",
+                    "wallet-balance-tooltip": "您钱包中的非质押 THALES 数量。",
+                    "total-thales-staked": "THALES 总质押",
+                    "apy-tooltip": "Staking THALES 代币的 THALES 代币年收益率。",
+                    "total-thales-staked-tooltip": "Staking Contract 中的 THALES 代币总量。",
+                    "staked-share": "我的股份",
+                    "section-title": "质押",
+                    "staked-share-tooltip": "您在总质押泰雷兹池中的百分比 (%)。",
+                    "escrow-balance": "托管余额",
+                    "staked-balance-tooltip": "您当前质押的 THALES 代币数量。",
+                    "section-description": "Staking 奖励显示您可领取的 THALES 奖励。",
+                    "staked-directly": "直接质押"
+                },
+                "rewards": {
+                    "close-period": {
+                        "label": "关闭期间",
+                        "confirmation-message": "期间成功关闭",
+                        "progress-label": "截止期..."
+                    },
+                    "section-title": "奖励",
+                    "info-bonus": "作为奖金奖励",
+                    "info-bonus-description": "基础奖励之上的最高奖励奖励为 50%。 21k 或 70% 到 Protocol Usage 桶。这计算了来自 AMM 交易、范围 AMM 交易、体育 AMM 交易和异国市场竞标的 sUSD 交易量以及 SNX 质押者的 9k 或 30%。 <0 />",
+                    "protocol-bonus": "最高奖金的额外 sUSD",
+                    "enable-claim-on-behalf-button": "代表启用索赔",
+                    "claiming": "声称",
+                    "volume-exotic-desc": "当前的异国市场量",
+                    "claim-button-tooltip": "领取的奖励有 10 周的归属期。",
+                    "volume-ranged-desc": "当前范围市场交易量",
+                    "claim-confirmation-message": "代币已成功领取",
+                    "snx-rewards": "最高奖励",
+                    "claim": "索取泰雷兹奖励",
+                    "enable-claim-on-behalf-label": "将可以代表您触发质押奖励声明的地址列入白名单",
+                    "total-label": "可索赔总额",
+                    "period": "剩下的时间：",
+                    "protocol-volume": "体积",
+                    "lp-staking-label-2": "LP质押",
+                    "snx-label": "SNX 质押",
+                    "volume-ranged-label": "范围广泛的市场",
+                    "volume-sports-desc": "当前体育市场规模",
+                    "snx-volume": "体积",
+                    "info-base": "作为基础奖励",
+                    "lp-staking-label-1": "泰雷兹/eth",
+                    "volume-amm-desc": "当前 AMM 市场成交量：",
+                    "claimed-message": "您已经领取了本周的奖励。请下周再来。",
+                    "volume-amm-label": "AMM 市场",
+                    "snx-bonus": "最高奖金的额外 sUSD",
+                    "base-label": "泰雷兹质押基础奖励",
+                    "protocol-rewards": "最高奖励",
+                    "not-eligible-message": "您没有资格获得这些奖励。",
+                    "protocol-label": "协议使用桶",
+                    "paused-message": "索赔已暂停。",
+                    "section-description": "Staking 奖励显示您可领取的 THALES 奖励。",
+                    "info-base-description": "THALES Staking 产生的基本奖励（每周 {{baseRewards}}）"
+                },
+                "vesting": {
+                    "vest": {
+                        "vesting": "归属",
+                        "confirmation-message": "代币成功归属",
+                        "vest": "背心",
+                        "available-to-vest": "可用于背心"
+                    },
+                    "schedule-label": "归属时间表",
+                    "section-title": "归属",
+                    "schedule-no-results": "未找到归属时间表。",
+                    "section-description": "将您的 THALES 质押奖励用于托管。 THALES 持续奖励需要 10 周归属。托管 THALES 是在您质押的 THALES 余额中计算的。"
+                },
+                "tab-title": "游戏化质押"
             }
         },
         "quiz": {

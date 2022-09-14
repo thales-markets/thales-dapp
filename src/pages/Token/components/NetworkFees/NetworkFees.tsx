@@ -8,7 +8,7 @@ import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { RootState } from 'redux/rootReducer';
 import { getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
-import { SummaryContent, SummaryItem, SummaryLabel } from 'components/OldVersion/old-components';
+import { SummaryContent, SummaryItem, SummaryLabel } from '../components';
 import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -65,22 +65,20 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                     ))}
                 </>
             ) : (
-                <>
-                    <NetworkFeeSummaryItem>
-                        <NetworkFeeSummaryLabel>{t('common.network-fee-gas')}</NetworkFeeSummaryLabel>
-                        <NetworkFeeSummaryContent>
-                            {formatCurrencyWithSign(
-                                USD_SIGN,
-                                getTransactionPrice(
-                                    gasPrice,
-                                    gasLimit as number,
-                                    ethRate,
-                                    l1Fee && l1Fee !== null ? (l1Fee as number) : l1Fee
-                                )
-                            )}
-                        </NetworkFeeSummaryContent>
-                    </NetworkFeeSummaryItem>
-                </>
+                <NetworkFeeSummaryItem>
+                    <NetworkFeeSummaryLabel>{t('common.network-fee-gas')}</NetworkFeeSummaryLabel>
+                    <NetworkFeeSummaryContent>
+                        {formatCurrencyWithSign(
+                            USD_SIGN,
+                            getTransactionPrice(
+                                gasPrice,
+                                gasLimit as number,
+                                ethRate,
+                                l1Fee && l1Fee !== null ? (l1Fee as number) : l1Fee
+                            )
+                        )}
+                    </NetworkFeeSummaryContent>
+                </NetworkFeeSummaryItem>
             )}
             <NetworkFeeSummaryItem key="Gas Price">
                 <NetworkFeeSummaryLabel key={0}>{t('common.gas-price-gwei')}</NetworkFeeSummaryLabel>
@@ -93,18 +91,28 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
 };
 
 const NetworkFeeSummaryItem = styled(SummaryItem)`
-    margin-bottom: 10px;
+    margin-bottom: 0;
 `;
 
 const NetworkFeeSummaryLabel = styled(SummaryLabel)`
-    font-size: 13px;
-    line-height: 24px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    text-transform: uppercase;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const NetworkFeeSummaryContent = styled(SummaryContent)`
-    font-size: 13px;
-    line-height: 24px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+    text-transform: uppercase;
     flex: 1;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 export default NetworkFees;

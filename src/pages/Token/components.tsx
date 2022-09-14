@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { ReactComponent as InfoIconGreen } from 'assets/images/info-circle-green.svg';
 import { LINKS } from 'constants/links';
+import balanceIcon from 'assets/images/token/balance-icon.svg';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -16,13 +18,9 @@ export const EarnSection = styled.section<{
     display: flex;
     flex-direction: column;
     position: relative;
-    background: #04045a;
     border-radius: 15px;
     color: white;
-    grid-column: span 5;
-    grid-row: span 3;
-    border: 1px solid rgba(100, 217, 254, 0.6);
-    padding: 10px;
+    padding: 15px 15px 10px 15px;
     max-width: 100%;
     @media screen and (max-width: 1024px) {
         grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;
@@ -31,17 +29,19 @@ export const EarnSection = styled.section<{
     @media (max-width: 767px) {
         grid-column: span 10 !important;
         order: ${(props) => props.orderOnMobile ?? 10};
-        padding: ${(props) => props.paddingOnMobile ?? 15}px;
+        padding: ${(props) => props.paddingOnMobile ?? 2}px;
     }
 `;
 
 export const SectionHeader = styled(FlexDivRowCentered)`
-    font-weight: 600;
+    font-weight: 700;
     font-size: 20px;
-    letter-spacing: 0.15px;
+    line-height: 20px;
+    letter-spacing: 0.035em;
     color: #f6f6fe;
-    min-height: 50px;
-    padding: 0px 20px 0 20px;
+    text-transform: uppercase;
+    min-height: 30px;
+    padding: 0 20px;
     @media (max-width: 767px) {
         font-size: 16px;
         padding: 0px 5px;
@@ -52,74 +52,33 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     }
 `;
 
-export const SectionContent = styled(FlexDiv)`
-    padding: 30px 30px 15px 30px;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-`;
-
-export const ClaimDiv = styled(FlexDiv)`
-    align-items: center;
-`;
-
-export const ClaimTitle = styled.span`
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: 0.15px;
-    padding-bottom: 20px;
-    @media (max-width: 767px) {
-        font-size: 16px;
-    }
-`;
-
-export const ClaimContent = styled.span`
-    font-size: 16px;
-`;
-
 export const SectionContentContainer = styled(FlexDivColumn)`
-    padding: 20px 20px 0 20px;
+    height: 100%;
     @media (max-width: 767px) {
         padding: 0 5px 0 5px;
     }
 `;
 
-export const ClaimItem = styled(FlexDivColumnCentered)`
-    margin-bottom: 20px;
-    align-items: center;
-`;
-
 export const ButtonContainer = styled(FlexDivColumnCentered)`
-    margin-top: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     align-items: center;
+    @media (max-width: 768px) {
+        margin-top: 10px;
+    }
 `;
 
-export const ButtonContainerBottom = styled(ButtonContainer)`
-    justify-content: flex-end;
-`;
-
-export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string }>`
+export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string; above?: boolean }>`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
     color: ${(props) => (props.color ? props.color : '#ffcc00')};
-    margin-top: 10px;
+    ${(props) => (props.above ? 'margin-bottom: 10px;' : 'margin-top: 10px;')}
     visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
-`;
-
-export const FullRow = styled(FlexDiv)`
-    flex-basis: 100%;
-    display: flex;
-    font-size: 20px;
-    justify-content: center;
-    margin-bottom: 10px;
-`;
-
-export const EarnSymbol = styled(FlexDivCentered)`
-    color: #00f9ff;
-    font-weight: 600;
-    font-size: 39px;
-    padding: 20px;
+    min-height: 16px;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 export const PieChartContainer = styled.div`
@@ -150,6 +109,115 @@ export const PieChartCenterText = styled.span<{ disabled?: boolean }>`
     color: ${(props) => (props.disabled ? '#B8C6E5' : 'white')};
 `;
 
+export const FullRow = styled(FlexDiv)`
+    flex-basis: 100%;
+    display: flex;
+    font-size: 20px;
+    justify-content: center;
+    margin-bottom: 10px;
+`;
+
+export const StyledMaterialTooltip = withStyles(() => ({
+    arrow: {
+        '&:before': {
+            border: '1px solid #64D9FE',
+        },
+        color: '#0d1069',
+        marginLeft: '0px!important',
+    },
+    tooltip: {
+        background:
+            'linear-gradient(#04045a 0%, #04045a 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
+        border: '1px solid transparent',
+        borderRadius: '5px',
+        padding: '10px 15px',
+        fontWeight: 400,
+        fontSize: '16px',
+        lineHeight: '20px',
+        letterSpacing: '0.4px',
+        color: '#ffffff',
+        maxWidth: window.innerWidth < 768 ? 350 : 400,
+    },
+}))(MaterialTooltip);
+
+export const TooltipLink = styled.a`
+    color: #00f9ff;
+    &:hover {
+        color: rgb(116, 139, 198);
+    }
+`;
+
+export const DescriptionLink = styled.a`
+    color: #64d9fe;
+    text-decoration: underline;
+    &:hover {
+        color: rgb(116, 139, 198);
+    }
+`;
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    margin-left: 5px;
+    width: 15px;
+    height: 15px;
+    @media (max-width: 768px) {
+        display: none;
+    }
+`;
+
+export const StyledInfoIconGreen = styled(InfoIconGreen)`
+    min-width: 15px;
+    min-height: 15px;
+    margin-left: 5px;
+    margin-bottom: 1px;
+    @media (max-width: 768px) {
+        display: none;
+    }
+`;
+
+export const BalanceIcon = styled.span`
+    content: url(${balanceIcon});
+    margin: 0 4px 2px 0;
+`;
+
+export const Line = styled.hr<{ margin?: string }>`
+    height: 1px;
+    color: #ffffff;
+    ${(props) => (props.margin ? `margin: ${props.margin}` : '')};
+`;
+
+export const DashedLine = styled.hr<{ gridRow: number; widthPer: number }>`
+    border: none;
+    border-bottom: 2px dashed #64d9fe80;
+    grid-row: ${(props) => props.gridRow};
+    grid-column: 1 / 13;
+    width: ${(props) => props.widthPer}%;
+    @media (max-width: 768px) {
+        display: none;
+    }
+`;
+
+export const DashedLineVertical = styled.hr<{
+    gridRow: number;
+    columnStart: number;
+    marginTop: number;
+    heightPer: number;
+    marginLeft?: number;
+}>`
+    border: none;
+    border-left: 2px dashed #64d9fe80;
+    grid-row: ${(props) => props.gridRow};
+    grid-column-start: ${(props) => props.columnStart};
+    margin-top: ${(props) => props.marginTop}px;
+    height: ${(props) => props.heightPer}%;
+    ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
+    @media (max-width: 768px) {
+        height: 20px;
+        margin-top: -10px;
+        margin-bottom: -10px;
+        ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
+    }
+`;
+
 export const LearnMore = styled.span<{ top: string }>`
     position: absolute;
     bottom: 18%;
@@ -166,77 +234,10 @@ export const LearnMore = styled.span<{ top: string }>`
     }
 `;
 
-export const StyledMaterialTooltip = withStyles(() => ({
-    arrow: {
-        '&:before': {
-            border: '1px solid #64D9FE',
-        },
-        color: '#0d1069',
-        marginLeft: '0px!important',
-    },
-    tooltip: {
-        background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
-        borderRadius: '15px',
-        border: '1px solid #64D9FE',
-        padding: '20px',
-        fontSize: '16px',
-        lineHeight: '24px',
-        letterSpacing: '0.4px',
-        color: '#F6F6FE',
-        maxWidth: window.innerWidth < 768 ? 350 : 400,
-        boxShadow: '-2px -2px 10px rgba(100, 217, 254, 0.25), 2px 2px 10px rgba(100, 217, 254, 0.25)',
-    },
-}))(MaterialTooltip);
-
-export const MaxButtonContainer = styled(FlexDiv)`
-    justify-content: flex-end;
-    flex: 1;
-    margin-left: 10px;
-    max-width: 40%;
-`;
-
-export const MaxButton = styled.button`
-    background: #04045a;
-    border: 3px solid #0c1c68;
-    box-sizing: border-box;
-    border-radius: 5px;
-    color: #f6f6fe;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 12px 32px 12px 32px;
-    text-transform: uppercase;
-    &:disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-`;
-
-export const TooltipLink = styled.a`
-    color: #00f9ff;
-    &:hover {
-        color: rgb(116, 139, 198);
-    }
-`;
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    min-width: 20px;
-    min-height: 20px;
-    margin-left: 10px;
-    margin-bottom: -2px;
-`;
-
-export const Tip23Link: React.FC = () => {
+export const Tip66Link: React.FC = () => {
     return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP23}>
-            TIP-23
-        </TooltipLink>
-    );
-};
-
-export const Tip20Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP20}>
-            TIP-20
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP66}>
+            TIP-66
         </TooltipLink>
     );
 };
@@ -249,6 +250,22 @@ export const Tip17Link: React.FC = () => {
     );
 };
 
+export const Tip20Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP20}>
+            TIP-20
+        </TooltipLink>
+    );
+};
+
+export const Tip23Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP23}>
+            TIP-23
+        </TooltipLink>
+    );
+};
+
 export const Tip37Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP37}>
@@ -257,26 +274,18 @@ export const Tip37Link: React.FC = () => {
     );
 };
 
+export const Tip48Link: React.FC = (props) => {
+    return (
+        <DescriptionLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP48}>
+            {props.children}
+        </DescriptionLink>
+    );
+};
+
 export const Tip49Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP49}>
             TIP-49
-        </TooltipLink>
-    );
-};
-
-export const Tip53Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP53}>
-            TIP-53
-        </TooltipLink>
-    );
-};
-
-export const Tip66Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP66}>
-            TIP-66
         </TooltipLink>
     );
 };
@@ -289,10 +298,18 @@ export const ClaimOnBehalfGuideLink: React.FC = () => {
     );
 };
 
-export const OpRewardsPageLink: React.FC = () => {
+export const UniswapExchangeLink: React.FC = (props) => {
     return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.OpRewardsPage}>
-            the OP rewards page
-        </TooltipLink>
+        <DescriptionLink target="_blank" rel="noreferrer" href={LINKS.Token.UniswapWrapEth}>
+            {props.children}
+        </DescriptionLink>
+    );
+};
+
+export const ProvideLiquidityLink: React.FC = (props) => {
+    return (
+        <DescriptionLink target="_blank" rel="noreferrer" href={LINKS.Token.Liquidity}>
+            {props.children}
+        </DescriptionLink>
     );
 };

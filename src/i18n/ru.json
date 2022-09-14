@@ -521,9 +521,7 @@
                         "rewards-label": "Перенесенные награды",
                         "claimed-message": "Вы уже запросили перенесенные вознаграждения.",
                         "info-tooltip": "<0>Невостребованные вознаграждения для стратегических инвесторов за </0><1 />."
-                    },
-                    "enable-disable-claim-on-behalf-label": "Включить/отключить претензию от имени",
-                    "op-rewards-tooltip": "Вознаграждения OP за игровые ставки рассчитываются по <tip /> и раздаются каждые две недели. Подробности см. на <page>странице вознаграждений OP</page>."
+                    }
                 }
             },
             "vesting": {
@@ -578,7 +576,8 @@
                     "stake-here": "3. Ставьте токены LP на этой странице.",
                     "description": "Получите токены G-UNI LP для стейкинга, добавив ликвидность в пул THALES/WETH.",
                     "deposit": "2. Внесите THALES и WETH в пул G-UNI."
-                }
+                },
+                "section-title": "Как работает ставка LP?"
             },
             "table": {
                 "title": "Ваша активность",
@@ -637,8 +636,10 @@
                     "claimMigratedRewards": "Перенесенные награды",
                     "lpStake": "ставка LP",
                     "claimMigratedRetroRewards": "Перенесенные ретро-награды",
-                    "mergeAccount": "Объединить аккаунт"
-                }
+                    "mergeAccount": "Объединить аккаунт",
+                    "button": "фильтры"
+                },
+                "no-activity": "Нет активности для показа"
             },
             "overview": {
                 "token-tooltip": "Просмотреть контракт THALES",
@@ -652,7 +653,8 @@
                 "circulating-supply-label": "Количество в обрашении",
                 "total-supply-label": "Общее количество",
                 "celer-bridge": "Целерский мост",
-                "celer-bridge-tooltip": "Быстрый мост THALES между цепями"
+                "celer-bridge-tooltip": "Быстрый мост THALES между цепями",
+                "total-burned-label": "Всего сожжено Thales"
             },
             "merge-account": {
                 "merge-blocked-message": {
@@ -695,6 +697,110 @@
                 "title": "Претензия от имени",
                 "no-enabled-addresses-message": "Адреса не присвоены.",
                 "guide": "<1 /><0> о том, как автоматизировать еженедельные заявки</0>."
+            },
+            "gamified-staking": {
+                "staking": {
+                    "stake": {
+                        "balance": "Остаток средств:",
+                        "name": "Ставка",
+                        "info-tooltip": "Доступные вознаграждения за ставку будут востребованы как часть транзакции по ставке.",
+                        "available-to-stake": "Доступно для ставок",
+                        "confirmation-message": "Токены успешно поставлены",
+                        "staking": "Ставка",
+                        "amount-to-stake": "Сумма ставки:",
+                        "paused-message": "Ставки приостановлены."
+                    },
+                    "unstake": {
+                        "network-fee-cancel": "Отмена",
+                        "cooldown-confirmation-message": "Анстейкинг успешно запущен",
+                        "cooldown-label": "Остывать",
+                        "unstaking": "Анстейкинг",
+                        "balance": "Остаток средств:",
+                        "amount-to-unstake": "Сумма для снятия ставки:",
+                        "cancel-confirmation-message": "Анстейкинг успешно отменен",
+                        "name": "Отменить ставку",
+                        "start-unstaking-tooltip": "Во время восстановления анстейкинга вы не сможете ставить или анстейкать больше THALES.",
+                        "unlock-cooldown-text": "Начните разблокировать кулдаун, во время которого сумма, которую вы не ставите, не учитывается в вашем балансе.",
+                        "canceling": "Отмена анстейкинга",
+                        "cooldown-started-text": "Вы можете отменить ставку {{amount}} в",
+                        "unstake-confirmation-message": "Токены успешно разблокированы",
+                        "paused-message": "Анстейкинг приостановлен.",
+                        "start-unstaking": "Начать снятие ставок",
+                        "info-tooltip": "Доступные вознаграждения за стейкинг будут затребованы как часть стартовой транзакции анстейкинга.",
+                        "cooldown-ended-text": "Теперь вы можете отменить ставку {{amount}}",
+                        "network-fee-unstake": "Отменить ставку",
+                        "cancel": "Отменить снятие ставок"
+                    },
+                    "escrow-balance": "Депозитный баланс",
+                    "total-thales-staked": "Всего ставок THALES",
+                    "total-thales-staked-tooltip": "Общее количество токенов THALES в стейкинг-контракте.",
+                    "staked-share-tooltip": "Ваш процент (%) от пула Total Staked Thales.",
+                    "section-title": "Ставка",
+                    "staked-directly": "Ставка напрямую",
+                    "staked-share": "Моя доля ставок",
+                    "staked-balance": "Мой стейкинговый баланс",
+                    "section-description": "Награды за стейкинг показывают награды THALES, которые вы можете получить.",
+                    "wallet-balance": "Баланс моего кошелька",
+                    "staked-balance-tooltip": "Количество токенов THALES, которое вы сейчас размещаете.",
+                    "apy-tooltip": "Годовой процентный доход в токенах THALES от размещения токенов THALES.",
+                    "bonus-apy-tooltip": "<0>Получите бонус +{{max}}% к вознаграждению за стейкинг за использование протокола или стейкинг SNX согласно </0><1 />.",
+                    "wallet-balance-tooltip": "Количество нестейкинговых THALES в вашем кошельке."
+                },
+                "rewards": {
+                    "close-period": {
+                        "label": "Закрыть период",
+                        "confirmation-message": "Период успешно закрыт",
+                        "progress-label": "Период закрытия..."
+                    },
+                    "claiming": "Претензия",
+                    "snx-rewards": "Максимальная награда",
+                    "paused-message": "Претензия приостановлена.",
+                    "protocol-bonus": "Дополнительные sUSD для максимального бонуса",
+                    "info-bonus-description": "Максимальные бонусные вознаграждения сверх базовых вознаграждений составляют 50%. 21 КБ или 70 % для корзины использования протокола. Это включает в себя объем sUSD от торговли AMM, торговли AMM с диапазоном, торговли AMM в спорте и торгов на экзотических рынках, а также 9k или 30% для стейкеров SNX. <0 />",
+                    "snx-label": "Стейкинг SNX",
+                    "protocol-rewards": "Максимальная награда",
+                    "volume-exotic-desc": "Текущий объем экзотического рынка",
+                    "volume-amm-label": "рынки АММ",
+                    "snx-bonus": "Дополнительные sUSD для максимального бонуса",
+                    "volume-ranged-desc": "Текущий объем рынка дальнего боя",
+                    "info-base": "В качестве базовых наград",
+                    "lp-staking-label-1": "талес/эт",
+                    "volume-ranged-label": "Диапазонные рынки",
+                    "section-title": "Награды",
+                    "claim-button-tooltip": "Заявленные вознаграждения подлежат 10-недельному периоду наделения правами.",
+                    "info-bonus": "В качестве бонусных вознаграждений",
+                    "protocol-label": "Сегмент использования протокола",
+                    "lp-staking-label-2": "LP стейкинг",
+                    "total-label": "Всего заявлено",
+                    "volume-sports-desc": "Текущий объем спортивного рынка",
+                    "base-label": "Thales размещает базовые вознаграждения",
+                    "claim": "Получите награды Thales",
+                    "section-description": "Награды за стейкинг показывают награды THALES, которые вы можете получить.",
+                    "snx-volume": "Объем",
+                    "volume-amm-desc": "Текущий объем рынка АММ:",
+                    "claim-confirmation-message": "Токены успешно получены",
+                    "info-base-description": "Базовые вознаграждения, получаемые от THALES Staking ({{baseRewards}} еженедельно)",
+                    "enable-disable-claim-on-behalf-label": "Включить/отключить претензию от имени",
+                    "not-eligible-message": "Вы не имеете права на эти награды.",
+                    "period": "Осталось времени:",
+                    "protocol-volume": "Объем",
+                    "claimed-message": "Вы уже получили награды за эту неделю. Пожалуйста, приходите на следующей неделе.",
+                    "enable-claim-on-behalf-label": "Внесите в белый список адрес, который может инициировать получение вознаграждения от вашего имени.",
+                    "enable-claim-on-behalf-button": "Включить претензию от имени"
+                },
+                "vesting": {
+                    "section-title": "Вестинг",
+                    "section-description": "Поместите свои вознаграждения за стекинг THALES на условное депонирование. Текущие вознаграждения THALES подлежат передаче в течение 10 недель. Депонированные THALES рассчитываются в вашем балансе THALES.",
+                    "vest": {
+                        "confirmation-message": "Токены успешно переданы",
+                        "vest": "Жилет",
+                        "vesting": "Вестинг",
+                        "available-to-vest": "Доступно для жилета"
+                    },
+                    "schedule-no-results": "График вестинга не найден.",
+                    "schedule-label": "График вестинга"
+                },
+                "tab-title": "Геймифицированный стейкинг"
             }
         },
         "quiz": {

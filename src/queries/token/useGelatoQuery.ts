@@ -9,6 +9,7 @@ const LP_STAKING_WEEKLY_REWARDS = 45000;
 const LP_STAKING_WEEKLY_SECOND_REWARDS = 15750;
 
 export interface Balance {
+    priceInUSD: number;
     totalInUSD: number;
     apr: string;
     secondApr: string;
@@ -56,10 +57,10 @@ const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
                 const thales = bigNumberFormatter(balance[0]);
                 const weth = bigNumberFormatter(balance[1]);
 
-                const totalInUSD =
-                    (bigNumberFormatter(totalGelatoLocked) *
-                        (weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd)) /
+                const priceInUSD =
+                    (weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd) /
                     bigNumberFormatter(totalSupply);
+                const totalInUSD = bigNumberFormatter(totalGelatoLocked) * priceInUSD;
 
                 const apr = (100 * (LP_STAKING_WEEKLY_REWARDS * ratesResults.thales.usd * 52)) / totalInUSD;
                 const secondApr =
@@ -67,6 +68,7 @@ const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
                 const totalApr = apr + secondApr;
 
                 return {
+                    priceInUSD,
                     totalInUSD,
                     apr: formatCurrency(apr) + '%',
                     secondApr: formatCurrency(secondApr) + '%',
@@ -75,7 +77,7 @@ const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
             } catch (e) {
                 console.log(e);
             }
-            return { totalInUSD: 0, apr: '', secondApr: '', totalApr: '' };
+            return { priceInUSD: 0, totalInUSD: 0, apr: '', secondApr: '', totalApr: '' };
         },
         options
     );

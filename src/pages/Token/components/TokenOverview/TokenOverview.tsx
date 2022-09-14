@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/common';
@@ -19,6 +19,8 @@ import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
 import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
 import { getIsOVM } from 'utils/network';
+import Lottie from 'lottie-react';
+import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
 
 export const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -38,82 +40,98 @@ export const TokentOverview: React.FC = () => {
     }, [tokenInfoQuery.isSuccess, tokenInfoQuery.data]);
 
     return (
-        <>
-            <Container>
-                <ItemContainer>
-                    <FlexDivCentered>
-                        <CustomIcon src={thalesTokenIcon}></CustomIcon>
-                        <LightTooltip title={t('options.earn.overview.token-tooltip')}>
+        <Container>
+            <ItemContainer>
+                <FlexDivCentered>
+                    <CustomIcon src={thalesTokenIcon}></CustomIcon>
+                    <LightTooltip title={t('options.earn.overview.token-tooltip')}>
+                        <StyledLink
+                            href={getEtherscanTokenLink(networkId, thalesContract.addresses[networkId])}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <CryptoName>{THALES_CURRENCY}</CryptoName>
+                            <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
+                        </StyledLink>
+                    </LightTooltip>
+                </FlexDivCentered>
+            </ItemContainer>
+            <ItemContainer>
+                <Title>{t('options.earn.overview.price-label')}</Title>
+                <Content>
+                    {tokenInfo && tokenInfo.price ? (
+                        <LightTooltip title={t(`options.earn.overview.price-tooltip-l2`)}>
                             <StyledLink
-                                href={getEtherscanTokenLink(networkId, thalesContract.addresses[networkId])}
+                                href={isL2 ? LINKS.Token.UniswapL2 : LINKS.Token.Uniswap}
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                                <CryptoName>{THALES_CURRENCY}</CryptoName>
+                                {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
                                 <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                             </StyledLink>
                         </LightTooltip>
-                    </FlexDivCentered>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>{t('options.earn.overview.price-label')}</Title>
-                    <Content>
-                        {tokenInfo && tokenInfo.price ? (
-                            <LightTooltip title={t(`options.earn.overview.price-tooltip-l2`)}>
-                                <StyledLink
-                                    href={isL2 ? LINKS.Token.UniswapL2 : LINKS.Token.Uniswap}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
-                                    <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
-                                </StyledLink>
-                            </LightTooltip>
-                        ) : (
-                            <>{EMPTY_VALUE}</>
-                        )}
-                    </Content>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>{t('options.earn.overview.market-cap-label')}</Title>
-                    <Content>
-                        {tokenInfo && tokenInfo.marketCap
-                            ? formatCurrencyWithSign(USD_SIGN, tokenInfo.marketCap)
-                            : EMPTY_VALUE}
-                    </Content>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>{t('options.earn.overview.circulating-supply-label')}</Title>
-                    <Content>
-                        {tokenInfo
-                            ? formatCurrencyWithKey(THALES_CURRENCY, tokenInfo.circulatingSupply, 0, true)
-                            : EMPTY_VALUE}
-                    </Content>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>{t('options.earn.overview.total-supply-label')}</Title>
-                    <Content>
-                        {tokenInfo
-                            ? formatCurrencyWithKey(THALES_CURRENCY, tokenInfo.totalSupply, 0, true)
-                            : EMPTY_VALUE}
-                    </Content>
-                </ItemContainer>
-                <ItemContainer>
-                    <FlexDivCentered>
-                        <LightTooltip title={t('options.earn.overview.celer-bridge-tooltip')}>
-                            <StyledLink
-                                href="https://cbridge.celer.network/#/transfer?sourceChainId=1&destinationChainId=10&tokenSymbol=THALES"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                <CryptoName>{t('options.earn.overview.celer-bridge')}</CryptoName>
-                                <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
-                            </StyledLink>
-                        </LightTooltip>
-                    </FlexDivCentered>
-                </ItemContainer>
-            </Container>
-        </>
+                    ) : (
+                        <>{EMPTY_VALUE}</>
+                    )}
+                </Content>
+            </ItemContainer>
+            <ItemContainer>
+                <Title>{t('options.earn.overview.market-cap-label')}</Title>
+                <Content>
+                    {tokenInfo && tokenInfo.marketCap
+                        ? formatCurrencyWithSign(USD_SIGN, Math.round(tokenInfo.marketCap), 0, true)
+                        : EMPTY_VALUE}
+                </Content>
+            </ItemContainer>
+            <ItemContainer>
+                <Title>{t('options.earn.overview.circulating-supply-label')}</Title>
+                <Content>
+                    {tokenInfo
+                        ? formatCurrencyWithKey(THALES_CURRENCY, Math.round(tokenInfo.circulatingSupply), 0, true)
+                        : EMPTY_VALUE}
+                </Content>
+            </ItemContainer>
+            <ItemContainer>
+                <ThalesBurnedWrapper>
+                    <Title color={'#E26565'} noWrap={true}>
+                        {t('options.earn.overview.total-burned-label')}
+                    </Title>
+                    <Lottie animationData={thalesBurnedAnimation} style={thalesBurnedStyle} />
+                </ThalesBurnedWrapper>
+                <Content color={'#E26565'}>
+                    {tokenInfo
+                        ? formatCurrencyWithKey(THALES_CURRENCY, Math.round(tokenInfo.thalesBurned), 0, true)
+                        : EMPTY_VALUE}
+                </Content>
+            </ItemContainer>
+            <ItemContainer>
+                <Title>{t('options.earn.overview.total-supply-label')}</Title>
+                <Content>
+                    {tokenInfo
+                        ? formatCurrencyWithKey(
+                              THALES_CURRENCY,
+                              Math.round(tokenInfo.totalSupply - tokenInfo.thalesBurned),
+                              0,
+                              true
+                          )
+                        : EMPTY_VALUE}
+                </Content>
+            </ItemContainer>
+            <ItemContainer>
+                <FlexDivCentered>
+                    <LightTooltip title={t('options.earn.overview.celer-bridge-tooltip')}>
+                        <StyledLink
+                            href="https://cbridge.celer.network/#/transfer?sourceChainId=1&destinationChainId=10&tokenSymbol=THALES"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <CryptoName>{t('options.earn.overview.celer-bridge')}</CryptoName>
+                            <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
+                        </StyledLink>
+                    </LightTooltip>
+                </FlexDivCentered>
+            </ItemContainer>
+        </Container>
     );
 };
 
@@ -127,7 +145,7 @@ const Container = styled(FlexDiv)`
     background: #04045a;
     border-radius: 16px;
     border: 2px solid rgba(100, 217, 254, 0.5);
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
     @media (max-width: 1024px) {
         padding-left: 10px;
@@ -142,38 +160,42 @@ const Container = styled(FlexDiv)`
             padding: 10px;
             border: none !important;
             &:nth-child(1) {
-                flex-basis: 100%;
+                flex-basis: 50%;
                 order: 1;
                 border-bottom: 1px solid rgba(1, 38, 81, 0.8) !important;
+                justify-content: flex-start;
             }
             &:nth-child(2) {
-                flex-basis: 40%;
+                flex-basis: 50%;
                 order: 2;
                 justify-content: flex-start;
             }
             &:nth-child(3) {
-                flex-basis: 40%;
-                order: 4;
+                flex-basis: 50%;
+                order: 3;
                 justify-content: flex-start;
             }
             &:nth-child(4) {
-                flex-basis: 60%;
-                order: 3;
-                justify-content: flex-end;
-                text-align: right;
+                flex-basis: 50%;
+                order: 4;
+                justify-content: flex-start;
             }
             &:nth-child(5) {
-                flex-basis: 60%;
+                flex-basis: 50%;
                 order: 5;
-                justify-content: flex-end;
-                text-align: right;
+                justify-content: flex-start;
             }
             &:nth-child(6) {
-                flex-basis: 100%;
+                flex-basis: 50%;
                 order: 6;
+                justify-content: flex-start;
+            }
+            &:nth-child(7) {
+                flex-basis: 100%;
+                order: 7;
                 border-top: 1px solid rgba(1, 38, 81, 0.8) !important;
             }
-            &:nth-child(6) span {
+            &:nth-child(7) span {
                 font-size: 14px;
                 line-height: 16px;
             }
@@ -188,6 +210,9 @@ const InnerItemContainer = styled(FlexDivCentered)`
         border-right: 2px solid rgba(1, 38, 81, 0.5);
     }
     color: #b8c6e5;
+    @media (max-width: 1192px) {
+        min-height: 60px;
+    }
     @media (max-width: 1024px) {
         flex-basis: 33%;
     }
@@ -200,28 +225,34 @@ const Item = styled(FlexDivColumnCentered)`
     flex: initial;
 `;
 
-const Title = styled.p`
+const Title = styled.p<{ color?: string; noWrap?: boolean }>`
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
     line-height: 18px;
-    color: #b8c6e5;
+    color: ${(props) => props.color || '#b8c6e5'};
+    ${(props) => (props.noWrap ? 'white-space: nowrap;' : '')};
     @media (max-width: 767px) {
         font-size: 12px;
         line-height: 16px;
     }
 `;
 
-const Content = styled.div<{ fontSize?: number }>`
+const Content = styled.div<{ fontSize?: number; color?: string }>`
     font-style: normal;
     font-weight: bold;
     font-size: ${(props) => props.fontSize || 16}px;
     line-height: 18px;
-    color: #f6f6fe;
+    color: ${(props) => props.color || '#f6f6fe'};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    @media (max-width: 1192px) {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 16px;
+    }
     @media (max-width: 767px) {
         font-weight: 600;
         font-size: 14px;
@@ -235,16 +266,22 @@ const StyledLink = styled.a`
         fill: #f6f6fe;
     }
     &:hover {
-        color: #00f9ff;
+        color: #64d9fe;
         & path {
-            fill: #00f9ff;
+            fill: #64d9fe;
         }
+    }
+    @media (max-width: 767px) {
+        color: #64d9fe;
     }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
     @media (max-width: 767px) {
-        display: none;
+        color: #64d9fe;
+        & path {
+            fill: #64d9fe;
+        }
     }
 `;
 
@@ -269,5 +306,18 @@ export const StyledInfoIcon = styled(InfoIcon)`
         display: none;
     }
 `;
+
+const ThalesBurnedWrapper = styled.div`
+    display: flex;
+    position: relative;
+`;
+
+const thalesBurnedStyle: CSSProperties = {
+    height: 40,
+    width: 40,
+    position: 'absolute',
+    right: -30,
+    top: -23,
+};
 
 export default TokentOverview;
