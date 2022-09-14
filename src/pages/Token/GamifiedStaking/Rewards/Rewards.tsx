@@ -25,7 +25,7 @@ import {
 import YourTransactions from './Transactions';
 import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import useStakingRewardsQuery from 'queries/token/useStakingRewardsQuery';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -33,7 +33,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivEnd } from 'theme/common';
-import { StakingReward, TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
+import { StakingReward, TokenTabEnum } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
@@ -41,6 +41,8 @@ import { dispatchMarketNotification } from 'utils/options';
 import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { isMobile } from 'utils/device';
+import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
+import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 
 enum SectionType {
     INFO,
@@ -54,11 +56,9 @@ enum SectionType {
 type RewardsProperties = {
     gridGap: number;
     setSelectedTab: (tabId: string) => void;
-    estimatedRewards: number;
-    setActiveButtonId: (activeButtonId: TokenTabSectionIdEnum) => void;
 };
 
-const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimatedRewards, setActiveButtonId }) => {
+const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -75,8 +75,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
-    const [initialWalletAddress, setInitialWalletAddress] = useState(walletAddress);
-    const [initialNetwork, setInitialNetwork] = useState(networkId);
 
     const { stakingThalesContract } = snxJSConnector as any;
 
@@ -95,6 +93,35 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     const stakingRewardsQuery = useStakingRewardsQuery(walletAddress, networkId, {
         enabled: isAppReady && !!stakingThalesContract,
     });
+    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, { enabled: isAppReady });
+    const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, { enabled: isAppReady });
+
+    const totalStakedAmount =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.totalStakedAmount : 0;
+    const fixedPeriodReward =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.fixedPeriodReward : 0;
+    const totalEscrowedRewards =
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.totalEscrowedRewards : 0;
+    const totalEscrowBalanceNotIncludedInStaking =
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data
+            ? escrowThalesQuery.data.totalEscrowBalanceNotIncludedInStaking
+            : 0;
+    const thalesStaked =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.thalesStaked : 0;
+    const escrowedBalance =
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.escrowedBalance : 0;
+
+    const totalThalesStaked = useMemo(
+        () => totalStakedAmount + totalEscrowedRewards - totalEscrowBalanceNotIncludedInStaking,
+        [totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+    );
+
+    const myStakedShare = useMemo(
+        () => (totalThalesStaked === 0 ? 0 : (100 * (thalesStaked + escrowedBalance)) / totalThalesStaked),
+        [thalesStaked, totalThalesStaked, escrowedBalance]
+    );
+
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * fixedPeriodReward, [myStakedShare]);
 
     useEffect(() => {
         if (stakingRewardsQuery.isSuccess && stakingRewardsQuery.data) {
@@ -136,12 +163,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab, estimat
     }, [walletAddress, isClaimAvailable]);
 
     useEffect(() => {
-        if (initialWalletAddress !== walletAddress || initialNetwork !== networkId) {
-            setActiveButtonId(TokenTabSectionIdEnum.STAKING);
-            setInitialWalletAddress(walletAddress);
-            setInitialNetwork(networkId);
-        }
-    }, [walletAddress, networkId]);
+        window.scrollTo(0, 0);
+    }, []);
 
     const totalThalesRewards = stakingRewards ? stakingRewards.rewards : 0;
     const baseRewards = stakingRewards ? stakingRewards.baseRewards : 0;

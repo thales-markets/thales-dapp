@@ -29,10 +29,12 @@ const TabContainer: React.FC<{
                                 key={index}
                                 noStrech={true}
                                 onClick={() => {
+                                    const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
                                     history.push({
                                         pathname: location.pathname,
                                         search: queryString.stringify({
                                             tab: tab.id,
+                                            activeButtonId: paramActiveButtonId,
                                         }),
                                     });
                                     setSelectedTab(tab.id);

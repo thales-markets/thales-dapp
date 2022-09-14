@@ -254,7 +254,6 @@ const Stake: React.FC = () => {
                         onChange={(_, value) => setAmountToStake(value)}
                         disabled={isStaking || isUnstaking || isStakingPaused}
                         className={isAmountValid ? '' : 'error'}
-                        autoFocus={!isMobile()}
                     />
                     <InputLabel>{t('options.earn.gamified-staking.staking.stake.amount-to-stake')}</InputLabel>
                     <CurrencyLabel className={isStaking || isUnstaking || isStakingPaused ? 'disabled' : ''}>

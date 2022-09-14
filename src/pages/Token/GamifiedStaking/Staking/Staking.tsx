@@ -3,7 +3,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { StyledInfoIcon, StyledInfoIconGreen, StyledMaterialTooltip, Tip17Link } from 'pages/Token/components';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -35,13 +35,10 @@ function getNumberLabel(label: number) {
     );
 }
 
-const aprToApy = (interest: number, frequency: number) => ((1 + interest / 100 / frequency) ** frequency - 1) * 100;
+const APR_FREQUENCY = 52;
+const aprToApy = (interest: number) => ((1 + interest / 100 / APR_FREQUENCY) ** APR_FREQUENCY - 1) * 100;
 
-type StakingProperties = {
-    setEstimatedRewards: (estimatedRewards: number) => void;
-};
-
-const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards }) => {
+const Staking: React.FC = () => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -62,23 +59,23 @@ const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards }) => {
     });
 
     const totalStakedAmount =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.totalStakedAmount) : 0;
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.totalStakedAmount : 0;
     const fixedPeriodReward =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.fixedPeriodReward) : 0;
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.fixedPeriodReward : 0;
     const totalEscrowedRewards =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.totalEscrowedRewards) : 0;
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.totalEscrowedRewards : 0;
     const totalEscrowBalanceNotIncludedInStaking =
         escrowThalesQuery.isSuccess && escrowThalesQuery.data
-            ? Number(escrowThalesQuery.data.totalEscrowBalanceNotIncludedInStaking)
+            ? escrowThalesQuery.data.totalEscrowBalanceNotIncludedInStaking
             : 0;
     const maxBonusRewardsPercentage =
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.maxBonusRewardsPercentage : 0;
     const thalesStaked =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.thalesStaked) : 0;
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.thalesStaked : 0;
     const escrowedBalance =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.escrowedBalance) : 0;
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.escrowedBalance : 0;
     const unstakingAmount =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.unstakingAmount) : 0;
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.unstakingAmount : 0;
 
     const APR = useMemo(
         () =>
@@ -92,19 +89,18 @@ const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards }) => {
     );
 
     const bonusAPR = useMemo(() => (APR * maxBonusRewardsPercentage) / 100, [APR]);
-    const APY = useMemo(() => aprToApy(APR, 52), [APR]);
-    const formattedAPY = useMemo(() => getNumberLabel(aprToApy(APR, 52)), [APR]);
-    const apyWithBonus = useMemo(() => aprToApy(APR + bonusAPR, 52), [APR, bonusAPR]);
+    const APY = useMemo(() => aprToApy(APR), [APR]);
+    const formattedAPY = useMemo(() => getNumberLabel(aprToApy(APR)), [APR]);
+    const apyWithBonus = useMemo(() => aprToApy(APR + bonusAPR), [APR, bonusAPR]);
     const formattedBonusAPY = useMemo(() => getNumberLabel(apyWithBonus - APY), [APY, apyWithBonus]);
 
     const totalThalesStaked = useMemo(
-        () => Number(totalStakedAmount) + Number(totalEscrowedRewards) - Number(totalEscrowBalanceNotIncludedInStaking),
+        () => totalStakedAmount + totalEscrowedRewards - totalEscrowBalanceNotIncludedInStaking,
         [totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
     const myStakedShare = useMemo(
-        () =>
-            totalThalesStaked === 0 ? 0 : (100 * (Number(thalesStaked) + Number(escrowedBalance))) / totalThalesStaked,
+        () => (totalThalesStaked === 0 ? 0 : (100 * (thalesStaked + escrowedBalance)) / totalThalesStaked),
         [thalesStaked, totalThalesStaked, escrowedBalance]
     );
 
@@ -125,14 +121,10 @@ const Staking: React.FC<StakingProperties> = ({ setEstimatedRewards }) => {
         );
     };
 
-    const estimatedRewards = useMemo(() => (myStakedShare / 100) * Number(fixedPeriodReward), [myStakedShare]);
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * fixedPeriodReward, [myStakedShare]);
     const bonusEstimatedRewards = useMemo(() => (estimatedRewards * maxBonusRewardsPercentage) / 100, [
         estimatedRewards,
     ]);
-
-    useEffect(() => {
-        setEstimatedRewards(estimatedRewards);
-    }, [estimatedRewards, networkId]);
 
     const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 

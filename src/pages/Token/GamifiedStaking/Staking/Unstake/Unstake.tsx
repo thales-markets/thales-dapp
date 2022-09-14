@@ -469,7 +469,6 @@ const Unstake: React.FC = () => {
                         onChange={(_, value) => setAmountToUnstake(value)}
                         disabled={isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused}
                         className={isAmountValid ? '' : 'error'}
-                        autoFocus={!isMobile()}
                     />
                     <InputLabel>{t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}</InputLabel>
                     <CurrencyLabel

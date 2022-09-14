@@ -61,7 +61,11 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const noUserTx = filteredTransactions.length === 0;
 
     return (
-        <SectionContainer gridColumns={gridColumns} gridColumnStart={gridColumnStart} noUserTx={noUserTx}>
+        <SectionContainer
+            txCount={filteredTransactions.length}
+            gridColumns={gridColumns}
+            gridColumnStart={gridColumnStart}
+        >
             <SectionHeader>{t('options.earn.table.title')}</SectionHeader>
             {!noUserTx ? (
                 <>
@@ -137,16 +141,20 @@ const NoResultsText = styled.div<{ background?: boolean }>`
     padding: 30px 15px;
 `;
 
-const SectionContainer = styled.section<{ gridColumns?: number; gridColumnStart?: number; noUserTx?: boolean }>`
+const SectionContainer = styled.section<{
+    txCount: number;
+    gridColumns?: number;
+    gridColumnStart?: number;
+}>`
     grid-column: ${(props) => (props.gridColumnStart ? `${props.gridColumnStart} /` : '')} span
         ${(props) => (props.gridColumns ? props.gridColumns : '8')};
     grid-row: span 1;
-    height: 390px;
+    height: ${(props) => (props.txCount > 10 ? '390px' : '100%')};
     margin-bottom: 0;
     @media (max-width: 768px) {
         grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : 12)};
         order: 12;
-        height: ${(props) => (props.noUserTx ? '100%' : '550px')};
+        height: ${(props) => (props.txCount === 0 ? '100%' : '550px')};
     }
 `;
 

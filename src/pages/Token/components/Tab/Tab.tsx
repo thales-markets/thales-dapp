@@ -15,6 +15,9 @@ import { getIsOVM } from 'utils/network';
 import Button from '../Button';
 import { ButtonType } from '../Button/Button';
 import MigrationInfo from '../MigrationInfo';
+import { history } from 'utils/routes';
+import queryString from 'query-string';
+import { useLocation } from 'react-router-dom';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -22,10 +25,10 @@ const Tab: React.FC<{
     sections: TokenTabSection[];
     selectedSection?: TokenTabSectionIdEnum;
 }> = ({ selectedTab, setSelectedTab, sections, selectedSection }) => {
+    const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
-    const [estimatedRewards, setEstimatedRewards] = useState(0);
     const [activeButtonId, setActiveButtonId] = useState(selectedSection || sections[0].id);
 
     useEffect(() => {
@@ -50,7 +53,17 @@ const Tab: React.FC<{
                                             width={'172px'}
                                             margin={'0 20px 0 0'}
                                             padding={'5px 20px'}
-                                            onClickHandler={() => setActiveButtonId(el.id)}
+                                            onClickHandler={() => {
+                                                const paramTab = queryString.parse(location.search).tab;
+                                                history.push({
+                                                    pathname: location.pathname,
+                                                    search: queryString.stringify({
+                                                        tab: paramTab,
+                                                        activeButtonId: el.id,
+                                                    }),
+                                                });
+                                                setActiveButtonId(el.id);
+                                            }}
                                         >
                                             {el.title}
                                         </Button>
@@ -64,16 +77,9 @@ const Tab: React.FC<{
                         </SectionDescription>
                     </SectionRow>
                     <SectionContent>
-                        {activeButtonId === TokenTabSectionIdEnum.STAKING && (
-                            <Staking setEstimatedRewards={setEstimatedRewards} />
-                        )}
+                        {activeButtonId === TokenTabSectionIdEnum.STAKING && <Staking />}
                         {activeButtonId === TokenTabSectionIdEnum.REWARDS && (
-                            <Rewards
-                                gridGap={GRID_GAP}
-                                setSelectedTab={setSelectedTab}
-                                estimatedRewards={estimatedRewards}
-                                setActiveButtonId={setActiveButtonId}
-                            />
+                            <Rewards gridGap={GRID_GAP} setSelectedTab={setSelectedTab} />
                         )}
                         {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
                         {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && isL2 && <MergeAccount />}
