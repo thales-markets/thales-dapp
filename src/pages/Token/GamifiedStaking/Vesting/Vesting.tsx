@@ -94,7 +94,13 @@ const Vesting: React.FC = () => {
         const sortedData = data.sort((a, b) => a.date - b.date);
         const rows: TileRow[] = sortedData.map((row) => {
             return {
-                cells: [{ value: row.date }, { value: `${formatCurrencyWithKey(THALES_CURRENCY, row.amount)}` }],
+                cells: [
+                    { value: row.date },
+                    {
+                        value: `${formatCurrencyWithKey(THALES_CURRENCY, row.amount)}`,
+                        valueFontSize: isMobile() ? 12 : 15,
+                    },
+                ],
                 heightSmall: true,
             };
         });

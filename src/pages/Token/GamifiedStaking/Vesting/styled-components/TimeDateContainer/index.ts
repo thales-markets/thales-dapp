@@ -20,6 +20,10 @@ const Date = styled.span`
     font-family: Roboto !important;
     font-weight: 700;
     font-size: 15px;
+    white-space: nowrap;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const Time = styled.span`
@@ -27,6 +31,9 @@ const Time = styled.span`
     font-family: Roboto !important;
     font-weight: 300;
     font-size: 15px;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 Container.Date = Date;
