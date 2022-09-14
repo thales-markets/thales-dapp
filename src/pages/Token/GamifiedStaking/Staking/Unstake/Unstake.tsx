@@ -577,16 +577,14 @@ const CooldownCounter = styled.span`
 const UnstakingTitleText = styled.span`
     font-weight: 400;
     font-size: 14px;
-    line-height: 18px;
+    line-height: 15px;
     margin-right: 10px;
     @media (max-width: 1192px) {
         font-size: 12px;
-        line-height: 15px;
     }
     @media (max-width: 767px) {
         font-size: 12px;
         margin-right: 0px;
-        margin-bottom: 10px;
     }
 `;
 
