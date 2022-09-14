@@ -539,7 +539,7 @@
                 "tab-title": "Gamified Staking",
                 "staking": {
                     "section-title": "Staking",
-                    "section-description": "The Staking rewards page shows the THALES rewards you have available for claiming.",
+                    "section-description": "The Staking page is where you stake your THALES and see all the relevant staking data.",
                     "apy-tooltip": "Annual Percentage Yield in THALES tokens from Staking THALES tokens.",
                     "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
                     "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />.",
@@ -589,7 +589,7 @@
                 },
                 "rewards": {
                     "section-title": "Rewards",
-                    "section-description": "The Staking rewards page shows the THALES rewards you have available for claiming.",
+                    "section-description": "The Rewards page shows the THALES you have available for claiming.",
                     "info": {
                         "base": "As base rewards",
                         "base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
