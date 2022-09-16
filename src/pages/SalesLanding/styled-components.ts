@@ -219,12 +219,13 @@ export const Button = styled.a`
     align-items: center;
     justify-content: center;
     width: 45%;
-    height: 48.24px;
     background-color: #64d9fe;
     color: #04045a;
     border-radius: 20px;
     font-size: 20px;
     font-weight: 700;
+    padding: 15px;
+    text-align: center;
 `;
 
 export const ButtonContainer = styled.div`
