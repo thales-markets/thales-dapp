@@ -17,18 +17,18 @@ import { navigateTo } from 'utils/routes';
 type HeaderInput = {
     theme: Theme;
     setTheme: (data: any) => void;
+    hideGraphics?: boolean;
     className?: string;
 };
 
 const cookies = new Cookies();
 
-const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
+const Footer: React.FC<HeaderInput> = ({ theme, setTheme, hideGraphics, className }) => {
     const { t } = useTranslation();
-
     return (
         <FooterHtml className={className}>
-            <Image src={theme === Theme.Dark ? footerW : footer} />
-            <Lines src={theme === Theme.Dark ? footerW2 : footer2} />
+            {!hideGraphics && <Image src={theme === Theme.Dark ? footerW : footer} />}
+            {!hideGraphics && <Lines src={theme === Theme.Dark ? footerW2 : footer2} />}
             <FooterContainer>
                 <FooterIconLogo className="icon-home icon-home--thales" />
                 <FooterButtonsWrapper>

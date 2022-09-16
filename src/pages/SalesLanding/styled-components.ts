@@ -28,10 +28,7 @@ export const Wrapper = styled.div`
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(260, 2em);
-    @media screen and (max-width: 700px) {
-        grid-template-rows: repeat(385, 2em);
-    }
+    grid-template-rows: repeat(3, 2em);
 `;
 
 export const AnimationSvg = styled.object`
@@ -125,22 +122,11 @@ export const IllustrationContainer = styled.div<{ width?: string }>`
 `;
 
 export const Content = styled.div`
-    grid-column-start: 1;
-    grid-column-end: 51;
-    grid-row-start: 8;
-    grid-row-end: 80;
-    width: 100%;
+    max-width: 1122px;
+    margin: 0 auto;
     @media (max-width: 1024px) {
-        position: absolute;
-        display: block;
-        top: 140px;
         width: 100vw;
         padding: 0 40px;
-        z-index: 9;
-        grid-column-start: unset;
-        grid-column-end: unset;
-        grid-row-start: unset;
-        grid-row-end: unset;
     }
 `;
 
@@ -188,7 +174,7 @@ export const NestedList = styled.ul`
             line-height: 170%;
             color: var(--color);
             &:hover {
-                font-size: 22px;
+                font-size: 21px;
                 transition: 0.2s;
             }
         }
