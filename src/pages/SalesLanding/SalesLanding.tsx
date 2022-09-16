@@ -1,4 +1,3 @@
-import { AnimationSvg } from 'pages/LandingPage/articles/Token/Token';
 import Header from 'pages/LandingPage/components/Header/Header';
 import { Theme } from 'pages/LandingPage/Home';
 import React, { useState } from 'react';
@@ -21,6 +20,7 @@ import {
     Wrapper,
     OrderedListContrainer,
     OrderedList,
+    AnimationSvg,
     OrderedItem,
 } from './styled-components';
 
@@ -33,6 +33,10 @@ import INChart from 'assets/images/sales-funnel/INchart.svg';
 import OUTMarket from 'assets/images/sales-funnel/OUTmarket.svg';
 import OUTChart from 'assets/images/sales-funnel/OUTchart.svg';
 import GroupImg from 'assets/images/sales-funnel/Group606.svg';
+import { buildHref } from 'utils/routes';
+import ROUTES from 'constants/routes';
+
+import termsOfUseReferral from 'assets/docs/thales-terms-of-use.pdf';
 
 const cookies = new Cookies();
 
@@ -87,7 +91,13 @@ const SalesLanding: React.FC = () => {
                     <SectionWrapper flexDirection={'column'}>
                         <ParagraphContainer width="100%">
                             <Paragraph>
-                                <Trans i18nKey={'sales-landing.sections.1.first-paragraph'} />
+                                <Trans
+                                    i18nKey={'sales-landing.sections.1.first-paragraph'}
+                                    components={{
+                                        poslink: <a href={buildHref(ROUTES.Options.Overview)} />,
+                                        rangelink: <a href={buildHref(ROUTES.Options.RangeMarkets)} />,
+                                    }}
+                                />
                             </Paragraph>
                         </ParagraphContainer>
                         <OrderedListContrainer>
@@ -122,7 +132,12 @@ const SalesLanding: React.FC = () => {
                                 <AnimationSvg type="image/svg+xml" data={UPMarket}></AnimationSvg>
                             </IllustrationContainer>
                             <Paragraph>
-                                <Trans i18nKey={'sales-landing.sections.2.content'} />
+                                <Trans
+                                    i18nKey={'sales-landing.sections.2.content'}
+                                    components={{
+                                        marketoverview: <a href={buildHref(ROUTES.Options.Overview)} />,
+                                    }}
+                                />
                             </Paragraph>
                         </ParagraphContainer>
                         <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
@@ -136,7 +151,12 @@ const SalesLanding: React.FC = () => {
                                 <AnimationSvg type="image/svg+xml" data={DOWNMarket}></AnimationSvg>
                             </IllustrationContainer>
                             <Paragraph>
-                                <Trans i18nKey={'sales-landing.sections.3.content'} />
+                                <Trans
+                                    i18nKey={'sales-landing.sections.3.content'}
+                                    components={{
+                                        marketoverview: <a href={buildHref(ROUTES.Options.Overview)} />,
+                                    }}
+                                />
                             </Paragraph>
                         </ParagraphContainer>
                         <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
@@ -150,7 +170,12 @@ const SalesLanding: React.FC = () => {
                                 <AnimationSvg type="image/svg+xml" data={INMarket}></AnimationSvg>
                             </IllustrationContainer>
                             <Paragraph>
-                                <Trans i18nKey={'sales-landing.sections.4.content'} />
+                                <Trans
+                                    i18nKey={'sales-landing.sections.4.content'}
+                                    components={{
+                                        marketoverview: <a href={buildHref(ROUTES.Options.Overview)} />,
+                                    }}
+                                />
                             </Paragraph>
                         </ParagraphContainer>
                         <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
@@ -164,7 +189,12 @@ const SalesLanding: React.FC = () => {
                                 <AnimationSvg type="image/svg+xml" data={OUTMarket}></AnimationSvg>
                             </IllustrationContainer>
                             <Paragraph>
-                                <Trans i18nKey={'sales-landing.sections.5.content'} />
+                                <Trans
+                                    i18nKey={'sales-landing.sections.5.content'}
+                                    components={{
+                                        marketoverview: <a href={buildHref(ROUTES.Options.Overview)} />,
+                                    }}
+                                />
                             </Paragraph>
                         </ParagraphContainer>
                         <IllustrationContainer width="40%" style={{ marginRight: '30px' }}>
@@ -177,7 +207,7 @@ const SalesLanding: React.FC = () => {
                             <Paragraph>
                                 <Trans
                                     i18nKey={'sales-landing.sections.6.first-paragraph'}
-                                    components={{ a: <a href="#" /> }}
+                                    components={{ a: <a href={buildHref(ROUTES.Options.Referral)} /> }}
                                 />
                             </Paragraph>
                         </ParagraphContainer>
@@ -194,7 +224,7 @@ const SalesLanding: React.FC = () => {
                             <Paragraph>
                                 <Trans
                                     i18nKey={'sales-landing.sections.6.second-paragraph'}
-                                    components={{ this: <a href="#" /> }}
+                                    components={{ this: <a href={buildHref(termsOfUseReferral)} /> }}
                                 />
                             </Paragraph>
                         </ParagraphContainer>
@@ -205,7 +235,10 @@ const SalesLanding: React.FC = () => {
                             <Paragraph>
                                 <Trans
                                     i18nKey={'sales-landing.sections.7.first-paragraph'}
-                                    components={{ poslink: <a href="#" />, rangelink: <a href="#" /> }}
+                                    components={{
+                                        poslink: <a href={buildHref(ROUTES.Options.Overview)} />,
+                                        rangelink: <a href={buildHref(ROUTES.Options.RangeMarkets)} />,
+                                    }}
                                 />
                             </Paragraph>
                         </ParagraphContainer>

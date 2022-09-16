@@ -34,6 +34,12 @@ export const Wrapper = styled.div`
     }
 `;
 
+export const AnimationSvg = styled.object`
+    @media screen and (max-width: 500px) {
+        width: 100%;
+    }
+`;
+
 export const H1 = styled.h1`
     font-family: Playfair Display !important;
     font-style: normal;
@@ -92,6 +98,9 @@ export const Paragraph = styled.p`
         text-decoration: none;
         color: #64d9fe;
     }
+    @media screen and (max-width: 500px) {
+        text-align: justify;
+    }
 `;
 
 export const ParagraphContainer = styled.div<{ width?: string }>`
@@ -99,6 +108,8 @@ export const ParagraphContainer = styled.div<{ width?: string }>`
     margin-right: 30px;
     @media screen and (max-width: 700px) {
         width: 100% !important;
+        margin-right: 0px;
+        margin-left: 0px;
     }
 `;
 
@@ -179,13 +190,6 @@ export const NestedList = styled.ul`
             &:hover {
                 font-size: 22px;
                 transition: 0.2s;
-            }
-        }
-        @media (max-width: 450px) {
-            &:nth-child(3),
-            &:nth-child(4),
-            &:nth-child(5) {
-                padding-bottom: 5em;
             }
         }
     }
