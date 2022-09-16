@@ -3,7 +3,7 @@ import { COLLATERALS, STABLE_DECIMALS } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import { OptionSide, RangedMarketPositionType, StableCoins } from 'types/options';
 import { stableCoinParser } from './formatters/ethers';
-import { getIsPolygon, Network, NetworkId } from './network';
+import { getIsArbitrum, getIsPolygon, Network, NetworkId } from './network';
 
 export const getQuoteFromAMM = (
     isNonDefaultStable: boolean,
@@ -197,7 +197,7 @@ export const getAmountToApprove = (
         return ethers.constants.MaxUint256;
     }
 
-    if (getIsPolygon(networkId) && isBuy) {
+    if ((getIsPolygon(networkId) || getIsArbitrum(networkId)) && isBuy) {
         return ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6);
     } else if (networkId == Network.BSC) {
         return ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), STABLE_DECIMALS['BUSD']);
