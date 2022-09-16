@@ -1856,6 +1856,8 @@
     },
     "sales-landing": {
         "title": "Win with Thales",
+        "button-positional-markets": "UP or DOWN markets",
+        "button-range-markets": "IN or OUT markets",
         "sections": {
             "1": {
                 "heading": "Introducing Thales",

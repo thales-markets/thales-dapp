@@ -22,6 +22,8 @@ import {
     OrderedList,
     AnimationSvg,
     OrderedItem,
+    ButtonContainer,
+    Button,
 } from './styled-components';
 
 import UPMarket from 'assets/images/sales-funnel/UPmarket.svg';
@@ -273,6 +275,14 @@ const SalesLanding: React.FC = () => {
                         </Paragraph>
                     </ParagraphContainer>
                 </SectionWrapper>
+                <ButtonContainer>
+                    <Button href={buildHref(ROUTES.Options.Overview)}>
+                        {t('sales-landing.button-positional-markets')}
+                    </Button>
+                    <Button href={buildHref(ROUTES.Options.RangeMarkets)}>
+                        {t('sales-landing.button-range-markets')}
+                    </Button>
+                </ButtonContainer>
             </Content>
             <Footer theme={theme} setTheme={setTheme} hideGraphics={true} />
         </Background>

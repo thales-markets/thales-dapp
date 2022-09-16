@@ -213,3 +213,22 @@ export const OrderedItem = styled.li`
 export const ListItem = styled.li`
     color: var(--color);
 `;
+
+export const Button = styled.a`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45%;
+    height: 48.24px;
+    background-color: #64d9fe;
+    color: #04045a;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: 700;
+`;
+
+export const ButtonContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+`;
