@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
+import { generalConfig } from 'config/general';
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ const userProfilesQuery = (networkId: NetworkId, options?: UseQueryOptions<Profi
     return useQuery<Profiles>(
         QUERY_KEYS.BinaryOptions.Profiles(networkId),
         async () => {
-            const baseUrl = 'https://api.thales.market/profiles/' + networkId;
+            const baseUrl = `${generalConfig.API_URL}/profiles/${networkId}`;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const profiles = new Map();

@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
+import { generalConfig } from 'config/general';
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ const useCompetitionQuery = (networkId: NetworkId, options?: UseQueryOptions<Com
     return useQuery<Competition>(
         QUERY_KEYS.BinaryOptions.Competition(networkId),
         async () => {
-            const baseUrl = 'https://api.thales.market/competition/' + networkId;
+            const baseUrl = `${generalConfig.API_URL}/competition/${networkId}`;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const competition = result.map((record: any) => {

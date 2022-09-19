@@ -1,3 +1,5 @@
+import { generalConfig } from 'config/general';
+
 export const LINKS = {
     Blog: {
         HowBinaryOptionsWork: 'https://blog.synthetix.io/how-binary-options-work/',
@@ -50,7 +52,7 @@ export const LINKS = {
     ExoticMarkets: 'https://exoticmarkets.xyz/',
     SportMarkets: 'https://overtimemarkets.xyz/',
     ThalesAPI: {
-        medium: 'https://api.thales.market/medium',
+        medium: `${generalConfig.API_URL}/medium`,
     },
     TradingIncentives: {
         TIP53:

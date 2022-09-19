@@ -7,6 +7,7 @@ import { getWalletAddress } from 'redux/modules/wallet';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import Container from './styled-components/GameContainer';
+import { generalConfig } from 'config/general';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-game/build.loader.js',
@@ -27,11 +28,11 @@ const TaleOfThales: React.FC = () => {
         unityContext.removeEventListener('StartGame');
         unityContext.on('StartGame', async () => {
             if (walletAddress) {
-                await axios.post('https://api.thales.market/game-started', {
+                await axios.post(`${generalConfig.API_URL}/game-started`, {
                     walletAddress,
                 });
             } else {
-                await axios.post('https://api.thales.market/game-started');
+                await axios.post(`${generalConfig.API_URL}/game-started`);
             }
         });
     }, [walletAddress]);
@@ -40,11 +41,11 @@ const TaleOfThales: React.FC = () => {
         unityContext.removeEventListener('EndGame');
         unityContext.on('EndGame', async () => {
             if (walletAddress) {
-                await axios.post('https://api.thales.market/game-ended', {
+                await axios.post(`${generalConfig.API_URL}/game-ended`, {
                     walletAddress,
                 });
             } else {
-                await axios.post('https://api.thales.market/game-ended');
+                await axios.post(`${generalConfig.API_URL}/game-ended`);
             }
         });
     }, [walletAddress]);
