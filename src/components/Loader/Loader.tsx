@@ -60,7 +60,7 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                     </FlexDivRowCentered>
                     <FlexDivRowCentered style={{ justifyContent: 'space-around' }}>
                         <NetworkButton
-                            margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
+                            margin={'20px 0 40px 0'}
                             onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[42161].changeNetwork.bind(
                                 this,
                                 42161,
@@ -81,10 +81,6 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                             <ArbitrumLogo />
                             <span>{t(`common.unsupported-network.button.bsc`)}</span>
                         </NetworkButton> */}
-                    </FlexDivRowCentered>
-                    <FlexDivRowCentered
-                        style={hideMainnet ? { justifyContent: 'center' } : { justifyContent: 'space-around' }}
-                    >
                         {!hideMainnet && (
                             <NetworkButton
                                 margin="20px 0 40px 0"
