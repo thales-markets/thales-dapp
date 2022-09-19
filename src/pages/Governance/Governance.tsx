@@ -16,6 +16,10 @@ import SidebarDetails from './ProposalDetails/SidebarDetails';
 import ThalesStakers from './ThalesStakers';
 import TabDropdown from './components/TabDropdown';
 import OpRewardsBanner from 'components/OpRewardsBanner';
+import { getIsOVM } from 'utils/network';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -23,11 +27,14 @@ type GovernancePageProps = RouteComponentProps<{
 }>;
 
 const GovernancePage: React.FC<GovernancePageProps> = (props) => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const { t } = useTranslation();
     const [selectedProposal, setSelectedProposal] = useState<Proposal | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState<SpaceKey>(SpaceKey.TIPS);
     const [statusFilter, setStatusFilter] = useState<StatusEnum>(StatusEnum.All);
     const [isMobile, setIsMobile] = useState(false);
+
+    const showOPBanner = getIsOVM(networkId);
 
     const fetchPreloadedProposal = useCallback(() => {
         const fetch = async () => {
@@ -134,7 +141,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
 
     return (
         <>
-            <OpRewardsBanner />
+            {showOPBanner && <OpRewardsBanner />}
             <BackLinkWrapper isOverviewPage={isOverviewPage}>
                 {selectedProposal && (
                     <BackLink

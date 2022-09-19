@@ -3,19 +3,16 @@ import { PieChart, Pie, Cell } from 'recharts';
 
 import styled from 'styled-components';
 
-import { SYNTHS_MAP } from 'constants/currency';
-
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetwork, getWalletAddress } from 'redux/modules/wallet';
 
-import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-
-import { getCurrencyKeyBalance } from 'utils/balances';
+import { getCurrencyKeyStableBalance } from 'utils/balances';
 
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getStableCoinForNetwork } from '../../utils/currency';
+import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 
 type PieChartProps = {
     claimable?: number;
@@ -27,15 +24,13 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
 
-    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
+    const walletBalancesQuery = useStableBalanceQuery(walletAddress, network.networkId, {
         enabled: isAppReady && isWalletConnected,
     });
     const walletBalancesMap =
-        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
-            ? { synths: synthsWalletBalancesQuery.data }
-            : null;
+        walletBalancesQuery.isSuccess && walletBalancesQuery.data ? walletBalancesQuery.data : null;
 
-    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+    const sUSDBalance = getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(network.networkId)) || 0;
 
     const data = [
         { name: getStableCoinForNetwork(network.networkId), value: sUSDBalance, color: '#8208FC' },

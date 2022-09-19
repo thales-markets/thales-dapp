@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
+import { generalConfig } from 'config/general';
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Lea
     return useQuery<Leaderboard>(
         QUERY_KEYS.BinaryOptions.Leaderboard(networkId),
         async () => {
-            const baseUrl = 'https://api.thales.market/leaderboard/' + networkId;
+            const baseUrl = `${generalConfig.API_URL}/leaderboard/${networkId}`;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const leaderboard = result.map((record: any) => {

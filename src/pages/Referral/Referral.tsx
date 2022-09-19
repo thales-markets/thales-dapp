@@ -42,6 +42,7 @@ import ReadMoreButton from 'components/ReadMoreButton';
 import Tooltip from 'components/Tooltip';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
+import { getIsOVM } from 'utils/network';
 
 const Tabs = [
     {
@@ -62,6 +63,8 @@ const Referral: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+
+    const showOPBanner = getIsOVM(networkId);
 
     // const [walletAddress, setWalletAddress] = useState<string>('');
     const [tabIndex, setTabIndex] = useState<number>(Tabs[0].id);
@@ -186,7 +189,7 @@ const Referral: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner />
+            {showOPBanner && <OpRewardsBanner />}
             <HeaderContainer>
                 <FormWrapper>
                     <Label>{t('referral-page.choose-landing')}</Label>

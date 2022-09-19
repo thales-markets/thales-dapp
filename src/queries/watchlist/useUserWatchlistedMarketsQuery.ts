@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
+import { generalConfig } from 'config/general';
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ const useUserWatchlistedMarketsQuery = (
     return useQuery<Watchlist>(
         QUERY_KEYS.User.Watchlist(walletAddress, networkId),
         async () => {
-            const baseUrl = 'https://api.thales.market/watchlist/' + networkId;
+            const baseUrl = `${generalConfig.API_URL}/watchlist/${networkId}`;
             const response = await fetch(baseUrl + '/' + walletAddress);
             const result = await response.text();
 

@@ -334,7 +334,9 @@
             "button": {
                 "mainnet": "Switch to Mainnet",
                 "optimism": "Switch to Optimism",
-                "polygon": "Switch to Polygon"
+                "polygon": "Switch to Polygon",
+                "arbitrum": "Switch to Arbitrum",
+                "bsc": "Switch to BSC"
             }
         },
         "user-info-card": {
@@ -1636,6 +1638,8 @@
         "type-label": "type",
         "total-buy-label": "Total to pay",
         "pay-with": "Pay with",
+        "allowing-in-progress": "In progress...",
+        "transaction-successful": "Transaction successful",
         "total-sell-label": "Total to receive",
         "return-label": "Potential profit",
         "return-tooltip": "Potential profit if this position wins",

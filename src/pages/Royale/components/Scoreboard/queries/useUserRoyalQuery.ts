@@ -3,6 +3,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import { truncateAddress } from 'utils/formatters/string';
 import { NetworkId } from 'utils/network';
+import { generalConfig } from 'config/general';
 
 enum UserStatus {
     RDY,
@@ -35,7 +36,7 @@ export const AnonimUser: User = {
 
 const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
-const BASE_URL = 'https://api.thales.market/royale-user/';
+const BASE_URL = `${generalConfig.API_URL}/royale-user/`;
 // const gruja = '0x36688C92700618f1D676698220F1AF44492811FE';
 
 const useUserRoyalQuery = (

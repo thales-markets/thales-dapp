@@ -11,8 +11,8 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import { getIsPolygon } from 'utils/network';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { getDefaultCurrencyIconClassByNetworkId } from 'utils/currency';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;
@@ -22,7 +22,6 @@ const UserWallet: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isPolygon = getIsPolygon(networkId);
     const { trackEvent } = useMatomo();
 
     return (
@@ -41,15 +40,7 @@ const UserWallet: React.FC = () => {
                         : onboardConnector.connectWallet();
                 }}
             >
-                <WalletIcon
-                    className={` ${
-                        networkId === 10
-                            ? 'v2-icon v2-icon--op'
-                            : isPolygon
-                            ? 'currency-icon icon--polygon'
-                            : 'sidebar-icon icon--ethereum'
-                    }`}
-                />
+                <WalletIcon className={` ${getDefaultCurrencyIconClassByNetworkId(networkId)}`} />
                 <WalletAddress>
                     {walletAddress
                         ? truncateAddress(

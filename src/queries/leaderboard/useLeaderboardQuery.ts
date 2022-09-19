@@ -4,6 +4,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 import notSigned from 'assets/images/royale/not-signed.svg';
 import { truncateAddress } from 'utils/formatters/string';
+import { generalConfig } from 'config/general';
 
 dotenv.config();
 
@@ -28,13 +29,13 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Use
     return useQuery<User[]>(
         QUERY_KEYS.BinaryOptions.Leaderboard(networkId),
         async () => {
-            const royaleAPIRoute = 'https://api.thales.market/royale-users/';
+            const royaleAPIRoute = `${generalConfig.API_URL}/royale-users/`;
             const royaleResponse = await fetch(royaleAPIRoute);
             const royalePlayers = await royaleResponse.json();
 
             const royalePlayersDataMap = new Map<string, any>(royalePlayers);
 
-            const baseUrl = 'https://api.thales.market/leaderboard/' + networkId;
+            const baseUrl = `${generalConfig.API_URL}/leaderboard/${networkId}`;
             const response = await fetch(baseUrl);
             const leaderboardData = await response.json();
 

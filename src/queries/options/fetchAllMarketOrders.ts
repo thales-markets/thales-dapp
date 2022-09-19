@@ -1,6 +1,7 @@
 import { NetworkId } from '../../utils/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
+import { generalConfig } from 'config/general';
 
 type OpenOrdersMap = Record<
     string,
@@ -14,7 +15,7 @@ export const fetchAllMarketOrders = (network: NetworkId, options?: UseQueryOptio
     return useQuery<OpenOrdersMap>(
         QUERY_KEYS.BinaryOptions.OrdersCount(network),
         async () => {
-            const baseUrl = 'https://api.thales.market/orders/' + network;
+            const baseUrl = `${generalConfig.API_URL}/orders/${network}`;
             const response = await fetch(baseUrl);
             const json = await response.json();
             const openOrdersMap = new Map(json);

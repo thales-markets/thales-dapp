@@ -2,10 +2,11 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import snxJSConnector from 'utils/snxJSConnector';
-import { getIsPolygon, NetworkId } from 'utils/network';
+import { NetworkId } from 'utils/network';
 import { ethers } from 'ethers';
 import { buildRangeMarketLink } from 'utils/routes';
 import { RangedMarket } from 'types/options';
+import { stableCoinFormatter } from 'utils/formatters/ethers';
 
 type RangedPositionData = {
     claimable: number;
@@ -41,34 +42,33 @@ const useRangedPositions = (
 
             await Promise.all(
                 livePosition.map(async (balance: any) => {
-                    let positionValue = '0';
                     try {
-                        positionValue = ethers.utils.formatUnits(
+                        const positionValue = stableCoinFormatter(
                             await (snxJSConnector as any).rangedMarketAMMContract.sellToAmmQuote(
                                 balance.position.market.id,
                                 balance.position.side === 'in' ? 0 : 1,
                                 balance.amount
                             ),
-                            getIsPolygon(networkId) ? 6 : 18
+                            networkId
                         );
-                    } catch {}
 
-                    live.push({
-                        link: buildRangeMarketLink(balance.position.market.id),
-                        market: {
-                            ...balance.position.market,
-                            currencyKey: hexToAscii(balance.position.market.currencyKey),
-                            maturityDate: Number(balance.position.market.maturityDate) * 1000,
-                            expiryDate: Number(balance.position.market.expiryDate) * 1000,
-                            leftPrice: balance.position.market.leftPrice / 1e18,
-                            rightPrice: balance.position.market.rightPrice / 1e18,
-                        },
-                        balances: {
-                            amount: Number(ethers.utils.formatEther(balance.amount)),
-                            value: Number(positionValue),
-                            type: balance.position.side === 'in' ? 'IN' : 'OUT',
-                        },
-                    });
+                        live.push({
+                            link: buildRangeMarketLink(balance.position.market.id),
+                            market: {
+                                ...balance.position.market,
+                                currencyKey: hexToAscii(balance.position.market.currencyKey),
+                                maturityDate: Number(balance.position.market.maturityDate) * 1000,
+                                expiryDate: Number(balance.position.market.expiryDate) * 1000,
+                                leftPrice: balance.position.market.leftPrice / 1e18,
+                                rightPrice: balance.position.market.rightPrice / 1e18,
+                            },
+                            balances: {
+                                amount: Number(ethers.utils.formatEther(balance.amount)),
+                                value: Number(positionValue),
+                                type: balance.position.side === 'in' ? 'IN' : 'OUT',
+                            },
+                        });
+                    } catch {}
                 })
             );
 

@@ -1,5 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
+import { generalConfig } from 'config/general';
+
 export interface TwitterAccount {
     createdAt: string;
     avatar: string;
@@ -11,7 +13,7 @@ const useTwitterAccountQuery = (walletAddress: string, options?: UseQueryOptions
     return useQuery<TwitterAccount>(
         QUERY_KEYS.User.TwitterAccount(walletAddress),
         async () => {
-            const baseUrl = 'https://api.thales.market/twitter/' + walletAddress.toLowerCase();
+            const baseUrl = `${generalConfig.API_URL}/twitter/${walletAddress.toLowerCase()}`;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
 

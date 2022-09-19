@@ -1,0 +1,35 @@
+{
+    "id": "thales",
+    "name": "Thales",
+    "url": "https://dapp-browser.apps.ledger.com",
+    "params": {
+        "dappUrl": "https://thalesmarket.io/?embed=true",
+        "nanoApp": "Polygon",
+        "dappName": "Thales",
+        "networks": [
+            {
+                "currency": "polygon",
+                "chainID": 137,
+                "nodeURL": "https://polygon-rpc.com"
+            }
+        ]
+    },
+    "homepageUrl": "https://thalesmarket.io/",
+    "icon": "https://i.ibb.co/1ZBK2pj/thales.gif",
+    "platform": "all",
+    "apiVersion": "0.0.1",
+    "manifestVersion": "1",
+    "branch": "stable",
+    "categories": ["defi"],
+    "currencies": ["polygon", "usdc"],
+    "content": {
+        "shortDescription": {
+            "en": "Thales: Permissionless Parimutuel markets."
+        },
+        "description": {
+            "en": "Thales protocol allows the creation of on-chain, non-custodial Parimutuel markets. You can trade AMM-based positional markets, immerse yourself in novel gamified DeFi experiences, and much more."
+        }
+    },
+    "permissions": [],
+    "domains": ["https://*"]
+}

@@ -12,6 +12,8 @@ export const ongoingAirdrop = {
         [Network['Kovan-Ovm']]: '0xcA8d82a30fd9dfec102eCdfb59A13e9a86C2Ee6F',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
     },
     abi: [
         {

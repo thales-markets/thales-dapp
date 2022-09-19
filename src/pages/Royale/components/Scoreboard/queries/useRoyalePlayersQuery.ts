@@ -4,6 +4,7 @@ import thalesData from 'thales-data';
 import { NetworkId } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { truncateAddress } from 'utils/formatters/string';
+import { generalConfig } from 'config/general';
 
 export enum UserStatus {
     RDY,
@@ -36,7 +37,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                 }
             }
 
-            const royalePlayersDataUrl = 'https://api.thales.market/royale-users/';
+            const royalePlayersDataUrl = `${generalConfig.API_URL}/royale-users/`;
             const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
             const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
 

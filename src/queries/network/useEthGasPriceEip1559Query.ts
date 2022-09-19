@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { formatGwei, getIsOVM, getIsPolygon, NetworkId } from 'utils/network';
+import { formatGwei, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const ETHERSCAN_GAS_TRACKER_API_URL =
@@ -33,9 +33,11 @@ const useEthGasPriceEip1559Query = (networkId: NetworkId, options?: UseQueryOpti
         QUERY_KEYS.Network.EthGasPriceEip1559(networkId),
         async () => {
             const isL2 = getIsOVM(networkId);
+            const isBSC = getIsBSC(networkId);
             const isPolygon = getIsPolygon(networkId);
+            const isArbitrum = getIsArbitrum(networkId);
 
-            if (isL2) {
+            if (isL2 || isBSC || isArbitrum) {
                 try {
                     const gasPrice = formatGwei((await (snxJSConnector as any).provider.getGasPrice()).toNumber());
                     return {
