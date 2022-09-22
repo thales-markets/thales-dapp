@@ -145,7 +145,7 @@ const FaqHeader = styled.p`
 
 const QuestionGroup = styled.div<{ questionOpened: boolean }>`
     width: 100%;
-    display: ${(_props) => (_props.questionOpened ? '' : 'flex')};
+    display: ${(props) => (props.questionOpened ? '' : 'flex')};
     justify-content: space-between;
     cursor: pointer;
 `;
@@ -164,12 +164,12 @@ const Question = styled.p`
 `;
 
 const ToggleQuestion = styled.div<{ questionOpened: boolean }>`
-    content: url(${(_props) => (_props.questionOpened ? arrowUp : arrowDown)});
+    content: url(${(props) => (props.questionOpened ? arrowUp : arrowDown)});
     padding-right: 20px;
-    padding-bottom: ${(_props) => (_props.questionOpened ? '20px' : '')};
-    padding-top: ${(_props) => (_props.questionOpened ? '10px' : '')};
-    margin-left: ${(_props) => (_props.questionOpened ? 'auto' : '')};
-    margin-right: ${(_props) => (_props.questionOpened ? '0' : '')};
+    padding-bottom: ${(props) => (props.questionOpened ? '20px' : '')};
+    padding-top: ${(props) => (props.questionOpened ? '10px' : '')};
+    margin-left: ${(props) => (props.questionOpened ? 'auto' : '')};
+    margin-right: ${(props) => (props.questionOpened ? '0' : '')};
 `;
 
 const Answer = styled.p`

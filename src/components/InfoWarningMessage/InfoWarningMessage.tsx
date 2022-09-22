@@ -6,13 +6,15 @@ import { FlexDiv, FlexDivRow } from 'theme/common';
 type InfoWarningMessageProps = {
     message: string | null;
     hideIcon?: boolean;
+    fontSize?: string;
+    lineHeight?: string;
 };
 
-export const InfoWarningMessage: React.FC<InfoWarningMessageProps> = ({ message, hideIcon }) => {
+export const InfoWarningMessage: React.FC<InfoWarningMessageProps> = ({ message, hideIcon, fontSize, lineHeight }) => {
     return (
         <>
             <Container>
-                <Message>
+                <Message fontSize={fontSize} lineHeight={lineHeight}>
                     <FlexDiv>
                         {!hideIcon && <StyledWarningIcon />} {message}
                     </FlexDiv>
@@ -29,10 +31,10 @@ const Container = styled.div`
     padding: 4px 10px;
 `;
 
-const Message = styled(FlexDivRow)`
+const Message = styled(FlexDivRow)<{ fontSize?: string; lineHeight?: string }>`
     font-weight: 500;
-    font-size: 12px;
-    line-height: 16px;
+    font-size: ${(props) => (props.fontSize ? props.fontSize : '12px')};
+    line-height: ${(props) => (props.lineHeight ? props.lineHeight : '16px')};
     color: #f55c05;
 `;
 

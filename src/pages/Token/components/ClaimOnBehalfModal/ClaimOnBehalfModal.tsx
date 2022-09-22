@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, XButton } from 'theme/common';
 import { Modal } from '@material-ui/core';
-import TextInput from 'components/TextInput';
-import { DefaultSubmitButton, InputContainer, InputLabel } from '../components';
+import TextInput from 'pages/Token/components/TextInput';
+import { InputContainer, InputLabel } from '../components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
@@ -18,12 +18,14 @@ import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getIsAppReady } from 'redux/modules/app';
 import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/components';
 import useStakingClaimOnBehalfQuery from 'queries/staking/useStakingClaimOnBehalfQuery';
+import Button from '../Button';
+import { ButtonType } from '../Button/Button';
 
-type MergeAccountModalProps = {
+type ClaimOnBehalfModalProps = {
     onClose: () => void;
 };
 
-const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
+const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -93,19 +95,38 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <DefaultSubmitButton onClick={() => onboardConnector.connectWallet()}>
+                <Button
+                    type={ButtonType.submit}
+                    width={'50%'}
+                    active={true}
+                    onClickHandler={() => onboardConnector.connectWallet()}
+                >
                     {t('common.wallet.connect-your-wallet')}
-                </DefaultSubmitButton>
+                </Button>
             );
         }
         if (!isAccountValid) {
-            return <DefaultSubmitButton disabled={true}>{t(`common.errors.invalid-address`)}</DefaultSubmitButton>;
+            return (
+                <Button type={ButtonType.submit} width={'50%'} disabled={true}>
+                    {t(`common.errors.invalid-address`)}
+                </Button>
+            );
         }
         if (!isAccountEntered) {
-            return <DefaultSubmitButton disabled={true}>{t(`common.errors.enter-address`)}</DefaultSubmitButton>;
+            return (
+                <Button type={ButtonType.submit} width={'50%'} disabled={true}>
+                    {t(`common.errors.enter-address`)}
+                </Button>
+            );
         }
         return (
-            <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleSubmit}>
+            <Button
+                type={ButtonType.submit}
+                width={'50%'}
+                active={!isButtonDisabled}
+                disabled={isButtonDisabled}
+                onClickHandler={handleSubmit}
+            >
                 {!canClaimOnBehalf
                     ? !isSubmitting
                         ? t('options.earn.claim-on-behalf.enable-button.label')
@@ -113,7 +134,7 @@ const MergeAccountModal: React.FC<MergeAccountModalProps> = ({ onClose }) => {
                     : !isSubmitting
                     ? t('options.earn.claim-on-behalf.disable-button.label')
                     : t('options.earn.claim-on-behalf.disable-button.progress-label')}
-            </DefaultSubmitButton>
+            </Button>
         );
     };
     return (
@@ -198,7 +219,7 @@ const Container = styled(FlexDivColumnCentered)`
     position: relative;
     top: calc(50% - 200px);
     padding: 20px;
-    width: 460px;
+    width: 570px;
     height: fit-content;
 `;
 
@@ -256,4 +277,4 @@ const NoAddresses = styled(EnabledAddressesItem)`
     text-align: center;
 `;
 
-export default MergeAccountModal;
+export default ClaimOnBehalfModal;

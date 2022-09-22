@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
+import { generalConfig } from 'config/general';
 
 const DISPLAY_NAME_REGEX = /^[a-zA-Z0-9 ]+$/;
 const AVATAR_LINK_REGEX = /^(.*?)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF|webp)$/;
@@ -42,7 +43,7 @@ const DisplayNameForm: React.FC = () => {
     const dispatchDisplayName = async (walletAddress: string, avatar: string, name: string) => {
         const signature = await (snxJSConnector as any).signer.signMessage(name);
         try {
-            await axios.post('https://api.thales.market/royale-user-data', {
+            await axios.post(`${generalConfig.API_URL}/royale-user-data`, {
                 walletAddress,
                 name,
                 avatar,

@@ -12,6 +12,8 @@ export const binaryOptionsMarketManagerContract = {
         [Network['Kovan-Ovm']]: '0xAfBA2e76B4580Ab88c07Beb2Ca884ca733fD4dD4',
         [Network['POLYGON-MUMBAI']]: '0x924364736B2e1c3d84656591a84bFA4aF1dc1291',
         [Network['POLYGON-MAINNET']]: '0x85f1B57A1D3Ac7605de3Df8AdA056b3dB9676eCE',
+        [Network.BSC]: '0x3124A11216273018C8F37181b4505d36573D9701',
+        [Network.Arbitrum]: '0x95d93c88c1b5190fA7FA4350844e0663e5a11fF0',
     },
     abi: [
         {

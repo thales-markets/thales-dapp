@@ -7,7 +7,7 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
 import { USD_SIGN } from 'constants/currency';
-import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsOVM, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import { formatCurrencyWithSignInRange } from 'utils/formatters/number';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
@@ -26,6 +26,8 @@ const RangeMarkets: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
+
+    const showOPBanner = getIsOVM(networkId);
 
     useEffect(() => {
         if (!isWalletConnected && window.ethereum) {
@@ -109,7 +111,7 @@ const RangeMarkets: React.FC = () => {
                     />
                 </InfoBanner>
             </BannerContainer> */}
-            <OpRewardsBanner width={90} />
+            {showOPBanner && <OpRewardsBanner width={90} />}
             <Suspense fallback={<></>}>
                 <HotMarketsRanged optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>

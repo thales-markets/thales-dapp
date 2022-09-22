@@ -5,7 +5,7 @@ import logoIcon from 'assets/images/logo-light.svg';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
-import { getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
@@ -21,10 +21,17 @@ const Sidebar: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
+    const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+
     const { t } = useTranslation();
     const [collapse, setCollapse] = useState(false);
 
     const [isMobileState, setIsMobileState] = useState(isMobile());
+
+    const showWizardPage = !isPolygon && !isMobileState && !isBSC && !isArbitrum;
+    const showTokenPage = !isPolygon && !isBSC && !isArbitrum;
+    const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -89,7 +96,7 @@ const Sidebar: React.FC = () => {
                     />
                 )} */}
 
-                {!isPolygon && !isMobileState && (
+                {showWizardPage && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
@@ -108,7 +115,7 @@ const Sidebar: React.FC = () => {
                     label={t('referral-page.title')}
                 />
                 <Divider />
-                {!isPolygon && (
+                {showTokenPage && (
                     <DappHeaderItem
                         className={`show ${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
                         href={buildHref(ROUTES.Options.Token)}
@@ -117,7 +124,7 @@ const Sidebar: React.FC = () => {
                     />
                 )}
 
-                {!isPolygon && (
+                {showOPRewardsPage && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.OPRewards ? 'selected' : ''

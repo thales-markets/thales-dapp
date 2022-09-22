@@ -3,7 +3,7 @@ import { COLLATERALS, STABLE_DECIMALS } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import { OptionSide, RangedMarketPositionType, StableCoins } from 'types/options';
 import { stableCoinParser } from './formatters/ethers';
-import { NetworkId } from './network';
+import { getIsArbitrum, getIsPolygon, Network, NetworkId } from './network';
 
 export const getQuoteFromAMM = (
     isNonDefaultStable: boolean,
@@ -189,25 +189,23 @@ export const preparePopulateTransactionForAMM = async (
 export const getAmountToApprove = (
     approveAmount: BigNumber,
     isNonDefaultStable: boolean,
-    isPolygon: boolean,
     isBuy: boolean,
-    selectedStableIndex: number
+    selectedStableIndex: number,
+    networkId: NetworkId
 ): BigNumber => {
-    if (isPolygon && isBuy) {
-        if (approveAmount === ethers.constants.MaxUint256) {
-            return ethers.constants.MaxUint256;
-        } else {
-            return ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6);
-        }
+    if (approveAmount === ethers.constants.MaxUint256) {
+        return ethers.constants.MaxUint256;
+    }
+
+    if ((getIsPolygon(networkId) || getIsArbitrum(networkId)) && isBuy) {
+        return ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), 6);
+    } else if (networkId == Network.BSC) {
+        return ethers.utils.parseUnits(ethers.utils.formatEther(approveAmount), STABLE_DECIMALS['BUSD']);
     } else if (isNonDefaultStable) {
-        if (approveAmount === ethers.constants.MaxUint256) {
-            return ethers.constants.MaxUint256;
-        } else {
-            return ethers.utils.parseUnits(
-                ethers.utils.formatEther(approveAmount),
-                STABLE_DECIMALS[COLLATERALS[selectedStableIndex] as StableCoins]
-            );
-        }
+        return ethers.utils.parseUnits(
+            ethers.utils.formatEther(approveAmount),
+            STABLE_DECIMALS[COLLATERALS[selectedStableIndex] as StableCoins]
+        );
     } else {
         return approveAmount;
     }
@@ -215,17 +213,65 @@ export const getAmountToApprove = (
 
 export const parseSellAmount = (
     sellAmount: number | string,
-    isNonDefaultStable: boolean,
-    isBuy: boolean,
-    isPolygon: boolean,
+    // isNonDefaultStable: boolean,
+    // isBuy: boolean,
+    // isPolygon: boolean,
     selectedStableIndex: number,
     networkId: NetworkId
 ) => {
-    if (isPolygon && isBuy) {
-        return ethers.utils.parseUnits(Number(sellAmount).toString(), 6);
-    } else if (isNonDefaultStable) {
-        return stableCoinParser(Number(sellAmount)?.toString(), networkId, COLLATERALS[selectedStableIndex]);
+    return stableCoinParser(Number(sellAmount)?.toString(), networkId, COLLATERALS[selectedStableIndex]);
+};
+
+export const getEstimatedGasFees = async (
+    isNonDefaultStable: boolean,
+    isBuy: boolean,
+    ammContractWithSigner: any,
+    marketAddress: string,
+    side: number | OptionSide | RangedMarketPositionType,
+    parsedAmount: BigNumber,
+    parsedTotal: BigNumber,
+    parsedSlippage: BigNumber,
+    sellToken: string | undefined,
+    referral: string
+) => {
+    let txRequest: any;
+
+    if (isNonDefaultStable) {
+        txRequest = await ammContractWithSigner.estimateGas.buyFromAMMWithDifferentCollateralAndReferrer(
+            marketAddress,
+            side,
+            parsedAmount,
+            parsedTotal,
+            parsedSlippage,
+            sellToken,
+            referral ? referral : ZERO_ADDRESS
+        );
     } else {
-        return ethers.utils.parseEther(Number(sellAmount).toString());
+        txRequest = isBuy
+            ? !referral
+                ? await ammContractWithSigner.estimateGas.buyFromAMM(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage
+                  )
+                : await ammContractWithSigner.estimateGas.buyFromAMMWithReferrer(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage,
+                      referral
+                  )
+            : await ammContractWithSigner.estimateGas.sellToAMM(
+                  marketAddress,
+                  side,
+                  parsedAmount,
+                  parsedTotal,
+                  parsedSlippage
+              );
     }
+
+    return txRequest;
 };

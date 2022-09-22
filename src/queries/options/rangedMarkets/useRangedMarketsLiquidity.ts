@@ -1,6 +1,7 @@
 import { NetworkId } from 'utils/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
+import { generalConfig } from 'config/general';
 
 type OpenOrdersMap = Record<string, any> | null;
 
@@ -11,7 +12,7 @@ export const useRangedMarketsLiquidity = (network: NetworkId, options?: UseQuery
     return useQuery<OpenOrdersMap>(
         QUERY_KEYS.BinaryOptions.RangedLiquidity(network),
         async () => {
-            const baseUrl = 'https://api.thales.market/ranged-liquidity/' + network;
+            const baseUrl = `${generalConfig.API_URL}/ranged-liquidity/${network}`;
             const response = await fetch(baseUrl);
             const json = await response.json();
             const openOrdersMap = new Map(json);

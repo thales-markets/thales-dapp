@@ -60,6 +60,10 @@ import { ReactComponent as USDTIcon } from 'assets/currencies/crypto/USDT.svg';
 import { ReactComponent as LOOKSIcon } from 'assets/currencies/crypto/LOOKS.svg';
 import { ReactComponent as DYDXIcon } from 'assets/currencies/crypto/DYDX.svg';
 import { ReactComponent as ETCIcon } from 'assets/currencies/crypto/ETC.svg';
+import { ReactComponent as BUSDIcon } from 'assets/currencies/crypto/BUSD.svg';
+import { ReactComponent as MAGICIcon } from 'assets/currencies/crypto/MAGIC.svg';
+import { ReactComponent as DPXIcon } from 'assets/currencies/crypto/DOPEX.svg';
+import { ReactComponent as GMXIcon } from 'assets/currencies/crypto/GMX.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -165,6 +169,10 @@ export const CRYPTO_CURRENCY = [
     'LOOKS',
     'DYDX',
     'ETC',
+    'BUSD',
+    'MAGIC',
+    'DPX',
+    'GMX',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -255,6 +263,10 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.LOOKS]: LOOKSIcon,
     [CRYPTO_CURRENCY_MAP.DYDX]: DYDXIcon,
     [CRYPTO_CURRENCY_MAP.ETC]: ETCIcon,
+    [CRYPTO_CURRENCY_MAP.BUSD]: BUSDIcon,
+    [CRYPTO_CURRENCY_MAP.MAGIC]: MAGICIcon,
+    [CRYPTO_CURRENCY_MAP.DPX]: DPXIcon,
+    [CRYPTO_CURRENCY_MAP.GMX]: GMXIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -323,6 +335,10 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.LOOKS]: 'LooksRare',
     [CRYPTO_CURRENCY_MAP.DYDX]: 'dYdX',
     [CRYPTO_CURRENCY_MAP.ETC]: 'Ethereum Classic',
+    [CRYPTO_CURRENCY_MAP.BNB]: 'Binance Coin',
+    [CRYPTO_CURRENCY_MAP.MAGIC]: 'Magic',
+    [CRYPTO_CURRENCY_MAP.DPX]: 'Dopex',
+    [CRYPTO_CURRENCY_MAP.GMX]: 'GMX',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
@@ -398,6 +414,9 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.LOOKS]: 'lookscoin',
     [CRYPTO_CURRENCY_MAP.DYDX]: 'dydx',
     [CRYPTO_CURRENCY_MAP.ETC]: 'ethereum-classic',
+    [CRYPTO_CURRENCY_MAP.MAGIC]: 'magic',
+    [CRYPTO_CURRENCY_MAP.DPX]: 'dopex',
+    [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
 };
 
 export const currencyKeyToDataFeedSourceMap = {

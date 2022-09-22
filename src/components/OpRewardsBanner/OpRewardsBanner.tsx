@@ -48,6 +48,9 @@ const BannerContainer = styled(FlexDiv)<{ width?: number }>`
         cursor: pointer;
         color: var(--input-border-color);
     }
+    @media (max-width: 1192px) {
+        padding-bottom: 20px;
+    }
 `;
 
 export default OpRewardsBanner;

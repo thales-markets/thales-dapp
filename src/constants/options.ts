@@ -43,6 +43,7 @@ export enum COLLATERALS_INDEX {
     'DAI' = 1,
     'USDC' = 2,
     'USDT' = 3,
+    'BUSD' = 4,
 }
 
 export const COLLATERALS = ['sUSD', 'DAI', 'USDC', 'USDT'];
@@ -52,6 +53,7 @@ export const STABLE_DECIMALS = {
     DAI: 18,
     USDC: 6,
     USDT: 6,
+    BUSD: 18,
 };
 
 export const PHASES = ['trading', 'maturity', 'expiry'] as Phase[];

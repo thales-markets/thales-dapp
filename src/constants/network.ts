@@ -1,6 +1,8 @@
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
+// import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
+import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
@@ -8,6 +10,8 @@ import { Network } from 'utils/network';
 
 export const GWEI_UNIT = 1000000000;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
+export const SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
 export const POLYGON_GWEI_INCREASE_PERCENTAGE = 0.2;
 
 export type NetworkMapper = Record<number, number>;
@@ -84,6 +88,26 @@ export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
         chainName: 'Polygon Mumbai',
         rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
         blockExplorerUrls: ['https://mumbai-explorer.matic.today/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+    },
+};
+
+export const BSC_NETWORK: Record<number, OptimismNetwork> = {
+    56: {
+        chainId: '0x38',
+        chainName: 'BSC',
+        rpcUrls: ['https://polygon-rpc.com'],
+        blockExplorerUrls: ['https://bscscan.com/'],
+        iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+    },
+};
+
+export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
+    42161: {
+        chainId: '0xA4B1',
+        chainName: 'Arbitrum One',
+        rpcUrls: ['https://arb1.arbitrum.io/rpc	'],
+        blockExplorerUrls: ['https://arbiscan.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
     },
 };
@@ -170,6 +194,42 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                     await (window.ethereum as any).request({
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: formattedChainId }],
+                    });
+                } catch (switchError: any) {
+                    console.log(switchError);
+                }
+            }
+        },
+    },
+    // 56: {
+    //     name: 'BSC',
+    //     icon: BSCLogo,
+    //     changeNetwork: async (networkId: number) => {
+    //         const bscNetworkParams = BSC_NETWORK[networkId];
+
+    //         if (typeof window.ethereum !== 'undefined') {
+    //             try {
+    //                 await (window.ethereum as any).request({
+    //                     method: 'wallet_switchEthereumChain',
+    //                     params: [{ chainId: bscNetworkParams.chainId }],
+    //                 });
+    //             } catch (switchError: any) {
+    //                 console.log(switchError);
+    //             }
+    //         }
+    //     },
+    // },
+    42161: {
+        name: 'Arbitrum',
+        icon: ArbitrumLogo,
+        changeNetwork: async (networkId: number) => {
+            const arbNetworkParams = ARBITRUM_NETWORK[networkId];
+
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await (window.ethereum as any).request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: arbNetworkParams.chainId }],
                     });
                 } catch (switchError: any) {
                     console.log(switchError);

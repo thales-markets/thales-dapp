@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 type AccountInfo = {
     balance: number;
     rawBalance: string;
@@ -43,6 +45,29 @@ export type TokenTransaction = {
     timestamp: number;
     amount: number | string;
     blockNumber: number;
+};
+
+export enum TokenTabEnum {
+    GAMIFIED_STAKING = 'gamified-staking',
+    LP_STAKING = 'lp-staking',
+    MIGRATION = 'migration',
+    STRATEGIC_INVESTORS = 'strategic-investors',
+}
+
+export enum TokenTabSectionIdEnum {
+    STAKING = 'staking',
+    REWARDS = 'rewards',
+    VESTING = 'vesting',
+    MERGE_ACCOUNT = 'merge-account',
+    LP_STAKING = 'lp-staking',
+}
+
+export type TokenTabSection = {
+    tab: TokenTabEnum;
+    id: TokenTabSectionIdEnum;
+    title: string;
+    description: string | ReactElement;
+    isButton: boolean;
 };
 
 export enum TransactionFilterEnum {
@@ -99,6 +124,10 @@ export type StakingReward = {
     snxVolumeRewardsMultiplier: number;
     snxStaked: number;
     ammVolume: number;
+    thalesAmmVolume: number;
+    rangedAmmVolume: number;
+    sportsAmmVolume: number;
+    exoticVolume: number;
     hasParticipatedInCurrentOrLastRoyale: boolean;
 };
 
@@ -122,6 +151,7 @@ export type MigratedReward = {
 export type TokenInfo = {
     totalSupply: number;
     circulatingSupply: number;
+    thalesBurned: number;
     price?: number;
     marketCap?: number;
 };

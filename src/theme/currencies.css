@@ -9,3 +9,11 @@
 .icon--polygon:before {
     content: '\004D';
 }
+
+.icon--binance:before {
+    content: '\004C';
+}
+
+.icon--arbitrum::before {
+    content: '\0065';
+}
