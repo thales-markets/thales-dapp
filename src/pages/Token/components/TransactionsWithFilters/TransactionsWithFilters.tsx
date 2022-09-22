@@ -67,49 +67,45 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
             gridColumnStart={gridColumnStart}
         >
             <SectionHeader>{t('options.earn.table.title')}</SectionHeader>
+            <FilterWrapper>
+                <FilterContainer
+                    onMouseEnter={() => (isMobile() ? '' : setShowFilters(true))}
+                    onMouseLeave={() => setShowFilters(false)}
+                >
+                    <Button type={ButtonType.default} onClickHandler={() => setShowFilters(!showFilters)}>
+                        {t(`options.earn.table.filter.button`)}
+                    </Button>
+                    <DropDownWrapper hidden={!showFilters}>
+                        <DropDown>
+                            {filters.map((filterItem) => {
+                                if (filterItem === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND) return null;
+                                return (
+                                    <FilterText
+                                        onClick={() => {
+                                            setFilter(filterItem);
+                                            setShowFilters(false);
+                                        }}
+                                        className={filter === filterItem ? 'selected' : ''}
+                                        key={filterItem}
+                                    >
+                                        {t(`options.earn.table.filter.${filterItem}`)}
+                                    </FilterText>
+                                );
+                            })}
+                        </DropDown>
+                    </DropDownWrapper>
+                </FilterContainer>
+            </FilterWrapper>
             {!noUserTx ? (
-                <>
-                    <FilterWrapper>
-                        <FilterContainer
-                            onMouseEnter={() => (isMobile() ? '' : setShowFilters(true))}
-                            onMouseLeave={() => setShowFilters(false)}
-                        >
-                            <Button type={ButtonType.default} onClickHandler={() => setShowFilters(!showFilters)}>
-                                {t(`options.earn.table.filter.button`)}
-                            </Button>
-                            <DropDownWrapper hidden={!showFilters}>
-                                <DropDown>
-                                    {filters.map((filterItem) => {
-                                        if (filterItem === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND)
-                                            return null;
-                                        return (
-                                            <FilterText
-                                                onClick={() => {
-                                                    setFilter(filterItem);
-                                                    setShowFilters(false);
-                                                }}
-                                                className={filter === filterItem ? 'selected' : ''}
-                                                key={filterItem}
-                                            >
-                                                {t(`options.earn.table.filter.${filterItem}`)}
-                                            </FilterText>
-                                        );
-                                    })}
-                                </DropDown>
-                            </DropDownWrapper>
-                        </FilterContainer>
-                    </FilterWrapper>
-
-                    <SectionContent>
-                        <TransactionsTable
-                            transactions={filteredTransactions}
-                            isLoading={userTokenTransactionsQuery.isLoading}
-                            noResultsMessage={
-                                noResults ? <span>{t(`options.earn.table.no-results.${filter}`)}</span> : undefined
-                            }
-                        />
-                    </SectionContent>
-                </>
+                <SectionContent>
+                    <TransactionsTable
+                        transactions={filteredTransactions}
+                        isLoading={userTokenTransactionsQuery.isLoading}
+                        noResultsMessage={
+                            noResults ? <span>{t(`options.earn.table.no-results.${filter}`)}</span> : undefined
+                        }
+                    />
+                </SectionContent>
             ) : (
                 <NoResultsContainer gridColumns={gridColumns} gridColumnStart={gridColumnStart}>
                     <NoResultsText>{t(`options.earn.table.no-activity`)}</NoResultsText>
