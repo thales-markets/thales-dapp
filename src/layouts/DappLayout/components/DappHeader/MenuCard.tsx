@@ -12,7 +12,7 @@ import NetworkSwitchSection from 'components/NetworkSwitch/v2/NetworkSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import ThemeSelector from 'components/ThemeSelector/ThemeSelector';
 
-import { getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
 import DisplayNameForm from 'components/DisplayNameForm/DisplayNameForm';
 
 interface ManuCardProps {
@@ -24,8 +24,7 @@ const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ 
     const theme = useSelector((state: RootState) => getTheme(state));
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isPolygon = getIsPolygon(networkId);
-
+    const showThalesBalance = !getIsPolygon(networkId) && !getIsArbitrum(networkId) && !getIsBSC(networkId);
     return (
         <MenuCard visibility={showCard} className={theme == 0 ? 'light' : 'dark'}>
             <CloseIcon className="icon icon--x-sign" onClick={() => setShowCard(!showCard)} />
@@ -37,7 +36,7 @@ const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ 
                 {isWalletConnected && <NetworkSwitchSection setShowCard={setShowCard} />}
                 <Container>
                     {isWalletConnected && <PieChartUserBalance />}
-                    {isWalletConnected && !isPolygon && <ThalesBalance />}
+                    {isWalletConnected && showThalesBalance && <ThalesBalance />}
                 </Container>
 
                 <PriceChart currencyKey={'THALES'} showHeading={true} />

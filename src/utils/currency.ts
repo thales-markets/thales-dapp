@@ -50,6 +50,13 @@ export const getStableCoinForNetwork = (networkId: number, customStable?: Stable
     return SYNTHS_MAP.sUSD;
 };
 
+export const getMainCurrencyForNetwork = (networkId: number) => {
+    if (getIsArbitrum(networkId)) return CRYPTO_CURRENCY_MAP.ETH;
+    if (getIsBSC(networkId)) return CRYPTO_CURRENCY_MAP.BNB;
+    if (getIsPolygon(networkId)) return CRYPTO_CURRENCY_MAP.MATIC;
+    return CRYPTO_CURRENCY_MAP.ETH;
+};
+
 export const sortCurrencies = (a: string, b: string) => {
     if (a === 'BTC' || a === 'sBTC') return -1;
     if (b === 'BTC' || b === 'sETH') return 1;
