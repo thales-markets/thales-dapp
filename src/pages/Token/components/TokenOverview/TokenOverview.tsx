@@ -1,7 +1,7 @@
 import React, { CSSProperties, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import styled from 'styled-components';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
@@ -11,7 +11,6 @@ import { TokenInfo } from 'types/token';
 import { getIsAppReady } from 'redux/modules/app';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
-import thalesTokenIcon from 'assets/images/sidebar/thales-token-white.svg';
 import { LightTooltip } from '../components';
 import { LINKS } from 'constants/links';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -43,7 +42,7 @@ export const TokentOverview: React.FC = () => {
         <Container>
             <ItemContainer>
                 <FlexDivCentered>
-                    <CustomIcon src={thalesTokenIcon}></CustomIcon>
+                    <CustomIcon className={`sidebar-icon icon--token`} />
                     <LightTooltip title={t('options.earn.overview.token-tooltip')}>
                         <StyledLink
                             href={getEtherscanTokenLink(networkId, thalesContract.addresses[networkId])}
@@ -285,10 +284,8 @@ const ArrowIcon = styled(ArrowHyperlinkIcon)`
     }
 `;
 
-const CustomIcon = styled(Image)`
+const CustomIcon = styled.i`
     margin-right: 10px;
-    width: 40px;
-    height: 40px;
 `;
 
 const CryptoName = styled.span`
@@ -310,14 +307,17 @@ export const StyledInfoIcon = styled(InfoIcon)`
 const ThalesBurnedWrapper = styled.div`
     display: flex;
     position: relative;
+    @media (min-width: 1024px) and (max-width: 1192px) {
+        margin-right: 20px;
+    }
 `;
 
 const thalesBurnedStyle: CSSProperties = {
-    height: 40,
-    width: 40,
+    height: 48,
+    width: 48,
     position: 'absolute',
-    right: -30,
-    top: -23,
+    right: -35,
+    top: -12,
 };
 
 export default TokentOverview;
