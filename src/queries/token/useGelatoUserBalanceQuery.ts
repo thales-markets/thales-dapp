@@ -3,6 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
+import { BALANCE_THRESHOLD } from 'constants/token';
 
 export interface BalanceQueryResponse {
     balance: number;
@@ -19,7 +20,9 @@ const useGelatoUserBalanceQuery = (
             try {
                 const [balance] = await Promise.all([snxJSConnector?.gelatoContract?.balanceOf(walletAddress)]);
 
-                return { balance: bigNumberFormatter(balance) || 0 };
+                return {
+                    balance: (bigNumberFormatter(balance) < BALANCE_THRESHOLD ? 0 : bigNumberFormatter(balance)) || 0,
+                };
             } catch (e) {
                 console.log(e);
             }
