@@ -314,10 +314,10 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionDetailsValue>{value.volume}</SectionDetailsValue>
                 </SectionDetails>
                 <SectionDetails>
-                    <SectionDetailsLabel useBonusColor={!value.bonus} notEligibleColor={!label.bonusEligible}>
+                    <SectionDetailsLabel color={!label.bonusEligible ? '#ffcc00' : !value.bonus ? '#50ce99' : ''}>
                         {label.bonus}
                     </SectionDetailsLabel>
-                    {value.bonus && <SectionDetailsValue useBonusColor={true}>{value.bonus}</SectionDetailsValue>}
+                    {value.bonus && <SectionDetailsValue color={'#50ce99'}>{value.bonus}</SectionDetailsValue>}
                 </SectionDetails>
                 <Line margin={'0 0 10px 0'} />
                 <SectionDetails>
@@ -1019,26 +1019,26 @@ const SectionDetails = styled.div`
     padding-bottom: 10px;
 `;
 
-const SectionDetailsLabel = styled.span<{ useBonusColor?: boolean; notEligibleColor?: boolean }>`
+const SectionDetailsLabel = styled.span<{ color?: string }>`
     display: block;
     float: left;
     font-weight: 300;
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: ${(props) => (props.notEligibleColor ? '#ffcc00' : props.useBonusColor ? '#50ce99' : '#ffffff')};
+    color: ${(props) => props.color ?? '#ffffff'};
     @media (max-width: 768px) {
         font-size: 12px;
     }
 `;
 
-const SectionDetailsValue = styled.span<{ useBonusColor?: boolean }>`
+const SectionDetailsValue = styled.span<{ color?: string }>`
     display: block;
     float: right;
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => (props.useBonusColor ? '#50ce99' : '#ffffff')};
+    color: ${(props) => props.color ?? '#ffffff'};
 `;
 
 const ButtonWrapperTooltip = styled.div`
