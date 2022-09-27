@@ -292,6 +292,9 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
     },
+    Bungee: {
+        Tokens: () => ['bungee', 'tokens'],
+    },
 };
 
 export default QUERY_KEYS;

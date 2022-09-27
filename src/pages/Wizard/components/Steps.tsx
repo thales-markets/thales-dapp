@@ -1,29 +1,30 @@
-import React, { lazy, Suspense, useEffect, useState, useRef } from 'react';
+import { Modal } from '@material-ui/core';
 import useInterval from 'hooks/useInterval';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Trans } from 'react-i18next';
-import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Modal } from '@material-ui/core';
+import styled from 'styled-components';
 
 import arrow from 'assets/images/arrow-link.svg';
 import metamask from 'assets/images/metamask.svg';
 import insertCard from 'assets/images/wizard/insert-card.svg';
-import separator from 'assets/images/wizard/vertical-line.svg';
 import banxa from 'assets/images/wizard/logo-banxa.svg';
-import mtPelerin from 'assets/images/wizard/logo-mt-pelerin.svg';
 import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
+import mtPelerin from 'assets/images/wizard/logo-mt-pelerin.svg';
+import separator from 'assets/images/wizard/vertical-line.svg';
 
-import ROUTES from 'constants/routes';
 import { POLYGON_ID } from 'constants/network';
+import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
 
-import { WizardSteps } from '../Wizard';
-import { XButton } from 'theme/common';
-import SPAAnchor from 'components/SPAAnchor';
 import SimpleLoader from 'components/SimpleLoader';
+import SPAAnchor from 'components/SPAAnchor';
+import { XButton } from 'theme/common';
+import { WizardSteps } from '../Wizard';
+import BungeeWidget from 'components/BungeeWidget';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -35,7 +36,7 @@ enum NavItems {
 enum Provider {
     BANXA = 'https://thalesmarket.banxa.com/iframe?code=x68QxHYZ2hQU0rccKDgDSeUO7QonDXsY&coinType=ETH&fiatType=EUR&blockchain=OPTIMISM',
     MT_PELERIN = 'https://widget.mtpelerin.com/?type=popup&lang=en&primary=%2304045a&mylogo=https://thalesmarket.io/THALES_LOGOTIP.svg',
-    BUNGEE = 'https://multitx.bungee.exchange/',
+    BUNGEE = '',
     LAYER_SWAP = 'https://www.layerswap.io/?destNetwork=optimism_mainnet&lockNetwork=true&sourceExchangeName=binance&asset=usdc',
 }
 
@@ -50,6 +51,8 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const [showBuyModal, setShowBuyModal] = useState(false);
     const [iframe, setIframe] = useState('');
     const [iframeLoader, setLoader] = useState(false);
+
+    const [showBungeeWidget, setShowBungeeWidget] = useState(false);
 
     const [showSwap, setShowSwap] = useState(false);
 
@@ -84,7 +87,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         installMetamask && !metamaskInstaleld ? 1000 : null
     );
 
-    const buyButtonHandler = (buttonType: Provider) => {
+    const buyBridgeButtonHandler = (buttonType: Provider) => {
         switch (buttonType) {
             case Provider.BANXA:
                 setIframe(Provider.BANXA.toString());
@@ -97,6 +100,9 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         : '&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH';
                 setIframe(Provider.MT_PELERIN.toString() + queryParams);
                 setLoader(true);
+                break;
+            case Provider.BUNGEE:
+                setShowBungeeWidget(true);
                 break;
             default:
                 setIframe('');
@@ -331,7 +337,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                             <ButtonWrapper>
                                 <Button
                                     onClick={() => {
-                                        buyButtonHandler(Provider.BANXA);
+                                        buyBridgeButtonHandler(Provider.BANXA);
                                     }}
                                 >
                                     <Trans i18nKey="wizard-page.buy-button1" />
@@ -343,7 +349,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                             <ButtonWrapper>
                                 <Button
                                     onClick={() => {
-                                        buyButtonHandler(Provider.MT_PELERIN);
+                                        buyBridgeButtonHandler(Provider.MT_PELERIN);
                                     }}
                                 >
                                     <Trans i18nKey="wizard-page.buy-button2" />
@@ -353,11 +359,13 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         </ButtonLogoGroup>
                         <ButtonLogoGroup>
                             <ButtonWrapper>
-                                <SPAAnchor href={Provider.BUNGEE}>
-                                    <Button>
-                                        <Trans i18nKey="wizard-page.buy-button3" />
-                                    </Button>
-                                </SPAAnchor>
+                                <Button
+                                    onClick={() => {
+                                        buyBridgeButtonHandler(Provider.BUNGEE);
+                                    }}
+                                >
+                                    <Trans i18nKey="wizard-page.buy-button3" />
+                                </Button>
                             </ButtonWrapper>
                             <Logo logoType={Provider.BUNGEE} />
                         </ButtonLogoGroup>
@@ -386,6 +394,18 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                     <IFrame src={iframe} onLoad={() => setLoader(false)} />
                 </IFrameWrapper>
             </Modal>
+            {showBungeeWidget && (
+                <Modal
+                    open={showBungeeWidget}
+                    onClose={() => {
+                        setShowBungeeWidget(false);
+                    }}
+                >
+                    <Suspense fallback={<></>}>
+                        <BungeeWidget />
+                    </Suspense>
+                </Modal>
+            )}
             {showSwap && (
                 <Modal
                     open={showSwap}
