@@ -190,12 +190,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const maxAmmVolume = baseRewards * ammVolumeRewardsMultiplier;
     const additionalAmmVolume = maxAmmVolume - ammVolume > 0 ? maxAmmVolume - ammVolume : 0;
     const ammVolumeNeededForMaxBonus =
-        (additionalAmmVolume > 0 ? additionalAmmVolume : estimatedRewards * ammVolumeRewardsMultiplier) - ammVolume;
+        isClaimAvailable || isClaiming
+            ? additionalAmmVolume
+            : estimatedRewards * ammVolumeRewardsMultiplier - ammVolume;
 
     const maxSnxStaked = baseRewards * snxVolumeRewardsMultiplier;
     const additionalSnxStaked = maxSnxStaked - snxStaked > 0 ? maxSnxStaked - snxStaked : 0;
     const snxNeededForMaxBonus =
-        (additionalSnxStaked > 0 ? additionalSnxStaked : estimatedRewards * snxVolumeRewardsMultiplier) - snxStaked;
+        isClaimAvailable || isClaiming
+            ? additionalSnxStaked
+            : estimatedRewards * snxVolumeRewardsMultiplier - snxStaked;
 
     const hasUserStaked = estimatedRewards > 0;
 
@@ -310,10 +314,10 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionDetailsValue>{value.volume}</SectionDetailsValue>
                 </SectionDetails>
                 <SectionDetails>
-                    <SectionDetailsLabel bonus={!value.bonus} notEligible={!label.bonusEligible}>
+                    <SectionDetailsLabel color={!label.bonusEligible ? '#ffcc00' : !value.bonus ? '#50ce99' : ''}>
                         {label.bonus}
                     </SectionDetailsLabel>
-                    {value.bonus && <SectionDetailsValue bonus={true}>{value.bonus}</SectionDetailsValue>}
+                    {value.bonus && <SectionDetailsValue color={'#50ce99'}>{value.bonus}</SectionDetailsValue>}
                 </SectionDetails>
                 <Line margin={'0 0 10px 0'} />
                 <SectionDetails>
@@ -1015,26 +1019,26 @@ const SectionDetails = styled.div`
     padding-bottom: 10px;
 `;
 
-const SectionDetailsLabel = styled.span<{ bonus?: boolean; notEligible?: boolean }>`
+const SectionDetailsLabel = styled.span<{ color?: string }>`
     display: block;
     float: left;
     font-weight: 300;
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: ${(props) => (props.notEligible ? '#ffcc00' : props.bonus ? '#50ce99' : '#ffffff')};
+    color: ${(props) => props.color ?? '#ffffff'};
     @media (max-width: 768px) {
         font-size: 12px;
     }
 `;
 
-const SectionDetailsValue = styled.span<{ bonus?: boolean }>`
+const SectionDetailsValue = styled.span<{ color?: string }>`
     display: block;
     float: right;
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => (props.bonus ? '#50ce99' : '#ffffff')};
+    color: ${(props) => props.color ?? '#ffffff'};
 `;
 
 const ButtonWrapperTooltip = styled.div`

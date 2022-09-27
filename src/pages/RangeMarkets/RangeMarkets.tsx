@@ -13,6 +13,7 @@ import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarket
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
 import { RangedMarketUI } from 'types/options';
 import OpRewardsBanner from 'components/OpRewardsBanner';
+import Footer from 'components/Footer';
 
 const HotMarketsRanged = lazy(
     () => import(/* webpackChunkName: "HotMarketsRanged" */ './components/HotMarketsRanged/HotMarketsRanged')
@@ -118,6 +119,7 @@ const RangeMarkets: React.FC = () => {
             <Suspense fallback={<></>}>
                 <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
             </Suspense>
+            <Footer />
 
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>

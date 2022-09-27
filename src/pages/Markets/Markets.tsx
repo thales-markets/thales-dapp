@@ -18,6 +18,7 @@ import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
 import { getIsOVM, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
+import Footer from 'components/Footer';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
@@ -121,6 +122,7 @@ const Markets: React.FC = () => {
             <Suspense fallback={<></>}>
                 <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>
+            <Footer />
 
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>

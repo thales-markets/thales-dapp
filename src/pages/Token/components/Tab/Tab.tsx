@@ -184,7 +184,6 @@ const SectionContent = styled.div`
     z-index: 0;
     width: 100%;
     color: #ffffff;
-    margin-bottom: 60px;
     @media (max-width: 767px) {
         background: transparent;
         border: none;

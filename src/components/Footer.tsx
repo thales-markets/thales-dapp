@@ -2,20 +2,22 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 
-const WizardFooter: React.FC = () => {
+const Footer: React.FC = () => {
     return (
         <Wrapper>
-            <ThalesLogo className="icon icon--logo" />
-            <ThalesLogoText>© 2022 THALES DAO All Rights Reserved</ThalesLogoText>
+            <ThalesLogoContainer>
+                <ThalesLogo className="icon icon--logo" />
+                <ThalesLogoText>© 2022 THALES DAO All Rights Reserved</ThalesLogoText>
+            </ThalesLogoContainer>
             <FooterIconsWrapper>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/token">
-                    <Trans i18nKey="wizard-page.discover" />
+                    <Trans i18nKey="footer.discover" />
                 </TextLink>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/governance">
-                    <Trans i18nKey="wizard-page.about" />
+                    <Trans i18nKey="footer.about" />
                 </TextLink>
                 <TextLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                    <Trans i18nKey="wizard-page.resources" />
+                    <Trans i18nKey="footer.resources" />
                 </TextLink>
                 <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
                     <FooterIcon className="icon-home icon-home--twitter" />
@@ -35,30 +37,45 @@ const WizardFooter: React.FC = () => {
 };
 
 const Wrapper = styled.div`
-    width: 100%;
     margin-top: 20px;
     display: flex;
     align-items: center;
+    @media (max-width: 768px) {
+        display: grid;
+        justify-items: center;
+    }
+`;
+
+const ThalesLogoContainer = styled.div`
+    display: flex;
+    align-items: center;
+    @media (max-width: 768px) {
+        order: 2;
+    }
 `;
 
 const ThalesLogo = styled.i`
     color: var(--icon-color);
     font-size: 88px;
     height: 83px;
+    @media (max-width: 768px) {
+        font-size: 80px;
+    }
 `;
 
 const ThalesLogoText = styled.p`
     width: 84px;
     height: 16px;
     font-size: 8px;
-    color: #ffffff;
     font-family: 'Inter' !important;
     font-style: normal;
     font-weight: 400;
-    font-size: 8px;
     line-height: 8px;
     text-align: center;
     color: #ffffff;
+    @media (max-width: 768px) {
+        height: 24px;
+    }
 `;
 
 const FlexDiv = styled.div`
@@ -75,7 +92,7 @@ const FooterIconsWrapper = styled(FlexDiv)`
     justify-content: center;
     gap: 6em;
     &:last-child {
-        margin: 25px 0 25px auto;
+        margin: 25px 0 25px 50px;
         font-style: normal;
         font-weight: 300;
         font-size: 7px;
@@ -84,8 +101,13 @@ const FooterIconsWrapper = styled(FlexDiv)`
     @media (max-width: 900px) {
         gap: 4em;
     }
-    @media (max-width: 600px) {
-        gap: 4em;
+    @media (max-width: 768px) {
+        order: 1;
+        &:last-child {
+            margin-left: 0;
+            margin-bottom: 0;
+            font-size: 6px;
+        }
     }
     @media (max-width: 450px) {
         gap: 3em;
@@ -115,4 +137,4 @@ const FooterIcon = styled.i`
     color: var(--color);
 `;
 
-export default WizardFooter;
+export default Footer;

@@ -17,6 +17,11 @@
             "test": "Test"
         }
     },
+    "footer": {
+        "discover": "Discover",
+        "about": "About",
+        "resources": "Resources"
+    },
     "user-info": {
         "tabs": {
             "my-markets": "My Markets",
@@ -216,10 +221,7 @@
         "buy-button1": "Buy with card",
         "buy-button2": "Buy with card",
         "buy-button3": "Bridge to optimism",
-        "buy-button4": "Send from Exchange",
-        "discover": "Discover",
-        "about": "About",
-        "resources": "Resources"
+        "buy-button4": "Send from Exchange"
     },
     "common": {
         "read-more": "Read more",

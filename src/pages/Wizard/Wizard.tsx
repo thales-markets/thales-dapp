@@ -7,10 +7,10 @@ import Steps from './components/Steps';
 import WizardText, { Text } from './components/WizardText';
 import WizardFaq from './components/WizardFaq';
 import WizardVideo from './components/WizardVideo';
-import WizardFooter from './components/WizardFooter';
 import Loader from 'components/Loader';
 import styled from 'styled-components';
 import OpRewardsBanner from 'components/OpRewardsBanner';
+import Footer from 'components/Footer';
 
 export enum WizardSteps {
     INSTALL_METAMASK,
@@ -30,33 +30,38 @@ const Wizard: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner width={70} />
-            <Wrapper>
-                <TextHeader>{t('wizard-page.header')}</TextHeader>
-                <TextIntro>
-                    <Trans
-                        i18nKey="wizard-page.intro"
-                        components={{
-                            b: <strong />,
-                        }}
-                    />
-                </TextIntro>
-                <WizardVideo
-                    header={false}
-                    videoLink="https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1"
-                    videoTitle="On-boarding Wizard video walk through for Thales platform"
-                />
-                <Steps step={currentStep} setCurrentStep={setCurrentStep}></Steps>
-                <WizardText step={currentStep}></WizardText>
-                <WizardVideo
-                    header={true}
-                    videoLink="https://www.youtube.com/embed/sWiOiW5VTdE?&autoplay=1"
-                    videoTitle="How to use Thales AMM (Automated Market Maker)? Walk through - Video Tutorial"
-                />
-                <WizardFaq />
-                <WizardFooter />
-            </Wrapper>
-            {networkId === 1 && <Loader hideMainnet={true} />}
+            {networkId !== 1 ? (
+                <>
+                    <OpRewardsBanner width={70} />
+                    <Wrapper>
+                        <TextHeader>{t('wizard-page.header')}</TextHeader>
+                        <TextIntro>
+                            <Trans
+                                i18nKey="wizard-page.intro"
+                                components={{
+                                    b: <strong />,
+                                }}
+                            />
+                        </TextIntro>
+                        <WizardVideo
+                            header={false}
+                            videoLink="https://www.youtube.com/embed/MXqt3itSCgw?&autoplay=1"
+                            videoTitle="On-boarding Wizard video walk through for Thales platform"
+                        />
+                        <Steps step={currentStep} setCurrentStep={setCurrentStep}></Steps>
+                        <WizardText step={currentStep}></WizardText>
+                        <WizardVideo
+                            header={true}
+                            videoLink="https://www.youtube.com/embed/sWiOiW5VTdE?&autoplay=1"
+                            videoTitle="How to use Thales AMM (Automated Market Maker)? Walk through - Video Tutorial"
+                        />
+                        <WizardFaq />
+                    </Wrapper>
+                    <Footer />
+                </>
+            ) : (
+                <Loader hideMainnet={true} />
+            )}
         </>
     );
 };
@@ -72,7 +77,6 @@ const TextHeader = styled(Text)`
     font-size: 22px;
     line-height: 33px;
     text-align: left;
-    margin-top: 30px;
     margin-bottom: 20px;
 `;
 
