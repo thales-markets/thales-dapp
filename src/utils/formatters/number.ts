@@ -91,6 +91,14 @@ export const truncToDecimals = (value: NumericValue, decimals = DEFAULT_CURRENCY
     return matchedValue !== null ? matchedValue[0] : '0';
 };
 
+export const truncDecimals = (value: number, decimals = DEFAULT_CURRENCY_DECIMALS): string => {
+    const matchedValue = value
+        .toFixed(decimals) // when number has more than 6 decimals with preceding zeros (e.g. 0.0000001), toString() returns string in exponential notation (e.g. 1e-7)
+        .replace(/(?<=[1-9])0+/, '') // remove trailing zeros added by toFixed (excluding 0.00)
+        .match(`^-?\\\d+(?:\\\.\\\d{0,${decimals}})?`);
+    return matchedValue !== null ? matchedValue[0] : '0';
+};
+
 export const formatNumberShort = (value: number) => {
     // Nine Zeroes for Billions
     return value >= 1.0e9
@@ -103,10 +111,6 @@ export const formatNumberShort = (value: number) => {
         ? formatCurrency(value / 1.0e3, 2, true) + 'k'
         : formatCurrency(value, 2, true);
 };
-
-// export const convertToCurrency = (amount: number, valueInCurrency: number, currencySymbol: string) => {
-
-// }
 
 export const formatPricePercentageGrowth = (priceChange: number) => {
     return priceChange > 0 ? `+ ${Math.abs(priceChange).toFixed(2)}%` : `- ${Math.abs(priceChange).toFixed(2)}%`;
