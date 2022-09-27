@@ -43,6 +43,7 @@ import Tooltip from 'components/Tooltip';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
+import Footer from 'components/Footer';
 
 const Tabs = [
     {
@@ -423,7 +424,7 @@ const Referral: React.FC = () => {
                     )}
                 </>
             </Container.Tab>
-            <Footer>
+            <ReferralFooter>
                 {'By sharing a referral link you consent to the disclaimer'}
                 <Tooltip
                     message={t('referral-page.disclaimer')}
@@ -441,10 +442,8 @@ const Referral: React.FC = () => {
                 >
                     {' terms'}
                 </a>
-            </Footer>
-            {/* <Footer>
-                <Trans i18nKey={'referral-page.disclaimer'} components={{ bold: <BoldText />, italic: <i /> }} />
-            </Footer> */}
+            </ReferralFooter>
+            <Footer />
         </>
     );
 };
@@ -453,46 +452,20 @@ const BoldText = styled.span`
     font-weight: 900;
 `;
 
-const Footer = styled.div`
+const ReferralFooter = styled.div`
     display: flex;
     flex-direction: row;
-    position: absolute;
+    position: relative;
     font-size: 16px;
-    width: 90%;
     color: var(--primary-color);
-    bottom: 0;
-    margin-bottom: 20px;
     @media screen and (max-width: 520px) {
         margin-top: 50px;
         margin-bottom: 10px;
-        position: relative;
         display: inline-block;
         div {
             display: inline;
         }
     }
 `;
-
-// const TextGradient = styled.div`
-//     position: absolute;
-//     z-index: 2;
-//     right: 0;
-//     bottom: 0;
-//     left: 0;
-//     height: 100px; /* adjust it to your needs */
-//     background: url(data:image/svg+xml;base64,alotofcodehere);
-//     background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-//     background: -webkit-gradient(
-//         linear,
-//         left top,
-//         left bottom,
-//         color-stop(0%, rgba(255, 255, 255, 0)),
-//         color-stop(70%, rgba(255, 255, 255, 1))
-//     );
-//     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-//     background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-//     background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-//     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-// `;
 
 export default Referral;

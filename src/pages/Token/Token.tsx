@@ -1,3 +1,4 @@
+import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
@@ -138,6 +139,7 @@ const TokenPage: React.FC = () => {
                 selectedSection={selectedSection}
                 setSelectedSection={setSelectedSection}
             />
+            <Footer />
         </>
     );
 };
@@ -158,9 +160,6 @@ const Container = styled.div`
 const MainContentContainer = styled.div`
     padding-top: 5px;
     overflow: hidden;
-    @media (max-width: 767px) {
-        padding-bottom: 100px;
-    }
 `;
 
 export default TokenPage;

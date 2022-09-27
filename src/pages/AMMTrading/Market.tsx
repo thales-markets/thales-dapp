@@ -24,6 +24,7 @@ import RangeMaturity from './components/Maturity/RangeMaturity';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import { POLYGON_ID } from 'constants/network';
+import Footer from 'components/Footer';
 
 type MarketProps = {
     marketAddress: string;
@@ -99,6 +100,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                     </MainContainer>
                 </RangedMarketProvider>
             )}
+            <Footer />
         </>
     ) : (
         <Loader />

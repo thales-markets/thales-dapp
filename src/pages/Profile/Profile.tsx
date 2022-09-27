@@ -27,6 +27,7 @@ import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarket
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import localStore from 'utils/localStore';
 import OpRewardsBanner from 'components/OpRewardsBanner';
+import Footer from 'components/Footer';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -229,6 +230,7 @@ const Profile: React.FC = () => {
                     </Wrapper>
                 </Container.Right>
             </Container>
+            <Footer />
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>
     );

@@ -150,7 +150,8 @@ const SectionContainer = styled.section<{
     @media (max-width: 768px) {
         grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : 12)};
         order: 12;
-        height: ${(props) => (props.txCount === 0 ? '100%' : '550px')};
+        // height: ${(props) => (props.txCount === 0 ? '100%' : '550px')};
+        height: 100%;
     }
 `;
 
