@@ -1884,5 +1884,8 @@
         "down-volume-label": "DOWN Volume",
         "ranged-volume-label": "RANGED Volume",
         "volume-tooltip": "Current rewards:\n {{op}} + {{thales}} per $1,000 of Buy Volume"
+    },
+    "vaults": {
+        "text": "buying IN options close to the current price and inside the range. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean condimentum rhoncus dui, vel euismod elit faucibus sit amet. Aenean porttitor varius molestie. Proin hendrerit."
     }
 }
