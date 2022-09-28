@@ -193,6 +193,12 @@ const Sidebar: React.FC = () => {
                     }}
                     simpleOnClick={true}
                 />
+                <DappHeaderItem
+                    className={`show ${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
+                    href={buildHref(ROUTES.Options.Vaults)}
+                    iconName="token"
+                    label={t('common.sidebar.earn-label')}
+                />
 
                 <ThreeDotsContainer
                     onClick={(event) => {

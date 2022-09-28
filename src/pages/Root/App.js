@@ -40,6 +40,8 @@ const RangeMarkets = lazy(() => import(/* webpackChunkName: "RangeMarkets" */ '.
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 
+const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
+
 const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token/Token'));
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales/TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
@@ -285,6 +287,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.Referral}>
                             <DappLayout>
                                 <Referral />
+                            </DappLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.Vaults}>
+                            <DappLayout>
+                                <Vaults />
                             </DappLayout>
                         </Route>
 
