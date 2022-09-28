@@ -61,7 +61,6 @@ const App = () => {
 
     const { trackPageView } = useMatomo();
 
-    console.log('WalletAddress ', walletAddress);
     queryConnector.setQueryClient();
 
     useEffect(() => {
