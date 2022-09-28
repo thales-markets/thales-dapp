@@ -269,13 +269,11 @@ const App = () => {
                                 <TaleOfThales />
                             </DappLayout>
                         </Route>
-                        {walletAddress && (
-                            <Route exact path={ROUTES.Options.Profile}>
-                                <DappLayout>
-                                    <Profile />
-                                </DappLayout>
-                            </Route>
-                        )}
+                        <Route exact path={ROUTES.Options.Profile}>
+                            <DappLayout>
+                                <Profile />
+                            </DappLayout>
+                        </Route>
                         {!isPolygon && (
                             <Route exact path={ROUTES.Options.Token}>
                                 <DappLayout>
