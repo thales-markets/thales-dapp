@@ -10,6 +10,7 @@ export const ammContract = {
         [Network.Goerli]: '', // TODO: goerli network remove or implement
         [Network['Mainnet-Ovm']]: '0x5ae7454827D83526261F3871C1029792644Ef1B1',
         [Network['Kovan-Ovm']]: '0xfed727f37e921Faac22e36E0bbaA8504B45F6e3f',
+        [Network['Goerli-Ovm']]: '0xcE9c1aAb41b18b24355138776186484B260B9cf0',
         [Network['POLYGON-MUMBAI']]: '0xdf0A5bf80E8009f2702E7d164A7bdeaa79013eba',
         [Network['POLYGON-MAINNET']]: '0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213',
         [Network.BSC]: '0x465B66A3e33088F0666dB1836652fBcF037c7319',
