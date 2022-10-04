@@ -85,6 +85,7 @@ export const initOnboard = (networkId: LocalNetworkId, subscriptions: Subscripti
                         [Network['Mainnet-Ovm']]: getInfuraRpcURL(Network['Mainnet-Ovm']),
                         [Network.Kovan]: getInfuraRpcURL(Network.Kovan),
                         [Network['Kovan-Ovm']]: getInfuraRpcURL(Network['Kovan-Ovm']),
+                        [Network['Goerli-Ovm']]: getInfuraRpcURL(Network['Goerli-Ovm']),
                         [POLYGON_MUMBAI_ID]: getInfuraRpcURL(POLYGON_MUMBAI_ID),
                         [POLYGON_ID]: getInfuraRpcURL(POLYGON_ID),
                         [Network.BSC]: getPublicRpc(Network.BSC),
