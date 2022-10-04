@@ -26,7 +26,7 @@ enum MarketType {
     long = 'UP',
 }
 
-const CARDS_TO_SHOW = 5;
+const CARDS_TO_SHOW = 10;
 
 const calculatePotentialProfit = (price: number) => {
     return ((1 - price) / price) * 100;
@@ -51,7 +51,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             .sort((a, b) => a.timeRemaining - b.timeRemaining)
             .forEach((market) => {
                 if (market.longPrice == 0 || market.shortPrice == 0) return;
-                const discount = (discountsMap as any).get(market.address);
+                const discount = (discountsMap as any).get(market.address.toLowerCase());
 
                 if (discount) {
                     if (discount.longPriceImpact < 0) {
@@ -84,7 +84,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 }
             });
 
-        return markets.sort((a: HotMarket, b: HotMarket) => a.discount - b.discount);
+        return markets.sort((a: HotMarket, b: HotMarket) => b.discount - a.discount);
     }, [optionsMarkets]);
 
     const moveLeft = () => {

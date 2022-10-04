@@ -461,6 +461,7 @@
                 "asset-col": "Asset",
                 "24h-change-col": "24H Change",
                 "strike-price-col": "Strike price",
+                "discount-col": "Discount",
                 "asset-price-col": "Asset price",
                 "current-asset-price-col": "Current Asset Price",
                 "final-asset-price-col": "Final Asset Price",

@@ -35,6 +35,14 @@ const ammSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) =>
     }
 };
 
+const discountSort = () => (rowA: any, rowB: any, desc: boolean) => {
+    if (desc) {
+        return +rowA.original.discount > +rowB.original.discount ? 1 : -1;
+    } else {
+        return +rowA.original.discount < +rowB.original.discount ? 1 : -1;
+    }
+};
+
 const ammPriceSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
     const leftPrice = rowA.values[columnId].props.red.slice(1);
     const rightPrice = rowB.values[columnId].props.red.slice(1);
@@ -58,6 +66,8 @@ const Table: React.FC<{
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const displayLiquidity =
         getIsOVM(networkId) || getIsPolygon(networkId) || getIsBSC(networkId) || getIsArbitrum(networkId);
+
+    const displayDiscount = getIsOVM(networkId);
 
     const { t } = useTranslation();
 
@@ -92,6 +102,27 @@ const Table: React.FC<{
                 },
                 sortType: assetSort(),
             },
+
+            ...(displayDiscount
+                ? [
+                      {
+                          Header: t(`options.home.markets-table.discount-col`),
+                          accessor: 'discountedSide',
+                          Cell: (_props: any) => {
+                              if (_props.cell.value) {
+                                  return (
+                                      <span>
+                                          {_props.cell.value} {_props.row.original.discount}%
+                                      </span>
+                                  );
+                              } else {
+                                  return <span>N/A</span>;
+                              }
+                          },
+                          sortType: discountSort(),
+                      },
+                  ]
+                : []),
             {
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
@@ -192,6 +223,8 @@ const Table: React.FC<{
                     availableShorts: market.availableShorts,
                     longPrice: formatCurrencyWithSign(USD_SIGN, market.longPrice, 2),
                     shortPrice: formatCurrencyWithSign(USD_SIGN, market.shortPrice, 2),
+                    discountedSide: market.discountedSide,
+                    discount: market.discount,
                     strikePrice: market.strikePrice,
                     currentPrice: exchangeRates?.[market.currencyKey] || 0,
                     timeRemaining: market.timeRemaining,

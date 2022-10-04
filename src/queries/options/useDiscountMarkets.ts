@@ -12,13 +12,15 @@ export const fetchDiscounts = (network: NetworkId, options?: UseQueryOptions<Dis
     return useQuery<DiscountMap>(
         QUERY_KEYS.BinaryOptions.DiscountMap(network),
         async () => {
-            const baseUrl = `${generalConfig.API_URL}/discounts/${network}`;
-            const response = await fetch(baseUrl);
-            const json = await response.json();
-            const discountMap = new Map(json);
+            if (network === 420 || network === 10) {
+                const baseUrl = `${generalConfig.API_URL}/discounts/${network}`;
+                const response = await fetch(baseUrl);
+                const json = await response.json();
+                const discountMap = new Map(json);
 
-            discountOrdersMap = discountMap as any;
-            return discountMap as any;
+                discountOrdersMap = discountMap as any;
+                return discountMap as any;
+            } else return new Map();
         },
         {
             refetchInterval: 5000,
