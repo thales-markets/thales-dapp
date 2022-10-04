@@ -55,22 +55,26 @@ const Container: StyledComponent<
     any,
     {
         borderColor?: string;
+        borderStyle?: string;
         disabled?: boolean;
         width?: string;
         margin?: string;
         height?: string;
         padding?: string;
         shadow?: string;
+        background?: string;
     }
 > &
     ContainerChildren = styled.div<{
     borderColor?: string;
+    borderStyle?: string;
     disabled?: boolean;
     width?: string;
     margin?: string;
     height?: string;
     padding?: string;
     shadow?: string;
+    background?: string;
 }>`
     width: ${(_props) => (_props?.width ? _props.width : '100%')};
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
@@ -78,6 +82,7 @@ const Container: StyledComponent<
     display: flex;
     flex-direction: column;
     border: 0.8px solid ${(_props) => (_props?.borderColor ? _props.borderColor : 'var(--card-border-color)')};
+    border-style: ${(_props) => (_props?.borderStyle ? _props.borderStyle : 'solid')};
     border-radius: 10px;
     justify-content: center;
     padding: ${(_props) => (_props?.padding ? _props.padding : '5px 10px')};
@@ -86,6 +91,7 @@ const Container: StyledComponent<
     position: relative;
     opacity: ${(_props) => (_props?.disabled ? '0.5 !important' : '1')};
     ${(_props) => (_props?.shadow ? `box-shadow: ${_props.shadow}` : '')};
+    background: ${(_props) => (_props?.background ? _props.background : 'transparent')};
 `;
 
 ValueContainer.Value = Value;
