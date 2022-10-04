@@ -103,6 +103,7 @@ export const QUERY_KEYS = {
         OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
         RangedLiquidity: (networkId: NetworkId) => ['binaryOptions', 'rangedLiquidity', networkId],
         AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
+        DiscountMap: (networkId: NetworkId) => ['binaryOptions', 'discountMap', networkId],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],

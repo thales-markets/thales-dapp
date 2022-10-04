@@ -228,6 +228,7 @@ export type HotMarket = {
     strikePrice: string;
     timeRemaining: number;
     potentialProfit: string;
+    discount: number;
     address: string;
 };
 

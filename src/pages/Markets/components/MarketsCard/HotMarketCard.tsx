@@ -21,6 +21,7 @@ const HotMarketCard: React.FC<HotMarket> = ({
     strikePrice,
     timeRemaining,
     potentialProfit,
+    discount,
     address,
 }) => {
     const [time, setTime] = useState(formatTimeDifference(calculateDifference(timeRemaining)));
@@ -74,7 +75,7 @@ const HotMarketCard: React.FC<HotMarket> = ({
                 </StyledComponents.SectionContainer>
 
                 <StyledComponents.Footer>
-                    <StyledComponents.Discount>20%</StyledComponents.Discount>
+                    <StyledComponents.Discount>{discount}%</StyledComponents.Discount>
                     <StyledComponents.DiscountText>Discounted</StyledComponents.DiscountText>
                 </StyledComponents.Footer>
             </SPAAnchor>

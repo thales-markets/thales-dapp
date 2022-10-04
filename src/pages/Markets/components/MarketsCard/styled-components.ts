@@ -1,6 +1,17 @@
 import styled from 'styled-components';
 import { MarketCardContainer } from 'theme/common';
 
+const Footer = styled.div`
+    border-color: transparent transparent #50ce99 transparent; // #297DFC #50ce99
+    border-style: solid;
+    border-width: 121px 0px 120px 150px;
+    height: 0px;
+    width: 0px;
+    position: relative;
+    top: -204px;
+    right: -24px;
+`;
+
 const Card = styled(MarketCardContainer)<{ address?: string }>`
     padding: 15px 20px;
     width: 195px;
@@ -12,6 +23,9 @@ const Card = styled(MarketCardContainer)<{ address?: string }>`
     flex-direction: column;
     &:hover {
         box-shadow: var(--shadow);
+        ${Footer} {
+            border-color: transparent transparent #3fd1ff transparent; // #297DFC #50ce99
+        }
     }
     overflow: hidden;
 `;
@@ -61,17 +75,6 @@ const AssetNameContainer = styled.div`
     font-size: 15px;
     color: var(--primary-color) !important;
     /* word-spacing: 50px; */
-`;
-
-const Footer = styled.div`
-    border-color: transparent transparent #3fd1ff transparent; // #297DFC #50ce99
-    border-style: solid;
-    border-width: 121px 0px 120px 150px;
-    height: 0px;
-    width: 0px;
-    position: relative;
-    top: -204px;
-    right: -24px;
 `;
 
 const Discount = styled.span`
