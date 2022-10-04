@@ -32,8 +32,6 @@ const HotMarketCard: React.FC<HotMarket> = ({
         setTime(formatTimeDifference(calculateDifference(timeRemaining)));
     }, 1000);
 
-    console.log(potentialProfit);
-
     return (
         <StyledComponents.Card
             address={address}
