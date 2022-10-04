@@ -443,7 +443,9 @@
             "hot-markets": {
                 "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
                 "range-markets-tooltip-text": "Ranged positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
-                "most-profitable-markets": "Highest potential profit"
+                "most-profitable-markets": "Highest potential profit",
+                "discounted-positions": "Discounted positions",
+                "tooltip-text-discount": "Positional Tokens available for purchase that are currently on discount"
             },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets"

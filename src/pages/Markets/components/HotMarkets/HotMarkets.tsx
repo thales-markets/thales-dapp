@@ -135,9 +135,9 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     return (
         <>
             <Title>
-                {t('options.home.hot-markets.most-profitable-markets')}
+                {t('options.home.hot-markets.discounted-positions')}
                 <Tooltip
-                    message={t('options.home.hot-markets.tooltip-text')}
+                    message={t('options.home.hot-markets.tooltip-text-discount')}
                     type={'info'}
                     iconColor={'var(--table-header-text-color)'}
                     placement={'right'}
