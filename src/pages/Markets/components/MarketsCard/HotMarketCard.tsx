@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import useInterval from 'hooks/useInterval';
+import React from 'react';
+
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { formatTimeDifference, calculateDifference } from 'utils/formatters/date';
+import { formatShortDate } from 'utils/formatters/date';
 
 import { useTranslation } from 'react-i18next';
 import SPAAnchor from 'components/SPAAnchor';
@@ -24,13 +24,8 @@ const HotMarketCard: React.FC<HotMarket> = ({
     discount,
     address,
 }) => {
-    const [time, setTime] = useState(formatTimeDifference(calculateDifference(timeRemaining)));
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
-
-    useInterval(() => {
-        setTime(formatTimeDifference(calculateDifference(timeRemaining)));
-    }, 1000);
 
     return (
         <StyledComponents.Card
@@ -62,8 +57,8 @@ const HotMarketCard: React.FC<HotMarket> = ({
                     </StyledComponents.SubHeader>
                 </StyledComponents.SectionContainer>
                 <StyledComponents.SectionContainer>
-                    <StyledComponents.Header>{t('options.home.hot-market-card.time-left')}</StyledComponents.Header>
-                    <StyledComponents.SubHeader>{time}</StyledComponents.SubHeader>
+                    <StyledComponents.Header>{t('options.market.overview.maturity-date')}</StyledComponents.Header>
+                    <StyledComponents.SubHeader>{formatShortDate(timeRemaining)}</StyledComponents.SubHeader>
                 </StyledComponents.SectionContainer>
                 <StyledComponents.SectionContainer>
                     <StyledComponents.Header style={{ color: '#50ce99' }}>
