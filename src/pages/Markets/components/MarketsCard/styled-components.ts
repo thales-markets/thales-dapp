@@ -13,11 +13,13 @@ const Card = styled(MarketCardContainer)<{ address?: string }>`
     &:hover {
         box-shadow: var(--shadow);
     }
+    overflow: hidden;
 `;
 
 const SectionContainer = styled.div`
     display: block;
     margin-bottom: 15px;
+    position: relative;
 `;
 
 const AssetInfo = styled.div`
@@ -35,18 +37,18 @@ const CardText = styled.span`
 `;
 
 const Header = styled(CardText)`
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 300;
     text-transform: capitalize;
 `;
 
 const SubHeader = styled(CardText)`
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 400;
 `;
 
 const Percentage = styled(CardText)`
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 700;
     color: #50ce99;
 `;
@@ -61,8 +63,43 @@ const AssetNameContainer = styled.div`
     /* word-spacing: 50px; */
 `;
 
+const Footer = styled.div`
+    border-color: transparent transparent #3fd1ff transparent; // #297DFC #50ce99
+    border-style: solid;
+    border-width: 121px 0px 120px 150px;
+    height: 0px;
+    width: 0px;
+    position: relative;
+    top: -204px;
+    right: -24px;
+`;
+
+const Discount = styled.span`
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 100%;
+    text-transform: capitalize;
+    color: #04045a;
+    position: absolute;
+    top: 62px;
+    left: -82px;
+`;
+
+const DiscountText = styled.span`
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 100%;
+    text-transform: capitalize;
+    color: #04045a;
+    position: absolute;
+    top: 98px;
+    left: -84px;
+`;
+
 const StyledComponents = {
     Card,
+    DiscountText,
     SectionContainer,
     AssetInfo,
     CardText,
@@ -70,6 +107,8 @@ const StyledComponents = {
     SubHeader,
     Percentage,
     AssetNameContainer,
+    Footer,
+    Discount,
 };
 
 export default StyledComponents;

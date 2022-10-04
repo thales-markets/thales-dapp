@@ -31,6 +31,8 @@ const HotMarketCard: React.FC<HotMarket> = ({
         setTime(formatTimeDifference(calculateDifference(timeRemaining)));
     }, 1000);
 
+    console.log(potentialProfit);
+
     return (
         <StyledComponents.Card
             address={address}
@@ -70,6 +72,11 @@ const HotMarketCard: React.FC<HotMarket> = ({
                     </StyledComponents.Header>
                     <StyledComponents.Percentage>{potentialProfit}</StyledComponents.Percentage>
                 </StyledComponents.SectionContainer>
+
+                <StyledComponents.Footer>
+                    <StyledComponents.Discount>20%</StyledComponents.Discount>
+                    <StyledComponents.DiscountText>Discounted</StyledComponents.DiscountText>
+                </StyledComponents.Footer>
             </SPAAnchor>
         </StyledComponents.Card>
     );

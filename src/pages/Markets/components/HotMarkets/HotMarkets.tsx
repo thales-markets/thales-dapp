@@ -5,7 +5,7 @@ import { HotMarket, OptionsMarkets } from 'types/options';
 
 import HotMarketCard from '../MarketsCard/HotMarketCard';
 import HotMarketCardSceleton from 'components/HotMarketSceleton/HotMarketCardSceleton';
-import { formatCurrencyWithSign, formatPricePercentageGrowth } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
 import Hammer, { DIRECTION_HORIZONTAL } from 'hammerjs';
 import Tooltip from 'components/Tooltip';
@@ -50,7 +50,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                     pricePerOption: market.longPrice,
                     strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
                     timeRemaining: market.timeRemaining,
-                    potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.longPrice)),
+                    potentialProfit: calculatePotentialProfit(market.longPrice).toFixed(2) + '%',
                     address: market.address,
                 });
 
@@ -61,7 +61,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                     pricePerOption: market.shortPrice,
                     strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
                     timeRemaining: market.timeRemaining,
-                    potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.shortPrice)),
+                    potentialProfit: calculatePotentialProfit(market.shortPrice).toFixed(2) + '%',
                     address: market.address,
                 });
             });
