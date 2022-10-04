@@ -53,32 +53,34 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 if (market.longPrice == 0 || market.shortPrice == 0) return;
                 const discount = (discountsMap as any).get(market.address);
 
-                if (discount.longPriceImpact < 0) {
-                    markets.push({
-                        fullAssetName: getSynthName(market.currencyKey),
-                        currencyKey: market.currencyKey,
-                        assetName: `${market.asset} ${MarketType.long}`,
-                        pricePerOption: market.longPrice,
-                        strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
-                        timeRemaining: market.timeRemaining,
-                        potentialProfit: calculatePotentialProfit(market.longPrice).toFixed(2) + '%',
-                        discount: Math.round(Math.abs(discount.longPriceImpact)),
-                        address: market.address,
-                    });
-                }
+                if (discount) {
+                    if (discount.longPriceImpact < 0) {
+                        markets.push({
+                            fullAssetName: getSynthName(market.currencyKey),
+                            currencyKey: market.currencyKey,
+                            assetName: `${market.asset} ${MarketType.long}`,
+                            pricePerOption: market.longPrice,
+                            strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
+                            timeRemaining: market.timeRemaining,
+                            potentialProfit: calculatePotentialProfit(market.longPrice).toFixed(2) + '%',
+                            discount: Math.round(Math.abs(discount.longPriceImpact)),
+                            address: market.address,
+                        });
+                    }
 
-                if (discount.shortPriceImpact < 0) {
-                    markets.push({
-                        fullAssetName: getSynthName(market.currencyKey),
-                        currencyKey: market.currencyKey,
-                        assetName: `${market.asset} ${MarketType.short}`,
-                        pricePerOption: market.shortPrice,
-                        strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
-                        timeRemaining: market.timeRemaining,
-                        potentialProfit: calculatePotentialProfit(market.shortPrice).toFixed(2) + '%',
-                        discount: Math.round(Math.abs(discount.shortPriceImpact)),
-                        address: market.address,
-                    });
+                    if (discount.shortPriceImpact < 0) {
+                        markets.push({
+                            fullAssetName: getSynthName(market.currencyKey),
+                            currencyKey: market.currencyKey,
+                            assetName: `${market.asset} ${MarketType.short}`,
+                            pricePerOption: market.shortPrice,
+                            strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
+                            timeRemaining: market.timeRemaining,
+                            potentialProfit: calculatePotentialProfit(market.shortPrice).toFixed(2) + '%',
+                            discount: Math.round(Math.abs(discount.shortPriceImpact)),
+                            address: market.address,
+                        });
+                    }
                 }
             });
 
