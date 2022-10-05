@@ -26,7 +26,7 @@ enum MarketType {
     long = 'UP',
 }
 
-const CARDS_TO_SHOW = 10;
+const CARDS_TO_SHOW = 5;
 
 const calculatePotentialProfit = (price: number) => {
     return ((1 - price) / price) * 100;
