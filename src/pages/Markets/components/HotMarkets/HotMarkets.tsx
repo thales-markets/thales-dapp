@@ -231,6 +231,9 @@ const DiscountBanner = styled.div`
     justify-content: center;
     position: relative;
     top: -20px;
+    @media (max-width: 768px) {
+        display: none;
+    }
 }
 `;
 
