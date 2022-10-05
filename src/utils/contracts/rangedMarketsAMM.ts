@@ -10,6 +10,7 @@ export const rangedMarketAMMContract = {
         [Network.Goerli]: '', // TODO: goerli network remove or implement
         [Network['Mainnet-Ovm']]: '0x2d356b114cbCA8DEFf2d8783EAc2a5A5324fE1dF',
         [Network['Kovan-Ovm']]: '0x0690F410FB54d76268e4fa97486CBD605e68dC62',
+        [Network['Goerli-Ovm']]: '0x618D7aeab71f1C5E2264982c0C35DCbE62600ad9',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: '0xe8e022405505a9F2b0B7452C844F1e64423849fC',
         [Network.BSC]: '0xda5Bd4aBAFbE249bdC5684eAD594B0ac379687fd',

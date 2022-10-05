@@ -6,7 +6,7 @@ import { GWEI_UNIT, POLYGON_GWEI_INCREASE_PERCENTAGE, POLYGON_ID, POLYGON_MUMBAI
 import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
 import { serializeTransaction } from 'ethers/lib/utils';
 
-export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137 | 56 | 42161;
+export type NetworkId = 1 | 3 | 42 | 10 | 69 | 420 | 80001 | 137 | 56 | 42161;
 
 export enum Network {
     Mainnet = 1,
@@ -16,6 +16,7 @@ export enum Network {
     Kovan = 42,
     'Mainnet-Ovm' = 10,
     'Kovan-Ovm' = 69,
+    'Goerli-Ovm' = 420,
     'POLYGON-MUMBAI' = 80001,
     'POLYGON-MAINNET' = 137,
     BSC = 56,
@@ -33,6 +34,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISTIC',
     69: 'KOVAN-OPTIMISTIC',
+    420: 'GOERLI-OPTIMISTIC',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
     56: 'BSC-MAINNET',
@@ -45,6 +47,7 @@ export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISM-MAINNET',
     69: 'OPTIMISM-KOVAN',
+    420: 'OPTIMISM-GOERLI',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
     56: '',
@@ -57,6 +60,7 @@ export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISM MAINNET',
     69: 'OPTIMISM KOVAN',
+    420: 'OPTIMISM GOERLI',
     80001: 'POLYGON MUMBAI',
     137: 'POLYGON',
     56: 'BINANCE SMART CHAIN MAINNET',
@@ -128,7 +132,7 @@ export const getIsMultiCollateralSupported = (networkId: NetworkId): boolean => 
 
 export const getIsBSC = (networkId: number): boolean => !!~[56].indexOf(networkId);
 
-export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(networkId);
+export const getIsOVM = (networkId: number): boolean => !!~[10, 69, 420].indexOf(networkId);
 
 export const getIsPolygon = (networkId: number): boolean => !!~[137, 80001].indexOf(networkId);
 

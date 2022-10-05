@@ -22,6 +22,7 @@ import { ethers } from 'ethers';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { isFirefox } from 'react-device-detect';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -79,14 +80,15 @@ const App = () => {
     }, [walletAddress]);
 
     const cookies = new Cookies();
+    const infuraId = process.env.REACT_APP_INFURA_PROJECT_ID;
 
     useEffect(() => {
         let ledgerProvider = null;
         if (isLedgerLive) {
             ledgerProvider = new IFrameEthereumProvider();
         }
-        const provider = loadProvider({
-            infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
+        const { provider, signer } = loadProviderAndSigner({
+            infuraId,
             provider: isLedgerLive ? ledgerProvider : window.ethereum,
             networkId,
         });
@@ -115,7 +117,7 @@ const App = () => {
                             snx.default.setContractSettings({
                                 networkId: providerNetworkId,
                                 provider,
-                                signer: provider.getSigner(),
+                                signer,
                             });
                         } else {
                             snx.default.setContractSettings({ networkId: providerNetworkId, provider });
@@ -157,10 +159,11 @@ const App = () => {
                     if (networkId) {
                         if (isNetworkSupported(networkId)) {
                             if (onboardConnector.onboard.getState().wallet.provider) {
-                                const provider = loadProvider({
+                                const { provider, signer } = loadProviderAndSigner({
+                                    infuraId,
                                     provider: onboardConnector.onboard.getState().wallet.provider,
+                                    networkId,
                                 });
-                                const signer = provider.getSigner();
                                 const useOvm = getIsOVM(networkId);
 
                                 snxJSConnector.setContractSettings({
@@ -186,10 +189,10 @@ const App = () => {
                 },
                 wallet: async (wallet) => {
                     if (wallet.provider) {
-                        const provider = loadProvider({
+                        const { provider, signer } = loadProviderAndSigner({
+                            infuraId,
                             provider: wallet.provider,
                         });
-                        const signer = provider.getSigner();
                         const network = await provider.getNetwork();
                         const networkId = network.chainId;
                         const useOvm = getIsOVM(networkId);
@@ -267,13 +270,11 @@ const App = () => {
                                 <TaleOfThales />
                             </DappLayout>
                         </Route>
-                        {walletAddress && (
-                            <Route exact path={ROUTES.Options.Profile}>
-                                <DappLayout>
-                                    <Profile />
-                                </DappLayout>
-                            </Route>
-                        )}
+                        <Route exact path={ROUTES.Options.Profile}>
+                            <DappLayout>
+                                <Profile />
+                            </DappLayout>
+                        </Route>
                         {!isPolygon && (
                             <Route exact path={ROUTES.Options.Token}>
                                 <DappLayout>
@@ -390,11 +391,21 @@ const App = () => {
     );
 };
 
-const loadProvider = ({ infuraId, provider, networkId }) => {
+const loadProviderAndSigner = ({ infuraId, provider, networkId }) => {
     if (!provider && !infuraId) throw new Error('No web3 provider');
-    if (provider) return new ethers.providers.Web3Provider(provider, 'any');
-    if (infuraId)
-        return new ethers.providers.InfuraProvider(networkId ? networkId : defaultNetwork.networkId, infuraId);
+
+    const web3Provider = provider ? new ethers.providers.Web3Provider(provider, 'any') : undefined;
+    let wrappedProvider =
+        provider && !isFirefox
+            ? web3Provider
+            : infuraId
+            ? new ethers.providers.InfuraProvider(networkId ? networkId : defaultNetwork.networkId, infuraId)
+            : undefined;
+
+    return {
+        provider: wrappedProvider,
+        signer: provider ? web3Provider.getSigner() : undefined,
+    };
 };
 
 export default App;
