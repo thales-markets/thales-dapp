@@ -124,7 +124,7 @@ const Table: React.FC<{
                                       </>
                                   );
                               } else {
-                                  return <span>N/A</span>;
+                                  return <span>-</span>;
                               }
                           },
                           sortType: discountSort(),
