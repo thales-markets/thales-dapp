@@ -10,6 +10,7 @@ export const limitOrderProtocol1inchContract = {
         [Network.Goerli]: '', // TODO: goerli network remove or implement
         [Network['Mainnet-Ovm']]: '0xb707d89d29c189421163515c59e42147371d6857',
         [Network['Kovan-Ovm']]: 'TBD',
+        [Network['Goerli-Ovm']]: 'TBD',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',

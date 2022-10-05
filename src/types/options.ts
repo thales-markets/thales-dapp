@@ -73,6 +73,8 @@ export type HistoricalOptionsMarketInfo = {
     result: OptionSide;
     availableLongs: number;
     availableShorts: number;
+    discountedSide?: string;
+    discount?: number;
     country?: string;
     eventName?: string;
     outcome?: string;
@@ -228,6 +230,7 @@ export type HotMarket = {
     strikePrice: string;
     timeRemaining: number;
     potentialProfit: string;
+    discount: number;
     address: string;
 };
 

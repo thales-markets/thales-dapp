@@ -443,7 +443,11 @@
             "hot-markets": {
                 "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
                 "range-markets-tooltip-text": "Ranged positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
-                "most-profitable-markets": "Highest potential profit"
+                "most-profitable-markets": "Highest potential profit",
+                "discounted-positions": "Discounted positions",
+                "eligible-for": "eligible for",
+                "token-rewards": "token rewards",
+                "tooltip-text-discount": "Positional Tokens available for purchase that are currently on discount"
             },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets"
@@ -461,6 +465,7 @@
                 "asset-col": "Asset",
                 "24h-change-col": "24H Change",
                 "strike-price-col": "Strike price",
+                "discount-col": "Discount",
                 "asset-price-col": "Asset price",
                 "current-asset-price-col": "Current Asset Price",
                 "final-asset-price-col": "Final Asset Price",
@@ -1646,8 +1651,10 @@
         "return-label": "Potential profit",
         "return-tooltip": "Potential profit if this position wins",
         "skew-label": "Skew impact",
-        "progress": "Please wait...",
         "skew-tooltip": "AMM will add a price impact on the side it is more exposed to",
+        "discount-label": "Position discounted",
+        "discount-tooltip": "AMM will add a price impact on the side it is more exposed to",
+        "progress": "Please wait...",
         "max-limit-buy-tooltip": "The maximum amount of {{currencyKey}} positions for buying from AMM",
         "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} positions for sale to AMM",
         "amm-disabled-warning": "AMM trading is disabled for this market",

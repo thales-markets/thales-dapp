@@ -10,6 +10,7 @@ export const stakingThales = {
         [Network.Goerli]: '', // TODO: goerli network remove or implement
         [Network['Mainnet-Ovm']]: '0xC392133eEa695603B51a5d5de73655d571c2CE51',
         [Network['Kovan-Ovm']]: '0x8417D248274439360CC38Be84CfFDc01226600F8',
+        [Network['Goerli-Ovm']]: 'TBD',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
