@@ -113,14 +113,13 @@ const Table: React.FC<{
                               if (_props.cell.value) {
                                   return (
                                       <>
-                                          <span
+                                          <Icon
                                               style={{
                                                   color: _props.cell.value === 'DOWN' ? '#e53720' : '#4fbf67',
                                                   marginRight: 8,
                                               }}
-                                          >
-                                              {_props.cell.value}
-                                          </span>
+                                              className={`v2-icon v2-icon--${_props.cell.value.toLowerCase()}`}
+                                          ></Icon>
                                           <span>{_props.row.original.discount}%</span>
                                       </>
                                   );
@@ -446,6 +445,13 @@ const Arrow = styled.i`
     font-size: 15px;
     text-transform: none;
     color: var(--table-header-text-color);
+`;
+
+const Icon = styled.i`
+    @media (max-width: 568px) {
+        font-size: 16px;
+        line-height: 100%;
+    }
 `;
 
 const Text = styled.span`
