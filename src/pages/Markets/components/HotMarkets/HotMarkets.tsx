@@ -63,7 +63,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                             strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
                             timeRemaining: market.timeRemaining,
                             potentialProfit: calculatePotentialProfit(market.longPrice).toFixed(2) + '%',
-                            discount: Math.round(Math.abs(discount.longPriceImpact)),
+                            discount: Math.ceil(Math.abs(discount.longPriceImpact)),
                             address: market.address,
                         });
                     }
@@ -77,7 +77,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                             strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
                             timeRemaining: market.timeRemaining,
                             potentialProfit: calculatePotentialProfit(market.shortPrice).toFixed(2) + '%',
-                            discount: Math.round(Math.abs(discount.shortPriceImpact)),
+                            discount: Math.ceil(Math.abs(discount.shortPriceImpact)),
                             address: market.address,
                         });
                     }

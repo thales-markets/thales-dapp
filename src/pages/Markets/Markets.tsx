@@ -70,11 +70,11 @@ const Markets: React.FC = () => {
                       if (discountData) {
                           if (discountData.longPriceImpact < 0) {
                               discountedSide = 'UP';
-                              discount = Math.round(discountData.longPriceImpact);
+                              discount = Math.ceil(discountData.longPriceImpact);
                           }
                           if (discountData.shortPriceImpact < 0) {
                               discountedSide = 'DOWN';
-                              discount = Math.round(discountData.shortPriceImpact);
+                              discount = Math.ceil(discountData.shortPriceImpact);
                           }
                       }
 
