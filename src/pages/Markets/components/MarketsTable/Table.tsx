@@ -111,9 +111,17 @@ const Table: React.FC<{
                           Cell: (_props: any) => {
                               if (_props.cell.value) {
                                   return (
-                                      <span>
-                                          {_props.cell.value} {_props.row.original.discount}%
-                                      </span>
+                                      <>
+                                          <span
+                                              style={{
+                                                  color: _props.cell.value === 'DOWN' ? '#e53720' : '#4fbf67',
+                                                  marginRight: 8,
+                                              }}
+                                          >
+                                              {_props.cell.value}
+                                          </span>
+                                          <span>{_props.row.original.discount}%</span>
+                                      </>
                                   );
                               } else {
                                   return <span>N/A</span>;
