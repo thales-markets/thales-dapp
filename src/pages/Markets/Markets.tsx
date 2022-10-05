@@ -24,7 +24,6 @@ import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
 
-// const MAX_HOT_MARKETS = 6;
 const INFORMATION_BANNER_ACTIVE = false;
 
 const Markets: React.FC = () => {
@@ -139,9 +138,7 @@ const Markets: React.FC = () => {
                     </InfoBanner>
                 </BannerContainer>
             )}
-            <Suspense fallback={<></>}>
-                <HotMarkets optionsMarkets={optionsMarkets} />
-            </Suspense>
+            <Suspense fallback={<></>}>{showOPBanner && <HotMarkets optionsMarkets={optionsMarkets} />}</Suspense>
             <Suspense fallback={<></>}>
                 <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>
