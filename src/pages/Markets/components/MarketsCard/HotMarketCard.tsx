@@ -68,8 +68,10 @@ const HotMarketCard: React.FC<HotMarket> = ({
                 </StyledComponents.SectionContainer>
 
                 <StyledComponents.Footer>
-                    <StyledComponents.Discount>{discount}%</StyledComponents.Discount>
-                    <StyledComponents.DiscountText>Discounted</StyledComponents.DiscountText>
+                    <StyledComponents.DiscountDiv>
+                        <StyledComponents.Discount>-{discount}%</StyledComponents.Discount>
+                        <StyledComponents.DiscountText>Discounted</StyledComponents.DiscountText>
+                    </StyledComponents.DiscountDiv>
                 </StyledComponents.Footer>
             </SPAAnchor>
         </StyledComponents.Card>

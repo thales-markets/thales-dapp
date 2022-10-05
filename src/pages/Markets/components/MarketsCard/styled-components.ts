@@ -77,15 +77,21 @@ const AssetNameContainer = styled.div`
     /* word-spacing: 50px; */
 `;
 
+const DiscountDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 62px;
+    left: -90px;
+`;
+
 const Discount = styled.span`
     font-weight: 700;
     font-size: 40px;
     line-height: 100%;
     text-transform: capitalize;
     color: #04045a;
-    position: absolute;
-    top: 62px;
-    left: -82px;
 `;
 
 const DiscountText = styled.span`
@@ -95,9 +101,6 @@ const DiscountText = styled.span`
     line-height: 100%;
     text-transform: capitalize;
     color: #04045a;
-    position: absolute;
-    top: 98px;
-    left: -84px;
 `;
 
 const StyledComponents = {
@@ -112,6 +115,7 @@ const StyledComponents = {
     AssetNameContainer,
     Footer,
     Discount,
+    DiscountDiv,
 };
 
 export default StyledComponents;
