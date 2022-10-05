@@ -445,6 +445,8 @@
                 "range-markets-tooltip-text": "Ranged positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
                 "most-profitable-markets": "Highest potential profit",
                 "discounted-positions": "Discounted positions",
+                "eligible-for": "eligible for",
+                "token-rewards": "token rewards",
                 "tooltip-text-discount": "Positional Tokens available for purchase that are currently on discount"
             },
             "market-creation": {
