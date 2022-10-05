@@ -106,6 +106,7 @@ const Table: React.FC<{
             ...(displayDiscount
                 ? [
                       {
+                          id: 'discountedSide',
                           Header: t(`options.home.markets-table.discount-col`),
                           accessor: 'discountedSide',
                           Cell: (_props: any) => {
