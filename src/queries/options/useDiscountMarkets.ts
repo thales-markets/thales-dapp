@@ -1,4 +1,4 @@
-import { NetworkId } from '../../utils/network';
+import { getIsArbitrum, getIsOVM, getIsPolygon, NetworkId } from '../../utils/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { generalConfig } from 'config/general';
@@ -12,7 +12,8 @@ export const fetchDiscounts = (network: NetworkId, options?: UseQueryOptions<Dis
     return useQuery<DiscountMap>(
         QUERY_KEYS.BinaryOptions.DiscountMap(network),
         async () => {
-            if (network === 420 || network === 10) {
+            const showDiscountMarkets = getIsOVM(network) || getIsArbitrum(network) || getIsPolygon(network);
+            if (showDiscountMarkets) {
                 const baseUrl = `${generalConfig.API_URL}/discounts/${network}`;
                 const response = await fetch(baseUrl);
                 const json = await response.json();
