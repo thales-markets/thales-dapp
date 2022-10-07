@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import Tooltip from 'components/Tooltip';
+import { getIsOVM } from 'utils/network';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -38,6 +39,8 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+    const showOPBanner = getIsOVM(networkId);
 
     const { trackEvent } = useMatomo();
 
@@ -137,9 +140,14 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         <>
             <DiscountBanner>
                 <DiscountTitle> {t('options.home.hot-markets.discounted-positions')}</DiscountTitle>
-                <DiscountSubTitle> + {t('options.home.hot-markets.eligible-for')} </DiscountSubTitle>{' '}
-                <img src={opToken} width="46" height="46" style={{ margin: '0 8px' }} />
-                <DiscountSubTitle> {t('options.home.hot-markets.token-rewards')} </DiscountSubTitle>
+                {showOPBanner && (
+                    <>
+                        <DiscountSubTitle> + {t('options.home.hot-markets.eligible-for')} </DiscountSubTitle>
+                        <img src={opToken} width="46" height="46" style={{ margin: '0 8px' }} />
+                        <DiscountSubTitle> {t('options.home.hot-markets.token-rewards')} </DiscountSubTitle>
+                    </>
+                )}
+
                 <Tooltip
                     message={t('options.home.hot-markets.tooltip-text-discount')}
                     type={'info'}
