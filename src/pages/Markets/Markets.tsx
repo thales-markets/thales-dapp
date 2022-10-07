@@ -16,7 +16,7 @@ import InfoBanner from 'components/InfoBanner';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
-import { getIsOVM, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsArbitrum, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
 import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
@@ -32,6 +32,8 @@ const Markets: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const showOPBanner = getIsOVM(networkId);
+
+    const showDiscountMarkets = getIsOVM(networkId) || getIsArbitrum(networkId) || getIsPolygon(networkId);
 
     const dispatch = useDispatch();
 
@@ -138,7 +140,9 @@ const Markets: React.FC = () => {
                     </InfoBanner>
                 </BannerContainer>
             )}
-            <Suspense fallback={<></>}>{showOPBanner && <HotMarkets optionsMarkets={optionsMarkets} />}</Suspense>
+            <Suspense fallback={<></>}>
+                {showDiscountMarkets && <HotMarkets optionsMarkets={optionsMarkets} />}
+            </Suspense>
             <Suspense fallback={<></>}>
                 <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>

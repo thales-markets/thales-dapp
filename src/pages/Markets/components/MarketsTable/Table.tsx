@@ -67,7 +67,7 @@ const Table: React.FC<{
     const displayLiquidity =
         getIsOVM(networkId) || getIsPolygon(networkId) || getIsBSC(networkId) || getIsArbitrum(networkId);
 
-    const displayDiscount = getIsOVM(networkId);
+    const displayDiscount = getIsOVM(networkId) || getIsArbitrum(networkId) || getIsPolygon(networkId);
 
     const { t } = useTranslation();
 
