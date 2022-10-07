@@ -11,6 +11,7 @@ export type UsersAmmBuyVolume = {
             downInfo: any;
             rangedInfo: any;
             staking: number;
+            discountedInfo: any;
             totalRewards: any;
         }
     ];
@@ -24,7 +25,7 @@ const useUsersAmmBuyVolumeQuery = (
     return useQuery<UsersAmmBuyVolume>(
         QUERY_KEYS.Token.UsersAmmBuyVolume(networkId, period),
         async () => {
-            const baseUrl = `${generalConfig.API_URL}/rewards/${networkId}/${period}`;
+            const baseUrl = `${generalConfig.LOCAL_URL}/rewards/${networkId}/${period}`;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const rewards = result.map((record: any) => {
@@ -33,6 +34,7 @@ const useUsersAmmBuyVolumeQuery = (
                     upInfo: record.up,
                     downInfo: record.down,
                     rangedInfo: record.ranged,
+                    discountedInfo: record.discounted,
                     staking: record.stackingRewards,
                     totalRewards: record.totalRewards,
                 };
