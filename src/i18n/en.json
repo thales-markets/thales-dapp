@@ -1868,7 +1868,7 @@
         "title": "OP Rewards",
         "description": "<bold>The Trading Incentives program</bold> is split into separate 14 day rounds. After each round a fixed amount of OP tokens + THALES tokens are to be distributed proportionally among all Buy Volume drivers across the Thales marketplace.<br/><br/>",
         "description-2": "Total amount of tokens allocated as Trading Incentives: <bold>200,000 OP + 350,000 THALES</bold> <br/><br/>",
-        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 10,000 OP + 15,000 THALES split between UP token Buyers <br/>    - 10,000 OP + 15,000 THALES split between DOWN token Buyers<br/>        - 5,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>  - 5,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
+        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 9,000 OP + 15,000 THALES split between UP token Buyers <br/>    - 9,000 OP + 15,000 THALES split between DOWN token Buyers<br/>        - 5,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>  - 5,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
         "description-4": "<br/><br/>You can find all the detailed infomation on how to participate in <guidelinesLink>.",
         "table": {
             "wallet-address": "Wallet address",
