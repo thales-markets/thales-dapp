@@ -11,6 +11,7 @@ export type UsersAmmBuyVolume = {
             downInfo: any;
             rangedInfo: any;
             staking: number;
+            discountedInfo: any;
             totalRewards: any;
         }
     ];
@@ -33,6 +34,7 @@ const useUsersAmmBuyVolumeQuery = (
                     upInfo: record.up,
                     downInfo: record.down,
                     rangedInfo: record.ranged,
+                    discountedInfo: record.discounted,
                     staking: record.stackingRewards,
                     totalRewards: record.totalRewards,
                 };

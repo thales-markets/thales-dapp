@@ -32,12 +32,14 @@ import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/curren
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 
-const UP_OP_REWARDS = 11000;
-const DOWN_OP_REWARDS = 11000;
-const RANGED_OP_REWARDS = 6000;
-const UP_THALES_REWARDS = 20000;
-const DOWN_THALES_REWARDS = 20000;
+const UP_OP_REWARDS = 9000;
+const DOWN_OP_REWARDS = 9000;
+const RANGED_OP_REWARDS = 5000;
+const DISCOUNTED_OP_REWARDS = 5000;
+const UP_THALES_REWARDS = 15000;
+const DOWN_THALES_REWARDS = 15000;
 const RANGED_THALES_REWARDS = 10000;
+const DISCOUNTED_THALES_REWARDS = 10000;
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -95,6 +97,7 @@ const OPRewards: React.FC = () => {
                 upInfo: any;
                 downInfo: any;
                 rangedInfo: any;
+                discountedInfo: any;
                 calculatedProtocolBonusForPeriod: string;
                 totalRewards: number;
                 sticky: boolean;
@@ -106,6 +109,7 @@ const OPRewards: React.FC = () => {
                     upInfo: reward.upInfo,
                     downInfo: reward.downInfo,
                     rangedInfo: reward.rangedInfo,
+                    discountedInfo: reward.discountedInfo,
                     calculatedProtocolBonusForPeriod: reward.staking.toFixed(2),
                     totalRewards: reward.totalRewards,
                     sticky: walletAddress.toLowerCase() == reward.address.toLowerCase() ? true : false,
@@ -128,25 +132,31 @@ const OPRewards: React.FC = () => {
         const upVolume = tableData.reduce((a, { upInfo }) => a + upInfo.volume, 0);
         const downVolume = tableData.reduce((a, { downInfo }) => a + downInfo.volume, 0);
         const rangedVolume = tableData.reduce((a, { rangedInfo }) => a + rangedInfo.volume, 0);
+        const discountedVolume = tableData.reduce((a, { discountedInfo }) => a + discountedInfo.volume, 0);
 
         const upOpRewardsPerVolume = (UP_OP_REWARDS / upVolume) * 1000;
         const downOpRewardsPerVolume = (DOWN_OP_REWARDS / downVolume) * 1000;
         const rangedOpRewardsPerVolume = (RANGED_OP_REWARDS / rangedVolume) * 1000;
+        const discountedOpRewardsPerVolume = (DISCOUNTED_OP_REWARDS / discountedVolume) * 1000;
 
         const upThalesRewardsPerVolume = (UP_THALES_REWARDS / upVolume) * 1000;
         const downThalesRewardsPerVolume = (DOWN_THALES_REWARDS / downVolume) * 1000;
         const rangedThalesRewardsPerVolume = (RANGED_THALES_REWARDS / rangedVolume) * 1000;
+        const discountedThalesRewardsPerVolume = (DISCOUNTED_THALES_REWARDS / discountedVolume) * 1000;
 
         return {
             upVolume,
             downVolume,
             rangedVolume,
+            discountedVolume,
             upOpRewardsPerVolume,
             downOpRewardsPerVolume,
             rangedOpRewardsPerVolume,
+            discountedOpRewardsPerVolume,
             upThalesRewardsPerVolume,
             downThalesRewardsPerVolume,
             rangedThalesRewardsPerVolume,
+            discountedThalesRewardsPerVolume,
         };
     }, [tableData]);
 
@@ -230,6 +240,25 @@ const OPRewards: React.FC = () => {
                         message={t('op-rewards.volume-tooltip', {
                             op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.rangedOpRewardsPerVolume),
                             thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.rangedThalesRewardsPerVolume),
+                        })}
+                        type={'info'}
+                        iconColor={'var(--primary-color)'}
+                        container={{ display: 'inline-block' }}
+                        interactive={true}
+                    />
+                </SummaryInfo>
+                <SummaryInfo>
+                    {`${t('op-rewards.discounted-volume-label')}: ${formatCurrencyWithSign(
+                        USD_SIGN,
+                        summaryData.discountedVolume
+                    )}`}
+                    <Tooltip
+                        message={t('op-rewards.volume-tooltip', {
+                            op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.discountedOpRewardsPerVolume),
+                            thales: formatCurrencyWithKey(
+                                THALES_CURRENCY,
+                                summaryData.discountedThalesRewardsPerVolume
+                            ),
                         })}
                         type={'info'}
                         iconColor={'var(--primary-color)'}
@@ -352,6 +381,33 @@ const OPRewards: React.FC = () => {
                                 sortType: rangedRewardsSort(),
                             },
                             {
+                                Header: t('op-rewards.table.discounted-info'),
+                                accessor: 'discountedInfo',
+                                Cell: (cellProps: any) => (
+                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                        <Trans
+                                            i18nKey={'op-rewards.table.reward-text'}
+                                            values={{
+                                                thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                                op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                            }}
+                                            components={[<br key="0" />]}
+                                        />
+                                        <Tooltip
+                                            message={t('op-rewards.table.info-text', {
+                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                            })}
+                                            type={'info'}
+                                            iconColor={'var(--primary-color)'}
+                                            container={{ display: 'inline-block' }}
+                                            interactive={true}
+                                        />
+                                    </p>
+                                ),
+                                sortType: discountedRewardsSort(),
+                            },
+                            {
                                 Header: () => (
                                     <>
                                         {t('op-rewards.table.protocol-reward')}
@@ -418,6 +474,10 @@ const downRewardsSort = () => (rowA: any, rowB: any) => {
 
 const rangedRewardsSort = () => (rowA: any, rowB: any) => {
     return rowA.original.rangedInfo.rewards.op - rowB.original.rangedInfo.rewards.op;
+};
+
+const discountedRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.discountedInfo.rewards.op - rowB.original.discountedInfo.rewards.op;
 };
 
 export default OPRewards;
