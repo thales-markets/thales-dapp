@@ -8,23 +8,18 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
-import axios from 'axios';
 import { refetchProposal } from 'utils/queryConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { percentageOfTotal } from 'utils/voting/weighted';
-import {
-    MESSAGE_VERSION,
-    MESSAGE_VOTE_TYPE,
-    SNAPSHOT_MESSAGE_API_URL,
-    ProposalTypeEnum,
-    SpaceKey,
-} from 'constants/governance';
+import { ProposalTypeEnum, SpaceKey } from 'constants/governance';
 import ValidationMessage from 'components/ValidationMessage';
 import voting from 'utils/voting';
 import pitches from '../pitches.json';
 import { Dialog, withStyles } from '@material-ui/core';
 import useProposalQuery from 'queries/governance/useProposalQuery';
 import { CloseIconContainer } from 'components/OldVersion/old-components';
+import snapshot from '@snapshot-labs/snapshot.js';
+import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 
 type WeightedVotingProps = {
     proposal: Proposal;
@@ -81,25 +76,17 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
         try {
             const formattedChoices = { ...selectedChoices };
             delete formattedChoices[0];
-            const msg: any = {
-                address: walletAddress,
-                msg: JSON.stringify({
-                    version: MESSAGE_VERSION,
-                    timestamp: (Date.now() / 1e3).toFixed(),
-                    type: MESSAGE_VOTE_TYPE,
-                    space: proposal.space.id,
-                    payload: { proposal: proposal.id, choice: formattedChoices, metadata: {} },
-                }),
-            };
 
-            msg.sig = await (snxJSConnector as any).signer.signMessage(msg.msg);
+            const hub = 'https://hub.snapshot.org';
+            const client = new snapshot.Client712(hub);
 
-            await axios.post(SNAPSHOT_MESSAGE_API_URL, msg, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
+            await client.vote((snxJSConnector as any).provider, walletAddress, {
+                space: proposal.space.id,
+                proposal: proposal.id,
+                type: proposal.type as ProposalType,
+                choice: formattedChoices,
+                reason: '',
+                app: 'thales',
             });
 
             refetchProposal(proposal.space.id, proposal.id, walletAddress);

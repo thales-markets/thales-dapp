@@ -8,12 +8,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
 import snxJSConnector from 'utils/snxJSConnector';
-import axios from 'axios';
 import { refetchProposal } from 'utils/queryConnector';
 import { dispatchMarketNotification } from 'utils/options';
-import { MESSAGE_VERSION, MESSAGE_VOTE_TYPE, SNAPSHOT_MESSAGE_API_URL, ProposalTypeEnum } from 'constants/governance';
+import { ProposalTypeEnum } from 'constants/governance';
 import ValidationMessage from 'components/ValidationMessage';
 import voting from 'utils/voting';
+import snapshot from '@snapshot-labs/snapshot.js';
+import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 
 type SingleChoiceVotingProps = {
     proposal: Proposal;
@@ -31,25 +32,16 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
         setTxErrorMessage(null);
         setIsVoting(true);
         try {
-            const msg: any = {
-                address: walletAddress,
-                msg: JSON.stringify({
-                    version: MESSAGE_VERSION,
-                    timestamp: (Date.now() / 1e3).toFixed(),
-                    type: MESSAGE_VOTE_TYPE,
-                    space: proposal.space.id,
-                    payload: { proposal: proposal.id, choice: selectedChoices, metadata: {} },
-                }),
-            };
+            const hub = 'https://hub.snapshot.org';
+            const client = new snapshot.Client712(hub);
 
-            msg.sig = await (snxJSConnector as any).signer.signMessage(msg.msg);
-
-            await axios.post(SNAPSHOT_MESSAGE_API_URL, msg, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
+            await client.vote((snxJSConnector as any).provider, walletAddress, {
+                space: proposal.space.id,
+                proposal: proposal.id,
+                type: proposal.type as ProposalType,
+                choice: Number(selectedChoices),
+                reason: '',
+                app: 'thales',
             });
 
             refetchProposal(proposal.space.id, proposal.id, walletAddress);
