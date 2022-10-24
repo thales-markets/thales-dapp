@@ -94,6 +94,10 @@ export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
         rpcUrls: ['https://polygon-rpc.com'],
         blockExplorerUrls: ['https://explorer.matic.network/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'MATIC',
+            decimals: 18,
+        },
     },
     [POLYGON_MUMBAI_ID]: {
         chainId: '0x13881',
@@ -101,6 +105,10 @@ export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
         rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
         blockExplorerUrls: ['https://mumbai-explorer.matic.today/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'MATIC',
+            decimals: 18,
+        },
     },
 };
 
@@ -111,6 +119,10 @@ export const BSC_NETWORK: Record<number, OptimismNetwork> = {
         rpcUrls: ['https://polygon-rpc.com'],
         blockExplorerUrls: ['https://bscscan.com/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'BNB',
+            decimals: 18,
+        },
     },
 };
 
@@ -121,6 +133,10 @@ export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
         rpcUrls: ['https://arb1.arbitrum.io/rpc	'],
         blockExplorerUrls: ['https://arbiscan.io/'],
         iconUrls: ['https://optimism.io/images/metamask_icon.svg', 'https://optimism.io/images/metamask_icon.png'],
+        nativeCurrency: {
+            symbol: 'ETH',
+            decimals: 18,
+        },
     },
 };
 
