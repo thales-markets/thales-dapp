@@ -948,7 +948,7 @@ const AMM: React.FC = () => {
                 valueEditDisable={true}
             />
             <Input
-                title={t('amm.skew-label')}
+                title={isDiscounted(priceImpact, basePriceImpact) ? t('amm.discount-label') : t('amm.skew-label')}
                 value={
                     isGettingQuote
                         ? '-'
@@ -957,10 +957,19 @@ const AMM: React.FC = () => {
                         : '-'
                 }
                 valueColor={
-                    Number(price) > 0 || Number(basePrice) > 0
+                    isDiscounted(priceImpact, basePriceImpact)
+                        ? 'white'
+                        : Number(price) > 0 || Number(basePrice) > 0
                         ? getPriceImpactColor(Number(price) > 0 ? Number(priceImpact) : Number(basePriceImpact))
                         : undefined
                 }
+                titleColor={isDiscounted(priceImpact, basePriceImpact) ? 'white' : ''}
+                background={
+                    isDiscounted(priceImpact, basePriceImpact)
+                        ? 'linear-gradient(to right, #516AFF -17.89%, #8208FC 90.41%)'
+                        : ''
+                }
+                borderStyle={isDiscounted(priceImpact, basePriceImpact) ? 'none' : 'solid'}
                 valueEditDisable={true}
             />
             <Slippage
@@ -983,6 +992,13 @@ const AMM: React.FC = () => {
             {getSubmitButton()}
         </Wrapper>
     );
+};
+
+const isDiscounted = (priceImpact: any, basePriceImpact: any) => {
+    if (priceImpact) {
+        return Number(priceImpact) < 0;
+    }
+    return Number(basePriceImpact) < 0;
 };
 
 const MaxButtonContainer = styled.div`

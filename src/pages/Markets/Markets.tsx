@@ -16,14 +16,14 @@ import InfoBanner from 'components/InfoBanner';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
-import { getIsOVM, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsArbitrum, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
+import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
 
-// const MAX_HOT_MARKETS = 6;
 const INFORMATION_BANNER_ACTIVE = false;
 
 const Markets: React.FC = () => {
@@ -32,6 +32,8 @@ const Markets: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const showOPBanner = getIsOVM(networkId);
+
+    const showDiscountMarkets = getIsOVM(networkId) || getIsArbitrum(networkId) || getIsPolygon(networkId);
 
     const dispatch = useDispatch();
 
@@ -52,12 +54,32 @@ const Markets: React.FC = () => {
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const discountQuery = fetchDiscounts(networkId);
 
     const optionsMarkets = useMemo(() => {
-        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data) && openOrdersQuery.isSuccess) {
+        if (
+            marketsQuery.isSuccess &&
+            Array.isArray(marketsQuery.data) &&
+            openOrdersQuery.isSuccess &&
+            discountQuery.isSuccess
+        ) {
             const markets = openOrdersQuery.data
                 ? marketsQuery.data.map((m) => {
                       const apiData = (openOrdersQuery.data as any).get(m.address.toLowerCase());
+                      const discountData = (discountQuery.data as any).get(m.address.toLowerCase());
+                      let discountedSide;
+                      let discount = 0;
+                      if (discountData) {
+                          if (discountData.longPriceImpact < 0) {
+                              discountedSide = 'UP';
+                              discount = -Math.ceil(Math.abs(discountData.longPriceImpact));
+                          }
+                          if (discountData.shortPriceImpact < 0) {
+                              discountedSide = 'DOWN';
+                              discount = -Math.ceil(Math.abs(discountData.shortPriceImpact));
+                          }
+                      }
+
                       return {
                           ...m,
                           openOrders: apiData?.ordersCount ?? 0,
@@ -66,13 +88,15 @@ const Markets: React.FC = () => {
                           longPrice: apiData?.longPrice ?? 0,
                           shortPrice: apiData?.shortPrice ?? 0,
                           ammLiquidity: Number(apiData?.availableLongs ?? 0) + Number(apiData?.availableShorts ?? 0),
+                          discountedSide,
+                          discount,
                       };
                   })
                 : marketsQuery.data;
             return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery, openOrdersQuery]);
+    }, [marketsQuery, openOrdersQuery, discountQuery]);
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
@@ -117,7 +141,7 @@ const Markets: React.FC = () => {
                 </BannerContainer>
             )}
             <Suspense fallback={<></>}>
-                <HotMarkets optionsMarkets={optionsMarkets} />
+                {showDiscountMarkets && <HotMarkets optionsMarkets={optionsMarkets} />}
             </Suspense>
             <Suspense fallback={<></>}>
                 <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />

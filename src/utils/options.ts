@@ -20,8 +20,8 @@ export const sortOptionsMarkets = (markets: OptionsMarkets) =>
                 phaseNum: PHASE[phase],
             };
         }),
-        ['phaseNum', 'ammLiquidity'],
-        ['asc', 'desc']
+        ['phaseNum', 'discountedSide', 'ammLiquidity'],
+        ['asc', 'asc', 'desc']
     );
 
 export const getPhaseAndEndDate = (

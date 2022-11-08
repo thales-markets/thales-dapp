@@ -443,7 +443,11 @@
             "hot-markets": {
                 "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
                 "range-markets-tooltip-text": "Ranged positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
-                "most-profitable-markets": "Highest potential profit"
+                "most-profitable-markets": "Highest potential profit",
+                "discounted-positions": "Discounted positions",
+                "eligible-for": "eligible for",
+                "token-rewards": "token rewards",
+                "tooltip-text-discount": "Positional Tokens available for purchase that are currently on discount"
             },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets"
@@ -461,6 +465,7 @@
                 "asset-col": "Asset",
                 "24h-change-col": "24H Change",
                 "strike-price-col": "Strike price",
+                "discount-col": "Discount",
                 "asset-price-col": "Asset price",
                 "current-asset-price-col": "Current Asset Price",
                 "final-asset-price-col": "Final Asset Price",
@@ -1646,8 +1651,10 @@
         "return-label": "Potential profit",
         "return-tooltip": "Potential profit if this position wins",
         "skew-label": "Skew impact",
-        "progress": "Please wait...",
         "skew-tooltip": "AMM will add a price impact on the side it is more exposed to",
+        "discount-label": "Position discounted",
+        "discount-tooltip": "AMM will add a price impact on the side it is more exposed to",
+        "progress": "Please wait...",
         "max-limit-buy-tooltip": "The maximum amount of {{currencyKey}} positions for buying from AMM",
         "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} positions for sale to AMM",
         "amm-disabled-warning": "AMM trading is disabled for this market",
@@ -1861,7 +1868,8 @@
         "title": "OP Rewards",
         "description": "<bold>The Trading Incentives program</bold> is split into separate 14 day rounds. After each round a fixed amount of OP tokens + THALES tokens are to be distributed proportionally among all Buy Volume drivers across the Thales marketplace.<br/><br/>",
         "description-2": "Total amount of tokens allocated as Trading Incentives: <bold>200,000 OP + 350,000 THALES</bold> <br/><br/>",
-        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 11,000 OP + 20,000 THALES split between UP token Buyers <br/>    - 11,000 OP + 20,000 THALES split between DOWN token Buyers<br/>        - 6,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
+        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 9,000 OP + 15,000 THALES split between UP token Buyers <br/>    - 9,000 OP + 15,000 THALES split between DOWN token Buyers<br/>        - 5,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>  - 5,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
+        "description-3-itm": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 5,000 OP + 7,000 THALES split between ITM token Buyers <br/>    - 5,000 OP + 7,000 THALES split between OTM token Buyers<br/>      - 5,000 OP + 7,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
         "description-4": "<br/><br/>You can find all the detailed infomation on how to participate in <guidelinesLink>.",
         "table": {
             "wallet-address": "Wallet address",
@@ -1873,6 +1881,9 @@
             "up-info": "UP tokens",
             "down-info": "DOWN tokens",
             "ranged-info": "Ranged tokens",
+            "discounted-info": "Discounted tokens",
+            "itm-info": "ITM tokens",
+            "otm-info": "OTM tokens",
             "total-rewards": "Total rewards",
             "reward-text": "Rewards:<0/> {{thales}} THALES, {{op}} OP",
             "info-text": "Volume: {{volume}}, Percentage: {{percentage}}%",
@@ -1883,6 +1894,9 @@
         "up-volume-label": "UP Volume",
         "down-volume-label": "DOWN Volume",
         "ranged-volume-label": "RANGED Volume",
+        "discounted-volume-label": "DISCOUNTED Volume",
+        "itm-volume-label": "ITM Volume",
+        "otm-volume-label": "OTM Volume",
         "volume-tooltip": "Current rewards:\n {{op}} + {{thales}} per $1,000 of Buy Volume"
     },
     "vaults": {

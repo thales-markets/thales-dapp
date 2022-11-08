@@ -32,12 +32,16 @@ import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/curren
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 
-const UP_OP_REWARDS = 11000;
-const DOWN_OP_REWARDS = 11000;
-const RANGED_OP_REWARDS = 6000;
-const UP_THALES_REWARDS = 20000;
-const DOWN_THALES_REWARDS = 20000;
+const UP_OP_REWARDS = 9000;
+const DOWN_OP_REWARDS = 9000;
+const RANGED_OP_REWARDS = 5000;
+const DISCOUNTED_OP_REWARDS = 5000;
+const UP_THALES_REWARDS = 15000;
+const DOWN_THALES_REWARDS = 15000;
 const RANGED_THALES_REWARDS = 10000;
+const DISCOUNTED_THALES_REWARDS = 10000;
+const THALES_REWARDS = 7000;
+const OP_REWARDS = 5000;
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -95,6 +99,9 @@ const OPRewards: React.FC = () => {
                 upInfo: any;
                 downInfo: any;
                 rangedInfo: any;
+                discountedInfo: any;
+                itmInfo: any;
+                otmInfo: any;
                 calculatedProtocolBonusForPeriod: string;
                 totalRewards: number;
                 sticky: boolean;
@@ -106,6 +113,9 @@ const OPRewards: React.FC = () => {
                     upInfo: reward.upInfo,
                     downInfo: reward.downInfo,
                     rangedInfo: reward.rangedInfo,
+                    itmInfo: reward.itmInfo,
+                    otmInfo: reward.otmInfo,
+                    discountedInfo: reward.discountedInfo,
                     calculatedProtocolBonusForPeriod: reward.staking.toFixed(2),
                     totalRewards: reward.totalRewards,
                     sticky: walletAddress.toLowerCase() == reward.address.toLowerCase() ? true : false,
@@ -128,29 +138,496 @@ const OPRewards: React.FC = () => {
         const upVolume = tableData.reduce((a, { upInfo }) => a + upInfo.volume, 0);
         const downVolume = tableData.reduce((a, { downInfo }) => a + downInfo.volume, 0);
         const rangedVolume = tableData.reduce((a, { rangedInfo }) => a + rangedInfo.volume, 0);
+        const discountedVolume = tableData.reduce((a, { discountedInfo }) => a + discountedInfo.volume, 0);
+        const itmVolume = tableData.reduce((a, { itmInfo }) => a + itmInfo.volume, 0);
+        const otmVolume = tableData.reduce((a, { otmInfo }) => a + otmInfo.volume, 0);
 
         const upOpRewardsPerVolume = (UP_OP_REWARDS / upVolume) * 1000;
         const downOpRewardsPerVolume = (DOWN_OP_REWARDS / downVolume) * 1000;
         const rangedOpRewardsPerVolume = (RANGED_OP_REWARDS / rangedVolume) * 1000;
+        const discountedOpRewardsPerVolume = (DISCOUNTED_OP_REWARDS / discountedVolume) * 1000;
+        const itmOpRewardsPerVolume = (OP_REWARDS / itmVolume) * 1000;
+        const otmOpRewardsPerVolume = (OP_REWARDS / otmVolume) * 1000;
 
         const upThalesRewardsPerVolume = (UP_THALES_REWARDS / upVolume) * 1000;
         const downThalesRewardsPerVolume = (DOWN_THALES_REWARDS / downVolume) * 1000;
         const rangedThalesRewardsPerVolume = (RANGED_THALES_REWARDS / rangedVolume) * 1000;
+        const discountedThalesRewardsPerVolume =
+            ((period < 7 ? DISCOUNTED_THALES_REWARDS : THALES_REWARDS) / discountedVolume) * 1000;
+        const itmThalesRewardsPerVolume = (THALES_REWARDS / itmVolume) * 1000;
+        const otmThalesRewardsPerVolume = (THALES_REWARDS / otmVolume) * 1000;
 
         return {
             upVolume,
             downVolume,
             rangedVolume,
+            discountedVolume,
+            itmVolume,
+            otmVolume,
             upOpRewardsPerVolume,
             downOpRewardsPerVolume,
             rangedOpRewardsPerVolume,
+            discountedOpRewardsPerVolume,
+            itmOpRewardsPerVolume,
+            otmOpRewardsPerVolume,
             upThalesRewardsPerVolume,
             downThalesRewardsPerVolume,
             rangedThalesRewardsPerVolume,
+            discountedThalesRewardsPerVolume,
+            itmThalesRewardsPerVolume,
+            otmThalesRewardsPerVolume,
         };
     }, [tableData]);
 
     const isLoading = usersAmmBuyVolumeQuery.isLoading;
+
+    const getColumns = (period: number) => {
+        if (period < 7) {
+            return [
+                {
+                    Header: t('op-rewards.table.wallet-address'),
+                    accessor: 'account',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <AddressLink
+                                href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
+                                    ? t('op-rewards.table.my-rewards')
+                                    : truncateAddress(cellProps.cell.value)}
+                            </AddressLink>
+                        </p>
+                    ),
+                    disableSortBy: true,
+                },
+                {
+                    Header: t('op-rewards.table.up-info'),
+                    accessor: 'upInfo',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.reward-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                            <Tooltip
+                                message={t('op-rewards.table.info-text', {
+                                    volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                    percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                })}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </p>
+                    ),
+                    sortType: upRewardsSort(),
+                },
+
+                {
+                    Header: t('op-rewards.table.down-info'),
+                    accessor: 'downInfo',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.reward-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                            <Tooltip
+                                message={t('op-rewards.table.info-text', {
+                                    volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                    percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                })}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </p>
+                    ),
+                    sortType: downRewardsSort(),
+                },
+                {
+                    Header: t('op-rewards.table.ranged-info'),
+                    accessor: 'rangedInfo',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.reward-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                            <Tooltip
+                                message={t('op-rewards.table.info-text', {
+                                    volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                    percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                })}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </p>
+                    ),
+                    sortType: rangedRewardsSort(),
+                },
+                {
+                    Header: t('op-rewards.table.discounted-info'),
+                    accessor: 'discountedInfo',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.reward-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                            <Tooltip
+                                message={t('op-rewards.table.info-text', {
+                                    volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                    percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                })}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </p>
+                    ),
+                    sortType: discountedRewardsSort(),
+                },
+                {
+                    Header: () => (
+                        <>
+                            {t('op-rewards.table.protocol-reward')}
+                            <Tooltip
+                                message={t('op-rewards.table.gamified-bonus-text')}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </>
+                    ),
+                    accessor: 'calculatedProtocolBonusForPeriod',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>{cellProps.cell.value} OP</p>
+                    ),
+                },
+                {
+                    Header: t('op-rewards.table.total-rewards'),
+                    accessor: 'totalRewards',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.total-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                        </p>
+                    ),
+                    sortType: rewardsSort(),
+                },
+            ];
+        } else {
+            return [
+                {
+                    Header: t('op-rewards.table.wallet-address'),
+                    accessor: 'account',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <AddressLink
+                                href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
+                                    ? t('op-rewards.table.my-rewards')
+                                    : truncateAddress(cellProps.cell.value)}
+                            </AddressLink>
+                        </p>
+                    ),
+                    disableSortBy: true,
+                },
+                {
+                    Header: t('op-rewards.table.itm-info'),
+                    accessor: 'itmInfo',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.reward-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                            <Tooltip
+                                message={t('op-rewards.table.info-text', {
+                                    volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                    percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                })}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </p>
+                    ),
+                    sortType: itmRewardsSort(),
+                },
+
+                {
+                    Header: t('op-rewards.table.otm-info'),
+                    accessor: 'otmInfo',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.reward-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                            <Tooltip
+                                message={t('op-rewards.table.info-text', {
+                                    volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                    percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                })}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </p>
+                    ),
+                    sortType: otmRewardsSort(),
+                },
+                {
+                    Header: t('op-rewards.table.discounted-info'),
+                    accessor: 'discountedInfo',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.reward-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                            <Tooltip
+                                message={t('op-rewards.table.info-text', {
+                                    volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                    percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                })}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </p>
+                    ),
+                    sortType: discountedRewardsSort(),
+                },
+                {
+                    Header: () => (
+                        <>
+                            {t('op-rewards.table.protocol-reward')}
+                            <Tooltip
+                                message={t('op-rewards.table.gamified-bonus-text')}
+                                type={'info'}
+                                iconColor={'var(--primary-color)'}
+                                container={{ display: 'inline-block' }}
+                                interactive={true}
+                            />
+                        </>
+                    ),
+                    accessor: 'calculatedProtocolBonusForPeriod',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>{cellProps.cell.value} OP</p>
+                    ),
+                },
+                {
+                    Header: t('op-rewards.table.total-rewards'),
+                    accessor: 'totalRewards',
+                    Cell: (cellProps: any) => (
+                        <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                            <Trans
+                                i18nKey={'op-rewards.table.total-text'}
+                                values={{
+                                    thales: Number(cellProps.cell.value.thales).toFixed(2),
+                                    op: Number(cellProps.cell.value.op).toFixed(2),
+                                }}
+                                components={[<br key="0" />]}
+                            />
+                        </p>
+                    ),
+                    sortType: rewardsSort(),
+                },
+            ];
+        }
+    };
+
+    const getSummaryInfo = (period: number) => {
+        if (period < 7) {
+            return (
+                <>
+                    <SummaryInfo>
+                        {`${t('op-rewards.up-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.upVolume
+                        )}`}
+                        <Tooltip
+                            message={t('op-rewards.volume-tooltip', {
+                                op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.upOpRewardsPerVolume),
+                                thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.upThalesRewardsPerVolume),
+                            })}
+                            type={'info'}
+                            iconColor={'var(--primary-color)'}
+                            container={{ display: 'inline-block' }}
+                            interactive={true}
+                        />
+                    </SummaryInfo>
+                    <SummaryInfo>
+                        {`${t('op-rewards.down-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.downVolume
+                        )}`}
+                        <Tooltip
+                            message={t('op-rewards.volume-tooltip', {
+                                op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.downOpRewardsPerVolume),
+                                thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.downThalesRewardsPerVolume),
+                            })}
+                            type={'info'}
+                            iconColor={'var(--primary-color)'}
+                            container={{ display: 'inline-block' }}
+                            interactive={true}
+                        />
+                    </SummaryInfo>
+                    <SummaryInfo>
+                        {`${t('op-rewards.ranged-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.rangedVolume
+                        )}`}
+                        <Tooltip
+                            message={t('op-rewards.volume-tooltip', {
+                                op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.rangedOpRewardsPerVolume),
+                                thales: formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    summaryData.rangedThalesRewardsPerVolume
+                                ),
+                            })}
+                            type={'info'}
+                            iconColor={'var(--primary-color)'}
+                            container={{ display: 'inline-block' }}
+                            interactive={true}
+                        />
+                    </SummaryInfo>
+                    <SummaryInfo>
+                        {`${t('op-rewards.discounted-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.discountedVolume
+                        )}`}
+                        <Tooltip
+                            message={t('op-rewards.volume-tooltip', {
+                                op: formatCurrencyWithKey(
+                                    CRYPTO_CURRENCY_MAP.OP,
+                                    summaryData.discountedOpRewardsPerVolume
+                                ),
+                                thales: formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    summaryData.discountedThalesRewardsPerVolume
+                                ),
+                            })}
+                            type={'info'}
+                            iconColor={'var(--primary-color)'}
+                            container={{ display: 'inline-block' }}
+                            interactive={true}
+                        />
+                    </SummaryInfo>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <SummaryInfo>
+                        {`${t('op-rewards.itm-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.itmVolume
+                        )}`}
+                        <Tooltip
+                            message={t('op-rewards.volume-tooltip', {
+                                op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.itmOpRewardsPerVolume),
+                                thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.itmThalesRewardsPerVolume),
+                            })}
+                            type={'info'}
+                            iconColor={'var(--primary-color)'}
+                            container={{ display: 'inline-block' }}
+                            interactive={true}
+                        />
+                    </SummaryInfo>
+                    <SummaryInfo>
+                        {`${t('op-rewards.otm-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.otmVolume
+                        )}`}
+                        <Tooltip
+                            message={t('op-rewards.volume-tooltip', {
+                                op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.otmOpRewardsPerVolume),
+                                thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.otmThalesRewardsPerVolume),
+                            })}
+                            type={'info'}
+                            iconColor={'var(--primary-color)'}
+                            container={{ display: 'inline-block' }}
+                            interactive={true}
+                        />
+                    </SummaryInfo>
+                    <SummaryInfo>
+                        {`${t('op-rewards.discounted-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.discountedVolume
+                        )}`}
+                        <Tooltip
+                            message={t('op-rewards.volume-tooltip', {
+                                op: formatCurrencyWithKey(
+                                    CRYPTO_CURRENCY_MAP.OP,
+                                    summaryData.discountedOpRewardsPerVolume
+                                ),
+                                thales: formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    summaryData.discountedThalesRewardsPerVolume
+                                ),
+                            })}
+                            type={'info'}
+                            iconColor={'var(--primary-color)'}
+                            container={{ display: 'inline-block' }}
+                            interactive={true}
+                        />
+                    </SummaryInfo>
+                </>
+            );
+        }
+    };
 
     return (
         <Wrapper>
@@ -159,7 +636,7 @@ const OPRewards: React.FC = () => {
                 <br />
                 <Trans i18nKey={'op-rewards.description-2'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
                 <Trans
-                    i18nKey={'op-rewards.description-3'}
+                    i18nKey={period < 7 ? 'op-rewards.description-3' : 'op-rewards.description-3-itm'}
                     components={{ bold: <BoldText />, br: <br />, tipLink: <Tip53Link /> }}
                 ></Trans>
                 .
@@ -191,53 +668,7 @@ const OPRewards: React.FC = () => {
                 </RoundWrapper>
                 <SearchField text={searchQuery} handleChange={(value) => setSearchQuery(value)} />
             </HeaderWrapper>
-            <SummaryWrapper>
-                <SummaryInfo>
-                    {`${t('op-rewards.up-volume-label')}: ${formatCurrencyWithSign(USD_SIGN, summaryData.upVolume)}`}
-                    <Tooltip
-                        message={t('op-rewards.volume-tooltip', {
-                            op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.upOpRewardsPerVolume),
-                            thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.upThalesRewardsPerVolume),
-                        })}
-                        type={'info'}
-                        iconColor={'var(--primary-color)'}
-                        container={{ display: 'inline-block' }}
-                        interactive={true}
-                    />
-                </SummaryInfo>
-                <SummaryInfo>
-                    {`${t('op-rewards.down-volume-label')}: ${formatCurrencyWithSign(
-                        USD_SIGN,
-                        summaryData.downVolume
-                    )}`}
-                    <Tooltip
-                        message={t('op-rewards.volume-tooltip', {
-                            op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.downOpRewardsPerVolume),
-                            thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.downThalesRewardsPerVolume),
-                        })}
-                        type={'info'}
-                        iconColor={'var(--primary-color)'}
-                        container={{ display: 'inline-block' }}
-                        interactive={true}
-                    />
-                </SummaryInfo>
-                <SummaryInfo>
-                    {`${t('op-rewards.ranged-volume-label')}: ${formatCurrencyWithSign(
-                        USD_SIGN,
-                        summaryData.rangedVolume
-                    )}`}
-                    <Tooltip
-                        message={t('op-rewards.volume-tooltip', {
-                            op: formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, summaryData.rangedOpRewardsPerVolume),
-                            thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.rangedThalesRewardsPerVolume),
-                        })}
-                        type={'info'}
-                        iconColor={'var(--primary-color)'}
-                        container={{ display: 'inline-block' }}
-                        interactive={true}
-                    />
-                </SummaryInfo>
-            </SummaryWrapper>
+            <SummaryWrapper>{getSummaryInfo(period)}</SummaryWrapper>
             {isLoading ? (
                 <Loader />
             ) : (
@@ -250,145 +681,7 @@ const OPRewards: React.FC = () => {
                         data={tableData}
                         leaderboardView={true}
                         hasStickyRow={true}
-                        columns={[
-                            {
-                                Header: t('op-rewards.table.wallet-address'),
-                                accessor: 'account',
-                                Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
-                                        <AddressLink
-                                            href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
-                                                ? t('op-rewards.table.my-rewards')
-                                                : truncateAddress(cellProps.cell.value)}
-                                        </AddressLink>
-                                    </p>
-                                ),
-                                disableSortBy: true,
-                            },
-                            {
-                                Header: t('op-rewards.table.up-info'),
-                                accessor: 'upInfo',
-                                Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
-                                        <Trans
-                                            i18nKey={'op-rewards.table.reward-text'}
-                                            values={{
-                                                thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
-                                                op: Number(cellProps.cell.value.rewards.op).toFixed(2),
-                                            }}
-                                            components={[<br key="0" />]}
-                                        />
-                                        <Tooltip
-                                            message={t('op-rewards.table.info-text', {
-                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
-                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
-                                            })}
-                                            type={'info'}
-                                            iconColor={'var(--primary-color)'}
-                                            container={{ display: 'inline-block' }}
-                                            interactive={true}
-                                        />
-                                    </p>
-                                ),
-                                sortType: upRewardsSort(),
-                            },
-
-                            {
-                                Header: t('op-rewards.table.down-info'),
-                                accessor: 'downInfo',
-                                Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
-                                        <Trans
-                                            i18nKey={'op-rewards.table.reward-text'}
-                                            values={{
-                                                thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
-                                                op: Number(cellProps.cell.value.rewards.op).toFixed(2),
-                                            }}
-                                            components={[<br key="0" />]}
-                                        />
-                                        <Tooltip
-                                            message={t('op-rewards.table.info-text', {
-                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
-                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
-                                            })}
-                                            type={'info'}
-                                            iconColor={'var(--primary-color)'}
-                                            container={{ display: 'inline-block' }}
-                                            interactive={true}
-                                        />
-                                    </p>
-                                ),
-                                sortType: downRewardsSort(),
-                            },
-                            {
-                                Header: t('op-rewards.table.ranged-info'),
-                                accessor: 'rangedInfo',
-                                Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
-                                        <Trans
-                                            i18nKey={'op-rewards.table.reward-text'}
-                                            values={{
-                                                thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
-                                                op: Number(cellProps.cell.value.rewards.op).toFixed(2),
-                                            }}
-                                            components={[<br key="0" />]}
-                                        />
-                                        <Tooltip
-                                            message={t('op-rewards.table.info-text', {
-                                                volume: Number(cellProps.cell.value.volume).toFixed(2),
-                                                percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
-                                            })}
-                                            type={'info'}
-                                            iconColor={'var(--primary-color)'}
-                                            container={{ display: 'inline-block' }}
-                                            interactive={true}
-                                        />
-                                    </p>
-                                ),
-                                sortType: rangedRewardsSort(),
-                            },
-                            {
-                                Header: () => (
-                                    <>
-                                        {t('op-rewards.table.protocol-reward')}
-                                        <Tooltip
-                                            message={t('op-rewards.table.gamified-bonus-text')}
-                                            type={'info'}
-                                            iconColor={'var(--primary-color)'}
-                                            container={{ display: 'inline-block' }}
-                                            interactive={true}
-                                        />
-                                    </>
-                                ),
-                                accessor: 'calculatedProtocolBonusForPeriod',
-                                Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
-                                        {cellProps.cell.value} OP
-                                    </p>
-                                ),
-                            },
-                            {
-                                Header: t('op-rewards.table.total-rewards'),
-                                accessor: 'totalRewards',
-                                Cell: (cellProps: any) => (
-                                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
-                                        <Trans
-                                            i18nKey={'op-rewards.table.total-text'}
-                                            values={{
-                                                thales: Number(cellProps.cell.value.thales).toFixed(2),
-                                                op: Number(cellProps.cell.value.op).toFixed(2),
-                                            }}
-                                            components={[<br key="0" />]}
-                                        />
-                                    </p>
-                                ),
-                                sortType: rewardsSort(),
-                            },
-                        ]}
+                        columns={getColumns(period)}
                         initialState={{
                             sortBy: [
                                 {
@@ -418,6 +711,18 @@ const downRewardsSort = () => (rowA: any, rowB: any) => {
 
 const rangedRewardsSort = () => (rowA: any, rowB: any) => {
     return rowA.original.rangedInfo.rewards.op - rowB.original.rangedInfo.rewards.op;
+};
+
+const discountedRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.discountedInfo.rewards.op - rowB.original.discountedInfo.rewards.op;
+};
+
+const itmRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.discountedInfo.rewards.op - rowB.original.itmInfo.rewards.op;
+};
+
+const otmRewardsSort = () => (rowA: any, rowB: any) => {
+    return rowA.original.discountedInfo.rewards.op - rowB.original.otmInfo.rewards.op;
 };
 
 export default OPRewards;
