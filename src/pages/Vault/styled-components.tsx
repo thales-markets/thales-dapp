@@ -12,13 +12,13 @@ export const Container = styled(FlexDivRow)`
     width: 80%;
     position: relative;
     align-items: start;
+    margin-top: 30px;
     @media (max-width: 1440px) {
         width: 95%;
     }
     @media (max-width: 767px) {
         flex-direction: column;
     }
-    margin-top: 30px;
 `;
 
 export const ContentContainer = styled(FlexDivColumn)`
@@ -57,7 +57,10 @@ export const RoundInfoWrapper = styled(FlexDivColumn)`
     @media (max-width: 1440px) {
         width: 95%;
     }
-    padding: 20px;
+    padding: 0px 20px 20px 20px;
+    @media (max-width: 767px) {
+        padding: 20px 20px 0px 20px;
+    }
 `;
 
 export const RoundEndContainer = styled(FlexDivColumn)`
