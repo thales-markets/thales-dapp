@@ -6,7 +6,7 @@ import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
-// import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
+import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { CircularProgress } from '@material-ui/core';
 import { FlexDivRowCentered, Image } from 'theme/common';
 import { history } from 'utils/routes';
@@ -70,17 +70,13 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                             <ArbitrumLogo />
                             <span>{t(`common.unsupported-network.button.arbitrum`)}</span>
                         </NetworkButton>
-                        {/* <NetworkButton
+                        <NetworkButton
                             margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
-                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[56].changeNetwork.bind(
-                                this,
-                                56,
-                                undefined
-                            )}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[56].changeNetwork.bind(this, 56, undefined)}
                         >
-                            <ArbitrumLogo />
+                            <BSCLogo />
                             <span>{t(`common.unsupported-network.button.bsc`)}</span>
-                        </NetworkButton> */}
+                        </NetworkButton>
                         {!hideMainnet && (
                             <NetworkButton
                                 margin="20px 0 40px 0"
