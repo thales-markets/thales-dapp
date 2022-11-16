@@ -36,6 +36,7 @@ import {
     RoundAllocationLabel,
     RoundAllocation,
     RoundAllocationWrapper,
+    UsersInVaultText,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -69,6 +70,7 @@ import NumericInput from 'components/NumericInput';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import onboardConnector from 'utils/onboardConnector';
+import Tooltip from 'components/Tooltip';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -205,7 +207,7 @@ const Vault: React.FC<VaultProps> = (props) => {
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { signer, collateral } = snxJSConnector;
         if (signer && collateral) {
-            const id = toast.loading(t('market.toast-messsage.transaction-pending'));
+            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsAllowing(true);
 
             try {
@@ -220,7 +222,9 @@ const Vault: React.FC<VaultProps> = (props) => {
                 if (txResult && txResult.transactionHash) {
                     toast.update(
                         id,
-                        getSuccessToastOptions(t('market.toast-messsage.approve-success', { token: SYNTHS_MAP.sUSD }))
+                        getSuccessToastOptions(
+                            t('options.market.toast-messsage.approve-success', { token: SYNTHS_MAP.sUSD })
+                        )
                     );
                     setIsAllowing(false);
                 }
@@ -235,7 +239,7 @@ const Vault: React.FC<VaultProps> = (props) => {
     const handleDeposit = async () => {
         const { signer } = snxJSConnector;
         if (signer) {
-            const id = toast.loading(t('market.toast-messsage.transaction-pending'));
+            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
@@ -262,7 +266,7 @@ const Vault: React.FC<VaultProps> = (props) => {
     const handleWithdrawalRequest = async () => {
         const { signer } = snxJSConnector;
         if (signer) {
-            const id = toast.loading(t('market.toast-messsage.transaction-pending'));
+            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
@@ -288,7 +292,7 @@ const Vault: React.FC<VaultProps> = (props) => {
     const closeRound = async () => {
         const { signer } = snxJSConnector;
         if (signer) {
-            const id = toast.loading(t('market.toast-messsage.transaction-pending'));
+            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
@@ -473,6 +477,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                             vaultData.minDepositAmount,
                                             0
                                         ),
+                                        roundLength: 7, // vaultData.roundLength,
                                     }}
                                 />
                             </Description>
@@ -514,6 +519,9 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                 amount: formatCurrencyWithSign(USD_SIGN, userVaultData.balanceTotal),
                                             }}
                                         />
+                                        {userVaultData.balanceCurrentRound > 0 && !isWithdrawalRequested && (
+                                            <Tooltip message={t('vault.estimated-amount-tooltip')} type={'info'} />
+                                        )}
                                     </ContentInfo>
                                     {isWithdrawalRequested && (
                                         <WarningContentInfo>
@@ -529,6 +537,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                     ),
                                                 }}
                                             />
+                                            <Tooltip message={t('vault.estimated-amount-tooltip')} type={'info'} />
                                         </WarningContentInfo>
                                     )}
                                 </ContentInfoContainer>
@@ -635,6 +644,15 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                     />
                                                 </ContentInfo>
                                             )}
+                                            <UsersInVaultText>
+                                                <Trans
+                                                    i18nKey="vault.users-in-vault-label"
+                                                    values={{
+                                                        number: vaultData.usersCurrentlyInVault,
+                                                        max: vaultData.maxAllowedUsers,
+                                                    }}
+                                                />
+                                            </UsersInVaultText>
                                             <VaultFilledText>
                                                 <Trans
                                                     i18nKey="vault.vault-filled-label"
@@ -665,9 +683,16 @@ const Vault: React.FC<VaultProps> = (props) => {
                                     {((vaultData && userVaultData && !isWithdrawalRequested) || !isWalletConnected) && (
                                         <>
                                             {nothingToWithdraw || !isWalletConnected ? (
-                                                <ContentInfo>
-                                                    <Trans i18nKey="vault.nothing-to-withdraw-label" />
-                                                </ContentInfo>
+                                                <>
+                                                    <ContentInfo>
+                                                        <Trans i18nKey="vault.nothing-to-withdraw-label" />
+                                                    </ContentInfo>
+                                                    {userVaultData && userVaultData.balanceNextRound > 0 && (
+                                                        <ContentInfo>
+                                                            <Trans i18nKey="vault.first-deposit-withdrawal-message" />
+                                                        </ContentInfo>
+                                                    )}
+                                                </>
                                             ) : (
                                                 <>
                                                     {userVaultData && (
@@ -690,6 +715,12 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                                                     userVaultData.balanceCurrentRound
                                                                                 ),
                                                                             }}
+                                                                        />
+                                                                        <Tooltip
+                                                                            message={t(
+                                                                                'vault.estimated-amount-tooltip'
+                                                                            )}
+                                                                            type={'info'}
                                                                         />
                                                                     </ContentInfo>
                                                                     <ContentInfo>
@@ -727,6 +758,12 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                     i18nKey="vault.withdrawal-requested-message"
                                                     components={{
                                                         bold: <BoldContent />,
+                                                        tooltip: (
+                                                            <Tooltip
+                                                                message={t('vault.estimated-amount-tooltip')}
+                                                                type={'info'}
+                                                            />
+                                                        ),
                                                     }}
                                                     values={{
                                                         amount: formatCurrencyWithSign(
