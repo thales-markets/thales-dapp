@@ -535,7 +535,13 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                 }}
                                             />
                                             {userVaultData.balanceCurrentRound > 0 && !isWithdrawalRequested && (
-                                                <Tooltip message={t('vault.estimated-amount-tooltip')} type={'info'} />
+                                                <Tooltip
+                                                    message={t('vault.estimated-amount-tooltip')}
+                                                    type={'info'}
+                                                    container={{ display: 'inline' }}
+                                                    iconFontSize={16}
+                                                    iconTop={-2}
+                                                />
                                             )}
                                         </ContentInfo>
                                         {isWithdrawalRequested && (
@@ -552,7 +558,14 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                         ),
                                                     }}
                                                 />
-                                                <Tooltip message={t('vault.estimated-amount-tooltip')} type={'info'} />
+                                                <Tooltip
+                                                    message={t('vault.estimated-amount-tooltip')}
+                                                    type={'info'}
+                                                    container={{ display: 'inline' }}
+                                                    iconFontSize={16}
+                                                    iconTop={-2}
+                                                    iconColor="#ffcc00"
+                                                />
                                             </WarningContentInfo>
                                         )}
                                     </ContentInfoContainer>
@@ -729,6 +742,9 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                                                     'vault.estimated-amount-tooltip'
                                                                                 )}
                                                                                 type={'info'}
+                                                                                container={{ display: 'inline' }}
+                                                                                iconFontSize={16}
+                                                                                iconTop={-2}
                                                                             />
                                                                         </ContentInfo>
                                                                         <ContentInfo>
@@ -770,6 +786,9 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                                 <Tooltip
                                                                     message={t('vault.estimated-amount-tooltip')}
                                                                     type={'info'}
+                                                                    container={{ display: 'inline' }}
+                                                                    iconFontSize={16}
+                                                                    iconTop={-2}
                                                                 />
                                                             ),
                                                         }}
