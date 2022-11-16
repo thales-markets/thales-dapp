@@ -26,6 +26,7 @@ export const ROUTES = {
         Wizard: '/wizard',
         OPRewards: '/op-rewards',
         Vaults: '/vaults',
+        Vault: '/vaults/:vaultId',
     },
     Governance: {
         Home: '/governance',

@@ -33,4 +33,7 @@ export const navigateToOptionsMarket = (marketAddress: string, option?: string, 
 export const navigateToGovernance = (spaceKey?: SpaceKey, id?: string, replacePath = false) =>
     navigateTo(`${ROUTES.Governance.Home}/${spaceKey ? spaceKey : ''}/${id ? id : ''}`, replacePath);
 
+export const buildVaultLink = (vaultId: string, language: string, excludeSlash = false) =>
+    `${ifIpfsDeployment && !excludeSlash ? '#' : ''}${ROUTES.Options.Vaults}/${vaultId}?lang=${language}`;
+
 export { history };

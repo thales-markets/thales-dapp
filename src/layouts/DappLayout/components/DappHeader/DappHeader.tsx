@@ -32,6 +32,7 @@ const getTitle = (t: any) => {
     if (location.pathname === ROUTES.Options.Leaderboard) return t('options.leaderboard.trading-comp-title');
     if (location.pathname === ROUTES.Options.OPRewards) return t('op-rewards.title');
     if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');
+    if (location.pathname === ROUTES.Options.Vaults) return 'Vaults';
 };
 
 const Container = styled.div`
