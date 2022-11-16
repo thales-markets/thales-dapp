@@ -86,7 +86,7 @@ export const VaultInfoContainer = styled(FlexDivColumn)`
     span {
         font-size: 20px;
         font-weight: 600;
-        color: #3fd1ff;
+        color: #64d9fe;
     }
     margin-top: 10px;
 `;

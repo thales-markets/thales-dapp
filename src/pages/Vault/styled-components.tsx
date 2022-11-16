@@ -1,6 +1,6 @@
 import { Tooltip, withStyles } from '@material-ui/core';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivStart, FlexDivRow, FlexDiv } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivStart, FlexDivRow, FlexDiv } from 'theme/common';
 
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;
@@ -67,7 +67,7 @@ export const RoundEndContainer = styled(FlexDivColumn)`
         font-size: 30px;
         text-transform: uppercase;
         font-weight: 600;
-        color: #3fd1ff;
+        color: #64d9fe;
     }
     margin-bottom: 15px;
 `;
@@ -79,7 +79,7 @@ export const RoundEndLabel = styled.p`
 export const RoundEnd = styled.p`
     font-weight: 600;
     font-size: 25px;
-    color: #3fd1ff;
+    color: #64d9fe;
 `;
 
 export const RoundAllocationWrapper = styled(FlexDivCentered)`
@@ -109,7 +109,7 @@ export const RoundAllocationLabel = styled.p`
 export const RoundAllocation = styled.p`
     font-size: 25px;
     font-weight: 600;
-    color: #3fd1ff;
+    color: #64d9fe;
 `;
 
 export const RoundInfoContainer = styled(FlexDivColumn)`
@@ -121,7 +121,7 @@ export const RoundInfoLabel = styled.p``;
 export const RoundInfo = styled.p`
     font-size: 20px;
     font-weight: 600;
-    color: #3fd1ff;
+    color: #64d9fe;
 `;
 
 export const Description = styled.div`
@@ -169,7 +169,7 @@ export const Title = styled.span`
 `;
 
 export const UsersInVaultText = styled(ContentInfo)`
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 10px;
 `;
 
@@ -180,39 +180,32 @@ export const VaultFilledText = styled(ContentInfo)`
 
 export const VaultFilledGraphicContainer = styled(FlexDivStart)`
     position: relative;
-    width: 400px;
+    width: 100%;
     height: 14px;
     background: #3b4472;
     border-radius: 15px;
     margin-bottom: 10px;
-    @media (max-width: 575px) {
-        width: 250px;
-    }
 `;
 
 export const VaultFilledGraphicPercentage = styled(FlexDivStart)<{ width: number }>`
     position: absolute;
     width: ${(props) => props.width}%;
     transition: width 1s linear;
-    max-width: 400px;
     height: 10px;
     left: 2px;
     top: 2px;
     background: linear-gradient(269.97deg, #64d9fe 16.18%, #3f75ff 77.77%);
     border-radius: 15px;
-    @media (max-width: 575px) {
-        max-width: 250px;
-    }
 `;
 
 export const SubmitButton = styled.button`
     background: linear-gradient(88.84deg, #2fc9dd 19.98%, #1ca6b9 117.56%);
-    border-radius: 8px;
+    border-radius: 30px;
     margin: 20px 20px;
     font-size: 20px;
     font-weight: 700;
     line-height: 23px;
-    color: #1a1c2b;
+    color: #04045a;
     width: 252px;
     border: none;
     padding: 7px;
@@ -247,21 +240,6 @@ export const ButtonContainer = styled(FlexDivCentered)<{ mobileDirection?: strin
             }
         }
     }
-`;
-
-export const InputContainer = styled(FlexDivColumnCentered)`
-    margin-top: 20px;
-    margin-bottom: 10px;
-    .currency-label {
-        padding: 9px 10px 10px 0;
-    }
-`;
-
-export const InputLabel = styled.p`
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    margin-bottom: 6px;
 `;
 
 export const ValidationTooltip = withStyles(() => ({

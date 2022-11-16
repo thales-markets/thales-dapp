@@ -8,9 +8,6 @@ import {
     Title,
     SubmitButton,
     ButtonContainer,
-    ValidationTooltip,
-    InputLabel,
-    InputContainer,
     Wrapper,
     ToggleContainer,
     Description,
@@ -41,8 +38,6 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-// import SPAAnchor from 'components/SPAAnchor';
-// import { Info } from 'pages/Markets/Home/Home';
 import { VaultTab, VAULT_MAP } from 'constants/vault';
 import { getIsAppReady } from 'redux/modules/app';
 import { UserVaultData, VaultData } from 'types/vault';
@@ -62,16 +57,17 @@ import SimpleLoader from 'components/SimpleLoader';
 import PnL from './PnL';
 import { RouteComponentProps } from 'react-router-dom';
 import vaultContract from 'utils/contracts/sportVaultContract';
-// import Toggle from 'components/Toggle/Toggle';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-import NumericInput from 'components/NumericInput';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import onboardConnector from 'utils/onboardConnector';
 import Tooltip from 'components/Tooltip';
 import OpRewardsBanner from 'components/OpRewardsBanner';
+import NumericInput from 'pages/Token/components/NumericInput';
+import { CurrencyLabel, InputLabel, InputContainer } from 'pages/Token/components/components';
+import FieldValidationMessage from 'components/FieldValidationMessage';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -366,14 +362,6 @@ const Vault: React.FC<VaultProps> = (props) => {
         <>
             <OpRewardsBanner />
             <Wrapper>
-                {/* <Info>
-                <Trans
-                    i18nKey="rewards.op-rewards-banner-message"
-                    components={{
-                        bold: <SPAAnchor href={buildHref(ROUTES.Rewards)} />,
-                    }}
-                />
-            </Info> */}
                 {/* <BackToLink link={buildHref(ROUTES.Options.Vaults)} text={t('vault.back-to-vaults')} /> */}
                 {vaultData && (
                     <>
@@ -587,22 +575,6 @@ const Vault: React.FC<VaultProps> = (props) => {
                                             );
                                         }}
                                     />
-                                    {/* <Toggle
-                                    label={{
-                                        firstLabel: t(`vault.tabs.${VaultTab.DEPOSIT}`),
-                                        secondLabel: t(`vault.tabs.${VaultTab.WITHDRAW}`),
-                                        fontSize: '18px',
-                                    }}
-                                    active={selectedTab === VaultTab.WITHDRAW}
-                                    dotSize="18px"
-                                    dotBackground="#303656"
-                                    dotBorder="3px solid #3FD1FF"
-                                    handleClick={() => {
-                                        setSelectedTab(
-                                            selectedTab === VaultTab.DEPOSIT ? VaultTab.WITHDRAW : VaultTab.DEPOSIT
-                                        );
-                                    }}
-                                /> */}
                                 </ToggleContainer>
                                 {selectedTab === VaultTab.DEPOSIT && (
                                     <>
@@ -622,11 +594,26 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                 <Trans i18nKey="vault.deposit-max-amount-of-users-warning" />
                                             </WarningContentInfo>
                                         )}
-                                        <InputContainer>
-                                            <InputLabel>{t('vault.deposit-amount-label')}:</InputLabel>
-                                            <ValidationTooltip
-                                                open={insufficientBalance || exceededVaultCap || invalidAmount}
-                                                title={
+                                        <InputContainer marginTop={20} style={{ width: '100%' }}>
+                                            <NumericInput
+                                                value={amount}
+                                                disabled={isDepositAmountInputDisabled}
+                                                onChange={(_, value) => setAmount(value)}
+                                                className={
+                                                    insufficientBalance || !!exceededVaultCap || !!invalidAmount
+                                                        ? 'error'
+                                                        : ''
+                                                }
+                                            />
+                                            <InputLabel>{t('vault.deposit-amount-label')}</InputLabel>
+                                            <CurrencyLabel className={isDepositAmountInputDisabled ? 'disabled' : ''}>
+                                                {SYNTHS_MAP.sUSD}
+                                            </CurrencyLabel>
+                                            <FieldValidationMessage
+                                                showValidation={
+                                                    insufficientBalance || !!exceededVaultCap || !!invalidAmount
+                                                }
+                                                message={
                                                     t(
                                                         `${
                                                             insufficientBalance
@@ -643,15 +630,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                         }
                                                     ) as string
                                                 }
-                                            >
-                                                <NumericInput
-                                                    value={amount}
-                                                    disabled={isDepositAmountInputDisabled}
-                                                    onChange={(_, value) => setAmount(value)}
-                                                    placeholder={t('vault.deposit-amount-placeholder')}
-                                                    // currencyLabel={SYNTHS_MAP.sUSD}
-                                                />
-                                            </ValidationTooltip>
+                                            />
                                         </InputContainer>
                                         {vaultData && (
                                             <>

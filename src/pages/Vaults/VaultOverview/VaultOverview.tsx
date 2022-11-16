@@ -130,7 +130,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                                     </VaultInfoContainer>
                                     <VaultInfoContainer>
                                         <VaultInfoLabel>{t('vault.round-end-label')}:</VaultInfoLabel>
-                                        <VaultInfo color="#3fd1ff">
+                                        <VaultInfo color="#64D9FE">
                                             {vaultData.isRoundEnded ? (
                                                 t('vault.round-ended-label')
                                             ) : (

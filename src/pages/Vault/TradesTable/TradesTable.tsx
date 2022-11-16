@@ -96,7 +96,7 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['result']>) => (
                             <>
                                 {cellProps.cell.value && (
-                                    <PositionCircle color="#3FD1FF">
+                                    <PositionCircle color="#64D9FE">
                                         {POSITION_MAP[cellProps.cell.value]}
                                     </PositionCircle>
                                 )}
