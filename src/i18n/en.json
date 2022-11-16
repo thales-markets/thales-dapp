@@ -1915,7 +1915,6 @@
         "strategy-label": "Vault strategy",
         "risks-label": "Vault risks"
     },
-
     "vault": {
         "discount-vault": {
             "title": "Discount Vault",

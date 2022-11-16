@@ -289,21 +289,25 @@ const App = () => {
                             </DappLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.Vaults}>
-                            <DappLayout>
-                                <Vaults />
-                            </DappLayout>
-                        </Route>
-
-                        <Route
-                            exact
-                            path={ROUTES.Options.Vault}
-                            render={(routeProps) => (
+                        {!isPolygon && (
+                            <Route exact path={ROUTES.Options.Vaults}>
                                 <DappLayout>
-                                    <Vault {...routeProps} />
+                                    <Vaults />
                                 </DappLayout>
-                            )}
-                        />
+                            </Route>
+                        )}
+
+                        {!isPolygon && (
+                            <Route
+                                exact
+                                path={ROUTES.Options.Vault}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <Vault {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
+                        )}
 
                         {!isPolygon && (
                             <Route exact path={ROUTES.Options.OPRewards}>

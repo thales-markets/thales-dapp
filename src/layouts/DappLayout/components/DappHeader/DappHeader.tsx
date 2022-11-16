@@ -23,6 +23,8 @@ const DappHeader: React.FC = () => {
 };
 
 const getTitle = (t: any) => {
+    const splittedPathname = location.pathname.split('/');
+
     if (location.pathname === ROUTES.Options.Home) return t('common.sidebar.markets');
     if (location.pathname === ROUTES.Options.RangeMarkets) return t('common.sidebar.ranged-markets');
     if (location.pathname.includes(ROUTES.Governance.Home)) return t('common.sidebar.governance-label');
@@ -32,7 +34,9 @@ const getTitle = (t: any) => {
     if (location.pathname === ROUTES.Options.Leaderboard) return t('options.leaderboard.trading-comp-title');
     if (location.pathname === ROUTES.Options.OPRewards) return t('op-rewards.title');
     if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');
-    if (location.pathname === ROUTES.Options.Vaults) return 'Vaults';
+    if (location.pathname === ROUTES.Options.Vaults) return t('vaults.title');
+    if (`/${splittedPathname[1]}` === ROUTES.Options.Vaults && splittedPathname[2] !== undefined)
+        return t(`vault.${splittedPathname[2]}.title`);
 };
 
 const Container = styled.div`

@@ -58,7 +58,6 @@ export const RoundInfoWrapper = styled(FlexDivColumn)`
         width: 95%;
     }
     padding: 20px;
-    margin-top: 30px;
 `;
 
 export const RoundEndContainer = styled(FlexDivColumn)`
