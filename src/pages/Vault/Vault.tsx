@@ -34,6 +34,7 @@ import {
     RoundAllocation,
     RoundAllocationWrapper,
     UsersInVaultText,
+    TitleVaultIcon,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -53,7 +54,7 @@ import ApprovalModal from 'components/ApprovalModal';
 import { checkAllowance } from 'utils/network';
 import { BigNumber, ethers } from 'ethers';
 import SimpleLoader from 'components/SimpleLoader';
-// import TradesHistory from './TradesHistory';
+import TradesHistory from './TradesHistory';
 import PnL from './PnL';
 import { RouteComponentProps } from 'react-router-dom';
 import vaultContract from 'utils/contracts/sportVaultContract';
@@ -431,7 +432,10 @@ const Vault: React.FC<VaultProps> = (props) => {
                 )}
                 <Container>
                     <LeftContainer>
-                        <Title>{t(`vault.${vaultId}.title`)}</Title>
+                        <Title>
+                            <TitleVaultIcon className={`sidebar-icon icon--${vaultId}`} />
+                            {t(`vault.${vaultId}.title`)}
+                        </Title>
                         {!vaultData ? (
                             <LeftLoaderContainer>
                                 <SimpleLoader />
@@ -825,7 +829,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     </RightContainer>
                 </Container>
                 {vaultData && <PnL vaultAddress={vaultAddress} lifetimePnl={vaultData.lifetimePnl} />}
-                {/* {vaultData && <TradesHistory vaultAddress={vaultAddress} currentRound={vaultData.round} />} */}
+                {vaultData && <TradesHistory vaultAddress={vaultAddress} currentRound={vaultData.round} />}
                 {openApprovalModal && (
                     <ApprovalModal
                         defaultAmount={amount}

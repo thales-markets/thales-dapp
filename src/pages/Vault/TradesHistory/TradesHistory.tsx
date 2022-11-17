@@ -75,15 +75,17 @@ const TradesHistory: React.FC<TradesHistoryProps> = ({ vaultAddress, currentRoun
 const Container = styled(FlexDivColumn)`
     border-radius: 10px;
     position: relative;
-    max-height: 370px;
-    min-height: 370px;
+    max-height: 362px;
+    min-height: 362px;
     overflow-y: auto;
     width: 80%;
     padding: 10px;
     margin-top: 20px;
+    margin-bottom: 30px;
     @media (max-width: 1440px) {
         width: 95%;
     }
+    border: 2px solid rgba(100, 217, 254, 0.5);
 `;
 
 const Header = styled(FlexDivRow)`

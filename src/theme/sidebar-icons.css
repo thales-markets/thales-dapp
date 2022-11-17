@@ -125,3 +125,27 @@
     left: -4px;
     top: -6px;
 }
+
+.icon--discount-vault::before {
+    content: '\0078';
+}
+
+.icon--degen-discount-vault::before {
+    content: '\0077';
+}
+
+.icon--safu-discount-vault::before {
+    content: '\007B';
+}
+
+.icon--strategy::before {
+    content: '\007D';
+}
+
+.icon--risks::before {
+    content: '\007A';
+}
+
+.icon--vaults::before {
+    content: '\007C';
+}

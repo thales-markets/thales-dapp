@@ -1,6 +1,6 @@
-import { PositionName } from 'constants/options';
+import { CurrencyKey } from 'constants/currency';
 import { VaultTradeStatus } from 'constants/vault';
-// import { SportMarketInfo } from './markets';
+import { HistoricalOptionsMarketInfo } from './options';
 
 export type VaultData = {
     round: number;
@@ -44,12 +44,13 @@ export type VaultTrade = {
     amount: number;
     paid: number;
     blockNumber: number;
-    position: PositionName;
-    positionTeam: string;
+    currencyKey: CurrencyKey;
+    strikePrice: number;
+    maturityDate: number;
     market: string;
-    game: string;
-    result: PositionName;
-    wholeMarket: any;
+    result: number;
+    position: number;
+    wholeMarket: HistoricalOptionsMarketInfo;
     status: VaultTradeStatus;
 };
 

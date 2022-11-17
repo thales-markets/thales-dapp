@@ -101,11 +101,3 @@ export const getInfoToastOptions = (message: string) => {
 };
 
 export const REFERRAL_COOKIE_LIFETIME = 648000;
-
-export const ODDS_COLOR = {
-    HOME: '#5FC694',
-    AWAY: '#E26A78',
-    DRAW: '#FAC438',
-    YES: '#5FC694',
-    NO: '#E26A78',
-};

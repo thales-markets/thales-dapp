@@ -1,20 +1,19 @@
 import React, { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { formatTxTimestamp } from 'utils/formatters/date';
+import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/Table';
-import styled from 'styled-components';
-import { ODDS_COLOR, UI_COLORS } from 'constants/ui';
-import { Position, POSITION_MAP, PositionName } from 'constants/options';
 import { buildOptionsMarketLink } from 'utils/routes';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import './style.css';
-import i18n from 'i18n';
 import { formatCurrency } from 'utils/formatters/number';
 import SPAAnchor from 'components/SPAAnchor';
 import { VaultTrade, VaultTrades } from 'types/vault';
+import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
+import { UI_COLORS } from 'constants/ui';
+import styled from 'styled-components';
 import { VaultTradeStatus } from 'constants/vault';
-// import { Colors } from 'styles/common';
+import { isMobile } from 'utils/device';
 
 type TradesTableProps = {
     transactions: VaultTrades;
@@ -24,31 +23,37 @@ type TradesTableProps = {
 
 export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
-    const language = i18n.language;
     // @ts-ignore
     return (
         <>
             <Table
                 columns={[
                     {
-                        Header: <>{t('market.table.date-time-col')}</>,
+                        Header: <>{t('vault.trades-history.table.date-time-col')}</>,
                         accessor: 'timestamp',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['timestamp']>) => (
-                            <p>{formatTxTimestamp(cellProps.cell.value)}</p>
+                            <p style={{ fontSize: `${isMobile() ? '10px' : '12px'}` }}>
+                                {formatTxTimestamp(cellProps.cell.value)}
+                            </p>
                         ),
                         width: 150,
                         sortable: true,
                     },
                     {
-                        Header: <>{t('market.table.game-col')}</>,
-                        accessor: 'game',
+                        Header: <>{t('vault.trades-history.table.asset')}</>,
+                        accessor: 'currencyKey',
                         sortType: 'alphanumeric',
-                        Cell: (cellProps: CellProps<VaultTrade, VaultTrade['game']>) => (
+                        Cell: (cellProps: CellProps<VaultTrade, VaultTrade['currencyKey']>) => (
                             <SPAAnchor
                                 className="hover-underline"
                                 onClick={(e) => e.stopPropagation()}
-                                href={buildOptionsMarketLink(cellProps.row.original.market, language)}
+                                href={buildOptionsMarketLink(cellProps.row.original.market)}
                             >
+                                <CurrencyIcon
+                                    width={`${isMobile() ? '18px' : '22px'}`}
+                                    height={`${isMobile() ? '18px' : '22px'}`}
+                                    currencyKey={cellProps.cell.value}
+                                />
                                 {cellProps.cell.value}
                             </SPAAnchor>
                         ),
@@ -56,49 +61,70 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                         sortable: true,
                     },
                     {
-                        Header: <>{t('market.table.position-col')}</>,
-                        accessor: 'positionTeam',
-                        sortType: 'alphanumeric',
-                        Cell: (cellProps: CellProps<VaultTrade, VaultTrade['positionTeam']>) => (
-                            <p>{cellProps.cell.value}</p>
+                        Header: <>{t('vault.trades-history.table.maturity-date-col')}</>,
+                        accessor: 'maturityDate',
+                        Cell: (cellProps: CellProps<VaultTrade, VaultTrade['maturityDate']>) => (
+                            <p>{formatShortDate(cellProps.cell.value)}</p>
                         ),
                         width: 150,
                         sortable: true,
                     },
                     {
-                        Header: <>{t('market.table.amount-col')}</>,
+                        Header: <>{t('vault.trades-history.table.strike-price-col')}</>,
+                        accessor: 'strikePrice',
                         sortType: 'basic',
-                        accessor: 'amount',
-                        Cell: (cellProps: CellProps<VaultTrade, VaultTrade['amount']>) => (
-                            <>
-                                <PositionCircle color={ODDS_COLOR[cellProps.row.original.position]}>
-                                    {POSITION_MAP[cellProps.row.original.position]}
-                                </PositionCircle>
-                                <p>{formatCurrency(cellProps.cell.value)}</p>
-                            </>
+                        Cell: (cellProps: CellProps<VaultTrade, VaultTrade['strikePrice']>) => (
+                            <p>${formatCurrency(cellProps.cell.value)}</p>
                         ),
                         width: 150,
                         sortable: true,
                     },
                     {
-                        Header: <>{t('market.table.usd-value-col')}</>,
+                        Header: <>{t('vault.trades-history.table.amount-col')}</>,
+                        accessor: 'amount',
+                        sortType: 'basic',
+                        Cell: (cellProps: CellProps<VaultTrade, VaultTrade['amount']>) => (
+                            <p>
+                                {cellProps.cell.value}
+                                <Icon
+                                    style={{
+                                        color: `${
+                                            cellProps.cell.row.original.position === 0 ? UI_COLORS.GREEN : UI_COLORS.RED
+                                        }`,
+                                        marginLeft: 6,
+                                    }}
+                                    className={`v2-icon v2-icon--${
+                                        cellProps.cell.row.original.position === 0 ? 'up' : 'down'
+                                    }`}
+                                ></Icon>
+                            </p>
+                        ),
+                        width: 150,
+                        sortable: true,
+                    },
+                    {
+                        Header: <>{t('vault.trades-history.table.usd-value-col')}</>,
                         accessor: 'paid',
+                        sortType: 'basic',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['paid']>) => (
                             <p>${formatCurrency(cellProps.cell.value)}</p>
                         ),
                         width: 150,
                         sortable: true,
-                        sortType: 'basic',
                     },
                     {
-                        Header: <>{t('market.table.result-col')}</>,
+                        Header: <>{t('vault.trades-history.table.result-col')}</>,
                         accessor: 'result',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['result']>) => (
                             <>
-                                {cellProps.cell.value && (
-                                    <PositionCircle color="#64D9FE">
-                                        {POSITION_MAP[cellProps.cell.value]}
-                                    </PositionCircle>
+                                {cellProps.cell.value !== null && (
+                                    <Icon
+                                        style={{
+                                            color: `${cellProps.cell.value === 0 ? UI_COLORS.GREEN : UI_COLORS.RED}`,
+                                            marginRight: 6,
+                                        }}
+                                        className={`v2-icon v2-icon--${cellProps.cell.value === 0 ? 'up' : 'down'}`}
+                                    ></Icon>
                                 )}
                                 {cellProps.row.original.status !== VaultTradeStatus.IN_PROGRESS && (
                                     <Status
@@ -115,20 +141,9 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                         ),
                         width: 150,
                         sortable: true,
-                        sortType: (rowA: any, rowB: any, _columnId?: string, desc?: boolean) => {
-                            let aValue = (Position[rowA.original.result as PositionName] ?? -1) + 1;
-                            let bValue = (Position[rowB.original.result as PositionName] ?? -1) + 1;
-                            if (!aValue) {
-                                aValue = desc ? -1 : 3;
-                            }
-                            if (!bValue) {
-                                bValue = desc ? -1 : 3;
-                            }
-                            return aValue < bValue ? -1 : 1;
-                        },
                     },
                     {
-                        Header: <>{t('market.table.tx-status-col')}</>,
+                        Header: <>{t('vault.trades-history.table.tx-status-col')}</>,
                         accessor: 'hash',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['hash']>) => (
                             <ViewEtherscanLink hash={cellProps.cell.value} />
@@ -139,28 +154,22 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                 data={transactions}
                 isLoading={isLoading}
                 noResultsMessage={noResultsMessage}
-                // tableRowStyles={{ minHeight: '50px' }}
+                tableHeadCellStyles={{ color: '#64D9FE' }}
+                tableRowCellStyles={{ fontSize: `${isMobile() ? '10px' : '14px'}` }}
             />
         </>
     );
 });
 
-const PositionCircle = styled.span<{ color: string }>`
-    width: 20px;
-    height: 20px;
-    border-radius: 100%;
-    display: inline-block;
-    text-align: center;
-    font-weight: bold;
-    margin-right: 10px;
-    line-height: 21px;
-    padding-left: 1px;
-    background-color: ${(props) => props.color};
-    color: #1a1c2b;
-`;
-
 const Status = styled.span<{ color: string }>`
     color: ${(props) => props.color};
+`;
+
+const Icon = styled.i`
+    font-size: 19px;
+    @media (max-width: 512px) {
+        font-size: 16px;
+    }
 `;
 
 export default TradesTable;

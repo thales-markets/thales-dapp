@@ -8,10 +8,11 @@ export const Wrapper = styled(FlexDivColumn)`
 `;
 
 export const Container = styled(FlexDivRow)`
-    width: 95%;
+    width: 100%;
     position: relative;
     align-items: start;
     @media (max-width: 767px) {
+        width: 95%;
         flex-direction: column;
         align-items: center;
     }

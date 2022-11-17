@@ -68,7 +68,6 @@ export const RoundEndContainer = styled(FlexDivColumn)`
     font-size: 20px;
     span {
         font-size: 30px;
-        text-transform: uppercase;
         font-weight: 600;
         color: #64d9fe;
     }
@@ -169,6 +168,14 @@ export const Title = styled.span`
     @media (max-width: 767px) {
         margin-top: 0px;
     }
+`;
+
+export const TitleVaultIcon = styled.i`
+    font-weight: 400;
+    font-size: 30px;
+    margin-right: 8px;
+    top: -3px;
+    position: relative;
 `;
 
 export const UsersInVaultText = styled(ContentInfo)`

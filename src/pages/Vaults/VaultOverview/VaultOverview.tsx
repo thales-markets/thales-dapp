@@ -13,6 +13,8 @@ import {
     VaultInfo,
     VaultBottomWrapper,
     VaultTopWrapper,
+    TitleVaultIcon,
+    VaultSectionIcon,
 } from './styled-components';
 import SPAAnchor from 'components/SPAAnchor';
 import i18n from 'i18n';
@@ -27,7 +29,6 @@ import { formatPercentage, formatPercentageWithSign } from 'utils/formatters/num
 import SimpleLoader from 'components/SimpleLoader';
 import TimeRemaining from 'components/TimeRemaining';
 import { FlexDivColumn } from 'theme/common';
-import styled from 'styled-components';
 import { UI_COLORS } from 'constants/ui';
 
 type VaultOverviewProps = {
@@ -66,7 +67,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                 <FlexDivColumn style={{ height: '100%' }}>
                     <VaultContainer>
                         <VaultTitle>
-                            <TitleVaultIcon className={`icon icon--${vaultId}`} />
+                            <TitleVaultIcon className={`sidebar-icon icon--${vaultId}`} />
                             {t(`vault.${vaultId}.title`)}
                         </VaultTitle>
                         {!vaultData ? (
@@ -77,7 +78,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                             <FlexDivColumn>
                                 <VaultTopWrapper>
                                     <VaultSectionTitle>
-                                        <VaultSectionIcon className={`icon icon--strategy`} />
+                                        <VaultSectionIcon className={`sidebar-icon icon--strategy`} />
                                         {t('vaults.strategy-label')}
                                     </VaultSectionTitle>
                                     <VaultSectionDescription>
@@ -93,7 +94,7 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                                         />
                                     </VaultSectionDescription>
                                     <VaultSectionTitle>
-                                        <VaultSectionIcon className={`icon icon--risks`} />
+                                        <VaultSectionIcon className={`sidebar-icon icon--risks`} />
                                         {t('vaults.risks-label')}
                                     </VaultSectionTitle>
                                     <VaultSectionDescription>
@@ -151,21 +152,5 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
         </SpaContainer>
     );
 };
-
-const TitleVaultIcon = styled.i`
-    font-weight: 400;
-    font-size: 28px;
-    margin-right: 8px;
-    top: -2px;
-    position: relative;
-`;
-
-const VaultSectionIcon = styled.i`
-    font-weight: 400;
-    font-size: 25px;
-    margin-right: 8px;
-    top: -2px;
-    position: relative;
-`;
 
 export default VaultOverview;

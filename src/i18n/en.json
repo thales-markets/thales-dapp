@@ -1985,7 +1985,19 @@
         "trades-history": {
             "title": "Vault trades history",
             "no-trades": "No trades associated with this vault in the selected round.",
-            "round-label": "Round"
+            "round-label": "Round",
+            "table": {
+                "date-time-col": "date | time",
+                "position-col": "position",
+                "amount-col": "amount",
+                "paid-col": "paid",
+                "asset": "asset",
+                "maturity-date-col": "maturity",
+                "strike-price-col": "strike price",
+                "usd-value-col": "usd value",
+                "result-col": "result",
+                "tx-status-col": "tx status"
+            }
         },
         "pnl": {
             "title": "PnL per round",

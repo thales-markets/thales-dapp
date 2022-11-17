@@ -2,10 +2,8 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
-import { Position, PositionName } from 'constants/options';
 import { VaultTrades, VaultTrade } from 'types/vault';
-import { getEtherscanTxLink } from 'utils/etherscan';
-import i18n from 'i18n';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { VaultTradeStatus } from 'constants/vault';
 
 const useVaultTradesQuery = (vaultAddress: string, networkId: NetworkId, options?: UseQueryOptions<VaultTrades>) => {
@@ -17,32 +15,28 @@ const useVaultTradesQuery = (vaultAddress: string, networkId: NetworkId, options
                     network: networkId,
                     vault: vaultAddress,
                 });
-                return vaultTrades.map((trade: VaultTrade) => {
-                    const game = `${trade.wholeMarket.homeTeam} - ${trade.wholeMarket.awayTeam}`;
-                    const position = Position[trade.position];
-                    const positionTeam =
-                        // @ts-ignore
-                        trade.wholeMarket[`${position.toLowerCase()}Team`] || i18n.t('markets.market-card.draw');
-                    const result = Position[trade.wholeMarket.finalResult - 1] as PositionName;
-                    const link = getEtherscanTxLink(networkId, trade.hash);
+                const mappedTrades = vaultTrades.map((trade: VaultTrade) => {
+                    const result = trade.wholeMarket.result;
+                    const currencyKey = hexToAscii(trade.wholeMarket.currencyKey);
+                    const strikePrice = bigNumberFormatter(trade.wholeMarket.strikePrice);
+                    const maturityDate = trade.wholeMarket.maturityDate * 1000;
                     const status =
-                        Number(trade.wholeMarket.finalResult) === 0
+                        result === null
                             ? VaultTradeStatus.IN_PROGRESS
-                            : // @ts-ignore
-                            (position as PositionName) === result
+                            : Number(result) === trade.position
                             ? VaultTradeStatus.WIN
                             : VaultTradeStatus.LOSE;
 
                     return {
                         ...trade,
-                        game,
-                        position,
-                        positionTeam,
+                        currencyKey,
+                        strikePrice,
+                        maturityDate,
                         result,
-                        link,
                         status,
                     };
                 });
+                return mappedTrades;
             } catch (e) {
                 console.log(e);
                 return [];
@@ -53,6 +47,18 @@ const useVaultTradesQuery = (vaultAddress: string, networkId: NetworkId, options
             ...options,
         }
     );
+};
+
+const hexToAscii = (str: string) => {
+    const hex = str.toString();
+    let out = '';
+    for (let n = 2; n < hex.length; n += 2) {
+        const nextPair = hex.substr(n, 2);
+        if (nextPair !== '00') {
+            out += String.fromCharCode(parseInt(nextPair, 16));
+        }
+    }
+    return out;
 };
 
 export default useVaultTradesQuery;
