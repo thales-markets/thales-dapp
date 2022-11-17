@@ -69,6 +69,7 @@ import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputLabel, InputContainer } from 'pages/Token/components/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
+import Footer from 'components/Footer';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -840,6 +841,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     />
                 )}
             </Wrapper>
+            <Footer />
         </>
     );
 };

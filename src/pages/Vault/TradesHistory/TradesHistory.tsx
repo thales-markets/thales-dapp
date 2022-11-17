@@ -81,7 +81,6 @@ const Container = styled(FlexDivColumn)`
     width: 80%;
     padding: 10px;
     margin-top: 20px;
-    margin-bottom: 30px;
     @media (max-width: 1440px) {
         width: 95%;
     }

@@ -1,3 +1,4 @@
+import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import React from 'react';
 import { Container, Wrapper } from './styled-components';
@@ -14,6 +15,7 @@ const Vault: React.FC = () => {
                     <VaultOverview vaultId="safu-discount-vault" />
                 </Container>
             </Wrapper>
+            <Footer />
         </>
     );
 };
