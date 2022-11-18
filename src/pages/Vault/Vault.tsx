@@ -475,8 +475,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                             ),
                                             skewImpactLimit: formatCurrency(vaultData.skewImpactLimit),
                                             allocationLimitsPerMarketPerRound: formatPercentage(
-                                                vaultData.allocationLimitsPerMarketPerRound,
-                                                0
+                                                vaultData.allocationLimitsPerMarketPerRound
                                             ),
                                             maxAllowedDeposit: formatCurrencyWithSign(
                                                 USD_SIGN,
