@@ -96,7 +96,7 @@ export const BackIcon = styled.i`
 
 export const TitleVaultIcon = styled.i`
     font-weight: 400;
-    font-size: 38px;
+    font-size: 36px;
     margin-left: 8px;
     top: -2px;
     position: relative;
