@@ -64,6 +64,7 @@ import { ReactComponent as BUSDIcon } from 'assets/currencies/crypto/BUSD.svg';
 import { ReactComponent as MAGICIcon } from 'assets/currencies/crypto/MAGIC.svg';
 import { ReactComponent as DPXIcon } from 'assets/currencies/crypto/DOPEX.svg';
 import { ReactComponent as GMXIcon } from 'assets/currencies/crypto/GMX.svg';
+import { ReactComponent as CAKEIcon } from 'assets/currencies/crypto/CAKE.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -173,6 +174,7 @@ export const CRYPTO_CURRENCY = [
     'MAGIC',
     'DPX',
     'GMX',
+    'CAKE',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -267,6 +269,7 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.MAGIC]: MAGICIcon,
     [CRYPTO_CURRENCY_MAP.DPX]: DPXIcon,
     [CRYPTO_CURRENCY_MAP.GMX]: GMXIcon,
+    [CRYPTO_CURRENCY_MAP.CAKE]: CAKEIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -339,6 +342,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.MAGIC]: 'Magic',
     [CRYPTO_CURRENCY_MAP.DPX]: 'Dopex',
     [CRYPTO_CURRENCY_MAP.GMX]: 'GMX',
+    [CRYPTO_CURRENCY_MAP.CAKE]: 'PancakeSwap',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
@@ -417,6 +421,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.MAGIC]: 'magic',
     [CRYPTO_CURRENCY_MAP.DPX]: 'dopex',
     [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
+    [CRYPTO_CURRENCY_MAP.GMX]: 'pancakeswap-token',
 };
 
 export const currencyKeyToDataFeedSourceMap = {
@@ -585,6 +590,10 @@ export const currencyKeyToDataFeedSourceMap = {
         link: '',
     },
     [CRYPTO_CURRENCY_MAP.ETC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.CAKE]: {
         source: 'CHAINLINK',
         link: '',
     },
