@@ -13,7 +13,7 @@ const useVaultUserTransactionsQuery = (
         QUERY_KEYS.Vault.UserTransactions(vaultAddress, networkId),
         async () => {
             try {
-                const vaultUserTransactions = await thalesData.sportMarkets.vaultUserTransactions({
+                const vaultUserTransactions = await thalesData.binaryOptions.vaultUserTransactions({
                     network: networkId,
                     vault: vaultAddress,
                 });
