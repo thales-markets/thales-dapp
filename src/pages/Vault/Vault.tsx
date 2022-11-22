@@ -70,6 +70,7 @@ import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputLabel, InputContainer } from 'pages/Token/components/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Footer from 'components/Footer';
+import UserTransactions from './UserTransactions';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -830,6 +831,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 </Container>
                 {vaultData && <PnL vaultAddress={vaultAddress} lifetimePnl={vaultData.lifetimePnl} />}
                 {vaultData && <TradesHistory vaultAddress={vaultAddress} currentRound={vaultData.round} />}
+                {vaultData && <UserTransactions vaultAddress={vaultAddress} currentRound={vaultData.round} />}
                 {openApprovalModal && (
                     <ApprovalModal
                         defaultAmount={amount}
