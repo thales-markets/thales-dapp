@@ -230,7 +230,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
         },
     },
     56: {
-        name: 'BSC',
+        name: 'BNBChain',
         icon: BSCLogo,
         changeNetwork: async (networkId: number) => {
             const bscNetworkParams = BSC_NETWORK[networkId];
