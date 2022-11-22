@@ -421,7 +421,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.MAGIC]: 'magic',
     [CRYPTO_CURRENCY_MAP.DPX]: 'dopex',
     [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
-    [CRYPTO_CURRENCY_MAP.GMX]: 'pancakeswap-token',
+    [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
 };
 
 export const currencyKeyToDataFeedSourceMap = {
