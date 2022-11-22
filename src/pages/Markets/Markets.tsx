@@ -16,7 +16,7 @@ import InfoBanner from 'components/InfoBanner';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
-import { getIsArbitrum, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
 import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
@@ -33,7 +33,8 @@ const Markets: React.FC = () => {
 
     const showOPBanner = getIsOVM(networkId);
 
-    const showDiscountMarkets = getIsOVM(networkId) || getIsArbitrum(networkId) || getIsPolygon(networkId);
+    const showDiscountMarkets =
+        getIsOVM(networkId) || getIsArbitrum(networkId) || getIsPolygon(networkId) || getIsBSC(networkId);
 
     const dispatch = useDispatch();
 
