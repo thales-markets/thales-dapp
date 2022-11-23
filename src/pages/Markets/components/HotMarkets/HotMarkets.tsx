@@ -54,7 +54,6 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             ?.filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
             .sort((a, b) => a.timeRemaining - b.timeRemaining)
             .forEach((market) => {
-                if (market.longPrice == 0 || market.shortPrice == 0) return;
                 const discount = (discountsMap as any).get(market.address.toLowerCase());
 
                 if (discount) {
@@ -242,7 +241,6 @@ const DiscountBanner = styled.div`
     @media (max-width: 768px) {
         display: none;
     }
-}
 `;
 
 const DiscountTitle = styled.span`
