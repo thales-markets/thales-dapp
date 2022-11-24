@@ -54,7 +54,6 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             ?.filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
             .sort((a, b) => a.timeRemaining - b.timeRemaining)
             .forEach((market) => {
-                if (market.longPrice == 0 || market.shortPrice == 0) return;
                 const discount = (discountsMap as any).get(market.address.toLowerCase());
 
                 if (discount) {
@@ -92,7 +91,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     }, [optionsMarkets]);
 
     const moveLeft = () => {
-        if (firstHotIndex === 0) setFirstHotIndex(currentMarkets.length - 1 - CARDS_TO_SHOW);
+        if (firstHotIndex === 0) return;
         if (firstHotIndex > 0) setFirstHotIndex(firstHotIndex - 1);
         trackEvent({
             category: 'Markets',
@@ -104,7 +103,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             category: 'Markets',
             action: 'move-right-hot-markets',
         });
-        setFirstHotIndex(firstHotIndex + CARDS_TO_SHOW < currentMarkets.length - 1 ? firstHotIndex + 1 : 0);
+        setFirstHotIndex(firstHotIndex + CARDS_TO_SHOW < currentMarkets.length ? firstHotIndex + 1 : 0);
     };
 
     const slicedMarkets = useMemo(() => {
@@ -130,7 +129,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
         return currentMarkets.slice(
             firstHotIndex,
-            firstHotIndex + CARDS_TO_SHOW > currentMarkets.length - 1
+            firstHotIndex + CARDS_TO_SHOW > currentMarkets.length
                 ? firstHotIndex + CARDS_TO_SHOW - currentMarkets.length + 1
                 : firstHotIndex + CARDS_TO_SHOW
         );
@@ -176,7 +175,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                         ))}
                         <Arrow
                             onClick={moveRight}
-                            disabled={firstHotIndex + 5 == currentMarkets?.length - 1}
+                            disabled={firstHotIndex + CARDS_TO_SHOW == currentMarkets?.length}
                             className={'icon icon--right'}
                         />
                     </>
@@ -242,7 +241,6 @@ const DiscountBanner = styled.div`
     @media (max-width: 768px) {
         display: none;
     }
-}
 `;
 
 const DiscountTitle = styled.span`
