@@ -55,11 +55,42 @@ const Governance: React.FC = () => {
                     </ListWrapper>
 
                     <Paragraph>
-                        <Trans i18nKey="articles.governance.paragraphs.intro1" components={{ bold: <strong /> }} />
+                        <Trans
+                            i18nKey="articles.governance.paragraphs.intro1"
+                            components={{
+                                bold: <strong />,
+                                urlStaking: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://thalesmarket.io/token?activeButtonId=staking"
+                                    />
+                                ),
+                                urlVoting: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://thalesmarket.io/governance/thalescouncil.eth/"
+                                    />
+                                ),
+                            }}
+                        />
                     </Paragraph>
                     <ChartWrapper>{theme !== Theme.Dark ? <Chart /> : <ChartBlack />}</ChartWrapper>
                     <Paragraph>
-                        <Trans i18nKey="articles.governance.paragraphs.intro2" components={{ bold: <strong /> }} />
+                        <Trans
+                            i18nKey="articles.governance.paragraphs.intro2"
+                            components={{
+                                bold: <strong />,
+                                url: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://medium.com/@Thales.Academy/how-to-use-github-to-submit-a-tip-e7d0047b54fd"
+                                    />
+                                ),
+                            }}
+                        />
                     </Paragraph>
                     <H2 id="section1">{t('articles.governance.list.1')}</H2>
                     <Paragraph>
@@ -84,6 +115,24 @@ const Governance: React.FC = () => {
                                         href="https://github.com/thales-markets/thales-improvement-proposals/tree/main/TIPs"
                                     />
                                 ),
+                                urlDisc: <a target="_blank" rel="noreferrer" href="https://discord.gg/thales" />,
+                                urlGov: (
+                                    <a target="_blank" rel="noreferrer" href="https://thalesmarket.io/governance" />
+                                ),
+                                urlDraft: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href=" https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-1.md"
+                                    />
+                                ),
+                                urlStaking: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://thalesmarket.io/token?activeButtonId=staking"
+                                    />
+                                ),
                             }}
                         />
                     </Paragraph>
@@ -95,7 +144,13 @@ const Governance: React.FC = () => {
 
                     <H2 id="section4">{t('articles.governance.list.4')}</H2>
                     <Paragraph>
-                        <Trans i18nKey="articles.governance.paragraphs.4" components={{ bold: <strong /> }} />
+                        <Trans
+                            i18nKey="articles.governance.paragraphs.4"
+                            components={{
+                                bold: <strong />,
+                                url: <a target="_blank" rel="noreferrer" href="https://contracts.thalesmarket.io/" />,
+                            }}
+                        />
                     </Paragraph>
 
                     <H2 id="section5">{t('articles.governance.list.5')}</H2>

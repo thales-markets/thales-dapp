@@ -77,10 +77,6 @@ const WizardFaq: React.FC = () => {
             question: 'wizard-page.question16',
             answer: 'wizard-page.answer16',
         },
-        {
-            question: 'wizard-page.question17',
-            answer: 'wizard-page.answer17',
-        },
     ];
 
     return (
