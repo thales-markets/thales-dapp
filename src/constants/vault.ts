@@ -21,7 +21,7 @@ export const VAULT_MAP: Record<string, any> = {
     'degen-discount-vault': {
         addresses: {
             5: '',
-            10: '0x9d3ABEAf22ddF68E72b865CA3b23ED880A3be41F',
+            10: '0x43318DE9E8f65b591598F17aDD87ae7247649C83',
             42: '',
             420: '',
         },
