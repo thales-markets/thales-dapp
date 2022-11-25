@@ -38,18 +38,22 @@ const getTitle = (t: any) => {
     if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');
     if (location.pathname === ROUTES.Options.Vaults) return t('vaults.title');
     if (`/${splittedPathname[1]}` === ROUTES.Options.Vaults && splittedPathname[2] !== undefined)
-        return (
-            <>
-                <SPAAnchor href={buildHref(ROUTES.Options.Vaults)}>
-                    <BackLinkContainer>
-                        <BackIcon className={`icon icon--left`} />
-                        {t('vaults.title')}
-                    </BackLinkContainer>
-                </SPAAnchor>{' '}
-                / {t(`vault.${splittedPathname[2]}.title`)}
-                <TitleVaultIcon className={`sidebar-icon icon--${splittedPathname[2]}`} />
-            </>
-        );
+        if (splittedPathname[2] === '') {
+            return t('vaults.title');
+        } else {
+            return (
+                <>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Vaults)}>
+                        <BackLinkContainer>
+                            <BackIcon className={`icon icon--left`} />
+                            {t('vaults.title')}
+                        </BackLinkContainer>
+                    </SPAAnchor>{' '}
+                    / {t(`vault.${splittedPathname[2]}.title`)}
+                    <TitleVaultIcon className={`sidebar-icon icon--${splittedPathname[2]}`} />
+                </>
+            );
+        }
 };
 
 const Container = styled.div`
