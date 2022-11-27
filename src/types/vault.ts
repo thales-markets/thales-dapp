@@ -52,6 +52,7 @@ export type VaultTrade = {
     position: number;
     wholeMarket: HistoricalOptionsMarketInfo;
     status: VaultTradeStatus;
+    round: number;
 };
 
 export type VaultTrades = VaultTrade[];
