@@ -26,6 +26,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
             color: state?.isFocused || state.isSelected ? '#04045a' : '#64d9fe',
             backgroundColor: state?.isFocused || state.isSelected ? '#64d9fe' : '#04045a',
             opacity: state.isSelected ? 0.7 : 1,
+            cursor: 'pointer',
         }),
         control: (provided: any) => ({
             ...provided,
@@ -38,6 +39,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
                 boxShadow: '0px 1px 15px rgba(100, 217, 254, 0.7)',
             },
             width: width,
+            cursor: 'pointer',
         }),
         placeholder: (provided: any) => ({
             ...provided,

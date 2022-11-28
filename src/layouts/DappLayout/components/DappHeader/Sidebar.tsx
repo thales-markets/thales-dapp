@@ -32,6 +32,7 @@ const Sidebar: React.FC = () => {
     const showWizardPage = !isPolygon && !isMobileState && !isBSC && !isArbitrum;
     const showTokenPage = !isPolygon && !isBSC && !isArbitrum;
     const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
+    const showVaultsPage = !isPolygon && !isBSC && !isArbitrum;
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -84,6 +85,15 @@ const Sidebar: React.FC = () => {
                     iconName="ranged-markets"
                     label={t('common.sidebar.ranged-markets')}
                 />
+
+                {showVaultsPage && (
+                    <DappHeaderItem
+                        className={`show ${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
+                        href={buildHref(ROUTES.Options.Vaults)}
+                        iconName="vaults"
+                        label={t('common.sidebar.vaults-label')}
+                    />
+                )}
 
                 {/* {isPolygon && (
                     <DappHeaderItem

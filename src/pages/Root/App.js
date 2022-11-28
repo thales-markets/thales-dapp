@@ -40,6 +40,9 @@ const RangeMarkets = lazy(() => import(/* webpackChunkName: "RangeMarkets" */ '.
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 
+const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
+const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
+
 const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token/Token'));
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales/TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
@@ -285,6 +288,26 @@ const App = () => {
                                 <Referral />
                             </DappLayout>
                         </Route>
+
+                        {!isPolygon && (
+                            <Route exact path={ROUTES.Options.Vaults}>
+                                <DappLayout>
+                                    <Vaults />
+                                </DappLayout>
+                            </Route>
+                        )}
+
+                        {!isPolygon && (
+                            <Route
+                                exact
+                                path={ROUTES.Options.Vault}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <Vault {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
+                        )}
 
                         {!isPolygon && (
                             <Route exact path={ROUTES.Options.OPRewards}>
