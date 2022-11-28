@@ -2,6 +2,8 @@ import React, { lazy, Suspense } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import ROUTES from 'constants/routes';
+import SPAAnchor from 'components/SPAAnchor';
+import { buildHref } from 'utils/routes';
 
 const UserCard = lazy(() => import(/* webpackChunkName: "UserCard" */ './UserCard'));
 const Sidebar = lazy(() => import(/* webpackChunkName: "Sidebar" */ './Sidebar'));
@@ -23,6 +25,8 @@ const DappHeader: React.FC = () => {
 };
 
 const getTitle = (t: any) => {
+    const splittedPathname = location.pathname.split('/');
+
     if (location.pathname === ROUTES.Options.Home) return t('common.sidebar.markets');
     if (location.pathname === ROUTES.Options.RangeMarkets) return t('common.sidebar.ranged-markets');
     if (location.pathname.includes(ROUTES.Governance.Home)) return t('common.sidebar.governance-label');
@@ -32,6 +36,24 @@ const getTitle = (t: any) => {
     if (location.pathname === ROUTES.Options.Leaderboard) return t('options.leaderboard.trading-comp-title');
     if (location.pathname === ROUTES.Options.OPRewards) return t('op-rewards.title');
     if (location.pathname === ROUTES.Options.Wizard) return t('wizard-page.title');
+    if (location.pathname === ROUTES.Options.Vaults) return t('vaults.title');
+    if (`/${splittedPathname[1]}` === ROUTES.Options.Vaults && splittedPathname[2] !== undefined)
+        if (splittedPathname[2] === '') {
+            return t('vaults.title');
+        } else {
+            return (
+                <>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Vaults)}>
+                        <BackLinkContainer>
+                            <BackIcon className={`icon icon--left`} />
+                            {t('vaults.title')}
+                        </BackLinkContainer>
+                    </SPAAnchor>{' '}
+                    / {t(`vault.${splittedPathname[2]}.title`)}
+                    <TitleVaultIcon className={`sidebar-icon icon--${splittedPathname[2]}`} />
+                </>
+            );
+        }
 };
 
 const Container = styled.div`
@@ -60,6 +82,28 @@ const PageTitle = styled.p`
     @media (max-width: 568px) {
         display: none;
     }
+`;
+
+export const BackLinkContainer = styled.span`
+    :hover {
+        text-decoration: underline;
+    }
+`;
+
+export const BackIcon = styled.i`
+    font-weight: 400;
+    font-size: 28px;
+    margin-right: 6px;
+    top: -2px;
+    position: relative;
+`;
+
+export const TitleVaultIcon = styled.i`
+    font-weight: 400;
+    font-size: 36px;
+    margin-left: 8px;
+    top: -2px;
+    position: relative;
 `;
 
 export default DappHeader;

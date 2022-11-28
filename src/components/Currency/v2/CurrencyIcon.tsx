@@ -115,6 +115,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 
 const Content = styled.div`
     position: relative;
+    display: flex;
 `;
 
 const Badge = styled.i<{ color: string; height: number }>`

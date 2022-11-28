@@ -296,6 +296,18 @@ export const QUERY_KEYS = {
     Bungee: {
         Tokens: () => ['bungee', 'tokens'],
     },
+    Vault: {
+        Data: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'data', networkId],
+        UserData: (vaultAddress: string, walletAddress: string, networkId: NetworkId) => [
+            vaultAddress,
+            'data',
+            walletAddress,
+            networkId,
+        ],
+        Trades: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'trades', networkId],
+        PnL: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'pnl', networkId],
+        UserTransactions: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'userTransactions', networkId],
+    },
 };
 
 export default QUERY_KEYS;

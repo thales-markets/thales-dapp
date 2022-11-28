@@ -65,7 +65,7 @@ export const formatCurrencyWithSign = (
 ) =>
     `${value < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
         typeof value == 'number' ? Math.abs(value) : value,
-        decimals || getPrecision(value),
+        decimals !== undefined ? decimals : getPrecision(value),
         trimDecimals
     )}`;
 

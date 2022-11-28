@@ -7,10 +7,12 @@ export const Container = styled.div`
     font-size: 10px;
 `;
 
-export const Icon = styled.i<{ color?: string; fontSize?: string; margin?: string }>`
+export const Icon = styled.i<{ color?: string; fontSize?: string; margin?: string; top?: string }>`
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
     color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
+    top: ${(_props) => (_props?.top ? _props.top : '')};
+    position: relative;
 `;
 
 export const Text = styled.span<{ margin?: string }>`
