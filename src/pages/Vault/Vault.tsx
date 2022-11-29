@@ -35,6 +35,11 @@ import {
     RoundAllocationWrapper,
     UsersInVaultText,
     TitleVaultIcon,
+    VariablesContainer,
+    Info,
+    Variables,
+    VariablesTitle,
+    Link,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -71,6 +76,7 @@ import { CurrencyLabel, InputLabel, InputContainer } from 'pages/Token/component
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Footer from 'components/Footer';
 import UserTransactions from './UserTransactions';
+import { LINKS } from 'constants/links';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -444,6 +450,16 @@ const Vault: React.FC<VaultProps> = (props) => {
                             </LeftLoaderContainer>
                         ) : (
                             <>
+                                {' '}
+                                <Info>
+                                    <Trans
+                                        i18nKey={`vault.info`}
+                                        components={{
+                                            p: <p />,
+                                            vaultLink: <Link href={LINKS.Vaults} target="_blank" rel="noreferrer" />,
+                                        }}
+                                    />{' '}
+                                </Info>
                                 <Description>
                                     <Trans
                                         i18nKey={`vault.${vaultId}.description`}
@@ -455,45 +471,62 @@ const Vault: React.FC<VaultProps> = (props) => {
                                             discount: formatPercentage(Math.abs(vaultData.skewImpactLimit), 0),
                                         }}
                                     />
-                                    <Trans
-                                        i18nKey={`vault.variables`}
-                                        components={{
-                                            p: <p />,
-                                            ul: <ul />,
-                                            li: <li />,
-                                        }}
-                                        values={{
-                                            utilizationRate: formatPercentage(vaultData.utilizationRate, 0),
-                                            priceLowerLimit: formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                vaultData.priceLowerLimit,
-                                                2
-                                            ),
-                                            priceUpperLimit: formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                vaultData.priceUpperLimit,
-                                                2
-                                            ),
-                                            skewImpactLimit: formatCurrency(vaultData.skewImpactLimit),
-                                            allocationLimitsPerMarketPerRound: formatPercentage(
-                                                vaultData.allocationLimitsPerMarketPerRound
-                                            ),
-                                            maxAllowedDeposit: formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                vaultData.maxAllowedDeposit,
-                                                0
-                                            ),
-                                            maxAllowedUsers: vaultData.maxAllowedUsers,
-                                            minTradeAmount: vaultData.minTradeAmount,
-                                            minDepositAmount: formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                vaultData.minDepositAmount,
-                                                0
-                                            ),
-                                            roundLength: 7, // vaultData.roundLength,
-                                        }}
-                                    />
                                 </Description>
+                                <VariablesTitle>{t(`vault.variables-title`)}:</VariablesTitle>
+                                <VariablesContainer>
+                                    <Variables>
+                                        <Trans
+                                            i18nKey={`vault.variables-left`}
+                                            components={{
+                                                p: <p />,
+                                                ul: <ul />,
+                                                li: <li />,
+                                            }}
+                                            values={{
+                                                utilizationRate: formatPercentage(vaultData.utilizationRate, 0),
+                                                priceLowerLimit: formatCurrencyWithSign(
+                                                    USD_SIGN,
+                                                    vaultData.priceLowerLimit,
+                                                    2
+                                                ),
+                                                priceUpperLimit: formatCurrencyWithSign(
+                                                    USD_SIGN,
+                                                    vaultData.priceUpperLimit,
+                                                    2
+                                                ),
+                                                skewImpactLimit: formatCurrency(vaultData.skewImpactLimit),
+                                                allocationLimitsPerMarketPerRound: formatPercentage(
+                                                    vaultData.allocationLimitsPerMarketPerRound
+                                                ),
+                                            }}
+                                        />
+                                    </Variables>
+                                    <Variables>
+                                        <Trans
+                                            i18nKey={`vault.variables-right`}
+                                            components={{
+                                                p: <p />,
+                                                ul: <ul />,
+                                                li: <li />,
+                                            }}
+                                            values={{
+                                                maxAllowedDeposit: formatCurrencyWithSign(
+                                                    USD_SIGN,
+                                                    vaultData.maxAllowedDeposit,
+                                                    0
+                                                ),
+                                                maxAllowedUsers: vaultData.maxAllowedUsers,
+                                                minTradeAmount: vaultData.minTradeAmount,
+                                                minDepositAmount: formatCurrencyWithSign(
+                                                    USD_SIGN,
+                                                    vaultData.minDepositAmount,
+                                                    0
+                                                ),
+                                                roundLength: 7, // vaultData.roundLength,
+                                            }}
+                                        />
+                                    </Variables>
+                                </VariablesContainer>
                             </>
                         )}
                     </LeftContainer>

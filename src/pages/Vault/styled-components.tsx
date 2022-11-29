@@ -9,15 +9,13 @@ export const Wrapper = styled(FlexDivColumn)`
 `;
 
 export const Container = styled(FlexDivRow)`
-    width: 80%;
+    width: 100%;
     position: relative;
     align-items: start;
     margin-top: 30px;
-    @media (max-width: 1440px) {
-        width: 95%;
-    }
     @media (max-width: 767px) {
         flex-direction: column;
+        width: 95%;
     }
 `;
 
@@ -36,30 +34,33 @@ export const ContentContainer = styled(FlexDivColumn)`
 `;
 
 export const LeftContainer = styled(ContentContainer)`
-    margin-right: 20px;
+    margin-right: 25px;
+    width: 60%;
+    align-items: start;
     @media (max-width: 767px) {
         margin-right: 0px;
         padding-top: 0px;
+        width: 100%;
     }
 `;
 
 export const RightContainer = styled(ContentContainer)`
     border: 2px solid #64d9fe;
     border-radius: 15px;
+    width: 40%;
     padding: 30px 40px 20px 40px;
     @media (max-width: 767px) {
         padding: 20px 20px 10px 20px;
+        width: 100%;
     }
 `;
 
 export const RoundInfoWrapper = styled(FlexDivColumn)`
-    width: 80%;
-    @media (max-width: 1440px) {
-        width: 95%;
-    }
+    width: 100%;
     padding: 0px 20px 20px 20px;
     @media (max-width: 767px) {
         padding: 20px 20px 0px 20px;
+        width: 95%;
     }
 `;
 
@@ -129,10 +130,24 @@ export const RoundInfo = styled.p`
 export const Description = styled.div`
     font-size: 18px;
     line-height: 22px;
-    text-align: justify;
+    text-align: start;
+    padding-top: 20px;
     p {
         margin-bottom: 10px;
     }
+    @media (max-width: 767px) {
+        font-size: 16px;
+    }
+`;
+
+export const Info = styled(Description)`
+    border-bottom: 3px solid rgba(100, 217, 254, 0.4);
+    padding-bottom: 10px;
+    padding-top: 0px;
+`;
+
+export const VariablesContainer = styled(FlexDivRow)`
+    width: 100%;
     ul {
         list-style: initial;
         margin-left: 20px;
@@ -140,6 +155,20 @@ export const Description = styled.div`
     li {
         margin-bottom: 4px;
     }
+`;
+
+export const VariablesTitle = styled.span`
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 100%;
+    margin-top: 10px;
+    color: #64d9fe;
+`;
+
+export const Variables = styled(Description)`
+    font-size: 16px;
+    width: 50%;
 `;
 
 export const ContentInfoContainer = styled.div`
@@ -161,21 +190,27 @@ export const BoldContent = styled.span`
 export const Title = styled.span`
     font-style: normal;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 27px;
     line-height: 100%;
     margin-bottom: 30px;
-    margin-top: 30px;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
     @media (max-width: 767px) {
         margin-top: 0px;
+        font-size: 25px;
     }
 `;
 
 export const TitleVaultIcon = styled.i`
     font-weight: 400;
-    font-size: 30px;
+    font-size: 36px;
     margin-right: 8px;
     top: -3px;
     position: relative;
+    @media (max-width: 767px) {
+        font-size: 30px;
+    }
 `;
 
 export const UsersInVaultText = styled(ContentInfo)`
@@ -282,4 +317,11 @@ export const ToggleContainer = styled(FlexDiv)`
     text-transform: uppercase;
     border-bottom: 2px solid rgba(100, 217, 254, 0.4);
     padding-bottom: 20px;
+`;
+
+export const Link = styled.a`
+    color: #64d9fe;
+    &:hover {
+        text-decoration: underline;
+    }
 `;
