@@ -164,9 +164,6 @@ export const VariablesTitle = styled.span`
     line-height: 100%;
     margin-top: 10px;
     color: #64d9fe;
-    @media (max-width: 767px) {
-        margin-top: 20px;
-    }
 `;
 
 export const Variables = styled(Description)`
