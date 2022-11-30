@@ -215,6 +215,7 @@ const BalanceContainer = styled.div`
     border-radius: 15px;
     padding: 5px 0;
     text-align: center;
+    z-index: 1;
 `;
 
 const BalanceWrapper = styled.div<{ clickable: boolean }>`
