@@ -15,12 +15,12 @@ import { VaultTransaction } from 'constants/vault';
 import UserTransactionsTable from '../UserTransactionsTable';
 import useVaultUserTransactionsQuery from 'queries/vault/useVaultUserTransactionsQuery';
 
-type TradesHistoryProps = {
+type TransactionsProps = {
     vaultAddress: string;
     currentRound: number;
 };
 
-const TradesHistory: React.FC<TradesHistoryProps> = ({ vaultAddress, currentRound }) => {
+const Transactions: React.FC<TransactionsProps> = ({ vaultAddress, currentRound }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -230,4 +230,4 @@ const Tab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
     }
 `;
 
-export default TradesHistory;
+export default Transactions;
