@@ -1,8 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-// import BackToLink from 'pages/Markets/components/BackToLink';
-// import ROUTES from 'constants/routes';
-// import { buildHref } from 'utils/routes';
 import {
     Container,
     Title,
@@ -75,7 +72,6 @@ import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputLabel, InputContainer } from 'pages/Token/components/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Footer from 'components/Footer';
-import UserTransactions from './UserTransactions';
 import { LINKS } from 'constants/links';
 
 type VaultProps = RouteComponentProps<{
@@ -860,7 +856,6 @@ const Vault: React.FC<VaultProps> = (props) => {
                 </Container>
                 {vaultData && <PnL vaultAddress={vaultAddress} lifetimePnl={vaultData.lifetimePnl} />}
                 {vaultData && <TradesHistory vaultAddress={vaultAddress} currentRound={vaultData.round} />}
-                {vaultData && <UserTransactions vaultAddress={vaultAddress} currentRound={vaultData.round} />}
                 {openApprovalModal && (
                     <ApprovalModal
                         defaultAmount={amount}
