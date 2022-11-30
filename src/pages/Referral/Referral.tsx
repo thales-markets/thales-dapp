@@ -299,6 +299,7 @@ const Referral: React.FC = () => {
                                             <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('volume'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.earned')}</>,
@@ -307,6 +308,7 @@ const Referral: React.FC = () => {
                                             <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('amount'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.transaction-date')}</>,
@@ -361,6 +363,7 @@ const Referral: React.FC = () => {
                                             <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('totalVolume'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.total-earned')}</>,
@@ -369,6 +372,7 @@ const Referral: React.FC = () => {
                                             <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('totalEarned'),
                                     },
                                 ]}
                             />
@@ -395,6 +399,7 @@ const Referral: React.FC = () => {
                                         accessor: 'trades',
                                         Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
                                         sortable: true,
+                                        sortType: customColumnSort('trades'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.total-volume')}</>,
@@ -403,6 +408,7 @@ const Referral: React.FC = () => {
                                             <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('totalVolume'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.total-earned')}</>,
@@ -411,6 +417,7 @@ const Referral: React.FC = () => {
                                             <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('totalEarned'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.first-transaction')}</>,
@@ -467,5 +474,13 @@ const ReferralFooter = styled.div`
         }
     }
 `;
+
+const customColumnSort = (propertyName: string) => (rowA: any, rowB: any, desc: boolean) => {
+    if (desc) {
+        return +rowA.original[propertyName] > +rowB.original[propertyName] ? 1 : -1;
+    } else {
+        return +rowA.original[propertyName] < +rowB.original[propertyName] ? 1 : -1;
+    }
+};
 
 export default Referral;
