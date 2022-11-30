@@ -175,21 +175,6 @@ const Sidebar: React.FC = () => {
                 <Divider />
                 <DappHeaderItem
                     className={collapse ? 'show' : ''}
-                    href={LINKS.ExoticMarkets}
-                    iconName="exotic-markets"
-                    label={t('common.sidebar.exotic-markets-label')}
-                    onClick={(event: any) => {
-                        event.preventDefault();
-                        if (window.innerWidth <= 767) {
-                            window.location.replace(LINKS.ExoticMarkets);
-                        } else {
-                            window.open(LINKS.ExoticMarkets);
-                        }
-                    }}
-                    simpleOnClick={true}
-                />
-                <DappHeaderItem
-                    className={collapse ? 'show' : ''}
                     href={LINKS.SportMarkets}
                     iconName="overtime-markets"
                     label={t('common.sidebar.sport-markets-label')}

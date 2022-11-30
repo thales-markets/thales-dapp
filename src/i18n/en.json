@@ -1879,7 +1879,7 @@
         "description": "<bold>The Trading Incentives program</bold> is split into separate 14 day rounds. After each round a fixed amount of OP tokens + THALES tokens are to be distributed proportionally among all Buy Volume drivers across the Thales marketplace.<br/><br/>",
         "description-2": "Total amount of tokens allocated as Trading Incentives: <bold>200,000 OP + 350,000 THALES</bold> <br/><br/>",
         "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 9,000 OP + 15,000 THALES split between UP token Buyers <br/>    - 9,000 OP + 15,000 THALES split between DOWN token Buyers<br/>        - 5,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>  - 5,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
-        "description-3-itm": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 5,000 OP + 7,000 THALES split between ITM token Buyers <br/>    - 5,000 OP + 7,000 THALES split between OTM token Buyers<br/>      - 5,000 OP + 7,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
+        "description-3-itm": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 2,000 OP + 3,000 THALES split between ITM token Buyers <br/>    - 5,000 OP + 7,000 THALES split between OTM token Buyers<br/>      - 8,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
         "description-4": "<br/><br/>You can find all the detailed infomation on how to participate in <guidelinesLink>.",
         "table": {
             "wallet-address": "Wallet address",
@@ -1917,20 +1917,23 @@
     "vault": {
         "discount-vault": {
             "title": "Discount Vault",
-            "description": "<p>Buys positions that have more than {{odds}} odds and are available at a discount larger than {{discount}}.</p>All deposits that enter a round count towards gamified staking volume.</p>",
+            "description": "<p>Buys positions that have more than {{odds}} odds and are available at a discount larger than {{discount}}.</p>",
             "risks": "<p>The vault has an utilization rate of {{utilizationRate}} which ensures no more than {{utilizationRate}} of deposited to a round is put to risk. Furthermore, out of those {{utilizationRate}} a maximum of {{allocationLimitsPerMarketPerRound}} can be spent on a single market, thus diversifying the risk into multiple markets that have odds more than {{odds}}.</p>"
         },
         "degen-discount-vault": {
             "title": "Degen Discount Vault",
-            "description": "<p>Buys positions at any odds that are available for more than {{discount}} discount.</p><p>All deposits that enter a round count towards gamified staking volume.</p>",
+            "description": "<p>Buys positions at any odds that are available for more than {{discount}} discount.</p>",
             "risks": "<p>The vault has an utilization rate of {{utilizationRate}} which ensures no more than {{utilizationRate}} of deposited to a round is put to risk. Furthermore, out of those {{utilizationRate}} a maximum of {{allocationLimitsPerMarketPerRound}} can be spent on a single market.</p>"
         },
         "safu-discount-vault": {
             "title": "Safu Discount Vault",
-            "description": "<p>Buys positions that have more than {{odds}} odds and are available at any discount.</p><p>All deposits that enter a round count towards gamified staking volume.</p>",
+            "description": "<p>Buys positions that have more than {{odds}} odds and are available at any discount.</p>",
             "risks": "<p>The vault has an utilization rate of {{utilizationRate}} which ensures no more than {{utilizationRate}} of deposited to a round is put to risk. Furthermore, out of those {{utilizationRate}} a maximum of {{allocationLimitsPerMarketPerRound}} can be spent on a single market, thus diversifying the risk into multiple markets that have odds more than {{odds}}.</p>"
         },
-        "variables": "<p>Variables:</p><ul><li>Utilization rate: {{utilizationRate}}</li><li>Price lower limit: {{priceLowerLimit}}</li><li>Price upper limit: {{priceUpperLimit}}</li><li>Max Skew impact: {{skewImpactLimit}}</li><li>Max allocation on a single market: {{allocationLimitsPerMarketPerRound}}</li><li>Max total deposit: {{maxAllowedDeposit}}</li><li>Max users in the vault: {{maxAllowedUsers}}</li><li>Minimum amount on a single trade: {{minTradeAmount}}</li><li>Minimum deposit: {{minDepositAmount}}</li><li>Round duration: {{roundLength}} days</li></ul>",
+        "info": "<p>Thales vaults work in 1-week rounds. This is currently a beta release.</p><p>Once you deposit collateral (sUSD) into the vault, this will be queued to be used starting on the next round.</p><p>Each vault will automatically execute a pre-defined strategy based on its specific parameters. You can find a <vaultLink>detailed description of each parameter here</vaultLink>.</p><p>Users of the vaults can request to withdraw their collateral back to sUSD (+/- wins or losses of the vault) at any time during a round. Once that round ends the withdrawal will be processed.</p><p>All deposits that enter a round count towards gamified staking volume.</p>",
+        "variables-title": "Variables",
+        "variables-left": "<ul><li>Utilization rate: {{utilizationRate}}</li><li>Price lower limit: {{priceLowerLimit}}</li><li>Price upper limit: {{priceUpperLimit}}</li><li>Max Skew impact: {{skewImpactLimit}}</li><li>Max allocation on a single market: {{allocationLimitsPerMarketPerRound}}</li></ul>",
+        "variables-right": "<ul><li>Max total deposit: {{maxAllowedDeposit}}</li><li>Max users in the vault: {{maxAllowedUsers}}</li><li>Minimum amount on a single trade: {{minTradeAmount}}</li><li>Minimum deposit: {{minDepositAmount}}</li><li>Round duration: {{roundLength}} days</li></ul>",
         "back-to-vaults": "Back to vaults",
         "vault-not-started-message": "The vault has not started",
         "vault-paused-message": "The vault is paused",
