@@ -82,7 +82,7 @@ const Transactions: React.FC<TransactionsProps> = ({ vaultAddress, currentRound 
         if (vaultUserTransactionsQuery.isSuccess && vaultUserTransactionsQuery.data) {
             setVaultUserTransactions(
                 orderBy(
-                    vaultUserTransactionsQuery.data.filter((trade: VaultUserTransaction) => trade.round === round),
+                    vaultUserTransactionsQuery.data.filter((trade: VaultUserTransaction) => trade.round === round + 1),
                     ['timestamp', 'blockNumber'],
                     ['desc', 'desc']
                 )
