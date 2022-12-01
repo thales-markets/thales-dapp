@@ -168,7 +168,9 @@
             "max-limit-exceeded": "金额超过 AMM 上的可用金额",
             "user-rejected-tx": "用户拒绝交易",
             "insufficient-staking-balance": "质押余额不足",
-            "try-again": "再试一次。 AMM 数据已更改。"
+            "try-again": "再试一次。 AMM 数据已更改。",
+            "enter-address": "输入地址",
+            "invalid-address": "无效地址"
         },
         "search": "搜索",
         "buy": "买",
@@ -195,7 +197,6 @@
             "leaderboard-label": "排行榜",
             "quick-trading-label": "快速交易",
             "quick-trading-label-competition": "竞赛订单",
-            "earn-label": "泰勒斯",
             "royale-label": "泰勒斯鱿鱼游戏",
             "governance-label": "治理",
             "game-label": "米利都",
@@ -206,7 +207,10 @@
             "profile-label": "轮廓",
             "exotic-markets-label": "异国市场",
             "ranged-markets": "范围市场",
-            "wizard": "泰雷兹向导"
+            "earn-label": "泰雷兹通证",
+            "wizard": "入职向导",
+            "op-rewards": "OP 奖励",
+            "sport-markets-label": "加班市场"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -297,7 +301,6 @@
             "short": "空头",
             "my-trades": "我的交易",
             "amm": "AMM",
-            "orderbook": "订单簿",
             "trade-type": "交易类型",
             "search-placeholder-for-mining": "试试地址",
             "search-placeholder-for-reporting": "尝试市场",
@@ -373,7 +376,8 @@
                 "range-markets-tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买目前具有最高潜在利润的远程定位代币。"
             },
             "polygon-trading-competition-2": " 点击<bold>这里</bold>了解更多",
-            "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播"
+            "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播",
+            "op-rewards-banner-message": "OP 奖励已开始，请在<bold>OP 奖励页面</bold>查看如何获得奖励"
         },
         "earn": {
             "snx-stakers": {
@@ -559,8 +563,10 @@
                     "lp-tokens": "LP 代币"
                 },
                 "info": {
-                    "apr": "年利率",
-                    "tvl": "锁定总值 (TVL)"
+                    "tvl": "锁定总值 (TVL)",
+                    "thales-apr": "THALES APR",
+                    "op-apr": "OP APR",
+                    "total-apr": "TOTAL APR"
                 },
                 "provide-liquidity": {
                     "here": "这里",
@@ -569,7 +575,8 @@
                     "wrap-your-eth": "1. 包裹你的 ETH",
                     "stake-here": "3. 在此页面质押LP代币",
                     "deposit": "2. 将THALES和WETH存入G-UNI矿池"
-                }
+                },
+                "section-title": "LP Staking 是如何运作的？"
             },
             "table": {
                 "title": "您的活动",
@@ -592,7 +599,8 @@
                     "lpStake": "没有与此钱包相关的 LP 股权交易。",
                     "lpClaimStakingRewards": "没有 LP 质押奖励与此钱包相关的交易。",
                     "lpUnstake": "没有与此钱包相关的 LP 取消质押交易。",
-                    "claimMigratedRetroRewards": "没有与此钱包相关的迁移复古奖励交易。"
+                    "claimMigratedRetroRewards": "没有与此钱包相关的迁移复古奖励交易。",
+                    "mergeAccount": "没有与此钱包关联的合并账户交易。"
                 },
                 "types": {
                     "claimRetroAirdrop": "领取追溯空投",
@@ -608,7 +616,8 @@
                     "lpClaimStakingRewards": "领取 LP 质押奖励",
                     "claimMigratedRewards": "领取迁移奖励",
                     "lpStake": "LP股权",
-                    "claimMigratedRetroRewards": "领取迁移的复古奖励"
+                    "claimMigratedRetroRewards": "领取迁移的复古奖励",
+                    "mergeAccount": "合并账户"
                 },
                 "filter": {
                     "all": "全部",
@@ -625,8 +634,11 @@
                     "claimMigratedRewards": "迁移奖励",
                     "lpUnstake": "LP 解除质押",
                     "lpStake": "LP股权",
-                    "claimMigratedRetroRewards": "迁移的复古奖励"
-                }
+                    "claimMigratedRetroRewards": "迁移的复古奖励",
+                    "mergeAccount": "合并账户",
+                    "button": "过滤器"
+                },
+                "no-activity": "没有活动可显示"
             },
             "overview": {
                 "token-tooltip": "查看泰勒斯合同",
@@ -640,7 +652,153 @@
                 "circulating-supply-label": "市场供应",
                 "total-supply-label": "总供应",
                 "celer-bridge": "赛勒桥",
-                "celer-bridge-tooltip": "链条之间的快速桥梁 THALES"
+                "celer-bridge-tooltip": "链条之间的快速桥梁 THALES",
+                "total-burned-label": "泰雷兹烧毁总数"
+            },
+            "merge-account": {
+                "merge-blocked-message": {
+                    "src-unstaking": "取消源账户的取款。",
+                    "title": "为了合并帐户，您需要",
+                    "dest-unstaking": "取消从目的地账户取款。",
+                    "src-claim": "索取源账户的质押奖励。",
+                    "dest-claim": "从目标账户领取 Staking 奖励。"
+                },
+                "merge-button": {
+                    "label": "合并账户",
+                    "progress-label": "正在合并..."
+                },
+                "title": "合并账户",
+                "description": "<0>帐户合并已按</0><1 />实施。",
+                "source-account-label": "来源账户",
+                "confirmation-message": "账号合并成功",
+                "info-message": "为了合并账户，您需要从两个账户中领取任何未完成的质押奖励并取消取消质押（如果有的话）。",
+                "merge-account-disabled-message": "帐户合并已禁用。",
+                "destination-account-label": "目的地帐户",
+                "warning-message": "合并后，所有质押和托管的 THALES 余额将转移到目标账户，并且无法从源账户访问。"
+            },
+            "claim-on-behalf": {
+                "enable-button": {
+                    "label": "使能够",
+                    "confirmation-message": "已成功为该帐户启用代偿",
+                    "progress-label": "正在启用..."
+                },
+                "disable-button": {
+                    "progress-label": "正在禁用...",
+                    "confirmation-message": "已成功为该帐户停用代销",
+                    "label": "禁用"
+                },
+                "title": "代为索赔",
+                "no-enabled-addresses-message": "未分配地址。",
+                "enable-message": "代表您为此帐户启用声明？",
+                "description": "<0>已按 </0><1 /> 实施代偿。",
+                "enabled-addresses-title": "可以代表您申领的帐户",
+                "disable-message": "此帐户已启用代表您的索赔。禁用？",
+                "label": "输入您要代表您启用/禁用声明的帐户",
+                "account-label": "帐户",
+                "guide": "<1 /><0>关于如何自动化您的每周理赔</0>。"
+            },
+            "gamified-staking": {
+                "staking": {
+                    "stake": {
+                        "staking": "质押",
+                        "info-tooltip": "可用的质押奖励将作为质押交易的一部分索取。",
+                        "name": "赌注",
+                        "available-to-stake": "可供质押",
+                        "balance": "平衡：",
+                        "paused-message": "质押暂停。",
+                        "confirmation-message": "代币成功质押",
+                        "amount-to-stake": "质押金额："
+                    },
+                    "unstake": {
+                        "info-tooltip": "可用的质押奖励将作为开始解除质押交易的一部分索取。",
+                        "balance": "平衡：",
+                        "cancel-confirmation-message": "Unstaking 已成功取消",
+                        "name": "取消抵押",
+                        "cooldown-confirmation-message": "Unstaking 成功开始",
+                        "start-unstaking": "开始下注",
+                        "cooldown-started-text": "您可以取消质押 {{amount}}",
+                        "unlock-cooldown-text": "开始解锁冷却时间，在此期间未质押的金额不计入您的质押余额。",
+                        "cancel": "取消质押",
+                        "unstaking": "取消抵押",
+                        "amount-to-unstake": "取消质押金额：",
+                        "network-fee-unstake": "取消抵押",
+                        "canceling": "取消取消抵押",
+                        "unstake-confirmation-message": "代币成功解除抵押",
+                        "cooldown-label": "冷却",
+                        "network-fee-cancel": "取消",
+                        "paused-message": "取消质押已暂停。",
+                        "start-unstaking-tooltip": "在取消抵押冷却期间，您将无法抵押或取消抵押更多 THALES。",
+                        "cooldown-ended-text": "您现在可以取消质押 {{amount}}"
+                    },
+                    "wallet-balance": "我的钱包余额",
+                    "staked-balance": "我的质押余额",
+                    "bonus-apy-tooltip": "<0>根据 </0><1 />，通过协议使用或 Staking SNX 赚取 +{{max}}% 的额外 Staking Rewards。",
+                    "wallet-balance-tooltip": "您钱包中的非质押 THALES 数量。",
+                    "total-thales-staked": "THALES 总质押",
+                    "apy-tooltip": "Staking THALES 代币的 THALES 代币年收益率。",
+                    "total-thales-staked-tooltip": "Staking Contract 中的 THALES 代币总量。",
+                    "staked-share": "我的股份",
+                    "section-title": "质押",
+                    "staked-share-tooltip": "您在总质押泰雷兹池中的百分比 (%)。",
+                    "escrow-balance": "托管余额",
+                    "staked-balance-tooltip": "您当前质押的 THALES 代币数量。",
+                    "section-description": "Staking 奖励显示您可领取的 THALES 奖励。",
+                    "staked-directly": "直接质押"
+                },
+                "rewards": {
+                    "close-period": {
+                        "label": "关闭期间",
+                        "confirmation-message": "期间成功关闭",
+                        "progress-label": "截止期..."
+                    },
+                    "section-title": "奖励",
+                    "info-bonus": "作为奖金奖励",
+                    "info-bonus-description": "基础奖励之上的最高奖励奖励为 50%。 21k 或 70% 到 Protocol Usage 桶。这计算了来自 AMM 交易、范围 AMM 交易、体育 AMM 交易和异国市场竞标的 sUSD 交易量以及 SNX 质押者的 9k 或 30%。 <0 />",
+                    "protocol-bonus": "最高奖金的额外 sUSD",
+                    "enable-claim-on-behalf-button": "代表启用索赔",
+                    "claiming": "声称",
+                    "volume-exotic-desc": "当前的异国市场量",
+                    "claim-button-tooltip": "领取的奖励有 10 周的归属期。",
+                    "volume-ranged-desc": "当前范围市场交易量",
+                    "claim-confirmation-message": "代币已成功领取",
+                    "snx-rewards": "最高奖励",
+                    "claim": "索取泰雷兹奖励",
+                    "enable-claim-on-behalf-label": "将可以代表您触发质押奖励声明的地址列入白名单",
+                    "total-label": "可索赔总额",
+                    "period": "剩下的时间：",
+                    "protocol-volume": "体积",
+                    "lp-staking-label-2": "LP质押",
+                    "snx-label": "SNX 质押",
+                    "volume-ranged-label": "范围广泛的市场",
+                    "volume-sports-desc": "当前体育市场规模",
+                    "snx-volume": "体积",
+                    "info-base": "作为基础奖励",
+                    "lp-staking-label-1": "泰雷兹/eth",
+                    "volume-amm-desc": "当前 AMM 市场成交量：",
+                    "claimed-message": "您已经领取了本周的奖励。请下周再来。",
+                    "volume-amm-label": "AMM 市场",
+                    "snx-bonus": "最高奖金的额外 sUSD",
+                    "base-label": "泰雷兹质押基础奖励",
+                    "protocol-rewards": "最高奖励",
+                    "not-eligible-message": "您没有资格获得这些奖励。",
+                    "protocol-label": "协议使用桶",
+                    "paused-message": "索赔已暂停。",
+                    "section-description": "Staking 奖励显示您可领取的 THALES 奖励。",
+                    "info-base-description": "THALES Staking 产生的基本奖励（每周 {{baseRewards}}）"
+                },
+                "vesting": {
+                    "vest": {
+                        "vesting": "归属",
+                        "confirmation-message": "代币成功归属",
+                        "vest": "背心",
+                        "available-to-vest": "可用于背心"
+                    },
+                    "schedule-label": "归属时间表",
+                    "section-title": "归属",
+                    "schedule-no-results": "未找到归属时间表。",
+                    "section-description": "将您的 THALES 质押奖励用于托管。 THALES 持续奖励需要 10 周归属。托管 THALES 是在您质押的 THALES 余额中计算的。"
+                },
+                "tab-title": "游戏化质押"
             }
         },
         "quiz": {
@@ -750,7 +908,6 @@
             "widgets": {
                 "trading-phase-widget": "领取选项",
                 "maturity-phase-widget": "行权选项",
-                "orderbook-widget": "订单簿",
                 "trade-widget": "交易",
                 "chart-trading-view-widget": "交易视图",
                 "chart-options-price-widget": "选项价格",
@@ -830,43 +987,6 @@
                 "market-tab-title": "市场",
                 "limit-tab-title": "限额",
                 "mint-tab-title": "铸造",
-                "orderbook": {
-                    "title": "订单簿",
-                    "buy": {
-                        "no-results": "未找到购买订单。"
-                    },
-                    "sell": {
-                        "no-results": "未找到出售订单。"
-                    },
-                    "filter": {
-                        "my-orders": {
-                            "tooltip-connected": "您已创建的订单。连接钱包即可启动。",
-                            "tooltip-not-connected": "您已创建订单。单击该行可输入或取消订单。",
-                            "buy": {
-                                "no-results": "您尚未创建任何购买订单。"
-                            },
-                            "sell": {
-                                "no-results": "您尚未创建任何出售订单。"
-                            }
-                        },
-                        "tooltips": {
-                            "all": "查看所有订单。单击该行以填写订单",
-                            "buy": "查看购买订单。单击该行填写订单",
-                            "sell": "查看销售订单。单击该行以填写订单"
-                        }
-                    },
-                    "table": {
-                        "type-col": "类型",
-                        "price-col": "价格({{token}})",
-                        "amount-col": "金额（{{currencyKey}}）",
-                        "filled-col": "填充（%）",
-                        "return-col": "返回",
-                        "return-col-tooltip": "如果此选项获胜，则可能返回",
-                        "total-col": "总计({{token}})",
-                        "time-remaining-col": "剩余时间",
-                        "cancel-col-tooltip": "单击以取消订单"
-                    }
-                },
                 "place-order": {
                     "modal": {
                         "buy": {
@@ -972,7 +1092,6 @@
                 }
             },
             "header": {
-                "orderbook": "订单簿",
                 "amm": "AMM"
             },
             "your-activity": {
@@ -1403,18 +1522,6 @@
                 "paid": "有薪酬的",
                 "expires": "过期@"
             }
-        },
-        "order-book": {
-            "trade-down": "交易选项",
-            "trade-up": "以旧换新",
-            "amount-to": "金额为 {{type}}",
-            "select-to": "选择 {{type}}",
-            "filters": {
-                "all": "全部",
-                "my-orders": "我的订单",
-                "buy-orders": "购买订单",
-                "sell-orders": "卖单"
-            }
         }
     },
     "governance": {
@@ -1476,7 +1583,9 @@
             },
             "pitch-by": "投球",
             "see-pitch": "看到这个音高",
-            "vote-confirmation": "您确定要投票"
+            "vote-confirmation": "您确定要投票",
+            "voting-label": "表决",
+            "not-voted-in-label": "未投票"
         },
         "no-votes": "对本提案无票",
         "view-more": "查看更多",
@@ -1518,7 +1627,9 @@
         "max-amount": "最大金额 {{amount}}",
         "progress": "请稍等...",
         "max-button-tooltip": "使用所有可用的抵押品减去相当于滑点容限的缓冲区",
-        "pay-with": "使用。。。支付"
+        "pay-with": "使用。。。支付",
+        "transaction-successful": "交易成功",
+        "allowing-in-progress": "进行中..."
     },
     "articles": {
         "token": {
@@ -1765,13 +1876,93 @@
         "choose-landing": "选择登陆页面",
         "disclaimer": "我们强烈建议附属公司遵守各自国家或司法管辖区关于推荐和认可的监管指南。对泰雷兹产品和服务的所有认可、评论、推荐，以及其他类型的内容网站（论坛、博客、微博和其他社交媒体渠道）与泰雷兹之间的关系必须在附属网站的单独政策中明确披露.泰雷兹产品和服务的最终用户在通过推荐链接被引导至泰雷兹网站时有权被告知和理解。我们强烈鼓励我们的附属公司遵循这些原则。我们还保留终止与任何不合规附属公司的关系的权利。此外，您不得以任何方式歪曲或美化泰雷兹平台（或其任何产品和服务）与您之间的关系。您不得将本程序用于任何非法或未经授权的目的。您在使用本程序时不得违反您所在司法管辖区的任何法律。泰雷兹委员会有权自行决定暂停或终止此推荐计划。<br>泰雷兹的 [使用条款和条件] 也适用于此推荐链接平台的使用。"
     },
-    "wizzard-page": {
-        "step3": "第三步是将您获得的以太坊换成 sUSD，这是用于在 Thales 上交易的去中心化稳定币，或者如果您更喜欢 USDT、USDC 或 DAI（Thales 目前也支持这些）。",
-        "step2": "第二步是使用您的信用卡和集成的“法定货币到加密货币”入口获得以太坊 on Optimism。如果您使用第一步设置新的 Metamask 钱包，则需要使用相同的钱包地址来存入购买的以太坊。",
-        "intro2": "现在，您可以使用信用卡使用 MtPelerin 集成并按照分步引导向导在 Optimism 上获得 sUSD，这是用于在 Thales 上交易的主要稳定币。",
-        "step1": "第一步是在您的浏览器上安装 Metamask，如果您还没有的话。此步骤为您提供您自己的以太坊“热钱包”，这是与 Thales 等 Web3 应用程序进行所有交互的基准。<b>请确保仔细遵循 Metamask 安装向导提供的所有步骤，并仔细阅读安全提示。</b>",
+    "wizard-page": {
+        "question13-link-text": "看视频",
         "title": "用信用卡购买加密货币",
-        "intro1": "开始您的 Optimism 之旅，现在比以往任何时候都容易。",
-        "step4": "最后一步是获得 AMM 的认可，但永远记得玩得开心！！！"
+        "question14-link-text": "看视频",
+        "answer1": "Web3 是互联网的下一个重大发展，专注于去中心化和社区治理和包容性，希望塑造金融和文化世界的未来。由于其无需许可的性质，区块链与以太坊一样，是 Web3 基础设施的核心。",
+        "buy-button4": "从 Exchange 发送",
+        "question1": "什么是 Web3？",
+        "resources": "资源",
+        "answer13": "定向市场，也称为上涨和下跌市场，允许交易者一次购买与资产价格与目标价格（执行价格）相关的头寸（到期日期/时间）。交易者可以在特定时间根据特定的执行价格买入头寸，如果在到期时选择了与资产实际价格相关的正确方向（上/上或下/下），则可以领取奖金。例如，交易者可能认为 ETH 将在 4 月 12 日最终突破 1200 美元，因此他们可以找到一个行使价为 1200 美元、到期日为 4 月 12 日的定向市场，并为该市场购买 UP 代币。如果 ETH 在 4 月 12 日最终超过 1200 美元，那么交易者可以行使他们的 UP 代币并收到 sUSD。",
+        "question4": "什么是 sUSD？",
+        "answer17": "Thales Royale 是一个基于社区的连续竞赛，由链式 Parimutuel Markets 组成，参与者可以在每一轮比赛中买入并尝试在比赛中胜出。当 Royale 开始时，玩家将有 8 小时的时间窗口来定位，或者选择以太坊的价格将在定位结束 16 小时后的决议期结束时的哪个方向（向上或向下）。选择正确位置的玩家将进入下一轮，不成功的玩家将被淘汰。轮次一直持续到第 6 轮或直到除 1 名参与者之外的所有或所有参与者被淘汰。 “幸存者”将平分总买入费并获得每个赛季的获胜者 NFT。",
+        "step4-ranged": "远程",
+        "step1-0": "第一步是<b>在您的浏览器上安装 Metamask</b> 。如果您已经安装了它，您可以跳过此步骤。<br/><br/>此步骤为您提供自己的以太坊“热钱包”，这是与 Thales 等 Web3 应用程序进行所有交互的基准。请务必<b>仔细遵循 Metamask 安装向导提供的所有步骤，并仔细阅读安全提示</b>。",
+        "step3": "第三步是将<b>您获得的一些以太坊 (ETH) 兑换成 sUSD</b> ，这是用于在 Thales 上进行交易的去中心化稳定币，或者如果您更喜欢 USDT、USDC 或 DAI（Thales 目前也支持这些） .<br/><br/>您需要<b>以太坊 (ETH) 来支付 Optimism 网络上的交易费用</b>，因此请确保始终拥有一些。<br/><br/>在参与泰雷兹定向或范围市场时<b>，sUSD 将用于获取位置代币（UP 或 DOWN，IN 或 OUT）</b> 。<br/><br/>当您的钱包中有以太坊 (ETH) 和 sUSD 时，您就可以进行最后一步了！<br/><br/><i>注意：如果您已经拥有任何其他受支持的加密货币，您可以使用我们内置的交换功能或在任何主要的去中心化交易所（如 1Inch.exchange 或 Uniswap）将它们兑换成 sUSD。</i>",
+        "question16": "支持哪些加密货币？",
+        "header": "从 Optimism 开始您的泰雷兹之旅，现在比以往任何时候都更容易。",
+        "step4-directional": "定向",
+        "step3-name": "换成稳定币",
+        "question6": "什么是交易成本？",
+        "step2": "恭喜你有一个 web3 钱包！<br/><br/>第二步是使用您的信用卡和集成<b>的“</b>法定货币到加密货币”入口在 Optimism 上获得以太坊 (ETH)。如果您完成了设置新 Metamask 钱包的第一步，您将需要使用相同的钱包地址来存入购买的以太坊。<br/><br/>通过<b>单击卡片图标</b>使用我们方便的入口匝道。您可以使用任何主要的卡提供商。只需按照这些步骤操作，如果您需要其他帮助，您可以阅读我们的文档或观看解释所有必需步骤的视频。",
+        "question15": "什么是位置代币？",
+        "question2": "什么是钱包？",
+        "step1-1": "安装后，您需要“连接”您的 Metamask 钱包。为此，<b>请单击连接钱包卡上的 Metamask 图标，点击</b>链接。<br/><br/>在这种情况下，由于我们以 Optimism 网络为例，您需要连接您的钱包并选择 Optimism 网络。",
+        "buy-button3": "通往乐观的桥梁",
+        "answer4": "sUSD 是 Synthetix 生态系统的原生稳定币。稳定币是一种旨在反映美元价格的加密货币，通常由某种形式的抵押品支持。 sUSD 由 SNX 代币支持，该代币用于“铸造”sUSD，通常超额抵押 sUSD 铸造价值的 3 到 4 倍。 sUSD 是 Thales Market 使用的主要抵押品形式，但也支持 USDT、USDC 和 DAI 等其他稳定币。",
+        "question17": "什么是泰雷兹皇家？",
+        "step4-name": "泰雷兹交易",
+        "answer12": "Parimutuel 市场是一种市场类型，它创建一个共享的抵押品池，并以整个池的比例份额减去市场费用来奖励获胜头寸。 Parimutuel 市场的市场结算事件可以是两个相互排斥的结果之一（例如，泰雷兹头寸市场，如 UP 或 DOWN 和 IN 或 OUT 市场），也可以是许多相互排斥的结果之一（例如 Thales Exotic Market 与多个职位）。",
+        "question13": "什么是定向市场？",
+        "answer3": "Metamask 是由 ConsenSys 开发的流行 Web3 钱包，允许用户与以太坊区块链（以及以太坊的第 2 层网络）进行交互。用户可以安装适用于 iOS 或 Android 的桌面浏览器扩展程序或移动应用程序。",
+        "answer7": "以太坊主网是用于记录以太坊网络交互和平衡的主要区块链。有几个网络在使用，包括用于测试和开发的 Kovan 测试网，以及像 Optimism 这样的第 2 层网络，它们充当主要区块链的扩展解决方案。主网用于在以太坊区块链上存储货币价值。",
+        "answer11": "桥接器是一种用于将加密货币从一个区块链网络传输到另一个区块链网络的工具。例如，用户可以使用中心化工具将法定货币兑换成 ETH，该工具会将资产存入以太坊的主网上。然后，用户可以使用桥接器将该 ETH“桥接”到另一个网络，例如 Optimism 或 Polygon。",
+        "step4": "你<b>准备好交易了</b>！<br/><br/>你有一个可用的 Metamask 钱包并连接到你选择的网络，在本例中是 Optimism 网络。<br/><br/>有关我们产品的更多信息，请阅读我们的文档或查看常见问题部分中的视频教程。<br/><br/>如果您对泰雷兹协议（及其产品）有任何疑问，或者需要帮助来了解这个入职流程，我们很乐意在泰雷兹 Discord 上为您提供支持。",
+        "answer10": "许多协议，无论是源自 Synthetix 平台还是其他与 Synthetix 完全无关的协议，都利用 sUSD 作为一种抵押形式，因为它的去中心化程度和超额抵押支持。 Kwenta、Lyra 和 dHedge 等协议使用 sUSD，您可以从 Uniswap 或 1inch 等大多数主流 DEX（去中心化交易所）获取。",
+        "answer5": "法定货币入口是一种允许用户将法定货币（例如美元）兑换成加密货币的工具。一旦收到用户的法定货币存款，公司就会将加密货币存入用户的钱包。这允许用户参与 Web3 应用程序。",
+        "question12": "什么是 Parimutuel 市场？",
+        "question10": "还有哪些平台支持 sUSD？",
+        "answer16": "Thales Market 目前在购买头寸时使用 sUSD 作为主要抵押形式，但也使用其他稳定币。其中包括 USDC、USDT 和 DAI。",
+        "question14": "什么是范围市场？",
+        "answer15": "位置代币是一种存储在区块链上的数字资产形式，用于表示定向（UP 或 DOWN 位置代币）和范围市场（IN 或 OUT 位置代币）中的位置。用户可以通过将抵押品换成位置代币来购买这些市场之一的头寸。例如，如果交易者想要在一个区间市场上建立头寸，声明资产价格最终将超出指定范围，他们将购买 OUT 头寸代币。如果交易者成功，他们可以在到期时将其位置代币兑换成一定数量的奖金。",
+        "buy-title": "购买、桥接和发送",
+        "buy-button2": "用卡购买",
+        "answer6": "要与以太坊区块链（或其第 2 层网络之一）进行交互，用户必须付费。区块链上发生的每笔交易或交互都必须包含在新开采的区块中，并且每个区块内的空间是有限的。为了确保公平和高效的市场，用户必须使用“gas”为每次交互支付市场费率，“gas”是 ETH 的一种面额。所需gas 量的市场价格将随需求波动，不同类型的交互需要不同的gas 量，具体取决于交互的计算负载。",
+        "question8": "什么是乐观？",
+        "question7": "什么是以太坊主网？",
+        "answer9": "Polygon 网络是另一种与以太坊主网结合使用的扩展解决方案。 Polygon 仍然可以使用 Metamask 访问，但网络使用它自己的代币 MATIC 作为处理交易的本地代币，而不是像以太坊主网和 Optimism 那样的 ETH。",
+        "video-header": "视频教程",
+        "answer8": "Optimism 是第 2 层网络，可与以太坊一起作为扩展解决方案。在大量使用期间，以太坊的主网可能会变得拥挤且交易成本高昂，因此 Optimism 网络已被部署为以太坊主网“顶部”的第二层。 Optimism 使用与主网不同的机制来记录交易，但它仍然利用主网卓越的安全性和网络效应以更低的成本和更快的处理速度运行。",
+        "answer14": "范围市场类似于定向市场，但不是使用单一执行价格，而是使用价格“范围”，交易者可以购买与该范围相关的进仓或出仓头寸。例如，交易者可以在 1000-1200 的 ETH 区间市场购买 IN 头寸，如果 ETH 的价格在到期时最终在此范围内，则交易者可以领取他们的奖金。",
+        "question5": "什么是法定入口匝道？",
+        "about": "关于",
+        "discover": "发现",
+        "step1-name": "连接钱包",
+        "buy-button1": "用卡购买",
+        "question11": "什么是桥？",
+        "answer2": "钱包是管理区块链上地址的软件。这包括管理地址的私钥，并允许用户与去中心化应用程序 (dApp) 进行交互。",
+        "step2-name": "购买以太坊",
+        "question9": "什么是多边形网络？",
+        "question3": "什么是元掩码？",
+        "intro": "现在，您可以使用 MtPelerin 集成并按照分步引导向导，<b>使用您的信用卡</b>在 Optimism 上<b>获得 sUSD</b> ，这是用于在 Thales 上交易的主要稳定币。<br/><br/>目前泰雷兹支持以太坊主网、Optimism 和 Polygon 网络（后两种是以太坊扩容解决方案，也称为 Layer-2 网络）。<br/><br/>支持的第 2 层网络 Optimism 和 Polygon 的交易费用都明显低于以太坊主网。<br/><br/>出于本指南的目的，我们将重点关注 Optimism 网络。如果您想使用 Polygon 网络，过程相同，但您需要获取 USDC 而不是 sUSD。<br/><br/>要在泰雷兹市场进行交易，您将需要一些先决条件：<br/> 1. 在你的浏览器上有一个 Metamask 钱包<br/>2. 保持乐观<br/>3. 购买以太坊 (ETH)<br/> 4. 购买 sUSD 或兑换一些以太坊 (ETH)<br/><br/>完成这些步骤后，您就可以使用我们所有的产品了。<br/><br/><i>开始吧！</i>"
+    },
+    "op-rewards": {
+        "table": {
+            "protocol-reward": "游戏化的赌注奖金",
+            "reward-text": "成交量：{{volume}}<0/>百分比：{{percentage}}%<0/>奖励：{{thales}} THALES，{{op}} OP",
+            "ranged-info": "远程令牌",
+            "up-info": "UP代币",
+            "total-rewards": "总奖励",
+            "wallet-address": "钱包地址",
+            "down-info": "DOWN 代币",
+            "info-text": "成交量：{{volume}}，百分比：{{percentage}}%",
+            "total-text": "{{thales}} THALES，{{op}} OP",
+            "no-rewards-info": "此地址无奖励",
+            "my-wallet-address": " 我的钱包地址",
+            "gamified-bonus-text": "当您领取每周 THALES 质押奖励时，将触发游戏化质押奖励。",
+            "my-rewards": "我的奖励"
+        },
+        "title": "OP 奖励",
+        "description-2": "分配为交易奖励的代币总量：<bold> 200,000 欧普 + 350,000 泰雷兹</bold><br/><br/>",
+        "description": "<bold>交易激励计划</bold>分为单独的 14 天轮次。在每一轮之后，固定数量的 OP 代币 + THALES 代币将按比例分配给整个泰雷兹市场的所有购买量驱动程序。<br/><br/>",
+        "description-3": "每 14 天轮次的奖励分配如下：<br/> - 11,000 OP + 20,000 THALES 分配给 UP 代币买家<br/>- 11,000 OP + 20,000 THALES 分配给 DOWN 代币买家<br/>- 6,000 OP + 10,000 THALES 分配给 Ranged Markets IN/OUT 代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外的奖金奖励，根据<tipLink>",
+        "description-4": "<br/><br/>您可以找到有关如何参与的所有详细信息<guidelinesLink>.",
+        "round-ended-label": "回合结束",
+        "ranged-volume-label": "远程音量",
+        "round-end-label": "回合结束于",
+        "up-volume-label": "提高音量",
+        "down-volume-label": "降低音量",
+        "volume-tooltip": "目前的奖励：\n 每 1,000 美元的购买量 {{op}} + {{thales}}"
     }
 }

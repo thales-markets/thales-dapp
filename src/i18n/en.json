@@ -17,6 +17,11 @@
             "test": "Test"
         }
     },
+    "footer": {
+        "discover": "Discover",
+        "about": "About",
+        "resources": "Resources"
+    },
     "user-info": {
         "tabs": {
             "my-markets": "My Markets",
@@ -157,17 +162,64 @@
                 "affiliate-leaderboard": "Affiliate leaderboard"
             }
         },
-        "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in sUSD instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.<br><br>To kick-start this referral program, in addition to the fees earned by the traders you refer, there will be 20,000 OP tokens to be distributed, at Thales Council discretion, among those that make the top in the Affiliate Leaderboard.",
+        "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.<br><br>To kick-start this referral program, in addition to the fees earned by the traders you refer, there will be 20,000 OP tokens to be distributed, at Thales Council discretion, among those that make the top in the Affiliate Leaderboard.",
         "disclaimer": "We strongly advise affiliates to stay compliant with the regulatory guidelines on testimonials and endorsements from their respective countries or jurisdictions. We suggest all endorsements, reviews, testimonials on Thales' products and services, as well as relationships between other types of content websites (forums, blogs, microblogs, and other Social Media channels) and Thales are clearly disclosed. The end-user of Thales' products and services has the right to be informed, and understand, when he is directed to Thales website through a referral link. In addition, you may not in any manner misrepresent or embellish the relationship between Thales platform (or any of its products and services) and you. Thales Council in its sole discretion, has the right to suspend or end this Referral Program.<br>Thales' terms and conditions of use also apply to the use of this referral links platform."
     },
-    "wizzard-page": {
+    "wizard-page": {
         "title": "Buy Crypto with credit card",
-        "intro1": "Starting your journey on Optimism it's now easier than ever.",
-        "intro2": "You can now obtain sUSD, the main stablecoin used for trading on Thales, on Optimism with your Credit Card using MtPelerin integration and following the step-by-step onboarding wizard.",
-        "step1": "The first step is to install Metamask on your browser, if you don't have it already. This step provides you with your own Ethereum 'Hot Wallet' which is a baseline for all interactions with the Web3 applications in the likes of Thales. <b>Please make sure to follow all steps provided by Metamask install wizard carefully, and read the safety tips with full attention.</b>",
-        "step2": "The second step is to obtain Ethereum on Optimism using your credit card with the integrated 'Fiat to Crypto' on-ramp. If you used the first step to set up a new Metamask wallet, you would need to use the same wallet's address for the deposit of purchased Ethereum.",
-        "step3": "The third step is to exchange your acquired Ethereum for sUSD, the decentralized stablecoin that is used for trading on Thales, or if you prefer for either USDT, USDC, or DAI (which are all also currently supported on Thales).",
-        "step4": "The last step is to get rekt by the AMM, but always remember to have fun!!!"
+        "header": "Starting your Thales journey on Optimism it's now easier than ever.",
+        "intro": "You can now <b>obtain sUSD</b>, the main stablecoin used for trading on Thales, on Optimism <b>with your Credit Card</b> using MtPelerin integration and following the step-by-step onboarding wizard.<br/><br/>Currently Thales supports the Ethereum main net, Optimism, and Polygon network (these last two are Ethereum scaling solutions, also called Layer-2 networks).<br/><br/>Both of the supported Layer-2 networks, Optimism and Polygon, have significantly lower transaction fees than Ethereum main net.<br/><br/>For the purpose of this guide we’ll be focusing on the Optimism network. If you want to use the Polygon network the process is the same but you’ll need to obtain USDC instead of sUSD.<br/><br/>For trading on Thales markets you will need a few prerequisites:<br/>1. Have a Metamask wallet on your browser<br/>2. Connect to Optimism<br/>3. Buy Ethereum (ETH)<br/>4. Buy sUSD or exchange some Ethereum (ETH) for it<br/><br/>After these steps, you'll be ready to use all our products.<br/><br/><i>Let's start!</i>",
+        "step1-name": "Connect wallet",
+        "step2-name": "Buy Ethereum",
+        "step3-name": "Swap to stablecoin",
+        "step4-name": "Trade on Thales",
+        "step4-directional": "Directional",
+        "step4-ranged": "Ranged",
+        "step1-0": "The first step is to <b>install Metamask on your browser</b>. You can skip this step if you already have it installed.<br/><br/>This step provides you with your own Ethereum 'Hot Wallet' which is a baseline for all interactions with the Web3 applications in the likes of Thales. Please make sure to <b>follow all steps provided by Metamask install wizard carefully, and read the safety tips with full attention</b>.",
+        "step1-1": "After you install it you’ll need to “connect” your Metamask wallet. To do this follow the link by <b>clicking on the Metamask icon on the connect wallet card</b>.<br/><br/>In this case, as we are using the Optimism network as an example, you’ll need to connect your wallet and select the Optimism network.",
+        "step2": "Congratulations you have a web3 wallet!<br/><br/>The second step is to obtain Ethereum (ETH) on Optimism using your credit card with the integrated <b>'Fiat to Crypto' on-ramp</b>. If you completed the first step to set up a new Metamask wallet, you would need to use the same wallet's address for the deposit of the purchased Ethereum.<br/><br/>Use our handy on-ramp by <b>clicking on the card icon</b>. You can use any major card provider. Just follow the steps and if you need additional help you can read our documentation or watch the video that explains all the required steps.",
+        "step3": "The third step is to <b>exchange some of your acquired Ethereum (ETH) for sUSD</b>, the decentralized stablecoin that is used for trading on Thales, or if you prefer for either USDT, USDC, or DAI (which are all also currently supported on Thales).<br/><br/>You’ll need <b>Ethereum (ETH) to pay for transaction fees on the Optimism network</b>, so make sure to always have some.<br/><br/>And the <b>sUSD will be used to acquire positional tokens (UP or DOWN, IN or OUT)</b> when participating in Thales directional or ranged markets.<br/><br/>When you have Ethereum (ETH) and sUSD in your wallet, you are ready for the final step!<br/><br/><i>Note: If you already have any other supported cryptocurrencies you can exchange them for sUSD with our in-built swap functionality or in any of the major decentralized exchanges like 1Inch.exchange or Uniswap.</i>",
+        "step4": "You are <b>ready to trade</b>!<br/><br/>You have a working Metamask wallet and are connected to the network of your choice, in this case the Optimism network.<br/><br/>For additional information about our products read our documentation or check the video tutorials in the FAQ section.<br/><br/>If you have any questions regarding Thales protocol (and it’s products) or need help navigating this onboarding process we’ll be happy to support you on Thales Discord.",
+        "question1": "What is Web3?",
+        "answer1": "Web3 is the next great development in the internet, with a focus on decentralization and community governance and inclusion, that hopes to shape the future of both the financial and culture world. Blockchains, like Ethereum, are at the core of Web3 infrastructure due to its permissionless nature.",
+        "question2": "What is a wallet?",
+        "answer2": "A wallet is software that manages an address on a blockchain.  This includes stewardship of an address's private key and allows users to interact with decentralized apps (dApps).",
+        "question3": "What is Metamask?",
+        "answer3": "Metamask is a popular Web3 wallet developed by ConsenSys that allows users to interact with the Ethereum blockchain (as well as Ethereum’s Layer 2 networks).  Users can install a desktop browser extension or mobile app for iOS or Android.",
+        "question4": "What is sUSD?",
+        "answer4": "sUSD is the native stablecoin of the Synthetix ecosystem.  A stablecoin is a cryptocurrency that intends to mirror the price of the US dollar and is typically backed by a form of collateral.  sUSD is backed by the SNX token, which is used to “mint” sUSD, and is typically overcollateralized by 3 to 4 times the value of sUSD minted.  sUSD is the main form of collateral used by Thales Market, but other stable coins like USDT, USDC, and DAI are also supported.",
+        "question5": "What is a fiat On-Ramp?",
+        "answer5": "A fiat On-Ramp is a tool that allows users to exchange fiat currency, such as the US dollar, for cryptocurrency.  Companies offer to deposit cryptocurrency into a user's wallet once they’ve received a deposit of fiat currency from the user.  This allows the user to participate in Web3 applications.",
+        "question6": "What are transaction costs?",
+        "answer6": "To interact with the Ethereum blockchain (or one of its Layer 2 networks), users must pay a fee.  Each transaction or interaction that takes place on a blockchain must be included in a newly mined block and space within each block is limited.  To ensure a fair and efficient market, users must pay a market rate for each interaction using “gas”, which is a denomination of ETH.  The market rate for the amount of gas required will fluctuate with demand, and different types of interactions require different amounts of gas, depending on the computation load of the interaction.",
+        "question7": "What is Ethereum mainnet?",
+        "answer7": "Ethereum mainnet is the primary blockchain used to record interactions and balance for the Ethereum network.  There are several networks in use, including the Kovan testnet for testing and development, and Layer 2 networks like Optimism, that act as scaling solutions for the main blockchain.  Mainnet is used to store monetary value on the Etherum blockchain.",
+        "question8": "What is Optimism?",
+        "answer8": "Optimism is a Layer 2 network that works with Ethereum as a scaling solution.  Ethereum’s mainnet can become congested and expensive to transact with during periods of heavy usage, so the Optimism network has been deployed as a second layer “on top” of Ethereum’s mainnet.  Optimism uses different mechanisms to record transactions than mainnet, but it still utilizes the superior security and network effect of mainnet operating with much lower costs and faster processing speeds.",
+        "question9": "What is the Polygon network?",
+        "answer9": "The Polygon network is another type of scaling solution used in tandem with Ethereum’s mainnet.  Polygon can still be accessed using Metamask, but the network uses it’s own token, MATIC, as the native token for processing transactions instead of ETH like Ethereum mainnet and Optimism.",
+        "question10": "What other platforms support sUSD?",
+        "answer10": "Many protocols, both originating from the Synthetix platform and other completely unrelated to Synthetix, utilize sUSD as a form of collateral because of its level of decentralization and overcollateralized backing.  Protocols such as Kwenta, Lyra, and dHedge use sUSD, and you can acquire it from most mainstream DEXs (decentralized exchanges) such as Uniswap or 1inch.",
+        "question11": "What is a bridge?",
+        "answer11": "A bridge is a tool used to transfer cryptocurrency from one blockchain network to another.  For example, a user might exchange fiat currency for ETH using a centralized tool, which will deposit the asset on Ethereum’s mainnet.  The user can then “bridge” this ETH to another network, such as Optimism or Polygon, using a bridge.",
+        "question12": "What is a Parimutuel Market?",
+        "answer12": "A Parimutuel Market is a type of market that creates a shared pool of collateral and awards winning positions with a proportional share of the entire pool minus market fees. A market-settling event for a Parimutuel market can be one of two mutually exclusive outcomes (e.g. Thales Positional Markets like the UP or DOWN and IN or OUT markets), or it can be one of many mutually exclusive outcomes (e.g. Thales Exotic Market with multiple positions).",
+        "question13": "What are Directional Markets?",
+        "question13-link-text": "Watch video",
+        "answer13": "Directional markets, also called UP and DOWN markets, allow traders to purchase a position in relation to the price of an asset versus a target price (strike price) at a time (maturity date/time).  Traders can purchase a position based on a specific strike price at a certain time, and if they choose the correct direction (above/UP or below/DOWN) in relation to the assets actual price at the time of maturity, they can claim winnings.  For example, a trader might believe that ETH will end up above $1200 on April 12th, so they could find a directional market with a strike price of $1200 and a maturity date of April 12 and purchase UP tokens for this market.  If ETH does end up above $1200 on 4/12, then the trader could exercise their UP tokens and receive sUSD.",
+        "question14": "What are Ranged Markets?",
+        "question14-link-text": "Watch video",
+        "answer14": "Ranged Markets are similar to Directional Markets, but instead of using a single strike price, they utilize a “range” of prices, and traders can purchase IN or OUT positions in relation to this range.  For example, a trader can purchase an IN position for an ETH ranged market from 1000-1200, and if the price of ETH ends up within this range at the time of maturity, the trader can claim their winnings.",
+        "question15": "What are Positional Tokens?",
+        "answer15": "Positional Tokens are a form of digital asset stored on the blockchain and is used to represent positions in Directional (UP or DOWN positional tokens) and Ranged Markets (IN or OUT positional tokens).  Users can purchase a position for one of these markets by exchanging collateral for a positional token.  For example, if a trader wants to take a position for a ranged market stating that the price of the asset will end up outside of the specified range, they will purchase an OUT positional token.  If the trader is successful, they can exchange their positional token upon maturity for a certain amount of winnings.",
+        "question16": "Which crytocurrencies are supported?",
+        "answer16": "Thales Market currently uses sUSD as the main form of collateral when purchasing positions, but other stable coins are also utilized.  These include USDC, USDT and DAI.",
+        "video-header": "Video tutorial",
+        "buy-title": "Buy, Bridge & Send",
+        "buy-button1": "Buy with card",
+        "buy-button2": "Buy with card",
+        "buy-button3": "Bridge to optimism",
+        "buy-button4": "Send from Exchange"
     },
     "common": {
         "read-more": "Read more",
@@ -214,8 +266,10 @@
             "invalid-order-amount-max": "The UP amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
+            "enter-address": "Enter address",
             "enter-valid-slippage": "Enter a valid slippage percentage",
             "invalid-price": "Invalid price",
+            "invalid-address": "Invalid address",
             "invalid-price-max": "The price cannot be higher than ${{max}}",
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
@@ -252,7 +306,7 @@
             "leaderboard-label": "Leaderboard",
             "quick-trading-label": "Quick trading",
             "quick-trading-label-competition": "Comp. quick trading",
-            "earn-label": "THALES",
+            "earn-label": "THALES TOKEN",
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
             "game-label": "Tale of Thales",
@@ -261,7 +315,10 @@
             "amm-mining-label": "AMM rewards",
             "amm-reporting-label": "AMM reporting",
             "exotic-markets-label": "Exotic markets",
-            "wizard": "Thales Wizard"
+            "sport-markets-label": "Overtime markets",
+            "wizard": "Onboarding Wizard",
+            "op-rewards": "OP Rewards",
+            "vaults-label": "Vaults"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -278,7 +335,9 @@
             "button": {
                 "mainnet": "Switch to Mainnet",
                 "optimism": "Switch to Optimism",
-                "polygon": "Switch to Polygon"
+                "polygon": "Switch to Polygon",
+                "arbitrum": "Switch to Arbitrum",
+                "bsc": "Switch to BSC"
             }
         },
         "user-info-card": {
@@ -350,12 +409,12 @@
             "short": "Down",
             "my-trades": "My Trades",
             "amm": "AMM",
-            "orderbook": "Order book",
             "trade-type": "Trade type"
         },
         "home": {
             "polygon-trading-competition-1": "Thales incentivized trading competition is live on<bold>Polygon</bold>",
             "polygon-trading-competition-2": " click <bold>here</bold> to learn more",
+            "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
             "market-card": {
                 "current-asset-price": "Current asset price",
                 "pool-size": "Pool size",
@@ -371,7 +430,8 @@
                 "position-value": "Position value",
                 "claim": "CLAIM",
                 "claimed": "CLAIMED",
-                "rip": "RIP"
+                "rip": "RIP",
+                "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>."
             },
             "hot-market-card": {
                 "strike-price": "Strike price",
@@ -382,7 +442,11 @@
             "hot-markets": {
                 "tooltip-text": "Positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
                 "range-markets-tooltip-text": "Ranged positional Tokens available for purchase that currently have the highest Potential Profit if the market in question resolves in their favor.",
-                "most-profitable-markets": "Highest potential profit"
+                "most-profitable-markets": "Highest potential profit",
+                "discounted-positions": "Discounted positions",
+                "eligible-for": "eligible for",
+                "token-rewards": "token rewards",
+                "tooltip-text-discount": "Positional Tokens available for purchase that are currently on discount"
             },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets"
@@ -400,6 +464,7 @@
                 "asset-col": "Asset",
                 "24h-change-col": "24H Change",
                 "strike-price-col": "Strike price",
+                "discount-col": "Discount",
                 "asset-price-col": "Asset price",
                 "current-asset-price-col": "Current Asset Price",
                 "final-asset-price-col": "Final Asset Price",
@@ -462,162 +527,209 @@
                 "olympus-button-text": "Olympus PRO"
             },
             "thales-staking": {
-                "tab-title": "Staking",
-                "stake": {
-                    "stake": "Stake",
-                    "staking": "Staking",
-                    "available-to-stake": "Available to stake",
-                    "amount-to-stake": "Amount to stake",
-                    "confirmation-message": "Tokens successfully staked",
-                    "info-tooltip": "Available staking rewards will be claimed as part of the stake transaction.",
-                    "paused-message": "Staking is paused."
-                },
-                "my-stake": {
-                    "my-stake": "My Staking Balance",
-                    "staked-in-contract": "Staked directly",
-                    "locked-in-escrow": "Escrowed balance",
-                    "total-staked": "Total staked balance",
-                    "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
-                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards",
-                    "global-staking-stats": "Global staking stats",
-                    "total-thales-staked": "Total THALES Staked",
-                    "my-staked-share": "My Staked Share",
-                    "estimated-rewards": "Estimated rewards for this period",
-                    "bonus-apr-tooltip": "<0>Maximum bonus APR of {{max}}% per </0><1 />.",
-                    "bonus-apy-tooltip": "<0>Maximum bonus APY of {{max}}% per </0><1 />.",
-                    "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />."
-                },
-                "unstake": {
-                    "unstake": "Unstake",
-                    "unlock-cooldown-text": "Start unlocking cooldown during which the amount being unstaked is not counted in your staked balance",
-                    "cooldown-started-text": "You can unstake {{amount}} in",
-                    "cooldown-ended-text": "You can now unstake {{amount}}",
-                    "cooldown-label": "Cooldown",
-                    "start-unstaking": "Start unstaking",
-                    "cooldown-confirmation-message": "Unstaking successfully started",
-                    "unstake-confirmation-message": "Tokens successfully unstaked",
-                    "unstaking": "Unstaking",
-                    "amount-to-unstake": "Amount to unstake",
-                    "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
-                    "cancel": "Cancel unstaking",
-                    "canceling": "Canceling unstaking",
-                    "cancel-confirmation-message": "Unstaking successfully canceled",
-                    "network-fee-cancel": "Cancel",
-                    "network-fee-unstake": "Unstake",
-                    "info-tooltip": "Available staking rewards will be claimed as part of the start unstaking transaction.",
-                    "paused-message": "Unstaking is paused."
-                },
                 "staking-rewards": {
-                    "title": "Staking Rewards",
-                    "period": "Period",
-                    "total": "Total",
-                    "claim": "Claim",
-                    "claiming": "Claiming",
-                    "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
+                    "confirmation-message": "Tokens successfully claimed",
                     "not-eligible-message": "You are not eligible for these rewards.",
                     "paused-message": "Claiming is paused.",
-                    "confirmation-message": "Tokens successfully claimed",
-                    "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
-                    "weekly-base-rewards": "Weekly base rewards pool",
-                    "weekly-bonus-rewards": "Maximum bonus rewards on top of base rewards",
-                    "thales-staking-label": "Thales staking",
-                    "snx-staking-label": "SNX staking",
-                    "amm-label": "Protocol volume",
-                    "thales-royale-label": "Thales Royale",
-                    "max-reward-label": "Max reward: {{max}}",
-                    "bonus-info": {
-                        "current-snx-staking-label": "Current SNX staked",
-                        "additional-snx-staking-label": "Additional SNX to stake for max bonus",
-                        "current-amm-label": "Current protocol volume",
-                        "additional-amm-label": "Additional protocol volume for max bonus",
-                        "current-thales-royale-label": "Current participation",
-                        "thales-royale-participation-yes": "YES",
-                        "thales-royale-participation-no": "NO",
-                        "max-bonus-notice": "Eligible for maximum bonus"
-                    },
-                    "bonus-button": {
-                        "snx-staking-label": "Stake more SNX to get more THALES bonus",
-                        "amm-label": "Trade more to get more THALES bonus",
-                        "thales-royale-label": "Join Thales Royale and get THALES bonus"
-                    },
-                    "bonus-tooltip": {
-                        "snx-staking-title": "SNX staking bonus",
-                        "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{snxVolumeRewardsMultiplier}} SNX staked per THALES he would receive as base reward. If the staker has less SNX staked, he/she gets a bonus percentage multiplier based on the formula:",
-                        "amm-title": "Protocol volume bonus",
-                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker has at least {{ammVolumeRewardsMultiplier}} sUSD AMM or exotic markets volume in last 4 periods per THALES he gets as base reward. If the staker did less volume, he/she gets a bonus percentage multiplier based on the formula:",
-                        "thales-royale-title": "Thales Royale bonus",
-                        "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
-                    },
-                    "close-period": {
-                        "label": "Close period",
-                        "progress-label": "Closing period...",
-                        "confirmation-message": "Period successfully closed"
-                    },
+                    "claim": "Claim",
+                    "claiming": "Claiming",
                     "migrated-rewards": {
-                        "title": "Migrated retro rewards",
-                        "rewards-label": "Migrated retro rewards",
-                        "claimed-message": "You have already claimed migrated retro rewards.",
-                        "info-tooltip": "<0>Unclaimed retro rewards from L1 have been migrated to L2 per </0><1 />."
+                        "claimed-message": "You have already claimed migrated retro rewards."
                     },
                     "unclaimed-rewards": {
                         "title": "Migrated rewards",
                         "rewards-label": "Migrated rewards",
-                        "claimed-message": "You have already claimed migrated rewards.",
                         "info-tooltip": "<0>Unclaimed rewards for strategic investors per </0><1 />."
-                    },
-                    "info-tooltip": "Unclaimed weekly rewards are forfeit."
+                    }
                 }
             },
-            "vesting": {
-                "tab-title": "Vesting",
-                "schedule": {
-                    "title": "Vesting schedule",
-                    "table": {
-                        "date-time-col": "vesting date | time",
-                        "amount-col": "amount",
-                        "no-results": "No vesting schedule found."
+            "gamified-staking": {
+                "tab-title": "Gamified Staking",
+                "staking": {
+                    "section-title": "Staking",
+                    "section-description": "The Staking page is where you stake your THALES and see all the relevant staking data.",
+                    "apy-tooltip": "Annual Percentage Yield in THALES tokens from Staking THALES tokens.",
+                    "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
+                    "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />.",
+                    "total-thales-staked": "Total THALES Staked",
+                    "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract.",
+                    "staked-share": "My Staked Share",
+                    "staked-share-tooltip": "Your percentage (%) of the total amount of THALES staked.",
+                    "wallet-balance": "My Wallet Balance",
+                    "wallet-balance-tooltip": "Amount of non-staked THALES in your wallet.",
+                    "staked-balance": "My Staked Balance",
+                    "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
+                    "staked-balance-tooltip": "Amount of THALES tokens you are currently staking.",
+                    "staked-directly": "Staked directly",
+                    "escrow-balance": "Escrowed balance",
+                    "estimated-rewards": "Estimated rewards for this period",
+                    "stake": {
+                        "name": "Stake",
+                        "staking": "Staking",
+                        "available-to-stake": "Available to stake",
+                        "amount-to-stake": "Amount to stake:",
+                        "balance": "Balance:",
+                        "confirmation-message": "Tokens successfully staked",
+                        "info-tooltip": "Available staking rewards will be claimed as part of the stake transaction.",
+                        "paused-message": "Staking is paused."
+                    },
+                    "unstake": {
+                        "name": "Unstake",
+                        "unlock-cooldown-text": "Unlocking starts a cooldown period during which the amount of THALES unstaked isn't counted in your staked balance.",
+                        "cooldown-started-text": "You can unstake {{amount}} in",
+                        "cooldown-ended-text": "You can now unstake {{amount}}",
+                        "cooldown-label": "Cooldown",
+                        "start-unstaking": "Start unstaking",
+                        "cooldown-confirmation-message": "Unstaking successfully started",
+                        "unstake-confirmation-message": "Tokens successfully unstaked",
+                        "unstaking": "Unstaking",
+                        "amount-to-unstake": "Amount to unstake:",
+                        "balance": "Balance:",
+                        "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
+                        "cancel": "Cancel unstaking",
+                        "canceling": "Canceling unstaking",
+                        "cancel-confirmation-message": "Unstaking successfully canceled",
+                        "network-fee-cancel": "Cancel",
+                        "network-fee-unstake": "Unstake",
+                        "info-tooltip": "Available staking rewards will be claimed as part of the start unstaking transaction.",
+                        "paused-message": "Unstaking is paused."
                     }
                 },
-                "vest": {
-                    "available-to-vest": "Available to vest",
-                    "vest": "Vest",
-                    "vesting": "Vesting",
-                    "confirmation-message": "Tokens successfully vested"
+                "rewards": {
+                    "section-title": "Rewards",
+                    "section-description": "The Rewards page shows the THALES you have available for claiming.",
+                    "info": {
+                        "base": "As base rewards",
+                        "base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
+                        "bonus": "As bonus rewards",
+                        "bonus-description": "Maximum bonus rewards on top of base rewards is 50%. Bonus rewards are divided in 21,000 THALES weekly for the Protocol Usage bucket that counts sUSD volume from AMM trading, ranged AMM trading, Overtime sport's AMM trading and Exotic Markets participation, and 9,000 THALES per week to SNX stakers. <0>Learn More.</0>"
+                    },
+                    "volume": {
+                        "amm-label": "AMM markets",
+                        "amm-desc": "Current AMM market volume:",
+                        "ranged-label": "Ranged markets",
+                        "ranged-desc": "Current Ranged market volume:",
+                        "sports-desc": "Current Sports market volume:",
+                        "exotic-desc": "Current Exotic market volume:"
+                    },
+                    "no-thales-staked": "You have no THALES staked",
+                    "protocol": {
+                        "label": "Protocol usage bucket",
+                        "volume": "Volume",
+                        "bonus": "Additional volume needed for max possible rewards",
+                        "bonus-eligible": "You are eligible for max bonus rewards",
+                        "rewards": "Max reward",
+                        "estimated-rewards": "Estimated max reward"
+                    },
+                    "snx": {
+                        "label": "SNX Staking",
+                        "staked": "SNX Staked",
+                        "bonus": "Additional SNX to stake for max possible rewards",
+                        "bonus-eligible": "You are eligible for max bonus rewards",
+                        "rewards": "Max reward",
+                        "estimated-rewards": "Estimated max reward"
+                    },
+                    "claim": {
+                        "total-label": "Total claimable",
+                        "claim": "Claim Thales rewards",
+                        "claiming": "Claiming",
+                        "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
+                        "confirmation-message": "Tokens successfully claimed",
+                        "period": "Time left:",
+                        "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
+                        "paused-message": "Claiming is paused.",
+                        "not-eligible-message": "You are not eligible for these rewards.",
+                        "close-period": {
+                            "label": "Close period",
+                            "progress-label": "Closing period...",
+                            "confirmation-message": "Period successfully closed"
+                        },
+                        "op-tooltip": "OP token rewards for Gamified Staking are distributed directly to your wallet every 2 weeks."
+                    },
+                    "claim-on-behalf": {
+                        "label-1": "Looking to automate your claim?",
+                        "label-2": "Whitelist an address to claim on your behalf",
+                        "enable": "Enable claim on behalf"
+                    },
+                    "lp-staking": {
+                        "label-1": "thales/eth",
+                        "label-2": "LP Staking",
+                        "tooltip": "Provide THALES/WETH Liquidity to earn THALES+OP dual rewards. More info <0>here</0>."
+                    },
+                    "base-label": "Thales staking base rewards"
                 },
-                "info": {
-                    "title": "Vest your THALES staking rewards in escrow",
-                    "text": "THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
+                "vesting": {
+                    "section-title": "Vesting",
+                    "section-description": "Vest your THALES staking rewards in escrow. THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance.",
+                    "vest": {
+                        "available-to-vest": "Available to vest",
+                        "vest": "Vest",
+                        "vesting": "Vesting",
+                        "confirmation-message": "Tokens successfully vested"
+                    },
+                    "schedule-label": "Vesting schedule",
+                    "schedule-no-results": "No vesting schedule found."
                 },
-                "lp-staking": {
-                    "title": "You can provide liquidity for THALES/ETH pair and earn THALES rewards",
-                    "button-text": "Click here to earn THALES rewards"
+                "merge-account": {
+                    "section-title": "Merge account",
+                    "section-description": "<0>Account merging has been implemented per </0><1 />.",
+                    "source-account-label": "Source account",
+                    "destination-account-label": "Destination account",
+                    "confirmation-message": "Account successfully merged",
+                    "merge-account-disabled-message": "Account merging is disabled.",
+                    "info-message": "In order to merge account, you need to claim any outstanding staking rewards and cancel unstaking if any are in progress from both accounts.",
+                    "warning-message": "Once merged, all staked and escrowed THALES balances will be transferred to the destination account and won't be accessible from the source account.",
+                    "merge-blocked-message": {
+                        "title": "In order to merge account, you need to",
+                        "src-claim": "Claim the staking rewards from the source account.",
+                        "src-unstaking": "Cancel ustaking from the source account.",
+                        "dest-claim": "Claim the staking rewards from the destination account.",
+                        "dest-unstaking": "Cancel ustaking from the destination account."
+                    },
+                    "merge-button": {
+                        "label": "Merge account",
+                        "progress-label": "Merging in progress..."
+                    }
                 }
             },
             "lp-staking": {
                 "tab-title": "LP staking",
-                "rewards": {
-                    "title": "Rewards",
-                    "lp-staking": "LP staking",
-                    "claim": "Claim",
-                    "claiming": "Claiming",
-                    "claimed": "Successfully claimed"
-                },
-                "my-stake": {
-                    "title": "My staked tokens",
-                    "total-staked": "Total staked",
-                    "lp-tokens": "LP Tokens"
+                "section-title": "How LP Staking works?",
+                "instructions": {
+                    "step1-label": "Connect wallet",
+                    "step1-desc": "Connect your wallet to Optimism network and the Thales dapp in the top right corner of this page.",
+                    "step2-label": "Wrap ETH into WETH",
+                    "step2-desc": "To be able to provide liquidity and be eligible for LP rewards, you need to have Wrapped Ethereum. You can wrap your ETH to WETH on Optimism using this <0>Uniswap page</0>.",
+                    "step3-label": "Provide liquidity",
+                    "step3-desc": "Provide THALES+WETH liquidity to the G-UNI pool on Arrakis Finance UI (<0>here</0>). Once the transaction is confirmed, you will receive THALES/WETH G-UNI LP tokens in your wallet that represent your share of the liquidity pool.",
+                    "step4-label": "Stake",
+                    "step4-desc": "Now that you have your G-UNI LP tokens, you need to stake them on this page to start receiving THALES+OP rewards.",
+                    "step5-label": "Claim rewards",
+                    "step5-desc": "Now that you've staked your LP tokens you'll see your rewards accruing in the Rewards card of the LP staking page."
                 },
                 "info": {
-                    "tvl": "Total value locked (TVL)",
-                    "apr": "APR"
+                    "staked-balance": "My staked LP tokens balance",
+                    "staked-balance-tooltip": "How much liquidity you have staked in the LP staking contract.",
+                    "lp-tokens": "LP tokens",
+                    "tvl": "Total value locked<0/>",
+                    "tvl-tooltip": "Total amount of liquidity staked in the LP staking contract.",
+                    "share": "My staked share",
+                    "share-tooltip": "My percentage share of the total staked liquidity in the LP staking contract."
                 },
-                "provide-liquidity": {
-                    "description": "Obtain G-UNI LP tokens to stake by adding liquidity to the THALES/WETH pool.",
-                    "wrap-your-eth": "1. Wrap your ETH",
-                    "deposit": "2. Deposit THALES and WETH to the G-UNI pool",
-                    "stake-here": "3. Stake LP tokens on this page",
-                    "here": "here",
-                    "button-text": "Link to add liquidity"
+                "apr": {
+                    "total": "APR in total",
+                    "total-tooltip": "Total current Annual Percentage Return as sum of both OP and THALES rewards.",
+                    "thales": "THALES APR",
+                    "thales-tooltip": "Current Annual Percentage Return in THALES tokens.",
+                    "op": "OP APR",
+                    "op-tooltip": "Current Annual Percentage Return in OP tokens."
+                },
+                "claim": {
+                    "title": "Unclaimed rewards",
+                    "total-label": "Total claimable",
+                    "claim-rewards": "Claim rewards",
+                    "claiming-rewards": "Claiming rewards",
+                    "claimed": "Successfully claimed"
                 }
             },
             "table": {
@@ -626,6 +738,7 @@
                 "type-col": "type",
                 "amount-col": "amount",
                 "tx-status-col": "tx status",
+                "no-activity": "No activity to show",
                 "no-results": {
                     "all": "No transactions associated with this wallet.",
                     "claimRetroAirdrop": "No retro airdrop transactions associated with this wallet.",
@@ -641,7 +754,8 @@
                     "vest": "No vest transactions associated with this wallet.",
                     "lpStake": "No LP stake transactions associated with this wallet.",
                     "lpUnstake": "No LP unstake transactions associated with this wallet.",
-                    "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet."
+                    "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet.",
+                    "mergeAccount": "No merge account transactions associated with this wallet."
                 },
                 "types": {
                     "claimRetroAirdrop": "Claim retro airdrop",
@@ -657,13 +771,15 @@
                     "vest": "Vest",
                     "lpStake": "LP stake",
                     "lpUnstake": "LP unstake",
-                    "lpClaimStakingRewards": "Claim LP staking rewards"
+                    "lpClaimStakingRewards": "Claim LP staking rewards",
+                    "mergeAccount": "Merge account"
                 },
                 "filter": {
+                    "button": "filters",
                     "all": "All",
                     "claimRetroAirdrop": "Retro airdrop",
                     "claimRetroUnlocked": "Retro unlock",
-                    "claimStakingRewards": "Staking rewards",
+                    "claimStakingRewards": "Reward claims",
                     "claimMigratedRewards": "Migrated rewards",
                     "claimMigratedRetroRewards": "Migrated retro rewards",
                     "stake": "Stake",
@@ -674,7 +790,8 @@
                     "vest": "Vest",
                     "lpStake": "LP stake",
                     "lpUnstake": "LP unstake",
-                    "lpClaimStakingRewards": "LP staking rewards"
+                    "lpClaimStakingRewards": "LP staking rewards",
+                    "mergeAccount": "Merge account"
                 }
             },
             "overview": {
@@ -687,9 +804,31 @@
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",
                 "earn-info-tooltip": "View guide on how to provide liquidity",
                 "circulating-supply-label": "Circulating supply",
+                "total-burned-label": "Total THALES burned",
                 "total-supply-label": "Total supply",
-                "celer-bridge": "Celer bridge",
+                "celer-bridge": "Celer cBridge",
                 "celer-bridge-tooltip": "Fast bridge THALES between chains"
+            },
+            "claim-on-behalf": {
+                "title": "Claim on behalf",
+                "description": "<0>Claim on behalf has been implemented per </0><1 />.",
+                "guide": "<1 /><0> on how to automate your weekly claims</0>.",
+                "label": "Enter account for which you want to enable/disable claim on your behalf",
+                "account-label": "Account",
+                "enable-message": "Enable claim on your behalf for this account?",
+                "disable-message": "Claim on your behalf is enabled for this account. Disable?",
+                "enable-button": {
+                    "label": "Enable",
+                    "progress-label": "Enabling in progress...",
+                    "confirmation-message": "Claim on behalf successfully enabled for the account"
+                },
+                "disable-button": {
+                    "label": "Disable",
+                    "progress-label": "Disabling in progress...",
+                    "confirmation-message": "Claim on behalf successfully disabled for the account"
+                },
+                "enabled-addresses-title": "Accounts that are enabled to claim on your behalf",
+                "no-enabled-addresses-message": "No addresses assigned."
             }
         },
         "quiz": {
@@ -760,8 +899,18 @@
         },
         "market": {
             "header": {
-                "orderbook": "Order book",
                 "amm": "AMM"
+            },
+            "toast-messsage": {
+                "transaction-pending": "Transaction pending",
+                "swap-success": "Successfully swapped {{ currencyKey }}",
+                "approve-success": "Successfully approved",
+                "buy-success": "Successfully bought",
+                "sell-success": "Successfully sold",
+                "claim-winnings-success": "Winnings successfully claimed",
+                "claim-refund-success": "Refund successfully claimed",
+                "withdraw-success": "Successfuly withdrawn",
+                "get-usd-success": "{{amount}} successfully minted"
             },
             "ranged-markets": {
                 "strike-range": "Strike range"
@@ -821,7 +970,6 @@
                 "amm-widget": "AMM",
                 "trading-phase-widget": "Claim options",
                 "maturity-phase-widget": "Exercise options",
-                "orderbook-widget": "Order book",
                 "trade-widget": "Trade",
                 "chart-trading-view-widget": "Trading view",
                 "chart": "{{currencyKey}} chart",
@@ -900,43 +1048,6 @@
                 "market-tab-title": "Market",
                 "limit-tab-title": "Limit",
                 "mint-tab-title": "Mint",
-                "orderbook": {
-                    "title": "Order book",
-                    "buy": {
-                        "no-results": "No buy orders found."
-                    },
-                    "sell": {
-                        "no-results": "No sell orders found."
-                    },
-                    "filter": {
-                        "my-orders": {
-                            "tooltip-connected": "Orders you’ve created. Connect a wallet to start.",
-                            "tooltip-not-connected": "Orders you’ve created. Click on the row to enter or cancel order.",
-                            "buy": {
-                                "no-results": "You haven't created any buy order yet."
-                            },
-                            "sell": {
-                                "no-results": "You haven't created any sell order yet."
-                            }
-                        },
-                        "tooltips": {
-                            "all": "View all orders. Click on the row to fill order.",
-                            "buy": "View buy orders. Click on the row to fill order.",
-                            "sell": "View sell orders. Click on the row to fill order."
-                        }
-                    },
-                    "table": {
-                        "type-col": "Type",
-                        "price-col": "PRICE ({{token}})",
-                        "amount-col": "AMOUNT ({{currencyKey}})",
-                        "filled-col": "FILLED (%)",
-                        "return-col": "RETURN",
-                        "return-col-tooltip": "Potential return if this option wins",
-                        "total-col": "TOTAL ({{token}})",
-                        "time-remaining-col": "TIME REMAINING",
-                        "cancel-col-tooltip": "Click to cancel your order"
-                    }
-                },
                 "place-order": {
                     "modal": {
                         "buy": {
@@ -1453,18 +1564,6 @@
                 "expired": "Expired",
                 "expires": "Expires @"
             }
-        },
-        "order-book": {
-            "trade-up": "Trade Up Positions",
-            "trade-down": "Trade Down Positions",
-            "select-to": "Select to {{type}}",
-            "amount-to": "Amount to {{type}}",
-            "filters": {
-                "all": "All",
-                "buy-orders": "Buy orders",
-                "sell-orders": "Sell orders",
-                "my-orders": "My orders"
-            }
         }
     },
     "governance": {
@@ -1521,6 +1620,8 @@
                 "weighted": "Weighted voting"
             },
             "voted-in-label": "Voted in",
+            "not-voted-in-label": "Not voted in",
+            "voting-label": "Voting",
             "votes": "{{votes}} Votes",
             "voting-approval-status": {
                 "passed": "Passed",
@@ -1554,12 +1655,16 @@
         "type-label": "type",
         "total-buy-label": "Total to pay",
         "pay-with": "Pay with",
+        "allowing-in-progress": "In progress...",
+        "transaction-successful": "Transaction successful",
         "total-sell-label": "Total to receive",
         "return-label": "Potential profit",
         "return-tooltip": "Potential profit if this position wins",
         "skew-label": "Skew impact",
-        "progress": "Please wait...",
         "skew-tooltip": "AMM will add a price impact on the side it is more exposed to",
+        "discount-label": "Position discounted",
+        "discount-tooltip": "AMM will add a price impact on the side it is more exposed to",
+        "progress": "Please wait...",
         "max-limit-buy-tooltip": "The maximum amount of {{currencyKey}} positions for buying from AMM",
         "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} positions for sale to AMM",
         "amm-disabled-warning": "AMM trading is disabled for this market",
@@ -1600,12 +1705,12 @@
             },
             "title": "THALES GOVERNANCE",
             "paragraphs": {
-                "intro1": "Thales protocol governance system is composed of various <bold>decentralized autonomous organizations</bold> (DAOs) that oversee different parts of the protocol’s operations and developments.\n\n At the core of this governance structure are the <bold>THALES token stakers</bold>, that are responsible for overseeing and electing the DAO members themselves by <bold>voting</bold> on the different elections.",
+                "intro1": "Thales protocol governance system is composed of various <bold>decentralized autonomous organizations</bold> (DAOs) that oversee different parts of the protocol’s operations and developments.\n\n At the core of this governance structure are the <urlStaking><bold>THALES token stakers</bold></urlStaking>, that are responsible for overseeing and electing the DAO members themselves by <urlVoting><bold>voting</bold></urlVoting> on the different elections.",
                 "intro2": "The goal of this kind of governance framework is to promote <bold>censorship resistance</bold> and <bold>decentralization</bold> while also maintaining <bold>low friction</bold> for decision-making and new feature deployments.",
                 "1": "Each of these organizations has its own <bold>set of responsibilities</bold> and all of them together share the same mission of enabling the most optimal, efficient, and censorship-resistant way for the Thales community to be the main driving force of the project.",
-                "2": "Thales Council can be considered the <bold>chief advisory body of the Thales governance system.</bold>\n\n The Thales Council’s main responsibilities are conducting <bold>Thales Improvement Proposal (“TIP”) reviews,</bold> interacting with TIP proposers while <bold>debating the implications of proposed changes, and coordinating with the ProtocolDAO</bold> regarding the technical implications and implementations.\n\n But... what is a TIP?\n\n <url>Thales Improvement Proposals (TIPs)</url> are artifacts used to <bold>describe proposed changes to the core Thales protocol.</bold>\n\n They can be <bold>authored by anyone</bold> and feature the motivation, technical specifications, and rationale behind design decisions related to the proposed idea. It is basically a <bold>design document</bold> that provides information to the Thales community about a proposed change to the system.\n\n The author is responsible for building consensus within the <bold>community</bold> and documenting dissenting opinions.\n\n You can find all previous TIPs on the <bold>governance site</bold> and a draft with all the TIP-creation guidelines <bold>here.</bold>\n\n Members of the Thales Council are elected by the community utilizing their staked THALES tokens as voting power during the Thales Council elections. These elections are organized at pre-defined intervals where an open call for nominees (and their pitches) is performed. Everyone is welcome to nominate themselves and participate in Thales governance.",
+                "2": "Thales Council can be considered the <bold>chief advisory body of the Thales governance system.</bold>\n\n The Thales Council’s main responsibilities are conducting <bold>Thales Improvement Proposal (“TIP”) reviews,</bold> interacting with TIP proposers while <bold>debating the implications of proposed changes, and coordinating with the ProtocolDAO</bold> regarding the technical implications and implementations.\n\n But... what is a TIP?\n\n <url>Thales Improvement Proposals (TIPs)</url> are artifacts used to <bold>describe proposed changes to the core Thales protocol.</bold>\n\n They can be <url><bold>authored by anyone</bold></url> and feature the motivation, technical specifications, and rationale behind design decisions related to the proposed idea. It is basically a <bold>design document</bold> that provides information to the Thales community about a proposed change to the system.\n\n The author is responsible for building consensus within the <urlDisc><bold>community</bold></urlDisc> and documenting dissenting opinions.\n\n You can find all previous TIPs on the <urlGov><bold>governance site</bold></urlGov> and a draft with all the TIP-creation guidelines <urlDraft><bold>here.</bold></urlDraft>\n\n Members of the Thales Council are elected by the community utilizing their <urlStaking><bold>staked THALES</bold></urlStaking> tokens as voting power during the Thales Council elections. These elections are organized at pre-defined intervals where an open call for nominees (and their pitches) is performed. Everyone is welcome to nominate themselves and participate in Thales governance.",
                 "3": "The Treasury DAO’s primary purpose is to manage Thales protocol’s treasury and is responsible for properly incentivizing the other governing bodies, prioritizing asset management strategies, and supporting further developments of the protocol. All of the DAO roles of the Thales governance structure are paid a certain stipend by the Treasury DAO.\n\n This DAO doesn’t have regular elections at this early stage but could have if the Thales Council decides so when time is due.",
-                "4": "The Protocol DAO is the owner of Thales protocol’s core smart contracts and its main responsibilities are <bold>upgrading and releasing new contracts</bold> (on behalf of the Thales Council), <bold>implementation of approved TIPs</bold>, and <bold>operational security.</bold>\n\n The Protocol DAO is managed in an m-of-n multi-signature wallet (“Multisig”) capacity by its members, which are selected by balancing the need to populate this group with qualified and competent members aligned with the long-term interest of the project.\n\n This DAO doesn’t have regular elections at this early stage, due to its need to have constituents deeply familiarized with the protocol architecture, dependencies, and roadmap on a technical level.",
+                "4": "The Protocol DAO is the owner of Thales protocol’s core <url><bold>smart contracts</bold></url> and its main responsibilities are <bold>upgrading and releasing new contracts</bold> (on behalf of the Thales Council), <bold>implementation of approved TIPs</bold>, and <bold>operational security.</bold>\n\n The Protocol DAO is managed in an m-of-n multi-signature wallet (“Multisig”) capacity by its members, which are selected by balancing the need to populate this group with qualified and competent members aligned with the long-term interest of the project.\n\n This DAO doesn’t have regular elections at this early stage, due to its need to have constituents deeply familiarized with the protocol architecture, dependencies, and roadmap on a technical level.",
                 "5": "If you feel moved to contribute or are just curious about what Thales is doing, then by far the most optimal way to start your journey is to <url>join Thales Discord</url>, introduce yourself, and look where the interesting discussions are taking place.\n\n We’ll be waiting for you. Let’s build this together!"
             }
         },
@@ -1767,6 +1872,149 @@
             "migrate-and-bridge": "Choose this option if you have LEGACY THALES on L1, want to exchange it to THALES and bridge it to Optimism (L2)",
             "migrate": "Choose this option if you have LEGACY THALES on L1 and want to exchange it to THALES maintaining it on L1. Be mindful that most of the liquidity of THALES is on OP (L2)",
             "bridge": "Choose this option if you already have THALES on L1 and want to bridge it to OP (L2)"
+        }
+    },
+    "op-rewards": {
+        "title": "OP Rewards",
+        "description": "<bold>The Trading Incentives program</bold> is split into separate 14 day rounds. After each round a fixed amount of OP tokens + THALES tokens are to be distributed proportionally among all Buy Volume drivers across the Thales marketplace.<br/><br/>",
+        "description-2": "Total amount of tokens allocated as Trading Incentives: <bold>200,000 OP + 350,000 THALES</bold> <br/><br/>",
+        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 9,000 OP + 15,000 THALES split between UP token Buyers <br/>    - 9,000 OP + 15,000 THALES split between DOWN token Buyers<br/>        - 5,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>  - 5,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
+        "description-3-itm": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 2,000 OP + 3,000 THALES split between ITM token Buyers <br/>    - 5,000 OP + 7,000 THALES split between OTM token Buyers<br/>      - 8,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
+        "description-4": "<br/><br/>You can find all the detailed infomation on how to participate in <guidelinesLink>.",
+        "table": {
+            "wallet-address": "Wallet address",
+            "my-wallet-address": " My wallet address",
+            "no-rewards-info": "No rewards for this address",
+            "protocol-reward": "Gamified staking bonus",
+            "gamified-bonus-text": "Gamified Staking bonus rewards are triggered when you claim your weekly THALES staking rewards.",
+            "my-rewards": "My rewards",
+            "up-info": "UP tokens",
+            "down-info": "DOWN tokens",
+            "ranged-info": "Ranged tokens",
+            "discounted-info": "Discounted tokens",
+            "itm-info": "ITM tokens",
+            "otm-info": "OTM tokens",
+            "total-rewards": "Total rewards",
+            "reward-text": "Rewards:<0/> {{thales}} THALES, {{op}} OP",
+            "info-text": "Volume: {{volume}}, Percentage: {{percentage}}%",
+            "total-text": "{{thales}} THALES, {{op}} OP"
+        },
+        "round-end-label": "The round ends in",
+        "round-ended-label": "Round ended",
+        "up-volume-label": "UP Volume",
+        "down-volume-label": "DOWN Volume",
+        "ranged-volume-label": "RANGED Volume",
+        "discounted-volume-label": "DISCOUNTED Volume",
+        "itm-volume-label": "ITM Volume",
+        "otm-volume-label": "OTM Volume",
+        "volume-tooltip": "Current rewards:\n {{op}} + {{thales}} per $1,000 of Buy Volume"
+    },
+    "vaults": {
+        "title": "Vaults",
+        "strategy-label": "Vault strategy",
+        "risks-label": "Vault risks"
+    },
+    "vault": {
+        "discount-vault": {
+            "title": "Discount Vault",
+            "description": "<p>Buys positions that have more than {{odds}} odds and are available at a discount larger than {{discount}}.</p>",
+            "risks": "<p>The vault has an utilization rate of {{utilizationRate}} which ensures no more than {{utilizationRate}} of deposited to a round is put to risk. Furthermore, out of those {{utilizationRate}} a maximum of {{allocationLimitsPerMarketPerRound}} can be spent on a single market, thus diversifying the risk into multiple markets that have odds more than {{odds}}.</p>"
+        },
+        "degen-discount-vault": {
+            "title": "Degen Discount Vault",
+            "description": "<p>Buys positions at any odds that are available for more than {{discount}} discount.</p>",
+            "risks": "<p>The vault has an utilization rate of {{utilizationRate}} which ensures no more than {{utilizationRate}} of deposited to a round is put to risk. Furthermore, out of those {{utilizationRate}} a maximum of {{allocationLimitsPerMarketPerRound}} can be spent on a single market.</p>"
+        },
+        "safu-discount-vault": {
+            "title": "Safu Discount Vault",
+            "description": "<p>Buys positions that have more than {{odds}} odds and are available at any discount.</p>",
+            "risks": "<p>The vault has an utilization rate of {{utilizationRate}} which ensures no more than {{utilizationRate}} of deposited to a round is put to risk. Furthermore, out of those {{utilizationRate}} a maximum of {{allocationLimitsPerMarketPerRound}} can be spent on a single market, thus diversifying the risk into multiple markets that have odds more than {{odds}}.</p>"
+        },
+        "info": "<p>Thales vaults work in 1-week rounds. This is currently a beta release.</p><p>Once you deposit collateral (sUSD) into the vault, this will be queued to be used starting on the next round.</p><p>Each vault will automatically execute a pre-defined strategy based on its specific parameters. You can find a <vaultLink>detailed description of each parameter here</vaultLink>.</p><p>Users of the vaults can request to withdraw their collateral back to sUSD (+/- wins or losses of the vault) at any time during a round. Once that round ends the withdrawal will be processed.</p><p>All deposits that enter a round count towards gamified staking volume.</p>",
+        "variables-title": "Variables",
+        "variables-left": "<ul><li>Utilization rate: {{utilizationRate}}</li><li>Price lower limit: {{priceLowerLimit}}</li><li>Price upper limit: {{priceUpperLimit}}</li><li>Max Skew impact: {{skewImpactLimit}}</li><li>Max allocation on a single market: {{allocationLimitsPerMarketPerRound}}</li></ul>",
+        "variables-right": "<ul><li>Max total deposit: {{maxAllowedDeposit}}</li><li>Max users in the vault: {{maxAllowedUsers}}</li><li>Minimum amount on a single trade: {{minTradeAmount}}</li><li>Minimum deposit: {{minDepositAmount}}</li><li>Round duration: {{roundLength}} days</li></ul>",
+        "back-to-vaults": "Back to vaults",
+        "vault-not-started-message": "The vault has not started",
+        "vault-paused-message": "The vault is paused",
+        "round-allocation-label": "Total round deposit",
+        "spent-trading-label": "Spent on trading",
+        "available-trading-label": "Available for trading",
+        "round-end-label": "The round ends in",
+        "your-round-allocation-label": "Your allocation for the round: <bold>{{amount}}</bold>",
+        "your-next-round-allocation-label": "Your allocation for the next round: <bold>{{amount}}</bold>",
+        "estimated-amount-tooltip": "This is an estimated amount. The actual amount will be calculated upon closing the current round based on the round PnL.",
+        "next-round-start-label": "The next round starts in: <counter />",
+        "users-in-vault-label": "Users in the vault: {{number}} / {{max}}",
+        "vault-filled-label": "Vault filled: {{amount}} / {{max}}",
+        "deposit-message": "Deposit funds into the vault for the next round.",
+        "deposit-amount-label": "Deposit amount",
+        "deposit-amount-placeholder": "Enter amount",
+        "available-to-withdraw-label": "Available to withdraw: <bold>{{amount}}</bold>",
+        "nothing-to-withdraw-label": "Nothing to withdraw.",
+        "withdrawal-message": "You can request a withdrawal and your funds will be sent to you automatically at the end of the round when the round closes.",
+        "withdraw-round-end-label": "The round ends in: <counter />",
+        "withdrawal-requested-message": "You requested to withdraw <bold>{{amount}}</bold><tooltip />. Your funds will be sent to you automatically at the end of the round when the round closes.",
+        "withdrawal-request-label": "Withdrawal request: <bold>{{amount}}</bold>",
+        "first-deposit-withdrawal-message": "You deposited for the next round and you can withdraw these funds at the end of the next round.",
+        "round-ended-label": "Round ended",
+        "deposit-withdrawal-warning": "Withdrawal is requested, you cannot deposit.",
+        "deposit-max-amount-of-users-warning": "Maximum number of users in the vault is reached, you cannot deposit.",
+        "deposit-vault-cap-reached-warning": "The vault cap is reached, you cannot deposit.",
+        "deposit-vault-cap-error": "Deposit amount exceeds vault cap",
+        "deposit-min-amount-error": "The minimum amount for the deposit is {{amount}}",
+        "withdrawal-deposit-warning": "You cannot withdraw as you already deposited for the next round.",
+        "tabs": {
+            "deposit": "Deposit",
+            "claim": "Claim",
+            "withdraw": "Withdraw"
+        },
+        "button": {
+            "deposit-label": "Deposit",
+            "deposit-progress-label": "Deposit in progress...",
+            "deposit-confirmation-message": "Deposit successfully placed",
+            "request-withdrawal-label": "Request withdrawal",
+            "request-withdrawal-progress-label": "Request in progress...",
+            "request-withdrawal-confirmation-message": "Withdrawal request successfully sent",
+            "withdraw-label": "Withdraw",
+            "withdraw-progress-label": "Withdrawal in progress...",
+            "withdraw-confirmation-message": "Funds successfully withdrawn",
+            "close-round-label": "Close round",
+            "close-round-progress-label": "Closing round in progress...",
+            "close-round-confirmation-message": "Round successfully closed"
+        },
+        "trades-history": {
+            "title": "Vault trades history",
+            "no-trades": "No trades associated with this vault in the selected round.",
+            "round-label": "Round",
+            "table": {
+                "date-time-col": "date | time",
+                "wallet-address": "wallet address",
+                "type-col": "type",
+                "position-col": "position",
+                "amount-col": "amount",
+                "paid-col": "paid",
+                "asset": "asset",
+                "maturity-date-col": "maturity",
+                "strike-price-col": "strike price",
+                "usd-value-col": "usd value",
+                "result-col": "result",
+                "tx-status-col": "tx status"
+            }
+        },
+        "pnl": {
+            "title": "PnL per round",
+            "no-data": "No PnL data for previous rounds.",
+            "lifetime-pnl": "Lifetime PnL"
+        },
+        "user-transactions": {
+            "title": "User transactions",
+            "no-transactions": "No user transactions associated with this vault in the selected round.",
+            "type": {
+                "deposit": "Deposit",
+                "withdrawalRequest": "Withdrawal Request",
+                "claim": "Withdrawal Claim"
+            }
         }
     }
 }

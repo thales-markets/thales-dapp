@@ -18,12 +18,15 @@ import useRangedAMMMaxLimitsQuery, {
 import { RangedMarketBalanceInfo, RangedMarketData } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import { getIsBuyState } from 'redux/modules/marketWidgets';
 import Tooltip from 'components/Tooltip';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
+import { StyledMaterialTooltip, UsingAmmLink } from 'pages/Profile/components/MyPositions/MyPositions';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import styled from 'styled-components';
 
 const RowCardRangedMarket: React.FC = () => {
     const marketInfo = useRangedMarketContext();
@@ -80,13 +83,17 @@ const RowCardRangedMarket: React.FC = () => {
                 inPositionValue:
                     inPosition.sellPrice && inPosition.sellPrice > 0 && optBalances?.in > 0
                         ? inPosition.sellPrice * optBalances?.in
-                        : null,
+                        : 0,
                 outPositionValue:
                     outPosition.sellPrice && outPosition.sellPrice > 0 && optBalances?.out > 0
                         ? outPosition.sellPrice * optBalances?.out
-                        : null,
+                        : 0,
             };
         }
+        return {
+            inPositionValue: 0,
+            outPositionValue: 0,
+        };
     }, [ammMaxLimitsQuery.isLoading, optBalances?.in, optBalances?.out]);
 
     return (
@@ -283,35 +290,88 @@ type PositionPriceProps = {
         in: number;
         out: number;
     };
-    positionCurrentValue:
-        | undefined
-        | {
-              inPositionValue: number | null;
-              outPositionValue: number | null;
-          };
+    positionCurrentValue: {
+        inPositionValue: number;
+        outPositionValue: number;
+    };
 };
 
 const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue }) => {
+    const { t } = useTranslation();
     if (marketInfo?.phase == 'maturity' && marketInfo?.result) {
         return <>{`${formatCurrencyWithSign(USD_SIGN, optBalances[marketInfo?.result])}`}</>;
     }
 
+    const noPositions = optBalances.in == 0 && optBalances.out == 0;
+    const hasBothPositions = optBalances.in > 0 && optBalances.out > 0;
+    const isInOutOfLiqudity = optBalances.in > 0 && positionCurrentValue.inPositionValue == 0;
+    const isOutOutOfLiqudity = optBalances.out > 0 && positionCurrentValue.outPositionValue == 0;
+    const areBothOutOfLiqudity = isInOutOfLiqudity && isOutOutOfLiqudity;
+
     return (
         <>
             {optBalances.in > 0 &&
-                positionCurrentValue?.inPositionValue &&
-                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.inPositionValue)}`}
-            {positionCurrentValue?.outPositionValue &&
-                positionCurrentValue?.outPositionValue > 0 &&
-                positionCurrentValue?.inPositionValue &&
-                positionCurrentValue?.inPositionValue > 0 &&
-                ' / '}
+                positionCurrentValue.inPositionValue > 0 &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue.inPositionValue)}`}
+            {(isInOutOfLiqudity || areBothOutOfLiqudity) && (
+                <>
+                    N/A
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                components={[
+                                    <span key="1">
+                                        <UsingAmmLink key="2" />
+                                    </span>,
+                                ]}
+                            />
+                        }
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </>
+            )}
+
+            {hasBothPositions && !areBothOutOfLiqudity && ' / '}
+
             {optBalances.out > 0 &&
-                positionCurrentValue?.outPositionValue &&
-                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.outPositionValue)}`}
-            {!positionCurrentValue?.outPositionValue && !positionCurrentValue?.inPositionValue && 'N/A'}
+                positionCurrentValue.outPositionValue > 0 &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue.outPositionValue)}`}
+            {isOutOutOfLiqudity && !areBothOutOfLiqudity && (
+                <>
+                    N/A
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                components={[
+                                    <span key="1">
+                                        <UsingAmmLink key="2" />
+                                    </span>,
+                                ]}
+                            />
+                        }
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </>
+            )}
+
+            {noPositions && <>N/A</>}
         </>
     );
 };
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    min-width: 20px;
+    min-height: 20px;
+    margin-left: 6px;
+    margin-top: 3px;
+`;
 
 export default RowCardRangedMarket;

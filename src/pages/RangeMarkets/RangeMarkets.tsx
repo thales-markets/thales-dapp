@@ -6,14 +6,14 @@ import { getIsAppReady } from 'redux/modules/app';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
-import { POLYGON_ID } from 'constants/network';
-import { CONVERT_TO_6_DECIMALS } from 'constants/token';
 import { USD_SIGN } from 'constants/currency';
-import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsOVM, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import { formatCurrencyWithSignInRange } from 'utils/formatters/number';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
 import { RangedMarketUI } from 'types/options';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import Footer from 'components/Footer';
 
 const HotMarketsRanged = lazy(
     () => import(/* webpackChunkName: "HotMarketsRanged" */ './components/HotMarketsRanged/HotMarketsRanged')
@@ -27,6 +27,8 @@ const RangeMarkets: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const dispatch = useDispatch();
+
+    const showOPBanner = getIsOVM(networkId);
 
     useEffect(() => {
         if (!isWalletConnected && window.ethereum) {
@@ -58,14 +60,8 @@ const RangeMarkets: React.FC = () => {
                           asset: m.currencyKey,
                           availableIn: apiData?.availableIn ?? 0,
                           availableOut: apiData?.availableOut ?? 0,
-                          inPrice:
-                              +(networkId === POLYGON_ID
-                                  ? apiData?.inPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.inPrice) ?? 0,
-                          outPrice:
-                              +(networkId === POLYGON_ID
-                                  ? apiData?.outPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.outPrice) ?? 0,
+                          inPrice: apiData?.inPrice ?? 0,
+                          outPrice: apiData?.outPrice ?? 0,
                           ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
                           range: formatCurrencyWithSignInRange(USD_SIGN, m.leftPrice, m.rightPrice, 2),
                       };
@@ -116,12 +112,14 @@ const RangeMarkets: React.FC = () => {
                     />
                 </InfoBanner>
             </BannerContainer> */}
+            {showOPBanner && <OpRewardsBanner width={90} />}
             <Suspense fallback={<></>}>
                 <HotMarketsRanged optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>
             <Suspense fallback={<></>}>
                 <RangeMarketsTable optionsMarkets={optionsMarkets as any} exchangeRates={exchangeRates} />
             </Suspense>
+            <Footer />
 
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>

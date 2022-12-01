@@ -104,11 +104,13 @@ const SwapSectionWrapper = styled(FlexDivColumn)<{
     &:first-of-type {
         margin: 60px 20px 20px;
     }
-    &:nth-of-type(3) {
+    &:nth-of-type(1) {
         .react-select__indicators {
             display: none !important;
         }
-        margin: 20px 20px 20px;
+    }
+    &:nth-of-type(3) {
+        margin: 20px;
     }
     &.hide {
         display: none;
@@ -278,8 +280,7 @@ const SwapConfirmButton: StyledComponent<'button', any, { royaleTheme?: boolean 
     background: ${(props) => (props.royaleTheme ? 'var(--color)' : 'var(--border-color)')};
     border: ${(props) => (props.royaleTheme ? '1px solid var(--color)' : '1px solid var(--border-color)')};
     box-sizing: border-box;
-    box-shadow: ${(props) =>
-        props.royaleTheme ? ' 0px 0px 30px var(--color);' : ' 0px 0px 30px var(--border-color);'};
+    box-shadow: ${(props) => (props.royaleTheme ? ' 0px 0px 30px var(--color);' : ' 0px 0px 0px var(--border-color);')};
     border-radius: 20px;
     padding: 6px 15px 6px 20px;
     margin: 15px 20px;

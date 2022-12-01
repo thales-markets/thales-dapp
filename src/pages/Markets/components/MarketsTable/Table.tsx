@@ -4,7 +4,7 @@ import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
-import { getIsOVM, getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -19,7 +19,7 @@ import { getSynthName, sortCurrencies } from 'utils/currency';
 import { PaginationWrapper } from './MarketsTable';
 import { UI_COLORS } from 'constants/ui';
 import { OptionsMarkets } from 'types/options';
-import { get } from 'utils/localStore';
+import { get, set } from 'utils/localStore';
 import { saveTableSort } from 'utils/table';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 
@@ -35,6 +35,14 @@ const ammSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) =>
     }
 };
 
+const discountSort = () => (rowA: any, rowB: any, desc: boolean) => {
+    if (desc) {
+        return +rowA.original.discount > +rowB.original.discount ? 1 : -1;
+    } else {
+        return +rowA.original.discount < +rowB.original.discount ? 1 : -1;
+    }
+};
+
 const ammPriceSort = () => (rowA: any, rowB: any, columnId: string, desc: boolean) => {
     const leftPrice = rowA.values[columnId].props.red.slice(1);
     const rightPrice = rowB.values[columnId].props.red.slice(1);
@@ -45,6 +53,8 @@ const ammPriceSort = () => (rowA: any, rowB: any, columnId: string, desc: boolea
     }
 };
 
+const DEFAULT_PAGE_SIZE = 20;
+
 const Table: React.FC<{
     optionsMarkets: OptionsMarkets;
     showOnlyLiquid: any;
@@ -54,7 +64,11 @@ const Table: React.FC<{
     setAllAssets: any;
 }> = ({ optionsMarkets, showOnlyLiquid, assetFilters, searchText, exchangeRates, setAllAssets }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isL2OrPolygon = getIsOVM(networkId) || getIsPolygon(networkId);
+    const displayLiquidity =
+        getIsOVM(networkId) || getIsPolygon(networkId) || getIsBSC(networkId) || getIsArbitrum(networkId);
+
+    const displayDiscount =
+        getIsOVM(networkId) || getIsArbitrum(networkId) || getIsPolygon(networkId) || getIsBSC(networkId);
 
     const { t } = useTranslation();
 
@@ -89,6 +103,35 @@ const Table: React.FC<{
                 },
                 sortType: assetSort(),
             },
+
+            ...(displayDiscount
+                ? [
+                      {
+                          id: 'discountedSide',
+                          Header: t(`options.home.markets-table.discount-col`),
+                          accessor: 'discountedSide',
+                          Cell: (_props: any) => {
+                              if (_props.cell.value) {
+                                  return (
+                                      <>
+                                          <Icon
+                                              style={{
+                                                  color: _props.cell.value === 'DOWN' ? '#e53720' : '#4fbf67',
+                                                  marginRight: 8,
+                                              }}
+                                              className={`v2-icon v2-icon--${_props.cell.value.toLowerCase()}`}
+                                          ></Icon>
+                                          <span>{_props.row.original.discount}%</span>
+                                      </>
+                                  );
+                              } else {
+                                  return <span>-</span>;
+                              }
+                          },
+                          sortType: discountSort(),
+                      },
+                  ]
+                : []),
             {
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
@@ -110,7 +153,7 @@ const Table: React.FC<{
                     return <TimeRemaining end={_props?.cell?.value} fontSize={14} showFullCounter={true} />;
                 },
             },
-            ...(isL2OrPolygon
+            ...(displayLiquidity
                 ? [
                       {
                           Header: t(`options.home.markets-table.amm-size-col`),
@@ -135,7 +178,7 @@ const Table: React.FC<{
                       },
                   ]
                 : []),
-            ...(isL2OrPolygon
+            ...(displayLiquidity
                 ? [
                       {
                           Header: t(`options.home.markets-table.price-up-down-col`),
@@ -173,6 +216,12 @@ const Table: React.FC<{
 
     const data = useMemo(() => {
         const processedMarkets = optionsMarkets
+            .filter((market) => {
+                if (!showOnlyLiquid) return market;
+                if (market.availableLongs > 0 || market.availableShorts > 0) {
+                    return market;
+                }
+            })
             .map((market) => {
                 return {
                     address: market.address,
@@ -183,17 +232,13 @@ const Table: React.FC<{
                     availableShorts: market.availableShorts,
                     longPrice: formatCurrencyWithSign(USD_SIGN, market.longPrice, 2),
                     shortPrice: formatCurrencyWithSign(USD_SIGN, market.shortPrice, 2),
+                    discountedSide: market.discountedSide,
+                    discount: market.discount,
                     strikePrice: market.strikePrice,
                     currentPrice: exchangeRates?.[market.currencyKey] || 0,
                     timeRemaining: market.timeRemaining,
                     phase: market.phase,
                 };
-            })
-            .filter((market) => {
-                if (!showOnlyLiquid) return market;
-                if (market.availableLongs > 0 || market.availableShorts > 0) {
-                    return market;
-                }
             })
             .filter((market) => {
                 if (assetFilters?.length) {
@@ -207,13 +252,31 @@ const Table: React.FC<{
 
     useEffect(() => {
         let allAssets: Set<string> = new Set();
-        optionsMarkets.forEach((market) => {
-            if (!market.customMarket) allAssets.add(market.currencyKey);
-            // currentAssetPrice is required because it is part of GridSortFilters
+        optionsMarkets
+            .filter((market) => {
+                if (!showOnlyLiquid) return market;
+                if (market.availableLongs > 0 || market.availableShorts > 0) {
+                    return market;
+                }
+            })
+            .forEach((market) => {
+                if (!market.customMarket) allAssets.add(market.currencyKey);
+            });
+        allAssets = new Set(Array.from(allAssets).sort(sortCurrencies));
+        setAllAssets((prevAllAssets: Set<string>) => {
+            if (prevAllAssets.size) {
+                if (
+                    prevAllAssets.size !== allAssets.size ||
+                    !Array.from(prevAllAssets).every((element) => allAssets.has(element))
+                ) {
+                    return allAssets;
+                }
+            } else {
+                return allAssets;
+            }
+            return prevAllAssets;
         });
-        allAssets = new Set(Array.from(allAssets).sort(sortCurrencies).slice(0, 11));
-        setAllAssets(allAssets);
-    }, [optionsMarkets]);
+    }, [networkId, optionsMarkets, showOnlyLiquid]);
 
     // Custom global search filter -> useTable
     const ourGlobalFilterFunction = useCallback((rows: any, _columnIds: string[], filterValue: any) => {
@@ -264,6 +327,10 @@ const Table: React.FC<{
     );
 
     useEffect(() => {
+        gotoPage(0);
+    }, [assetFilters]);
+
+    useEffect(() => {
         setGlobalFilter(searchText);
     }, [searchText]);
 
@@ -282,18 +349,22 @@ const Table: React.FC<{
         gotoPage(newPage);
     };
 
+    const pageSizeLocalStorageKey = LOCAL_STORAGE_KEYS.MARKET_TABLE_PAGE_SIZE + networkId;
     const handleChangeRowsPerPage = (event: any) => {
-        setPageSize(parseInt(event.target.value, 10));
+        const userPageSize = parseInt(event.target.value, 10);
+        setPageSize(userPageSize);
         gotoPage(0);
+        set(pageSizeLocalStorageKey, userPageSize);
     };
+
+    useEffect(() => {
+        const userPageSize: number | undefined = get(pageSizeLocalStorageKey);
+        setPageSize(userPageSize ? userPageSize : DEFAULT_PAGE_SIZE);
+    }, []);
 
     useEffect(() => {
         gotoPage(0);
     }, [globalFilter, showOnlyLiquid]);
-
-    useEffect(() => {
-        setPageSize(20);
-    }, []);
 
     return (
         <>
@@ -359,7 +430,7 @@ const Table: React.FC<{
                 </tbody>
             </table>
             <PaginationWrapper
-                rowsPerPageOptions={[5, 10, 20, 25]}
+                rowsPerPageOptions={[10, 20, 30, 50]}
                 count={rows?.length ? rows.length : 0}
                 rowsPerPage={pageSize}
                 page={pageIndex}
@@ -375,6 +446,13 @@ const Arrow = styled.i`
     font-size: 15px;
     text-transform: none;
     color: var(--table-header-text-color);
+`;
+
+const Icon = styled.i`
+    @media (max-width: 568px) {
+        font-size: 16px;
+        line-height: 100%;
+    }
 `;
 
 const Text = styled.span`

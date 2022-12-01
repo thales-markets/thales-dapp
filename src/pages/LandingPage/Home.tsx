@@ -33,6 +33,14 @@ const Home: React.FC = () => {
 
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
+            <Info>
+                <Trans
+                    i18nKey="options.home.op-rewards-banner-message"
+                    components={{
+                        bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
+                    }}
+                />
+            </Info>
             {INFORMATION_BANNER_ACTIVE && (
                 <Info>
                     <Trans

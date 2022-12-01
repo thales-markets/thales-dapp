@@ -10,8 +10,11 @@ export const airdrop = {
         [Network.Goerli]: '', // TODO: goerli network remove or implement
         [Network['Mainnet-Ovm']]: '0x3Da91E5eD564eE46d4D734E1F99F395f0969101a',
         [Network['Kovan-Ovm']]: '0xAC1A4F1d912d30e3a546dcf6fc0F27c44CB1A058',
+        [Network['Goerli-Ovm']]: 'TBD',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
     },
     abi: [
         {

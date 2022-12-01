@@ -17,7 +17,6 @@ type TimeRemainingProps = {
 };
 
 const ONE_SECOND_IN_MS = 1000;
-//const ENDING_SOON_IN_HOURS = 48;
 
 export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     end,
@@ -116,13 +115,19 @@ const Container = styled.span<{ fontSize?: number; duration: Duration; showBorde
         font-size: ${(props) => props.fontSize || 10}px;
     }
     color: ${(props) => getColor(props.duration)};
-    border: 1px solid
-        ${(props) => (props.showBorder ? (getColor(props.duration) === '#D82418' ? '#D82418' : 'transparent') : 'none')};
+    border: ${(props) =>
+        props.showBorder
+            ? '1px solid ' + (getColor(props.duration) === '#D82418' ? '#D82418' : 'transparent')
+            : 'none'};
     padding: ${(props) => (props.showBorder ? '2px 12px 4px 12px' : '0')};
     border-radius: ${(props) => (props.showBorder ? '5px' : '0')};
     text-align: center;
     z-index: 3;
     white-space: pre;
+    text-transform: uppercase;
+    @media (max-width: 1192px) {
+        font-size: 12px;
+    }
 `;
 
 export default TimeRemaining;

@@ -10,8 +10,11 @@ export const binaryOptionsMarketDataContract = {
         [Network.Goerli]: '', // TODO: goerli network remove or implement
         [Network['Mainnet-Ovm']]: '0xE2881cAd27db4C27fB3814AD97ccA694B80c0fA0',
         [Network['Kovan-Ovm']]: '0xdBDAB336Cd97DB0F361DbD8C47EB4731674B62d7',
+        [Network['Goerli-Ovm']]: '0xa5621f9d9D0beE891c0C7ce9865CcDb5c0d10836',
         [Network['POLYGON-MUMBAI']]: '0xd6BEd7D753DCbbbb8937Dd009788d6c815aE3094',
         [Network['POLYGON-MAINNET']]: '0xAF662BB75e9c1b6bb3e6EF9c0BD4Ac3507646B9A',
+        [Network.BSC]: '0x308C5B6E489B693e1e582157aaBaF2d6df187aa1',
+        [Network.Arbitrum]: '0x3124A11216273018C8F37181b4505d36573D9701',
     },
     abi: [
         {

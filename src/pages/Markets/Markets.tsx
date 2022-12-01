@@ -11,24 +11,30 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
-import { POLYGON_ID, SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
-import { CONVERT_TO_6_DECIMALS } from 'constants/token';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import InfoBanner from 'components/InfoBanner';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { Trans } from 'react-i18next';
-import { NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import Footer from 'components/Footer';
+import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
 
-// const MAX_HOT_MARKETS = 6;
 const INFORMATION_BANNER_ACTIVE = false;
 
 const Markets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
+    const showOPBanner = getIsOVM(networkId);
+
+    const showDiscountMarkets =
+        getIsOVM(networkId) || getIsArbitrum(networkId) || getIsPolygon(networkId) || getIsBSC(networkId);
 
     const dispatch = useDispatch();
 
@@ -49,34 +55,49 @@ const Markets: React.FC = () => {
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const discountQuery = fetchDiscounts(networkId);
 
     const optionsMarkets = useMemo(() => {
-        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data) && openOrdersQuery.isSuccess) {
+        if (
+            marketsQuery.isSuccess &&
+            Array.isArray(marketsQuery.data) &&
+            openOrdersQuery.isSuccess &&
+            discountQuery.isSuccess
+        ) {
             const markets = openOrdersQuery.data
                 ? marketsQuery.data.map((m) => {
                       const apiData = (openOrdersQuery.data as any).get(m.address.toLowerCase());
+                      const discountData = (discountQuery.data as any).get(m.address.toLowerCase());
+                      let discountedSide;
+                      let discount = 0;
+                      if (discountData) {
+                          if (discountData.longPriceImpact < 0) {
+                              discountedSide = 'UP';
+                              discount = -Math.ceil(Math.abs(discountData.longPriceImpact));
+                          }
+                          if (discountData.shortPriceImpact < 0) {
+                              discountedSide = 'DOWN';
+                              discount = -Math.ceil(Math.abs(discountData.shortPriceImpact));
+                          }
+                      }
 
                       return {
                           ...m,
                           openOrders: apiData?.ordersCount ?? 0,
                           availableLongs: apiData?.availableLongs ?? 0,
                           availableShorts: apiData?.availableShorts ?? 0,
-                          longPrice:
-                              +(networkId === POLYGON_ID
-                                  ? apiData?.longPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.longPrice) ?? 0,
-                          shortPrice:
-                              +(networkId === POLYGON_ID
-                                  ? apiData?.shortPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.shortPrice) ?? 0,
+                          longPrice: apiData?.longPrice ?? 0,
+                          shortPrice: apiData?.shortPrice ?? 0,
                           ammLiquidity: Number(apiData?.availableLongs ?? 0) + Number(apiData?.availableShorts ?? 0),
+                          discountedSide,
+                          discount,
                       };
                   })
                 : marketsQuery.data;
             return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery, openOrdersQuery]);
+    }, [marketsQuery, openOrdersQuery, discountQuery]);
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
@@ -86,6 +107,7 @@ const Markets: React.FC = () => {
 
     return (
         <>
+            {showOPBanner && <OpRewardsBanner width={90} />}
             {INFORMATION_BANNER_ACTIVE && (
                 <BannerContainer>
                     <InfoBanner>
@@ -120,11 +142,12 @@ const Markets: React.FC = () => {
                 </BannerContainer>
             )}
             <Suspense fallback={<></>}>
-                <HotMarkets optionsMarkets={optionsMarkets} />
+                {showDiscountMarkets && <HotMarkets optionsMarkets={optionsMarkets} />}
             </Suspense>
             <Suspense fallback={<></>}>
                 <MarketsTable optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>
+            <Footer />
 
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>

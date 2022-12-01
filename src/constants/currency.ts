@@ -57,6 +57,14 @@ import { ReactComponent as OPIcon } from 'assets/currencies/crypto/OP.svg';
 import { ReactComponent as DAIIcon } from 'assets/currencies/crypto/DAI.svg';
 import { ReactComponent as USDCIcon } from 'assets/currencies/crypto/USDC.svg';
 import { ReactComponent as USDTIcon } from 'assets/currencies/crypto/USDT.svg';
+import { ReactComponent as LOOKSIcon } from 'assets/currencies/crypto/LOOKS.svg';
+import { ReactComponent as DYDXIcon } from 'assets/currencies/crypto/DYDX.svg';
+import { ReactComponent as ETCIcon } from 'assets/currencies/crypto/ETC.svg';
+import { ReactComponent as BUSDIcon } from 'assets/currencies/crypto/BUSD.svg';
+import { ReactComponent as MAGICIcon } from 'assets/currencies/crypto/MAGIC.svg';
+import { ReactComponent as DPXIcon } from 'assets/currencies/crypto/DOPEX.svg';
+import { ReactComponent as GMXIcon } from 'assets/currencies/crypto/GMX.svg';
+import { ReactComponent as CAKEIcon } from 'assets/currencies/crypto/CAKE.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -159,6 +167,14 @@ export const CRYPTO_CURRENCY = [
     'CVX',
     'OHM',
     'OP',
+    'LOOKS',
+    'DYDX',
+    'ETC',
+    'BUSD',
+    'MAGIC',
+    'DPX',
+    'GMX',
+    'CAKE',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -246,6 +262,14 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.USDC]: USDCIcon,
     [CRYPTO_CURRENCY_MAP.USDT]: USDTIcon,
     [CRYPTO_CURRENCY_MAP.OP]: OPIcon,
+    [CRYPTO_CURRENCY_MAP.LOOKS]: LOOKSIcon,
+    [CRYPTO_CURRENCY_MAP.DYDX]: DYDXIcon,
+    [CRYPTO_CURRENCY_MAP.ETC]: ETCIcon,
+    [CRYPTO_CURRENCY_MAP.BUSD]: BUSDIcon,
+    [CRYPTO_CURRENCY_MAP.MAGIC]: MAGICIcon,
+    [CRYPTO_CURRENCY_MAP.DPX]: DPXIcon,
+    [CRYPTO_CURRENCY_MAP.GMX]: GMXIcon,
+    [CRYPTO_CURRENCY_MAP.CAKE]: CAKEIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -311,6 +335,14 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.CVX]: 'Convex Finance',
     [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
     [CRYPTO_CURRENCY_MAP.OHM]: 'Optimism',
+    [CRYPTO_CURRENCY_MAP.LOOKS]: 'LooksRare',
+    [CRYPTO_CURRENCY_MAP.DYDX]: 'dYdX',
+    [CRYPTO_CURRENCY_MAP.ETC]: 'Ethereum Classic',
+    [CRYPTO_CURRENCY_MAP.BNB]: 'Binance Coin',
+    [CRYPTO_CURRENCY_MAP.MAGIC]: 'Magic',
+    [CRYPTO_CURRENCY_MAP.DPX]: 'Dopex',
+    [CRYPTO_CURRENCY_MAP.GMX]: 'GMX',
+    [CRYPTO_CURRENCY_MAP.CAKE]: 'PancakeSwap',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
@@ -325,7 +357,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.BCH]: 'binance-peg-bitcoin-cash',
     [CRYPTO_CURRENCY_MAP.LTC]: 'binance-peg-litecoin',
     [CRYPTO_CURRENCY_MAP.EOS]: 'eos',
-    [CRYPTO_CURRENCY_MAP.BNB]: 'oec-binance-coin',
+    [CRYPTO_CURRENCY_MAP.BNB]: 'binancecoin',
     [CRYPTO_CURRENCY_MAP.XTZ]: 'tezos',
     [CRYPTO_CURRENCY_MAP.XMR]: 'monero',
     [CRYPTO_CURRENCY_MAP.ADA]: 'binance-peg-cardano',
@@ -383,6 +415,13 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.CVX]: 'convex-finance',
     [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
     [CRYPTO_CURRENCY_MAP.OP]: 'optimism',
+    [CRYPTO_CURRENCY_MAP.LOOKS]: 'lookscoin',
+    [CRYPTO_CURRENCY_MAP.DYDX]: 'dydx',
+    [CRYPTO_CURRENCY_MAP.ETC]: 'ethereum-classic',
+    [CRYPTO_CURRENCY_MAP.MAGIC]: 'magic',
+    [CRYPTO_CURRENCY_MAP.DPX]: 'dopex',
+    [CRYPTO_CURRENCY_MAP.GMX]: 'gmx',
+    [CRYPTO_CURRENCY_MAP.CAKE]: 'pancakeswap-token',
 };
 
 export const currencyKeyToDataFeedSourceMap = {
@@ -535,12 +574,28 @@ export const currencyKeyToDataFeedSourceMap = {
         link: '',
     },
     [CRYPTO_CURRENCY_MAP.PERP]: {
-        source: 'TWAP',
-        link: 'https://optimistic.etherscan.io/address/0x535541f1aa08416e69dc4d610131099fa2ae7222',
+        source: 'CHAINLINK',
+        link: '',
     },
     [CRYPTO_CURRENCY_MAP.OP]: {
-        source: 'TWAP',
-        link: 'https://optimistic.etherscan.io/address/0x68f5c0a2de713a54991e01858fd27a3832401849',
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.LOOKS]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.DYDX]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ETC]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.CAKE]: {
+        source: 'CHAINLINK',
+        link: '',
     },
 };
 

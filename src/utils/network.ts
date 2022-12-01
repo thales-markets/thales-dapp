@@ -1,11 +1,12 @@
 import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
-import { GWEI_UNIT } from 'constants/network';
+import { GWEI_UNIT, POLYGON_GWEI_INCREASE_PERCENTAGE, POLYGON_ID, POLYGON_MUMBAI_ID } from 'constants/network';
 import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
 import { serializeTransaction } from 'ethers/lib/utils';
 
-export type NetworkId = 1 | 3 | 42 | 10 | 69 | 80001 | 137;
+export type NetworkId = 1 | 3 | 42 | 10 | 69 | 420 | 80001 | 137 | 56 | 42161;
 
 export enum Network {
     Mainnet = 1,
@@ -15,8 +16,11 @@ export enum Network {
     Kovan = 42,
     'Mainnet-Ovm' = 10,
     'Kovan-Ovm' = 69,
+    'Goerli-Ovm' = 420,
     'POLYGON-MUMBAI' = 80001,
     'POLYGON-MAINNET' = 137,
+    BSC = 56,
+    Arbitrum = 42161,
 }
 
 type EthereumProvider = {
@@ -30,8 +34,11 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISTIC',
     69: 'KOVAN-OPTIMISTIC',
+    420: 'GOERLI-OPTIMISTIC',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
+    56: 'BSC-MAINNET',
+    42161: 'ARBITRUM-ONE',
 };
 
 export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
@@ -40,8 +47,11 @@ export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISM-MAINNET',
     69: 'OPTIMISM-KOVAN',
+    420: 'OPTIMISM-GOERLI',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
+    56: '',
+    42161: 'ARBITRUM-ONE',
 };
 
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
@@ -50,8 +60,11 @@ export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISM MAINNET',
     69: 'OPTIMISM KOVAN',
+    420: 'OPTIMISM GOERLI',
     80001: 'POLYGON MUMBAI',
     137: 'POLYGON',
+    56: 'BINANCE SMART CHAIN MAINNET',
+    42161: 'ARBITRUM ONE',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
@@ -61,6 +74,8 @@ export const defaultNetwork: { name: string; networkId: NetworkId } = {
 
 export const hasEthereumInjected = () => !!window.ethereum;
 
+// Not in use anymore as detectEthereumProvider() doesn't always return value.
+// On page reload returns undefined and on hard reload returns good value from Metamask (e.g. 69)
 export async function getEthereumNetwork() {
     try {
         if (hasEthereumInjected()) {
@@ -99,16 +114,28 @@ export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
 
 export const getInfuraRpcURL = (networkId: NetworkId) => {
     const network = INFURA_SUPPORTED_NETWORKS[networkId];
+    if (!network) return '';
     return `https://${network?.toLowerCase()}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
+};
+
+export const getPublicRpc = (networkId: NetworkId) => {
+    if (networkId == Network.BSC) return 'https://bsc-dataseed.binance.org/';
+    return 'https://mainnet.optimism.io';
 };
 
 export const isNetworkSupported = (networkId: NetworkId): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
 };
 
-export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(networkId);
+export const getIsMultiCollateralSupported = (networkId: NetworkId): boolean => !!~[10].indexOf(networkId);
+
+export const getIsBSC = (networkId: number): boolean => !!~[56].indexOf(networkId);
+
+export const getIsOVM = (networkId: number): boolean => !!~[10, 69, 420].indexOf(networkId);
 
 export const getIsPolygon = (networkId: number): boolean => !!~[137, 80001].indexOf(networkId);
+
+export const getIsArbitrum = (networkId: number): boolean => !!~[42161].indexOf(networkId);
 
 export const formatGwei = (wei: number) => wei / GWEI_UNIT;
 
@@ -150,4 +177,42 @@ export const checkAllowance = async (amount: BigNumber, token: any, walletAddres
         console.log(err);
         return false;
     }
+};
+
+export const getProvider = (gasEstimate: BigNumber, gasInGwei: string, networkId: NetworkId) => {
+    if (networkId == POLYGON_ID || networkId == POLYGON_MUMBAI_ID) {
+        return {
+            gasLimit: formatGasLimit(gasEstimate, networkId),
+            gasPrice: ethers.utils.parseUnits(
+                Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
+                'gwei'
+            ),
+        };
+    }
+
+    if (networkId == Network.BSC) {
+        return {
+            gasLimit: formatGasLimit(gasEstimate, networkId),
+        };
+    }
+
+    return {
+        gasLimit: formatGasLimit(gasEstimate, networkId),
+    };
+};
+
+export const getDefaultCollateral = (networkId: NetworkId) => {
+    if (getIsPolygon(networkId) || getIsArbitrum(networkId)) {
+        return CRYPTO_CURRENCY_MAP.USDC;
+    }
+    if (networkId == Network.BSC) {
+        return CRYPTO_CURRENCY_MAP.BUSD;
+    }
+    return SYNTHS_MAP.sUSD;
+};
+
+export const getFeeCollateral = (networkId: NetworkId) => {
+    if (getIsPolygon(networkId)) return CRYPTO_CURRENCY_MAP.MATIC;
+    if (getIsBSC(networkId)) return CRYPTO_CURRENCY_MAP.BNB;
+    return CRYPTO_CURRENCY_MAP.ETH;
 };

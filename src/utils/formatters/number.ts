@@ -57,10 +57,16 @@ export const formatPercentageWithSign = (value: NumericValue, decimals = DEFAULT
     `${value > 0 ? '+' : ''}${formatPercentage(value, decimals)}`;
 
 // TODO: use a library for this, because the sign does not always appear on the left. (perhaps something like number.toLocaleString)
-export const formatCurrencyWithSign = (sign: string | null | undefined, value: NumericValue, decimals?: number) =>
+export const formatCurrencyWithSign = (
+    sign: string | null | undefined,
+    value: NumericValue,
+    decimals?: number,
+    trimDecimals?: boolean
+) =>
     `${value < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
         typeof value == 'number' ? Math.abs(value) : value,
-        decimals || getPrecision(value)
+        decimals !== undefined ? decimals : getPrecision(value),
+        trimDecimals
     )}`;
 
 export const formatCurrencyWithSignInRange = (
@@ -85,6 +91,14 @@ export const truncToDecimals = (value: NumericValue, decimals = DEFAULT_CURRENCY
     return matchedValue !== null ? matchedValue[0] : '0';
 };
 
+export const truncDecimals = (value: number, decimals = DEFAULT_CURRENCY_DECIMALS): string => {
+    const matchedValue = value
+        .toFixed(decimals) // when number has more than 6 decimals with preceding zeros (e.g. 0.0000001), toString() returns string in exponential notation (e.g. 1e-7)
+        .replace(/(?<=[1-9])0+/, '') // remove trailing zeros added by toFixed (excluding 0.00)
+        .match(`^-?\\\d+(?:\\\.\\\d{0,${decimals}})?`);
+    return matchedValue !== null ? matchedValue[0] : '0';
+};
+
 export const formatNumberShort = (value: number) => {
     // Nine Zeroes for Billions
     return value >= 1.0e9
@@ -97,10 +111,6 @@ export const formatNumberShort = (value: number) => {
         ? formatCurrency(value / 1.0e3, 2, true) + 'k'
         : formatCurrency(value, 2, true);
 };
-
-// export const convertToCurrency = (amount: number, valueInCurrency: number, currencySymbol: string) => {
-
-// }
 
 export const formatPricePercentageGrowth = (priceChange: number) => {
     return priceChange > 0 ? `+ ${Math.abs(priceChange).toFixed(2)}%` : `- ${Math.abs(priceChange).toFixed(2)}%`;

@@ -10,6 +10,7 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        Balance: (walletAddress: string, networkId: NetworkId) => ['balance', walletAddress, networkId],
         Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
         ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
         Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
@@ -87,7 +88,6 @@ export const QUERY_KEYS = {
             networkId,
         ],
         OptionPrices: (marketAddress: string) => ['binaryOptions', marketAddress],
-        MarketOrderBook: (optionsTokenAddress: string) => ['binaryOptions', 'marketOrderBook', optionsTokenAddress],
         AllTrades: (networkId: NetworkId) => ['binaryOptions', 'allTrades', networkId],
         Trades: (marketAddress: string) => ['binaryOptions', 'trades', marketAddress],
         UserTrades: (marketAddress: string, walletAddress: string) => [
@@ -103,6 +103,7 @@ export const QUERY_KEYS = {
         OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
         RangedLiquidity: (networkId: NetworkId) => ['binaryOptions', 'rangedLiquidity', networkId],
         AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
+        DiscountMap: (networkId: NetworkId) => ['binaryOptions', 'discountMap', networkId],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
@@ -131,6 +132,12 @@ export const QUERY_KEYS = {
     Staking: {
         Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],
         Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
+        ClaimOnBehalf: (walletAddress: string, networkId: NetworkId) => [
+            'staking',
+            'claimOnBehalf',
+            walletAddress,
+            networkId,
+        ],
     },
     Token: {
         Transactions: (walletAddress: string, networkId: NetworkId) => [
@@ -139,6 +146,13 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        OPProtocolRewards: (networkId: NetworkId, minTimestamp?: number, maxTimestamp?: number) => [
+            'opprotocolreward',
+            networkId,
+            minTimestamp,
+            maxTimestamp,
+        ],
+        UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['transactions', networkId, period],
         VestingSchedule: (walletAddress: string, networkId: NetworkId) => [
             'token',
             'vesting',
@@ -178,7 +192,7 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        Gelato: (totalGelatoLocked: number) => ['token', 'Gelato', totalGelatoLocked],
+        Gelato: () => ['token', 'Gelato'],
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
@@ -278,6 +292,21 @@ export const QUERY_KEYS = {
             snapshot,
             walletAddress,
         ],
+    },
+    Bungee: {
+        Tokens: () => ['bungee', 'tokens'],
+    },
+    Vault: {
+        Data: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'data', networkId],
+        UserData: (vaultAddress: string, walletAddress: string, networkId: NetworkId) => [
+            vaultAddress,
+            'data',
+            walletAddress,
+            networkId,
+        ],
+        Trades: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'trades', networkId],
+        PnL: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'pnl', networkId],
+        UserTransactions: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'userTransactions', networkId],
     },
 };
 

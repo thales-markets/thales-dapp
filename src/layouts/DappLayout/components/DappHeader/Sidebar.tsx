@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { buildHref } from 'utils/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
-import { getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
@@ -13,14 +13,42 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { isMobile } from 'utils/device';
+import debounce from 'lodash/debounce';
 
 const Sidebar: React.FC = () => {
     const location = useLocation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
+    const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+
     const { t } = useTranslation();
     const [collapse, setCollapse] = useState(false);
+
+    const [isMobileState, setIsMobileState] = useState(isMobile());
+
+    const showWizardPage = !isPolygon && !isMobileState && !isBSC && !isArbitrum;
+    const showTokenPage = !isPolygon && !isBSC && !isArbitrum;
+    const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
+    const showVaultsPage = !isPolygon && !isBSC && !isArbitrum;
+
+    useEffect(() => {
+        const handleResize = debounce(() => {
+            if (isMobile()) {
+                setIsMobileState(true);
+            } else {
+                setIsMobileState(false);
+            }
+        }, 100);
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            handleResize.cancel();
+        };
+    }, []);
 
     return (
         <SidebarHtml id="sidebar">
@@ -51,12 +79,19 @@ const Sidebar: React.FC = () => {
                     label={t('common.sidebar.markets')}
                 />
 
-                {!isPolygon && (
+                <DappHeaderItem
+                    className={`show ${location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}`}
+                    href={buildHref(ROUTES.Options.RangeMarkets)}
+                    iconName="ranged-markets"
+                    label={t('common.sidebar.ranged-markets')}
+                />
+
+                {showVaultsPage && (
                     <DappHeaderItem
-                        className={`show ${location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.RangeMarkets)}
-                        iconName="ranged-markets"
-                        label={t('common.sidebar.ranged-markets')}
+                        className={`show ${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
+                        href={buildHref(ROUTES.Options.Vaults)}
+                        iconName="vaults"
+                        label={t('common.sidebar.vaults-label')}
                     />
                 )}
 
@@ -70,18 +105,27 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.leaderboard-label')}
                     />
                 )} */}
-                {!isPolygon && (
+
+                {showWizardPage && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Referral ? 'selected' : ''
+                            location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
                         }`}
-                        href={buildHref(ROUTES.Options.Referral)}
-                        iconName="referral-page"
-                        label={t('referral-page.title')}
+                        href={buildHref(ROUTES.Options.Wizard)}
+                        iconName="wizard"
+                        label={t('common.sidebar.wizard')}
                     />
                 )}
+                <DappHeaderItem
+                    className={`${collapse ? 'show' : ''} ${
+                        location.pathname === ROUTES.Options.Referral ? 'selected' : ''
+                    }`}
+                    href={buildHref(ROUTES.Options.Referral)}
+                    iconName="referral-page"
+                    label={t('referral-page.title')}
+                />
                 <Divider />
-                {!isPolygon && (
+                {showTokenPage && (
                     <DappHeaderItem
                         className={`show ${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
                         href={buildHref(ROUTES.Options.Token)}
@@ -89,6 +133,18 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.earn-label')}
                     />
                 )}
+
+                {showOPRewardsPage && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.OPRewards ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.OPRewards)}
+                        iconName="optimism"
+                        label={t('common.sidebar.op-rewards')}
+                    />
+                )}
+
                 <DappHeaderItem
                     className={`${collapse ? 'show' : ''} ${
                         location.pathname === ROUTES.Governance.Home ? 'selected' : ''
@@ -97,18 +153,7 @@ const Sidebar: React.FC = () => {
                     iconName="governance"
                     label={t('common.sidebar.governance-label')}
                 />
-
                 <Divider />
-                {!isPolygon && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Royal ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Royal)}
-                        iconName="thales-royale"
-                        label={t('common.sidebar.royale-label')}
-                    />
-                )}
                 <DappHeaderItem
                     className={`${collapse ? 'show' : ''} ${
                         location.pathname === ROUTES.Options.Game ? 'selected' : ''
@@ -130,29 +175,20 @@ const Sidebar: React.FC = () => {
                 <Divider />
                 <DappHeaderItem
                     className={collapse ? 'show' : ''}
-                    href={LINKS.ExoticMarkets}
-                    iconName="exotic-markets"
-                    label={t('common.sidebar.exotic-markets-label')}
+                    href={LINKS.SportMarkets}
+                    iconName="overtime-markets"
+                    label={t('common.sidebar.sport-markets-label')}
                     onClick={(event: any) => {
                         event.preventDefault();
                         if (window.innerWidth <= 767) {
-                            window.location.replace(LINKS.ExoticMarkets);
+                            window.location.replace(LINKS.SportMarkets);
                         } else {
-                            window.open(LINKS.ExoticMarkets);
+                            window.open(LINKS.SportMarkets);
                         }
                     }}
                     simpleOnClick={true}
                 />
-                {!isPolygon && (
-                    <DappHeaderItem
-                        className={`${collapse ? 'show' : ''} ${
-                            location.pathname === ROUTES.Options.Wizzard ? 'selected' : ''
-                        }`}
-                        href={buildHref(ROUTES.Options.Wizzard)}
-                        iconName="wizard"
-                        label={t('common.sidebar.wizard')}
-                    />
-                )}
+
                 <ThreeDotsContainer
                     onClick={(event) => {
                         event.stopPropagation();

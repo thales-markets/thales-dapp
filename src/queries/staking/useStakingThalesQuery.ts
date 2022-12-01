@@ -16,6 +16,7 @@ type StakingThalesQueryResponse = {
     totalStakedAmount: number;
     paused: boolean;
     maxBonusRewardsPercentage: number;
+    mergeAccountEnabled: boolean;
 };
 
 const useStakingThalesQuery = (
@@ -37,6 +38,7 @@ const useStakingThalesQuery = (
                 totalStakedAmount: 0,
                 paused: false,
                 maxBonusRewardsPercentage: 0,
+                mergeAccountEnabled: true,
             };
 
             try {
@@ -48,6 +50,7 @@ const useStakingThalesQuery = (
                     maxSNXRewardsPercentage,
                     maxAMMVolumeRewardsPercentage,
                     maxThalesRoyaleRewardsPercentage,
+                    mergeAccountEnabled,
                 ] = await Promise.all([
                     (snxJSConnector as any).stakingThalesContract.unstakeDurationPeriod(),
                     (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
@@ -56,6 +59,7 @@ const useStakingThalesQuery = (
                     (snxJSConnector as any).stakingThalesContract.maxSNXRewardsPercentage(),
                     (snxJSConnector as any).stakingThalesContract.maxAMMVolumeRewardsPercentage(),
                     (snxJSConnector as any).stakingThalesContract.maxThalesRoyaleRewardsPercentage(),
+                    (snxJSConnector as any).stakingThalesContract.mergeAccountEnabled(),
                 ]);
 
                 staking.unstakeDurationPeriod = Number(unstakeDurationPeriod) * 1000;
@@ -66,6 +70,7 @@ const useStakingThalesQuery = (
                     Number(maxSNXRewardsPercentage) +
                     Number(maxAMMVolumeRewardsPercentage) +
                     Number(maxThalesRoyaleRewardsPercentage);
+                staking.mergeAccountEnabled = mergeAccountEnabled;
 
                 if (walletAddress !== '') {
                     const [isUnstaking, lastUnstakeTime, thalesStaked, unstakingAmount, rewards] = await Promise.all([

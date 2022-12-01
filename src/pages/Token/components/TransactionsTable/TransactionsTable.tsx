@@ -1,7 +1,7 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/Table';
@@ -17,6 +17,24 @@ type TransactionsTableProps = {
 
 export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
+
+    const amountSort = useMemo(
+        () => (rowA: any, rowB: any, columnId: any, desc: any) => {
+            let a = rowA.values[columnId];
+            let b = rowB.values[columnId];
+
+            if (a === 0) {
+                // Zeros to bottom
+                a = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            }
+            if (b === 0) {
+                b = desc ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            }
+            return a > b ? 1 : a < b ? -1 : 0;
+        },
+        []
+    );
+
     return (
         <>
             <Table
@@ -34,29 +52,39 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         Header: <>{t('options.earn.table.type-col')}</>,
                         accessor: 'type',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['type']>) => (
-                            <p>{t(`options.earn.table.types.${cellProps.cell.value}`)}</p>
+                            <p>
+                                {t(
+                                    `options.earn.table.types.${
+                                        cellProps.cell.value === TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND
+                                            ? TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS
+                                            : cellProps.cell.value
+                                    }`
+                                ).toUpperCase()}
+                            </p>
                         ),
-                        width: 150,
                         sortable: true,
                     },
                     {
                         Header: <>{t('options.earn.table.amount-col')}</>,
-                        sortType: 'basic',
+                        sortType: amountSort,
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
                             <p>
-                                {cellProps.cell.row.original.type !== TransactionFilterEnum.CANCEL_UNSTAKE
+                                {cellProps.cell.row.original.type !== TransactionFilterEnum.CANCEL_UNSTAKE &&
+                                cellProps.cell.row.original.type !== TransactionFilterEnum.MERGE_ACCOUNT
                                     ? formatCurrencyWithKey(
                                           cellProps.cell.row.original.type === TransactionFilterEnum.LP_STAKE ||
                                               cellProps.cell.row.original.type === TransactionFilterEnum.LP_UNSTAKE
                                               ? LP_TOKEN
+                                              : cellProps.cell.row.original.type ===
+                                                TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS_SECOND
+                                              ? CRYPTO_CURRENCY_MAP.OP
                                               : THALES_CURRENCY,
                                           cellProps.cell.value
                                       )
                                     : EMPTY_VALUE}
                             </p>
                         ),
-                        width: 150,
                         sortable: true,
                     },
                     {
@@ -65,13 +93,12 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         Cell: (cellProps: CellProps<TokenTransaction>) => (
                             <ViewEtherscanLink hash={cellProps.cell.row.original.hash} />
                         ),
-                        // ),
-                        width: 150,
                     },
                 ]}
                 data={transactions}
                 isLoading={isLoading}
                 noResultsMessage={noResultsMessage}
+                tableHeadCellStyles={{ color: '#64D9FE' }}
             />
         </>
     );

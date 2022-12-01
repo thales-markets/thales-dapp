@@ -21,9 +21,13 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import Loader from '../../components/Loader';
-import { getIsPolygon } from '../../utils/network';
+import { getIsOVM, getIsPolygon } from '../../utils/network';
 import useRangedPositions from 'queries/user/useRangedPositions';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import localStore from 'utils/localStore';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import Footer from 'components/Footer';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -43,6 +47,8 @@ const Profile: React.FC = () => {
     const markets = marketsQuery.isSuccess ? marketsQuery.data : [];
     const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
     const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
+
+    const showOPBanner = getIsOVM(networkId);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
@@ -72,13 +78,21 @@ const Profile: React.FC = () => {
         : { claimable: 0, claimableAmount: 0, matured: [], live: [], claimed: [] };
 
     const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
-        enabled: isAppReady,
+        enabled: isAppReady && walletAddress !== null,
     });
     const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
-    const [isSimpleView, setSimpleView] = useState(true);
+    const tableViewStorageKey = LOCAL_STORAGE_KEYS.PROFILE_TABLE_VIEW + networkId;
+    const tableViewLocalStorageValue: boolean = localStore.get(tableViewStorageKey) || false;
+
+    const [isSimpleView, setSimpleView] = useState<boolean>(!tableViewLocalStorageValue);
     const [searchText, setSearchText] = useState('');
     const [view, setView] = useState(NavItems.MyPositions);
+
+    const tableViewSwitchClickhandler = () => {
+        setSimpleView(!isSimpleView);
+        localStore.set(tableViewStorageKey, isSimpleView);
+    };
 
     const claimable = useMemo(() => {
         return positions.claimable + userRangePositions.claimable;
@@ -102,6 +116,7 @@ const Profile: React.FC = () => {
 
     return (
         <>
+            {showOPBanner && <OpRewardsBanner />}
             <Container layout={isSimpleView}>
                 <Container.Fixed>
                     <SearchField
@@ -111,7 +126,7 @@ const Profile: React.FC = () => {
                     />
                     <TableGridSwitch
                         value={!isSimpleView}
-                        clickEventHandler={setSimpleView.bind(this, !isSimpleView)}
+                        clickEventHandler={tableViewSwitchClickhandler}
                         labels={['Grid', 'Table']}
                     />
                 </Container.Fixed>
@@ -175,7 +190,9 @@ const Profile: React.FC = () => {
                     </ContentWrapper>
                 </Container.Left>
                 <Container.Right layout={isSimpleView}>
-                    <PieChartOptionsAllocated claimable={positions.claimableAmount} />
+                    <PieChartOptionsAllocated
+                        claimable={positions.claimableAmount + userRangePositions.claimableAmount}
+                    />
                     <Wrapper>
                         <Wrapper.Row>
                             <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
@@ -213,6 +230,7 @@ const Profile: React.FC = () => {
                     </Wrapper>
                 </Container.Right>
             </Container>
+            <Footer />
             {networkId === 1 && <Loader hideMainnet={true} />}
         </>
     );

@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 type AccountInfo = {
     balance: number;
     rawBalance: string;
@@ -32,7 +34,9 @@ export type TokenTransactionType =
     | 'vest'
     | 'lpStake'
     | 'lpUnstake'
-    | 'lpClaimStakingRewards';
+    | 'lpClaimStakingRewards'
+    | 'lpClaimStakingRewardsSecond'
+    | 'mergeAccount';
 
 export type TokenTransaction = {
     hash: string;
@@ -41,6 +45,29 @@ export type TokenTransaction = {
     timestamp: number;
     amount: number | string;
     blockNumber: number;
+};
+
+export enum TokenTabEnum {
+    GAMIFIED_STAKING = 'gamified-staking',
+    LP_STAKING = 'lp-staking',
+    MIGRATION = 'migration',
+    STRATEGIC_INVESTORS = 'strategic-investors',
+}
+
+export enum TokenTabSectionIdEnum {
+    STAKING = 'staking',
+    REWARDS = 'rewards',
+    VESTING = 'vesting',
+    MERGE_ACCOUNT = 'merge-account',
+    LP_STAKING = 'lp-staking',
+}
+
+export type TokenTabSection = {
+    tab: TokenTabEnum;
+    id: TokenTabSectionIdEnum;
+    title: string;
+    description: string | ReactElement;
+    isButton: boolean;
 };
 
 export enum TransactionFilterEnum {
@@ -59,6 +86,8 @@ export enum TransactionFilterEnum {
     LP_STAKE = 'lpStake',
     LP_UNSTAKE = 'lpUnstake',
     LP_CLAIM_STAKING_REWARDS = 'lpClaimStakingRewards',
+    LP_CLAIM_STAKING_REWARDS_SECOND = 'lpClaimStakingRewardsSecond',
+    MERGE_ACCOUNT = 'mergeAccount',
 }
 
 export type TokenTransactions = TokenTransaction[];
@@ -85,7 +114,6 @@ export type StakingReward = {
     totalBonus: number;
     snxBonus: number;
     ammBonus: number;
-    thalesRoyaleBonus: number;
     maxSnxBonusPercentage: number;
     maxAmmBonusPercentage: number;
     maxThalesRoyaleBonusPercentage: number;
@@ -96,6 +124,10 @@ export type StakingReward = {
     snxVolumeRewardsMultiplier: number;
     snxStaked: number;
     ammVolume: number;
+    thalesAmmVolume: number;
+    rangedAmmVolume: number;
+    sportsAmmVolume: number;
+    exoticVolume: number;
     hasParticipatedInCurrentOrLastRoyale: boolean;
 };
 
@@ -119,6 +151,7 @@ export type MigratedReward = {
 export type TokenInfo = {
     totalSupply: number;
     circulatingSupply: number;
+    thalesBurned: number;
     price?: number;
     marketCap?: number;
 };

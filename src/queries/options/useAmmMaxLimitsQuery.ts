@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { MIN_SCEW_IMPACT, SIDE } from 'constants/options';
+import { AMM_MAX_BUFFER_PERCENTAGE, MIN_SCEW_IMPACT, SIDE } from 'constants/options';
 import { ethers } from 'ethers';
 
 export type AmmMaxLimits = {
@@ -73,10 +73,10 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
                     ammContract.sellPriceImpact(marketAddress, SIDE['short'], parsedAmount),
                 ]);
 
-                ammMaxLimits.maxBuyLong = bigNumberFormatter(maxBuyLong);
-                ammMaxLimits.maxSellLong = bigNumberFormatter(maxSellLong);
-                ammMaxLimits.maxBuyShort = bigNumberFormatter(maxBuyShort);
-                ammMaxLimits.maxSellShort = bigNumberFormatter(maxSellShort);
+                ammMaxLimits.maxBuyLong = bigNumberFormatter(maxBuyLong) * AMM_MAX_BUFFER_PERCENTAGE;
+                ammMaxLimits.maxSellLong = bigNumberFormatter(maxSellLong) * AMM_MAX_BUFFER_PERCENTAGE;
+                ammMaxLimits.maxBuyShort = bigNumberFormatter(maxBuyShort) * AMM_MAX_BUFFER_PERCENTAGE;
+                ammMaxLimits.maxSellShort = bigNumberFormatter(maxSellShort) * AMM_MAX_BUFFER_PERCENTAGE;
                 ammMaxLimits.buyLongPrice = stableCoinFormatter(buyLongPrice, networkId);
                 ammMaxLimits.buyShortPrice = stableCoinFormatter(buyShortPrice, networkId);
                 ammMaxLimits.sellLongPrice = stableCoinFormatter(sellLongPrice, networkId);

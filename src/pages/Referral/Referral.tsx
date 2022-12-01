@@ -41,6 +41,9 @@ import { UI_COLORS } from 'constants/ui';
 import ReadMoreButton from 'components/ReadMoreButton';
 import Tooltip from 'components/Tooltip';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import { getIsOVM } from 'utils/network';
+import Footer from 'components/Footer';
 
 const Tabs = [
     {
@@ -61,6 +64,8 @@ const Referral: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+
+    const showOPBanner = getIsOVM(networkId);
 
     // const [walletAddress, setWalletAddress] = useState<string>('');
     const [tabIndex, setTabIndex] = useState<number>(Tabs[0].id);
@@ -185,6 +190,7 @@ const Referral: React.FC = () => {
 
     return (
         <>
+            {showOPBanner && <OpRewardsBanner />}
             <HeaderContainer>
                 <FormWrapper>
                     <Label>{t('referral-page.choose-landing')}</Label>
@@ -218,16 +224,16 @@ const Referral: React.FC = () => {
                     </KeyValue>
                     <KeyValue>
                         <StatLabel>{t('referral-page.statistics.total-volume')}</StatLabel>
-                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume, 2)}</StatValue>
+                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume)}</StatValue>
                     </KeyValue>
                     <KeyValue>
                         <StatLabel>{t('referral-page.statistics.total-fees')}</StatLabel>
-                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume * 0.02, 2)}</StatValue>
+                        <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume * 0.02)}</StatValue>
                     </KeyValue>
                     <KeyValue>
                         <StatLabel color={UI_COLORS.GREEN}>{t('referral-page.statistics.earned')}</StatLabel>
                         <StatValue color={UI_COLORS.GREEN}>
-                            {formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned, 2)}
+                            {formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned)}
                         </StatValue>
                     </KeyValue>
                 </StatisticsWrapper>
@@ -290,17 +296,19 @@ const Referral: React.FC = () => {
                                         Header: <>{t('referral-page.table.volume')}</>,
                                         accessor: 'volume',
                                         Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('volume'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.earned')}</>,
                                         accessor: 'amount',
                                         Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('amount'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.transaction-date')}</>,
@@ -352,17 +360,19 @@ const Referral: React.FC = () => {
                                         Header: <>{t('referral-page.table.total-volume')}</>,
                                         accessor: 'totalVolume',
                                         Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('totalVolume'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.total-earned')}</>,
                                         accessor: 'totalEarned',
                                         Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('totalEarned'),
                                     },
                                 ]}
                             />
@@ -389,22 +399,25 @@ const Referral: React.FC = () => {
                                         accessor: 'trades',
                                         Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
                                         sortable: true,
+                                        sortType: customColumnSort('trades'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.total-volume')}</>,
                                         accessor: 'totalVolume',
                                         Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('totalVolume'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.total-earned')}</>,
                                         accessor: 'totalEarned',
                                         Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
                                         ),
                                         sortable: true,
+                                        sortType: customColumnSort('totalEarned'),
                                     },
                                     {
                                         Header: <>{t('referral-page.table.first-transaction')}</>,
@@ -418,7 +431,7 @@ const Referral: React.FC = () => {
                     )}
                 </>
             </Container.Tab>
-            <Footer>
+            <ReferralFooter>
                 {'By sharing a referral link you consent to the disclaimer'}
                 <Tooltip
                     message={t('referral-page.disclaimer')}
@@ -436,10 +449,8 @@ const Referral: React.FC = () => {
                 >
                     {' terms'}
                 </a>
-            </Footer>
-            {/* <Footer>
-                <Trans i18nKey={'referral-page.disclaimer'} components={{ bold: <BoldText />, italic: <i /> }} />
-            </Footer> */}
+            </ReferralFooter>
+            <Footer />
         </>
     );
 };
@@ -448,37 +459,28 @@ const BoldText = styled.span`
     font-weight: 900;
 `;
 
-const Footer = styled.div`
+const ReferralFooter = styled.div`
     display: flex;
     flex-direction: row;
-    position: absolute;
+    position: relative;
     font-size: 16px;
-    width: 90%;
     color: var(--primary-color);
-    bottom: 0;
-    margin-bottom: 10px;
+    @media screen and (max-width: 520px) {
+        margin-top: 50px;
+        margin-bottom: 10px;
+        display: inline-block;
+        div {
+            display: inline;
+        }
+    }
 `;
 
-// const TextGradient = styled.div`
-//     position: absolute;
-//     z-index: 2;
-//     right: 0;
-//     bottom: 0;
-//     left: 0;
-//     height: 100px; /* adjust it to your needs */
-//     background: url(data:image/svg+xml;base64,alotofcodehere);
-//     background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-//     background: -webkit-gradient(
-//         linear,
-//         left top,
-//         left bottom,
-//         color-stop(0%, rgba(255, 255, 255, 0)),
-//         color-stop(70%, rgba(255, 255, 255, 1))
-//     );
-//     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-//     background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-//     background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-//     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-// `;
+const customColumnSort = (propertyName: string) => (rowA: any, rowB: any, desc: boolean) => {
+    if (desc) {
+        return +rowA.original[propertyName] > +rowB.original[propertyName] ? 1 : -1;
+    } else {
+        return +rowA.original[propertyName] < +rowB.original[propertyName] ? 1 : -1;
+    }
+};
 
 export default Referral;

@@ -8,7 +8,7 @@ import {
 } from 'constants/currency';
 import { COLLATERALS_INDEX } from 'constants/options';
 import { StableCoins } from 'types/options';
-import { getIsPolygon } from './network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId } from './network';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
 export const isCryptoCurrency = (currencyKey: CurrencyKey) => !!CRYPTO_CURRENCY_MAP[currencyKey];
@@ -32,7 +32,15 @@ export const getSynthAsset = (currencyKey: string) =>
 
 export const getStableCoinForNetwork = (networkId: number, customStable?: StableCoins) => {
     if (customStable) {
-        return customStable;
+        return customStable as StableCoins;
+    }
+
+    if (getIsArbitrum(networkId)) {
+        return CRYPTO_CURRENCY_MAP.USDC;
+    }
+
+    if (getIsBSC(networkId)) {
+        return CRYPTO_CURRENCY_MAP.BUSD;
     }
 
     if (getIsPolygon(networkId)) {
@@ -40,6 +48,13 @@ export const getStableCoinForNetwork = (networkId: number, customStable?: Stable
     }
 
     return SYNTHS_MAP.sUSD;
+};
+
+export const getMainCurrencyForNetwork = (networkId: number) => {
+    if (getIsArbitrum(networkId)) return CRYPTO_CURRENCY_MAP.ETH;
+    if (getIsBSC(networkId)) return CRYPTO_CURRENCY_MAP.BNB;
+    if (getIsPolygon(networkId)) return CRYPTO_CURRENCY_MAP.MATIC;
+    return CRYPTO_CURRENCY_MAP.ETH;
 };
 
 export const sortCurrencies = (a: string, b: string) => {
@@ -85,4 +100,17 @@ export const getStableCoinBalance = (balancesQueryObject: any, currency: StableC
         return balancesQueryObject[currency] ? balancesQueryObject[currency] : 0;
     }
     return 0;
+};
+
+export const getDefaultCurrencyIconClassByNetworkId = (networkId: NetworkId) => {
+    const isOP = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
+    const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+
+    if (isOP) return 'v2-icon v2-icon--op';
+    if (isPolygon) return 'currency-icon icon--polygon';
+    if (isBSC) return 'currency-icon icon--binance';
+    if (isArbitrum) return 'currency-icon icon--arbitrum';
+    return 'sidebar-icon icon--ethereum';
 };

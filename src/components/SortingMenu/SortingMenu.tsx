@@ -16,7 +16,7 @@ const SortingMenu: React.FC<SortingMenuProps> = ({ items, itemClickEventHandler,
             {window.innerWidth <= 768 && (
                 <OutsideClickHandler onOutsideClick={() => setShowSorting(false)}>
                     <Wrapper>
-                        <Title>Filters</Title>
+                        <Title>Sort</Title>
                         {items.map((item, index) => (
                             <>
                                 <Item key={index} onClick={() => itemClickEventHandler(index)}>

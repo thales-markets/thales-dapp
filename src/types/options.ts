@@ -16,11 +16,9 @@ export type OrderSideOptionType = { value: OrderSide; label?: string; i18nLabel?
 
 export type TooltipType = 'error' | 'success' | 'info';
 
-export type TradingType = 'AMM' | 'Orderbook';
-
 export type MarketType = 'positional' | 'ranged';
 
-export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT';
+export type StableCoins = 'sUSD' | 'DAI' | 'USDC' | 'USDT' | 'BUSD';
 
 export type OptionsTransaction = {
     hash: string;
@@ -75,6 +73,8 @@ export type HistoricalOptionsMarketInfo = {
     result: OptionSide;
     availableLongs: number;
     availableShorts: number;
+    discountedSide?: string;
+    discount?: number;
     country?: string;
     eventName?: string;
     outcome?: string;
@@ -230,6 +230,7 @@ export type HotMarket = {
     strikePrice: string;
     timeRemaining: number;
     potentialProfit: string;
+    discount: number;
     address: string;
 };
 
@@ -254,11 +255,6 @@ export type TradeCardPhaseProps = {
 export type CurrentPosition = {
     bid: number;
     payout: number;
-};
-
-export type OrderbookInfo = {
-    buyOrders: Orders;
-    sellOrders: Orders;
 };
 
 export type Orders = OrderItem[];

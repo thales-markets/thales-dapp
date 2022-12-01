@@ -19,7 +19,7 @@ export const Result = styled.div`
     border-radius: 10px;
     border: none;
     height: 64px;
-    padding: 31px 0 0 22px;
+    padding: 31px 22px 0 22px;
     font-size: 16px;
     font-weight: 600;
     font-size: 14px;
@@ -28,19 +28,26 @@ export const Result = styled.div`
     color: #f6f6fe;
     outline: none;
     user-select: none;
+    word-wrap: anywhere;
 `;
 
 export const ArrowContainer = styled(FlexDivCentered)`
     margin-bottom: 15px;
     margin-top: -5px;
+    @media (max-width: 1192px) {
+        margin-bottom: 5px;
+    }
 `;
 
 export const ThalesWalletAmountLabel = styled(InputLabel)`
     right: 0px;
     top: 0px;
     padding: 8px 14px 0 0;
-    text-transform: none;
+    text-transform: uppercase;
     display: flex;
+    @media (max-width: 1192px) {
+        font-size: 9px;
+    }
 `;
 
 export const MaxButton = styled(DefaultSubmitButton)`

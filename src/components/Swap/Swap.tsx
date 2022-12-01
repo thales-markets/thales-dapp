@@ -16,34 +16,29 @@ import { RootState } from 'redux/rootReducer';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { checkAllowance, getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
+import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
 import { refetchUserBalance } from 'utils/queryConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
 import SwapDialog from './styled-components';
 import {
-    ETH_Dai,
     ETH_Eth,
-    ETH_sUSD,
-    ETH_USDC,
-    ETH_USDT,
-    OP_Dai,
     OP_Eth,
-    OP_sUSD,
-    OP_USDC,
-    OP_USDT,
-    POLYGON_Dai,
-    POLYGON_ETH,
     POLYGON_MATIC,
-    POLYGON_USDC,
-    POLYGON_USDT,
+    mapTokenByNetwork,
+    TokenSymbol,
+    getTokenForSwap,
+    getFromTokenSwap,
+    BSC_BNB,
+    ARB_ETH,
 } from './tokens';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
-import { getStableCoinForNetwork } from '../../utils/currency';
+import { OneInchLiquidityProtocol } from 'constants/network';
+import snxJSConnector from 'utils/snxJSConnector';
 
-const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
+const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -52,10 +47,18 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const [preLoadTokens, setPreLoadTokens] = useState([] as any);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
-    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-    const signer = provider.getSigner();
-    const [fromToken, _setFromToken] = useState(isL2 ? OP_Eth : isPolygon ? POLYGON_MATIC : ETH_Eth);
-    const [toToken, _setToToken] = useState(isL2 ? OP_sUSD : isPolygon ? POLYGON_USDC : ETH_sUSD);
+    const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+    const signer = (snxJSConnector as any).signer;
+    const [fromToken, _setFromToken] = useState(getFromTokenSwap(networkId));
+
+    const toTokenInitialState = mapTokenByNetwork(
+        TokenSymbol[initialToToken as keyof typeof TokenSymbol],
+        isL2,
+        isPolygon
+    );
+    const [toToken, _setToToken] = useState(toTokenInitialState);
+
     const [amount, setAmount] = useState('');
     const [previewData, setPreviewData] = useState(undefined);
     const [allowance, setAllowance] = useState(false);
@@ -72,6 +75,9 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const ethRate = get(exchangeRates, isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : SYNTHS_MAP.sETH, null);
 
+    const unsupportedNetwork =
+        networkId !== 1 && networkId !== 10 && networkId !== 137 && networkId !== 56 && networkId !== 42161;
+
     const approveSpenderQuery = useApproveSpender(networkId, {
         enabled: false,
     });
@@ -81,6 +87,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
         fromToken,
         toToken,
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
+        isPolygon || isBSC || isArbitrum ? [] : [OneInchLiquidityProtocol.UNISWAP],
         { enabled: false }
     );
 
@@ -90,6 +97,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
         toToken,
         walletAddress ? walletAddress : '',
         ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
+        isPolygon || isBSC || isArbitrum ? [] : [OneInchLiquidityProtocol.UNISWAP],
         {
             enabled: false,
         }
@@ -109,14 +117,25 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
             setPreviewData(undefined);
             setShowSceleton(false);
         }
-    }, [fromToken, amount]);
+    }, [fromToken, toToken, amount]);
 
     useEffect(() => {
-        isL2
-            ? (setPreLoadTokens([OP_Eth, OP_Dai, OP_USDC, OP_USDT]), _setToToken(OP_sUSD))
-            : isPolygon
-            ? (setPreLoadTokens([POLYGON_MATIC, POLYGON_USDT, POLYGON_ETH, POLYGON_Dai]), _setToToken(POLYGON_USDC))
-            : (setPreLoadTokens([ETH_Eth, ETH_Dai, ETH_USDC, ETH_USDT]), _setToToken(ETH_sUSD));
+        const swapTokenData = getTokenForSwap(networkId, initialToToken);
+        // const mappedToToken = mapTokenByNetwork(toToken.symbol, isL2, isPolygon);
+
+        setPreLoadTokens(swapTokenData.preloadTokens);
+        _setFromToken(swapTokenData.fromToken);
+        _setToToken(swapTokenData.toToken);
+
+        // isL2
+        //     ? (setPreLoadTokens([OP_sUSD, OP_Dai, OP_USDC, OP_USDT]), _setFromToken(OP_Eth), _setToToken(mappedToToken))
+        //     : isPolygon
+        //     ? (setPreLoadTokens([POLYGON_DAI, POLYGON_USDC, POLYGON_USDT]),
+        //       _setFromToken(POLYGON_MATIC),
+        //       _setToToken(mappedToToken))
+        //     : (setPreLoadTokens([ETH_sUSD, ETH_Dai, ETH_USDC, ETH_USDT]),
+        //       _setFromToken(ETH_Eth),
+        //       _setToToken(mappedToToken));
     }, [networkId]);
 
     useEffect(() => {
@@ -125,7 +144,13 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
 
     const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
-            if (token === ETH_Eth || token === OP_Eth || token === POLYGON_MATIC) {
+            if (
+                token === ETH_Eth ||
+                token === OP_Eth ||
+                token === POLYGON_MATIC ||
+                token == BSC_BNB ||
+                token == ARB_ETH
+            ) {
                 setAllowance(true);
                 signer
                     .getBalance()
@@ -197,10 +222,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                 await tx.wait();
                 refetchUserBalance(walletAddress as any, networkId);
                 setLoading(false);
-                toast.update(
-                    id,
-                    getSuccessToastOptions(t('options.swap.tx-success', { token: getStableCoinForNetwork(networkId) }))
-                );
+                toast.update(id, getSuccessToastOptions(t('options.swap.tx-success', { token: toToken.symbol })));
                 return {
                     data: (data as any).tx.data,
                     from: (data as any).tx.from,
@@ -257,7 +279,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                     className={Number(amount) > Number(balance) ? 'disabled primary' : 'primary'}
                     onClick={async () => {
                         await swapTx();
-                        updateBalanceAndAllowance(fromToken).finally(() => handleClose(this, false));
+                        handleClose(false);
                     }}
                     disabled={Number(amount) > Number(balance)}
                 >
@@ -267,8 +289,8 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
     };
 
     return (
-        <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, false)}>
-            {networkId !== 1 && networkId !== 10 && networkId !== 137 ? (
+        <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
+            {unsupportedNetwork ? (
                 <SwapDialog
                     royaleTheme={royaleTheme}
                     contentType="unsupported"
@@ -325,6 +347,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                                         </FlexDivRowCentered>
                                     );
                                 }}
+                                isDisabled={true}
                                 value={fromToken}
                                 onChange={(option: any) => {
                                     _setFromToken(option);
@@ -388,8 +411,20 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme }) => {
                                         </FlexDivRowCentered>
                                     );
                                 }}
-                                isDisabled={true}
+                                isDisabled={false}
                                 value={toToken}
+                                components={
+                                    preLoadTokens?.length == 1
+                                        ? {
+                                              Menu: () => null,
+                                              MenuList: () => null,
+                                              DropdownIndicator: () => null,
+                                              IndicatorSeparator: () => null,
+                                          }
+                                        : {
+                                              IndicatorSeparator: () => null,
+                                          }
+                                }
                                 onChange={(option: any) => {
                                     _setToToken(option);
                                 }}

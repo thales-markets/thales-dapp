@@ -11,8 +11,8 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import { getIsPolygon } from 'utils/network';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { getDefaultCurrencyIconClassByNetworkId } from 'utils/currency';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;
@@ -22,7 +22,6 @@ const UserWallet: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isPolygon = getIsPolygon(networkId);
     const { trackEvent } = useMatomo();
 
     return (
@@ -41,15 +40,7 @@ const UserWallet: React.FC = () => {
                         : onboardConnector.connectWallet();
                 }}
             >
-                <WalletIcon
-                    className={` ${
-                        networkId === 10
-                            ? 'v2-icon v2-icon--op'
-                            : isPolygon
-                            ? 'currency-icon icon--polygon'
-                            : 'sidebar-icon icon--ethereum'
-                    }`}
-                />
+                <WalletIcon className={` ${getDefaultCurrencyIconClassByNetworkId(networkId)}`} />
                 <WalletAddress>
                     {walletAddress
                         ? truncateAddress(
@@ -69,6 +60,7 @@ const Wrapper = styled.div`
     position: absolute;
     top: 40px;
     right: 90px;
+    width: 130px;
     @media (max-width: 1024px) {
         right: 70px;
         top: 20px;
@@ -82,14 +74,11 @@ const Wrapper = styled.div`
 
 const WalletContainer = styled.div<{ connected: boolean }>`
     border: 1px solid rgba(100, 217, 254, 0.5);
-    border-radius: 19.5349px;
+    border-radius: 15px;
     width: 100%;
     cursor: ${(_props) => (_props.connected ? 'text' : 'pointer')};
-    padding: 5px 12px;
-    padding-left: 5px;
+    padding: 5px 6px;
     display: flex;
-    align-items: center;
-    justify-content: center;
     max-width: 150px;
     cursor: pointer;
 `;
@@ -97,7 +86,6 @@ const WalletContainer = styled.div<{ connected: boolean }>`
 const WalletIcon = styled.i`
     color: var(--icon-color);
     font-size: 20px;
-    padding-right: 5px;
     display: inline;
 `;
 
@@ -110,6 +98,7 @@ const WalletAddress = styled.p`
     line-height: 14px;
     display: inline;
     text-align: center;
+    margin: auto;
 `;
 
 export default UserWallet;

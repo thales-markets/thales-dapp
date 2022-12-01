@@ -1,5 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
+import { generalConfig } from 'config/general';
+
 export interface DisplayName {
     user: {
         name: string;
@@ -7,7 +9,7 @@ export interface DisplayName {
     };
 }
 
-const BASE_URL = 'https://api.thales.market/royale-user/';
+const BASE_URL = `${generalConfig.API_URL}/royale-user/`;
 
 const useDisplayNameQuery = (walletAddress: string, options?: UseQueryOptions<DisplayName>) => {
     return useQuery<DisplayName>(

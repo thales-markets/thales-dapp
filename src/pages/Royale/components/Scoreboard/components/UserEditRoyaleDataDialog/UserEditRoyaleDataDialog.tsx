@@ -13,6 +13,7 @@ import './media.scss';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { Theme } from 'pages/Royale/ThalesRoyal';
 import FieldValidationMessage from 'components/FieldValidationMessage';
+import { generalConfig } from 'config/general';
 
 type UserEditRoyaleDataDialogProps = {
     open: boolean;
@@ -74,7 +75,7 @@ const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
 
             (window.web3?.eth as any).personal.sign(name, walletAddress, async (_test: any, signature: any) => {
                 try {
-                    await axios.post('https://api.thales.market/royale-user-data', {
+                    await axios.post(`${generalConfig.API_URL}/royale-user-data`, {
                         walletAddress,
                         name,
                         avatar,

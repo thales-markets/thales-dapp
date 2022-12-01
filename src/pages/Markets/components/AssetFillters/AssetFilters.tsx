@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useState, useMemo } from 'react';
+import React, { lazy, Suspense, useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { ReactComponent as PlusButton } from 'assets/images/asset-filters-plus.svg';
@@ -8,32 +8,51 @@ import { isMobile } from 'utils/device';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 
 const AssetsDropdown = lazy(() => import(/* webpackChunkName: "AssetsDropdown" */ 'components/AssetsDropdown'));
 
 const FILTERS_LENGTH = 6;
 
-const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilters: any }> = ({
-    allAssets,
-    assetFilters,
-    setAssetFilters,
-}) => {
+const AssetFilters: React.FC<{
+    allAssets: Set<string>;
+    assetFilters: string[];
+    setAssetFilters: (assets: string[]) => void;
+}> = ({ allAssets, assetFilters, setAssetFilters }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const selectedAssetsCookie = localStorage.getItem('selectedAssets' + networkId);
+    const selectedAssetsLocalStorageKey = LOCAL_STORAGE_KEYS.MARKET_SELECTED_ASSETS + networkId;
+    const selectedAssetsLocalStorage = localStorage.getItem(selectedAssetsLocalStorageKey);
 
     const [selectedAssets, setSelectedAssets] = useState<string[]>(
-        selectedAssetsCookie ? JSON.parse(selectedAssetsCookie) : []
+        selectedAssetsLocalStorage ? JSON.parse(selectedAssetsLocalStorage) : []
     );
     const [assetsDropdownOpen, setAssetsDropdownOpen] = useState<boolean>(false);
 
-    useMemo(() => {
-        setSelectedAssets(
-            selectedAssetsCookie && JSON.parse(selectedAssetsCookie).length > 0
-                ? JSON.parse(selectedAssetsCookie)
-                : [...(allAssets as any)].slice(0, FILTERS_LENGTH)
-        );
+    useEffect(() => {
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem(selectedAssetsLocalStorageKey) || '[]');
+        if (selectedAssetsLocalStorage.length && allAssets.size) {
+            const newSelectedAssets: string[] = selectedAssetsLocalStorage.filter(
+                (asset: string) => allAssets.has(asset) || (assetFilters.length ? assetFilters.includes(asset) : false)
+            );
+            localStorage.setItem(selectedAssetsLocalStorageKey, JSON.stringify(newSelectedAssets));
+            setSelectedAssets(newSelectedAssets);
+        }
+    }, [allAssets, assetFilters]);
+
+    useEffect(() => {
+        const selectedAssetsLocalStorage = JSON.parse(localStorage.getItem(selectedAssetsLocalStorageKey) || '[]');
+        if (!selectedAssetsLocalStorage.length) {
+            setSelectedAssets([...Array.from(allAssets)].slice(0, FILTERS_LENGTH));
+        }
     }, [allAssets]);
+
+    useEffect(() => {
+        const chosenAssetsLocalStorage = JSON.parse(
+            localStorage.getItem(LOCAL_STORAGE_KEYS.MARKET_CHOSEN_ASSET + networkId) || '[]'
+        );
+        chosenAssetsLocalStorage.length ? setAssetFilters(chosenAssetsLocalStorage) : setAssetFilters([]);
+    }, [networkId]);
 
     const safeSetSelectedAssets = useCallback(
         (assets) => {
@@ -62,7 +81,7 @@ const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilter
                 }}
                 className={'icon icon--left'}
             />
-            <Filters length={selectedAssets.length} id="asset-filters">
+            <Filters length={allAssets.size} id="asset-filters">
                 {selectedAssets.length > 0 &&
                     selectedAssets.map((value: string, index: number) => {
                         return (
@@ -106,7 +125,7 @@ const AssetFilters: React.FC<{ allAssets: any; assetFilters: any; setAssetFilter
                             {assetsDropdownOpen && (
                                 <AssetsDropdown
                                     assets={[...(allAssets as any)]}
-                                    cookieKey={'selectedAssets'}
+                                    localStorageKey={LOCAL_STORAGE_KEYS.MARKET_SELECTED_ASSETS}
                                     selectedAssets={selectedAssets}
                                     setSelectedAssets={safeSetSelectedAssets}
                                 />
@@ -130,7 +149,8 @@ const FilterContainer = styled.div`
 `;
 
 const Filters = styled.div<{ length: number }>`
-    width: ${FILTERS_LENGTH * ((isMobile() ? 26 : 40) + 5)}px;
+    width: ${(_props) =>
+        (_props.length < FILTERS_LENGTH ? _props.length : FILTERS_LENGTH) * ((isMobile() ? 26 : 40) + 5)}px;
     overflow: hidden;
     display: flex;
     height: 60px;

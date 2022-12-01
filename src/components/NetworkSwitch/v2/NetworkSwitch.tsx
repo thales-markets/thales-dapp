@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
-
 import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
 
 type Properties = {
     setShowCard: (showCard: boolean) => void;
@@ -16,7 +16,6 @@ type Properties = {
 
 export const NetworkSwitch: React.FC<Properties> = ({ setShowCard }) => {
     const { t } = useTranslation();
-
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     // TODO: add support for testnets
     const selectedNetwork = useMemo(
@@ -24,14 +23,19 @@ export const NetworkSwitch: React.FC<Properties> = ({ setShowCard }) => {
         [networkId]
     );
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const isLedgerLive = isLedgerDappBrowserProvider();
+
     return (
         <NetworkSwitchContainer>
             <SectionHeader>{t('common.user-info-card.network')}</SectionHeader>
             <RelativeContainer>
                 <OutsideClickHandler onOutsideClick={() => isDropdownOpen && setIsDropdownOpen(false)}>
-                    <SelectedNetworkContainer dropdownOpen={isDropdownOpen}>
+                    <SelectedNetworkContainer
+                        dropdownOpen={isDropdownOpen}
+                        cursor={isLedgerLive ? 'initial' : 'pointer'}
+                    >
                         {!isDropdownOpen ? (
-                            <NetworkItem onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                            <NetworkItem onClick={() => setIsDropdownOpen(!isDropdownOpen && !isLedgerLive)}>
                                 {React.createElement(selectedNetwork.icon)}
                                 {selectedNetwork.name}
                             </NetworkItem>
@@ -75,7 +79,7 @@ const SectionHeader = styled(UserCardSectionHeader)`
     align-self: self-start;
 `;
 
-const SelectedNetworkContainer = styled.div<{ dropdownOpen: boolean }>`
+const SelectedNetworkContainer = styled.div<{ dropdownOpen: boolean; cursor: string }>`
     position: ${(props) => (props.dropdownOpen ? 'absolute' : 'relative')};
     left: 0;
     right: 0;
@@ -89,7 +93,7 @@ const SelectedNetworkContainer = styled.div<{ dropdownOpen: boolean }>`
     border: 2px solid var(--icon-color);
     color: var(--icon-color);
     border-radius: 20px;
-    cursor: pointer;
+    cursor: ${(props) => props.cursor};
     flex-direction: column;
     z-index: 1;
     @media (max-width: 1024px) {

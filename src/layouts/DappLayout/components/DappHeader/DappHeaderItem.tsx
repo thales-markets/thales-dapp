@@ -49,7 +49,10 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
     return (
         <SPAAnchor href={href || ''} onClick={onClick} simpleOnClick={simpleOnClick}>
             <MenuItem className={className}>
-                <i className={`sidebar-icon icon--${iconName}`} />
+                <i
+                    className={`sidebar-icon icon--${iconName}`}
+                    style={iconName == 'optimism' ? { color: 'white' } : {}}
+                />
                 <Text>{label}</Text>
             </MenuItem>
         </SPAAnchor>

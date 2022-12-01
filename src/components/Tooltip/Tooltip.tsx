@@ -21,6 +21,8 @@ type CustomTooltipProps = {
         position?: string;
     };
     interactive?: boolean;
+    iconFontSize?: number;
+    iconTop?: number;
 };
 
 type TooltipContentProps = {
@@ -86,6 +88,8 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
     placement,
     container,
     interactive,
+    iconFontSize,
+    iconTop,
 }) => {
     return (
         <>
@@ -102,7 +106,12 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
                     display={container?.display}
                     position={container?.position}
                 >
-                    <Icon className={icons[type].className} color={iconColor} fontSize={'11px'} />
+                    <Icon
+                        className={icons[type].className}
+                        color={iconColor}
+                        fontSize={`${iconFontSize ? iconFontSize : 11}px`}
+                        top={`${iconTop ? iconTop : 0}px`}
+                    />
                 </IconContainer>
             </ModifiedTooltip>
         </>

@@ -5,7 +5,6 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import {
@@ -16,9 +15,8 @@ import {
     RangedMarketPositionType,
     StableCoins,
 } from 'types/options';
-import { getCurrencyKeyBalance } from 'utils/balances';
+import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { SYNTHS_MAP } from 'constants/currency';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { UI_COLORS } from 'constants/ui';
 import { getAssetIcon, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
@@ -26,6 +24,7 @@ import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/u
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import { COLLATERALS, MARKET_TYPE } from 'constants/options';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
+import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 
 type WalletBalancePropsType = {
     type: OptionSide | RangedMarketPositionType;
@@ -45,11 +44,11 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
-        enabled: isAppReady && marketType == MARKET_TYPE[0],
+        enabled: isAppReady && walletAddress !== '' && marketType == MARKET_TYPE[0],
     });
 
     const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(optionsMarket?.address, walletAddress, networkId, {
-        enabled: isAppReady && marketType == MARKET_TYPE[1],
+        enabled: isAppReady && walletAddress !== '' && marketType == MARKET_TYPE[1],
     });
 
     if (
@@ -79,14 +78,11 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) 
             ? optBalances.in
             : optBalances.out;
 
-    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
+    const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
-    const walletBalancesMap =
-        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
-            ? { synths: synthsWalletBalancesQuery.data }
-            : null;
+    const walletBalancesMap = stableBalanceQuery.isSuccess && stableBalanceQuery.data ? stableBalanceQuery.data : null;
 
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '' && stableIndex !== 0,
@@ -95,7 +91,7 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) 
     const sUSDBalance =
         stableIndex && stableIndex !== 0
             ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[stableIndex] as StableCoins)
-            : getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+            : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId)) || 0;
 
     const AssetIcon = getAssetIcon(
         getStableCoinForNetwork(networkId, stableIndex ? (COLLATERALS[stableIndex] as StableCoins) : undefined)

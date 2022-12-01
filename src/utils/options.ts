@@ -1,4 +1,3 @@
-import { MarketWidgetKey } from 'constants/ui';
 import orderBy from 'lodash/orderBy';
 import { COLLATERALS, PHASE } from '../constants/options';
 import { OptionSide, OptionsMarkets, Phase, RangedMarketPositionType } from '../types/options';
@@ -21,8 +20,8 @@ export const sortOptionsMarkets = (markets: OptionsMarkets) =>
                 phaseNum: PHASE[phase],
             };
         }),
-        ['phaseNum', 'ammLiquidity'],
-        ['asc', 'desc']
+        ['phaseNum', 'discountedSide', 'ammLiquidity'],
+        ['asc', 'asc', 'desc']
     );
 
 export const getPhaseAndEndDate = (
@@ -49,44 +48,6 @@ export const getPhaseAndEndDate = (
         phase: 'expiry',
         timeRemaining: expiryDate,
     };
-};
-
-export const isMarketWidgetVisible = (
-    marketWidget: MarketWidgetKey,
-    visibilityMap: Record<MarketWidgetKey, boolean>,
-    marketPhase: string,
-    isCustomMarket: boolean,
-    isWalletConected: boolean,
-    isCustomizationVisibility: boolean,
-    ammSelected: boolean,
-    isL2: boolean
-) => {
-    switch (marketWidget) {
-        case MarketWidgetKey.AMM:
-            return (
-                marketPhase === 'trading' &&
-                ammSelected &&
-                isL2 &&
-                (visibilityMap[marketWidget] || isCustomizationVisibility)
-            );
-        case MarketWidgetKey.ORDERBOOK:
-        case MarketWidgetKey.TRADE:
-            return (
-                marketPhase === 'trading' &&
-                (!ammSelected || !isL2) &&
-                (visibilityMap[marketWidget] || isCustomizationVisibility)
-            );
-        case MarketWidgetKey.MATURITY_PHASE:
-            return marketPhase === 'maturity' && (visibilityMap[marketWidget] || isCustomizationVisibility);
-        case MarketWidgetKey.YOUR_TRANSACTIONS:
-            return isWalletConected && (visibilityMap[marketWidget] || isCustomizationVisibility);
-        case MarketWidgetKey.CHART_TRADING_VIEW:
-            return !isCustomMarket && (visibilityMap[marketWidget] || isCustomizationVisibility);
-        case MarketWidgetKey.CUSTOM_MARKET_RESULTS:
-            return isCustomMarket && (visibilityMap[marketWidget] || isCustomizationVisibility);
-        default:
-            return visibilityMap[marketWidget] || isCustomizationVisibility;
-    }
 };
 
 export const dispatchMarketNotification = (message: string, type?: Color) => {

@@ -23,7 +23,10 @@ export const ROUTES = {
         TokenMigration: '/token?tab=migration&action=migrate',
         Profile: '/profile',
         Referral: '/referral',
-        Wizzard: '/wizard',
+        Wizard: '/wizard',
+        OPRewards: '/op-rewards',
+        Vaults: '/vaults',
+        Vault: '/vaults/:vaultId',
     },
     Governance: {
         Home: '/governance',

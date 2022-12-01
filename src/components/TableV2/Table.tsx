@@ -17,6 +17,7 @@ type TableProps = {
     containerStyle?: CSSProperties;
     leaderboardView?: boolean;
     hasStickyRow?: boolean;
+    initialState?: any;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -29,6 +30,7 @@ const Table: React.FC<TableProps> = ({
     containerStyle,
     leaderboardView,
     hasStickyRow,
+    initialState,
 }) => {
     const { t } = useTranslation();
     const [isMobile, setIsMobile] = useState(false);
@@ -52,9 +54,7 @@ const Table: React.FC<TableProps> = ({
         {
             columns,
             data,
-            initalState: {
-                pageIndex: 1,
-            },
+            initialState,
             autoResetPage: false,
             autoResetSortBy: false,
             autoResetGlobalFilter: false,
@@ -337,7 +337,7 @@ const Table: React.FC<TableProps> = ({
                             <tbody>
                                 <tr>
                                     <Pagination
-                                        rowsPerPageOptions={resultsPerPage ? resultsPerPage : [5, 10, 20, 25]}
+                                        rowsPerPageOptions={resultsPerPage ? resultsPerPage : [10, 20, 30, 50]}
                                         count={leaderboardView ? data.length - 1 : data.length}
                                         rowsPerPage={pageSize}
                                         page={pageIndex}

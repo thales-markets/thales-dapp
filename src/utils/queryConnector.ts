@@ -44,10 +44,6 @@ export const refetchRangeMarketQueries = (
     }
 };
 
-export const refetchOrderbook = (optionsTokenAddress: string) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress));
-};
-
 export const refetchTrades = (marketAddress: string) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Trades(marketAddress));
 };
@@ -89,6 +85,7 @@ export const refetchUserTokenTransactions = (walletAddress: string, networkId: N
 
 export const refetchUserBalance = (walletAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Synths(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Balance(walletAddress, networkId));
 };
 
 export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress: string) => {

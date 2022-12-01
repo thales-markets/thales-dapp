@@ -43,6 +43,7 @@ export enum COLLATERALS_INDEX {
     'DAI' = 1,
     'USDC' = 2,
     'USDT' = 3,
+    'BUSD' = 4,
 }
 
 export const COLLATERALS = ['sUSD', 'DAI', 'USDC', 'USDT'];
@@ -52,6 +53,7 @@ export const STABLE_DECIMALS = {
     DAI: 18,
     USDC: 6,
     USDT: 6,
+    BUSD: 18,
 };
 
 export const PHASES = ['trading', 'maturity', 'expiry'] as Phase[];
@@ -108,11 +110,6 @@ export const ORDER_PERIOD_ITEMS_MAP: OrderPeriodItem[] = [
     },
 ];
 
-export enum OrderbookFilterEnum {
-    ALL = 'all',
-    BUY = 'buy',
-    SELL = 'sell',
-}
 export enum OneInchErrorReason {
     INSUFFICIENT_LIQUIDITY = 'insufficient liquidity',
     TRANSACTION_INVALID = 105,
@@ -124,9 +121,10 @@ export enum Zero0xErrorReason {
     TAKER_WALLET_INSUFFICIENT_BALANCE = 'SpenderERC20TransferFromFailedError',
 }
 
-export const ORDERBOOK_AMOUNT_THRESHOLD = 0.01;
-
 export const MINIMUM_AMM_LIQUIDITY = 2;
 export const MAX_L2_GAS_LIMIT = 15000000;
 export const L2_EXERCISE_GAS_LIMIT = 1000000;
 export const MIN_SCEW_IMPACT = 0.0;
+
+export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;
+export const OP_REWARDS_MULTIPLIER = 0.64;

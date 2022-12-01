@@ -12,13 +12,7 @@ import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
 import { setTheme } from 'redux/modules/ui';
-import {
-    getEthereumNetwork,
-    getIsOVM,
-    getIsPolygon,
-    isNetworkSupported,
-    SUPPORTED_NETWORKS_NAMES,
-} from 'utils/network';
+import { defaultNetwork, getIsOVM, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
@@ -26,6 +20,8 @@ import ROUTES from 'constants/routes';
 import Cookies from 'universal-cookie';
 import { ethers } from 'ethers';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
+import { isLedgerDappBrowserProvider } from 'utils/ledger';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -42,14 +38,18 @@ const Leaderboard = lazy(() => import(/* webpackChunkName: "Leaderboard" */ '../
 const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Markets'));
 const RangeMarkets = lazy(() => import(/* webpackChunkName: "RangeMarkets" */ '../RangeMarkets'));
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
-const Wizzard = lazy(() => import(/* webpackChunkName: "Wizzard" */ '../Wizzard'));
+const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
+
+const Vaults = lazy(() => import(/* webpackChunkName: "Vaults" */ '../Vaults'));
+const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
 
 const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token/Token'));
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales/TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
 const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
-const Referral = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Referral'));
+const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
+const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
 
 const App = () => {
     const dispatch = useDispatch();
@@ -57,10 +57,10 @@ const App = () => {
     const walletAddress = useSelector((state) => getWalletAddress(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
-    // const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const [snxJSConnector, setSnxJSConnector] = useState();
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
+    const isLedgerLive = isLedgerDappBrowserProvider();
 
     const { trackPageView } = useMatomo();
 
@@ -84,32 +84,57 @@ const App = () => {
     const cookies = new Cookies();
 
     useEffect(() => {
+        let ledgerProvider = null;
+        if (isLedgerLive) {
+            ledgerProvider = new IFrameEthereumProvider();
+        }
+        const provider = loadProvider({
+            infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
+            provider: isLedgerLive ? ledgerProvider : window.ethereum,
+            networkId,
+        });
+
         const init = async () => {
-            const { networkId, name } = await getEthereumNetwork();
             try {
-                dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
+                const providerNetworkId = (await provider.getNetwork()).chainId;
+                const name = SUPPORTED_NETWORKS_NAMES[providerNetworkId];
+
+                if (isLedgerLive) {
+                    const accounts = await ledgerProvider.enable();
+                    const account = accounts[0];
+                    dispatch(updateWallet({ walletAddress: account }));
+                    ledgerProvider.on('accountsChanged', (accounts) => {
+                        if (accounts.length > 0) {
+                            dispatch(updateWallet({ walletAddress: accounts[0] }));
+                        }
+                    });
+                }
+
+                dispatch(updateNetworkSettings({ networkId: providerNetworkId, networkName: name?.toLowerCase() }));
 
                 if (!snxJSConnector) {
                     import(/* webpackChunkName: "snxJSConnector" */ 'utils/snxJSConnector').then((snx) => {
-                        const provider = loadProvider({
-                            infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-                            provider: window.ethereum,
-                        });
-
-                        const useOvm = getIsOVM(networkId);
-
-                        snx.default.setContractSettings({ networkId, provider, useOvm });
-
+                        if (isLedgerLive) {
+                            snx.default.setContractSettings({
+                                networkId: providerNetworkId,
+                                provider,
+                                signer: provider.getSigner(),
+                            });
+                        } else {
+                            snx.default.setContractSettings({ networkId: providerNetworkId, provider });
+                        }
                         setSnxJSConnector(snx.default);
                         dispatch(setAppReady());
                     });
+                } else {
+                    snxJSConnector.setContractSettings({ ...snxJSConnector, networkId: providerNetworkId, provider });
                 }
             } catch (e) {
                 dispatch(setAppReady());
                 console.log(e);
             }
         };
-        init().then(() => console.log('rdy'));
+        init();
 
         const handler = (e) => {
             setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
@@ -118,7 +143,7 @@ const App = () => {
         return () => {
             document.removeEventListener('market-notification', handler);
         };
-    }, []);
+    }, [networkId]);
 
     useEffect(() => {
         // Init value of theme selected from the cookie
@@ -245,13 +270,11 @@ const App = () => {
                                 <TaleOfThales />
                             </DappLayout>
                         </Route>
-                        {selectedWallet && (
-                            <Route exact path={ROUTES.Options.Profile}>
-                                <DappLayout>
-                                    <Profile />
-                                </DappLayout>
-                            </Route>
-                        )}
+                        <Route exact path={ROUTES.Options.Profile}>
+                            <DappLayout>
+                                <Profile />
+                            </DappLayout>
+                        </Route>
                         {!isPolygon && (
                             <Route exact path={ROUTES.Options.Token}>
                                 <DappLayout>
@@ -260,10 +283,36 @@ const App = () => {
                             </Route>
                         )}
 
+                        <Route exact path={ROUTES.Options.Referral}>
+                            <DappLayout>
+                                <Referral />
+                            </DappLayout>
+                        </Route>
+
                         {!isPolygon && (
-                            <Route exact path={ROUTES.Options.Referral}>
+                            <Route exact path={ROUTES.Options.Vaults}>
                                 <DappLayout>
-                                    <Referral />
+                                    <Vaults />
+                                </DappLayout>
+                            </Route>
+                        )}
+
+                        {!isPolygon && (
+                            <Route
+                                exact
+                                path={ROUTES.Options.Vault}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <Vault {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
+                        )}
+
+                        {!isPolygon && (
+                            <Route exact path={ROUTES.Options.OPRewards}>
+                                <DappLayout>
+                                    <OPRewards />
                                 </DappLayout>
                             </Route>
                         )}
@@ -308,9 +357,9 @@ const App = () => {
                             </DappLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.Wizzard}>
+                        <Route exact path={ROUTES.Options.Wizard}>
                             <DappLayout>
-                                <Wizzard />
+                                <Wizard />
                             </DappLayout>
                         </Route>
 
@@ -362,12 +411,11 @@ const App = () => {
     );
 };
 
-const loadProvider = ({ infuraId, provider }) => {
-    const network = { chainId: 1, name: 'homestead', ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e' };
-
+const loadProvider = ({ infuraId, provider, networkId }) => {
     if (!provider && !infuraId) throw new Error('No web3 provider');
-    if (provider) return new ethers.providers.Web3Provider(provider);
-    if (infuraId) return new ethers.providers.InfuraProvider(network, infuraId);
+    if (provider) return new ethers.providers.Web3Provider(provider, 'any');
+    if (infuraId)
+        return new ethers.providers.InfuraProvider(networkId ? networkId : defaultNetwork.networkId, infuraId);
 };
 
 export default App;

@@ -2,16 +2,22 @@ import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { HotMarket, OptionsMarkets } from 'types/options';
+import opToken from 'assets/currencies/crypto/OP.svg';
 
 import HotMarketCard from '../MarketsCard/HotMarketCard';
 import HotMarketCardSceleton from 'components/HotMarketSceleton/HotMarketCardSceleton';
-import { formatCurrencyWithSign, formatPricePercentageGrowth } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
 import Hammer, { DIRECTION_HORIZONTAL } from 'hammerjs';
-import Tooltip from 'components/Tooltip';
 import { PHASE } from 'constants/options';
 import { USD_SIGN } from 'constants/currency';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
+import Tooltip from 'components/Tooltip';
+import { getIsOVM } from 'utils/network';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -32,8 +38,14 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+    const showOPBanner = getIsOVM(networkId);
 
     const { trackEvent } = useMatomo();
+
+    const discountQuery = fetchDiscounts(networkId, { enabled: true });
+    const discountsMap = discountQuery.isSuccess ? discountQuery.data : new Map();
 
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
@@ -42,35 +54,44 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             ?.filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
             .sort((a, b) => a.timeRemaining - b.timeRemaining)
             .forEach((market) => {
-                if (market.longPrice == 0 || market.shortPrice == 0) return;
-                markets.push({
-                    fullAssetName: getSynthName(market.currencyKey),
-                    currencyKey: market.currencyKey,
-                    assetName: `${market.asset} ${MarketType.long}`,
-                    pricePerOption: market.longPrice,
-                    strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
-                    timeRemaining: market.timeRemaining,
-                    potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.longPrice)),
-                    address: market.address,
-                });
+                const discount = (discountsMap as any).get(market.address.toLowerCase());
 
-                markets.push({
-                    fullAssetName: getSynthName(market.currencyKey),
-                    currencyKey: market.currencyKey,
-                    assetName: `${market.asset} ${MarketType.short}`,
-                    pricePerOption: market.shortPrice,
-                    strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
-                    timeRemaining: market.timeRemaining,
-                    potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.shortPrice)),
-                    address: market.address,
-                });
+                if (discount) {
+                    if (discount.longPriceImpact < 0) {
+                        markets.push({
+                            fullAssetName: getSynthName(market.currencyKey),
+                            currencyKey: market.currencyKey,
+                            assetName: `${market.asset} ${MarketType.long}`,
+                            pricePerOption: market.longPrice,
+                            strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
+                            timeRemaining: market.timeRemaining,
+                            potentialProfit: calculatePotentialProfit(market.longPrice).toFixed(2) + '%',
+                            discount: Math.ceil(Math.abs(discount.longPriceImpact)),
+                            address: market.address,
+                        });
+                    }
+
+                    if (discount.shortPriceImpact < 0) {
+                        markets.push({
+                            fullAssetName: getSynthName(market.currencyKey),
+                            currencyKey: market.currencyKey,
+                            assetName: `${market.asset} ${MarketType.short}`,
+                            pricePerOption: market.shortPrice,
+                            strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
+                            timeRemaining: market.timeRemaining,
+                            potentialProfit: calculatePotentialProfit(market.shortPrice).toFixed(2) + '%',
+                            discount: Math.ceil(Math.abs(discount.shortPriceImpact)),
+                            address: market.address,
+                        });
+                    }
+                }
             });
 
-        return markets.sort((a: HotMarket, b: HotMarket) => a.pricePerOption - b.pricePerOption);
+        return markets.sort((a: HotMarket, b: HotMarket) => b.discount - a.discount);
     }, [optionsMarkets]);
 
     const moveLeft = () => {
-        if (firstHotIndex === 0) setFirstHotIndex(currentMarkets.length - 1 - CARDS_TO_SHOW);
+        if (firstHotIndex === 0) return;
         if (firstHotIndex > 0) setFirstHotIndex(firstHotIndex - 1);
         trackEvent({
             category: 'Markets',
@@ -82,7 +103,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             category: 'Markets',
             action: 'move-right-hot-markets',
         });
-        setFirstHotIndex(firstHotIndex + CARDS_TO_SHOW < currentMarkets.length - 1 ? firstHotIndex + 1 : 0);
+        setFirstHotIndex(firstHotIndex + CARDS_TO_SHOW < currentMarkets.length ? firstHotIndex + 1 : 0);
     };
 
     const slicedMarkets = useMemo(() => {
@@ -108,7 +129,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
         return currentMarkets.slice(
             firstHotIndex,
-            firstHotIndex + CARDS_TO_SHOW > currentMarkets.length - 1
+            firstHotIndex + CARDS_TO_SHOW > currentMarkets.length
                 ? firstHotIndex + CARDS_TO_SHOW - currentMarkets.length + 1
                 : firstHotIndex + CARDS_TO_SHOW
         );
@@ -116,19 +137,28 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     return (
         <>
-            <Title>
-                {t('options.home.hot-markets.most-profitable-markets')}
+            <DiscountBanner>
+                <DiscountTitle> {t('options.home.hot-markets.discounted-positions')}</DiscountTitle>
+                {showOPBanner && (
+                    <>
+                        <DiscountSubTitle> + {t('options.home.hot-markets.eligible-for')} </DiscountSubTitle>
+                        <img src={opToken} width="46" height="46" style={{ margin: '0 8px' }} />
+                        <DiscountSubTitle> {t('options.home.hot-markets.token-rewards')} </DiscountSubTitle>
+                    </>
+                )}
+
                 <Tooltip
-                    message={t('options.home.hot-markets.tooltip-text')}
+                    message={t('options.home.hot-markets.tooltip-text-discount')}
                     type={'info'}
                     iconColor={'var(--table-header-text-color)'}
                     placement={'right'}
                 />
-            </Title>
+            </DiscountBanner>
+
             <Wrapper id="wrapper-cards">
                 {currentMarkets.length > 0 ? (
                     <>
-                        <Icon onClick={moveLeft} disabled={firstHotIndex == 0} className={'icon icon--left'} />
+                        <Arrow onClick={moveLeft} disabled={firstHotIndex == 0} className={'icon icon--left'} />
                         {slicedMarkets.map((market, index) => (
                             <HotMarketCard
                                 key={index}
@@ -139,12 +169,13 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                                 pricePerOption={market.pricePerOption}
                                 timeRemaining={market.timeRemaining}
                                 potentialProfit={market.potentialProfit}
+                                discount={market.discount}
                                 address={market.address}
                             />
                         ))}
-                        <Icon
+                        <Arrow
                             onClick={moveRight}
-                            disabled={firstHotIndex + 5 == currentMarkets?.length - 1}
+                            disabled={firstHotIndex + CARDS_TO_SHOW == currentMarkets?.length}
                             className={'icon icon--right'}
                         />
                     </>
@@ -197,23 +228,39 @@ const Wrapper = styled.div`
     }
 `;
 
-const Title = styled.p`
+const DiscountBanner = styled.div`
+    background: linear-gradient(106.37deg, #7900d9 23.8%, #219fc7 80.11%);
+    border-radius: 10px;
+    height: 30px;
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    font-family: Roboto !important;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 38px;
-    color: var(--notice-text);
-    border-bottom: 4px solid var(--card-border-color);
-    padding: 4px 20px;
-    text-transform: capitalize;
+    align-items: center;
+    justify-content: center;
     position: relative;
     top: -20px;
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
-const Icon = styled.i<{ disabled?: boolean }>`
+const DiscountTitle = styled.span`
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    color: #ffffff;
+    margin-right: 6px;
+`;
+
+const DiscountSubTitle = styled.span`
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+    color: #ffffff;
+`;
+
+const Arrow = styled.i<{ disabled?: boolean }>`
     cursor: pointer;
     font-size: 60px;
     color: ${(_props) => (_props?.disabled ? 'var(--hotmarket-arrow-disable)' : 'var(--hotmarket-arrow-enabled)')};

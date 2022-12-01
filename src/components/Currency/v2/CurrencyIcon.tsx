@@ -4,7 +4,23 @@ import { CurrencyKey } from 'constants/currency';
 import styled from 'styled-components';
 import { UI_COLORS } from 'constants/ui';
 
-const NEW_CURRENCY_ICONS = ['LYRA', 'LUNA', 'MATIC', 'PERP', 'OHM', 'CVX', 'APE', 'OP'];
+const NEW_CURRENCY_ICONS = [
+    'LYRA',
+    'LUNA',
+    'MATIC',
+    'PERP',
+    'OHM',
+    'CVX',
+    'APE',
+    'OP',
+    'DYDX',
+    'ETC',
+    'LOOKS',
+    'MAGIC',
+    'DPX',
+    'GMX',
+    'CAKE',
+];
 
 type CurrencyIconProps = {
     currencyKey: CurrencyKey;
@@ -99,6 +115,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 
 const Content = styled.div`
     position: relative;
+    display: flex;
 `;
 
 const Badge = styled.i<{ color: string; height: number }>`

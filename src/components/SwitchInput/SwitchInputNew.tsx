@@ -23,6 +23,7 @@ type SwitchProps = {
     label?: LabelProps;
     shadow?: boolean;
     margin?: string;
+    spanColumns?: number;
 };
 
 type SwitchContainerProps = {
@@ -62,9 +63,10 @@ const Switch: React.FC<SwitchProps> = ({
     label,
     shadow,
     margin,
+    spanColumns,
 }) => {
     return (
-        <Wrapper margin={margin} disabled={disabled}>
+        <Wrapper margin={margin} disabled={disabled} spanColumns={spanColumns}>
             {label?.firstLabel && <Label fontSize={label?.fontSize}>{label.firstLabel}</Label>}
             <SwitchContainer
                 disabled={disabled}
@@ -84,7 +86,7 @@ const Switch: React.FC<SwitchProps> = ({
     );
 };
 
-const Wrapper = styled.div<{ margin?: string; disabled?: boolean }>`
+const Wrapper = styled.div<{ margin?: string; disabled?: boolean; spanColumns?: number }>`
     ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
     opacity: ${(props: any) => (props.disabled ? '0.4' : '1')};
     display: flex;
@@ -93,6 +95,9 @@ const Wrapper = styled.div<{ margin?: string; disabled?: boolean }>`
     justify-content: center;
     width: 100%;
     cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'default')};
+    @media (max-width: 768px) {
+        ${(_props) => (_props?.spanColumns ? `grid-column: span ${_props.spanColumns}` : '')};
+    }
 `;
 
 const Label = styled.span<{ fontSize?: string }>`
