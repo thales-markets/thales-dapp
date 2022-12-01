@@ -6,6 +6,7 @@ import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import Container from './styled-components/GameContainer';
+import onboardConnector from 'utils/onboardConnector';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-game/build.loader.js',
@@ -31,6 +32,8 @@ const TaleOfThales: React.FC = () => {
     unityContext.on('connectGameToWallet', () => {
         if (walletAddress) {
             unityContext.send('JSListener', 'sendWalletInfoToGame', walletAddress);
+        } else {
+            onboardConnector.connectWallet();
         }
     });
 
