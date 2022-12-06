@@ -1,59 +1,63 @@
-import React, { useEffect } from 'react';
-import Unity, { UnityContext } from 'react-unity-webgl';
-import fullScreenImage from 'assets/images/full_screen_icon.png';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
-import Container from './styled-components/GameContainer';
-import onboardConnector from 'utils/onboardConnector';
-
-const unityContext = new UnityContext({
-    loaderUrl: '/miletus-game/build.loader.js',
-    dataUrl: '/miletus-game/build.data.unityweb',
-    frameworkUrl: '/miletus-game/build.framework.js.unityweb',
-    codeUrl: '/miletus-game/build.wasm.unityweb',
-});
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Metaverse from './components/Metaverse';
+import Story from './components/Story';
 
 const TaleOfThales: React.FC = () => {
-    const { t } = useTranslation();
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-
-    const handleOnClickFullscreen = () => {
-        unityContext.setFullscreen(true);
-    };
-
-    useEffect(() => {
-        if (walletAddress) {
-            unityContext.send('JSListener', 'sendWalletInfoToGame', walletAddress);
-        }
-    }, [walletAddress]);
-
-    unityContext.on('connectGameToWallet', () => {
-        if (walletAddress) {
-            unityContext.send('JSListener', 'sendWalletInfoToGame', walletAddress);
-        } else {
-            onboardConnector.connectWallet();
-        }
-    });
-
+    // const { t } = useTranslation();
+    const [activeTab, setActiveTab] = useState(0);
     return (
-        <Container className="game" style={{ zIndex: 10 }}>
-            {!walletAddress && <Container.Msg>{t('game.connect-wallet-warning')}</Container.Msg>}
-            <Container.Center>
-                <Container.Wrapper>
-                    <Unity
-                        unityContext={unityContext}
-                        style={{
-                            height: 'auto',
-                            width: '100%',
-                        }}
-                    />
-                    <Container.Btn onClick={handleOnClickFullscreen} src={fullScreenImage} />
-                </Container.Wrapper>
-            </Container.Center>
-        </Container>
+        <>
+            <TabsContainer>
+                <Tab onClick={() => setActiveTab(0)} active={activeTab === 0}>
+                    Metaverse
+                </Tab>
+                <Tab onClick={() => setActiveTab(1)} active={activeTab === 1}>
+                    Mint NFT
+                </Tab>
+                <Tab onClick={() => setActiveTab(2)} active={activeTab === 2}>
+                    Story
+                </Tab>
+            </TabsContainer>
+            {activeTab === 0 && <Metaverse />}
+            {activeTab === 1 && <div />}
+            {activeTab === 2 && <Story />}
+        </>
     );
 };
+
+const TabsContainer = styled.div`
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    border-bottom: 4px solid var(--table-border-color);
+    border-radius: 3px;
+    @media (max-width: 1024px) {
+        margin-top: 30px;
+    }
+    @media (max-width: 768px) {
+        display: none;
+    }
+`;
+
+const Tab = styled.div<{ active: boolean }>`
+    font-weight: 400;
+    font-size: 25px;
+    text-align: center;
+    width: 25%;
+    font-family: Roboto !important;
+    font-style: normal;
+    color: var(--primary-color);
+    box-shadow: ${(props) => (props?.active ? '0px 4px var(--primary-filter-menu-active)' : '')};
+    text-transform: uppercase;
+    padding: 10px 5px;
+    cursor: pointer;
+    @media (max-width: 1192px) {
+        font-size: 23px;
+        padding: 5px;
+    }
+`;
 
 export default TaleOfThales;
