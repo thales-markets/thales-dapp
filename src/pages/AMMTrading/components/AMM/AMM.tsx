@@ -642,8 +642,11 @@ const AMM: React.FC = () => {
         setMaxLimit(max);
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
-        console.log('base', base);
-        setPotentialBaseReturn(base > 0 && isBuy ? calculateAndFormatPercentage(base, 1) : 0);
+        setPotentialBaseReturn(
+            isBuy && total && total > 0 && amount && amount > 0
+                ? calculateAndFormatPercentage(Number(total), Number(amount))
+                : 0
+        );
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
     }, [ammMaxLimits, isLong, isBuy]);
 
