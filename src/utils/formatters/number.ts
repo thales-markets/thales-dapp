@@ -125,5 +125,7 @@ export const formatPricePercentageDifference = (targetPrice: number, currentPric
 };
 
 export const calculateAndFormatPercentage = (first: number, second: number) => {
-    return Math.abs(first - second) / ((first + second) / 2);
+    const greater = first > second ? first : second;
+    const smaller = first > second ? second : first;
+    return (greater - smaller) / smaller;
 };
