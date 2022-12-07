@@ -123,3 +123,7 @@ export const calculatePercentageChange = (lastPrice: number, firstPrice: number)
 export const formatPricePercentageDifference = (targetPrice: number, currentPrice: number) => {
     return ((currentPrice - targetPrice) / currentPrice) * 100;
 };
+
+export const calculateAndFormatPercentage = (first: number, second: number) => {
+    return Math.abs(first - second) / ((first + second) / 2);
+};
