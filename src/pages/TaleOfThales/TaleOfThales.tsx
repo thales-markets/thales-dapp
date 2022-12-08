@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Metaverse from './components/Metaverse';
+import Mint from './components/Mint';
 import Story from './components/Story';
 
 const TaleOfThales: React.FC = () => {
@@ -20,7 +21,7 @@ const TaleOfThales: React.FC = () => {
                 </Tab>
             </TabsContainer>
             {activeTab === 0 && <Metaverse />}
-            {activeTab === 1 && <div />}
+            {activeTab === 1 && <Mint />}
             {activeTab === 2 && <Story />}
         </>
     );
