@@ -34,7 +34,13 @@ import {
     refetchUserTrades,
     refetchWalletBalances,
 } from 'utils/queryConnector';
-import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
+import {
+    calculateAndFormatPercentage,
+    formatCurrency,
+    formatCurrencyWithKey,
+    formatPercentage,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
 import { AccountMarketInfo, OrderSide, OptionSide, StableCoins } from 'types/options';
@@ -636,7 +642,11 @@ const AMM: React.FC = () => {
         setMaxLimit(max);
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
-        setPotentialBaseReturn(base > 0 && isBuy ? 1 / Number(base) - 1 : 0);
+        setPotentialBaseReturn(
+            isBuy && total && total > 0 && amount && amount > 0
+                ? calculateAndFormatPercentage(Number(total), Number(amount))
+                : 0
+        );
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
     }, [ammMaxLimits, isLong, isBuy]);
 
@@ -656,6 +666,11 @@ const AMM: React.FC = () => {
                         ? (Number(total) > 0 && Number(total) <= stableBalance) ||
                           (Number(total) === 0 && stableBalance > 0)
                         : Number(amount) <= tokenBalance))
+        );
+        setPotentialBaseReturn(
+            isBuy && total && total > 0 && amount && amount > 0
+                ? calculateAndFormatPercentage(Number(total), Number(amount))
+                : 0
         );
     }, [amount, total, isBuy, stableBalance, tokenBalance]);
 

@@ -55,9 +55,8 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             .sort((a, b) => a.timeRemaining - b.timeRemaining)
             .forEach((market) => {
                 const discount = (discountsMap as any).get(market.address.toLowerCase());
-
                 if (discount) {
-                    if (discount.longPriceImpact < 0) {
+                    if (discount.longPriceImpact < 0 && market.longPrice !== 0) {
                         markets.push({
                             fullAssetName: getSynthName(market.currencyKey),
                             currencyKey: market.currencyKey,
@@ -71,7 +70,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                         });
                     }
 
-                    if (discount.shortPriceImpact < 0) {
+                    if (discount.shortPriceImpact < 0 && market.shortPrice !== 0) {
                         markets.push({
                             fullAssetName: getSynthName(market.currencyKey),
                             currencyKey: market.currencyKey,
@@ -130,7 +129,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         return currentMarkets.slice(
             firstHotIndex,
             firstHotIndex + CARDS_TO_SHOW > currentMarkets.length
-                ? firstHotIndex + CARDS_TO_SHOW - currentMarkets.length + 1
+                ? currentMarkets.length
                 : firstHotIndex + CARDS_TO_SHOW
         );
     }, [currentMarkets, firstHotIndex]);
@@ -175,7 +174,11 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                         ))}
                         <Arrow
                             onClick={moveRight}
-                            disabled={firstHotIndex + CARDS_TO_SHOW == currentMarkets?.length}
+                            disabled={
+                                CARDS_TO_SHOW >= currentMarkets?.length
+                                    ? true
+                                    : firstHotIndex + CARDS_TO_SHOW == currentMarkets?.length
+                            }
                             className={'icon icon--right'}
                         />
                     </>

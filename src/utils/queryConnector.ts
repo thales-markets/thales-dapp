@@ -11,7 +11,9 @@ type QueryConnector = {
 // @ts-ignore
 const queryConnector: QueryConnector = {
     setQueryClient: function () {
-        this.queryClient = new QueryClient();
+        if (this.queryClient === undefined) {
+            this.queryClient = new QueryClient();
+        }
     },
 };
 
