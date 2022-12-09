@@ -111,7 +111,10 @@ const Table: React.FC<{
                           Header: t(`options.home.markets-table.discount-col`),
                           accessor: 'discountedSide',
                           Cell: (_props: any) => {
-                              if (_props.cell.value) {
+                              if (
+                                  _props.cell.value &&
+                                  (_props.row.original.availableLongs > 0 || _props.row.original.availableShorts > 0)
+                              ) {
                                   return (
                                       <>
                                           <Icon
