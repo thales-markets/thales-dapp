@@ -3,10 +3,12 @@ import Unity, { UnityContext } from 'react-unity-webgl';
 import fullScreenImage from 'assets/images/full_screen_icon.png';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import Container from '../../styled-components/GameContainer';
 import onboardConnector from 'utils/onboardConnector';
+import { getIsAppReady } from 'redux/modules/app';
+import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-metaverse/build.loader.js',
@@ -17,21 +19,36 @@ const unityContext = new UnityContext({
 
 const Metaverse: React.FC = () => {
     const { t } = useTranslation();
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
+    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
+        enabled: isAppReady && !!walletAddress,
+    });
+
+    const thalesStaked = stakingThalesQuery.isSuccess ? stakingThalesQuery.data.thalesStaked : 0;
     const handleOnClickFullscreen = () => {
         unityContext.setFullscreen(true);
     };
 
     useEffect(() => {
         if (walletAddress) {
-            unityContext.send('JSListener', 'sendWalletInfoToGame', walletAddress);
+            unityContext.send(
+                'JSListener',
+                'sendWalletInfoToGame',
+                JSON.stringify({ walletAddress, thalesStaked, listOwnedNFTs: [3, 7, 8, 17, 18] })
+            );
         }
-    }, [walletAddress]);
+    }, [walletAddress, thalesStaked]);
 
     unityContext.on('connectGameToWallet', () => {
         if (walletAddress) {
-            unityContext.send('JSListener', 'sendWalletInfoToGame', walletAddress);
+            unityContext.send(
+                'JSListener',
+                'sendWalletInfoToGame',
+                JSON.stringify({ walletAddress, thalesStaked, listOwnedNFTs: [3, 7, 8, 17, 18] })
+            );
         } else {
             onboardConnector.connectWallet();
         }
