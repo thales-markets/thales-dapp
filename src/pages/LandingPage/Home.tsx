@@ -9,6 +9,8 @@ import ROUTES from 'constants/routes';
 import { buildHref, navigateTo } from 'utils/routes';
 import SPAAnchor from 'components/SPAAnchor';
 import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 export enum Theme {
     Light,
@@ -33,14 +35,8 @@ const Home: React.FC = () => {
 
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <Info>
-                <Trans
-                    i18nKey="options.home.op-rewards-banner-message"
-                    components={{
-                        bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
-                    }}
-                />
-            </Info>
+            <OpRewardsBanner isLandingPage={true} />
+            <ElectionsBanner isLandingPage={true} />
             {INFORMATION_BANNER_ACTIVE && (
                 <Info>
                     <Trans
