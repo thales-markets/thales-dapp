@@ -16,7 +16,7 @@ type ElectionsBannerProps = {
 const SHOW_BANNER = true;
 
 const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width }) => {
-    const transMessage = useMemo(() => {
+    const textLink = useMemo(() => {
         return (
             <Trans
                 i18nKey="options.home.elections-banner-message"
@@ -36,10 +36,10 @@ const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width 
     return (
         SHOW_BANNER &&
         (isLandingPage ? (
-            <Info>{transMessage}</Info>
+            <Info>{textLink}</Info>
         ) : (
             <BannerContainer width={width}>
-                <InfoBanner>{transMessage}</InfoBanner>
+                <InfoBanner>{textLink}</InfoBanner>
             </BannerContainer>
         ))
     );

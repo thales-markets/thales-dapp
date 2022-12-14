@@ -22,7 +22,7 @@ const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
 
-    const transMessage = useMemo(() => {
+    const textLink = useMemo(() => {
         return (
             <Trans
                 i18nKey="options.home.op-rewards-banner-message"
@@ -35,10 +35,10 @@ const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width 
 
     return SHOW_BANNER ? (
         isPolygon ? null : isLandingPage ? (
-            <Info>{transMessage}</Info>
+            <Info>{textLink}</Info>
         ) : (
             <BannerContainer width={width}>
-                <InfoBanner>{transMessage}</InfoBanner>
+                <InfoBanner>{textLink}</InfoBanner>
             </BannerContainer>
         )
     ) : null;
