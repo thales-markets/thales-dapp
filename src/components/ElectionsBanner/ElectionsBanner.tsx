@@ -9,14 +9,31 @@ import SPAAnchor from 'components/SPAAnchor';
 import { SpaceKey, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
 
 type ElectionsBannerProps = {
+    isLandingPage?: boolean;
     width?: number;
 };
 
 const SHOW_BANNER = true;
 
-const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ width }) => {
+const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width }) => {
     return (
-        SHOW_BANNER && (
+        SHOW_BANNER &&
+        (isLandingPage ? (
+            <Info>
+                <Trans
+                    i18nKey="options.home.elections-banner-message"
+                    components={{
+                        bold: (
+                            <SPAAnchor
+                                href={buildHref(
+                                    `${ROUTES.Governance.Home}/${SpaceKey.COUNCIL}/${VOTING_COUNCIL_PROPOSAL_ID}`
+                                )}
+                            />
+                        ),
+                    }}
+                />
+            </Info>
+        ) : (
             <BannerContainer width={width}>
                 <InfoBanner>
                     <Trans
@@ -33,7 +50,7 @@ const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ width }) => {
                     />
                 </InfoBanner>
             </BannerContainer>
-        )
+        ))
     );
 };
 
@@ -54,6 +71,30 @@ const BannerContainer = styled(FlexDiv)<{ width?: number }>`
     }
     @media (max-width: 1192px) {
         padding-bottom: 20px;
+    }
+`;
+
+const Info = styled.div`
+    width: 100%;
+    color: var(--color);
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    background-color: var(--background);
+    box-shadow: 0px 0px 20px rgb(0 0 0 / 40%);
+    z-index: 2;
+    position: absolute;
+    strong {
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 0.2em;
+        color: #91bced;
+    }
+    a {
+        display: contents;
+        font-weight: bold;
+        cursor: pointer;
+        color: #91bced;
     }
 `;
 
