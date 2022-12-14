@@ -28,6 +28,7 @@ import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import localStore from 'utils/localStore';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -117,6 +118,7 @@ const Profile: React.FC = () => {
     return (
         <>
             {showOPBanner && <OpRewardsBanner />}
+            <ElectionsBanner />
             <Container layout={isSimpleView}>
                 <Container.Fixed>
                     <SearchField

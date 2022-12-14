@@ -6,35 +6,35 @@ import { FlexDiv } from 'theme/common';
 import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';
-import { getIsPolygon } from 'utils/network';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useSelector } from 'react-redux';
+import { SpaceKey, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
 
-type OpRewardsBannerProps = {
+type ElectionsBannerProps = {
     width?: number;
 };
 
-const SHOW_BANNER = false;
+const SHOW_BANNER = true;
 
-const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ width }) => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isPolygon = getIsPolygon(networkId);
-
-    return SHOW_BANNER ? (
-        isPolygon ? null : (
+const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ width }) => {
+    return (
+        SHOW_BANNER && (
             <BannerContainer width={width}>
                 <InfoBanner>
                     <Trans
-                        i18nKey="options.home.op-rewards-banner-message"
+                        i18nKey="options.home.elections-banner-message"
                         components={{
-                            bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
+                            bold: (
+                                <SPAAnchor
+                                    href={buildHref(
+                                        `${ROUTES.Governance.Home}/${SpaceKey.COUNCIL}/${VOTING_COUNCIL_PROPOSAL_ID}`
+                                    )}
+                                />
+                            ),
                         }}
                     />
                 </InfoBanner>
             </BannerContainer>
         )
-    ) : null;
+    );
 };
 
 const BannerContainer = styled(FlexDiv)<{ width?: number }>`
@@ -57,4 +57,4 @@ const BannerContainer = styled(FlexDiv)<{ width?: number }>`
     }
 `;
 
-export default OpRewardsBanner;
+export default ElectionsBanner;

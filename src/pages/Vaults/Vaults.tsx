@@ -1,3 +1,4 @@
+import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import React from 'react';
@@ -8,6 +9,7 @@ const Vault: React.FC = () => {
     return (
         <>
             <OpRewardsBanner />
+            <ElectionsBanner />
             <Wrapper>
                 <Container>
                     <VaultOverview vaultId="discount-vault" />

@@ -44,6 +44,7 @@ import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
 import Footer from 'components/Footer';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 const Tabs = [
     {
@@ -191,6 +192,7 @@ const Referral: React.FC = () => {
     return (
         <>
             {showOPBanner && <OpRewardsBanner />}
+            <ElectionsBanner />
             <HeaderContainer>
                 <FormWrapper>
                     <Label>{t('referral-page.choose-landing')}</Label>
