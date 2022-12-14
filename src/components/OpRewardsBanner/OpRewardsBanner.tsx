@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Trans } from 'react-i18next';
 import InfoBanner from 'components/InfoBanner';
@@ -22,26 +22,23 @@ const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
 
+    const transMessage = useMemo(() => {
+        return (
+            <Trans
+                i18nKey="options.home.op-rewards-banner-message"
+                components={{
+                    bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
+                }}
+            />
+        );
+    }, []);
+
     return SHOW_BANNER ? (
         isPolygon ? null : isLandingPage ? (
-            <Info>
-                <Trans
-                    i18nKey="options.home.op-rewards-banner-message"
-                    components={{
-                        bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
-                    }}
-                />
-            </Info>
+            <Info>{transMessage}</Info>
         ) : (
             <BannerContainer width={width}>
-                <InfoBanner>
-                    <Trans
-                        i18nKey="options.home.op-rewards-banner-message"
-                        components={{
-                            bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
-                        }}
-                    />
-                </InfoBanner>
+                <InfoBanner>{transMessage}</InfoBanner>
             </BannerContainer>
         )
     ) : null;

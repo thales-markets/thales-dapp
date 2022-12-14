@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Trans } from 'react-i18next';
 import InfoBanner from 'components/InfoBanner';
@@ -16,39 +16,30 @@ type ElectionsBannerProps = {
 const SHOW_BANNER = true;
 
 const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width }) => {
+    const transMessage = useMemo(() => {
+        return (
+            <Trans
+                i18nKey="options.home.elections-banner-message"
+                components={{
+                    bold: (
+                        <SPAAnchor
+                            href={buildHref(
+                                `${ROUTES.Governance.Home}/${SpaceKey.COUNCIL}/${VOTING_COUNCIL_PROPOSAL_ID}`
+                            )}
+                        />
+                    ),
+                }}
+            />
+        );
+    }, []);
+
     return (
         SHOW_BANNER &&
         (isLandingPage ? (
-            <Info>
-                <Trans
-                    i18nKey="options.home.elections-banner-message"
-                    components={{
-                        bold: (
-                            <SPAAnchor
-                                href={buildHref(
-                                    `${ROUTES.Governance.Home}/${SpaceKey.COUNCIL}/${VOTING_COUNCIL_PROPOSAL_ID}`
-                                )}
-                            />
-                        ),
-                    }}
-                />
-            </Info>
+            <Info>{transMessage}</Info>
         ) : (
             <BannerContainer width={width}>
-                <InfoBanner>
-                    <Trans
-                        i18nKey="options.home.elections-banner-message"
-                        components={{
-                            bold: (
-                                <SPAAnchor
-                                    href={buildHref(
-                                        `${ROUTES.Governance.Home}/${SpaceKey.COUNCIL}/${VOTING_COUNCIL_PROPOSAL_ID}`
-                                    )}
-                                />
-                            ),
-                        }}
-                    />
-                </InfoBanner>
+                <InfoBanner>{transMessage}</InfoBanner>
             </BannerContainer>
         ))
     );
