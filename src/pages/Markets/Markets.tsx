@@ -20,6 +20,7 @@ import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_N
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
 import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
@@ -108,6 +109,7 @@ const Markets: React.FC = () => {
     return (
         <>
             {showOPBanner && <OpRewardsBanner width={90} />}
+            <ElectionsBanner width={90} />
             {INFORMATION_BANNER_ACTIVE && (
                 <BannerContainer>
                     <InfoBanner>

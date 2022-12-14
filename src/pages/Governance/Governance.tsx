@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import Footer from 'components/Footer';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -143,6 +144,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     return (
         <>
             {showOPBanner && <OpRewardsBanner />}
+            <ElectionsBanner />
             <BackLinkWrapper isOverviewPage={isOverviewPage}>
                 {selectedProposal && (
                     <BackLink

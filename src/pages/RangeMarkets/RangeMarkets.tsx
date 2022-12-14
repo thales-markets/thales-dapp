@@ -14,6 +14,7 @@ import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRang
 import { RangedMarketUI } from 'types/options';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 const HotMarketsRanged = lazy(
     () => import(/* webpackChunkName: "HotMarketsRanged" */ './components/HotMarketsRanged/HotMarketsRanged')
@@ -113,6 +114,7 @@ const RangeMarkets: React.FC = () => {
                 </InfoBanner>
             </BannerContainer> */}
             {showOPBanner && <OpRewardsBanner width={90} />}
+            <ElectionsBanner width={90} />
             <Suspense fallback={<></>}>
                 <HotMarketsRanged optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
             </Suspense>

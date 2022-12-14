@@ -306,7 +306,7 @@
             "leaderboard-label": "Leaderboard",
             "quick-trading-label": "Quick trading",
             "quick-trading-label-competition": "Comp. quick trading",
-            "earn-label": "THALES TOKEN",
+            "earn-label": "Thales Token",
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
             "game-label": "Tale of Thales",
@@ -415,6 +415,7 @@
             "polygon-trading-competition-1": "Thales incentivized trading competition is live on<bold>Polygon</bold>",
             "polygon-trading-competition-2": " click <bold>here</bold> to learn more",
             "op-rewards-banner-message": "OP rewards have started, check how you can earn those on <bold>the OP rewards page</bold>",
+            "elections-banner-message": "Elections are now live, exercise your voting power as a THALES staker <bold>here</bold>",
             "market-card": {
                 "current-asset-price": "Current asset price",
                 "pool-size": "Pool size",

@@ -1,3 +1,4 @@
+import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
@@ -117,6 +118,7 @@ const TokenPage: React.FC = () => {
     return (
         <>
             <OpRewardsBanner />
+            <ElectionsBanner />
             <Container>
                 <FlexDivColumn>
                     <TokenOverview />

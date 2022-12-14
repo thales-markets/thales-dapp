@@ -31,6 +31,7 @@ import TimeRemaining from 'components/TimeRemaining';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 const UP_OP_REWARDS = 9000;
 const DOWN_OP_REWARDS = 9000;
@@ -631,6 +632,7 @@ const OPRewards: React.FC = () => {
 
     return (
         <Wrapper>
+            <ElectionsBanner />
             <Description>
                 <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
                 <br />
