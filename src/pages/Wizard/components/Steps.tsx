@@ -631,7 +631,6 @@ const Text = styled.p`
 
 const BuyWrapper = styled.div`
     box-sizing: border-box;
-    position: absolute;
     width: 390px;
     height: 441px;
     margin: auto;
