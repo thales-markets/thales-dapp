@@ -65,6 +65,7 @@ const BungeePlugin: React.FC = () => {
             <Bridge
                 provider={snxJSConnector.provider}
                 API_KEY={apiKey}
+                singleTxOnly={false}
                 sourceNetworks={SOURCE_NETWORK_IDS}
                 defaultSourceNetwork={defaultSourceNetwork}
                 destNetworks={destinationNetworks}
@@ -79,9 +80,8 @@ const BungeePlugin: React.FC = () => {
 
 const BungeeWrapper = styled.div`
     box-sizing: border-box;
-    position: absolute;
     width: 390px;
-    height: 470px;
+    height: 467px;
     margin: auto;
     position: relative;
     top: 100px;
