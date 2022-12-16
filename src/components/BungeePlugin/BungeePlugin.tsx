@@ -25,7 +25,7 @@ type CustomizationProps = {
     outline?: string;
 };
 
-const BungeeWidget: React.FC = () => {
+const BungeePlugin: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const apiKey = process.env.REACT_APP_BUNGEE_API_KEY || '';
@@ -92,4 +92,4 @@ const BungeeWrapper = styled.div`
     outline: none;
 `;
 
-export default BungeeWidget;
+export default BungeePlugin;

@@ -24,7 +24,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import SPAAnchor from 'components/SPAAnchor';
 import { XButton } from 'theme/common';
 import { WizardSteps } from '../Wizard';
-import BungeeWidget from 'components/BungeeWidget';
+import BungeePlugin from 'components/BungeePlugin';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -402,7 +402,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                     }}
                 >
                     <Suspense fallback={<></>}>
-                        <BungeeWidget />
+                        <BungeePlugin />
                     </Suspense>
                 </Modal>
             )}

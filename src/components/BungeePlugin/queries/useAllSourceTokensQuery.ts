@@ -1,9 +1,6 @@
 import { Currency } from '@socket.tech/plugin';
 import QUERY_KEYS from 'constants/queryKeys';
-import dotenv from 'dotenv';
 import { useQuery, UseQueryOptions } from 'react-query';
-
-dotenv.config();
 
 export interface TokenListOutput {
     success: boolean;
