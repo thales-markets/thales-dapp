@@ -65,7 +65,6 @@ const BungeePlugin: React.FC = () => {
             <Bridge
                 provider={snxJSConnector.provider}
                 API_KEY={apiKey}
-                singleTxOnly={false}
                 sourceNetworks={SOURCE_NETWORK_IDS}
                 defaultSourceNetwork={defaultSourceNetwork}
                 destNetworks={destinationNetworks}
