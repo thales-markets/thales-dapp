@@ -80,7 +80,7 @@ const BungeePlugin: React.FC = () => {
 const BungeeWrapper = styled.div`
     box-sizing: border-box;
     width: 390px;
-    height: 467px;
+    height: 469px;
     margin: auto;
     position: relative;
     top: 100px;
