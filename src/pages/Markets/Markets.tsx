@@ -67,7 +67,7 @@ const Markets: React.FC = () => {
         ) {
             const markets = openOrdersQuery.data
                 ? marketsQuery.data.map((m) => {
-                      const apiData = (openOrdersQuery.data as any).get(m.address.toLowerCase());
+                      const apiData = openOrdersQuery?.data?.get(m.address.toLowerCase());
                       const discountData = (discountQuery.data as any).get(m.address.toLowerCase());
                       let discountedSide;
                       let discount = 0;
@@ -89,7 +89,7 @@ const Markets: React.FC = () => {
                           availableShorts: apiData?.availableShorts ?? 0,
                           longPrice: apiData?.longPrice ?? 0,
                           shortPrice: apiData?.shortPrice ?? 0,
-                          ammLiquidity: Number(apiData?.availableLongs ?? 0) + Number(apiData?.availableShorts ?? 0),
+                          ammLiquidity: (apiData?.availableLongs ?? 0) + (apiData?.availableShorts ?? 0),
                           discountedSide,
                           discount,
                       };
