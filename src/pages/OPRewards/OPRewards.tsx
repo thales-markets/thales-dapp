@@ -733,8 +733,6 @@ const OPRewards: React.FC = () => {
             <ElectionsBanner />
             <Description>
                 <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
-                <br />
-                <Trans i18nKey={'op-rewards.description-2'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
                 <Trans
                     i18nKey={
                         period < 7
