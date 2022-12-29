@@ -1899,7 +1899,7 @@
             "otm-info": "OTM tokens",
             "total-rewards": "Total rewards",
             "reward-text": "Rewards:<0/> {{thales}} THALES, {{op}} OP",
-            "reward-text-op": "Rewards:<0/> {{op}} OP",
+            "reward-text-op": "Rewards: {{op}} OP",
             "info-text": "Volume: {{volume}}, Percentage: {{percentage}}%",
             "total-text": "{{thales}} THALES, {{op}} OP"
         },
