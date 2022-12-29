@@ -1,9 +1,6 @@
-import { Currency } from '@socket.tech/widget';
+import { Currency } from '@socket.tech/plugin';
 import QUERY_KEYS from 'constants/queryKeys';
-import dotenv from 'dotenv';
 import { useQuery, UseQueryOptions } from 'react-query';
-
-dotenv.config();
 
 export interface TokenListOutput {
     success: boolean;
@@ -12,7 +9,8 @@ export interface TokenListOutput {
 
 export const SOURCE_NETWORK_IDS = [1, 56, 100, 137, 250, 43114, 42161, 1313161554];
 
-const baseUrl = 'https://backend.movr.network/v2/token-lists/from-token-list';
+// Check docs on: https://docs.socket.tech/socket-api/versioning
+const baseUrl = 'https://api.socket.tech/v2/token-lists/from-token-list';
 const queryParamFromChainId = '?fromChainId=';
 const queryParamToChainId = '&toChainId=';
 const queryParamShortList = '&isShortList=true';

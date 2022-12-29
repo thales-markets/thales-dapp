@@ -73,11 +73,11 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
             let markets = openOrdersMap
                 ? marketsQuery.data.map((m) => ({
                       ...m,
-                      openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
-                      availableLongs: (openOrdersMap as any).get(m.address.toLowerCase())?.availableLongs ?? '0',
-                      availableShorts: (openOrdersMap as any).get(m.address.toLowerCase())?.availableShorts ?? '0',
-                      longPrice: (openOrdersMap as any).get(m.address.toLowerCase())?.longPrice ?? '0',
-                      shortPrice: (openOrdersMap as any).get(m.address.toLowerCase())?.shortPrice ?? '0',
+                      openOrders: openOrdersMap.get(m.address.toLowerCase())?.ordersCount ?? 0,
+                      availableLongs: openOrdersMap.get(m.address.toLowerCase())?.availableLongs ?? 0,
+                      availableShorts: openOrdersMap.get(m.address.toLowerCase())?.availableShorts ?? 0,
+                      longPrice: openOrdersMap.get(m.address.toLowerCase())?.longPrice ?? 0,
+                      shortPrice: openOrdersMap.get(m.address.toLowerCase())?.shortPrice ?? 0,
                   }))
                 : marketsQuery.data;
 
@@ -95,21 +95,21 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
         if (rangedMarketsQuery.isSuccess && Array.isArray(rangedMarketsQuery.data)) {
             let markets = rangedMarketsLiquidity
                 ? rangedMarketsQuery.data.map((m) => {
-                      const apiData = (rangedMarketsLiquidity as any).get(m.address.toLowerCase());
+                      const apiData = rangedMarketsLiquidity.get(m.address.toLowerCase());
 
                       return {
                           ...m,
-                          availableIn: apiData?.availableIn ?? '0',
+                          availableIn: apiData?.availableIn ?? 0,
                           availableOut: apiData?.availableOut ?? 0,
                           inPrice:
                               +(networkId === POLYGON_ID
-                                  ? apiData?.inPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.inPrice) ?? 0,
+                                  ? (apiData?.inPrice ?? 0) * CONVERT_TO_6_DECIMALS
+                                  : apiData?.inPrice ?? 0) ?? 0,
                           outPrice:
                               +(networkId === POLYGON_ID
-                                  ? apiData?.outPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.outPrice) ?? 0,
-                          ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
+                                  ? (apiData?.outPrice ?? 0) * CONVERT_TO_6_DECIMALS
+                                  : apiData?.outPrice ?? 0) ?? 0,
+                          ammLiquidity: (apiData?.availableIn ?? 0) + (apiData?.availableOut ?? 0),
                           range: m.leftPrice.toFixed(2) + ' - ' + m.rightPrice.toFixed(2),
                       };
                   })

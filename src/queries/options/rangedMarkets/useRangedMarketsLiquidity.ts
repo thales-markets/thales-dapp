@@ -2,11 +2,12 @@ import { NetworkId } from 'utils/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { generalConfig } from 'config/general';
+import { AMM_MAX_BUFFER_PERCENTAGE } from 'constants/options';
 
-type OpenOrdersMap = Record<string, any> | null;
-
-// TODO: discuss with team to change logic and store and update markets in redux to avoid this
-export let openOrdersMapCacheNew: OpenOrdersMap = null;
+type OpenOrdersMap = Map<
+    string,
+    { asset: string; availableIn: number; availableOut: number; inPrice: number; outPrice: number }
+> | null;
 
 export const useRangedMarketsLiquidity = (network: NetworkId, options?: UseQueryOptions<OpenOrdersMap>) => {
     return useQuery<OpenOrdersMap>(
@@ -15,10 +16,18 @@ export const useRangedMarketsLiquidity = (network: NetworkId, options?: UseQuery
             const baseUrl = `${generalConfig.API_URL}/ranged-liquidity/${network}`;
             const response = await fetch(baseUrl);
             const json = await response.json();
-            const openOrdersMap = new Map(json);
+            const openOrdersMap: OpenOrdersMap = new Map(json) as any;
 
-            openOrdersMapCacheNew = openOrdersMap as any;
-            return openOrdersMap as any;
+            const mappedOpenOrdersMap: OpenOrdersMap = new Map();
+            openOrdersMap?.forEach((openOrderMap, key) => {
+                mappedOpenOrdersMap?.set(key, {
+                    ...openOrderMap,
+                    availableIn: openOrderMap.availableIn * AMM_MAX_BUFFER_PERCENTAGE,
+                    availableOut: openOrderMap.availableOut * AMM_MAX_BUFFER_PERCENTAGE,
+                });
+            });
+
+            return mappedOpenOrdersMap;
         },
         {
             refetchInterval: 5000,

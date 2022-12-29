@@ -54,7 +54,7 @@ const RangeMarkets: React.FC = () => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data) && rangeLiquidityQuery.isSuccess) {
             const markets = rangeLiquidityQuery.data
                 ? marketsQuery.data.map((m) => {
-                      const apiData = (rangeLiquidityQuery.data as any).get(m.address.toLowerCase());
+                      const apiData = rangeLiquidityQuery?.data?.get(m.address.toLowerCase());
 
                       return {
                           ...m,
@@ -63,7 +63,7 @@ const RangeMarkets: React.FC = () => {
                           availableOut: apiData?.availableOut ?? 0,
                           inPrice: apiData?.inPrice ?? 0,
                           outPrice: apiData?.outPrice ?? 0,
-                          ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
+                          ammLiquidity: (apiData?.availableIn ?? 0) + (apiData?.availableOut ?? 0),
                           range: formatCurrencyWithSignInRange(USD_SIGN, m.leftPrice, m.rightPrice, 2),
                       };
                   })
