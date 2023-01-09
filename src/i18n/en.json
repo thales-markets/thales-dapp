@@ -610,8 +610,7 @@
                         "amm-desc": "Current AMM market volume:",
                         "ranged-label": "Ranged markets",
                         "ranged-desc": "Current Ranged market volume:",
-                        "sports-desc": "Current Sports market volume:",
-                        "exotic-desc": "Current Exotic market volume:"
+                        "sports-desc": "Current Sports market volume:"
                     },
                     "no-thales-staked": "You have no THALES staked",
                     "protocol": {
