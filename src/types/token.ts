@@ -127,7 +127,6 @@ export type StakingReward = {
     thalesAmmVolume: number;
     rangedAmmVolume: number;
     sportsAmmVolume: number;
-    exoticVolume: number;
     hasParticipatedInCurrentOrLastRoyale: boolean;
 };
 
