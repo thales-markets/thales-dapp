@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getTheme } from 'redux/modules/ui';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
@@ -43,7 +42,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const theme = useSelector((state: RootState) => getTheme(state));
     const [preLoadTokens, setPreLoadTokens] = useState([] as any);
     const isL2 = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
@@ -291,22 +289,14 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {unsupportedNetwork ? (
-                <SwapDialog
-                    royaleTheme={royaleTheme}
-                    contentType="unsupported"
-                    className={theme == 0 ? 'light' : 'dark'}
-                >
+                <SwapDialog royaleTheme={royaleTheme} contentType="unsupported">
                     <SwapDialog.CloseButton royaleTheme={royaleTheme} onClick={handleClose.bind(this, false)} />{' '}
                     <SwapDialog.ErrorMessage royaleTheme={royaleTheme}>
                         {t('options.swap.not-supported')}
                     </SwapDialog.ErrorMessage>
                 </SwapDialog>
             ) : (
-                <SwapDialog
-                    royaleTheme={royaleTheme}
-                    contentType={` ${isLoading ? 'loading' : ''}`}
-                    className={theme == 0 ? 'light' : 'dark'}
-                >
+                <SwapDialog royaleTheme={royaleTheme} contentType={` ${isLoading ? 'loading' : ''}`}>
                     <SwapDialog.CloseButton royaleTheme={royaleTheme} onClick={handleClose.bind(this, false)} />
                     <SwapDialog.SectionWrapper royaleTheme={royaleTheme}>
                         <FlexDivRowCentered>

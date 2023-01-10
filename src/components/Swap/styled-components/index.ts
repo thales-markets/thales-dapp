@@ -30,16 +30,9 @@ const SwapDialog: StyledComponent<'div', any, { royaleTheme?: boolean; contentTy
     royaleTheme?: boolean;
     contentType?: string;
 }>`
-    &.light {
-        --background: #f7f7f7;
-        --icon-color: #04045a;
-        --border-color: #64d9fe;
-    }
-    &.dark {
-        --background: #04045a;
-        --icon-color: #f7f7f7;
-        --border-color: #64d9fe;
-    }
+    --background: #04045a;
+    --icon-color: #f7f7f7;
+    --border-color: #64d9fe;
 
     font-weight: bold;
     font-size: 12px;

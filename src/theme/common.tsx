@@ -125,36 +125,19 @@ export const Background = styled.section`
             }
         }
     }
-    &.light {
-        background-color: #f7f7f7;
-        --background: #f7f7f7;
-        --icon-color: #04045a;
-        --shadow: 0px 0px 50px rgba(4, 4, 90, 0.4);
-        --primary-color: #04045a;
-        --input-border-color: #04045a;
-        --table-border-color: #64d9fe;
-        --table-header-text-color: #64d9fe;
-        --disabled-item: #8181ac;
-        --enabled-item: #04045a;
-        --primary-filter-menu-active: #04045a;
-        --hotmarket-arrow-enabled: #64d9fe;
-        --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
-    }
-    &.dark {
-        background-color: #04045a;
-        --background: #04045a;
-        --icon-color: #f7f7f7;
-        --shadow: 0px 0px 40px #64d9fe;
-        --primary-color: #f7f7f7;
-        --input-border-color: #64d9fe;
-        --table-border-color: rgba(100, 217, 254, 0.5);
-        --table-header-text-color: #64d9fe;
-        --disabled-item: #8181ac;
-        --enabled-item: #f7f7f7;
-        --primary-filter-menu-active: #64d9fe;
-        --hotmarket-arrow-enabled: #64d9fe;
-        --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
-    }
+    background-color: #04045a;
+    --background: #04045a;
+    --icon-color: #f7f7f7;
+    --shadow: 0px 0px 40px #64d9fe;
+    --primary-color: #f7f7f7;
+    --input-border-color: #64d9fe;
+    --table-border-color: rgba(100, 217, 254, 0.5);
+    --table-header-text-color: #64d9fe;
+    --disabled-item: #8181ac;
+    --enabled-item: #f7f7f7;
+    --primary-filter-menu-active: #64d9fe;
+    --hotmarket-arrow-enabled: #64d9fe;
+    --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
 `;
 
 export const MainWrapper = styled.div`

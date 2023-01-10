@@ -1,47 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Background, Theme } from '../../Home';
+import { ReactComponent as Chart1White } from 'assets/images/landing-page/articles/chart1b.svg';
+import { ReactComponent as Chart2White } from 'assets/images/landing-page/articles/chart2b.svg';
+import { ReactComponent as Chart3White } from 'assets/images/landing-page/articles/chart3b.svg';
+import { ReactComponent as Chart4White } from 'assets/images/landing-page/articles/chart4b.svg';
+import { ReactComponent as Chart5White } from 'assets/images/landing-page/articles/chart5b.svg';
+import { ReactComponent as ThalesLogoWhitepaperWhite } from 'assets/images/landing-page/articles/thales-logo-whitepaper-white.svg';
+import React from 'react';
 import styled from 'styled-components';
 import Header from '../../components/Header/Header';
-import Cookies from 'universal-cookie';
-import { ReactComponent as ThalesLogoWhitepaperBlue } from 'assets/images/landing-page/articles/thales-logo-whitepaper-blue.svg';
-import { ReactComponent as ThalesLogoWhitepaperWhite } from 'assets/images/landing-page/articles/thales-logo-whitepaper-white.svg';
-import { ReactComponent as Chart1White } from 'assets/images/landing-page/articles/chart1b.svg';
-import { ReactComponent as Chart1Blue } from 'assets/images/landing-page/articles/chart1.svg';
-import { ReactComponent as Chart2White } from 'assets/images/landing-page/articles/chart2b.svg';
-import { ReactComponent as Chart2Blue } from 'assets/images/landing-page/articles/chart2.svg';
-import { ReactComponent as Chart3White } from 'assets/images/landing-page/articles/chart3b.svg';
-import { ReactComponent as Chart3Blue } from 'assets/images/landing-page/articles/chart3.svg';
-import { ReactComponent as Chart4White } from 'assets/images/landing-page/articles/chart4b.svg';
-import { ReactComponent as Chart4Blue } from 'assets/images/landing-page/articles/chart4.svg';
-import { ReactComponent as Chart5White } from 'assets/images/landing-page/articles/chart5b.svg';
-import { ReactComponent as Chart5Blue } from 'assets/images/landing-page/articles/chart5.svg';
+import { Background } from '../../Home';
 
-import { FlexDivCentered } from '../../../../theme/common';
 import { Trans, useTranslation } from 'react-i18next';
+import { FlexDivCentered } from '../../../../theme/common';
 import Footer from '../../components/Footer';
-
-const cookies = new Cookies();
 
 const Whitepaper: React.FC = () => {
     const { t } = useTranslation();
-    const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
-
-    useEffect(() => {
-        const body = document.getElementsByTagName('body')[0];
-        const html = document.documentElement;
-        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-    }, [theme]);
 
     return (
-        <Background className={theme === Theme.Light ? 'light' : 'dark'}>
+        <Background className={'dark'}>
             <Wrapper>
-                <Header theme={theme} setTheme={setTheme} />
+                <Header />
                 <Content>
                     <FlexDivCentered>
-                        {theme === Theme.Light ? <ThalesLogoWhitepaperBlue /> : <ThalesLogoWhitepaperWhite />}
+                        <ThalesLogoWhitepaperWhite />
                     </FlexDivCentered>
                     <FlexDivCentered>
                         <H1>{t('articles.whitepaper.title')}</H1>
@@ -77,7 +58,7 @@ const Whitepaper: React.FC = () => {
                     <Paragraph>{t('articles.whitepaper.paragraphs.2.section5')}</Paragraph>
                     <H3>{t('articles.whitepaper.paragraphs.2-1.title')}</H3>
                     <ChartContainer>
-                        {theme === Theme.Light ? <Chart1Blue /> : <Chart1White />}
+                        <Chart1White />
                         <ChartLabel>{t('articles.whitepaper.paragraphs.2-1.chartlabel')}</ChartLabel>
                     </ChartContainer>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2-1.section1')}</Paragraph>
@@ -99,7 +80,7 @@ const Whitepaper: React.FC = () => {
                     </Paragraph>
                     <H3>{t('articles.whitepaper.paragraphs.2-2.title')}</H3>
                     <ChartContainer>
-                        {theme === Theme.Light ? <Chart2Blue /> : <Chart2White />}{' '}
+                        <Chart2White />
                         <ChartLabel>{t('articles.whitepaper.paragraphs.2-2.chartlabel')}</ChartLabel>
                     </ChartContainer>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2-2.section1')}</Paragraph>
@@ -113,14 +94,16 @@ const Whitepaper: React.FC = () => {
                     </Paragraph>
                     <H3>{t('articles.whitepaper.paragraphs.2-3.title')}</H3>
                     <ChartContainer>
-                        {theme === Theme.Light ? <Chart3Blue /> : <Chart3White />}{' '}
+                        <Chart3White />
                         <ChartLabel>{t('articles.whitepaper.paragraphs.2-3.chartlabel')}</ChartLabel>
                     </ChartContainer>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2-3.section1')}</Paragraph>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2-3.section2')}</Paragraph>
                     <H2>{t('articles.whitepaper.paragraphs.3.title')}</H2>
                     <Paragraph>{t('articles.whitepaper.paragraphs.3.section1')}</Paragraph>
-                    <ChartContainer>{theme === Theme.Light ? <Chart4Blue /> : <Chart4White />}</ChartContainer>
+                    <ChartContainer>
+                        <Chart4White />
+                    </ChartContainer>
                     <Paragraph>{t('articles.whitepaper.paragraphs.3.section2')}</Paragraph>
                     <List>
                         <ListItem bold={true}>{t('articles.whitepaper.paragraphs.3.listitem1')}</ListItem>
@@ -163,11 +146,13 @@ const Whitepaper: React.FC = () => {
                     <H3>{t('articles.whitepaper.paragraphs.3-3.title')}</H3>
                     <Paragraph>{t('articles.whitepaper.paragraphs.3-3.section1')}</Paragraph>
                     <H2>{t('articles.whitepaper.paragraphs.4.title')}</H2>
-                    <ChartContainer>{theme === Theme.Light ? <Chart5Blue /> : <Chart5White />}</ChartContainer>
+                    <ChartContainer>
+                        <Chart5White />
+                    </ChartContainer>
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section1')}</Paragraph>
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section2')}</Paragraph>
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section3')}</Paragraph>
-                    <Footer className="article" theme={theme} setTheme={setTheme} />
+                    <Footer className="article" />
                 </Content>
             </Wrapper>
         </Background>
