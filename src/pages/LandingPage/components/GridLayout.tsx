@@ -1,36 +1,22 @@
-import React from 'react';
-import styled from 'styled-components';
-import thalesI from 'assets/images/landing-page/thales1.png';
-import thalesII from 'assets/images/landing-page/thales2.png';
-import thalesIII from 'assets/images/landing-page/thales3.png';
 import starsBlack from 'assets/images/landing-page/stars-black.svg';
-import starsWhite from 'assets/images/landing-page/stars-white.svg';
 import systemBlack from 'assets/images/landing-page/system-black.svg';
-import systemWhite from 'assets/images/landing-page/system-white.svg';
 import thalesIW from 'assets/images/landing-page/thales1-white.png';
 import thalesIIW from 'assets/images/landing-page/thales2-white.png';
 import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
-import Header from './Header/Header';
-import { Trans, useTranslation } from 'react-i18next';
-import { Theme } from '../Home';
 import ROUTES from 'constants/routes';
+import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
+import Header from './Header/Header';
 
-type GridLayoutProps = {
-    theme: Theme;
-    setTheme: (data: any) => void;
-};
-
-const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
+const GridLayout: React.FC = () => {
     const { t } = useTranslation();
     return (
         <Wrapper>
-            <Header theme={theme} setTheme={setTheme} />
+            <Header />
             <SystemImage>
-                <AnimationSvg
-                    type="image/svg+xml"
-                    data={theme !== Theme.Dark ? systemWhite : systemBlack}
-                ></AnimationSvg>
+                <AnimationSvg type="image/svg+xml" data={systemBlack}></AnimationSvg>
             </SystemImage>
             <TitleContainer>
                 <Title> {t('landing-page.title')}</Title>
@@ -73,16 +59,16 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                 </ContSubTitle>
             </ContIV>
             <ThalesImageI>
-                <Image src={theme !== Theme.Dark ? thalesI : thalesIW}></Image>
+                <Image src={thalesIW}></Image>
             </ThalesImageI>
             <ThalesImageII>
-                <Image src={theme !== Theme.Dark ? thalesII : thalesIIW}></Image>
+                <Image src={thalesIIW}></Image>
             </ThalesImageII>
             <ThalesImageIII>
-                <Image src={theme !== Theme.Dark ? thalesIII : thalesIIIW}></Image>
+                <Image src={thalesIIIW}></Image>
             </ThalesImageIII>
             <StarsImage>
-                <AnimationSvg type="image/svg+xml" data={theme !== Theme.Dark ? starsWhite : starsBlack}></AnimationSvg>
+                <AnimationSvg type="image/svg+xml" data={starsBlack}></AnimationSvg>
             </StarsImage>
         </Wrapper>
     );

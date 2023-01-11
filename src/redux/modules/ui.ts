@@ -7,11 +7,6 @@ const cookies = new Cookies();
 
 const sliceName = 'ui';
 
-export enum Theme {
-    Light,
-    Dark,
-}
-
 export enum UISize {
     Small,
     Medium,
@@ -50,9 +45,6 @@ export const uiSlice = createSlice({
     },
 });
 
-export const { setTheme } = uiSlice.actions;
-
 export const getUIState = (state: RootState) => state[sliceName];
-export const getTheme = (state: RootState) => getUIState(state).theme;
 export const getUISize = (state: RootState) => getUIState(state).size;
 export default uiSlice.reducer;

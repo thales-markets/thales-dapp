@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import coin from 'assets/images/only_coin.gif';
 import angry from 'assets/images/angry_thales.gif';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
@@ -90,10 +89,6 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                         )}
                     </ButtonWrapper>
                 </WrongNetworkWrapper>
-            ) : history.location.pathname === '/' ? (
-                <CircularProgress />
-            ) : history.location.state === 'show' ? (
-                <Image style={{ width: 100, height: 100 }} src={coin}></Image>
             ) : (
                 <CircularProgress />
             )}

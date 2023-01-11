@@ -1,34 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import Cookies from 'universal-cookie';
-import Header from '../../components/Header/Header';
-import { ReactComponent as Chart } from 'assets/images/landing-page/articles/governance.svg';
 import { ReactComponent as ChartBlack } from 'assets/images/landing-page/articles/governance-black.svg';
-import { Background, Theme } from '../../Home';
-import Footer from '../../components/Footer';
-import { FlexDivCentered } from 'theme/common';
+import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { HashLink } from 'react-router-hash-link';
-
-const cookies = new Cookies();
+import styled from 'styled-components';
+import { FlexDivCentered } from 'theme/common';
+import Footer from '../../components/Footer';
+import Header from '../../components/Header/Header';
+import { Background } from '../../Home';
 
 const Governance: React.FC = () => {
-    const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
     const { t } = useTranslation();
 
-    useEffect(() => {
-        const body = document.getElementsByTagName('body')[0];
-        const html = document.documentElement;
-        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-    }, [theme]);
-
     return (
-        <Background className={theme === Theme.Light ? 'light' : 'dark'}>
+        <Background>
             <Wrapper>
-                <Header theme={theme} setTheme={setTheme} />
+                <Header />
                 <Content>
                     <H1>{t('articles.governance.title')}</H1>
                     <ListWrapper>
@@ -76,7 +62,9 @@ const Governance: React.FC = () => {
                             }}
                         />
                     </Paragraph>
-                    <ChartWrapper>{theme !== Theme.Dark ? <Chart /> : <ChartBlack />}</ChartWrapper>
+                    <ChartWrapper>
+                        <ChartBlack />
+                    </ChartWrapper>
                     <Paragraph>
                         <Trans
                             i18nKey="articles.governance.paragraphs.intro2"
@@ -163,7 +151,7 @@ const Governance: React.FC = () => {
                             }}
                         />
                     </Paragraph>
-                    <Footer className="article" theme={theme} setTheme={setTheme} />
+                    <Footer className="article" />
                 </Content>
             </Wrapper>
         </Background>

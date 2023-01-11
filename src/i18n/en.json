@@ -603,7 +603,7 @@
                         "base": "As base rewards",
                         "base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",
                         "bonus": "As bonus rewards",
-                        "bonus-description": "Maximum bonus rewards on top of base rewards is 50%. Bonus rewards are divided in 21,000 THALES weekly for the Protocol Usage bucket that counts sUSD volume from AMM trading, ranged AMM trading, Overtime sport's AMM trading and Exotic Markets participation, and 9,000 THALES per week to SNX stakers. <0>Learn More.</0>"
+                        "bonus-description": "Maximum bonus rewards on top of base rewards is 50%. Bonus rewards are divided in 21,000 THALES weekly for the Protocol Usage bucket that counts sUSD volume from AMM trading, ranged AMM trading and Overtime sport's AMM trading, and 9,000 THALES per week to SNX stakers. <0>Learn More.</0>"
                     },
                     "volume": {
                         "amm-label": "AMM markets",
