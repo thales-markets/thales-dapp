@@ -1,34 +1,37 @@
 import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated';
+import ElectionsBanner from 'components/ElectionsBanner';
+import Footer from 'components/Footer';
+import OpRewardsBanner from 'components/OpRewardsBanner';
 import SearchField from 'components/TableInputs/SearchField';
 import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
+import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
+import { USD_SIGN } from 'constants/currency';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useAllPositions from 'queries/user/useAllPositions';
+import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
+import useRangedPositions from 'queries/user/useRangedPositions';
+import queryString from 'query-string';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import MaturedPositions from './components/MaturedPositions/MaturedPositions';
-import MyPositions from './components/MyPositions/MyPositions';
-import History from './components/History/History';
-import Wrapper from './components/styled-components/UserData';
-import Container from './components/styled-components/Layout';
-import useCalculateDataQuery from 'queries/user/useCalculateDataQuery';
-import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
-import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
+import localStore from 'utils/localStore';
+import { history } from 'utils/routes';
 import Loader from '../../components/Loader';
 import { getIsOVM, getIsPolygon } from '../../utils/network';
-import useRangedPositions from 'queries/user/useRangedPositions';
-import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import localStore from 'utils/localStore';
-import OpRewardsBanner from 'components/OpRewardsBanner';
-import Footer from 'components/Footer';
-import ElectionsBanner from 'components/ElectionsBanner';
+import History from './components/History/History';
+import MaturedPositions from './components/MaturedPositions/MaturedPositions';
+import MyPositions from './components/MyPositions/MyPositions';
+import Container from './components/styled-components/Layout';
+import Wrapper from './components/styled-components/UserData';
 
 enum NavItems {
     MyPositions = 'My Positions',
@@ -38,6 +41,8 @@ enum NavItems {
 
 const Profile: React.FC = () => {
     const { t } = useTranslation();
+    const location = useLocation();
+
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -88,7 +93,8 @@ const Profile: React.FC = () => {
 
     const [isSimpleView, setSimpleView] = useState<boolean>(!tableViewLocalStorageValue);
     const [searchText, setSearchText] = useState('');
-    const [view, setView] = useState(NavItems.MyPositions);
+    const queryParamTab = queryString.parse(location.search).tab as NavItems;
+    const [view, setView] = useState(queryParamTab || NavItems.MyPositions);
 
     const tableViewSwitchClickhandler = () => {
         setSimpleView(!isSimpleView);
@@ -115,6 +121,14 @@ const Profile: React.FC = () => {
         }
     }, [searchAddress]);
 
+    const onTabClickHandler = (tab: NavItems) => {
+        history.push({
+            pathname: location.pathname,
+            search: queryString.stringify({ tab }),
+        });
+        setView(tab);
+    };
+
     return (
         <>
             {showOPBanner && <OpRewardsBanner />}
@@ -135,13 +149,13 @@ const Profile: React.FC = () => {
                 <Container.Left layout={isSimpleView}>
                     <Nav justifyContent={isSimpleView ? 'space-between' : 'flex-start'}>
                         <NavItem
-                            onClick={setView.bind(this, NavItems.MyPositions)}
+                            onClick={() => onTabClickHandler(NavItems.MyPositions)}
                             className={view === NavItems.MyPositions ? 'active' : ''}
                         >
                             {NavItems.MyPositions}
                         </NavItem>
                         <NavItem
-                            onClick={setView.bind(this, NavItems.MaturedPositions)}
+                            onClick={() => onTabClickHandler(NavItems.MaturedPositions)}
                             className={view === NavItems.MaturedPositions ? 'active' : ''}
                         >
                             {NavItems.MaturedPositions}
@@ -152,7 +166,7 @@ const Profile: React.FC = () => {
                             )}
                         </NavItem>
                         <NavItem
-                            onClick={setView.bind(this, NavItems.History)}
+                            onClick={() => onTabClickHandler(NavItems.History)}
                             className={view === NavItems.History ? 'active' : ''}
                         >
                             {NavItems.History}
