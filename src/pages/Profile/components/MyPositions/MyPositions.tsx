@@ -301,9 +301,14 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     />
                                 );
                             },
+                            sortType: (firstElem: any, secondElem: any) => {
+                                const firstCurrency = firstElem.original.market.currencyKey;
+                                const secondCurrency = secondElem.original.market.currencyKey;
+
+                                return firstCurrency > secondCurrency ? 1 : firstCurrency < secondCurrency ? -1 : 0;
+                            },
                             sortable: true,
                         },
-
                         {
                             Header: t(`options.home.markets-table.24h-change-col`),
                             accessor: (row: any) => (
@@ -336,6 +341,18 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     </TableText>
                                 );
                             },
+                            sortType: (firstElem: any, secondElem: any) => {
+                                const firstStrikePrice =
+                                    firstElem.original.market.leftPrice || firstElem.original.market.strikePrice;
+                                const secondStrikePrice =
+                                    secondElem.original.market.leftPrice || secondElem.original.market.strikePrice;
+
+                                return firstStrikePrice > secondStrikePrice
+                                    ? 1
+                                    : firstStrikePrice < secondStrikePrice
+                                    ? -1
+                                    : 0;
+                            },
                             sortable: true,
                         },
                         {
@@ -346,18 +363,14 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                 </TableText>
                             ),
                             sortType: (firstElem: any, secondElem: any) => {
-                                if (
-                                    (exchangeRates?.[firstElem.original.market.currencyKey] || 0) >
-                                    (exchangeRates?.[secondElem.original.market.currencyKey] || 0)
-                                )
-                                    return 1;
+                                const firstAssetPrice = exchangeRates?.[firstElem.original.market.currencyKey] || 0;
+                                const secondAssetPrice = exchangeRates?.[secondElem.original.market.currencyKey] || 0;
 
-                                if (
-                                    (exchangeRates?.[firstElem.original.market.currencyKey] || 0) <
-                                    (exchangeRates?.[secondElem.original.market.currencyKey] || 0)
-                                )
-                                    return -1;
-                                return 0;
+                                return firstAssetPrice > secondAssetPrice
+                                    ? 1
+                                    : firstAssetPrice < secondAssetPrice
+                                    ? -1
+                                    : 0;
                             },
                             sortable: true,
                         },
@@ -366,6 +379,16 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                             accessor: (row: any) => (
                                 <TimeRemaining end={row.market.maturityDate} fontSize={15} showFullCounter={true} />
                             ),
+                            sortType: (firstElem: any, secondElem: any) => {
+                                const firstMaturityDate = firstElem.original.market.maturityDate;
+                                const secondMaturityDate = secondElem.original.market.maturityDate;
+
+                                return firstMaturityDate > secondMaturityDate
+                                    ? 1
+                                    : firstMaturityDate < secondMaturityDate
+                                    ? -1
+                                    : 0;
+                            },
                             sortable: true,
                         },
                         {
@@ -392,9 +415,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                 );
                             },
                             sortType: (firstElem: any, secondElem: any) => {
-                                if (firstElem.original.balances.amount > secondElem.original.balances.amount) return 1;
-                                if (firstElem.original.balances.amount < secondElem.original.balances.amount) return -1;
-                                return 0;
+                                const firstAmount = firstElem.original.balances.amount;
+                                const secondAmount = secondElem.original.balances.amount;
+
+                                return firstAmount > secondAmount ? 1 : firstAmount < secondAmount ? -1 : 0;
                             },
                             sortable: true,
                         },
@@ -428,6 +452,12 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                         )}
                                     </TableText>
                                 );
+                            },
+                            sortType: (firstElem: any, secondElem: any) => {
+                                const firstValue = firstElem.original.balances?.value || 0;
+                                const secondValue = secondElem.original.balances?.value || 0;
+
+                                return firstValue > secondValue ? 1 : firstValue < secondValue ? -1 : 0;
                             },
                         },
                     ]}
