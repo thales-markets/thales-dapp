@@ -94,7 +94,9 @@ const Profile: React.FC = () => {
     const [isSimpleView, setSimpleView] = useState<boolean>(!tableViewLocalStorageValue);
     const [searchText, setSearchText] = useState('');
     const queryParamTab = queryString.parse(location.search).tab as NavItems;
-    const [view, setView] = useState(queryParamTab || NavItems.MyPositions);
+    const [view, setView] = useState(
+        Object.values(NavItems).includes(queryParamTab) ? queryParamTab : NavItems.MyPositions
+    );
 
     const tableViewSwitchClickhandler = () => {
         setSimpleView(!isSimpleView);
