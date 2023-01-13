@@ -236,7 +236,7 @@ const RowCardRangedMarket: React.FC = () => {
                                         </>
                                     ) : (
                                         <Container.SubContainer.Value.OutOfLiquidity>
-                                            {!ammData ? t('options.home.markets-table.out-of-liquidity') : ''}
+                                            {ammData ? t('options.home.markets-table.out-of-liquidity') : ''}
                                         </Container.SubContainer.Value.OutOfLiquidity>
                                     )}
                                 </Container.SubContainer.Value>
