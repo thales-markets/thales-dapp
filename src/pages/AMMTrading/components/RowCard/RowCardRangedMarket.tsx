@@ -192,7 +192,9 @@ const RowCardRangedMarket: React.FC = () => {
                                 {optBalances?.out > 0 && (
                                     <Container.Icon className="v2-icon v2-icon--out" color={UI_COLORS.OUT_COLOR} />
                                 )}
-                                {optBalances?.in == 0 && optBalances?.out == 0 && 'N/A'}
+                                {rangedMarketPositionBalance.isLoading
+                                    ? '-'
+                                    : optBalances?.in == 0 && optBalances?.out == 0 && 'N/A'}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                         <Container.SubContainer>
@@ -206,6 +208,7 @@ const RowCardRangedMarket: React.FC = () => {
                                     marketInfo={marketInfo}
                                     positionCurrentValue={positionCurrentValue}
                                     optBalances={optBalances}
+                                    isLoading={ammMaxLimitsQuery.isLoading || rangedMarketPositionBalance.isLoading}
                                 />
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
@@ -294,9 +297,10 @@ type PositionPriceProps = {
         inPositionValue: number;
         outPositionValue: number;
     };
+    isLoading?: boolean;
 };
 
-const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue }) => {
+const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue, isLoading }) => {
     const { t } = useTranslation();
     if (marketInfo?.phase == 'maturity' && marketInfo?.result) {
         return <>{`${formatCurrencyWithSign(USD_SIGN, optBalances[marketInfo?.result])}`}</>;
@@ -308,7 +312,9 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
     const isOutOutOfLiqudity = optBalances.out > 0 && positionCurrentValue.outPositionValue == 0;
     const areBothOutOfLiqudity = isInOutOfLiqudity && isOutOutOfLiqudity;
 
-    return (
+    return isLoading ? (
+        <>{'-'}</>
+    ) : (
         <>
             {optBalances.in > 0 &&
                 positionCurrentValue.inPositionValue > 0 &&
