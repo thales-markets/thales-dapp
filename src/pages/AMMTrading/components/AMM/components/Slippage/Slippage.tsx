@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Container from './styled-components/Container';
 
@@ -9,6 +10,8 @@ type SlippageProps = {
 };
 
 const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandler }) => {
+    const { t } = useTranslation();
+
     const changeHandler = (event: React.ChangeEvent<HTMLInputElement> | number) => {
         let newValue = 0;
 
@@ -38,7 +41,7 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
 
     return (
         <Container>
-            <Container.Title>Slippage Tolerance</Container.Title>
+            <Container.Title>{t('options.market.trade-options.place-order.slippage-label')}</Container.Title>
             <Container.ValueContainer>
                 {fixed?.length &&
                     fixed.length > 0 &&

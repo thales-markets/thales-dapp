@@ -13,12 +13,14 @@ import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getStableCoinForNetwork } from '../../utils/currency';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
+import { useTranslation } from 'react-i18next';
 
 type PieChartProps = {
     claimable?: number;
 };
 
 const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
+    const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -42,11 +44,16 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
             {isWalletConnected && claimable !== undefined && (
                 <ChartContainer>
                     <BalanceInfoContainer>
-                        <Header>{getStableCoinForNetwork(network.networkId)} in Wallet:</Header>
+                        <Header>
+                            {getStableCoinForNetwork(network.networkId) +
+                                ' ' +
+                                t('options.trading-profile.chart-info.in-wallet')}
+                            :
+                        </Header>
                         <SubHeader>
                             {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), sUSDBalance, 2)}
                         </SubHeader>
-                        <Header>Claimable: </Header>
+                        <Header>{t('options.trading-profile.chart-info.claimable')}:</Header>
                         <SubHeader>
                             {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), claimable)}
                         </SubHeader>
@@ -103,7 +110,6 @@ const BalanceInfoContainer = styled.div`
 `;
 
 const Header = styled.p`
-    text-transform: uppercase;
     font-family: Roboto !important;
     font-style: normal;
     font-weight: 600;
@@ -111,7 +117,6 @@ const Header = styled.p`
     line-height: 32px;
     text-align: center;
     letter-spacing: 0.035em;
-    text-transform: capitalize;
     color: var(--primary-color);
     @media (max-width: 768px) {
         font-size: 10px;

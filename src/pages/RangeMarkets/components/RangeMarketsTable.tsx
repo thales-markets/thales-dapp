@@ -690,6 +690,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                         rowsPerPageOptions={[10, 20, 30, 50]}
                         count={rows?.length ? rows.length : 0}
                         rowsPerPage={pageSize}
+                        labelRowsPerPage={t('common.pagination.rows-per-page')}
                         page={pageIndex}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}

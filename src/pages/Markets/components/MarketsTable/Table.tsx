@@ -439,6 +439,7 @@ const Table: React.FC<{
                 page={pageIndex}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage={t('common.pagination.rows-per-page')}
             />
         </>
     );

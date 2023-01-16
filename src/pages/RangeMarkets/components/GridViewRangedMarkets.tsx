@@ -4,6 +4,7 @@ import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import _ from 'lodash';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -21,6 +22,7 @@ type MarketsGridProps = {
 };
 
 const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates, filters }) => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [rowsPerPage, setRowsPerPage] = useState<number>(9);
     const [pageIndex, setPageIndex] = useState<number>(0);
@@ -117,6 +119,7 @@ const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exc
                 page={pageIndex}
                 onPageChange={(_event: any, newPage: number) => setPageIndex(newPage)}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage={t('common.pagination.rows-per-page')}
             />
         </Wrapper>
     );

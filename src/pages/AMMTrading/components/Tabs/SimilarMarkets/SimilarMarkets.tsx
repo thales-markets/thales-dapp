@@ -16,7 +16,6 @@ import { sortOptionsMarkets } from 'utils/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import SPAAnchor from 'components/SPAAnchor';
 import { getIsAppReady } from 'redux/modules/app';
-import Loader from 'components/Loader';
 import { NoDataContainer, NoDataText } from 'theme/common';
 import { MarketType, RangedMarket } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
@@ -27,6 +26,8 @@ import { CONVERT_TO_6_DECIMALS } from 'constants/token';
 import { POLYGON_ID } from 'constants/network';
 import RangeMarketCard from 'components/RangeMarketCard';
 import MarketCard from 'components/MarketCard';
+import styled from 'styled-components';
+import SimpleLoader from 'components/SimpleLoader';
 
 const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) => {
     const marketInfo = marketType !== MARKET_TYPE[1] ? useMarketContext() : useRangedMarketContext();
@@ -147,7 +148,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
                                         exchangeRates={exchangeRates}
                                         marketCardStyle={{
                                             maxWidth: '49%',
-                                            wrapperMargin: '0px 0px 10px 0px',
+                                            wrapperMargin: '5px 10px 10px 4px',
                                         }}
                                     />
                                 </SPAAnchor>
@@ -162,7 +163,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
                                         exchangeRates={exchangeRates}
                                         marketCardStyle={{
                                             maxWidth: '49%',
-                                            wrapperMargin: '0px 0px 10px 0px',
+                                            wrapperMargin: '5px 10px 10px 4px',
                                         }}
                                     />
                                 </SPAAnchor>
@@ -175,10 +176,18 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
                     )}
                 </SimilarMarketsContainer>
             ) : (
-                <Loader />
+                <LoaderWrapper>
+                    <SimpleLoader />
+                </LoaderWrapper>
             )}
         </>
     );
 };
+
+const LoaderWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    height: 600px;
+`;
 
 export default SimilarMarkets;

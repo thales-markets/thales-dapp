@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Phase } from 'types/options';
 
@@ -9,9 +10,11 @@ const MarketPhase = {
 };
 
 const PhaseComponent: React.FC<{ phase: Phase }> = ({ phase }) => {
+    const { t } = useTranslation();
+
     return (
         <PhaseComp phase={phase}>
-            {phase} <Dot phase={phase} />
+            {t('options.phases.' + phase)} <Dot phase={phase} />
         </PhaseComp>
     );
 };

@@ -237,6 +237,7 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({
                     rowsPerPageOptions={[9, 12, 15, 18]}
                     count={dataCount}
                     rowsPerPage={rowsPerPage}
+                    labelRowsPerPage={t('common.pagination.rows-per-page')}
                     page={pageIndex}
                     onPageChange={(_event: any, newPage: number) => setPageIndex(newPage)}
                     onRowsPerPageChange={handleChangeRowsPerPage}

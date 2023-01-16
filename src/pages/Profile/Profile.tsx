@@ -34,9 +34,9 @@ import Container from './components/styled-components/Layout';
 import Wrapper from './components/styled-components/UserData';
 
 enum NavItems {
-    MyPositions = 'My Positions',
-    MaturedPositions = 'Matured Positions',
-    History = 'History',
+    MyPositions = 'my-positions',
+    MaturedPositions = 'matured-positions',
+    History = 'history',
 }
 
 const Profile: React.FC = () => {
@@ -145,7 +145,7 @@ const Profile: React.FC = () => {
                     <TableGridSwitch
                         value={!isSimpleView}
                         clickEventHandler={tableViewSwitchClickhandler}
-                        labels={['Grid', 'Table']}
+                        labels={[t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)]}
                     />
                 </Container.Fixed>
                 <Container.Left layout={isSimpleView}>
@@ -154,13 +154,13 @@ const Profile: React.FC = () => {
                             onClick={() => onTabClickHandler(NavItems.MyPositions)}
                             className={view === NavItems.MyPositions ? 'active' : ''}
                         >
-                            {NavItems.MyPositions}
+                            {t('options.trading-profile.tabs.my-positions')}
                         </NavItem>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.MaturedPositions)}
                             className={view === NavItems.MaturedPositions ? 'active' : ''}
                         >
-                            {NavItems.MaturedPositions}
+                            {t('options.trading-profile.tabs.matured-positions')}
                             {claimable > 0 && (
                                 <>
                                     <Notification> {claimable} </Notification>
@@ -171,7 +171,7 @@ const Profile: React.FC = () => {
                             onClick={() => onTabClickHandler(NavItems.History)}
                             className={view === NavItems.History ? 'active' : ''}
                         >
-                            {NavItems.History}
+                            {t('options.trading-profile.tabs.history')}
                         </NavItem>
                     </Nav>
                     <LineUnderNav />

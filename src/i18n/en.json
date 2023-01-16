@@ -42,6 +42,7 @@
             "expires-col": "Expires in"
         },
         "wallet": {
+            "my-thales": "My Thales",
             "switch-wallet": "Switch Wallet",
             "disconnect-wallet": "Disconnect Wallet",
             "display-name": "Display Name",
@@ -1555,6 +1556,15 @@
         },
         "trading-profile": {
             "title": "Trading Profile",
+            "chart-info": {
+                "in-wallet": "in wallet",
+                "claimable": "Claimable"
+            },
+            "tabs": {
+                "my-positions": "My Positions",
+                "matured-positions": "Matured Positions",
+                "history": "History"
+            },
             "search-placeholder": "Search Wallet",
             "history": {
                 "strike": "Strike",

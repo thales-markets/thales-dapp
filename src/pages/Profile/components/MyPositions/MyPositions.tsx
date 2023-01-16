@@ -127,7 +127,13 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                             color: getColor(data),
                                                         }}
                                                     >
-                                                        {data.balances.type}
+                                                        {!data.range
+                                                            ? data?.balances?.type === 'UP'
+                                                                ? t('options.common.long')
+                                                                : t('options.common.short')
+                                                            : data?.balances?.type === 'IN'
+                                                            ? t('options.common.in')
+                                                            : t('options.common.out')}
                                                     </Card.RowTitle>
                                                 </Card.Section>
                                             </Card.Row>
