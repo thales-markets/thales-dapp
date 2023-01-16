@@ -46,7 +46,8 @@ const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exc
             if (filters?.searchQuery) {
                 data = data.filter((market) => {
                     if (market?.asset.toLowerCase().includes(filters.searchQuery.toLowerCase())) return market;
-
+                    if (market?.leftPrice.toFixed(2).includes(filters.searchQuery)) return market;
+                    if (market?.rightPrice.toFixed(2).includes(filters.searchQuery)) return market;
                     if (exchangeRates && exchangeRates[market.currencyKey]) {
                         if (exchangeRates[market.currencyKey].toFixed(2).includes(filters.searchQuery)) return market;
                     }
