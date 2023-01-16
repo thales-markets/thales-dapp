@@ -434,7 +434,7 @@ const Referral: React.FC = () => {
                 </>
             </Container.Tab>
             <ReferralFooter>
-                {'By sharing a referral link you consent to the disclaimer'}
+                {t('referral-page.footer.sharing')}
                 <Tooltip
                     message={t('referral-page.disclaimer')}
                     type={'info'}
@@ -442,14 +442,15 @@ const Referral: React.FC = () => {
                     container={{ width: '15px' }}
                     interactive={true}
                 />
-                {'and'}{' '}
+                {t('referral-page.footer.and')}{' '}
                 <a
                     target="_blank"
                     rel="noreferrer"
                     href={termsOfUse}
                     style={{ color: 'var(--primary-color)', marginLeft: '5px', textDecoration: 'underline' }}
                 >
-                    {' terms'}
+                    {' '}
+                    {t('referral-page.footer.terms')}
                 </a>
             </ReferralFooter>
             <Footer />
