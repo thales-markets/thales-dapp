@@ -58,7 +58,7 @@ export enum TokenTabSectionIdEnum {
     STAKING = 'staking',
     REWARDS = 'rewards',
     VESTING = 'vesting',
-    MERGE_ACCOUNT = 'merge-account',
+    MERGE_ACCOUNT = 'account-preferences',
     LP_STAKING = 'lp-staking',
 }
 
@@ -68,6 +68,7 @@ export type TokenTabSection = {
     title: string;
     description: string | ReactElement;
     isButton: boolean;
+    buttonWidth?: string;
 };
 
 export enum TransactionFilterEnum {

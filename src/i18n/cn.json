@@ -911,17 +911,33 @@
                         "dest-claim": "从目标账户中领取质押奖励。"
                     },
                     "merge-button": {
-                        "label": "合并账户",
-                        "progress-label": "正在合并..."
+                        "progress-label": "正在合并...",
+                        "label": "合并"
                     },
                     "source-account-label": "源账户",
-                    "section-description": "<0>已根据 </0><1 /> 实施帐户合并。",
                     "merge-account-disabled-message": "帐户合并已禁用。",
-                    "section-title": "合并账户",
-                    "destination-account-label": "目的地账户",
                     "warning-message": "合并后，所有质押和托管的 THALES 余额都将转移到目标账户，并且无法从源账户访问。",
                     "confirmation-message": "账号合并成功",
-                    "info-message": "为了合并账户，您需要索取任何未完成的质押奖励，并取消两个账户正在进行的质押。"
+                    "info-message": "为了合并账户，您需要索取任何未完成的质押奖励，并取消两个账户正在进行的质押。",
+                    "delegate-button": {
+                        "label": "代表",
+                        "remove-delegation": "删除委托",
+                        "progress-label": "正在委托中..."
+                    },
+                    "delegate-volume-address-label": "地址",
+                    "how-merge-account-works": "合并帐户如何运作",
+                    "delegate-volume": "委托量",
+                    "merge-account": "合并账户",
+                    "how-delegate-volume-works": "委托量的工作原理",
+                    "delegation-confirmation-message": "成功委托量",
+                    "delegate-volume-description-2": "这个简单的步骤对于那些使用硬件钱包抵押 THALES 但为了方便而在另一个热钱包上进行交易的人来说非常方便（例如在他们的移动钱包上使用 Overtime），这样生成的交易量可以计入“协议交易量”桶”的游戏化 THALES 质押奖励。",
+                    "delegate-volume-description-3": "这种交易量委托可以随时停止，并且它进行了适当的检查，以避免钱包将其交易量转移给另一个钱包，同时仍然增加自己的交易量。",
+                    "delegate-volume-description-1": "“委托交易量”功能使您能够将您拥有的一个钱包产生的交易量定向到另一个钱包。",
+                    "merge-account-description-1": "“合并账户”功能使 THALES 质押者能够将其所有质押的 THALES 和质押奖励从一个钱包转移到另一个钱包。这对于那些想要循环钱包的人或那些钱包已被盗用的人来说非常方便。",
+                    "merge-account-description-2": "此帐户合并仅适用于质押和归属 THALES 的全部余额，部分重新分配是不可能的。还值得注意的是，在接收钱包上，质押的 THALES 代币仍需要 7 天倒计时才能解除质押，既得奖励在领取时也将有标准的 10 周冷却时间。",
+                    "destination-account-label": "目的地",
+                    "section-description": "<0>已根据 </0><1 /> 实施帐户合并。",
+                    "section-title": "账户偏好"
                 }
             }
         },

@@ -677,14 +677,25 @@
                     "schedule-no-results": "No vesting schedule found."
                 },
                 "merge-account": {
-                    "section-title": "Merge account",
+                    "section-title": "Account Preferences",
                     "section-description": "<0>Account merging has been implemented per </0><1 />.",
-                    "source-account-label": "Source account",
-                    "destination-account-label": "Destination account",
+                    "source-account-label": "Source",
+                    "destination-account-label": "Destination",
+                    "delegate-volume-address-label": "Address",
                     "confirmation-message": "Account successfully merged",
+                    "delegation-confirmation-message": "Successfully delegated volume",
                     "merge-account-disabled-message": "Account merging is disabled.",
                     "info-message": "In order to merge account, you need to claim any outstanding staking rewards and cancel unstaking if any are in progress from both accounts.",
                     "warning-message": "Once merged, all staked and escrowed THALES balances will be transferred to the destination account and won't be accessible from the source account.",
+                    "merge-account": "Merge Account",
+                    "how-merge-account-works": "How merge account works",
+                    "merge-account-description-1": "The \"Merge Account\" functionality gives a THALES staker the ability to transfer all its staked THALES and staking rewards from one wallet to another. This comes in handy for those who want to cycle wallets or for those whose wallet has been compromised.",
+                    "merge-account-description-2": "This account merging only works for the entire balance of staked and vested THALES, partial reassignments will not be possible. It's also worth noting that on the receiving wallet, the THALES tokens staked will still need a 7-day countdown to unstake and the vested rewards will also be subject to the standard 10-weeks cooldown when claiming.",
+                    "delegate-volume": "Delegate Volume",
+                    "how-delegate-volume-works": "How delegate volume works",
+                    "delegate-volume-description-1": "The \"Delegate Volume\" functionality gives you the ability to direct the volume generated from one wallet that you own to another wallet.",
+                    "delegate-volume-description-2": "This simple step comes in handy for those who stake their THALES with a hardware wallet but do their trading on another hot wallet for convenience's sake (for example using Overtime on their mobile wallet), this way the volume generated can count towards the \"Protocol Volume bucket\" of gamified THALES staking rewards.",
+                    "delegate-volume-description-3": "This delegation of volume can be stopped at any time and it has checks in place to avoid a wallet directing it's volume to another while still boosting it's own.",
                     "merge-blocked-message": {
                         "title": "In order to merge account, you need to",
                         "src-claim": "Claim the staking rewards from the source account.",
@@ -693,8 +704,13 @@
                         "dest-unstaking": "Cancel ustaking from the destination account."
                     },
                     "merge-button": {
-                        "label": "Merge account",
+                        "label": "Merge",
                         "progress-label": "Merging in progress..."
+                    },
+                    "delegate-button": {
+                        "label": "Delegate",
+                        "progress-label": "Delegating in progress...",
+                        "remove-delegation": "Remove delegation"
                     }
                 }
             },
