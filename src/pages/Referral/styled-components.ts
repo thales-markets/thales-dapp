@@ -86,6 +86,9 @@ export const TableWrapper = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 100px;
+    @media (max-width: 768px) {
+        margin-bottom: 10px;
+    }
 `;
 
 export const RowContrainer = styled.div`

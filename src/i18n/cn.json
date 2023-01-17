@@ -2019,7 +2019,9 @@
                 "all-transactions": "所有交易",
                 "by-trader": "按交易者查看结果",
                 "affiliate-leaderboard": "会员排行榜"
-            }
+            },
+            "view": "观点",
+            "current-view": "查看：{{当前视图}}"
         },
         "title": "推荐",
         "pages": {

@@ -49,7 +49,9 @@ const RowMobile = styled.div`
     width: 100%;
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid var(--table-border-color);
+    :not(:last-child) {
+        border-bottom: 1px solid var(--table-border-color);
+    }
 `;
 
 const RowWrapper = styled.div<{ isClaimable?: boolean }>`
