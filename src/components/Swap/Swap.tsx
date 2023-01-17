@@ -15,7 +15,15 @@ import { RootState } from 'redux/rootReducer';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
+import {
+    checkAllowance,
+    getIsArbitrum,
+    getIsBSC,
+    getIsOVM,
+    getIsPolygon,
+    getTransactionPrice,
+    Network,
+} from 'utils/network';
 import { refetchUserBalance } from 'utils/queryConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
@@ -48,14 +56,14 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
     const signer = (snxJSConnector as any).signer;
-    const [fromToken, _setFromToken] = useState(getFromTokenSwap(networkId));
+    const [fromToken, setFromToken] = useState(getFromTokenSwap(networkId));
 
     const toTokenInitialState = mapTokenByNetwork(
         TokenSymbol[initialToToken as keyof typeof TokenSymbol],
         isL2,
         isPolygon
     );
-    const [toToken, _setToToken] = useState(toTokenInitialState);
+    const [toToken, setToToken] = useState(toTokenInitialState);
 
     const [amount, setAmount] = useState('');
     const [previewData, setPreviewData] = useState(undefined);
@@ -73,8 +81,13 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const ethRate = get(exchangeRates, isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : SYNTHS_MAP.sETH, null);
 
-    const unsupportedNetwork =
-        networkId !== 1 && networkId !== 10 && networkId !== 137 && networkId !== 56 && networkId !== 42161;
+    const unsupportedNetwork = ![
+        Network.Mainnet,
+        Network['Mainnet-Ovm'],
+        Network.BSC,
+        Network['POLYGON-MAINNET'],
+        Network.Arbitrum,
+    ].includes(networkId);
 
     const approveSpenderQuery = useApproveSpender(networkId, {
         enabled: false,
@@ -119,21 +132,10 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
 
     useEffect(() => {
         const swapTokenData = getTokenForSwap(networkId, initialToToken);
-        // const mappedToToken = mapTokenByNetwork(toToken.symbol, isL2, isPolygon);
 
         setPreLoadTokens(swapTokenData.preloadTokens);
-        _setFromToken(swapTokenData.fromToken);
-        _setToToken(swapTokenData.toToken);
-
-        // isL2
-        //     ? (setPreLoadTokens([OP_sUSD, OP_Dai, OP_USDC, OP_USDT]), _setFromToken(OP_Eth), _setToToken(mappedToToken))
-        //     : isPolygon
-        //     ? (setPreLoadTokens([POLYGON_DAI, POLYGON_USDC, POLYGON_USDT]),
-        //       _setFromToken(POLYGON_MATIC),
-        //       _setToToken(mappedToToken))
-        //     : (setPreLoadTokens([ETH_sUSD, ETH_Dai, ETH_USDC, ETH_USDT]),
-        //       _setFromToken(ETH_Eth),
-        //       _setToToken(mappedToToken));
+        setFromToken(swapTokenData.fromToken);
+        setToToken(swapTokenData.toToken);
     }, [networkId]);
 
     useEffect(() => {
@@ -340,7 +342,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                                 isDisabled={true}
                                 value={fromToken}
                                 onChange={(option: any) => {
-                                    _setFromToken(option);
+                                    setFromToken(option);
                                 }}
                             ></SwapDialog.TokenSelect>
 
@@ -416,7 +418,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                                           }
                                 }
                                 onChange={(option: any) => {
-                                    _setToToken(option);
+                                    setToToken(option);
                                 }}
                             ></SwapDialog.TokenSelect>
                             <SwapDialog.NumericText royaleTheme={royaleTheme}>
