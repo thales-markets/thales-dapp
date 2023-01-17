@@ -267,6 +267,7 @@ const Nav = styled.div<{ justifyContent: string }>`
     justify-content: ${(_props) => _props.justifyContent};
     @media (max-width: 768px) {
         margin-top: 20px;
+        justify-content: space-between;
     }
 `;
 
@@ -290,7 +291,6 @@ const NavItem = styled.p`
     }
     @media (max-width: 500px) {
         font-size: 10px;
-        padding: 0;
     }
 `;
 
@@ -320,7 +320,6 @@ const Notification = styled.span`
 const ContentWrapper = styled.div`
     width: calc(100% + 100px);
     padding-right: 50px;
-    max-height: 870px;
     overflow: hidden;
     overflow-y: auto;
     padding-left: 50px;

@@ -23,6 +23,7 @@ import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { LINKS } from 'constants/links';
+import { isMobile } from 'utils/device';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -321,7 +322,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                 <PriceChart
                                     currencyKey={row?.market?.currencyKey}
                                     height={30}
-                                    width={100}
+                                    width={isMobile() ? 90 : 100}
                                     showFooter={false}
                                     showPercentageChangeOnSide={true}
                                     containerStyle={{

@@ -169,7 +169,7 @@ const CurrencyKey = styled.span<{ alignSelf?: string }>`
 const MarketStatus = styled.span`
     font-family: Roboto !important;
     font-style: normal;
-    font-size: 7px;
+    font-size: 10px;
     display: block;
     line-height: 18px;
 `;
