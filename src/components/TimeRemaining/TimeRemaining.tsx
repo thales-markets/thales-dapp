@@ -14,6 +14,7 @@ type TimeRemainingProps = {
     fontSize?: number;
     showBorder?: boolean;
     showFullCounter?: boolean;
+    zIndex?: number;
 };
 
 const ONE_SECOND_IN_MS = 1000;
@@ -25,6 +26,7 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     fontSize,
     showBorder,
     showFullCounter,
+    zIndex,
 }) => {
     const now = Date.now();
     const [timeElapsed, setTimeElapsed] = useState(now >= end);
@@ -83,7 +85,7 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     }, timeInterval);
 
     return (
-        <Container fontSize={fontSize} duration={duration} showBorder={showBorder}>
+        <Container fontSize={fontSize} duration={duration} showBorder={showBorder} zIndex={zIndex}>
             {timeElapsed
                 ? t('options.common.time-remaining.ended')
                 : showRemainingInWeeks
@@ -110,7 +112,7 @@ const getColor = (duration: Duration) => {
     return '#D82418';
 };
 
-const Container = styled.span<{ fontSize?: number; duration: Duration; showBorder?: boolean }>`
+const Container = styled.span<{ fontSize?: number; duration: Duration; showBorder?: boolean; zIndex?: number }>`
     font-size: ${(props) => props.fontSize || 12}px;
     @media (max-width: 512px) {
         font-size: ${(props) => props.fontSize || 10}px;
@@ -121,7 +123,7 @@ const Container = styled.span<{ fontSize?: number; duration: Duration; showBorde
     padding: ${(props) => (props.showBorder ? '2px 12px 4px 12px' : '0')};
     border-radius: ${(props) => (props.showBorder ? '5px' : '0')};
     text-align: center;
-    z-index: 3;
+    z-index: ${(props) => props.zIndex || 3};
     white-space: pre;
 `;
 

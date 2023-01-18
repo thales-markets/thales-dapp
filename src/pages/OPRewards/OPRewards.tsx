@@ -763,7 +763,7 @@ const OPRewards: React.FC = () => {
                         (NOW.getTime() < maxTimestamp * 1000 ? (
                             <RoundEndWrapper>
                                 <RoundEndLabel>{t('op-rewards.round-end-label')}:</RoundEndLabel>
-                                <TimeRemaining end={maxTimestamp * 1000} fontSize={20} showFullCounter />
+                                <TimeRemaining end={maxTimestamp * 1000} fontSize={20} showFullCounter zIndex={0} />
                             </RoundEndWrapper>
                         ) : (
                             <RoundEndWrapper>
