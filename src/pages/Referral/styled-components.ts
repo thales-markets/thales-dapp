@@ -57,6 +57,7 @@ export const HeaderContainer = styled.div`
     margin-bottom: 31px;
     @media screen and (max-width: 520px) {
         justify-content: center;
+        margin-bottom: 0;
     }
 `;
 
