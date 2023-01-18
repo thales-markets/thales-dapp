@@ -133,7 +133,7 @@ const OPRewards: React.FC = () => {
         }
 
         return [];
-    }, [minTimestamp, maxTimestamp, period, usersAmmBuyVolumeQuery?.data, searchQuery]);
+    }, [minTimestamp, maxTimestamp, period, usersAmmBuyVolumeQuery?.data, searchQuery, walletAddress]);
 
     const summaryData = useMemo(() => {
         const upVolume = tableData.reduce((a, { upInfo }) => a + upInfo.volume, 0);
