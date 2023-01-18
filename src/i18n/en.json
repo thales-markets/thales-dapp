@@ -440,7 +440,7 @@
                 "claim": "CLAIM",
                 "claimed": "CLAIMED",
                 "rip": "RIP",
-                "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>."
+                "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. You will still receive your profits if you have winning positions even if the market is out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>."
             },
             "hot-market-card": {
                 "strike-price": "Strike price",
