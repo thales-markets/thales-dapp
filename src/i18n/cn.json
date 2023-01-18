@@ -328,7 +328,7 @@
                 "claim": "宣称",
                 "rip": "RIP",
                 "position-value": "位置值",
-                "no-liquidity-tooltip": "<0>我们无法从 AMM 获取此头寸的报价，因为它可能没有流动性。要了解有关 AMM 流动性规则的更多信息，请转到 <0/ ></0>。"
+                "no-liquidity-tooltip": "<0>我们无法从 AMM 获取此头寸的报价，因为它可能没有流动性。即使市場流動性不足，如果您有贏利頭寸，您仍將獲得利潤。要了解有关 AMM 流动性规则的更多信息，请转到 <0/ ></0>。"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场"
