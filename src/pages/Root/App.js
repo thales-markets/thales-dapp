@@ -226,6 +226,14 @@ const App = () => {
         }
     }, [isAppReady, onboardConnector.onboard, selectedWallet]);
 
+    useEffect(() => {
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                dispatch(updateWallet({ walletAddress: accounts[0] }));
+            });
+        }
+    }, [isAppReady]);
+
     const onSnackbarClosed = (e) => {
         if (e) {
             return;
