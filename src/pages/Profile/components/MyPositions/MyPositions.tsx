@@ -542,6 +542,7 @@ export const StyledInfoIcon = styled(InfoIcon)`
 `;
 
 export const UsingAmmLink: React.FC = () => {
+    const { t } = useTranslation();
     return (
         <TooltipLink
             target="_blank"
@@ -551,7 +552,7 @@ export const UsingAmmLink: React.FC = () => {
                 event?.stopPropagation();
             }}
         >
-            here
+            {t('common.here')}
         </TooltipLink>
     );
 };
