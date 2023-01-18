@@ -54,6 +54,14 @@ const Metaverse: React.FC = () => {
         }
     });
 
+    unityContext.on('openThalesMarkets', () => {
+        window.open('https://thalesmarket.io/markets');
+    });
+
+    unityContext.on('openOvertimeMarkets', () => {
+        window.open('https://overtimemarkets.xyz/#/markets');
+    });
+
     return (
         <Container className="game" style={{ zIndex: 10 }}>
             {!walletAddress && <Container.Msg>{t('game.connect-wallet-warning')}</Container.Msg>}
