@@ -123,7 +123,7 @@ const Container = styled.span<{ fontSize?: number; duration: Duration; showBorde
     padding: ${(props) => (props.showBorder ? '2px 12px 4px 12px' : '0')};
     border-radius: ${(props) => (props.showBorder ? '5px' : '0')};
     text-align: center;
-    z-index: ${(props) => props.zIndex || 3};
+    z-index: ${(props) => (props.zIndex !== undefined ? props.zIndex : 3)};
     white-space: pre;
 `;
 
