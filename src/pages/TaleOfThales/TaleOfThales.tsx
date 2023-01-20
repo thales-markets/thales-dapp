@@ -7,6 +7,7 @@ import Story from './components/Story';
 const TaleOfThales: React.FC = () => {
     // const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<number>(0);
+    const [closeMetaverse, setCloseMetaverse] = useState<number>(0);
 
     return (
         <>
@@ -14,14 +15,38 @@ const TaleOfThales: React.FC = () => {
                 <Tab onClick={() => setActiveTab(0)} active={activeTab === 0}>
                     Metaverse
                 </Tab>
-                <Tab onClick={() => setActiveTab(1)} active={activeTab === 1}>
+                <Tab
+                    onClick={async () => {
+                        if (activeTab === 0) {
+                            setCloseMetaverse(1);
+                        } else {
+                            setActiveTab(1);
+                        }
+                    }}
+                    active={activeTab === 1}
+                >
                     Mint NFT
                 </Tab>
-                <Tab onClick={() => setActiveTab(2)} active={activeTab === 2}>
+                <Tab
+                    onClick={async () => {
+                        if (activeTab === 0) {
+                            setCloseMetaverse(2);
+                        } else {
+                            setActiveTab(2);
+                        }
+                    }}
+                    active={activeTab === 2}
+                >
                     Story
                 </Tab>
             </TabsContainer>
-            {activeTab === 0 && <Metaverse />}
+            {activeTab === 0 && (
+                <Metaverse
+                    closeMetaverse={closeMetaverse}
+                    setCloseMetaverse={setCloseMetaverse}
+                    setActiveTab={setActiveTab}
+                />
+            )}
             {activeTab === 1 && <Mint />}
             {activeTab === 2 && <Story />}
         </>

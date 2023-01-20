@@ -17,7 +17,15 @@ const unityContext = new UnityContext({
     codeUrl: '/miletus-metaverse/build.wasm.unityweb',
 });
 
-const Metaverse: React.FC = () => {
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+type MetaverseProperties = {
+    closeMetaverse: number;
+    setCloseMetaverse: (tab: number) => void;
+    setActiveTab: (tab: number) => void;
+};
+
+const Metaverse: React.FC<MetaverseProperties> = ({ closeMetaverse, setCloseMetaverse, setActiveTab }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -62,12 +70,18 @@ const Metaverse: React.FC = () => {
         window.open('https://overtimemarkets.xyz/#/markets');
     });
 
+    unityContext.on('readyToUnload', async () => {
+        await delay(3000);
+        await unityContext.quitUnityInstance();
+        setActiveTab(closeMetaverse);
+        setCloseMetaverse(0);
+    });
+
     useEffect(() => {
-        return () => {
+        if (closeMetaverse) {
             unityContext.send('JSListener', 'onClose');
-            unityContext.quitUnityInstance();
-        };
-    }, []);
+        }
+    }, [closeMetaverse]);
 
     return (
         <Container className="game" style={{ zIndex: 10 }}>
