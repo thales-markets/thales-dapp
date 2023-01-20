@@ -71,7 +71,6 @@ const Metaverse: React.FC<MetaverseProperties> = ({ closeMetaverse, setCloseMeta
     });
 
     unityContext.on('readyToUnload', async () => {
-        await delay(100);
         await unityContext.quitUnityInstance();
         setActiveTab(closeMetaverse);
         setCloseMetaverse(0);
