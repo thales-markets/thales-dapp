@@ -17,7 +17,7 @@ const unityContext = new UnityContext({
     codeUrl: '/miletus-metaverse/build.wasm.unityweb',
 });
 
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+// const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 type MetaverseProperties = {
     closeMetaverse: number;
