@@ -65,6 +65,8 @@ import { ReactComponent as MAGICIcon } from 'assets/currencies/crypto/MAGIC.svg'
 import { ReactComponent as DPXIcon } from 'assets/currencies/crypto/DOPEX.svg';
 import { ReactComponent as GMXIcon } from 'assets/currencies/crypto/GMX.svg';
 import { ReactComponent as CAKEIcon } from 'assets/currencies/crypto/CAKE.svg';
+import { ReactComponent as XAUIcon } from 'assets/currencies/commodity/GOLD.svg';
+import { ReactComponent as XAGIcon } from 'assets/currencies/commodity/SILVER.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -178,6 +180,9 @@ export const CRYPTO_CURRENCY = [
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
+export const COMMODITY = ['XAU', 'XAG'];
+export const COMMODITY_MAP = keyBy(COMMODITY);
+
 export const FIAT_CURRENCY = ['USD'];
 export const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
 export const FIAT_CURRENCY_SIGN = {
@@ -270,6 +275,8 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.DPX]: DPXIcon,
     [CRYPTO_CURRENCY_MAP.GMX]: GMXIcon,
     [CRYPTO_CURRENCY_MAP.CAKE]: CAKEIcon,
+    [COMMODITY_MAP.XAU]: XAUIcon,
+    [COMMODITY_MAP.XAG]: XAGIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -343,6 +350,8 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.DPX]: 'Dopex',
     [CRYPTO_CURRENCY_MAP.GMX]: 'GMX',
     [CRYPTO_CURRENCY_MAP.CAKE]: 'PancakeSwap',
+    [COMMODITY_MAP.XAU]: 'Gold',
+    [COMMODITY_MAP.XAG]: 'Silver',
 };
 
 export const currencyKeyToCoinGeckoIndexMap = {
@@ -594,6 +603,14 @@ export const currencyKeyToDataFeedSourceMap = {
         link: '',
     },
     [CRYPTO_CURRENCY_MAP.CAKE]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [COMMODITY_MAP.XAU]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [COMMODITY_MAP.XAG]: {
         source: 'CHAINLINK',
         link: '',
     },
