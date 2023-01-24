@@ -20,6 +20,8 @@ const NEW_CURRENCY_ICONS = [
     'DPX',
     'GMX',
     'CAKE',
+    'XAU',
+    'XAG',
 ];
 
 type CurrencyIconProps = {
