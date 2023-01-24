@@ -360,6 +360,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                     inPrice: formatCurrencyWithSign(USD_SIGN, market.inPrice, 2),
                     outPrice: formatCurrencyWithSign(USD_SIGN, market.outPrice, 2),
                     strikePrice: market.range,
+                    leftPrice: market.leftPrice,
+                    rightPrice: market.rightPrice,
                     currentPrice: exchangeRates?.[market.currencyKey] || 0,
                     timeRemaining: market.timeRemaining,
                     phase: market.phase,
@@ -441,7 +443,8 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                 row?.original?.phase.includes(filterValue) ||
                 row?.original?.inPrice.includes(filterValue) ||
                 row?.original?.outPrice.includes(filterValue) ||
-                row?.original?.strikePrice.includes(filterValue)
+                row?.original?.leftPrice.toFixed(2).includes(filterValue) ||
+                row?.original?.rightPrice.toFixed(2).includes(filterValue)
         );
     }, []);
 
@@ -690,6 +693,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                         rowsPerPageOptions={[10, 20, 30, 50]}
                         count={rows?.length ? rows.length : 0}
                         rowsPerPage={pageSize}
+                        labelRowsPerPage={t('common.pagination.rows-per-page')}
                         page={pageIndex}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}

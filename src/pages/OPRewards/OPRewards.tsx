@@ -133,7 +133,7 @@ const OPRewards: React.FC = () => {
         }
 
         return [];
-    }, [minTimestamp, maxTimestamp, period, usersAmmBuyVolumeQuery?.data, searchQuery]);
+    }, [minTimestamp, maxTimestamp, period, usersAmmBuyVolumeQuery?.data, searchQuery, walletAddress]);
 
     const summaryData = useMemo(() => {
         const upVolume = tableData.reduce((a, { upInfo }) => a + upInfo.volume, 0);
@@ -763,7 +763,7 @@ const OPRewards: React.FC = () => {
                         (NOW.getTime() < maxTimestamp * 1000 ? (
                             <RoundEndWrapper>
                                 <RoundEndLabel>{t('op-rewards.round-end-label')}:</RoundEndLabel>
-                                <TimeRemaining end={maxTimestamp * 1000} fontSize={20} showFullCounter />
+                                <TimeRemaining end={maxTimestamp * 1000} fontSize={20} showFullCounter zIndex={0} />
                             </RoundEndWrapper>
                         ) : (
                             <RoundEndWrapper>

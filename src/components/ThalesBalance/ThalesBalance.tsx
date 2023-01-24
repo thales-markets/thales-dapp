@@ -59,7 +59,7 @@ const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
 
     return (
         <Wrapper>
-            {showTitle && <Title>My Thales:</Title>}
+            {showTitle && <Title>{t('user-info.wallet.my-thales')}:</Title>}
             <Bar background="#464DCF" width={proportions.inWallet}>
                 <Label>{t('user-info.wallet.in-wallet')}</Label>
                 <Amount>{formatCurrencyWithSign('', inWallet.toFixed(2))}</Amount>

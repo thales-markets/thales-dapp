@@ -174,7 +174,7 @@ const UserActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
 
     return (
         <Container>
-            {userTransactionAndTradeList?.length && (
+            {userTransactionAndTradeList?.length !== 0 && (
                 <TileTable
                     firstColumnRenderer={(row: TileRow | string) => <FirstColumn value={row} />}
                     rows={generateRowsForTileTable(userTransactionAndTradeList, marketInfo)}

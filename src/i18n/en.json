@@ -42,6 +42,7 @@
             "expires-col": "Expires in"
         },
         "wallet": {
+            "my-thales": "My Thales",
             "switch-wallet": "Switch Wallet",
             "disconnect-wallet": "Disconnect Wallet",
             "display-name": "Display Name",
@@ -160,10 +161,17 @@
                 "all-transactions": "All transactions",
                 "by-trader": "See results by trader",
                 "affiliate-leaderboard": "Affiliate leaderboard"
-            }
+            },
+            "current-view": "View: {{ currentView }}",
+            "view": "Views"
         },
         "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.<br><br>To kick-start this referral program, in addition to the fees earned by the traders you refer, there will be 20,000 OP tokens to be distributed, at Thales Council discretion, among those that make the top in the Affiliate Leaderboard.",
-        "disclaimer": "We strongly advise affiliates to stay compliant with the regulatory guidelines on testimonials and endorsements from their respective countries or jurisdictions. We suggest all endorsements, reviews, testimonials on Thales' products and services, as well as relationships between other types of content websites (forums, blogs, microblogs, and other Social Media channels) and Thales are clearly disclosed. The end-user of Thales' products and services has the right to be informed, and understand, when he is directed to Thales website through a referral link. In addition, you may not in any manner misrepresent or embellish the relationship between Thales platform (or any of its products and services) and you. Thales Council in its sole discretion, has the right to suspend or end this Referral Program.<br>Thales' terms and conditions of use also apply to the use of this referral links platform."
+        "disclaimer": "We strongly advise affiliates to stay compliant with the regulatory guidelines on testimonials and endorsements from their respective countries or jurisdictions. We suggest all endorsements, reviews, testimonials on Thales' products and services, as well as relationships between other types of content websites (forums, blogs, microblogs, and other Social Media channels) and Thales are clearly disclosed. The end-user of Thales' products and services has the right to be informed, and understand, when he is directed to Thales website through a referral link. In addition, you may not in any manner misrepresent or embellish the relationship between Thales platform (or any of its products and services) and you. Thales Council in its sole discretion, has the right to suspend or end this Referral Program.<br>Thales' terms and conditions of use also apply to the use of this referral links platform.",
+        "footer": {
+            "sharing": "By sharing a referral link you consent to the disclaimer",
+            "and": "and",
+            "terms": "terms"
+        }
     },
     "wizard-page": {
         "title": "Buy Crypto with credit card",
@@ -432,7 +440,7 @@
                 "claim": "CLAIM",
                 "claimed": "CLAIMED",
                 "rip": "RIP",
-                "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>."
+                "no-liquidity-tooltip": "<0>We could not fetch a quote from AMM for this position as it's likely out of liquidity. You will still receive your profits if you have winning positions even if the market is out of liquidity. To learn more about the rule for AMM liquidity go <0/ ></0>."
             },
             "hot-market-card": {
                 "strike-price": "Strike price",
@@ -671,14 +679,25 @@
                     "schedule-no-results": "No vesting schedule found."
                 },
                 "merge-account": {
-                    "section-title": "Merge account",
+                    "section-title": "Account Preferences",
                     "section-description": "<0>Account merging has been implemented per </0><1 />.",
-                    "source-account-label": "Source account",
-                    "destination-account-label": "Destination account",
+                    "source-account-label": "Source",
+                    "destination-account-label": "Destination",
+                    "delegate-volume-address-label": "Address",
                     "confirmation-message": "Account successfully merged",
+                    "delegation-confirmation-message": "Successfully delegated volume",
                     "merge-account-disabled-message": "Account merging is disabled.",
                     "info-message": "In order to merge account, you need to claim any outstanding staking rewards and cancel unstaking if any are in progress from both accounts.",
                     "warning-message": "Once merged, all staked and escrowed THALES balances will be transferred to the destination account and won't be accessible from the source account.",
+                    "merge-account": "Merge Account",
+                    "how-merge-account-works": "How merge account works",
+                    "merge-account-description-1": "The \"Merge Account\" functionality gives a THALES staker the ability to transfer all its staked THALES and staking rewards from one wallet to another. This comes in handy for those who want to cycle wallets or for those whose wallet has been compromised.",
+                    "merge-account-description-2": "This account merging only works for the entire balance of staked and vested THALES, partial reassignments will not be possible. It's also worth noting that on the receiving wallet, the THALES tokens staked will still need a 7-day countdown to unstake and the vested rewards will also be subject to the standard 10-weeks cooldown when claiming.",
+                    "delegate-volume": "Delegate Volume",
+                    "how-delegate-volume-works": "How delegate volume works",
+                    "delegate-volume-description-1": "The \"Delegate Volume\" functionality gives you the ability to direct the volume generated from one wallet that you own to another wallet.",
+                    "delegate-volume-description-2": "This simple step comes in handy for those who stake their THALES with a hardware wallet but do their trading on another hot wallet for convenience's sake (for example using Overtime on their mobile wallet), this way the volume generated can count towards the \"Protocol Volume bucket\" of gamified THALES staking rewards.",
+                    "delegate-volume-description-3": "This delegation of volume can be stopped at any time and it has checks in place to avoid a wallet directing it's volume to another while still boosting it's own.",
                     "merge-blocked-message": {
                         "title": "In order to merge account, you need to",
                         "src-claim": "Claim the staking rewards from the source account.",
@@ -687,8 +706,13 @@
                         "dest-unstaking": "Cancel ustaking from the destination account."
                     },
                     "merge-button": {
-                        "label": "Merge account",
+                        "label": "Merge",
                         "progress-label": "Merging in progress..."
+                    },
+                    "delegate-button": {
+                        "label": "Delegate",
+                        "progress-label": "Delegating in progress...",
+                        "remove-delegation": "Remove delegation"
                     }
                 }
             },
@@ -1555,6 +1579,15 @@
         },
         "trading-profile": {
             "title": "Trading Profile",
+            "chart-info": {
+                "in-wallet": "in wallet",
+                "claimable": "Claimable"
+            },
+            "tabs": {
+                "my-positions": "My Positions",
+                "matured-positions": "Matured Positions",
+                "history": "History"
+            },
             "search-placeholder": "Search Wallet",
             "history": {
                 "strike": "Strike",

@@ -68,7 +68,7 @@ import { useTranslation } from 'react-i18next';
 import WalletBalance from '../AMM/components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
-import { checkMultipleStableBalances, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
+import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
@@ -200,7 +200,7 @@ const AMM: React.FC = () => {
             selectedStableIndex == 0 &&
             isMultiCollateralSupported
         ) {
-            const defaultStableBalance = checkMultipleStableBalances(multipleStableBalances?.data);
+            const defaultStableBalance = getDefaultStableIndexByBalance(multipleStableBalances?.data);
             setStableIndex(defaultStableBalance);
         }
     }, [multipleStableBalances?.data]);

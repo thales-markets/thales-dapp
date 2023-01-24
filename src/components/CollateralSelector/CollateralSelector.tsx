@@ -10,6 +10,8 @@ import {
 // import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import { getAssetIcon } from 'utils/currency';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { setSelectedCollateral } from 'redux/modules/wallet';
 
 type CollateralSelectorProps = {
     collateralArray: Array<string>;
@@ -23,6 +25,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     onChangeCollateral,
 }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     return (
         <Container>
             <LabelValueContainer>
@@ -37,7 +40,10 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                             <CollateralIcon active={selectedItem == index} key={index}>
                                 <AssetIcon
                                     key={index}
-                                    onClick={() => onChangeCollateral(index)}
+                                    onClick={() => {
+                                        onChangeCollateral(index);
+                                        dispatch(setSelectedCollateral(index));
+                                    }}
                                     style={{
                                         ...(selectedItem == index
                                             ? {

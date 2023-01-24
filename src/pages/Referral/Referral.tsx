@@ -13,7 +13,6 @@ import {
     TableWrapper,
     Text,
 } from './styled-components';
-// import InputWithIcon from 'components/InputWithIcon';
 import Button from 'components/Button';
 import { Trans, useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -45,8 +44,9 @@ import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
 import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
+import OutsideClickHandler from 'react-outside-click-handler';
 
-const Tabs = [
+const tabs = [
     {
         id: 0,
         i18label: 'referral-page.tabs.labels.all-transactions',
@@ -68,12 +68,12 @@ const Referral: React.FC = () => {
 
     const showOPBanner = getIsOVM(networkId);
 
-    // const [walletAddress, setWalletAddress] = useState<string>('');
-    const [tabIndex, setTabIndex] = useState<number>(Tabs[0].id);
+    const [tabIndex, setTabIndex] = useState(tabs[0].id);
     const [landingPage, setLandingPage] = useState<number | undefined>(0);
-    const [referralLink, setReferralLink] = useState<string>('');
-    const [showMore, setShowMore] = useState<boolean>(false);
-    const [textHeight, setHeight] = useState<string>('170px');
+    const [referralLink, setReferralLink] = useState('');
+    const [showMore, setShowMore] = useState(false);
+    const [textHeight, setHeight] = useState('170px');
+    const [showViewsDropdown, setShowViewsDropdown] = useState(false);
     const { t } = useTranslation();
 
     const landingPageOptions = [
@@ -250,35 +250,61 @@ const Referral: React.FC = () => {
                     <ReadMoreButton onClick={handleReadMore} active={showMore} />
                 </DescriptionContainer>
             </HeaderContainer>
+            <ViewButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
+                {t('referral-page.tabs.current-view', { currentView: t(tabs[tabIndex].i18label) })}
+            </ViewButton>
+            {showViewsDropdown && (
+                <ViewsDropDownWrapper>
+                    <ViewsDropDown>
+                        <OutsideClickHandler onOutsideClick={() => setShowViewsDropdown(false)}>
+                            <ViewTitle>{t('referral-page.tabs.view')}</ViewTitle>
+                            {tabs.map((item, index) => {
+                                return (
+                                    <ViewItem
+                                        active={tabIndex === item.id}
+                                        key={index}
+                                        onClick={() => {
+                                            setTabIndex(item.id);
+                                            setShowViewsDropdown(false);
+                                        }}
+                                    >
+                                        {t(item.i18label)}
+                                    </ViewItem>
+                                );
+                            })}
+                        </OutsideClickHandler>
+                    </ViewsDropDown>
+                </ViewsDropDownWrapper>
+            )}
             <Container.Main justifyContent="flex-start" hide={false}>
                 <Container.Main.Item
                     noStrech={true}
                     padding={'20px 30px'}
                     active={tabIndex == 0}
-                    onClick={() => setTabIndex(Tabs[0].id)}
+                    onClick={() => setTabIndex(tabs[0].id)}
                 >
-                    {t(Tabs[0].i18label)}
+                    {t(tabs[0].i18label)}
                 </Container.Main.Item>
                 <Container.Main.Item
                     noStrech={true}
                     padding={'20px 30px'}
                     active={tabIndex == 1}
-                    onClick={() => setTabIndex(Tabs[1].id)}
+                    onClick={() => setTabIndex(tabs[1].id)}
                 >
-                    {t(Tabs[1].i18label)}
+                    {t(tabs[1].i18label)}
                 </Container.Main.Item>
                 <Container.Main.Item
                     noStrech={true}
                     padding={'20px 30px'}
                     active={tabIndex == 2}
-                    onClick={() => setTabIndex(Tabs[2].id)}
+                    onClick={() => setTabIndex(tabs[2].id)}
                 >
-                    {t(Tabs[2].i18label)}
+                    {t(tabs[2].i18label)}
                 </Container.Main.Item>
             </Container.Main>
             <Container.Tab>
                 <>
-                    {tabIndex == Tabs[0].id && (
+                    {tabIndex == tabs[0].id && (
                         <TableWrapper>
                             <Table
                                 data={transactionData}
@@ -328,7 +354,7 @@ const Referral: React.FC = () => {
                             />
                         </TableWrapper>
                     )}
-                    {tabIndex == Tabs[1].id && (
+                    {tabIndex == tabs[1].id && (
                         <TableWrapper>
                             <Table
                                 data={tradersData}
@@ -380,7 +406,7 @@ const Referral: React.FC = () => {
                             />
                         </TableWrapper>
                     )}
-                    {tabIndex == Tabs[2].id && (
+                    {tabIndex == tabs[2].id && (
                         <TableWrapper>
                             <Table
                                 data={affiliateCompetitionData}
@@ -434,7 +460,7 @@ const Referral: React.FC = () => {
                 </>
             </Container.Tab>
             <ReferralFooter>
-                {'By sharing a referral link you consent to the disclaimer'}
+                {t('referral-page.footer.sharing')}
                 <Tooltip
                     message={t('referral-page.disclaimer')}
                     type={'info'}
@@ -442,14 +468,15 @@ const Referral: React.FC = () => {
                     container={{ width: '15px' }}
                     interactive={true}
                 />
-                {'and'}{' '}
+                {t('referral-page.footer.and')}{' '}
                 <a
                     target="_blank"
                     rel="noreferrer"
                     href={termsOfUse}
                     style={{ color: 'var(--primary-color)', marginLeft: '5px', textDecoration: 'underline' }}
                 >
-                    {' terms'}
+                    {' '}
+                    {t('referral-page.footer.terms')}
                 </a>
             </ReferralFooter>
             <Footer />
@@ -484,5 +511,82 @@ const customColumnSort = (propertyName: string) => (rowA: any, rowB: any, desc: 
         return +rowA.original[propertyName] < +rowB.original[propertyName] ? 1 : -1;
     }
 };
+
+const ViewButton = styled.div`
+    display: none;
+    @media (max-width: 768px) {
+        display: block;
+        align-self: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 6px 20px;
+        border: 1.5px solid rgba(100, 217, 254, 0.5);
+        box-sizing: border-box;
+        border-radius: 30px;
+        background: transparent;
+        font-family: Roboto !important;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #64d9fe;
+    }
+`;
+
+const ViewsDropDownWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    height: 0;
+    z-index: 2;
+`;
+
+const ViewsDropDown = styled.div`
+    display: none;
+    @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+        border: 2px solid rgba(100, 217, 254, 0.5);
+        box-sizing: border-box;
+        border-radius: 12px;
+        padding: 15px 20px;
+        max-width: 240px;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+        top: -56px;
+        z-index: 2;
+    }
+`;
+
+const ViewTitle = styled.p`
+    font-family: Roboto !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: #64d9fe;
+    @media (min-width: 769px) {
+        display: none;
+    }
+    margin-bottom: 10px;
+`;
+
+const ViewItem = styled.div<{ active: boolean }>`
+    @media (max-width: 768px) {
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 162.5%;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: Roboto !important;
+        font-style: normal;
+        color: ${(_props) => (_props?.active ? '#64d9fe' : '#ffffff')};
+    }
+`;
 
 export default Referral;
