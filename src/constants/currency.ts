@@ -65,8 +65,8 @@ import { ReactComponent as MAGICIcon } from 'assets/currencies/crypto/MAGIC.svg'
 import { ReactComponent as DPXIcon } from 'assets/currencies/crypto/DOPEX.svg';
 import { ReactComponent as GMXIcon } from 'assets/currencies/crypto/GMX.svg';
 import { ReactComponent as CAKEIcon } from 'assets/currencies/crypto/CAKE.svg';
-import { ReactComponent as XAUIcon } from 'assets/currencies/commodity/XAU.svg';
-import { ReactComponent as XAGIcon } from 'assets/currencies/commodity/XAG.svg';
+import { ReactComponent as XAUIcon } from 'assets/synths/sXAU.svg';
+import { ReactComponent as XAGIcon } from 'assets/synths/sXAG.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
