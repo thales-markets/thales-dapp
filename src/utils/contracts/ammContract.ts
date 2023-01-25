@@ -8,7 +8,7 @@ export const ammContract = {
         [Network.Kovan]: 'TBD',
         // added to resolve error with typings
         [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: '0x5ae7454827D83526261F3871C1029792644Ef1B1',
+        [Network['Mainnet-Ovm']]: '0x278B5A44397c9D8E52743fEdec263c4760dc1A1A',
         [Network['Kovan-Ovm']]: '0xfed727f37e921Faac22e36E0bbaA8504B45F6e3f',
         [Network['Goerli-Ovm']]: '0xcE9c1aAb41b18b24355138776186484B260B9cf0',
         [Network['POLYGON-MUMBAI']]: '0xdf0A5bf80E8009f2702E7d164A7bdeaa79013eba',
