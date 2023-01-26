@@ -4,7 +4,7 @@ import { RootState } from 'redux/rootReducer';
 import { useTranslation } from 'react-i18next';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 // import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
@@ -57,12 +57,11 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
         }
     }, [rangedMarketsLiquidityQuery.isLoading]);
 
-    const openOrdersMap: OpenOrdersMap = useMemo(() => {
-        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
             return openOrdersQuery.data;
         }
-        return null;
-    }, [openOrdersQuery.isSuccess, openOrdersQuery.data]);
+    }, [openOrdersQuery.isLoading]);
 
     const isLoading =
         openOrdersQuery.isLoading ||
@@ -72,20 +71,16 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
 
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
-            let markets =
-                openOrdersMap !== null
-                    ? marketsQuery.data.map((m) => {
-                          const apiData = openOrdersMap !== null ? openOrdersMap[m.address.toLowerCase()] : undefined;
-                          return {
-                              ...m,
-                              openOrders: apiData?.ordersCount ?? 0,
-                              availableLongs: apiData?.availableLongs ?? 0,
-                              availableShorts: apiData?.availableShorts ?? 0,
-                              longPrice: apiData?.longPrice ?? 0,
-                              shortPrice: apiData?.shortPrice ?? 0,
-                          };
-                      })
-                    : marketsQuery.data;
+            let markets = openOrdersMap
+                ? marketsQuery.data.map((m) => ({
+                      ...m,
+                      openOrders: openOrdersMap.get(m.address.toLowerCase())?.ordersCount ?? 0,
+                      availableLongs: openOrdersMap.get(m.address.toLowerCase())?.availableLongs ?? 0,
+                      availableShorts: openOrdersMap.get(m.address.toLowerCase())?.availableShorts ?? 0,
+                      longPrice: openOrdersMap.get(m.address.toLowerCase())?.longPrice ?? 0,
+                      shortPrice: openOrdersMap.get(m.address.toLowerCase())?.shortPrice ?? 0,
+                  }))
+                : marketsQuery.data;
 
             markets = markets.filter((market) => market.currencyKey == marketInfo?.currencyKey);
             markets = markets.filter((market) => market.availableLongs > 0 || market.availableShorts > 0);
