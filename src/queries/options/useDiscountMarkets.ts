@@ -1,31 +1,36 @@
-import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId } from '../../utils/network';
+import { NetworkId } from '../../utils/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { generalConfig } from 'config/general';
+import snxJSConnector from 'utils/snxJSConnector';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
-type DiscountMap = Record<string, { longPriceImpact: number; shortPriceImpact: number }> | null;
-
-// TODO: discuss with team to change logic and store and update markets in redux to avoid this
-export let discountOrdersMap: DiscountMap = null;
+export type DiscountMap = Record<string, { longPriceImpact: number; shortPriceImpact: number }> | null;
 
 export const fetchDiscounts = (network: NetworkId, options?: UseQueryOptions<DiscountMap>) => {
     return useQuery<DiscountMap>(
         QUERY_KEYS.BinaryOptions.DiscountMap(network),
         async () => {
-            const showDiscountMarkets =
-                getIsOVM(network) || getIsArbitrum(network) || getIsPolygon(network) || getIsBSC(network);
-            if (showDiscountMarkets) {
-                const baseUrl = `${generalConfig.API_URL}/discounts/${network}`;
-                const response = await fetch(baseUrl);
-                const json = await response.json();
-                const discountMap = new Map(json);
+            try {
+                const priceImpactFromContract = await (snxJSConnector as any).binaryOptionsMarketDataContract.getPriceImpactForAllActiveMarkets();
 
-                discountOrdersMap = discountMap as any;
-                return discountMap as any;
-            } else return new Map();
+                const discountMap = Object.assign(
+                    {},
+                    ...priceImpactFromContract.map((item: any) => ({
+                        [item.market.toLowerCase()]: {
+                            longPriceImpact: bigNumberFormatter(item.upPriceImpact) * 100,
+                            shortPriceImpact: bigNumberFormatter(item.downPriceImpact) * 100,
+                        },
+                    }))
+                ) as DiscountMap;
+
+                return discountMap;
+            } catch (e) {
+                console.log(e);
+                return null;
+            }
         },
         {
-            refetchInterval: 5000,
+            refetchInterval: 30 * 1000,
             ...options,
         }
     );

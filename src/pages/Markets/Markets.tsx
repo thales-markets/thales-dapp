@@ -6,7 +6,7 @@ import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux
 import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
 import { sortOptionsMarkets } from 'utils/options';
@@ -19,7 +19,7 @@ import { Trans } from 'react-i18next';
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
-import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
 import ElectionsBanner from 'components/ElectionsBanner';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
@@ -55,8 +55,11 @@ const Markets: React.FC = () => {
     }, []);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
-    const openOrdersQuery = fetchAllMarketOrders(networkId);
-    const discountQuery = fetchDiscounts(networkId);
+    const openOrdersQuery = fetchAllMarketOrders(networkId, { enabled: isAppReady });
+    const openOrdersMap: OpenOrdersMap = openOrdersQuery.isSuccess ? openOrdersQuery.data : null;
+
+    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
+    const discountsMap: DiscountMap = discountQuery.isSuccess ? discountQuery.data : null;
 
     const optionsMarkets = useMemo(() => {
         if (
@@ -65,40 +68,43 @@ const Markets: React.FC = () => {
             openOrdersQuery.isSuccess &&
             discountQuery.isSuccess
         ) {
-            const markets = openOrdersQuery.data
-                ? marketsQuery.data.map((m) => {
-                      const apiData = openOrdersQuery?.data?.get(m.address.toLowerCase());
-                      const discountData = (discountQuery.data as any).get(m.address.toLowerCase());
-                      let discountedSide;
-                      let discount = 0;
-                      if (discountData) {
-                          if (discountData.longPriceImpact < 0) {
-                              discountedSide = 'UP';
-                              discount = -Math.ceil(Math.abs(discountData.longPriceImpact));
+            const markets =
+                openOrdersMap !== null
+                    ? marketsQuery.data.map((m) => {
+                          const apiData = openOrdersMap !== null ? openOrdersMap[m.address.toLowerCase()] : undefined;
+                          const discountData =
+                              discountsMap !== null ? discountsMap[m.address.toLowerCase()] : undefined;
+                          let discountedSide;
+                          let discount = 0;
+                          if (discountData) {
+                              if (discountData.longPriceImpact < 0) {
+                                  discountedSide = 'UP';
+                                  discount = -Math.ceil(Math.abs(discountData.longPriceImpact));
+                              }
+                              if (discountData.shortPriceImpact < 0) {
+                                  discountedSide = 'DOWN';
+                                  discount = -Math.ceil(Math.abs(discountData.shortPriceImpact));
+                              }
                           }
-                          if (discountData.shortPriceImpact < 0) {
-                              discountedSide = 'DOWN';
-                              discount = -Math.ceil(Math.abs(discountData.shortPriceImpact));
-                          }
-                      }
 
-                      return {
-                          ...m,
-                          openOrders: apiData?.ordersCount ?? 0,
-                          availableLongs: apiData?.availableLongs ?? 0,
-                          availableShorts: apiData?.availableShorts ?? 0,
-                          longPrice: apiData?.longPrice ?? 0,
-                          shortPrice: apiData?.shortPrice ?? 0,
-                          ammLiquidity: (apiData?.availableLongs ?? 0) + (apiData?.availableShorts ?? 0),
-                          discountedSide,
-                          discount,
-                      };
-                  })
-                : marketsQuery.data;
+                          return {
+                              ...m,
+                              openOrders: apiData?.ordersCount ?? 0,
+                              availableLongs: apiData?.availableLongs ?? 0,
+                              availableShorts: apiData?.availableShorts ?? 0,
+                              longPrice: apiData?.longPrice ?? 0,
+                              shortPrice: apiData?.shortPrice ?? 0,
+                              ammLiquidity: (apiData?.availableLongs ?? 0) + (apiData?.availableShorts ?? 0),
+                              discountedSide,
+                              discount,
+                          };
+                      })
+                    : marketsQuery.data;
             return sortOptionsMarkets(markets);
         }
         return [];
     }, [marketsQuery, openOrdersQuery, discountQuery]);
+
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
