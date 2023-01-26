@@ -779,7 +779,9 @@
                     "lpStake": "No LP stake transactions associated with this wallet.",
                     "lpUnstake": "No LP unstake transactions associated with this wallet.",
                     "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet.",
-                    "mergeAccount": "No merge account transactions associated with this wallet."
+                    "mergeAccount": "No merge account transactions associated with this wallet.",
+                    "delegateVolume": "No delegate volume transactions associated with this wallet.",
+                    "removeDelegation": "No remove delegation transactions associated with this wallet."
                 },
                 "types": {
                     "claimRetroAirdrop": "Claim retro airdrop",
@@ -796,7 +798,9 @@
                     "lpStake": "LP stake",
                     "lpUnstake": "LP unstake",
                     "lpClaimStakingRewards": "Claim LP staking rewards",
-                    "mergeAccount": "Merge account"
+                    "mergeAccount": "Merge account",
+                    "delegateVolume": "Delegate Volume",
+                    "removeDelegation": "Remove Delegation"
                 },
                 "filter": {
                     "button": "filters",
@@ -815,7 +819,9 @@
                     "lpStake": "LP stake",
                     "lpUnstake": "LP unstake",
                     "lpClaimStakingRewards": "LP staking rewards",
-                    "mergeAccount": "Merge account"
+                    "mergeAccount": "Merge account",
+                    "delegateVolume": "Delegate Volume",
+                    "removeDelegation": "Remove Delegation"
                 }
             },
             "overview": {
