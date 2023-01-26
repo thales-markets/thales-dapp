@@ -22,7 +22,6 @@ const usePriceDataQuery = (requestArgs: RequestParams, options?: UseQueryOptions
         QUERY_KEYS.PriceData.Currency(requestArgs.currencyKey),
         async () => {
             if (!coinGeckoKey) {
-                console.log('currencyKey ', requestArgs.currencyKey);
                 return false;
             }
 
