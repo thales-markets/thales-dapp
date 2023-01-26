@@ -12,12 +12,13 @@ import Hammer, { DIRECTION_HORIZONTAL } from 'hammerjs';
 import { PHASE } from 'constants/options';
 import { USD_SIGN } from 'constants/currency';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import Tooltip from 'components/Tooltip';
 import { getIsOVM } from 'utils/network';
+import { getIsAppReady } from 'redux/modules/app';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -39,13 +40,14 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const showOPBanner = getIsOVM(networkId);
 
     const { trackEvent } = useMatomo();
 
-    const discountQuery = fetchDiscounts(networkId, { enabled: true });
-    const discountsMap = discountQuery.isSuccess ? discountQuery.data : new Map();
+    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
+    const discountsMap: DiscountMap = discountQuery.isSuccess ? discountQuery.data : null;
 
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
@@ -54,7 +56,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             ?.filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
             .sort((a, b) => a.timeRemaining - b.timeRemaining)
             .forEach((market) => {
-                const discount = (discountsMap as any).get(market.address.toLowerCase());
+                const discount = discountsMap !== null ? discountsMap[market.address.toLowerCase()] : undefined;
                 if (discount) {
                     if (discount.longPriceImpact < 0 && market.longPrice !== 0) {
                         markets.push({
