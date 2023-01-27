@@ -4,7 +4,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 
-export type DiscountMap = Record<string, { longPriceImpact: number; shortPriceImpact: number }> | null;
+export type DiscountMap = Record<string, { longPriceImpact: number; shortPriceImpact: number }> | undefined;
 
 export const fetchDiscounts = (network: NetworkId, options?: UseQueryOptions<DiscountMap>) => {
     return useQuery<DiscountMap>(
@@ -26,7 +26,7 @@ export const fetchDiscounts = (network: NetworkId, options?: UseQueryOptions<Dis
                 return discountMap;
             } catch (e) {
                 console.log(e);
-                return null;
+                return undefined;
             }
         },
         {

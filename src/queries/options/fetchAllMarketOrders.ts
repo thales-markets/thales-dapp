@@ -5,10 +5,18 @@ import { AMM_MAX_BUFFER_PERCENTAGE } from 'constants/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 
-export type OpenOrdersMap = Record<
-    string,
-    { ordersCount: number; availableLongs: number; availableShorts: number; longPrice: number; shortPrice: number }
-> | null;
+export type OpenOrdersMap =
+    | Record<
+          string,
+          {
+              ordersCount: number;
+              availableLongs: number;
+              availableShorts: number;
+              longPrice: number;
+              shortPrice: number;
+          }
+      >
+    | undefined;
 
 export const fetchAllMarketOrders = (network: NetworkId, options?: UseQueryOptions<OpenOrdersMap>) => {
     return useQuery<OpenOrdersMap>(
@@ -39,7 +47,7 @@ export const fetchAllMarketOrders = (network: NetworkId, options?: UseQueryOptio
                 return mappedOpenOrdersMap;
             } catch (e) {
                 console.log(e);
-                return null;
+                return undefined;
             }
         },
         {

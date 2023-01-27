@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { HotMarket, OptionsMarkets } from 'types/options';
@@ -41,13 +41,26 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const [hammerManager, setHammerManager] = useState<any>();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const [lastValidDiscountMap, setLastValidDiscountMap] = useState<DiscountMap>(undefined);
 
     const showOPBanner = getIsOVM(networkId);
 
     const { trackEvent } = useMatomo();
 
     const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
-    const discountsMap: DiscountMap = discountQuery.isSuccess ? discountQuery.data : null;
+
+    useEffect(() => {
+        if (discountQuery.isSuccess && discountQuery.data) {
+            setLastValidDiscountMap(discountQuery.data);
+        }
+    }, [discountQuery.isSuccess, discountQuery.data]);
+
+    const discountMap: DiscountMap = useMemo(() => {
+        if (discountQuery.isSuccess && discountQuery.data) {
+            return discountQuery.data;
+        }
+        return lastValidDiscountMap;
+    }, [discountQuery.isSuccess, discountQuery.data, lastValidDiscountMap]);
 
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
@@ -56,7 +69,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             ?.filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
             .sort((a, b) => a.timeRemaining - b.timeRemaining)
             .forEach((market) => {
-                const discount = discountsMap !== null ? discountsMap[market.address.toLowerCase()] : undefined;
+                const discount = discountMap ? discountMap[market.address.toLowerCase()] : undefined;
                 if (discount) {
                     if (discount.longPriceImpact < 0 && market.longPrice !== 0) {
                         markets.push({
@@ -89,7 +102,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             });
 
         return markets.sort((a: HotMarket, b: HotMarket) => b.discount - a.discount);
-    }, [optionsMarkets]);
+    }, [optionsMarkets, discountMap]);
 
     const moveLeft = () => {
         if (firstHotIndex === 0) return;
