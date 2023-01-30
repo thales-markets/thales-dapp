@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { useTranslation } from 'react-i18next';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 // import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
@@ -34,7 +34,6 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const [lastValidOpenOrdersMap, setLastValidOpenOrdersMap] = useState<OpenOrdersMap>(undefined);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: isAppReady && marketType !== MARKET_TYPE[1],
@@ -53,23 +52,16 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
     });
 
     const rangedMarketsLiquidity = useMemo(() => {
-        if (rangedMarketsLiquidityQuery.isSuccess && rangedMarketsLiquidityQuery.data) {
-            return rangedMarketsLiquidityQuery.data;
+        if (rangedMarketsLiquidityQuery?.isSuccess && rangedMarketsLiquidityQuery?.data) {
+            return rangedMarketsLiquidityQuery?.data;
         }
-    }, [rangedMarketsLiquidityQuery.isSuccess, rangedMarketsLiquidityQuery.data]);
+    }, [rangedMarketsLiquidityQuery.isLoading]);
 
-    useEffect(() => {
-        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
-            setLastValidOpenOrdersMap(openOrdersQuery.data);
-        }
-    }, [openOrdersQuery.isSuccess, openOrdersQuery.data]);
-
-    const openOrdersMap: OpenOrdersMap = useMemo(() => {
-        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
             return openOrdersQuery.data;
         }
-        return lastValidOpenOrdersMap;
-    }, [openOrdersQuery.isSuccess, openOrdersQuery.data, lastValidOpenOrdersMap]);
+    }, [openOrdersQuery.isLoading]);
 
     const isLoading =
         openOrdersQuery.isLoading ||
@@ -80,17 +72,14 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             let markets = openOrdersMap
-                ? marketsQuery.data.map((m) => {
-                      const apiData = openOrdersMap[m.address.toLowerCase()];
-                      return {
-                          ...m,
-                          openOrders: apiData?.ordersCount ?? 0,
-                          availableLongs: apiData?.availableLongs ?? 0,
-                          availableShorts: apiData?.availableShorts ?? 0,
-                          longPrice: apiData?.longPrice ?? 0,
-                          shortPrice: apiData?.shortPrice ?? 0,
-                      };
-                  })
+                ? marketsQuery.data.map((m) => ({
+                      ...m,
+                      openOrders: openOrdersMap.get(m.address.toLowerCase())?.ordersCount ?? 0,
+                      availableLongs: openOrdersMap.get(m.address.toLowerCase())?.availableLongs ?? 0,
+                      availableShorts: openOrdersMap.get(m.address.toLowerCase())?.availableShorts ?? 0,
+                      longPrice: openOrdersMap.get(m.address.toLowerCase())?.longPrice ?? 0,
+                      shortPrice: openOrdersMap.get(m.address.toLowerCase())?.shortPrice ?? 0,
+                  }))
                 : marketsQuery.data;
 
             markets = markets.filter((market) => market.currencyKey == marketInfo?.currencyKey);
@@ -101,7 +90,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
             return markets;
         }
         return [];
-    }, [marketsQuery.isSuccess, marketsQuery.data, marketInfo?.address, openOrdersMap]);
+    }, [isLoading, marketInfo?.address]);
 
     const rangedMarkets: RangedMarket[] | [] = useMemo(() => {
         if (rangedMarketsQuery.isSuccess && Array.isArray(rangedMarketsQuery.data)) {
@@ -135,7 +124,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
             return markets;
         }
         return [];
-    }, [rangedMarketsQuery.isSuccess, rangedMarketsQuery.data, marketInfo?.address, rangedMarketsLiquidity]);
+    }, [isLoading, marketInfo?.address]);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery({
         enabled: isAppReady && (optionsMarkets.length > 0 || rangedMarkets?.length > 0),

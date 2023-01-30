@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 
 import { RootState } from 'redux/rootReducer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +6,7 @@ import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux
 import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
 import { sortOptionsMarkets } from 'utils/options';
@@ -19,7 +19,7 @@ import { Trans } from 'react-i18next';
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
-import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
 import ElectionsBanner from 'components/ElectionsBanner';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
@@ -31,8 +31,6 @@ const Markets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const [lastValidOpenOrdersMap, setLastValidOpenOrdersMap] = useState<OpenOrdersMap>(undefined);
-    const [lastValidDiscountMap, setLastValidDiscountMap] = useState<DiscountMap>(undefined);
 
     const showOPBanner = getIsOVM(networkId);
 
@@ -57,43 +55,20 @@ const Markets: React.FC = () => {
     }, []);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
-
-    const openOrdersQuery = fetchAllMarketOrders(networkId, { enabled: isAppReady });
-
-    useEffect(() => {
-        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
-            setLastValidOpenOrdersMap(openOrdersQuery.data);
-        }
-    }, [openOrdersQuery.isSuccess, openOrdersQuery.data]);
-
-    const openOrdersMap: OpenOrdersMap = useMemo(() => {
-        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
-            return openOrdersQuery.data;
-        }
-        return lastValidOpenOrdersMap;
-    }, [openOrdersQuery.isSuccess, openOrdersQuery.data, lastValidOpenOrdersMap]);
-
-    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
-
-    useEffect(() => {
-        if (discountQuery.isSuccess && discountQuery.data) {
-            setLastValidDiscountMap(discountQuery.data);
-        }
-    }, [discountQuery.isSuccess, discountQuery.data]);
-
-    const discountMap: DiscountMap = useMemo(() => {
-        if (discountQuery.isSuccess && discountQuery.data) {
-            return discountQuery.data;
-        }
-        return lastValidDiscountMap;
-    }, [discountQuery.isSuccess, discountQuery.data, lastValidDiscountMap]);
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const discountQuery = fetchDiscounts(networkId);
 
     const optionsMarkets = useMemo(() => {
-        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
-            const markets = openOrdersMap
+        if (
+            marketsQuery.isSuccess &&
+            Array.isArray(marketsQuery.data) &&
+            openOrdersQuery.isSuccess &&
+            discountQuery.isSuccess
+        ) {
+            const markets = openOrdersQuery.data
                 ? marketsQuery.data.map((m) => {
-                      const apiData = openOrdersMap[m.address.toLowerCase()];
-                      const discountData = discountMap ? discountMap[m.address.toLowerCase()] : undefined;
+                      const apiData = openOrdersQuery?.data?.get(m.address.toLowerCase());
+                      const discountData = (discountQuery.data as any).get(m.address.toLowerCase());
                       let discountedSide;
                       let discount = 0;
                       if (discountData) {
@@ -123,8 +98,7 @@ const Markets: React.FC = () => {
             return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery.isSuccess, marketsQuery.data, openOrdersMap, discountMap]);
-
+    }, [marketsQuery, openOrdersQuery, discountQuery]);
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
