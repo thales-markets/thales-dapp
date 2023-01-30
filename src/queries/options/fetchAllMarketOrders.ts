@@ -1,57 +1,36 @@
 import { NetworkId } from '../../utils/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
+import { generalConfig } from 'config/general';
 import { AMM_MAX_BUFFER_PERCENTAGE } from 'constants/options';
-import snxJSConnector from 'utils/snxJSConnector';
-import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 
-export type OpenOrdersMap =
-    | Record<
-          string,
-          {
-              ordersCount: number;
-              availableLongs: number;
-              availableShorts: number;
-              longPrice: number;
-              shortPrice: number;
-          }
-      >
-    | undefined;
+type OpenOrdersMap = Map<
+    string,
+    { ordersCount: number; availableLongs: number; availableShorts: number; longPrice: number; shortPrice: number }
+> | null;
 
 export const fetchAllMarketOrders = (network: NetworkId, options?: UseQueryOptions<OpenOrdersMap>) => {
     return useQuery<OpenOrdersMap>(
         QUERY_KEYS.BinaryOptions.OrdersCount(network),
         async () => {
-            try {
-                const [pricesFromContract, liquidityFromContract] = await Promise.all([
-                    (snxJSConnector as any).binaryOptionsMarketDataContract.getPricesForAllActiveMarkets(),
-                    (snxJSConnector as any).binaryOptionsMarketDataContract.getLiquidityForAllActiveMarkets(),
-                ]);
+            const baseUrl = `${generalConfig.API_URL}/orders/${network}`;
+            const response = await fetch(baseUrl);
+            const json = await response.json();
+            const openOrdersMap: OpenOrdersMap = new Map(json) as any;
 
-                const mappedOpenOrdersMap = Object.assign(
-                    {},
-                    ...pricesFromContract.map((item: any, index: number) => ({
-                        [item.market.toLowerCase()]: {
-                            availableLongs:
-                                bigNumberFormatter(liquidityFromContract[index].upLiquidity) *
-                                AMM_MAX_BUFFER_PERCENTAGE,
-                            availableShorts:
-                                bigNumberFormatter(liquidityFromContract[index].downLiquidity) *
-                                AMM_MAX_BUFFER_PERCENTAGE,
-                            longPrice: stableCoinFormatter(item.upPrice, network),
-                            shortPrice: stableCoinFormatter(item.downPrice, network),
-                        },
-                    }))
-                ) as OpenOrdersMap;
+            const mappedOpenOrdersMap: OpenOrdersMap = new Map();
+            openOrdersMap?.forEach((openOrderMap, key) => {
+                mappedOpenOrdersMap?.set(key, {
+                    ...openOrderMap,
+                    availableLongs: openOrderMap.availableLongs * AMM_MAX_BUFFER_PERCENTAGE,
+                    availableShorts: openOrderMap.availableShorts * AMM_MAX_BUFFER_PERCENTAGE,
+                });
+            });
 
-                return mappedOpenOrdersMap;
-            } catch (e) {
-                console.log(e);
-                return undefined;
-            }
+            return mappedOpenOrdersMap;
         },
         {
-            refetchInterval: 30 * 1000,
+            refetchInterval: 5000,
             ...options,
         }
     );

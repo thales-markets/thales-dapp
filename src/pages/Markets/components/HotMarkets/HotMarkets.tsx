@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { HotMarket, OptionsMarkets } from 'types/options';
@@ -12,13 +12,12 @@ import Hammer, { DIRECTION_HORIZONTAL } from 'hammerjs';
 import { PHASE } from 'constants/options';
 import { USD_SIGN } from 'constants/currency';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import Tooltip from 'components/Tooltip';
 import { getIsOVM } from 'utils/network';
-import { getIsAppReady } from 'redux/modules/app';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -40,27 +39,13 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const [firstHotIndex, setFirstHotIndex] = useState(0);
     const [hammerManager, setHammerManager] = useState<any>();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const [lastValidDiscountMap, setLastValidDiscountMap] = useState<DiscountMap>(undefined);
 
     const showOPBanner = getIsOVM(networkId);
 
     const { trackEvent } = useMatomo();
 
-    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
-
-    useEffect(() => {
-        if (discountQuery.isSuccess && discountQuery.data) {
-            setLastValidDiscountMap(discountQuery.data);
-        }
-    }, [discountQuery.isSuccess, discountQuery.data]);
-
-    const discountMap: DiscountMap = useMemo(() => {
-        if (discountQuery.isSuccess && discountQuery.data) {
-            return discountQuery.data;
-        }
-        return lastValidDiscountMap;
-    }, [discountQuery.isSuccess, discountQuery.data, lastValidDiscountMap]);
+    const discountQuery = fetchDiscounts(networkId, { enabled: true });
+    const discountsMap = discountQuery.isSuccess ? discountQuery.data : new Map();
 
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
@@ -69,7 +54,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             ?.filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
             .sort((a, b) => a.timeRemaining - b.timeRemaining)
             .forEach((market) => {
-                const discount = discountMap ? discountMap[market.address.toLowerCase()] : undefined;
+                const discount = (discountsMap as any).get(market.address.toLowerCase());
                 if (discount) {
                     if (discount.longPriceImpact < 0 && market.longPrice !== 0) {
                         markets.push({
@@ -102,7 +87,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             });
 
         return markets.sort((a: HotMarket, b: HotMarket) => b.discount - a.discount);
-    }, [optionsMarkets, discountMap]);
+    }, [optionsMarkets]);
 
     const moveLeft = () => {
         if (firstHotIndex === 0) return;
