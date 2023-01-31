@@ -698,6 +698,7 @@
                     "delegate-volume-description-1": "The \"Delegate Volume\" functionality gives you the ability to direct the volume generated from one wallet that you own to another wallet.",
                     "delegate-volume-description-2": "This simple step comes in handy for those who stake their THALES with a hardware wallet but do their trading on another hot wallet for convenience's sake (for example using Overtime on their mobile wallet), this way the volume generated can count towards the \"Protocol Volume bucket\" of gamified THALES staking rewards.",
                     "delegate-volume-description-3": "This delegation of volume can be stopped at any time and it has checks in place to avoid a wallet directing it's volume to another while still boosting it's own.",
+                    "addresses-delegating-to-you": "Addresses delegating to you",
                     "merge-blocked-message": {
                         "title": "In order to merge account, you need to",
                         "src-claim": "Claim the staking rewards from the source account.",

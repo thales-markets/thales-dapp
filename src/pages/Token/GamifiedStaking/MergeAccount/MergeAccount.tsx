@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { FlexDiv, FlexDivColumnCentered, FlexDivCentered, FlexDivRow } from 'theme/common';
@@ -23,6 +23,11 @@ import Button, { ButtonType } from 'pages/Token/components/Button/Button';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { formatGasLimit, getL1FeeInWei, getIsOVM } from 'utils/network';
 import { ZERO_ADDRESS } from 'constants/network';
+import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
+import { orderBy } from 'lodash';
+import { TransactionFilterEnum } from 'types/token';
+import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -62,6 +67,37 @@ const MergeAccount: React.FC = () => {
     const destStakingThalesQuery = useStakingThalesQuery(destAddress, networkId, {
         enabled: isAppReady && isDestAddressValid,
     });
+
+    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(
+        undefined,
+        networkId,
+        '[delegateVolume, removeDelegation]',
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
+
+    const userTokenTransactions = useMemo(
+        () =>
+            userTokenTransactionsQuery.isSuccess && userTokenTransactionsQuery.data
+                ? orderBy(userTokenTransactionsQuery.data, ['timestamp', 'blockNumber'], ['asc', 'asc'])
+                : [],
+        [userTokenTransactionsQuery.data]
+    );
+
+    const addressesThatDelegateToYou = useMemo(() => {
+        const map = {} as Record<string, boolean>;
+        userTokenTransactions.forEach((tx) => {
+            if (tx.destAccount?.toUpperCase() === walletAddress.toUpperCase()) {
+                map[tx.account] = true;
+            }
+
+            if (tx.type === TransactionFilterEnum.REMOVE_DELEGATION) {
+                delete map[tx.account];
+            }
+        });
+        return Object.keys(map);
+    }, [userTokenTransactions, walletAddress]);
 
     const isAccountMergingEnabled =
         srcStakingThalesQuery.isSuccess && srcStakingThalesQuery.data
@@ -338,7 +374,7 @@ const MergeAccount: React.FC = () => {
                     <ButtonContainer>{getDelegateButton()}</ButtonContainer>
                 </SectionContentWrapper>
             </SectionWrapper>
-            <SectionDescription>
+            <SectionDescription width={addressesThatDelegateToYou.length ? 4 : 8}>
                 <SectionDescriptionTitle>
                     {t('options.earn.gamified-staking.merge-account.how-delegate-volume-works')}
                 </SectionDescriptionTitle>
@@ -352,6 +388,25 @@ const MergeAccount: React.FC = () => {
                     {t('options.earn.gamified-staking.merge-account.delegate-volume-description-3')}
                 </SectionDescriptionParagraph>
             </SectionDescription>
+            {!!addressesThatDelegateToYou.length && (
+                <AddressesDelegatingToYouContainer>
+                    <AddressesDelegatingToYouTitle>
+                        {t('options.earn.gamified-staking.merge-account.addresses-delegating-to-you')}
+                    </AddressesDelegatingToYouTitle>
+                    {addressesThatDelegateToYou.map((address) => (
+                        <StyledLink
+                            key={address}
+                            href={getEtherscanAddressLink(networkId, address)}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <DelegationAddress key={address}>
+                                {address} <ArrowIcon width="10" height="10" />
+                            </DelegationAddress>
+                        </StyledLink>
+                    ))}
+                </AddressesDelegatingToYouContainer>
+            )}
             <SectionWrapper>
                 <SectionContentWrapper>
                     <SectionTitle>{t('options.earn.gamified-staking.merge-account.merge-account')}</SectionTitle>
@@ -437,10 +492,10 @@ const SectionTitle = styled(FlexDivCentered)`
     text-transform: uppercase;
 `;
 
-const SectionDescription = styled.section`
+const SectionDescription = styled.section<{ width?: number }>`
     box-sizing: border-box;
     border-radius: 15px;
-    grid-column: 5 / span 8;
+    grid-column: 5 / span ${(props) => props.width || 8};
     padding: 20px;
     @media (max-width: 767px) {
         grid-column: span 12;
@@ -466,6 +521,8 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     border-radius: 15px;
     padding: 20px;
     height: 100%;
+    display: flex;
+    flex-direction: column;
     @media (max-width: 1192px) {
         padding: 10px 15px;
     }
@@ -483,6 +540,7 @@ const ButtonContainer = styled(FlexDivColumnCentered)`
     padding-top: 20px;
     padding-bottom: 5px;
     align-items: center;
+    justify-content: end;
 `;
 
 const Message = styled.div`
@@ -539,6 +597,58 @@ const MergeInfo = styled.div`
     line-height: 15px;
     text-align: justify;
     padding: 3px;
+`;
+
+const AddressesDelegatingToYouContainer = styled.div`
+    grid-column: 9 / span 4;
+    padding: 20px;
+    @media (max-width: 767px) {
+        grid-column: span 12;
+    }
+`;
+
+const AddressesDelegatingToYouTitle = styled.div`
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: justify;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+`;
+
+const DelegationAddress = styled.div`
+    font-size: 14px;
+    line-height: 138.69%;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    @media (max-width: 767px) {
+        font-size: 11px;
+    }
+`;
+
+const StyledLink = styled.a`
+    color: #f6f6fe;
+    &path {
+        fill: #f6f6fe;
+    }
+    &:hover {
+        color: #64d9fe;
+        & path {
+            fill: #64d9fe;
+        }
+    }
+    @media (max-width: 767px) {
+        color: #64d9fe;
+    }
+`;
+
+const ArrowIcon = styled(ArrowHyperlinkIcon)`
+    @media (max-width: 767px) {
+        color: #64d9fe;
+        & path {
+            fill: #64d9fe;
+        }
+    }
 `;
 
 export default MergeAccount;

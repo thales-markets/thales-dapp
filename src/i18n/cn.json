@@ -943,7 +943,8 @@
                     "merge-account-description-2": "此帐户合并仅适用于质押和归属 THALES 的全部余额，部分重新分配是不可能的。还值得注意的是，在接收钱包上，质押的 THALES 代币仍需要 7 天倒计时才能解除质押，既得奖励在领取时也将有标准的 10 周冷却时间。",
                     "destination-account-label": "目的地",
                     "section-description": "<0>已根据 </0><1 /> 实施帐户合并。",
-                    "section-title": "账户偏好"
+                    "section-title": "账户偏好",
+                    "addresses-delegating-to-you": "委托给您的地址"
                 }
             }
         },
