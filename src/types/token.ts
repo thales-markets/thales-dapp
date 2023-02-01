@@ -47,6 +47,7 @@ export type TokenTransaction = {
     timestamp: number;
     amount: number | string;
     blockNumber: number;
+    destAccount?: string;
 };
 
 export enum TokenTabEnum {

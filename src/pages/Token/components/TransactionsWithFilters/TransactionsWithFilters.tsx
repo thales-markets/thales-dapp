@@ -31,7 +31,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
     const [showFilters, setShowFilters] = useState<boolean>(false);
 
-    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, {
+    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, undefined, {
         enabled: isAppReady && isWalletConnected,
     });
 
