@@ -114,9 +114,14 @@ const useRangedPositions = (
 
             const claimedMap = new Map();
 
+            const today = new Date();
+            // thales-data takes timestamp argument in seconds - take markets from last 120 days (4 months)
+            const priorDate = Math.round(new Date(new Date().setDate(today.getDate() - 120)).getTime() / 1000);
+
             const optionsMarkets: RangedMarket[] = await thalesData.binaryOptions.rangedMarkets({
                 max: Infinity,
                 network: networkId,
+                minMaturity: priorDate,
             });
 
             optionsMarkets
