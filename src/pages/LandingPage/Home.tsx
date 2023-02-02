@@ -1,46 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import GridLayout from './components/GridLayout';
+import ElectionsBanner from 'components/ElectionsBanner';
+import OpRewardsBanner from 'components/OpRewardsBanner';
+import SPAAnchor from 'components/SPAAnchor';
+import ROUTES from 'constants/routes';
+import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import Cookies from 'universal-cookie';
+import styled from 'styled-components';
+import { buildHref, navigateTo } from 'utils/routes';
+import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
 import BlogPosts from './components/BlogPosts';
 import Footer from './components/Footer';
-import ROUTES from 'constants/routes';
-import { buildHref, navigateTo } from 'utils/routes';
-import SPAAnchor from 'components/SPAAnchor';
-import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
-
-export enum Theme {
-    Light,
-    Dark,
-}
+import GridLayout from './components/GridLayout';
 
 const INFORMATION_BANNER_ACTIVE = false;
-const cookies = new Cookies();
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
-    const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
-
-    useEffect(() => {
-        const body = document.getElementsByTagName('body')[0];
-        const html = document.documentElement;
-        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-    }, [theme]);
 
     return (
-        <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <Info>
-                <Trans
-                    i18nKey="options.home.op-rewards-banner-message"
-                    components={{
-                        bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
-                    }}
-                />
-            </Info>
+        <Background>
+            <OpRewardsBanner isLandingPage={true} />
+            <ElectionsBanner isLandingPage={true} />
             {INFORMATION_BANNER_ACTIVE && (
                 <Info>
                     <Trans
@@ -74,7 +53,7 @@ const Home: React.FC = () => {
                     />
                 </Info>
             )}
-            <GridLayout theme={theme} setTheme={setTheme} />
+            <GridLayout />
             <FlexWrapper>
                 <Title> {t('landing-page.initiatives')}</Title>
                 <FlexDiv className="initiatives">
@@ -163,7 +142,7 @@ const Home: React.FC = () => {
                     <FaqQuestion>{t('landing-page.faq.thirdQ')}</FaqQuestion>
                     <FaqAnswer>{t('landing-page.faq.thirdA')}</FaqAnswer>
                 </Faq>
-                <Footer theme={theme} setTheme={setTheme} />
+                <Footer />
             </FlexWrapper>
         </Background>
     );
@@ -179,18 +158,10 @@ export const Background = styled.div`
         font-size: 14px;
     }
 
-    &.light {
-        background: #f7f7f7;
-        --main-background: #f7f7f7;
-        --color: #052040;
-        --background: #ffffff;
-    }
-    &.dark {
-        background: #052040;
-        --main-background: #052040;
-        --color: #f7f7f7;
-        --background: #1b314f;
-    }
+    background: #052040;
+    --main-background: #052040;
+    --color: #f7f7f7;
+    --background: #1b314f;
 `;
 
 const FlexWrapper = styled.div`

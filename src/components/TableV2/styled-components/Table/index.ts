@@ -49,7 +49,9 @@ const RowMobile = styled.div`
     width: 100%;
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid var(--table-border-color);
+    :not(:last-child) {
+        border-bottom: 1px solid var(--table-border-color);
+    }
 `;
 
 const RowWrapper = styled.div<{ isClaimable?: boolean }>`
@@ -104,7 +106,7 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
 const Body = styled.div<{ leaderboardView?: boolean; isMobile?: boolean }>`
     width: 100%;
     ${Row} {
-        ${(_props) => (_props?.leaderboardView ? `height: 60px;` : '')};
+        ${(_props) => (_props?.leaderboardView ? `height: 40px;` : '')};
         ${(_props) => (_props?.leaderboardView ? `font-size: 20px;` : '')};
         ${(_props) => (_props?.isMobile ? 'height: auto !important;' : '')};
         ${(_props) => (_props?.isMobile ? 'flex-direction: column' : '')};

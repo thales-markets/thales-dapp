@@ -81,7 +81,7 @@ type StableBalances = {
     USDT: number | null;
 };
 
-export const checkMultipleStableBalances = (balancesObject: any) => {
+export const getDefaultStableIndexByBalance = (balancesObject: any) => {
     let index = COLLATERALS_INDEX['sUSD'];
     if (balancesObject?.sUSD < 1) {
         for (const [key, value] of Object.entries(balancesObject as StableBalances)) {

@@ -57,6 +57,7 @@ export const HeaderContainer = styled.div`
     margin-bottom: 31px;
     @media screen and (max-width: 520px) {
         justify-content: center;
+        margin-bottom: 0;
     }
 `;
 
@@ -86,6 +87,9 @@ export const TableWrapper = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 100px;
+    @media (max-width: 768px) {
+        margin-bottom: 10px;
+    }
 `;
 
 export const RowContrainer = styled.div`

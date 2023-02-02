@@ -1,5 +1,4 @@
 import arrowLink from 'assets/images/arrow-link.svg';
-import logoExotic from 'assets/images/token/logo-exotic.svg';
 import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
@@ -172,7 +171,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const thalesAmmVolume = stakingRewards ? stakingRewards.thalesAmmVolume : 0;
     const rangedAmmVolume = stakingRewards ? stakingRewards.rangedAmmVolume : 0;
     const sportsAmmVolume = stakingRewards ? stakingRewards.sportsAmmVolume : 0;
-    const exoticVolume = stakingRewards ? stakingRewards.exoticVolume : 0;
     const ammVolume = stakingRewards ? stakingRewards.ammVolume : 0;
     const ammBonus = stakingRewards ? stakingRewards.ammBonus : 0;
     const maxAmmBonus = stakingRewards ? stakingRewards.maxAmmBonus : 0;
@@ -218,7 +216,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const ammVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, thalesAmmVolume, 0, true);
     const rangedVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, rangedAmmVolume, 0, true);
     const sportsVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, sportsAmmVolume, 0, true);
-    const exoticVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, exoticVolume, 0, true);
 
     // Protocol usage
     const protocolRewardThales = formatCurrencyWithKey(THALES_CURRENCY, ammBonus);
@@ -579,7 +576,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             </SectionWrapper>
 
             {/* Second row */}
-            <SectionWrapper columns={3} backgroundType={BackgroundType.AMM}>
+            <SectionWrapper columns={4} backgroundType={BackgroundType.AMM}>
                 {getVolumeSection(
                     ROUTES.Options.Home,
                     t('options.earn.gamified-staking.rewards.volume.amm-label'),
@@ -587,7 +584,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     t('options.earn.gamified-staking.rewards.volume.amm-desc')
                 )}
             </SectionWrapper>
-            <SectionWrapper columns={3} backgroundType={BackgroundType.RANGED}>
+            <SectionWrapper columns={4} backgroundType={BackgroundType.RANGED}>
                 {getVolumeSection(
                     ROUTES.Options.RangeMarkets,
                     t('options.earn.gamified-staking.rewards.volume.ranged-label'),
@@ -595,9 +592,27 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     t('options.earn.gamified-staking.rewards.volume.ranged-desc')
                 )}
             </SectionWrapper>
-            {isMobile() && <DashedLineVertical gridRow={4} columnStart={4} marginTop={-gridGap} heightPer={135} />}
-            {isMobile() && <DashedLineVertical gridRow={4} columnStart={9} marginTop={-gridGap} heightPer={135} />}
-            <SectionWrapper columns={3} backgroundType={BackgroundType.SPORTS}>
+            {isMobile() && (
+                <DashedLineVertical
+                    gridRow={4}
+                    columnStart={4}
+                    marginLeft={-7}
+                    marginTop={-gridGap}
+                    heightPer={135}
+                    mobileLong={true}
+                />
+            )}
+            {isMobile() && (
+                <DashedLineVertical
+                    gridRow={4}
+                    columnStart={10}
+                    marginLeft={-5}
+                    marginTop={-gridGap}
+                    heightPer={135}
+                    mobileLong={true}
+                />
+            )}
+            <SectionWrapper columns={4} backgroundType={BackgroundType.SPORTS}>
                 {getVolumeSection(
                     LINKS.SportMarkets,
                     '',
@@ -606,28 +621,33 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     logoOvertime
                 )}
             </SectionWrapper>
-            <SectionWrapper columns={3} backgroundType={BackgroundType.EXOTIC}>
-                {getVolumeSection(
-                    LINKS.ExoticMarkets,
-                    '',
-                    exoticVolumeFormatted,
-                    t('options.earn.gamified-staking.rewards.volume.exotic-desc'),
-                    logoExotic
-                )}
-            </SectionWrapper>
 
             {isMobile() ? (
-                <>
-                    <DashedLineVertical gridRow={6} columnStart={4} marginTop={-gridGap} heightPer={135} />
-                    <DashedLineVertical gridRow={6} columnStart={9} marginTop={-gridGap} heightPer={135} />
-                </>
+                <DashedLineVertical gridRow={5} columnStart={7} marginLeft={-5} marginTop={-gridGap} heightPer={135} />
             ) : (
                 <>
-                    <DashedLine gridRow={3} widthPer={76.2} />
-                    <DashedLineVertical gridRow={3} columnStart={2} marginTop={-gridGap} heightPer={135} />
-                    <DashedLineVertical gridRow={3} columnStart={5} marginTop={-gridGap} heightPer={135} />
-                    <DashedLineVertical gridRow={3} columnStart={8} marginTop={-gridGap} heightPer={135} />
-                    <DashedLineVertical gridRow={3} columnStart={11} marginTop={-gridGap} heightPer={135} />
+                    <DashedLine gridRow={3} widthPer={67.6} />
+                    <DashedLineVertical
+                        gridRow={3}
+                        columnStart={3}
+                        marginLeft={-10}
+                        marginTop={-gridGap}
+                        heightPer={135}
+                    />
+                    <DashedLineVertical
+                        gridRow={3}
+                        columnStart={7}
+                        marginLeft={-10}
+                        marginTop={-gridGap}
+                        heightPer={135}
+                    />
+                    <DashedLineVertical
+                        gridRow={3}
+                        columnStart={11}
+                        marginLeft={-12}
+                        marginTop={-gridGap}
+                        heightPer={135}
+                    />
                     <DashedLineVertical gridRow={3} columnStart={4} marginTop={gridGap} heightPer={100} />
                 </>
             )}
@@ -755,7 +775,6 @@ enum BackgroundType {
     AMM,
     RANGED,
     SPORTS,
-    EXOTIC,
     CLAIM,
     CLAIM_ON_BEHALF,
     LP_STAKING,
@@ -797,8 +816,6 @@ const SectionWrapper = styled.section<{
                 return 'linear-gradient(-20deg, #801BF2 0%, #464DCF 100%)';
             case BackgroundType.SPORTS:
                 return '#303656';
-            case BackgroundType.EXOTIC:
-                return 'linear-gradient(-20deg, #EE5782 0%, #B81B8F 100%)';
             case BackgroundType.CLAIM:
             case BackgroundType.CLAIM_ON_BEHALF:
                 return '#64d9fe80';
@@ -835,17 +852,17 @@ const SectionWrapper = styled.section<{
     @media (max-width: 768px) {
         grid-column: span
             ${(props) =>
-                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS, BackgroundType.EXOTIC].includes(
-                    props.backgroundType ?? -1
-                )
+                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS].includes(props.backgroundType ?? -1)
                     ? 6
                     : 12};
+        ${(props) => (props.backgroundType === BackgroundType.SPORTS ? 'grid-column-start: 4;' : '')}
+        ${(props) => (props.backgroundType === BackgroundType.SPORTS ? 'grid-column-end: 10;' : '')}
         margin-top: 0;
     }
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolean }>`
-    ${(props) => (props.noGrid ? '' : 'display: grid;')};
+    ${(props) => (props.noGrid ? '' : 'display: grid;')}
     position: relative;
     height: 100%;
     background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};

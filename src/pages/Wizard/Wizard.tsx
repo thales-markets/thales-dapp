@@ -11,6 +11,7 @@ import Loader from 'components/Loader';
 import styled from 'styled-components';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 export enum WizardSteps {
     INSTALL_METAMASK,
@@ -33,6 +34,7 @@ const Wizard: React.FC = () => {
             {networkId !== 1 ? (
                 <>
                     <OpRewardsBanner width={70} />
+                    <ElectionsBanner width={70} />
                     <Wrapper>
                         <TextHeader>{t('wizard-page.header')}</TextHeader>
                         <TextIntro>

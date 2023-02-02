@@ -140,11 +140,12 @@ export const QUERY_KEYS = {
         ],
     },
     Token: {
-        Transactions: (walletAddress: string, networkId: NetworkId) => [
+        Transactions: (walletAddress: string | undefined, networkId: NetworkId, type_in: string | undefined) => [
             'token',
             'transactions',
             walletAddress,
             networkId,
+            type_in,
         ],
         OPProtocolRewards: (networkId: NetworkId, minTimestamp?: number, maxTimestamp?: number) => [
             'opprotocolreward',

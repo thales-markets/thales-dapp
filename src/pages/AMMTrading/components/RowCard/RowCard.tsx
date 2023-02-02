@@ -206,7 +206,9 @@ const RowCard: React.FC = () => {
                                 {optBalances?.short > 0 && (
                                     <Container.Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />
                                 )}
-                                {optBalances?.long == 0 && optBalances?.short == 0 && 'N/A'}
+                                {accountMarketInfoQuery.isLoading
+                                    ? '-'
+                                    : optBalances?.long == 0 && optBalances?.short == 0 && 'N/A'}
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
                         <Container.SubContainer>
@@ -220,6 +222,7 @@ const RowCard: React.FC = () => {
                                     marketInfo={marketInfo}
                                     positionCurrentValue={positionCurrentValue}
                                     optBalances={optBalances}
+                                    isLoading={ammMaxLimitsQuery.isLoading || accountMarketInfoQuery.isLoading}
                                 />
                             </Container.SubContainer.Value>
                         </Container.SubContainer>
@@ -310,9 +313,10 @@ type PositionPriceProps = {
               longPositionValue: number | null;
               shortPositionValue: number | null;
           };
+    isLoading?: boolean;
 };
 
-const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue }) => {
+const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, positionCurrentValue, isLoading }) => {
     const { t } = useTranslation();
     if (marketInfo?.phase == 'maturity' && marketInfo?.result) {
         return <>{`${formatCurrencyWithSign(USD_SIGN, optBalances[marketInfo?.result])}`}</>;
@@ -329,7 +333,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
                 `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
             {!positionCurrentValue?.shortPositionValue && !positionCurrentValue?.longPositionValue && (
                 <>
-                    N/A
+                    {isLoading ? '-' : 'N/A'}
                     {(optBalances?.long > 0 || optBalances?.short > 0) && (
                         <StyledMaterialTooltip
                             arrow={true}

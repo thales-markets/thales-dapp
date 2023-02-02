@@ -111,7 +111,7 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) 
                     )}
                 </Balance>
             </BalanceContainer>
-            {tokenBalance && (
+            {!!tokenBalance && (
                 <BalanceContainer>
                     <Balance>{formatCurrency(tokenBalance)}</Balance>
                     <TokenIcon

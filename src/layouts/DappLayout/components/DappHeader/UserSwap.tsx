@@ -1,23 +1,39 @@
 import { Modal } from '@material-ui/core';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import _ from 'lodash';
+import { COLLATERALS } from 'constants/options';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import {
+    getIsWalletConnected,
+    getNetworkId,
+    getSelectedCollateral,
+    getWalletAddress,
+    setSelectedCollateral,
+} from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { StableCoins } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 
-import { getAssetIcon, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
+import {
+    getAssetIcon,
+    getDefaultStableIndexByBalance,
+    getStableCoinBalance,
+    getStableCoinForNetwork,
+} from 'utils/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsMultiCollateralSupported } from 'utils/network';
 
 const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
+
+type SwapCollateral = {
+    type: StableCoins;
+    balance: number;
+};
 
 export const UserSwap: React.FC = () => {
     const { t } = useTranslation();
@@ -26,6 +42,8 @@ export const UserSwap: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
+    const userSelectedCollateral = useSelector((state: RootState) => getSelectedCollateral(state));
+    const dispatch = useDispatch();
 
     const [showSwap, setShowSwap] = useState(false);
     const [showBalance, setShowBalance] = useState(false);
@@ -50,30 +68,48 @@ export const UserSwap: React.FC = () => {
     });
 
     const stableBalance = stableBalanceQuery?.isSuccess && stableBalanceQuery?.data ? stableBalanceQuery.data : null;
-    const balance = getCurrencyKeyStableBalance(stableBalance, getStableCoinForNetwork(networkId));
+    const balance = getCurrencyKeyStableBalance(stableBalance, getStableCoinForNetwork(networkId)) || 0;
 
-    const userData = [];
+    const userCollaterals: SwapCollateral[] = [];
     if (isMultiCollateralSupported) {
-        userData.push({ type: SYNTHS_MAP.sUSD as StableCoins, balance: sUSDBalance });
-        userData.push(
-            { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance } // default for Polygon
-        );
-        userData.push(
+        userCollaterals.push(
+            { type: SYNTHS_MAP.sUSD as StableCoins, balance: sUSDBalance },
             { type: CRYPTO_CURRENCY_MAP.DAI as StableCoins, balance: DAIBalance },
+            { type: CRYPTO_CURRENCY_MAP.USDC as StableCoins, balance: USDCBalance }, // default for Polygon
             { type: CRYPTO_CURRENCY_MAP.USDT as StableCoins, balance: USDTBalance }
         );
     } else {
-        userData.push({ type: getStableCoinForNetwork(networkId) as StableCoins, balance: balance });
+        userCollaterals.push({ type: getStableCoinForNetwork(networkId) as StableCoins, balance: balance });
     }
 
-    const sortedUserData = _.orderBy(userData, 'balance', 'desc');
-    const maxBalance = sortedUserData[0];
+    const defaultCollateral = isMultiCollateralSupported
+        ? userCollaterals.find(
+              (el) => el.type === COLLATERALS[getDefaultStableIndexByBalance(multipleStableBalances?.data)]
+          ) || userCollaterals[0]
+        : userCollaterals[0];
 
-    const [buttonText, setButtonText] = useState(maxBalance.balance);
+    const [collateral, setCollateral] = useState(defaultCollateral);
+    const [buttonText, setButtonText] = useState(collateral.balance.toString());
 
     useEffect(() => {
-        setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
-    }, [maxBalance.balance, maxBalance.type]);
+        const positiveCollateral = isMultiCollateralSupported
+            ? userCollaterals.find(
+                  (el) => el.type === COLLATERALS[getDefaultStableIndexByBalance(multipleStableBalances?.data)]
+              ) || userCollaterals[0]
+            : userCollaterals[0];
+        setCollateral(positiveCollateral);
+        dispatch(setSelectedCollateral(COLLATERALS.findIndex((el) => el === positiveCollateral.type)));
+    }, [multipleStableBalances.data, stableBalanceQuery.data]);
+
+    useEffect(() => {
+        const selectedCollateral =
+            userCollaterals.find((el) => el.type === COLLATERALS[userSelectedCollateral]) || userCollaterals[0];
+        setCollateral(selectedCollateral);
+    }, [userSelectedCollateral]);
+
+    useEffect(() => {
+        setButtonText(formatCurrencyWithKey(collateral.type, collateral.balance, 2));
+    }, [collateral.balance, collateral.type]);
 
     const mouseOverHandler = () => {
         if (isWalletConnected) {
@@ -89,7 +125,7 @@ export const UserSwap: React.FC = () => {
     };
 
     const mouseLeaveHandler = () => {
-        setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
+        setButtonText(formatCurrencyWithKey(collateral.type, collateral.balance, 2));
         setShowBalance(false);
     };
 
@@ -97,12 +133,13 @@ export const UserSwap: React.FC = () => {
         if (!showSwap) {
             setSwapToStableCoin(coinType);
             isWalletConnected ? setShowSwap(true) : '';
+            dispatch(setSelectedCollateral(COLLATERALS.findIndex((el) => el === coinType)));
         }
     };
 
     const closeSwap = (isShowSwap: boolean) => {
         if (!isShowSwap) {
-            setButtonText(formatCurrencyWithKey(maxBalance.type, maxBalance.balance, 2));
+            setButtonText(formatCurrencyWithKey(collateral.type, collateral.balance, 2));
             setShowBalance(false);
             setShowSwap(isShowSwap);
         }
@@ -118,16 +155,16 @@ export const UserSwap: React.FC = () => {
             <SwapWrapper onMouseOver={mouseOverHandler} onMouseLeave={mouseLeaveHandler}>
                 <SwapButton
                     clickable={isWalletConnected && !showSwap}
-                    onClick={() => mouseClickHandler(maxBalance.type)}
+                    onClick={() => mouseClickHandler(collateral.type)}
                 >
-                    {assetIcon(maxBalance.type)}
+                    {assetIcon(collateral.type)}
                     <SwapButtonTextWrap>
                         <SwapButtonText>{buttonText}</SwapButtonText>
                     </SwapButtonTextWrap>
                 </SwapButton>
                 {showBalance && (
                     <BalanceContainer>
-                        {sortedUserData.map((coin, index) => (
+                        {userCollaterals.map((coin, index) => (
                             <BalanceWrapper
                                 key={index}
                                 clickable={isWalletConnected && !showSwap}

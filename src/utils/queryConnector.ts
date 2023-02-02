@@ -11,7 +11,9 @@ type QueryConnector = {
 // @ts-ignore
 const queryConnector: QueryConnector = {
     setQueryClient: function () {
-        this.queryClient = new QueryClient();
+        if (this.queryClient === undefined) {
+            this.queryClient = new QueryClient();
+        }
     },
 };
 
@@ -80,7 +82,7 @@ export const refetchVestingBalance = (walletAddress: string, networkId: NetworkI
 };
 
 export const refetchUserTokenTransactions = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Transactions(walletAddress, networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Transactions(walletAddress, networkId, undefined));
 };
 
 export const refetchUserBalance = (walletAddress: string, networkId: NetworkId) => {

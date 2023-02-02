@@ -6,35 +6,35 @@ import { FlexDiv } from 'theme/common';
 import { buildHref } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import SPAAnchor from 'components/SPAAnchor';
-import { getIsPolygon } from 'utils/network';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { useSelector } from 'react-redux';
+import { SpaceKey, VOTING_COUNCIL_PROPOSAL_ID } from 'constants/governance';
 
-type OpRewardsBannerProps = {
+type ElectionsBannerProps = {
     isLandingPage?: boolean;
     width?: number;
 };
 
-const SHOW_BANNER = true;
+const SHOW_BANNER = false;
 
-const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width }) => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isPolygon = getIsPolygon(networkId);
-
+const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width }) => {
     const textLink = useMemo(() => {
         return (
             <Trans
-                i18nKey="options.home.op-rewards-banner-message"
+                i18nKey="options.home.elections-banner-message"
                 components={{
-                    bold: <SPAAnchor href={buildHref(ROUTES.Options.OPRewards)} />,
+                    bold: (
+                        <SPAAnchor
+                            href={buildHref(
+                                `${ROUTES.Governance.Home}/${SpaceKey.COUNCIL}/${VOTING_COUNCIL_PROPOSAL_ID}`
+                            )}
+                        />
+                    ),
                 }}
             />
         );
     }, []);
 
     return SHOW_BANNER ? (
-        isPolygon ? null : isLandingPage ? (
+        isLandingPage ? (
             <Info>{textLink}</Info>
         ) : (
             <BannerContainer width={width}>
@@ -88,4 +88,4 @@ const Info = styled.div`
     }
 `;
 
-export default OpRewardsBanner;
+export default ElectionsBanner;

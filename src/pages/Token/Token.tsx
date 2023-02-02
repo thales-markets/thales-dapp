@@ -1,8 +1,9 @@
+import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -11,7 +12,6 @@ import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
 import { getIsOVM } from 'utils/network';
-import { Tip49Link } from './components';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
@@ -61,13 +61,9 @@ const TokenPage: React.FC = () => {
             tab: TokenTabEnum.GAMIFIED_STAKING,
             id: TokenTabSectionIdEnum.MERGE_ACCOUNT,
             title: t('options.earn.gamified-staking.merge-account.section-title'),
-            description: (
-                <Trans
-                    i18nKey={`options.earn.gamified-staking.merge-account.section-description`}
-                    components={[<span key="1" />, <Tip49Link key="2" />]}
-                />
-            ),
+            description: '',
             isButton: true,
+            buttonWidth: 'auto',
         },
         {
             tab: TokenTabEnum.LP_STAKING,
@@ -117,6 +113,7 @@ const TokenPage: React.FC = () => {
     return (
         <>
             <OpRewardsBanner />
+            <ElectionsBanner />
             <Container>
                 <FlexDivColumn>
                     <TokenOverview />

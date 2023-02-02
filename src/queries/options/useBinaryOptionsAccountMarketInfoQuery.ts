@@ -17,8 +17,8 @@ const useBinaryOptionsAccountMarketInfoQuery = (
                 walletAddress
             );
             return {
-                long: bigNumberFormatter(result.balances.long),
-                short: bigNumberFormatter(result.balances.short),
+                long: bigNumberFormatter(result.balances.up),
+                short: bigNumberFormatter(result.balances.down),
             };
         },
         {

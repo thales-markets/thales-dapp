@@ -24,7 +24,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import SPAAnchor from 'components/SPAAnchor';
 import { XButton } from 'theme/common';
 import { WizardSteps } from '../Wizard';
-import BungeeWidget from 'components/BungeeWidget';
+import BungeePlugin from 'components/BungeePlugin';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -52,7 +52,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
     const [iframe, setIframe] = useState('');
     const [iframeLoader, setLoader] = useState(false);
 
-    const [showBungeeWidget, setShowBungeeWidget] = useState(false);
+    const [showBungeePlugin, setShowBungeePlugin] = useState(false);
 
     const [showSwap, setShowSwap] = useState(false);
 
@@ -102,7 +102,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 setLoader(true);
                 break;
             case Provider.BUNGEE:
-                setShowBungeeWidget(true);
+                setShowBungeePlugin(true);
                 break;
             default:
                 setIframe('');
@@ -394,15 +394,15 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                     <IFrame src={iframe} onLoad={() => setLoader(false)} />
                 </IFrameWrapper>
             </Modal>
-            {showBungeeWidget && (
+            {showBungeePlugin && (
                 <Modal
-                    open={showBungeeWidget}
+                    open={showBungeePlugin}
                     onClose={() => {
-                        setShowBungeeWidget(false);
+                        setShowBungeePlugin(false);
                     }}
                 >
                     <Suspense fallback={<></>}>
-                        <BungeeWidget />
+                        <BungeePlugin />
                     </Suspense>
                 </Modal>
             )}
@@ -631,7 +631,6 @@ const Text = styled.p`
 
 const BuyWrapper = styled.div`
     box-sizing: border-box;
-    position: absolute;
     width: 390px;
     height: 441px;
     margin: auto;

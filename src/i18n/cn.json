@@ -38,6 +38,7 @@
             "amm-size-col": "AMM流动性"
         },
         "wallet": {
+            "my-thales": "我的泰雷兹",
             "switch-wallet": "更换钱包",
             "disconnect-wallet": "断开钱包链接",
             "display-name": "显示名称",
@@ -210,7 +211,8 @@
             "earn-label": "泰雷兹通证",
             "wizard": "入职向导",
             "op-rewards": "OP 奖励",
-            "sport-markets-label": "加班市场"
+            "sport-markets-label": "加班市场",
+            "vaults-label": "金库"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -225,7 +227,9 @@
             "button": {
                 "mainnet": "切换到主网",
                 "optimism": "转为乐观",
-                "polygon": "切换到多边形"
+                "polygon": "切换到多边形",
+                "bsc": "切换到平衡计分卡",
+                "arbitrum": "切换到仲裁"
             },
             "description": "您在钱包中选择了错误的网络。要继续，请切换到支持的网络之一。",
             "description2": "您在钱包中选择了错误的网络。要继续，请切换到支持的网络之一。"
@@ -323,7 +327,8 @@
                 "claimed": "声称",
                 "claim": "宣称",
                 "rip": "RIP",
-                "position-value": "位置值"
+                "position-value": "位置值",
+                "no-liquidity-tooltip": "<0>我们无法从 AMM 获取此头寸的报价，因为它可能没有流动性。即使市場流動性不足，如果您有贏利頭寸，您仍將獲得利潤。要了解有关 AMM 流动性规则的更多信息，请转到 <0/ ></0>。"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场"
@@ -362,7 +367,8 @@
                 "out-of-liquidity": "流动性不足",
                 "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送：",
                 "price-in-out-col": "价格进/出",
-                "iv-tooltip": "目前为该资产设置的隐含波动率为 xx%"
+                "iv-tooltip": "目前为该资产设置的隐含波动率为 xx%",
+                "discount-col": "折扣"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",
@@ -373,11 +379,16 @@
             "hot-markets": {
                 "tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买当前具有最高潜在利润的位置代币。",
                 "most-profitable-markets": "最赚钱的市场",
-                "range-markets-tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买目前具有最高潜在利润的远程定位代币。"
+                "range-markets-tooltip-text": "如果相关市场以有利于他们的方式解决，则可以购买目前具有最高潜在利润的远程定位代币。",
+                "token-rewards": "代币奖励",
+                "tooltip-text-discount": "当前打折的可供购买的位置代币",
+                "eligible-for": "可以",
+                "discounted-positions": "优惠职位"
             },
             "polygon-trading-competition-2": " 点击<bold>这里</bold>了解更多",
             "polygon-trading-competition-1": "泰雷兹激励交易竞赛在 <bold> Polygon</bold> 上直播",
-            "op-rewards-banner-message": "OP 奖励已开始，请在<bold>OP 奖励页面</bold>查看如何获得奖励"
+            "op-rewards-banner-message": "OP 奖励已开始，请在<bold>OP 奖励页面</bold>查看如何获得奖励",
+            "elections-banner-message": "选举现已开始，作为 THALES 质押者行使您的投票权<bold>此处</bold>"
         },
         "earn": {
             "snx-stakers": {
@@ -566,7 +577,13 @@
                     "tvl": "锁定总值 (TVL)",
                     "thales-apr": "THALES APR",
                     "op-apr": "OP APR",
-                    "total-apr": "TOTAL APR"
+                    "total-apr": "TOTAL APR",
+                    "share": "我的质押份额",
+                    "share-tooltip": "我在 LP 质押合约中占总质押流动性的百分比。",
+                    "staked-balance": "我质押的 LP 代币余额",
+                    "staked-balance-tooltip": "您在 LP 质押合约中质押了多少流动性。",
+                    "tvl-tooltip": "LP 质押合约中质押的流动性总量。",
+                    "lp-tokens": "LP代币"
                 },
                 "provide-liquidity": {
                     "here": "这里",
@@ -576,7 +593,34 @@
                     "stake-here": "3. 在此页面质押LP代币",
                     "deposit": "2. 将THALES和WETH存入G-UNI矿池"
                 },
-                "section-title": "LP Staking 是如何运作的？"
+                "section-title": "LP Staking 是如何运作的？",
+                "instructions": {
+                    "step2-label": "将 ETH 打包成 WETH",
+                    "step4-label": "赌注",
+                    "step1-label": "连接钱包",
+                    "step4-desc": "现在您已拥有 G-UNI LP 代币，您需要将它们质押在此页面上以开始接收 THALES+OP 奖励。",
+                    "step1-desc": "将您的钱包连接到 Optimism 网络和本页右上角的 Thales dapp。",
+                    "step5-label": "领取奖励",
+                    "step5-desc": "现在您已经抵押了您的 LP 代币，您将在 LP 抵押页面的奖励卡中看到您的奖励累积。",
+                    "step3-label": "提供流动性",
+                    "step2-desc": "为了能够提供流动性并有资格获得 LP 奖励，您需要拥有 Wrapped Ethereum。您可以使用此 <0>Uniswap 页面</0>将您的 ETH 包装成 Optimism 上的 WETH。",
+                    "step3-desc": "为 Arrakis Finance UI（<0>此处</0>）上的 G-UNI 池提供 THALES+WETH 流动性。交易确认后，您将在您的钱包中收到 THALES/WETH G-UNI LP 代币，代表您在流动资金池中的份额。"
+                },
+                "apr": {
+                    "total-tooltip": "当前年度总回报率作为 OP 和 THALES 奖励的总和。",
+                    "total": "总年利率",
+                    "op-tooltip": "OP 代币的当前年回报率。",
+                    "op": "四月",
+                    "thales-tooltip": "THALES 代币的当前年回报率。",
+                    "thales": "泰雷兹APR"
+                },
+                "claim": {
+                    "claiming-rewards": "领取奖励",
+                    "title": "无人认领的奖励",
+                    "claim-rewards": "领取奖励",
+                    "claimed": "领取成功",
+                    "total-label": "可索偿总额"
+                }
             },
             "table": {
                 "title": "您的活动",
@@ -600,7 +644,9 @@
                     "lpClaimStakingRewards": "没有 LP 质押奖励与此钱包相关的交易。",
                     "lpUnstake": "没有与此钱包相关的 LP 取消质押交易。",
                     "claimMigratedRetroRewards": "没有与此钱包相关的迁移复古奖励交易。",
-                    "mergeAccount": "没有与此钱包关联的合并账户交易。"
+                    "mergeAccount": "没有与此钱包关联的合并账户交易。",
+                    "delegateVolume": "没有与此钱包关联的委托交易量。",
+                    "removeDelegation": "没有删除与此钱包关联的委托交易。"
                 },
                 "types": {
                     "claimRetroAirdrop": "领取追溯空投",
@@ -617,7 +663,9 @@
                     "claimMigratedRewards": "领取迁移奖励",
                     "lpStake": "LP股权",
                     "claimMigratedRetroRewards": "领取迁移的复古奖励",
-                    "mergeAccount": "合并账户"
+                    "mergeAccount": "合并账户",
+                    "removeDelegation": "删除委派",
+                    "delegateVolume": "委托量"
                 },
                 "filter": {
                     "all": "全部",
@@ -636,7 +684,9 @@
                     "lpStake": "LP股权",
                     "claimMigratedRetroRewards": "迁移的复古奖励",
                     "mergeAccount": "合并账户",
-                    "button": "过滤器"
+                    "button": "过滤器",
+                    "delegateVolume": "委托量",
+                    "removeDelegation": "删除委派"
                 },
                 "no-activity": "没有活动可显示"
             },
@@ -743,7 +793,10 @@
                     "escrow-balance": "托管余额",
                     "staked-balance-tooltip": "您当前质押的 THALES 代币数量。",
                     "section-description": "Staking 奖励显示您可领取的 THALES 奖励。",
-                    "staked-directly": "直接质押"
+                    "staked-directly": "直接质押",
+                    "estimated-rewards": "本期预估奖励",
+                    "not-eligible-message": "除非您直接抵押的余额大于 0，否则您没有资格获得抵押奖励",
+                    "bonus-estimated-rewards-tooltip": "<0>每 </0><1 /> 的最高奖金奖励为 {{max}}%。"
                 },
                 "rewards": {
                     "close-period": {
@@ -762,7 +815,23 @@
                     "volume-ranged-desc": "当前范围市场交易量",
                     "claim-confirmation-message": "代币已成功领取",
                     "snx-rewards": "最高奖励",
-                    "claim": "索取泰雷兹奖励",
+                    "claim": {
+                        "claim": "索取泰雷兹奖励",
+                        "close-period": {
+                            "label": "关闭期间",
+                            "confirmation-message": "期间成功关闭",
+                            "progress-label": "截止期..."
+                        },
+                        "confirmation-message": "代币领取成功",
+                        "button-tooltip": "领取的奖励有 10 周的归属期。",
+                        "claiming": "声称",
+                        "total-label": "可索偿总额",
+                        "not-eligible-message": "您没有资格获得这些奖励。",
+                        "op-tooltip": "Gamified Staking 的 OP 代币奖励每 2 周直接分配到您的钱包中。",
+                        "paused-message": "声明已暂停。",
+                        "period": "剩下的时间：",
+                        "claimed-message": "您已经领取了本周的奖励。请下周回来。"
+                    },
                     "enable-claim-on-behalf-label": "将可以代表您触发质押奖励声明的地址列入白名单",
                     "total-label": "可索赔总额",
                     "period": "剩下的时间：",
@@ -784,7 +853,47 @@
                     "protocol-label": "协议使用桶",
                     "paused-message": "索赔已暂停。",
                     "section-description": "Staking 奖励显示您可领取的 THALES 奖励。",
-                    "info-base-description": "THALES Staking 产生的基本奖励（每周 {{baseRewards}}）"
+                    "info-base-description": "THALES Staking 产生的基本奖励（每周 {{baseRewards}}）",
+                    "info": {
+                        "base": "作为基础奖励",
+                        "base-description": "THALES 质押产生的基本奖励（每周 {{baseRewards}}）",
+                        "bonus": "作为奖金奖励",
+                        "bonus-description": "基本奖励之上的最高奖励奖励为 50%。奖励每周分配给协议使用桶 21,000 THALES，该桶计算来自 AMM 交易、范围 AMM 交易和 Overtime sport 的 AMM 交易的 sUSD 交易量，以及每周 9,000 THALES 给 SNX 质押者。 <0>了解更多。</0>"
+                    },
+                    "volume": {
+                        "ranged-desc": "当前的远程市场量：",
+                        "amm-label": "AMM 市场",
+                        "amm-desc": "当前 AMM 市场容量：",
+                        "sports-desc": "当前体育市场容量：",
+                        "ranged-label": "分布市场"
+                    },
+                    "protocol": {
+                        "rewards": "最大奖励",
+                        "estimated-rewards": "预估最高奖励",
+                        "bonus-eligible": "您有资格获得最高奖金奖励",
+                        "label": "协议使用桶",
+                        "volume": "体积",
+                        "bonus": "获得最大可能奖励所需的额外数量"
+                    },
+                    "snx": {
+                        "estimated-rewards": "预估最高奖励",
+                        "bonus-eligible": "您有资格获得最高奖金奖励",
+                        "rewards": "最大奖励",
+                        "staked": "SNX 质押",
+                        "bonus": "额外的 SNX 质押以获得最大可能的奖励",
+                        "label": "SNX 质押"
+                    },
+                    "claim-on-behalf": {
+                        "enable": "代表启用声明",
+                        "label-2": "将一个地址列入白名单以代表您声明",
+                        "label-1": "希望自动化您的索赔？"
+                    },
+                    "lp-staking": {
+                        "label-1": "泰雷兹/eth",
+                        "label-2": "LP质押",
+                        "tooltip": "提供THALES/WETH流动性，赚取THALES+OP双重奖励。点击<0>此处</0>了解更多信息。"
+                    },
+                    "no-thales-staked": "您没有质押 THALES"
                 },
                 "vesting": {
                     "vest": {
@@ -798,7 +907,45 @@
                     "schedule-no-results": "未找到归属时间表。",
                     "section-description": "将您的 THALES 质押奖励用于托管。 THALES 持续奖励需要 10 周归属。托管 THALES 是在您质押的 THALES 余额中计算的。"
                 },
-                "tab-title": "游戏化质押"
+                "tab-title": "游戏化质押",
+                "merge-account": {
+                    "merge-blocked-message": {
+                        "src-unstaking": "取消从源账户提取。",
+                        "dest-unstaking": "取消从目标账户提取。",
+                        "title": "为了合并帐户，您需要",
+                        "src-claim": "从源账户中领取质押奖励。",
+                        "dest-claim": "从目标账户中领取质押奖励。"
+                    },
+                    "merge-button": {
+                        "progress-label": "正在合并...",
+                        "label": "合并"
+                    },
+                    "source-account-label": "源账户",
+                    "merge-account-disabled-message": "帐户合并已禁用。",
+                    "warning-message": "合并后，所有质押和托管的 THALES 余额都将转移到目标账户，并且无法从源账户访问。",
+                    "confirmation-message": "账号合并成功",
+                    "info-message": "为了合并账户，您需要索取任何未完成的质押奖励，并取消两个账户正在进行的质押。",
+                    "delegate-button": {
+                        "label": "代表",
+                        "remove-delegation": "删除委托",
+                        "progress-label": "正在委托中..."
+                    },
+                    "delegate-volume-address-label": "地址",
+                    "how-merge-account-works": "合并帐户如何运作",
+                    "delegate-volume": "委托量",
+                    "merge-account": "合并账户",
+                    "how-delegate-volume-works": "委托量的工作原理",
+                    "delegation-confirmation-message": "成功委托量",
+                    "delegate-volume-description-2": "这个简单的步骤对于那些使用硬件钱包抵押 THALES 但为了方便而在另一个热钱包上进行交易的人来说非常方便（例如在他们的移动钱包上使用 Overtime），这样生成的交易量可以计入“协议交易量”桶”的游戏化 THALES 质押奖励。",
+                    "delegate-volume-description-3": "这种交易量委托可以随时停止，并且它进行了适当的检查，以避免钱包将其交易量转移给另一个钱包，同时仍然增加自己的交易量。",
+                    "delegate-volume-description-1": "“委托交易量”功能使您能够将您拥有的一个钱包产生的交易量定向到另一个钱包。",
+                    "merge-account-description-1": "“合并账户”功能使 THALES 质押者能够将其所有质押的 THALES 和质押奖励从一个钱包转移到另一个钱包。这对于那些想要循环钱包的人或那些钱包已被盗用的人来说非常方便。",
+                    "merge-account-description-2": "此帐户合并仅适用于质押和归属 THALES 的全部余额，部分重新分配是不可能的。还值得注意的是，在接收钱包上，质押的 THALES 代币仍需要 7 天倒计时才能解除质押，既得奖励在领取时也将有标准的 10 周冷却时间。",
+                    "destination-account-label": "目的地",
+                    "section-description": "<0>已根据 </0><1 /> 实施帐户合并。",
+                    "section-title": "账户偏好",
+                    "addresses-delegating-to-you": "委托给您的地址"
+                }
             }
         },
         "quiz": {
@@ -1110,6 +1257,17 @@
             },
             "ranged-markets": {
                 "strike-range": "打击范围"
+            },
+            "toast-messsage": {
+                "swap-success": "成功兑换 {{ currencyKey }}",
+                "approve-success": "成功获批",
+                "transaction-pending": "待处理交易",
+                "claim-winnings-success": "成功领取彩金",
+                "get-usd-success": "{{amount}} 成功铸造",
+                "withdraw-success": "提现成功",
+                "buy-success": "购买成功",
+                "sell-success": "成功售出",
+                "claim-refund-success": "退款申请成功"
             }
         },
         "quick-trading": {
@@ -1513,6 +1671,15 @@
         },
         "trading-profile": {
             "title": "交易资料",
+            "chart-info": {
+                "in-wallet": "在錢包裡",
+                "claimable": "可索賠的"
+            },
+            "tabs": {
+                "my-positions": "我的的二元期权",
+                "matured-positions": "成熟的二元期权",
+                "history": "歷史"
+            },
             "search-placeholder": "搜索钱包",
             "history": {
                 "expired": "已到期",
@@ -1629,7 +1796,9 @@
         "max-button-tooltip": "使用所有可用的抵押品减去相当于滑点容限的缓冲区",
         "pay-with": "使用。。。支付",
         "transaction-successful": "交易成功",
-        "allowing-in-progress": "进行中..."
+        "allowing-in-progress": "进行中...",
+        "discount-label": "职位打折",
+        "discount-tooltip": "AMM 将对其更容易受到的影响增加价格影响"
     },
     "articles": {
         "token": {
@@ -1857,7 +2026,9 @@
                 "all-transactions": "所有交易",
                 "by-trader": "按交易者查看结果",
                 "affiliate-leaderboard": "会员排行榜"
-            }
+            },
+            "view": "观点",
+            "current-view": "查看：{{当前视图}}"
         },
         "title": "推荐",
         "pages": {
@@ -1874,7 +2045,12 @@
             "copy-link": "复制网址"
         },
         "choose-landing": "选择登陆页面",
-        "disclaimer": "我们强烈建议附属公司遵守各自国家或司法管辖区关于推荐和认可的监管指南。对泰雷兹产品和服务的所有认可、评论、推荐，以及其他类型的内容网站（论坛、博客、微博和其他社交媒体渠道）与泰雷兹之间的关系必须在附属网站的单独政策中明确披露.泰雷兹产品和服务的最终用户在通过推荐链接被引导至泰雷兹网站时有权被告知和理解。我们强烈鼓励我们的附属公司遵循这些原则。我们还保留终止与任何不合规附属公司的关系的权利。此外，您不得以任何方式歪曲或美化泰雷兹平台（或其任何产品和服务）与您之间的关系。您不得将本程序用于任何非法或未经授权的目的。您在使用本程序时不得违反您所在司法管辖区的任何法律。泰雷兹委员会有权自行决定暂停或终止此推荐计划。<br>泰雷兹的 [使用条款和条件] 也适用于此推荐链接平台的使用。"
+        "disclaimer": "我们强烈建议附属公司遵守各自国家或司法管辖区关于推荐和认可的监管指南。对泰雷兹产品和服务的所有认可、评论、推荐，以及其他类型的内容网站（论坛、博客、微博和其他社交媒体渠道）与泰雷兹之间的关系必须在附属网站的单独政策中明确披露.泰雷兹产品和服务的最终用户在通过推荐链接被引导至泰雷兹网站时有权被告知和理解。我们强烈鼓励我们的附属公司遵循这些原则。我们还保留终止与任何不合规附属公司的关系的权利。此外，您不得以任何方式歪曲或美化泰雷兹平台（或其任何产品和服务）与您之间的关系。您不得将本程序用于任何非法或未经授权的目的。您在使用本程序时不得违反您所在司法管辖区的任何法律。泰雷兹委员会有权自行决定暂停或终止此推荐计划。<br>泰雷兹的 [使用条款和条件] 也适用于此推荐链接平台的使用。",
+        "footer": {
+            "sharing": "分享推薦鏈接即表示您同意免責聲明",
+            "and": "和",
+            "terms": "條款"
+        }
     },
     "wizard-page": {
         "question13-link-text": "看视频",
@@ -1940,7 +2116,7 @@
     "op-rewards": {
         "table": {
             "protocol-reward": "游戏化的赌注奖金",
-            "reward-text": "成交量：{{volume}}<0/>百分比：{{percentage}}%<0/>奖励：{{thales}} THALES，{{op}} OP",
+            "reward-text": "奖励:<0/> {{thales}} THALES，{{op}} OP",
             "ranged-info": "远程令牌",
             "up-info": "UP代币",
             "total-rewards": "总奖励",
@@ -1951,7 +2127,11 @@
             "no-rewards-info": "此地址无奖励",
             "my-wallet-address": " 我的钱包地址",
             "gamified-bonus-text": "当您领取每周 THALES 质押奖励时，将触发游戏化质押奖励。",
-            "my-rewards": "我的奖励"
+            "my-rewards": "我的奖励",
+            "reward-text-op": "奖励：{{op}} OP",
+            "discounted-info": "折扣代币",
+            "otm-info": "OTM代币",
+            "itm-info": "ITM代币"
         },
         "title": "OP 奖励",
         "description-2": "分配为交易奖励的代币总量：<bold> 200,000 欧普 + 350,000 泰雷兹</bold><br/><br/>",
@@ -1963,6 +2143,125 @@
         "round-end-label": "回合结束于",
         "up-volume-label": "提高音量",
         "down-volume-label": "降低音量",
-        "volume-tooltip": "目前的奖励：\n 每 1,000 美元的购买量 {{op}} + {{thales}}"
+        "volume-tooltip": "目前的奖励：\n 每 1,000 美元的购买量 {{op}} + {{thales}}",
+        "length-info": "当前计划将在第 15 轮结束。",
+        "otm-volume-label": "场外成交量",
+        "description-last": "每14天的奖励分配如下：<br/><br/> - 8,000 OP 分配给所有折扣代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外奖励，根据<tipLink>.",
+        "itm-volume-label": "ITM 体积",
+        "description-3-itm": "每14天的奖励分配如下：<br/><br/> - 2,000 OP + 3,000 THALES 分配给 ITM 代币买家<br/>- 5,000 OP + 7,000 THALES 分配给 OTM 代币买家<br/>- 8,000 OP + 10,000 THALES 给任何折扣代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外奖励，根据<tipLink>.",
+        "discounted-volume-label": "折扣量"
+    },
+    "footer": {
+        "discover": "发现",
+        "resources": "资源",
+        "about": "关于"
+    },
+    "vaults": {
+        "strategy-label": "金库策略",
+        "title": "金库",
+        "risks-label": "金库风险"
+    },
+    "vault": {
+        "discount-vault": {
+            "risks": "<p>金库的利用率为 {{utilizationRate}}，确保不超过 {{utilizationRate}} 的存入一轮风险。此外，在这些 {{utilizationRate}} 中，最多可以将 {{allocationLimitsPerMarketPerRound}} 花在一个市场上，从而将风险分散到赔率大于 {{odds}} 的多个市场。</p>",
+            "description": "<p>买入赔率高于 {{odds}} 且折扣大于 {{discount}} 的头寸。</p>",
+            "title": "折扣金库"
+        },
+        "degen-discount-vault": {
+            "description": "<p>以超过 {{discount}} 折扣的任何赔率买入头寸。</p>",
+            "title": "德劲折扣金库",
+            "risks": "<p>金库的利用率为 {{utilizationRate}}，确保不超过 {{utilizationRate}} 的存入一轮风险。此外，在这些 {{utilizationRate}} 中，最多可以在单个市场上花费 {{allocationLimitsPerMarketPerRound}}。</p>"
+        },
+        "safu-discount-vault": {
+            "description": "<p>购买赔率超过 {{odds}} 且可享受任何折扣的头寸。</p>",
+            "title": "列折扣库",
+            "risks": "<p>金库的利用率为 {{utilizationRate}}，确保不超过 {{utilizationRate}} 的存入一轮风险。此外，在这些 {{utilizationRate}} 中，最多可以将 {{allocationLimitsPerMarketPerRound}} 花在一个市场上，从而将风险分散到赔率大于 {{odds}} 的多个市场。</p>"
+        },
+        "tabs": {
+            "claim": "宣称",
+            "withdraw": "提取",
+            "deposit": "订金"
+        },
+        "button": {
+            "close-round-progress-label": "收尾正在进行中...",
+            "request-withdrawal-progress-label": "请求进行中...",
+            "request-withdrawal-label": "请求撤回",
+            "deposit-confirmation-message": "入金成功",
+            "close-round-label": "关闭回合",
+            "withdraw-confirmation-message": "资金成功提取",
+            "withdraw-progress-label": "提现中...",
+            "request-withdrawal-confirmation-message": "取款请求已成功发送",
+            "deposit-progress-label": "存款进行中...",
+            "withdraw-label": "提取",
+            "deposit-label": "订金",
+            "close-round-confirmation-message": "回合成功结束"
+        },
+        "trades-history": {
+            "table": {
+                "strike-price-col": "行使价",
+                "tx-status-col": "发送状态",
+                "wallet-address": "钱包地址",
+                "date-time-col": "日期 |时间",
+                "position-col": "位置",
+                "type-col": "类型",
+                "amount-col": "数量",
+                "usd-value-col": "美元价值",
+                "paid-col": "有薪酬的",
+                "result-col": "结果",
+                "asset": "资产",
+                "maturity-date-col": "到期"
+            },
+            "no-trades": "在选定的回合中没有与此保险库关联的交易。",
+            "round-label": "圆形的",
+            "title": "金库交易历史"
+        },
+        "pnl": {
+            "no-data": "没有前几轮的 PnL 数据。",
+            "title": "每轮盈亏",
+            "lifetime-pnl": "终身盈亏"
+        },
+        "user-transactions": {
+            "type": {
+                "withdrawalRequest": "提款请求",
+                "deposit": "订金",
+                "claim": "提款申请"
+            },
+            "title": "用户交易",
+            "no-transactions": "在选定的回合中没有与此保管库关联的用户交易。"
+        },
+        "estimated-amount-tooltip": "这是一个估计数额。实际金额将在本轮结束时根据该轮PnL计算。",
+        "nothing-to-withdraw-label": "没什么可退的。",
+        "withdrawal-requested-message": "您请求提取<bold>{{amount}}</bold><tooltip />。当回合结束时，您的资金将在回合结束时自动发送给您。",
+        "withdrawal-message": "您可以请求提款，您的资金将在该轮结束时自动发送给您。",
+        "deposit-amount-label": "存款金额",
+        "variables-title": "变量",
+        "available-trading-label": "可供交易",
+        "your-round-allocation-label": "您在本轮的分配：<bold>{{amount}}</bold>",
+        "variables-right": "<ul><li>最大总存款：{{maxAllowedDeposit}}</li><li>保险库中的最大用户数：{{maxAllowedUsers}}</li><li>单笔交易的最低金额：{{minTradeAmount}}</li><li>最低存款：{{minDepositAmount}}</li><li>回合持续时间：{{roundLength}} 天</li></ul>",
+        "round-allocation-label": "总存款",
+        "deposit-vault-cap-error": "入金金额超过金库上限",
+        "deposit-amount-placeholder": "输入金额",
+        "vault-not-started-message": "保险库尚未启动",
+        "back-to-vaults": "返回金库",
+        "deposit-vault-cap-reached-warning": "已达到金库上限，无法入金。",
+        "round-end-label": "回合结束于",
+        "spent-trading-label": "交易花费",
+        "deposit-min-amount-error": "存款的最低金额为 {{amount}}",
+        "deposit-message": "为下一轮将资金存入金库。",
+        "next-round-start-label": "下一轮开始于：<counter />",
+        "info": "<p>Thales 金库以 1 周为周期工作。这是目前的测试版。</p><p>一旦您将抵押品 (sUSD) 存入金库，它将排队等待在下一轮开始使用。</p><p>每个保险库将根据其特定参数自动执行预定义的策略。你可以找到一个<vaultLink>每个参数的详细说明在这里</vaultLink>.</p><p>金库的用户可以在一轮中的任何时间请求将他们的抵押品取回 sUSD（+/- 金库的赢或输）。一旦该轮结束，提款将被处理。</p><p>进入一轮的所有存款都计入游戏化的质押量。</p>",
+        "users-in-vault-label": "保管库中的用户：{{number}} / {{max}}",
+        "vault-paused-message": "保险库已暂停",
+        "your-next-round-allocation-label": "您下一轮的分配：<bold>{{amount}}</bold>",
+        "first-deposit-withdrawal-message": "您为下一轮存入资金，您可以在下一轮结束时提取这些资金。",
+        "withdrawal-deposit-warning": "您不能退出，因为您已经为下一轮存款。",
+        "deposit-max-amount-of-users-warning": "已达到保险库中的最大用户数，您无法存款。",
+        "withdrawal-request-label": "提款请求：<bold>{{amount}}</bold>",
+        "deposit-withdrawal-warning": "要求提款，您不能存款。",
+        "available-to-withdraw-label": "可提取：<bold>{{amount}}</bold>",
+        "round-ended-label": "回合结束",
+        "withdraw-round-end-label": "回合结束于：<counter />",
+        "vault-filled-label": "保险库已满：{{amount}} / {{max}}",
+        "variables-left": "<ul><li>利用率：{{utilizationRate}}</li><li>价格下限：{{priceLowerLimit}}</li><li>价格上限：{{priceUpperLimit}}</li><li>最大偏斜影响：{{skewImpactLimit}}</li><li>单一市场的最大分配：{{allocationLimitsPerMarketPerRound}}</li></ul>"
     }
 }

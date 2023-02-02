@@ -5,8 +5,8 @@ import { ethers } from 'ethers';
 import { formatCurrency } from 'utils/formatters/number';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 
-const LP_STAKING_WEEKLY_REWARDS = 45000;
-const LP_STAKING_WEEKLY_SECOND_REWARDS = 15750;
+const LP_STAKING_WEEKLY_REWARDS = 30000;
+const LP_STAKING_WEEKLY_SECOND_REWARDS = 5000;
 
 export interface Balance {
     priceInUSD: number;

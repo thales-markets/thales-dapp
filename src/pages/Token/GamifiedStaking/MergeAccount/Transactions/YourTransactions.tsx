@@ -3,7 +3,12 @@ import React from 'react';
 
 import { TransactionFilterEnum } from 'types/token';
 
-const filters = [TransactionFilterEnum.ALL, TransactionFilterEnum.MERGE_ACCOUNT];
+const filters = [
+    TransactionFilterEnum.ALL,
+    TransactionFilterEnum.MERGE_ACCOUNT,
+    TransactionFilterEnum.DELEGATE_VOLUME,
+    TransactionFilterEnum.REMOVE_DELEGATION,
+];
 
 const YourTransactions: React.FC<{ gridColumns?: number; gridColumnStart?: number }> = ({
     gridColumns,

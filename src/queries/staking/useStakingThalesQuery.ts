@@ -4,6 +4,7 @@ import snxJSConnector from '../../utils/snxJSConnector';
 import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { BALANCE_THRESHOLD } from 'constants/token';
+import { ZERO_ADDRESS } from 'constants/network';
 
 type StakingThalesQueryResponse = {
     thalesStaked: number;
@@ -17,6 +18,7 @@ type StakingThalesQueryResponse = {
     paused: boolean;
     maxBonusRewardsPercentage: number;
     mergeAccountEnabled: boolean;
+    delegatedVolume: string;
 };
 
 const useStakingThalesQuery = (
@@ -39,6 +41,7 @@ const useStakingThalesQuery = (
                 paused: false,
                 maxBonusRewardsPercentage: 0,
                 mergeAccountEnabled: true,
+                delegatedVolume: ZERO_ADDRESS,
             };
 
             try {
@@ -73,12 +76,20 @@ const useStakingThalesQuery = (
                 staking.mergeAccountEnabled = mergeAccountEnabled;
 
                 if (walletAddress !== '') {
-                    const [isUnstaking, lastUnstakeTime, thalesStaked, unstakingAmount, rewards] = await Promise.all([
+                    const [
+                        isUnstaking,
+                        lastUnstakeTime,
+                        thalesStaked,
+                        unstakingAmount,
+                        rewards,
+                        delegatedVolume,
+                    ] = await Promise.all([
                         (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
+                        (snxJSConnector as any).stakingThalesContract.delegatedVolume(walletAddress),
                     ]);
 
                     staking.isUnstaking = isUnstaking;
@@ -87,6 +98,7 @@ const useStakingThalesQuery = (
                         bigNumberFormatter(thalesStaked) < BALANCE_THRESHOLD ? 0 : bigNumberFormatter(thalesStaked);
                     staking.unstakingAmount = bigNumberFormatter(unstakingAmount);
                     staking.rewards = bigNumberFormatter(rewards);
+                    staking.delegatedVolume = delegatedVolume;
                 }
             } catch {}
 

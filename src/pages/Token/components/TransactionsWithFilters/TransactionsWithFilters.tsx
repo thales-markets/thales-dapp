@@ -31,7 +31,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
     const [showFilters, setShowFilters] = useState<boolean>(false);
 
-    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, {
+    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, undefined, {
         enabled: isAppReady && isWalletConnected,
     });
 
@@ -146,6 +146,7 @@ const SectionContainer = styled.section<{
         ${(props) => (props.gridColumns ? props.gridColumns : '8')};
     grid-row: span 1;
     height: ${(props) => (props.txCount > 10 ? '390px' : '100%')};
+    min-height: 200px;
     margin-bottom: 0;
     @media (max-width: 768px) {
         grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : 12)};

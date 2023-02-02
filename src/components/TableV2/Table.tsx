@@ -119,7 +119,7 @@ const Table: React.FC<TableProps> = ({
 
     return (
         <>
-            {data?.length && (
+            {!!data?.length && (
                 <FlexDivColumn>
                     {isMobile && (
                         <MobileDropdownMenu
@@ -343,6 +343,7 @@ const Table: React.FC<TableProps> = ({
                                         page={pageIndex}
                                         onPageChange={handleChangePage}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
+                                        labelRowsPerPage={t('common.pagination.rows-per-page')}
                                     />
                                 </tr>
                             </tbody>

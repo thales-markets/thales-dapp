@@ -31,6 +31,8 @@ const History: React.FC<HistoryProps> = ({ markets, trades, searchText, isLoadin
                         marketItem: optionsMarketsMap[trade.market],
                     }))
                     .filter((trade: any) => {
+                        if (!trade?.marketItem) return false;
+
                         const search = searchText.toLowerCase();
                         const tradeValue = `${trade?.marketItem?.currencyKey} ${
                             currencyKeyToCoinGeckoIndexMap[trade?.marketItem?.asset?.toUpperCase()]
