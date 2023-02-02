@@ -21,8 +21,8 @@ export const SNAPSHOT_MESSAGE_API_URL = 'https://hub.snapshot.org/api/message';
 export const MESSAGE_VOTE_TYPE = 'vote';
 export const MESSAGE_VERSION = '0.1.3';
 
-export const VOTING_COUNCIL_PROPOSAL_ID = '0x63ab2605ffb55cc9f2c7e54beecb522ebebbe38534647e2dc183d3632b454516';
-export const COUNCIL_PROPOSAL_ID = '0x63ab2605ffb55cc9f2c7e54beecb522ebebbe38534647e2dc183d3632b454516';
+export const VOTING_COUNCIL_PROPOSAL_ID = '0x7e3c98677e7d918f0c4f1ac6dda2b89ce36063f383a316ed7d86e9d061e42ad8';
+export const COUNCIL_PROPOSAL_ID = '0x7e3c98677e7d918f0c4f1ac6dda2b89ce36063f383a316ed7d86e9d061e42ad8';
 export const VOTING_ORACLE_COUNCIL_PROPOSAL_ID = '0xb94b357561a620ab38777f75aba7f6d14d21e019911c2c1ff5cd88e5f1b18eeb';
 export const FIRST_COUNCIL_ELECTIONS_ID = 'QmcKWQZYyj6Z7iaWpUR3unjNU5otchQsARSVjE4utYSyv3';
 

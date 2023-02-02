@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useMemo } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 
 import { RootState } from 'redux/rootReducer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +6,7 @@ import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux
 import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
 import { sortOptionsMarkets } from 'utils/options';
@@ -19,7 +19,8 @@ import { Trans } from 'react-i18next';
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
-import { fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
@@ -30,6 +31,8 @@ const Markets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const [lastValidOpenOrdersMap, setLastValidOpenOrdersMap] = useState<OpenOrdersMap>(undefined);
+    const [lastValidDiscountMap, setLastValidDiscountMap] = useState<DiscountMap>(undefined);
 
     const showOPBanner = getIsOVM(networkId);
 
@@ -54,20 +57,43 @@ const Markets: React.FC = () => {
     }, []);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
-    const openOrdersQuery = fetchAllMarketOrders(networkId);
-    const discountQuery = fetchDiscounts(networkId);
+
+    const openOrdersQuery = fetchAllMarketOrders(networkId, { enabled: isAppReady });
+
+    useEffect(() => {
+        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
+            setLastValidOpenOrdersMap(openOrdersQuery.data);
+        }
+    }, [openOrdersQuery.isSuccess, openOrdersQuery.data]);
+
+    const openOrdersMap: OpenOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
+            return openOrdersQuery.data;
+        }
+        return lastValidOpenOrdersMap;
+    }, [openOrdersQuery.isSuccess, openOrdersQuery.data, lastValidOpenOrdersMap]);
+
+    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
+
+    useEffect(() => {
+        if (discountQuery.isSuccess && discountQuery.data) {
+            setLastValidDiscountMap(discountQuery.data);
+        }
+    }, [discountQuery.isSuccess, discountQuery.data]);
+
+    const discountMap: DiscountMap = useMemo(() => {
+        if (discountQuery.isSuccess && discountQuery.data) {
+            return discountQuery.data;
+        }
+        return lastValidDiscountMap;
+    }, [discountQuery.isSuccess, discountQuery.data, lastValidDiscountMap]);
 
     const optionsMarkets = useMemo(() => {
-        if (
-            marketsQuery.isSuccess &&
-            Array.isArray(marketsQuery.data) &&
-            openOrdersQuery.isSuccess &&
-            discountQuery.isSuccess
-        ) {
-            const markets = openOrdersQuery.data
+        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
+            const markets = openOrdersMap
                 ? marketsQuery.data.map((m) => {
-                      const apiData = (openOrdersQuery.data as any).get(m.address.toLowerCase());
-                      const discountData = (discountQuery.data as any).get(m.address.toLowerCase());
+                      const apiData = openOrdersMap[m.address.toLowerCase()];
+                      const discountData = discountMap ? discountMap[m.address.toLowerCase()] : undefined;
                       let discountedSide;
                       let discount = 0;
                       if (discountData) {
@@ -88,7 +114,7 @@ const Markets: React.FC = () => {
                           availableShorts: apiData?.availableShorts ?? 0,
                           longPrice: apiData?.longPrice ?? 0,
                           shortPrice: apiData?.shortPrice ?? 0,
-                          ammLiquidity: Number(apiData?.availableLongs ?? 0) + Number(apiData?.availableShorts ?? 0),
+                          ammLiquidity: (apiData?.availableLongs ?? 0) + (apiData?.availableShorts ?? 0),
                           discountedSide,
                           discount,
                       };
@@ -97,7 +123,8 @@ const Markets: React.FC = () => {
             return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery, openOrdersQuery, discountQuery]);
+    }, [marketsQuery.isSuccess, marketsQuery.data, openOrdersMap, discountMap]);
+
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
         refetchInterval: false,
@@ -108,6 +135,7 @@ const Markets: React.FC = () => {
     return (
         <>
             {showOPBanner && <OpRewardsBanner width={90} />}
+            <ElectionsBanner width={90} />
             {INFORMATION_BANNER_ACTIVE && (
                 <BannerContainer>
                     <InfoBanner>

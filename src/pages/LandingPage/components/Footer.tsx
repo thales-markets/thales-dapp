@@ -1,52 +1,29 @@
-import React from 'react';
-import styled from 'styled-components';
-import footer from 'assets/images/landing-page/footer.png';
-import footerW from 'assets/images/landing-page/footer-white.png';
-import footer2 from 'assets/images/landing-page/footer_black.svg';
-import footerW2 from 'assets/images/landing-page/footer_white.svg';
 import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
-import { IconLink } from 'theme/common';
+import footerW from 'assets/images/landing-page/footer-white.png';
+import footerW2 from 'assets/images/landing-page/footer_white.svg';
 import LanguageSelector from 'components/LanguageSelector/V2';
-import { Theme } from '../Home';
-import Cookies from 'universal-cookie';
 import ROUTES from 'constants/routes';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import { IconLink } from 'theme/common';
 import { navigateTo } from 'utils/routes';
 
 type HeaderInput = {
-    theme: Theme;
-    setTheme: (data: any) => void;
     className?: string;
 };
 
-const cookies = new Cookies();
-
-const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
+const Footer: React.FC<HeaderInput> = ({ className }) => {
     const { t } = useTranslation();
 
     return (
         <FooterHtml className={className}>
-            <Image src={theme === Theme.Dark ? footerW : footer} />
-            <Lines src={theme === Theme.Dark ? footerW2 : footer2} />
+            <Image src={footerW} />
+            <Lines src={footerW2} />
             <FooterContainer>
                 <FooterIconLogo className="icon-home icon-home--thales" />
                 <FooterButtonsWrapper>
-                    <ButtonWrapper>
-                        <Label>{t('landing-page.footer.theme').toUpperCase()}</Label>
-                        <ToggleContainer
-                            onClick={() => {
-                                cookies.set('home-theme', theme === Theme.Light ? Theme.Dark : Theme.Light);
-                                setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light);
-                            }}
-                        >
-                            <ToggleIcon
-                                className={`icon-home ${
-                                    theme === Theme.Light ? 'icon-home--toggle-white' : 'icon-home--toggle-dark'
-                                }`}
-                            />
-                        </ToggleContainer>
-                    </ButtonWrapper>
                     <ButtonWrapper>
                         <ButtonContainer>
                             <DAPPLink
@@ -297,20 +274,6 @@ const FooterIconLogo = styled.i`
     margin-bottom: -40px;
     color: var(--color);
     text-align: center;
-`;
-
-const ToggleContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-`;
-
-const ToggleIcon = styled.i`
-    font-size: 3.4em;
-    line-height: 26px;
-    z-index: 2;
-    color: var(--color);
 `;
 
 const ButtonContainer = styled.div`

@@ -1,33 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import Cookies from 'universal-cookie';
-import Header from '../../components/Header/Header';
-import pic from 'assets/images/landing-page/articles/token-white.svg';
 import picBlack from 'assets/images/landing-page/articles/token-black.svg';
-import { Background, Theme } from '../../Home';
-import Footer from '../../components/Footer';
+import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { HashLink } from 'react-router-hash-link';
-
-const cookies = new Cookies();
+import styled from 'styled-components';
+import Footer from '../../components/Footer';
+import Header from '../../components/Header/Header';
+import { Background } from '../../Home';
 
 const Token: React.FC = () => {
-    const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
     const { t } = useTranslation();
 
-    useEffect(() => {
-        const body = document.getElementsByTagName('body')[0];
-        const html = document.documentElement;
-        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
-        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
-    }, [theme]);
-
     return (
-        <Background className={theme === Theme.Light ? 'light' : 'dark'}>
+        <Background className={'dark'}>
             <Wrapper>
-                <Header theme={theme} setTheme={setTheme} />
+                <Header />
                 <Content>
                     <H1>{t('articles.token.title')}</H1>
                     <ListWrapper>
@@ -63,7 +49,7 @@ const Token: React.FC = () => {
                         <Trans i18nKey="articles.token.paragraphs.2" components={{ bold: <strong /> }} />
                     </Paragraph>
                     <PieChart>
-                        <AnimationSvg type="image/svg+xml" data={theme !== Theme.Dark ? pic : picBlack}></AnimationSvg>
+                        <AnimationSvg type="image/svg+xml" data={picBlack}></AnimationSvg>
                     </PieChart>
 
                     <Paragraph>
@@ -109,7 +95,7 @@ const Token: React.FC = () => {
                     <Paragraph>
                         <Trans i18nKey="articles.token.paragraphs.6" components={{ bold: <strong /> }} />
                     </Paragraph>
-                    <Footer className="article" theme={theme} setTheme={setTheme} />
+                    <Footer className="article" />
                 </Content>
             </Wrapper>
         </Background>

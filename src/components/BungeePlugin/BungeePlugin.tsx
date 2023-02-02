@@ -1,4 +1,4 @@
-import { Bridge } from '@socket.tech/widget';
+import { Bridge } from '@socket.tech/plugin';
 import { SYNTHS_MAP } from 'constants/currency';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -25,7 +25,7 @@ type CustomizationProps = {
     outline?: string;
 };
 
-const BungeeWidget: React.FC = () => {
+const BungeePlugin: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const apiKey = process.env.REACT_APP_BUNGEE_API_KEY || '';
@@ -79,9 +79,8 @@ const BungeeWidget: React.FC = () => {
 
 const BungeeWrapper = styled.div`
     box-sizing: border-box;
-    position: absolute;
     width: 390px;
-    height: 440px;
+    height: 469px;
     margin: auto;
     position: relative;
     top: 100px;
@@ -92,4 +91,4 @@ const BungeeWrapper = styled.div`
     outline: none;
 `;
 
-export default BungeeWidget;
+export default BungeePlugin;

@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { useTranslation } from 'react-i18next';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 // import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
@@ -16,7 +16,6 @@ import { sortOptionsMarkets } from 'utils/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import SPAAnchor from 'components/SPAAnchor';
 import { getIsAppReady } from 'redux/modules/app';
-import Loader from 'components/Loader';
 import { NoDataContainer, NoDataText } from 'theme/common';
 import { MarketType, RangedMarket } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
@@ -27,12 +26,15 @@ import { CONVERT_TO_6_DECIMALS } from 'constants/token';
 import { POLYGON_ID } from 'constants/network';
 import RangeMarketCard from 'components/RangeMarketCard';
 import MarketCard from 'components/MarketCard';
+import styled from 'styled-components';
+import SimpleLoader from 'components/SimpleLoader';
 
 const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) => {
     const marketInfo = marketType !== MARKET_TYPE[1] ? useMarketContext() : useRangedMarketContext();
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const [lastValidOpenOrdersMap, setLastValidOpenOrdersMap] = useState<OpenOrdersMap>(undefined);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: isAppReady && marketType !== MARKET_TYPE[1],
@@ -51,16 +53,23 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
     });
 
     const rangedMarketsLiquidity = useMemo(() => {
-        if (rangedMarketsLiquidityQuery?.isSuccess && rangedMarketsLiquidityQuery?.data) {
-            return rangedMarketsLiquidityQuery?.data;
+        if (rangedMarketsLiquidityQuery.isSuccess && rangedMarketsLiquidityQuery.data) {
+            return rangedMarketsLiquidityQuery.data;
         }
-    }, [rangedMarketsLiquidityQuery.isLoading]);
+    }, [rangedMarketsLiquidityQuery.isSuccess, rangedMarketsLiquidityQuery.data]);
 
-    const openOrdersMap = useMemo(() => {
-        if (openOrdersQuery.isSuccess) {
+    useEffect(() => {
+        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
+            setLastValidOpenOrdersMap(openOrdersQuery.data);
+        }
+    }, [openOrdersQuery.isSuccess, openOrdersQuery.data]);
+
+    const openOrdersMap: OpenOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
             return openOrdersQuery.data;
         }
-    }, [openOrdersQuery.isLoading]);
+        return lastValidOpenOrdersMap;
+    }, [openOrdersQuery.isSuccess, openOrdersQuery.data, lastValidOpenOrdersMap]);
 
     const isLoading =
         openOrdersQuery.isLoading ||
@@ -71,14 +80,17 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             let markets = openOrdersMap
-                ? marketsQuery.data.map((m) => ({
-                      ...m,
-                      openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
-                      availableLongs: (openOrdersMap as any).get(m.address.toLowerCase())?.availableLongs ?? '0',
-                      availableShorts: (openOrdersMap as any).get(m.address.toLowerCase())?.availableShorts ?? '0',
-                      longPrice: (openOrdersMap as any).get(m.address.toLowerCase())?.longPrice ?? '0',
-                      shortPrice: (openOrdersMap as any).get(m.address.toLowerCase())?.shortPrice ?? '0',
-                  }))
+                ? marketsQuery.data.map((m) => {
+                      const apiData = openOrdersMap[m.address.toLowerCase()];
+                      return {
+                          ...m,
+                          openOrders: apiData?.ordersCount ?? 0,
+                          availableLongs: apiData?.availableLongs ?? 0,
+                          availableShorts: apiData?.availableShorts ?? 0,
+                          longPrice: apiData?.longPrice ?? 0,
+                          shortPrice: apiData?.shortPrice ?? 0,
+                      };
+                  })
                 : marketsQuery.data;
 
             markets = markets.filter((market) => market.currencyKey == marketInfo?.currencyKey);
@@ -89,27 +101,27 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
             return markets;
         }
         return [];
-    }, [isLoading, marketInfo?.address]);
+    }, [marketsQuery.isSuccess, marketsQuery.data, marketInfo?.address, openOrdersMap]);
 
     const rangedMarkets: RangedMarket[] | [] = useMemo(() => {
         if (rangedMarketsQuery.isSuccess && Array.isArray(rangedMarketsQuery.data)) {
             let markets = rangedMarketsLiquidity
                 ? rangedMarketsQuery.data.map((m) => {
-                      const apiData = (rangedMarketsLiquidity as any).get(m.address.toLowerCase());
+                      const apiData = rangedMarketsLiquidity.get(m.address.toLowerCase());
 
                       return {
                           ...m,
-                          availableIn: apiData?.availableIn ?? '0',
+                          availableIn: apiData?.availableIn ?? 0,
                           availableOut: apiData?.availableOut ?? 0,
                           inPrice:
                               +(networkId === POLYGON_ID
-                                  ? apiData?.inPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.inPrice) ?? 0,
+                                  ? (apiData?.inPrice ?? 0) * CONVERT_TO_6_DECIMALS
+                                  : apiData?.inPrice ?? 0) ?? 0,
                           outPrice:
                               +(networkId === POLYGON_ID
-                                  ? apiData?.outPrice * CONVERT_TO_6_DECIMALS
-                                  : apiData?.outPrice) ?? 0,
-                          ammLiquidity: Number(apiData?.availableIn ?? 0) + Number(apiData?.availableOut ?? 0),
+                                  ? (apiData?.outPrice ?? 0) * CONVERT_TO_6_DECIMALS
+                                  : apiData?.outPrice ?? 0) ?? 0,
+                          ammLiquidity: (apiData?.availableIn ?? 0) + (apiData?.availableOut ?? 0),
                           range: m.leftPrice.toFixed(2) + ' - ' + m.rightPrice.toFixed(2),
                       };
                   })
@@ -123,7 +135,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
             return markets;
         }
         return [];
-    }, [isLoading, marketInfo?.address]);
+    }, [rangedMarketsQuery.isSuccess, rangedMarketsQuery.data, marketInfo?.address, rangedMarketsLiquidity]);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery({
         enabled: isAppReady && (optionsMarkets.length > 0 || rangedMarkets?.length > 0),
@@ -147,7 +159,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
                                         exchangeRates={exchangeRates}
                                         marketCardStyle={{
                                             maxWidth: '49%',
-                                            wrapperMargin: '0px 0px 10px 0px',
+                                            wrapperMargin: '5px 10px 10px 4px',
                                         }}
                                     />
                                 </SPAAnchor>
@@ -162,7 +174,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
                                         exchangeRates={exchangeRates}
                                         marketCardStyle={{
                                             maxWidth: '49%',
-                                            wrapperMargin: '0px 0px 10px 0px',
+                                            wrapperMargin: '5px 10px 10px 4px',
                                         }}
                                     />
                                 </SPAAnchor>
@@ -175,10 +187,18 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
                     )}
                 </SimilarMarketsContainer>
             ) : (
-                <Loader />
+                <LoaderWrapper>
+                    <SimpleLoader />
+                </LoaderWrapper>
             )}
         </>
     );
 };
+
+const LoaderWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    height: 600px;
+`;
 
 export default SimilarMarkets;

@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { setBuyState } from 'redux/modules/marketWidgets';
 import styled from 'styled-components';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -34,7 +34,13 @@ import {
     refetchUserTrades,
     refetchWalletBalances,
 } from 'utils/queryConnector';
-import { formatCurrency, formatCurrencyWithKey, formatPercentage, truncToDecimals } from 'utils/formatters/number';
+import {
+    calculateAndFormatPercentage,
+    formatCurrency,
+    formatCurrencyWithKey,
+    formatPercentage,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import onboardConnector from 'utils/onboardConnector';
 
 import { AccountMarketInfo, OrderSide, OptionSide, StableCoins } from 'types/options';
@@ -62,7 +68,7 @@ import { useTranslation } from 'react-i18next';
 import WalletBalance from './components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
-import { checkMultipleStableBalances, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
+import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import Tooltip from 'components/Tooltip';
 import { getReferralWallet } from 'utils/referral';
@@ -91,6 +97,7 @@ const AMM: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const userSelectedCollateral = useSelector((state: RootState) => getSelectedCollateral(state));
     const dispatch = useDispatch();
 
     const { trackEvent } = useMatomo();
@@ -136,7 +143,7 @@ const AMM: React.FC = () => {
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
 
-    const [selectedStableIndex, setStableIndex] = useState<number>(0);
+    const [selectedStableIndex, setStableIndex] = useState<number>(userSelectedCollateral);
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported && orderSide.value === 'buy';
 
@@ -177,10 +184,14 @@ const AMM: React.FC = () => {
             selectedStableIndex == 0 &&
             isMultiCollateralSupported
         ) {
-            const defaultStableBalance = checkMultipleStableBalances(multipleStableBalances?.data);
+            const defaultStableBalance = getDefaultStableIndexByBalance(multipleStableBalances?.data);
             setStableIndex(defaultStableBalance);
         }
     }, [multipleStableBalances?.data]);
+
+    useEffect(() => {
+        setStableIndex(userSelectedCollateral);
+    }, [userSelectedCollateral]);
 
     const walletBalancesMap = stableBalanceQuery.isSuccess && stableBalanceQuery.data ? stableBalanceQuery.data : null;
 
@@ -636,7 +647,11 @@ const AMM: React.FC = () => {
         setMaxLimit(max);
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
-        setPotentialBaseReturn(base > 0 && isBuy ? 1 / Number(base) - 1 : 0);
+        setPotentialBaseReturn(
+            isBuy && total && total > 0 && amount && amount > 0
+                ? calculateAndFormatPercentage(Number(total), Number(amount))
+                : 0
+        );
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
     }, [ammMaxLimits, isLong, isBuy]);
 
@@ -656,6 +671,11 @@ const AMM: React.FC = () => {
                         ? (Number(total) > 0 && Number(total) <= stableBalance) ||
                           (Number(total) === 0 && stableBalance > 0)
                         : Number(amount) <= tokenBalance))
+        );
+        setPotentialBaseReturn(
+            isBuy && total && total > 0 && amount && amount > 0
+                ? calculateAndFormatPercentage(Number(total), Number(amount))
+                : 0
         );
     }, [amount, total, isBuy, stableBalance, tokenBalance]);
 

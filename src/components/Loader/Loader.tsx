@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import coin from 'assets/images/only_coin.gif';
 import angry from 'assets/images/angry_thales.gif';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
@@ -8,7 +7,7 @@ import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
 import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { CircularProgress } from '@material-ui/core';
-import { FlexDivRowCentered, Image } from 'theme/common';
+import { Image } from 'theme/common';
 import { history } from 'utils/routes';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -42,25 +41,25 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                             ? t(`common.unsupported-network.description2`)
                             : t(`common.unsupported-network.description`)}
                     </ExplanationText>
-                    <FlexDivRowCentered style={{ justifyContent: 'space-around' }}>
+                    <ButtonWrapper>
                         <NetworkButton
-                            margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
+                            margin={''}
                             onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[10].changeNetwork.bind(this, 10, undefined)}
                         >
                             <OpLogo />
                             <span>{t(`common.unsupported-network.button.optimism`)}</span>
                         </NetworkButton>
                         <NetworkButton
-                            margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
+                            margin={''}
                             onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(this, 137, undefined)}
                         >
                             <PolygonLogo />
                             <span>{t(`common.unsupported-network.button.polygon`)}</span>
                         </NetworkButton>
-                    </FlexDivRowCentered>
-                    <FlexDivRowCentered style={{ justifyContent: 'space-around' }}>
+                    </ButtonWrapper>
+                    <ButtonWrapper>
                         <NetworkButton
-                            margin={'20px 0 40px 0'}
+                            margin={''}
                             onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[42161].changeNetwork.bind(
                                 this,
                                 42161,
@@ -71,27 +70,25 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                             <span>{t(`common.unsupported-network.button.arbitrum`)}</span>
                         </NetworkButton>
                         <NetworkButton
-                            margin={hideMainnet ? '40px 0px' : '40px 0 0 0'}
+                            margin={''}
                             onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[56].changeNetwork.bind(this, 56, undefined)}
                         >
                             <BSCLogo />
                             <span>{t(`common.unsupported-network.button.bsc`)}</span>
                         </NetworkButton>
+                    </ButtonWrapper>
+                    <ButtonWrapper>
                         {!hideMainnet && (
                             <NetworkButton
-                                margin="20px 0 40px 0"
+                                margin=""
                                 onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[1].changeNetwork.bind(this, 1, undefined)}
                             >
                                 <EthereumLogo />
                                 <span>{t(`common.unsupported-network.button.mainnet`)}</span>
                             </NetworkButton>
                         )}
-                    </FlexDivRowCentered>
+                    </ButtonWrapper>
                 </WrongNetworkWrapper>
-            ) : history.location.pathname === '/' ? (
-                <CircularProgress />
-            ) : history.location.state === 'show' ? (
-                <Image style={{ width: 100, height: 100 }} src={coin}></Image>
             ) : (
                 <CircularProgress />
             )}
@@ -111,6 +108,14 @@ const Wrapper = styled.div`
     z-index: 99;
     backdrop-filter: blur(4px);
     background: #04045a;
+`;
+
+const ButtonWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px 0px;
 `;
 
 const WrongNetworkWrapper = styled.div`

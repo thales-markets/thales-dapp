@@ -202,6 +202,7 @@ export const DashedLineVertical = styled.hr<{
     marginTop: number;
     heightPer: number;
     marginLeft?: number;
+    mobileLong?: boolean;
 }>`
     border: none;
     border-left: 2px dashed #64d9fe80;
@@ -211,7 +212,8 @@ export const DashedLineVertical = styled.hr<{
     height: ${(props) => props.heightPer}%;
     ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
     @media (max-width: 768px) {
-        height: 20px;
+        ${(props) => (props.mobileLong ? 'position: absolute;' : '')}
+        height: ${(props) => (props.mobileLong ? '153px' : '20px')};
         margin-top: -10px;
         margin-bottom: -10px;
         ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}

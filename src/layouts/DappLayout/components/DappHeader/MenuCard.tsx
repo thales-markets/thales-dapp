@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getTheme } from 'redux/modules/ui';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -10,8 +9,6 @@ import PriceChart from 'components/Charts/PriceChart';
 import LanguageCardSelector from 'components/LanguageSelector/v3/LanguageCardSelector';
 import NetworkSwitchSection from 'components/NetworkSwitch/v2/NetworkSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
-import ThemeSelector from 'components/ThemeSelector/ThemeSelector';
-
 import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
 import DisplayNameForm from 'components/DisplayNameForm/DisplayNameForm';
 
@@ -21,12 +18,11 @@ interface ManuCardProps {
 
 const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ showCard, setShowCard }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const theme = useSelector((state: RootState) => getTheme(state));
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const showThalesBalance = !getIsPolygon(networkId) && !getIsArbitrum(networkId) && !getIsBSC(networkId);
     return (
-        <MenuCard visibility={showCard} className={theme == 0 ? 'light' : 'dark'}>
+        <MenuCard visibility={showCard} className={'dark'}>
             <CloseIcon className="icon icon--x-sign" onClick={() => setShowCard(!showCard)} />
             <CardWrapper>
                 <LogoContainer>
@@ -41,7 +37,6 @@ const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ 
 
                 <PriceChart currencyKey={'THALES'} showHeading={true} />
                 {isWalletConnected && <DisplayNameForm />}
-                <ThemeSelector />
                 <LanguageCardSelector />
             </CardWrapper>
         </MenuCard>
@@ -60,18 +55,10 @@ const MenuCard = styled.div<ManuCardProps>`
     box-sizing: border-box;
     border-radius: 15px;
     z-index: 1000;
-    &.light {
-        background-color: #f7f7f7;
-        --background: #f7f7f7;
-        --icon-color: #04045a;
-        --shadow-color: '#64D9FErgba(4, 4, 90, 0.4)';
-    }
-    &.dark {
-        background-color: #04045a;
-        --background: #04045a;
-        --icon-color: #f7f7f7;
-        --shadow-color: '#64D9FE';
-    }
+    background-color: #04045a;
+    --background: #04045a;
+    --icon-color: #f7f7f7;
+    --shadow-color: '#64D9FE';
     @media (max-width: 1024px) {
         width: 100%;
         max-width: 100%;

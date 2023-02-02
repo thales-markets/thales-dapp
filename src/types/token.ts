@@ -36,7 +36,9 @@ export type TokenTransactionType =
     | 'lpUnstake'
     | 'lpClaimStakingRewards'
     | 'lpClaimStakingRewardsSecond'
-    | 'mergeAccount';
+    | 'mergeAccount'
+    | 'delegateVolume'
+    | 'removeDelegation';
 
 export type TokenTransaction = {
     hash: string;
@@ -45,6 +47,7 @@ export type TokenTransaction = {
     timestamp: number;
     amount: number | string;
     blockNumber: number;
+    destAccount?: string;
 };
 
 export enum TokenTabEnum {
@@ -58,7 +61,7 @@ export enum TokenTabSectionIdEnum {
     STAKING = 'staking',
     REWARDS = 'rewards',
     VESTING = 'vesting',
-    MERGE_ACCOUNT = 'merge-account',
+    MERGE_ACCOUNT = 'account-preferences',
     LP_STAKING = 'lp-staking',
 }
 
@@ -68,6 +71,7 @@ export type TokenTabSection = {
     title: string;
     description: string | ReactElement;
     isButton: boolean;
+    buttonWidth?: string;
 };
 
 export enum TransactionFilterEnum {
@@ -88,6 +92,8 @@ export enum TransactionFilterEnum {
     LP_CLAIM_STAKING_REWARDS = 'lpClaimStakingRewards',
     LP_CLAIM_STAKING_REWARDS_SECOND = 'lpClaimStakingRewardsSecond',
     MERGE_ACCOUNT = 'mergeAccount',
+    DELEGATE_VOLUME = 'delegateVolume',
+    REMOVE_DELEGATION = 'removeDelegation',
 }
 
 export type TokenTransactions = TokenTransaction[];
@@ -127,7 +133,6 @@ export type StakingReward = {
     thalesAmmVolume: number;
     rangedAmmVolume: number;
     sportsAmmVolume: number;
-    exoticVolume: number;
     hasParticipatedInCurrentOrLastRoyale: boolean;
 };
 

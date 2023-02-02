@@ -1,30 +1,57 @@
 import { NetworkId } from '../../utils/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { generalConfig } from 'config/general';
+import { AMM_MAX_BUFFER_PERCENTAGE } from 'constants/options';
+import snxJSConnector from 'utils/snxJSConnector';
+import { bigNumberFormatter, stableCoinFormatter } from 'utils/formatters/ethers';
 
-type OpenOrdersMap = Record<
-    string,
-    { ordersCount: number; availableLongs: number; availableShorts: number; longPrice: number; shortPrice: number }
-> | null;
-
-// TODO: discuss with team to change logic and store and update markets in redux to avoid this
-export let openOrdersMapCacheNew: OpenOrdersMap = null;
+export type OpenOrdersMap =
+    | Record<
+          string,
+          {
+              ordersCount: number;
+              availableLongs: number;
+              availableShorts: number;
+              longPrice: number;
+              shortPrice: number;
+          }
+      >
+    | undefined;
 
 export const fetchAllMarketOrders = (network: NetworkId, options?: UseQueryOptions<OpenOrdersMap>) => {
     return useQuery<OpenOrdersMap>(
         QUERY_KEYS.BinaryOptions.OrdersCount(network),
         async () => {
-            const baseUrl = `${generalConfig.API_URL}/orders/${network}`;
-            const response = await fetch(baseUrl);
-            const json = await response.json();
-            const openOrdersMap = new Map(json);
+            try {
+                const [pricesFromContract, liquidityFromContract] = await Promise.all([
+                    (snxJSConnector as any).binaryOptionsMarketDataContract.getPricesForAllActiveMarkets(),
+                    (snxJSConnector as any).binaryOptionsMarketDataContract.getLiquidityForAllActiveMarkets(),
+                ]);
 
-            openOrdersMapCacheNew = openOrdersMap as any;
-            return openOrdersMap as any;
+                const mappedOpenOrdersMap = Object.assign(
+                    {},
+                    ...pricesFromContract.map((item: any, index: number) => ({
+                        [item.market.toLowerCase()]: {
+                            availableLongs:
+                                bigNumberFormatter(liquidityFromContract[index].upLiquidity) *
+                                AMM_MAX_BUFFER_PERCENTAGE,
+                            availableShorts:
+                                bigNumberFormatter(liquidityFromContract[index].downLiquidity) *
+                                AMM_MAX_BUFFER_PERCENTAGE,
+                            longPrice: stableCoinFormatter(item.upPrice, network),
+                            shortPrice: stableCoinFormatter(item.downPrice, network),
+                        },
+                    }))
+                ) as OpenOrdersMap;
+
+                return mappedOpenOrdersMap;
+            } catch (e) {
+                console.log(e);
+                return undefined;
+            }
         },
         {
-            refetchInterval: 5000,
+            refetchInterval: 30 * 1000,
             ...options,
         }
     );

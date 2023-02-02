@@ -73,6 +73,7 @@ import { CurrencyLabel, InputLabel, InputContainer } from 'pages/Token/component
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Footer from 'components/Footer';
 import { LINKS } from 'constants/links';
+import ElectionsBanner from 'components/ElectionsBanner';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -366,6 +367,7 @@ const Vault: React.FC<VaultProps> = (props) => {
     return (
         <>
             <OpRewardsBanner />
+            <ElectionsBanner />
             <Wrapper>
                 {/* <BackToLink link={buildHref(ROUTES.Options.Vaults)} text={t('vault.back-to-vaults')} /> */}
                 {vaultData && (

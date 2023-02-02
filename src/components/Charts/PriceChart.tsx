@@ -251,6 +251,9 @@ const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
     font-weight: bold;
     font-size: 15px;
     margin-left: 30px;
+    @media (max-width: 768px) {
+        margin-left: 5px;
+    }
 `;
 
 export default PriceChart;

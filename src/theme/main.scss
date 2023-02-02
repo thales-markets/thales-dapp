@@ -141,16 +141,10 @@ table {
     font-family: 'Roboto' !important;
     font-style: normal;
     -webkit-tap-highlight-color: transparent;
-    scrollbar-color: var(--color, #355dff) var(--color-wrapper, #04045a);
+    scrollbar-color: #f7f7f7 #1b314f;
     scrollbar-width: thin;
     &.dark-theme {
         scrollbar-color: #a1e1b4 #133326;
-    }
-    &.light {
-        scrollbar-color: #1b314f #dcdcdc;
-    }
-    &.dark {
-        scrollbar-color: #f7f7f7 #1b314f;
     }
 }
 
@@ -189,6 +183,12 @@ input[type='number'] {
 }
 
 body {
+    background: #052040;
+    scrollbar-color: #f7f7f7 #1b314f;
+    --color-wrapper: #1b314f;
+    --color: #f7f7f7;
+    --color-scrollbar-hover: #f7f7f7;
+
     &.light-theme {
         --scrollbar-width: 6px;
         --color-low: #141874;
@@ -206,21 +206,6 @@ body {
         --color-wrapper: #133326;
         --color: #a1e1b4;
         --color-scrollbar-hover: #6e967a;
-    }
-
-    &.light {
-        background: #f7f7f7;
-        scrollbar-color: #1b314f #dcdcdc;
-        --color-wrapper: #dcdcdc;
-        --color: #1b314f;
-        --color-scrollbar-hover: #1b314f;
-    }
-    &.dark {
-        background: #052040;
-        scrollbar-color: #f7f7f7 #1b314f;
-        --color-wrapper: #1b314f;
-        --color: #f7f7f7;
-        --color-scrollbar-hover: #f7f7f7;
     }
 }
 

@@ -1,4 +1,4 @@
-import { Currency } from '@socket.tech/widget';
+import { Currency } from '@socket.tech/plugin';
 
 export const OP_DAI: Currency = {
     name: 'Dai Stablecoin',

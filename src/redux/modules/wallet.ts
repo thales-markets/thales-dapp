@@ -4,6 +4,7 @@ import { defaultNetwork, NetworkId, formatGasLimit } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_SPEED } from 'constants/defaults';
 import { GasSpeed } from 'queries/network/useEthGasPriceQuery';
+import { COLLATERALS_INDEX } from 'constants/options';
 
 const sliceName = 'wallet';
 
@@ -14,6 +15,7 @@ export type WalletSliceState = {
     gasSpeed: GasSpeed;
     customGasPrice: number | null;
     gasLimit: number;
+    selectedCollateral: COLLATERALS_INDEX;
 };
 
 const initialState: WalletSliceState = {
@@ -23,6 +25,7 @@ const initialState: WalletSliceState = {
     gasSpeed: DEFAULT_GAS_SPEED,
     customGasPrice: null,
     gasLimit: DEFAULT_GAS_LIMIT,
+    selectedCollateral: COLLATERALS_INDEX.sUSD,
 };
 
 export const walletDetailsSlice = createSlice({
@@ -63,6 +66,9 @@ export const walletDetailsSlice = createSlice({
         setGasLimit: (state, action: PayloadAction<number>) => {
             state.gasLimit = formatGasLimit(action.payload, state.networkId);
         },
+        setSelectedCollateral: (state, action: PayloadAction<number>) => {
+            state.selectedCollateral = action.payload;
+        },
     },
 });
 
@@ -81,6 +87,8 @@ export const getGasSpeed = (state: RootState) => getWalletState(state).gasSpeed;
 export const getGasLimit = (state: RootState) => getWalletState(state).gasLimit;
 export const getCustomGasPrice = (state: RootState) => getWalletState(state).customGasPrice;
 
+export const getSelectedCollateral = (state: RootState) => getWalletState(state).selectedCollateral;
+
 export const {
     updateNetworkSettings,
     resetWallet,
@@ -88,6 +96,7 @@ export const {
     setGasSpeed,
     setCustomGasPrice,
     setGasLimit,
+    setSelectedCollateral,
 } = walletDetailsSlice.actions;
 
 export default walletDetailsSlice.reducer;
