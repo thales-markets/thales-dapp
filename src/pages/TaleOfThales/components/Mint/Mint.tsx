@@ -36,7 +36,7 @@ const Mint: React.FC = () => {
             const { taleOfThalesNFTContract } = snxJSConnector as any;
             const taleOfThalesNFTContractWithSigner = taleOfThalesNFTContract.connect((snxJSConnector as any).signer);
 
-            const tx = await taleOfThalesNFTContractWithSigner.mintCollection(collectionId);
+            const tx = await taleOfThalesNFTContractWithSigner.mintCollection('0x' + collectionId);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -52,8 +52,7 @@ const Mint: React.FC = () => {
         try {
             const { taleOfThalesNFTContract } = snxJSConnector as any;
             const taleOfThalesNFTContractWithSigner = taleOfThalesNFTContract.connect((snxJSConnector as any).signer);
-
-            const tx = await taleOfThalesNFTContractWithSigner.mintItem(itemId);
+            const tx = await taleOfThalesNFTContractWithSigner.mintItem('0x' + itemId);
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
