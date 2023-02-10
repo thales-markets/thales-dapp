@@ -2,11 +2,68 @@ import React from 'react';
 import styled from 'styled-components';
 import { NFT_COLLECTIONS } from './constants';
 import { ReactComponent as NFTContainerImage } from 'assets/images/tale-of-thales-nft-container.svg';
+import { ReactComponent as NFTOwnedContainerImage } from 'assets/images/tale-of-thales-nft-owned-container.svg';
 import { ReactComponent as PixelTooltipContainer } from 'assets/images/pixel-tooltip-container.svg';
 import { Tooltip } from '@material-ui/core';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import useNFTCollectionsQuery from 'queries/taleOfThales/useNFTCollectionsQuery';
+import { useSelector } from 'react-redux';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import snxJSConnector from 'utils/snxJSConnector';
+import { toast } from 'react-toastify';
+import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { useTranslation } from 'react-i18next';
+import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
+import { RootState } from 'redux/rootReducer';
+import { getIsAppReady } from 'redux/modules/app';
 
 const Mint: React.FC = () => {
+    const { t } = useTranslation();
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector(getWalletAddress);
+    const networkId = useSelector(getNetworkId);
+    const collectionsQuery = useNFTCollectionsQuery(walletAddress || '', networkId, {
+        enabled: isAppReady && !!walletAddress,
+    });
+    const collectionEligibility = collectionsQuery.isSuccess ? collectionsQuery.data : {};
+    const NFTBalancesQuery = useNFTBalancesQuery(walletAddress || '', networkId, {
+        enabled: isAppReady && !!walletAddress,
+    });
+    const NFTBalancesMap = NFTBalancesQuery.isSuccess ? NFTBalancesQuery.data : {};
+    const handleMintCollection = async (collectionId: number) => {
+        const id = toast.loading(t('tale-of-thales.mint.loading'));
+        try {
+            const { taleOfThalesNFTContract } = snxJSConnector as any;
+            const taleOfThalesNFTContractWithSigner = taleOfThalesNFTContract.connect((snxJSConnector as any).signer);
+
+            const tx = await taleOfThalesNFTContractWithSigner.mintCollection(collectionId);
+            const txResult = await tx.wait();
+
+            if (txResult && txResult.transactionHash) {
+                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted')));
+            }
+        } catch (e) {
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+        }
+    };
+
+    const handleMintItem = async (itemId: number) => {
+        const id = toast.loading(t('tale-of-thales.mint.loading'));
+        try {
+            const { taleOfThalesNFTContract } = snxJSConnector as any;
+            const taleOfThalesNFTContractWithSigner = taleOfThalesNFTContract.connect((snxJSConnector as any).signer);
+
+            const tx = await taleOfThalesNFTContractWithSigner.mintItem(itemId);
+            const txResult = await tx.wait();
+
+            if (txResult && txResult.transactionHash) {
+                toast.update(id, getSuccessToastOptions(t('tale-of-thales.mint.successfully-minted')));
+            }
+        } catch (e) {
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+        }
+    };
+
     return (
         <Container>
             {NFT_COLLECTIONS.map((collection, index) => {
@@ -31,15 +88,30 @@ const Mint: React.FC = () => {
                                 return (
                                     <Item key={index}>
                                         <NFTContainer>
-                                            <StyledNFTContainerImage />
+                                            {NFTBalancesMap[item.itemId] ? (
+                                                <StyledNFTOwnedContainerImage />
+                                            ) : (
+                                                <StyledNFTContainerImage />
+                                            )}
                                             <NFTTitle>{item.name}</NFTTitle>
                                             <NFTImage src={item.src} />
                                         </NFTContainer>
-                                        <Button>Mint</Button>
+                                        <Button
+                                            invisible={NFTBalancesMap[item.itemId]}
+                                            onClick={() => handleMintItem(item.itemId)}
+                                            disabled={!collectionEligibility[collection.collectionId]}
+                                        >
+                                            Mint
+                                        </Button>
                                     </Item>
                                 );
                             })}
-                            <CollectionButton>Mint Collection</CollectionButton>
+                            <CollectionButton
+                                onClick={() => handleMintCollection(collection.collectionId)}
+                                disabled={!collectionEligibility[collection.collectionId]}
+                            >
+                                Mint Collection
+                            </CollectionButton>
                         </CollectionItemsContainer>
                     </CollectionContainer>
                 );
@@ -108,7 +180,12 @@ const StyledNFTContainerImage = styled(NFTContainerImage)`
     z-index: 0;
 `;
 
-const Button = styled.button`
+const StyledNFTOwnedContainerImage = styled(NFTOwnedContainerImage)`
+    position: absolute;
+    z-index: 0;
+`;
+
+const Button = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
     background: linear-gradient(90.42deg, #d6d0ab 18.36%, #aea992 87.84%);
     border: 2px dashed #04045a;
@@ -119,6 +196,11 @@ const Button = styled.button`
     text-transform: uppercase;
     margin-top: 10px;
     cursor: pointer;
+    visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
 `;
 
 const CollectionButton = styled.button`
@@ -133,6 +215,10 @@ const CollectionButton = styled.button`
     cursor: pointer;
     transform: translateY(-50%);
     margin-left: auto;
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
 `;
 
 const StyledTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)(
@@ -155,7 +241,6 @@ const TooltipContent = styled.div`
     font-family: basis33 !important;
     font-size: 25px;
     line-height: 120%;
-    text-align: justify;
     width: 332px;
     height: 167px;
     padding: 10px 10px 10px 15px;

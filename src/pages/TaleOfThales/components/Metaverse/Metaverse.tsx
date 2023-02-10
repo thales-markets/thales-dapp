@@ -9,6 +9,7 @@ import Container from '../../styled-components/GameContainer';
 import onboardConnector from 'utils/onboardConnector';
 import { getIsAppReady } from 'redux/modules/app';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
+import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-metaverse/build.loader.js',
@@ -17,15 +18,7 @@ const unityContext = new UnityContext({
     codeUrl: '/miletus-metaverse/build.wasm.unityweb',
 });
 
-// const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-
-type MetaverseProperties = {
-    closeMetaverse: number;
-    setCloseMetaverse: (tab: number) => void;
-    setActiveTab: (tab: number) => void;
-};
-
-const Metaverse: React.FC<MetaverseProperties> = ({ closeMetaverse, setCloseMetaverse, setActiveTab }) => {
+const Metaverse: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -36,6 +29,12 @@ const Metaverse: React.FC<MetaverseProperties> = ({ closeMetaverse, setCloseMeta
     });
 
     const thalesStaked = stakingThalesQuery.isSuccess ? stakingThalesQuery.data.thalesStaked : 0;
+
+    const NFTBalancesQuery = useNFTBalancesQuery(walletAddress || '', networkId, {
+        enabled: isAppReady && !!walletAddress,
+    });
+    const NFTBalancesMap = NFTBalancesQuery.isSuccess ? NFTBalancesQuery.data : {};
+
     const handleOnClickFullscreen = () => {
         unityContext.setFullscreen(true);
     };
@@ -45,17 +44,17 @@ const Metaverse: React.FC<MetaverseProperties> = ({ closeMetaverse, setCloseMeta
             unityContext.send(
                 'JSListener',
                 'sendWalletInfoToGame',
-                JSON.stringify({ walletAddress, thalesStaked, listOwnedNFTs: [3, 7, 8, 17, 18] })
+                JSON.stringify({ walletAddress, thalesStaked, listOwnedNFTs: Object.keys(NFTBalancesMap) })
             );
         }
-    }, [walletAddress, thalesStaked]);
+    }, [walletAddress, thalesStaked, NFTBalancesMap]);
 
     unityContext.on('connectGameToWallet', () => {
         if (walletAddress) {
             unityContext.send(
                 'JSListener',
                 'sendWalletInfoToGame',
-                JSON.stringify({ walletAddress, thalesStaked, listOwnedNFTs: [3, 7, 8, 17, 18] })
+                JSON.stringify({ walletAddress, thalesStaked, listOwnedNFTs: Object.keys(NFTBalancesMap) })
             );
         } else {
             onboardConnector.connectWallet();
@@ -69,18 +68,6 @@ const Metaverse: React.FC<MetaverseProperties> = ({ closeMetaverse, setCloseMeta
     unityContext.on('openOvertimeMarkets', () => {
         window.open('https://overtimemarkets.xyz/#/markets');
     });
-
-    unityContext.on('readyToUnload', async () => {
-        await unityContext.quitUnityInstance();
-        setActiveTab(closeMetaverse);
-        setCloseMetaverse(0);
-    });
-
-    useEffect(() => {
-        if (closeMetaverse) {
-            unityContext.send('JSListener', 'onClose');
-        }
-    }, [closeMetaverse]);
 
     return (
         <Container className="game" style={{ zIndex: 10 }}>

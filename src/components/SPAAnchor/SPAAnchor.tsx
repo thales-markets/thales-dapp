@@ -44,7 +44,6 @@ const SPAAnchor: React.FC<FieldValidationMessageProps> = ({
                                   onClick && onClick(event);
                                   if (!href.includes('http')) {
                                       if (location.pathname === ROUTES.Options.Game && href !== ROUTES.Options.Game) {
-                                          console.log(href);
                                           // @ts-ignore
                                           window?.webSocket?.close();
                                           await delay(100);

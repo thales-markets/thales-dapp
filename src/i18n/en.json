@@ -1952,6 +1952,12 @@
         "otm-volume-label": "OTM Volume",
         "volume-tooltip": "Current rewards:\n {{op}} + {{thales}} per $1,000 of Buy Volume"
     },
+    "tale-of-thales": {
+        "mint": {
+            "loading": "Please wait...",
+            "successfully-minted": "Successfully minted"
+        }
+    },
     "vaults": {
         "title": "Vaults",
         "strategy-label": "Vault strategy",
