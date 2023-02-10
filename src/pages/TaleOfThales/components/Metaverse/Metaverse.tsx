@@ -44,7 +44,11 @@ const Metaverse: React.FC = () => {
             unityContext.send(
                 'JSListener',
                 'sendWalletInfoToGame',
-                JSON.stringify({ walletAddress, thalesStaked, listOwnedNFTs: Object.keys(NFTBalancesMap) })
+                JSON.stringify({
+                    walletAddress,
+                    thalesStaked,
+                    listOwnedNFTs: Object.keys(NFTBalancesMap).map((itemId) => Number(itemId) - 1),
+                })
             );
         }
     }, [walletAddress, thalesStaked, NFTBalancesMap]);
@@ -54,7 +58,11 @@ const Metaverse: React.FC = () => {
             unityContext.send(
                 'JSListener',
                 'sendWalletInfoToGame',
-                JSON.stringify({ walletAddress, thalesStaked, listOwnedNFTs: Object.keys(NFTBalancesMap) })
+                JSON.stringify({
+                    walletAddress,
+                    thalesStaked,
+                    listOwnedNFTs: Object.keys(NFTBalancesMap).map((itemId) => Number(itemId) - 1),
+                })
             );
         } else {
             onboardConnector.connectWallet();
