@@ -106,6 +106,7 @@ const Mint: React.FC = () => {
                                 );
                             })}
                             <CollectionButton
+                                invisible={collection.items.every((item) => NFTBalancesMap[item.itemId])}
                                 onClick={() => handleMintCollection(collection.collectionId)}
                                 disabled={!collectionEligibility[collection.collectionId]}
                             >
@@ -202,7 +203,7 @@ const Button = styled.button<{ invisible?: boolean }>`
     }
 `;
 
-const CollectionButton = styled.button`
+const CollectionButton = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
     background: linear-gradient(90.42deg, #d6d0ab 18.36%, #aea992 87.84%);
     border: 2px dashed #04045a;
@@ -214,6 +215,7 @@ const CollectionButton = styled.button`
     cursor: pointer;
     transform: translateY(-50%);
     margin-left: auto;
+    visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
     &:disabled {
         opacity: 0.4;
         cursor: not-allowed;
