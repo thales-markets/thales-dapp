@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Metaverse from './components/Metaverse';
 import Mint from './components/Mint';
 import Story from './components/Story';
+import { history } from 'utils/routes';
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 const TaleOfThales: React.FC = () => {
     // const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<number>(0);
+
+    useEffect(() => {
+        history.push({ pathname: location.pathname, search: location.search });
+    }, []);
+
+    useEffect(() => {
+        const listener = () => {
+            history.push({ pathname: location.pathname, search: location.search });
+        };
+        window.addEventListener('popstate', listener);
+        return () => window.removeEventListener('popstate', listener);
+    }, []);
 
     return (
         <>
