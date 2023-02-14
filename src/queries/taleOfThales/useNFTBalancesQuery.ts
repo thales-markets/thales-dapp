@@ -17,7 +17,7 @@ const useNFTBalancesQuery = (
                 network: networkId,
             });
             mintTransactions.forEach((tx: any) => {
-                NFTBalances[parseInt(tx.item.id.replace('0x', ''), 16)] = true;
+                NFTBalances[parseInt(tx.item.id, 16)] = true;
             });
             return NFTBalances;
         },
