@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Metaverse from './components/Metaverse';
 import Mint from './components/Mint';
 import Story from './components/Story';
+import { history } from 'utils/routes';
+
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 const TaleOfThales: React.FC = () => {
     // const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<number>(0);
-    const [closeMetaverse, setCloseMetaverse] = useState<number>(0);
+
+    useEffect(() => {
+        history.push({ pathname: location.pathname, search: location.search });
+    }, []);
+
+    useEffect(() => {
+        const listener = () => {
+            history.push({ pathname: location.pathname, search: location.search });
+        };
+        window.addEventListener('popstate', listener);
+        return () => window.removeEventListener('popstate', listener);
+    }, []);
 
     return (
         <>
@@ -18,10 +32,11 @@ const TaleOfThales: React.FC = () => {
                 <Tab
                     onClick={async () => {
                         if (activeTab === 0) {
-                            setCloseMetaverse(1);
-                        } else {
-                            setActiveTab(1);
+                            // @ts-ignore
+                            window?.webSocket?.close();
+                            await delay(100);
                         }
+                        setActiveTab(1);
                     }}
                     active={activeTab === 1}
                 >
@@ -30,23 +45,18 @@ const TaleOfThales: React.FC = () => {
                 <Tab
                     onClick={async () => {
                         if (activeTab === 0) {
-                            setCloseMetaverse(2);
-                        } else {
-                            setActiveTab(2);
+                            // @ts-ignore
+                            window?.webSocket?.close();
+                            await delay(100);
                         }
+                        setActiveTab(2);
                     }}
                     active={activeTab === 2}
                 >
                     Story
                 </Tab>
             </TabsContainer>
-            {activeTab === 0 && (
-                <Metaverse
-                    closeMetaverse={closeMetaverse}
-                    setCloseMetaverse={setCloseMetaverse}
-                    setActiveTab={setActiveTab}
-                />
-            )}
+            {activeTab === 0 && <Metaverse />}
             {activeTab === 1 && <Mint />}
             {activeTab === 2 && <Story />}
         </>
