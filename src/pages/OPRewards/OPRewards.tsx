@@ -673,9 +673,10 @@ const OPRewards: React.FC = () => {
                         Cell: (cellProps: any) => (
                             <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
                                 <Trans
-                                    i18nKey={'op-rewards.table.reward-text-op'}
+                                    i18nKey={'op-rewards.table.reward-text'}
                                     values={{
                                         op: Number(cellProps.cell.value.op).toFixed(2),
+                                        thales: Number(cellProps.cell.value.thales).toFixed(2),
                                     }}
                                     components={[<br key="0" />]}
                                 />
