@@ -11,7 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
-import { getIsOVM } from 'utils/network';
+import { getIsArbitrum, getIsOVM } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
@@ -21,8 +21,9 @@ const TokenPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isArb = getIsArbitrum(networkId);
 
-    const defaultTab = isL2 ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
+    const defaultTab = isL2 || isArb ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
 
     const tabs = [
         {
@@ -74,7 +75,7 @@ const TokenPage: React.FC = () => {
         },
     ];
 
-    if (!isL2) {
+    if (!isL2 && !isArb) {
         tabs.push({
             id: TokenTabEnum.MIGRATION,
             name: t('migration.title'),
@@ -117,7 +118,7 @@ const TokenPage: React.FC = () => {
             <Container>
                 <FlexDivColumn>
                     <TokenOverview />
-                    {!isL2 && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
+                    {!isL2 && !isArb && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
 
                     <MainContentContainer>
                         <TabContainer

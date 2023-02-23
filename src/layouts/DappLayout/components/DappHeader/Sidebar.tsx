@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
     const [isMobileState, setIsMobileState] = useState(isMobile());
 
     const showWizardPage = !isPolygon && !isMobileState && !isBSC && !isArbitrum;
-    const showTokenPage = !isPolygon && !isBSC && !isArbitrum;
+    const showTokenPage = !isPolygon && !isBSC;
     const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
     const showVaultsPage = !isPolygon && !isBSC && !isArbitrum;
 

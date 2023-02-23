@@ -11,7 +11,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { TokenTabEnum, TokenTabSectionIdEnum, TokenTabSection } from 'types/token';
-import { getIsOVM } from 'utils/network';
+import { getIsArbitrum, getIsOVM } from 'utils/network';
 import Button from '../Button';
 import { ButtonType } from '../Button/Button';
 import MigrationInfo from '../MigrationInfo';
@@ -28,6 +28,7 @@ const Tab: React.FC<{
     const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isArb = getIsArbitrum(networkId);
 
     const [activeButtonId, setActiveButtonId] = useState(selectedSection || sections[0].id);
 
@@ -37,7 +38,7 @@ const Tab: React.FC<{
 
     return (
         <Container>
-            {isL2 && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
+            {(isArb || isL2) && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
                 <>
                     <SectionRow>
                         <SectionHeader>{sections.find((el) => el.id === activeButtonId)?.title}</SectionHeader>
