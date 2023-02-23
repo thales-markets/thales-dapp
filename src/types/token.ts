@@ -133,7 +133,6 @@ export type StakingReward = {
     thalesAmmVolume: number;
     rangedAmmVolume: number;
     sportsAmmVolume: number;
-    hasParticipatedInCurrentOrLastRoyale: boolean;
 };
 
 type Reward = {

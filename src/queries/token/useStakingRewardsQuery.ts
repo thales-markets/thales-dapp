@@ -70,7 +70,6 @@ const useStakingRewardsQuery = (
                 maxThalesRoyaleBonus: 0,
                 snxStaked: 0,
                 ammVolume: 0,
-                hasParticipatedInCurrentOrLastRoyale: false,
                 thalesAmmVolume: 0,
                 rangedAmmVolume: 0,
                 sportsAmmVolume: 0,
@@ -85,7 +84,6 @@ const useStakingRewardsQuery = (
                     ammBonus,
                     snxStaked,
                     ammVolume,
-                    hasParticipatedInCurrentOrLastRoyale,
                     thalesAmmVolume,
                     rangedAmmVolume,
                     sportsAmmVolume,
@@ -97,11 +95,6 @@ const useStakingRewardsQuery = (
                     (snxJSConnector as any).stakingThalesContract.getAMMBonus(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getSNXStaked(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getAMMVolume(walletAddress),
-                    networkId === 10
-                        ? (snxJSConnector as any).thalesRoyaleContract.hasParticipatedInCurrentOrLastRoyale(
-                              walletAddress
-                          )
-                        : false,
                     (snxJSConnector as any).stakingThalesContract.getThalesAMMVolume(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getThalesRangedAMMVolume(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getSportsAMMVolume(walletAddress),
@@ -124,7 +117,6 @@ const useStakingRewardsQuery = (
                     (bigNumberFormatter(baseRewards) * Number(maxThalesRoyaleRewardsPercentage)) / 100;
                 stakingRewards.snxStaked = bigNumberFormatter(snxStaked);
                 stakingRewards.ammVolume = bigNumberFormatter(ammVolume);
-                stakingRewards.hasParticipatedInCurrentOrLastRoyale = hasParticipatedInCurrentOrLastRoyale;
                 stakingRewards.thalesAmmVolume = bigNumberFormatter(thalesAmmVolume);
                 stakingRewards.rangedAmmVolume = bigNumberFormatter(rangedAmmVolume);
                 stakingRewards.sportsAmmVolume = bigNumberFormatter(sportsAmmVolume);
