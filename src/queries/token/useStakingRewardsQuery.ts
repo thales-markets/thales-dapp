@@ -97,7 +97,11 @@ const useStakingRewardsQuery = (
                     (snxJSConnector as any).stakingThalesContract.getAMMBonus(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getSNXStaked(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getAMMVolume(walletAddress),
-                    (snxJSConnector as any).thalesRoyaleContract.hasParticipatedInCurrentOrLastRoyale(walletAddress),
+                    networkId === 10
+                        ? (snxJSConnector as any).thalesRoyaleContract.hasParticipatedInCurrentOrLastRoyale(
+                              walletAddress
+                          )
+                        : false,
                     (snxJSConnector as any).stakingThalesContract.getThalesAMMVolume(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getThalesRangedAMMVolume(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getSportsAMMVolume(walletAddress),
