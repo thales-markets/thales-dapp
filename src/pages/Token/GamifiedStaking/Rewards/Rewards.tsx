@@ -19,6 +19,7 @@ import {
     Line,
     StyledInfoIcon,
     StyledMaterialTooltip,
+    Tip125Link,
     Tip48Link,
 } from 'pages/Token/components';
 import YourTransactions from './Transactions';
@@ -174,6 +175,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const ammVolume = stakingRewards ? stakingRewards.ammVolume : 0;
     const ammBonus = stakingRewards ? stakingRewards.ammBonus : 0;
     const maxAmmBonus = stakingRewards ? stakingRewards.maxAmmBonus : 0;
+    console.log(maxAmmBonus);
     const ammVolumeRewardsMultiplier = stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
     const snxBonus = stakingRewards ? stakingRewards.snxBonus : 0;
     const snxStaked = stakingRewards ? stakingRewards.snxStaked : 0;
@@ -578,8 +580,15 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     t('options.earn.gamified-staking.rewards.info.bonus'),
                     bonusRewardsFormatted,
                     <Trans
-                        i18nKey="options.earn.gamified-staking.rewards.info.bonus-description"
-                        components={[<Tip48Link key="1" />]}
+                        i18nKey={
+                            isL2
+                                ? 'options.earn.gamified-staking.rewards.info.bonus-description'
+                                : 'options.earn.gamified-staking.rewards.info.bonus-description-arb'
+                        }
+                        values={{
+                            bonusRewards: bonusRewardsFormatted,
+                        }}
+                        components={[isL2 ? <Tip48Link key="1" /> : <Tip125Link key="1" />]}
                     />
                 )}
             </SectionWrapper>
