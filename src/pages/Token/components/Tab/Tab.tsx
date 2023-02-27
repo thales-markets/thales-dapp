@@ -87,7 +87,7 @@ const Tab: React.FC<{
                     </SectionContent>
                 </>
             )}
-            {!isL2 && selectedTab === TokenTabEnum.GAMIFIED_STAKING && <MigrationInfo messageKey="staking" />}
+            {!isL2 && !isArb && selectedTab === TokenTabEnum.GAMIFIED_STAKING && <MigrationInfo messageKey="staking" />}
             {isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
                 <>
                     <SectionRow>
