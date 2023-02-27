@@ -83,7 +83,7 @@ const Tab: React.FC<{
                             <Rewards gridGap={GRID_GAP} setSelectedTab={setSelectedTab} />
                         )}
                         {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
-                        {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && isL2 && <MergeAccount />}
+                        {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && <MergeAccount />}
                     </SectionContent>
                 </>
             )}
