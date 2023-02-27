@@ -30,10 +30,6 @@ const TokenPage: React.FC = () => {
             id: TokenTabEnum.GAMIFIED_STAKING,
             name: t('options.earn.gamified-staking.tab-title'),
         },
-        {
-            id: TokenTabEnum.LP_STAKING,
-            name: t('options.earn.lp-staking.tab-title'),
-        },
     ];
 
     const tabSections = [
@@ -74,6 +70,13 @@ const TokenPage: React.FC = () => {
             isButton: false,
         },
     ];
+
+    if (isL2) {
+        tabs.push({
+            id: TokenTabEnum.LP_STAKING,
+            name: t('options.earn.lp-staking.tab-title'),
+        });
+    }
 
     if (!isL2 && !isArb) {
         tabs.push({
