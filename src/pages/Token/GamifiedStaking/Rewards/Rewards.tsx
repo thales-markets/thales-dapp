@@ -742,9 +742,24 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             {/* Fourth row */}
-            {!isMobile() && (
-                <SectionWrapper columns={isL2 ? 3 : 5} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
+            {!isMobile() && isL2 ? (
+                <SectionWrapper columns={3} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
                     {getClaimOnBehalfSection()}
+                </SectionWrapper>
+            ) : (
+                <SectionWrapper columns={3} startColumn={-6}>
+                    <SectionContentWrapper>
+                        <SectionLabel type={SectionType.REWARD}>
+                            <SectionLabelContent type={SectionType.REWARD}>
+                                {t('options.earn.gamified-staking.rewards.base-label')}
+                            </SectionLabelContent>
+                        </SectionLabel>
+                        <SectionValue type={SectionType.REWARD}>
+                            <SectionValueContent type={SectionType.REWARD}>
+                                {formatCurrencyWithKey(THALES_CURRENCY, baseRewards)}
+                            </SectionValueContent>
+                        </SectionValue>
+                    </SectionContentWrapper>
                 </SectionWrapper>
             )}
             <SectionWrapper startColumn={isL2 ? undefined : 4} columns={6} backgroundType={BackgroundType.CLAIM}>
@@ -769,20 +784,31 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             {/* Fifth row */}
-            <SectionWrapper columns={12} marginTop={-gridGap}>
-                <SectionContentWrapper>
-                    <SectionLabel type={SectionType.REWARD}>
-                        <SectionLabelContent type={SectionType.REWARD}>
-                            {t('options.earn.gamified-staking.rewards.base-label')}
-                        </SectionLabelContent>
-                    </SectionLabel>
-                    <SectionValue type={SectionType.REWARD}>
-                        <SectionValueContent type={SectionType.REWARD}>
-                            {formatCurrencyWithKey(THALES_CURRENCY, baseRewards)}
-                        </SectionValueContent>
-                    </SectionValue>
-                </SectionContentWrapper>
-            </SectionWrapper>
+            {isL2 ? (
+                <SectionWrapper columns={12} marginTop={-gridGap}>
+                    <SectionContentWrapper>
+                        <SectionLabel type={SectionType.REWARD}>
+                            <SectionLabelContent type={SectionType.REWARD}>
+                                {t('options.earn.gamified-staking.rewards.base-label')}
+                            </SectionLabelContent>
+                        </SectionLabel>
+                        <SectionValue type={SectionType.REWARD}>
+                            <SectionValueContent type={SectionType.REWARD}>
+                                {formatCurrencyWithKey(THALES_CURRENCY, baseRewards)}
+                            </SectionValueContent>
+                        </SectionValue>
+                    </SectionContentWrapper>
+                </SectionWrapper>
+            ) : (
+                <SectionWrapper
+                    marginTop={-gridGap}
+                    startColumn={5}
+                    columns={4}
+                    backgroundType={BackgroundType.CLAIM_ON_BEHALF}
+                >
+                    {getClaimOnBehalfSection()}
+                </SectionWrapper>
+            )}
 
             {/* Sixth row */}
             <YourTransactions gridColumns={12} />
