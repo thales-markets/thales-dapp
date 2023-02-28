@@ -116,7 +116,7 @@ const TokenPage: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner />
+            {isL2 && <OpRewardsBanner />}
             <ElectionsBanner />
             <Container>
                 <FlexDivColumn>
