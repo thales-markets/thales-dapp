@@ -45,6 +45,7 @@ const TokenPage: React.FC = () => {
             id: TokenTabSectionIdEnum.REWARDS,
             title: t('options.earn.gamified-staking.rewards.section-title'),
             description: t('options.earn.gamified-staking.rewards.section-description'),
+            warning: t('options.earn.gamified-staking.rewards.section-warning'),
             isButton: true,
         },
         {

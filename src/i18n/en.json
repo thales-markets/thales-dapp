@@ -606,7 +606,8 @@
                 },
                 "rewards": {
                     "section-title": "Rewards",
-                    "section-description": "The Rewards page shows the THALES you have available for claiming.",
+                    "section-description": "Staking rewards are allocated to you once a week, depending on your My Staked Share percentage value at the time of the weekly snapshot. You can claim staking rewards weekly.",
+                    "section-warning": "Unclaimed weekly rewards are forfeited!",
                     "info": {
                         "base": "As base rewards",
                         "base-description": "Base rewards accrued from THALES Staking ({{baseRewards}} weekly)",

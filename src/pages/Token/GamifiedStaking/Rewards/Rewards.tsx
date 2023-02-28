@@ -175,7 +175,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const ammVolume = stakingRewards ? stakingRewards.ammVolume : 0;
     const ammBonus = stakingRewards ? stakingRewards.ammBonus : 0;
     const maxAmmBonus = stakingRewards ? stakingRewards.maxAmmBonus : 0;
-    console.log(maxAmmBonus);
     const ammVolumeRewardsMultiplier = stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
     const snxBonus = stakingRewards ? stakingRewards.snxBonus : 0;
     const snxStaked = stakingRewards ? stakingRewards.snxStaked : 0;

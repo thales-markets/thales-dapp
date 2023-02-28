@@ -70,6 +70,7 @@ export type TokenTabSection = {
     id: TokenTabSectionIdEnum;
     title: string;
     description: string | ReactElement;
+    warning?: string | ReactElement;
     isButton: boolean;
     buttonWidth?: string;
 };
