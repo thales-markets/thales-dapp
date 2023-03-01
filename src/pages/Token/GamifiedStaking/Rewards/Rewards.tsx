@@ -19,6 +19,7 @@ import {
     Line,
     StyledInfoIcon,
     StyledMaterialTooltip,
+    Tip125Link,
     Tip48Link,
 } from 'pages/Token/components';
 import YourTransactions from './Transactions';
@@ -223,16 +224,21 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const protocolVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume);
     const protocolVolumeNeededForBonusFormatted =
         ammVolumeNeededForMaxBonus > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolumeNeededForMaxBonus) : '';
+
     const protocolMaxRewardFormatted = isClaimAvailable
-        ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
-          ' + ' +
-          formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, maxOpAmmBonus)
-        : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100)) +
+        ? isL2
+            ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
+              ' + ' +
+              formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, maxOpAmmBonus)
+            : formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus)
+        : isL2
+        ? formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100)) +
           ' + ' +
           formatCurrencyWithKey(
               CRYPTO_CURRENCY_MAP.OP,
               estimatedRewards * (maxAmmBonusPercentage / 100) * OP_REWARDS_MULTIPLIER
-          );
+          )
+        : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100));
 
     // SNX staking
     const snxRewardFormatted = formatCurrencyWithKey(THALES_CURRENCY, snxBonus);
@@ -298,7 +304,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 <SectionValue type={SectionType.REWARD}>
                     <SectionValueContent type={SectionType.REWARD}>{value.main}</SectionValueContent>
                     {value.mainAddition && (
-                        <SectionValueContent type={SectionType.REWARD} isOp={true}>
+                        <SectionValueContent type={SectionType.REWARD} isOp={isL2}>
                             {' + ' + value.mainAddition}
                         </SectionValueContent>
                     )}
@@ -448,16 +454,20 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionValueContent type={SectionType.CLAIM}>
                         {formatCurrencyWithKey(THALES_CURRENCY, totalThalesRewards)}
                     </SectionValueContent>
-                    <SectionValueContent type={SectionType.CLAIM} isOp={true}>
-                        {' + ' + formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus)}
-                    </SectionValueContent>
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={<Trans i18nKey="options.earn.gamified-staking.rewards.claim.op-tooltip" />}
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                    {isL2 && (
+                        <>
+                            <SectionValueContent type={SectionType.CLAIM} isOp={true}>
+                                {' + ' + formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus)}
+                            </SectionValueContent>
+                            <StyledMaterialTooltip
+                                arrow={true}
+                                title={<Trans i18nKey="options.earn.gamified-staking.rewards.claim.op-tooltip" />}
+                                interactive
+                            >
+                                <StyledInfoIcon />
+                            </StyledMaterialTooltip>
+                        </>
+                    )}
                 </SectionValue>
                 <NetworkFeesWrapper>
                     <Line margin={'0 0 10px 0'} />
@@ -569,8 +579,15 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     t('options.earn.gamified-staking.rewards.info.bonus'),
                     bonusRewardsFormatted,
                     <Trans
-                        i18nKey="options.earn.gamified-staking.rewards.info.bonus-description"
-                        components={[<Tip48Link key="1" />]}
+                        i18nKey={
+                            isL2
+                                ? 'options.earn.gamified-staking.rewards.info.bonus-description'
+                                : 'options.earn.gamified-staking.rewards.info.bonus-description-arb'
+                        }
+                        values={{
+                            bonusRewards: bonusRewardsFormatted,
+                        }}
+                        components={[isL2 ? <Tip48Link key="1" /> : <Tip125Link key="1" />]}
                     />
                 )}
             </SectionWrapper>
@@ -673,34 +690,37 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         volume: protocolVolumeFormatted,
                         bonus: protocolVolumeNeededForBonusFormatted,
                         rewards: protocolMaxRewardFormatted,
-                        mainAddition: protocolRewardOp,
+                        mainAddition: isL2 ? protocolRewardOp : undefined,
                     }
                 )}
             </SectionWrapper>
             {isMobile() && <PlusSectionConnect>+</PlusSectionConnect>}
-            <SectionWrapper columns={5}>
-                {getRewardSection(
-                    {
-                        main: t('options.earn.gamified-staking.rewards.snx.label'),
-                        volume: t('options.earn.gamified-staking.rewards.snx.staked'),
-                        bonus: snxNeededForMaxBonusFormatted.length
-                            ? t('options.earn.gamified-staking.rewards.snx.bonus')
-                            : hasUserStaked
-                            ? t('options.earn.gamified-staking.rewards.snx.bonus-eligible')
-                            : t('options.earn.gamified-staking.rewards.no-thales-staked'),
-                        rewards: isClaimAvailable
-                            ? t('options.earn.gamified-staking.rewards.snx.rewards')
-                            : t('options.earn.gamified-staking.rewards.snx.estimated-rewards'),
-                        bonusEligible: hasUserStaked,
-                    },
-                    {
-                        main: snxRewardFormatted,
-                        volume: snxStakedFormatted,
-                        bonus: snxNeededForMaxBonusFormatted,
-                        rewards: snxMaxRewardFormatted,
-                    }
-                )}
-            </SectionWrapper>
+            {isL2 && (
+                <SectionWrapper columns={5}>
+                    {getRewardSection(
+                        {
+                            main: t('options.earn.gamified-staking.rewards.snx.label'),
+                            volume: t('options.earn.gamified-staking.rewards.snx.staked'),
+                            bonus: snxNeededForMaxBonusFormatted.length
+                                ? t('options.earn.gamified-staking.rewards.snx.bonus')
+                                : hasUserStaked
+                                ? t('options.earn.gamified-staking.rewards.snx.bonus-eligible')
+                                : t('options.earn.gamified-staking.rewards.no-thales-staked'),
+                            rewards: isClaimAvailable
+                                ? t('options.earn.gamified-staking.rewards.snx.rewards')
+                                : t('options.earn.gamified-staking.rewards.snx.estimated-rewards'),
+                            bonusEligible: hasUserStaked,
+                        },
+                        {
+                            main: snxRewardFormatted,
+                            volume: snxStakedFormatted,
+                            bonus: snxNeededForMaxBonusFormatted,
+                            rewards: snxMaxRewardFormatted,
+                        }
+                    )}
+                </SectionWrapper>
+            )}
+
             {isMobile() && (
                 <DashedLineVertical gridRow={10} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
             )}
@@ -721,15 +741,30 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             {/* Fourth row */}
-            {!isMobile() && (
+            {!isMobile() && isL2 ? (
                 <SectionWrapper columns={3} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
                     {getClaimOnBehalfSection()}
                 </SectionWrapper>
+            ) : (
+                <SectionWrapper columns={3} startColumn={-6}>
+                    <SectionContentWrapper>
+                        <SectionLabel type={SectionType.REWARD}>
+                            <SectionLabelContent type={SectionType.REWARD}>
+                                {t('options.earn.gamified-staking.rewards.base-label')}
+                            </SectionLabelContent>
+                        </SectionLabel>
+                        <SectionValue type={SectionType.REWARD}>
+                            <SectionValueContent type={SectionType.REWARD}>
+                                {formatCurrencyWithKey(THALES_CURRENCY, baseRewards)}
+                            </SectionValueContent>
+                        </SectionValue>
+                    </SectionContentWrapper>
+                </SectionWrapper>
             )}
-            <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM}>
+            <SectionWrapper startColumn={isL2 ? undefined : 4} columns={6} backgroundType={BackgroundType.CLAIM}>
                 {getClaimSection()}
             </SectionWrapper>
-            {!isMobile() && (
+            {!isMobile() && isL2 && (
                 <SectionWrapper
                     columns={3}
                     backgroundType={BackgroundType.LP_STAKING}
@@ -748,20 +783,31 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             {/* Fifth row */}
-            <SectionWrapper columns={12} marginTop={-gridGap}>
-                <SectionContentWrapper>
-                    <SectionLabel type={SectionType.REWARD}>
-                        <SectionLabelContent type={SectionType.REWARD}>
-                            {t('options.earn.gamified-staking.rewards.base-label')}
-                        </SectionLabelContent>
-                    </SectionLabel>
-                    <SectionValue type={SectionType.REWARD}>
-                        <SectionValueContent type={SectionType.REWARD}>
-                            {formatCurrencyWithKey(THALES_CURRENCY, baseRewards)}
-                        </SectionValueContent>
-                    </SectionValue>
-                </SectionContentWrapper>
-            </SectionWrapper>
+            {isL2 ? (
+                <SectionWrapper columns={12} marginTop={-gridGap}>
+                    <SectionContentWrapper>
+                        <SectionLabel type={SectionType.REWARD}>
+                            <SectionLabelContent type={SectionType.REWARD}>
+                                {t('options.earn.gamified-staking.rewards.base-label')}
+                            </SectionLabelContent>
+                        </SectionLabel>
+                        <SectionValue type={SectionType.REWARD}>
+                            <SectionValueContent type={SectionType.REWARD}>
+                                {formatCurrencyWithKey(THALES_CURRENCY, baseRewards)}
+                            </SectionValueContent>
+                        </SectionValue>
+                    </SectionContentWrapper>
+                </SectionWrapper>
+            ) : (
+                <SectionWrapper
+                    marginTop={-gridGap}
+                    startColumn={5}
+                    columns={4}
+                    backgroundType={BackgroundType.CLAIM_ON_BEHALF}
+                >
+                    {getClaimOnBehalfSection()}
+                </SectionWrapper>
+            )}
 
             {/* Sixth row */}
             <YourTransactions gridColumns={12} />

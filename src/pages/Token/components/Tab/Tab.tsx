@@ -11,7 +11,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { TokenTabEnum, TokenTabSectionIdEnum, TokenTabSection } from 'types/token';
-import { getIsOVM } from 'utils/network';
+import { getIsArbitrum, getIsOVM } from 'utils/network';
 import Button from '../Button';
 import { ButtonType } from '../Button/Button';
 import MigrationInfo from '../MigrationInfo';
@@ -28,6 +28,7 @@ const Tab: React.FC<{
     const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isArb = getIsArbitrum(networkId);
 
     const [activeButtonId, setActiveButtonId] = useState(selectedSection || sections[0].id);
 
@@ -37,7 +38,7 @@ const Tab: React.FC<{
 
     return (
         <Container>
-            {isL2 && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
+            {(isArb || isL2) && selectedTab === TokenTabEnum.GAMIFIED_STAKING && (
                 <>
                     <SectionRow>
                         <SectionHeader>{sections.find((el) => el.id === activeButtonId)?.title}</SectionHeader>
@@ -76,17 +77,23 @@ const Tab: React.FC<{
                             {sections.find((el) => el.id === activeButtonId)?.description}
                         </SectionDescription>
                     </SectionRow>
+                    {sections.find((el) => el.id === activeButtonId)?.warning && (
+                        <SectionRow>
+                            <WarningIcon className="icon icon--warning" />
+                            <SectionWarning>{sections.find((el) => el.id === activeButtonId)?.warning}</SectionWarning>
+                        </SectionRow>
+                    )}
                     <SectionContent>
                         {activeButtonId === TokenTabSectionIdEnum.STAKING && <Staking />}
                         {activeButtonId === TokenTabSectionIdEnum.REWARDS && (
                             <Rewards gridGap={GRID_GAP} setSelectedTab={setSelectedTab} />
                         )}
                         {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
-                        {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && isL2 && <MergeAccount />}
+                        {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && <MergeAccount />}
                     </SectionContent>
                 </>
             )}
-            {!isL2 && selectedTab === TokenTabEnum.GAMIFIED_STAKING && <MigrationInfo messageKey="staking" />}
+            {!isL2 && !isArb && selectedTab === TokenTabEnum.GAMIFIED_STAKING && <MigrationInfo messageKey="staking" />}
             {isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
                 <>
                     <SectionRow>
@@ -149,6 +156,34 @@ const SectionDescription = styled.p`
     line-height: 20px;
     padding-top: 5px;
     color: #ffffff;
+    @media (max-width: 768px) {
+        font-size: 15px;
+        line-height: 20px;
+        padding-bottom: 10px;
+    }
+`;
+
+const WarningIcon = styled.i`
+    font-weight: 400;
+    font-size: 18px;
+    margin-right: 4px;
+    line-height: 18px;
+    padding-top: 5px;
+    color: #e53720;
+    @media (max-width: 768px) {
+        font-size: 15px;
+        line-height: 20px;
+        padding-bottom: 10px;
+    }
+`;
+
+const SectionWarning = styled.p`
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    padding-top: 5px;
+    color: #e53720;
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;

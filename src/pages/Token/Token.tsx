@@ -11,7 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
-import { getIsOVM } from 'utils/network';
+import { getIsArbitrum, getIsOVM } from 'utils/network';
 import MigrationNotice from './components/MigrationNotice';
 import TokenNavFooter from './components/MobileFooter/TokenNavFooter';
 import TabContainer from './components/TabContainer';
@@ -21,17 +21,14 @@ const TokenPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isArb = getIsArbitrum(networkId);
 
-    const defaultTab = isL2 ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
+    const defaultTab = isL2 || isArb ? TokenTabEnum.GAMIFIED_STAKING : TokenTabEnum.MIGRATION;
 
     const tabs = [
         {
             id: TokenTabEnum.GAMIFIED_STAKING,
             name: t('options.earn.gamified-staking.tab-title'),
-        },
-        {
-            id: TokenTabEnum.LP_STAKING,
-            name: t('options.earn.lp-staking.tab-title'),
         },
     ];
 
@@ -48,6 +45,7 @@ const TokenPage: React.FC = () => {
             id: TokenTabSectionIdEnum.REWARDS,
             title: t('options.earn.gamified-staking.rewards.section-title'),
             description: t('options.earn.gamified-staking.rewards.section-description'),
+            warning: t('options.earn.gamified-staking.rewards.section-warning'),
             isButton: true,
         },
         {
@@ -74,7 +72,14 @@ const TokenPage: React.FC = () => {
         },
     ];
 
-    if (!isL2) {
+    if (isL2) {
+        tabs.push({
+            id: TokenTabEnum.LP_STAKING,
+            name: t('options.earn.lp-staking.tab-title'),
+        });
+    }
+
+    if (!isL2 && !isArb) {
         tabs.push({
             id: TokenTabEnum.MIGRATION,
             name: t('migration.title'),
@@ -112,12 +117,12 @@ const TokenPage: React.FC = () => {
 
     return (
         <>
-            <OpRewardsBanner />
+            {isL2 && <OpRewardsBanner />}
             <ElectionsBanner />
             <Container>
                 <FlexDivColumn>
                     <TokenOverview />
-                    {!isL2 && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
+                    {!isL2 && !isArb && selectedTab !== TokenTabEnum.MIGRATION && <MigrationNotice />}
 
                     <MainContentContainer>
                         <TabContainer
