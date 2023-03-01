@@ -39,10 +39,9 @@ export const LINKS = {
             AMM: 'https://thalesmarket.io/markets',
             ThalesRoyale: 'https://thalesmarket.io/royale',
         },
-        Uniswap:
-            'https://app.uniswap.org/#/swap?outputCurrency=0x8947da500Eb47F82df21143D0C01A29862a8C3c5&chain=mainnet',
-        UniswapL2:
-            'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11&chain=optimism',
+        Uniswap: 'https://app.uniswap.org/#/swap?outputCurrency=0x8947da500Eb47F82df21143D0C01A29862a8C3c5',
+        UniswapL2: 'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11',
+        UniswapArb: 'https://app.uniswap.org/#/swap?outputCurrency=0xE85B662Fe97e8562f4099d8A1d5A92D4B453bF30',
         UniswapWrapEth:
             'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x4200000000000000000000000000000000000006&chain=optimism',
         Liquidity: 'https://beta.arrakis.finance/vaults/10/0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5',
