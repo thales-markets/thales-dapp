@@ -12,12 +12,11 @@ import { getIsAppReady } from 'redux/modules/app';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
 import { LightTooltip } from '../components';
-import { LINKS } from 'constants/links';
 import { getNetworkId } from 'redux/modules/wallet';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
 import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, NetworkId } from 'utils/network';
 import Lottie from 'lottie-react';
 import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
 
@@ -60,11 +59,7 @@ export const TokentOverview: React.FC = () => {
                 <Content>
                     {tokenInfo && tokenInfo.price ? (
                         <LightTooltip title={t(`options.earn.overview.price-tooltip-l2`)}>
-                            <StyledLink
-                                href={isL2 ? LINKS.Token.UniswapL2 : LINKS.Token.Uniswap}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
+                            <StyledLink href={getUrlForUniswap(networkId)} target="_blank" rel="noreferrer">
                                 {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
                                 <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                             </StyledLink>
@@ -136,6 +131,18 @@ export const TokentOverview: React.FC = () => {
             </ItemContainer>
         </Container>
     );
+};
+
+const getUrlForUniswap = (networkId: NetworkId) => {
+    switch (networkId) {
+        case 10:
+            return 'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11';
+        case 42161:
+            return 'https://app.uniswap.org/#/swap?outputCurrency=0xE85B662Fe97e8562f4099d8A1d5A92D4B453bF30';
+
+        default:
+            return 'https://app.uniswap.org/#/swap?outputCurrency=0x8947da500Eb47F82df21143D0C01A29862a8C3c5';
+    }
 };
 
 const ItemContainer: React.FC<{ className?: string }> = (props) => (
