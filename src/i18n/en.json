@@ -559,6 +559,7 @@
                     "section-description": "The Staking page is where you stake your THALES and see all the relevant staking data.",
                     "apy-tooltip": "Annual Percentage Yield in THALES tokens from Staking THALES tokens.",
                     "bonus-apy-tooltip": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage or Staking SNX, as per </0><1 />.",
+                    "bonus-apy-tooltip-arb": "<0>Earn +{{max}}% bonus Staking Rewards by Protocol Usage, as per </0><1 />.",
                     "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />.",
                     "total-thales-staked": "Total THALES Staked",
                     "total-thales-staked-tooltip": "Total amount of THALES tokens in the Staking Contract.",
