@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NFT_COLLECTIONS } from './constants';
-import { ReactComponent as NFTContainerImage } from 'assets/images/tale-of-thales-nft-container.svg';
-import { ReactComponent as NFTOwnedContainerImage } from 'assets/images/tale-of-thales-nft-owned-container.svg';
-import { ReactComponent as PixelTooltipContainer } from 'assets/images/pixel-tooltip-container.svg';
+import NFTContainerImage from 'assets/images/ToT_square.png';
+import NFTOwnedContainerImage from 'assets/images/ToT_square_owned.png';
+import PixelTooltipContainer from 'assets/images/ToT_rectangle.png';
 import { Tooltip } from '@material-ui/core';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import useNFTCollectionsQuery from 'queries/taleOfThales/useNFTCollectionsQuery';
@@ -74,7 +74,7 @@ const Mint: React.FC = () => {
                                 placement="right"
                                 title={
                                     <>
-                                        <StyledPixelTooltipContainer />
+                                        <StyledPixelTooltipContainer src={PixelTooltipContainer} />
                                         <TooltipContent>{collection.condition}</TooltipContent>
                                     </>
                                 }
@@ -88,9 +88,9 @@ const Mint: React.FC = () => {
                                     <Item key={index}>
                                         <NFTContainer>
                                             {NFTBalancesMap[item.itemId] ? (
-                                                <StyledNFTOwnedContainerImage />
+                                                <StyledNFTContainerImage src={NFTOwnedContainerImage} />
                                             ) : (
-                                                <StyledNFTContainerImage />
+                                                <StyledNFTContainerImage src={NFTContainerImage} />
                                             )}
                                             <NFTTitle>{item.name}</NFTTitle>
                                             <NFTImage src={item.src} />
@@ -175,19 +175,15 @@ const NFTImage = styled.img`
     z-index: 1;
 `;
 
-const StyledNFTContainerImage = styled(NFTContainerImage)`
+const StyledNFTContainerImage = styled.img`
     position: absolute;
     z-index: 0;
-`;
-
-const StyledNFTOwnedContainerImage = styled(NFTOwnedContainerImage)`
-    position: absolute;
-    z-index: 0;
+    width: 170px;
 `;
 
 const Button = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
-    background: linear-gradient(90.42deg, #d6d0ab 18.36%, #aea992 87.84%);
+    background: #e1b689;
     border: 2px dashed #04045a;
     color: var(--background);
     width: 100%;
@@ -205,7 +201,7 @@ const Button = styled.button<{ invisible?: boolean }>`
 
 const CollectionButton = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
-    background: linear-gradient(90.42deg, #d6d0ab 18.36%, #aea992 87.84%);
+    background: #e1b689;
     border: 2px dashed #04045a;
     color: var(--background);
     width: 350px;
@@ -226,16 +222,18 @@ const StyledTooltip = styled(({ className, ...props }) => <Tooltip {...props} cl
     () => ({
         [`& .MuiTooltip-tooltip`]: {
             backgroundColor: 'transparent',
-            color: 'white',
+            color: 'black',
             maxWidth: 332,
         },
     })
 );
 
-const StyledPixelTooltipContainer = styled(PixelTooltipContainer)`
+const StyledPixelTooltipContainer = styled.img`
     position: absolute;
-    top: -67px;
+    top: -30px;
     z-index: -1;
+    width: 335px;
+    height: 200px;
 `;
 
 const TooltipContent = styled.div`
