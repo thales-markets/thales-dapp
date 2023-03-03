@@ -53,8 +53,6 @@ const Staking: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isL2 = getIsOVM(networkId);
 
-    console.log(isL2);
-
     const stakeOptions = {
         stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
         unstake: { value: 'unstake', label: t('options.earn.gamified-staking.staking.unstake.name') },

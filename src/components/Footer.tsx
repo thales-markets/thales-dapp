@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
         <Wrapper>
             <ThalesLogoContainer>
                 <ThalesLogo className="icon icon--logo" />
-                <ThalesLogoText>© 2022 THALES DAO All Rights Reserved</ThalesLogoText>
+                <ThalesLogoText>© 2023 THALES DAO All Rights Reserved</ThalesLogoText>
             </ThalesLogoContainer>
             <FooterIconsWrapper>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/token">
