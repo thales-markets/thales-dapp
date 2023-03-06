@@ -7,7 +7,7 @@ export const liquidityPoolContract = {
         [Network.Rinkeby]: 'TBD',
         [Network.Kovan]: 'TBD',
         [Network.Goerli]: 'TBD',
-        [Network['Mainnet-Ovm']]: 'TBD',
+        [Network['Mainnet-Ovm']]: '0x842e89b7a7eF8Ce099540b3613264C933cE0eBa5',
         [Network['Kovan-Ovm']]: 'TBD',
         [Network['Goerli-Ovm']]: '0xdd0879AB819287637f33A29d1ee91d5a76c890Af',
         [Network['POLYGON-MUMBAI']]: 'TBD',
