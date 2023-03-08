@@ -23,6 +23,7 @@ import usdcContract from './contracts/collateralContract';
 import unclaimedRetroAirdropContract from './contracts/unclaimedRetroAirdrop';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import multipleCollateral from './contracts/multipleCollateralContract';
+import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -52,6 +53,7 @@ type SnxJSConnector = {
     bridgeContract?: ethers.Contract;
     unclaimedRetroAirdropContract?: ethers.Contract;
     unclaimedInvestorsRetroAirdropContract?: ethers.Contract;
+    liquidityPoolContract?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -112,6 +114,7 @@ const snxJSConnector: SnxJSConnector = {
             unclaimedInvestorsRetroAirdropContract,
             contractSettings
         );
+        this.liquidityPoolContract = conditionalInitializeContract(liquidityPoolContract, contractSettings);
     },
 };
 

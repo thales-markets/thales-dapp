@@ -78,6 +78,7 @@ const Unstake: React.FC = () => {
     const unstakingAmount =
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.unstakingAmount) : 0;
     const isStakingPaused = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.paused;
+    const isUserLPing = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.isUserLPing;
 
     const isAmountEntered = Number(amountToUnstake) > 0;
     const insufficientBalance = Number(amountToUnstake) > thalesStaked || !thalesStaked;
@@ -90,7 +91,8 @@ const Unstake: React.FC = () => {
         !isAmountEntered ||
         insufficientBalance ||
         !isWalletConnected ||
-        isStakingPaused;
+        isStakingPaused ||
+        isUserLPing;
 
     const isCancelUnstakeButtonDisabled = isUnstaking || isCanceling || !stakingThalesContract || !isWalletConnected;
     const isUnstakeButtonDisabled = isUnstaking || isCanceling || !stakingThalesContract || !isWalletConnected;
@@ -467,13 +469,15 @@ const Unstake: React.FC = () => {
                     <NumericInput
                         value={amountToUnstake}
                         onChange={(_, value) => setAmountToUnstake(value)}
-                        disabled={isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused}
+                        disabled={isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused || isUserLPing}
                         className={isAmountValid ? '' : 'error'}
                     />
                     <InputLabel>{t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}</InputLabel>
                     <CurrencyLabel
                         className={
-                            isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused ? 'disabled' : ''
+                            isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused || isUserLPing
+                                ? 'disabled'
+                                : ''
                         }
                     >
                         {THALES_CURRENCY}
@@ -497,7 +501,8 @@ const Unstake: React.FC = () => {
                                 isUnstaking ||
                                 isCanceling ||
                                 isStakingPaused ||
-                                !isWalletConnected
+                                !isWalletConnected ||
+                                isUserLPing
                             }
                             onClick={onMaxClick}
                         >
@@ -517,6 +522,11 @@ const Unstake: React.FC = () => {
                     {getSubmitButton()}
                     {isStakingPaused && (
                         <ClaimMessage>{t('options.earn.gamified-staking.staking.unstake.paused-message')}</ClaimMessage>
+                    )}
+                    {isUserLPing && (
+                        <ClaimMessage>
+                            {t('options.earn.gamified-staking.staking.unstake.user-lping-message')}
+                        </ClaimMessage>
                     )}
                 </ButtonsContainer>
                 <FullRow>

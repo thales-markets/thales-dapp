@@ -184,7 +184,7 @@ const Referral: React.FC = () => {
     };
 
     const handleReadMore = () => {
-        if (!showMore) setHeight('470px');
+        if (!showMore) setHeight('370px');
         if (showMore) setHeight('170px');
         setShowMore(!showMore);
     };

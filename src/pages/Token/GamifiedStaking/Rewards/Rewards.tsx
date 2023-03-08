@@ -1,7 +1,7 @@
 import arrowLink from 'assets/images/arrow-link.svg';
 import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import ValidationMessage from 'components/ValidationMessage';
-import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
 import { MAX_L2_GAS_LIMIT, OP_REWARDS_MULTIPLIER } from 'constants/options';
 import ROUTES from 'constants/routes';
@@ -43,6 +43,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { isMobile } from 'utils/device';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
+import { getStableCoinForNetwork } from 'utils/currency';
 
 enum SectionType {
     INFO,
@@ -214,16 +215,18 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const bonusRewardsFormatted = formatCurrencyWithKey(THALES_CURRENCY, 0.5 * baseRewardsPool, 0, true);
 
     // Market volume
-    const ammVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, thalesAmmVolume, 0, true);
-    const rangedVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, rangedAmmVolume, 0, true);
-    const sportsVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, sportsAmmVolume, 0, true);
+    const ammVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), thalesAmmVolume, 0, true);
+    const rangedVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), rangedAmmVolume, 0, true);
+    const sportsVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), sportsAmmVolume, 0, true);
 
     // Protocol usage
     const protocolRewardThales = formatCurrencyWithKey(THALES_CURRENCY, ammBonus);
     const protocolRewardOp = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
-    const protocolVolumeFormatted = formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolume);
+    const protocolVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), ammVolume);
     const protocolVolumeNeededForBonusFormatted =
-        ammVolumeNeededForMaxBonus > 0 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, ammVolumeNeededForMaxBonus) : '';
+        ammVolumeNeededForMaxBonus > 0
+            ? formatCurrencyWithKey(getStableCoinForNetwork(networkId), ammVolumeNeededForMaxBonus)
+            : '';
 
     const protocolMaxRewardFormatted = isClaimAvailable
         ? isL2

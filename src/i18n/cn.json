@@ -2008,7 +2008,7 @@
         },
         "generate-link-btn": "生成链接",
         "form-label": "生成会员链接",
-        "description": "痛本身就是爱的痛，主要的生态问题，但我给这种倒下的时间，让一些很大的痛和痛。为了在大多数情况下，我们中的任何人都会从事任何类型的工作，除了利用它的目标。但电影中的痛苦是难以谴责的，在快乐中它想摆脱痛苦中的痛苦，没有结果。他们是盲人渴望的例外，他们看不到，他们是那些为了抚慰心灵苦难的过失而放弃责任的人。",
+        "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.",
         "table": {
             "transaction-date": "交易日期",
             "volume": "体积",

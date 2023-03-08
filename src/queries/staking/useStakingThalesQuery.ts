@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
+import { Network, NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { BALANCE_THRESHOLD } from 'constants/token';
 import { ZERO_ADDRESS } from 'constants/network';
@@ -19,6 +19,7 @@ type StakingThalesQueryResponse = {
     maxBonusRewardsPercentage: number;
     mergeAccountEnabled: boolean;
     delegatedVolume: string;
+    isUserLPing: boolean;
 };
 
 const useStakingThalesQuery = (
@@ -42,6 +43,7 @@ const useStakingThalesQuery = (
                 maxBonusRewardsPercentage: 0,
                 mergeAccountEnabled: true,
                 delegatedVolume: ZERO_ADDRESS,
+                isUserLPing: false,
             };
 
             try {
@@ -83,6 +85,7 @@ const useStakingThalesQuery = (
                         unstakingAmount,
                         rewards,
                         delegatedVolume,
+                        isUserLPing,
                     ] = await Promise.all([
                         (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress),
@@ -90,6 +93,9 @@ const useStakingThalesQuery = (
                         (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.delegatedVolume(walletAddress),
+                        networkId === Network['Mainnet-Ovm'] || networkId === Network['Goerli-Ovm']
+                            ? (snxJSConnector as any).liquidityPoolContract.isUserLPing(walletAddress)
+                            : false,
                     ]);
 
                     staking.isUnstaking = isUnstaking;
@@ -99,6 +105,7 @@ const useStakingThalesQuery = (
                     staking.unstakingAmount = bigNumberFormatter(unstakingAmount);
                     staking.rewards = bigNumberFormatter(rewards);
                     staking.delegatedVolume = delegatedVolume;
+                    staking.isUserLPing = isUserLPing;
                 }
             } catch {}
 
