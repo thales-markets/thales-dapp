@@ -602,7 +602,8 @@
                         "network-fee-cancel": "Cancel",
                         "network-fee-unstake": "Unstake",
                         "info-tooltip": "Available staking rewards will be claimed as part of the start unstaking transaction.",
-                        "paused-message": "Unstaking is paused."
+                        "paused-message": "Unstaking is paused.",
+                        "user-lping-message": "You cannot unstake while providing liquidity for Overtime."
                     }
                 },
                 "rewards": {
