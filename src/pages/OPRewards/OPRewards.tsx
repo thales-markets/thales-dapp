@@ -52,7 +52,7 @@ const OPRewards: React.FC = () => {
 
     const PERIOD_DURATION_IN_DAYS = 14;
     const START_DATE = new Date(Date.UTC(2022, 6, 13, 12, 23, 0));
-    const NOW = new Date();
+    const NOW = new Date(Date.UTC(2023, 2, 7, 12, 23, 0));
 
     let CALCULATED_START = new Date(START_DATE.getTime());
     let PERIOD_COUNTER = 0;
