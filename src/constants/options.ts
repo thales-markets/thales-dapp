@@ -1,3 +1,4 @@
+import { Network, NetworkId } from 'utils/network';
 import { Phase, OptionSide, OrderSide, RangedMarketPositionType, MarketType } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
@@ -125,6 +126,11 @@ export const MINIMUM_AMM_LIQUIDITY = 2;
 export const MAX_L2_GAS_LIMIT = 15000000;
 export const L2_EXERCISE_GAS_LIMIT = 1000000;
 export const MIN_SCEW_IMPACT = 0.0;
+
+export const getMaxGasLimitForNetwork = (networkId: NetworkId) => {
+    if (networkId == Network.Arbitrum) return undefined;
+    return MAX_L2_GAS_LIMIT;
+};
 
 export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;
 export const OP_REWARDS_MULTIPLIER = 0.64;
