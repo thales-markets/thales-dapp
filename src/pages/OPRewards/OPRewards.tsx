@@ -10,8 +10,6 @@ import {
     SummaryWrapper,
     SummaryInfo,
     Wrapper,
-    Tip53Link,
-    GuidelinesLink,
     AddressLink,
 } from './styled-components';
 import SelectInput from 'components/SelectInput';
@@ -54,7 +52,7 @@ const OPRewards: React.FC = () => {
 
     const PERIOD_DURATION_IN_DAYS = 14;
     const START_DATE = new Date(Date.UTC(2022, 6, 13, 12, 23, 0));
-    const NOW = new Date();
+    const NOW = new Date(Date.UTC(2023, 2, 7, 12, 23, 0));
 
     let CALCULATED_START = new Date(START_DATE.getTime());
     let PERIOD_COUNTER = 0;
@@ -84,7 +82,7 @@ const OPRewards: React.FC = () => {
         }
     }
 
-    const [period, setPeriod] = useState<number>(options.length > 0 ? options[options.length - 1].value : 0);
+    const [period, setPeriod] = useState<number>(16);
 
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
@@ -862,24 +860,7 @@ const OPRewards: React.FC = () => {
         <Wrapper>
             <ElectionsBanner />
             <Description>
-                <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
-                <Trans
-                    i18nKey={
-                        period < 7
-                            ? 'op-rewards.description-3'
-                            : period < 12
-                            ? 'op-rewards.description-3-itm'
-                            : 'op-rewards.description-last'
-                    }
-                    components={{ bold: <BoldText />, br: <br />, tipLink: <Tip53Link /> }}
-                ></Trans>
-                .
-                <Trans
-                    i18nKey={'op-rewards.description-4'}
-                    components={{ br: <br />, guidelinesLink: <GuidelinesLink /> }}
-                ></Trans>
-                . <br /> <br />
-                <Trans i18nKey={'op-rewards.length-info'} components={{ br: <br /> }}></Trans>
+                <Trans i18nKey={'op-rewards.stay-tuned'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
             </Description>
             <HeaderWrapper>
                 <RoundWrapper>
