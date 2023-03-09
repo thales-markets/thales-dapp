@@ -69,7 +69,7 @@ const OPRewards: React.FC = () => {
                     1000,
             });
             CALCULATED_START = new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000);
-            if (PERIOD_COUNTER != 0) {
+            if (PERIOD_COUNTER > 14) {
                 options.push({
                     value: PERIOD_COUNTER,
                     label: `Round ${PERIOD_COUNTER}`,
@@ -867,7 +867,7 @@ const OPRewards: React.FC = () => {
                     <SelectInput
                         options={options}
                         handleChange={(value) => setPeriod(Number(value))}
-                        defaultValue={period - 1}
+                        defaultValue={1}
                         width={300}
                     />
                     {maxTimestamp &&
