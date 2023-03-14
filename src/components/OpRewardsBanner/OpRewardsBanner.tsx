@@ -16,7 +16,7 @@ type OpRewardsBannerProps = {
     width?: number;
 };
 
-const SHOW_BANNER = true;
+const SHOW_BANNER = false;
 
 const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));

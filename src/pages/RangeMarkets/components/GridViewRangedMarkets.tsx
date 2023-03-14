@@ -11,6 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { GridFilters, RangedMarketUI } from 'types/options';
+import { getSynthName } from 'utils/currency';
 import { get, set } from 'utils/localStore';
 import { buildRangeMarketLink } from 'utils/routes';
 import { PaginationWrapper } from './RangeMarketsTable';
@@ -46,6 +47,8 @@ const GridViewRangedMarkets: React.FC<MarketsGridProps> = ({ optionsMarkets, exc
             if (filters?.searchQuery) {
                 data = data.filter((market) => {
                     if (market?.asset.toLowerCase().includes(filters.searchQuery.toLowerCase())) return market;
+                    const assetFullName = getSynthName(market.currencyKey).toLowerCase();
+                    if (assetFullName.includes(filters.searchQuery.toLowerCase())) return market;
                     if (market?.leftPrice.toFixed(2).includes(filters.searchQuery)) return market;
                     if (market?.rightPrice.toFixed(2).includes(filters.searchQuery)) return market;
                     if (exchangeRates && exchangeRates[market.currencyKey]) {

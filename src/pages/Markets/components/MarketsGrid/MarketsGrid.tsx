@@ -11,7 +11,7 @@ import { PaginationWrapper } from '../MarketsTable/MarketsTable';
 
 import SPAAnchor from 'components/SPAAnchor';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { sortCurrencies } from 'utils/currency';
+import { getSynthName, sortCurrencies } from 'utils/currency';
 import { useTranslation } from 'react-i18next';
 import SortingMenu from 'components/SortingMenu';
 
@@ -96,6 +96,8 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({
             if (filters?.searchQuery) {
                 data = data.filter((market) => {
                     if (market?.asset.toLowerCase().includes(filters.searchQuery.toLowerCase())) return market;
+                    const assetFullName = getSynthName(market.currencyKey).toLowerCase();
+                    if (assetFullName.includes(filters.searchQuery.toLowerCase())) return market;
                     if (market?.strikePrice.toFixed(2).includes(filters.searchQuery)) return market;
                     if (exchangeRates && exchangeRates[market.currencyKey]) {
                         if (exchangeRates[market.currencyKey].toFixed(2).includes(filters.searchQuery)) return market;

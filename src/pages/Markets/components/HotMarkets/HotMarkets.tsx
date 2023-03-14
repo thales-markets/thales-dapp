@@ -17,7 +17,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import Tooltip from 'components/Tooltip';
-import { getIsOVM } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
 
 type HotMarketsProps = {
@@ -43,7 +42,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [lastValidDiscountMap, setLastValidDiscountMap] = useState<DiscountMap>(undefined);
 
-    const showOPBanner = getIsOVM(networkId);
+    const showOPBanner = false;
 
     const { trackEvent } = useMatomo();
 
@@ -149,25 +148,29 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         );
     }, [currentMarkets, firstHotIndex]);
 
+    const SHOW_DISCOUNT_BANNER = true;
+
     return (
         <>
-            <DiscountBanner>
-                <DiscountTitle> {t('options.home.hot-markets.discounted-positions')}</DiscountTitle>
-                {showOPBanner && (
-                    <>
-                        <DiscountSubTitle> + {t('options.home.hot-markets.eligible-for')} </DiscountSubTitle>
-                        <img src={opToken} width="46" height="46" style={{ margin: '0 8px' }} />
-                        <DiscountSubTitle> {t('options.home.hot-markets.token-rewards')} </DiscountSubTitle>
-                    </>
-                )}
+            {SHOW_DISCOUNT_BANNER && (
+                <DiscountBanner>
+                    <DiscountTitle> {t('options.home.hot-markets.discounted-positions')}</DiscountTitle>
+                    {showOPBanner && (
+                        <>
+                            <DiscountSubTitle> + {t('options.home.hot-markets.eligible-for')} </DiscountSubTitle>
+                            <img src={opToken} width="46" height="46" style={{ margin: '0 8px' }} />
+                            <DiscountSubTitle> {t('options.home.hot-markets.token-rewards')} </DiscountSubTitle>
+                        </>
+                    )}
 
-                <Tooltip
-                    message={t('options.home.hot-markets.tooltip-text-discount')}
-                    type={'info'}
-                    iconColor={'var(--table-header-text-color)'}
-                    placement={'right'}
-                />
-            </DiscountBanner>
+                    <Tooltip
+                        message={t('options.home.hot-markets.tooltip-text-discount')}
+                        type={'info'}
+                        iconColor={'var(--table-header-text-color)'}
+                        placement={'right'}
+                    />
+                </DiscountBanner>
+            )}
 
             <Wrapper id="wrapper-cards">
                 {currentMarkets.length > 0 ? (
