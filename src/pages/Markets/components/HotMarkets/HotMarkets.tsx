@@ -17,7 +17,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import Tooltip from 'components/Tooltip';
-import { getIsOVM } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
 
 type HotMarketsProps = {
@@ -43,7 +42,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [lastValidDiscountMap, setLastValidDiscountMap] = useState<DiscountMap>(undefined);
 
-    const showOPBanner = getIsOVM(networkId);
+    const showOPBanner = false;
 
     const { trackEvent } = useMatomo();
 
@@ -149,7 +148,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         );
     }, [currentMarkets, firstHotIndex]);
 
-    const SHOW_DISCOUNT_BANNER = false;
+    const SHOW_DISCOUNT_BANNER = true;
 
     return (
         <>

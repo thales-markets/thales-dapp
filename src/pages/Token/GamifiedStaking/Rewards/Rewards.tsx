@@ -3,7 +3,7 @@ import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { MAX_L2_GAS_LIMIT, OP_REWARDS_MULTIPLIER } from 'constants/options';
 import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
 import Button from 'pages/Token/components/Button';
@@ -184,8 +184,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const maxAmmBonusPercentage = stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
     const maxSnxBonusPercentage = stakingRewards ? stakingRewards.maxSnxBonusPercentage : 0;
 
-    // const opAmmBonus = ammBonus * OP_REWARDS_MULTIPLIER;
-    // const maxOpAmmBonus = maxAmmBonus * OP_REWARDS_MULTIPLIER;
+    const opAmmBonus = ammBonus * OP_REWARDS_MULTIPLIER;
+    const maxOpAmmBonus = maxAmmBonus * OP_REWARDS_MULTIPLIER;
 
     const maxAmmVolume = baseRewards * ammVolumeRewardsMultiplier;
     const additionalAmmVolume = maxAmmVolume - ammVolume > 0 ? maxAmmVolume - ammVolume : 0;
@@ -221,7 +221,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     // Protocol usage
     const protocolRewardThales = formatCurrencyWithKey(THALES_CURRENCY, ammBonus);
-    // const protocolRewardOp = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
+    const protocolRewardOp = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
     const protocolVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), ammVolume);
     const protocolVolumeNeededForBonusFormatted =
         ammVolumeNeededForMaxBonus > 0
@@ -229,7 +229,18 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             : '';
 
     const protocolMaxRewardFormatted = isClaimAvailable
-        ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus)
+        ? isL2
+            ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
+              ' + ' +
+              formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, maxOpAmmBonus)
+            : formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus)
+        : isL2
+        ? formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100)) +
+          ' + ' +
+          formatCurrencyWithKey(
+              CRYPTO_CURRENCY_MAP.OP,
+              estimatedRewards * (maxAmmBonusPercentage / 100) * OP_REWARDS_MULTIPLIER
+          )
         : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100));
 
     // SNX staking
@@ -295,11 +306,11 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 </SectionLabel>
                 <SectionValue type={SectionType.REWARD}>
                     <SectionValueContent type={SectionType.REWARD}>{value.main}</SectionValueContent>
-                    {/* {value.mainAddition && (
+                    {value.mainAddition && (
                         <SectionValueContent type={SectionType.REWARD} isOp={isL2}>
                             {' + ' + value.mainAddition}
                         </SectionValueContent>
-                    )} */}
+                    )}
                 </SectionValue>
 
                 <Line margin={'0 0 10px 0'} />
@@ -446,7 +457,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionValueContent type={SectionType.CLAIM}>
                         {formatCurrencyWithKey(THALES_CURRENCY, totalThalesRewards)}
                     </SectionValueContent>
-                    {/* {isL2 && (
+                    {isL2 && (
                         <>
                             <SectionValueContent type={SectionType.CLAIM} isOp={true}>
                                 {' + ' + formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus)}
@@ -459,7 +470,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                                 <StyledInfoIcon />
                             </StyledMaterialTooltip>
                         </>
-                    )} */}
+                    )}
                 </SectionValue>
                 <NetworkFeesWrapper>
                     <Line margin={'0 0 10px 0'} />
@@ -682,7 +693,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         volume: protocolVolumeFormatted,
                         bonus: protocolVolumeNeededForBonusFormatted,
                         rewards: protocolMaxRewardFormatted,
-                        mainAddition: undefined,
+                        mainAddition: isL2 ? protocolRewardOp : undefined,
                     }
                 )}
             </SectionWrapper>
