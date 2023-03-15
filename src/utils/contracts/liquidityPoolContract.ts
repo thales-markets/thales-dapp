@@ -13,7 +13,7 @@ export const liquidityPoolContract = {
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
-        [Network.Arbitrum]: 'TBD',
+        [Network.Arbitrum]: '0x8e9018b48456202aA9bb3E485192B8475822B874',
     },
     abi: [
         {

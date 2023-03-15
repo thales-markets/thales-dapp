@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { Network, NetworkId } from '../../utils/network';
+import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { BALANCE_THRESHOLD } from 'constants/token';
 import { ZERO_ADDRESS } from 'constants/network';
@@ -93,9 +93,7 @@ const useStakingThalesQuery = (
                         (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.delegatedVolume(walletAddress),
-                        networkId === Network['Mainnet-Ovm'] || networkId === Network['Goerli-Ovm']
-                            ? (snxJSConnector as any).liquidityPoolContract.isUserLPing(walletAddress)
-                            : false,
+                        (snxJSConnector as any).liquidityPoolContract.isUserLPing(walletAddress),
                     ]);
 
                     staking.isUnstaking = isUnstaking;
