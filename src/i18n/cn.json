@@ -778,8 +778,7 @@
                         "network-fee-cancel": "取消",
                         "paused-message": "取消质押已暂停。",
                         "start-unstaking-tooltip": "在取消抵押冷却期间，您将无法抵押或取消抵押更多 THALES。",
-                        "cooldown-ended-text": "您现在可以取消质押 {{amount}}",
-                        "user-lping-message": "您不能在为 Overtime 提供流动性的同时取消质押。"
+                        "cooldown-ended-text": "您现在可以取消质押 {{amount}}"
                     },
                     "wallet-balance": "我的钱包余额",
                     "staked-balance": "我的质押余额",
@@ -797,8 +796,7 @@
                     "staked-directly": "直接质押",
                     "estimated-rewards": "本期预估奖励",
                     "not-eligible-message": "除非您直接抵押的余额大于 0，否则您没有资格获得抵押奖励",
-                    "bonus-estimated-rewards-tooltip": "<0>每 </0><1 /> 的最高奖金奖励为 {{max}}%。",
-                    "bonus-apy-tooltip-arb": "<0>按照协议使用情况赚取 +{{max}}% 的奖金质押奖励</0><1 />。"
+                    "bonus-estimated-rewards-tooltip": "<0>每 </0><1 /> 的最高奖金奖励为 {{max}}%。"
                 },
                 "rewards": {
                     "close-period": {
@@ -860,8 +858,7 @@
                         "base": "作为基础奖励",
                         "base-description": "THALES 质押产生的基本奖励（每周 {{baseRewards}}）",
                         "bonus": "作为奖金奖励",
-                        "bonus-description": "基本奖励之上的最高奖励奖励为 50%。奖励每周分配给协议使用桶 21,000 THALES，该桶计算来自 AMM 交易、范围 AMM 交易和 Overtime sport 的 AMM 交易的 sUSD 交易量，以及每周 9,000 THALES 给 SNX 质押者。 <0>了解更多。</0>",
-                        "bonus-description-arb": "基本奖励之上的最高奖励奖励为 50%。协议使用桶的奖金奖励是每周 {{ bonusRewards }}，该桶计算来自 AMM 交易、范围 AMM 交易和 Overtime sport 的 AMM 交易的 USDC 交易量。 <0>了解更多。</0>"
+                        "bonus-description": "基本奖励之上的最高奖励奖励为 50%。奖励每周分配给协议使用桶 21,000 THALES，该桶计算来自 AMM 交易、范围 AMM 交易和 Overtime sport 的 AMM 交易的 sUSD 交易量，以及每周 9,000 THALES 给 SNX 质押者。 <0>了解更多。</0>"
                     },
                     "volume": {
                         "ranged-desc": "当前的远程市场量：",
@@ -896,8 +893,7 @@
                         "label-2": "LP质押",
                         "tooltip": "提供THALES/WETH流动性，赚取THALES+OP双重奖励。点击<0>此处</0>了解更多信息。"
                     },
-                    "no-thales-staked": "您没有质押 THALES",
-                    "section-warning": "无人认领的每周奖励将被没收！"
+                    "no-thales-staked": "您没有质押 THALES"
                 },
                 "vesting": {
                     "vest": {
@@ -2153,8 +2149,7 @@
         "description-last": "每14天的奖励分配如下：<br/><br/> - 8,000 OP 分配给所有折扣代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外奖励，根据<tipLink>.",
         "itm-volume-label": "ITM 体积",
         "description-3-itm": "每14天的奖励分配如下：<br/><br/> - 2,000 OP + 3,000 THALES 分配给 ITM 代币买家<br/>- 5,000 OP + 7,000 THALES 分配给 OTM 代币买家<br/>- 8,000 OP + 10,000 THALES 给任何折扣代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外奖励，根据<tipLink>.",
-        "discounted-volume-label": "折扣量",
-        "stay-tuned": "敬请期待新的奖励计划！"
+        "discounted-volume-label": "折扣量"
     },
     "footer": {
         "discover": "发现",
@@ -2265,6 +2260,11 @@
         "deposit-withdrawal-warning": "要求提款，您不能存款。",
         "available-to-withdraw-label": "可提取：<bold>{{amount}}</bold>",
         "round-ended-label": "回合结束",
+        "withdraw-round-end-label": "回合结束于：<counter />",
+        "vault-filled-label": "保险库已满：{{amount}} / {{max}}",
+        "variables-left": "<ul><li>利用率：{{utilizationRate}}</li><li>价格下限：{{priceLowerLimit}}</li><li>价格上限：{{priceUpperLimit}}</li><li>最大偏斜影响：{{skewImpactLimit}}</li><li>单一市场的最大分配：{{allocationLimitsPerMarketPerRound}}</li></ul>"
+    }
+}
         "withdraw-round-end-label": "回合结束于：<counter />",
         "vault-filled-label": "保险库已满：{{amount}} / {{max}}",
         "variables-left": "<ul><li>利用率：{{utilizationRate}}</li><li>价格下限：{{priceLowerLimit}}</li><li>价格上限：{{priceUpperLimit}}</li><li>最大偏斜影响：{{skewImpactLimit}}</li><li>单一市场的最大分配：{{allocationLimitsPerMarketPerRound}}</li></ul>"
