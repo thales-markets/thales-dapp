@@ -703,7 +703,8 @@
                 "total-supply-label": "Общее количество",
                 "celer-bridge": "Целерский мост",
                 "celer-bridge-tooltip": "Быстрый мост THALES между цепями",
-                "total-burned-label": "Всего сожжено Thales"
+                "total-burned-label": "Всего сожжено Thales",
+                "price-tooltip-camelot": "Обмен на Камелот"
             },
             "merge-account": {
                 "merge-blocked-message": {

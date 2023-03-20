@@ -834,6 +834,7 @@
                 "price-label": "Price",
                 "price-tooltip": "View DODO pool",
                 "price-tooltip-l2": "Swap on UNISWAP",
+                "price-tooltip-camelot": "Swap on Camelot",
                 "market-cap-label": "Market cap",
                 "earn-label": "Earn LP rewards",
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",

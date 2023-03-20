@@ -703,7 +703,8 @@
                 "total-supply-label": "总供应",
                 "celer-bridge": "赛勒桥",
                 "celer-bridge-tooltip": "链条之间的快速桥梁 THALES",
-                "total-burned-label": "泰雷兹烧毁总数"
+                "total-burned-label": "泰雷兹烧毁总数",
+                "price-tooltip-camelot": "交换卡米洛特"
             },
             "merge-account": {
                 "merge-blocked-message": {
