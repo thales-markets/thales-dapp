@@ -2011,7 +2011,11 @@
             "earned": "赢得",
             "total-fees": "总交易费用"
         },
-        "generate-link-btn": "生成链接",
+        "generate": {
+            "link-btn": "生成链接",
+            "id-create-success": "成功设置推荐人ID",
+            "id-exists": "推荐 ID 已存在"
+        },
         "form-label": "生成会员链接",
         "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.",
         "table": {
@@ -2055,7 +2059,8 @@
             "sharing": "分享推薦鏈接即表示您同意免責聲明",
             "and": "和",
             "terms": "條款"
-        }
+        },
+        "choose-referral": "选择您的推荐人 ID"
     },
     "wizard-page": {
         "question13-link-text": "看视频",

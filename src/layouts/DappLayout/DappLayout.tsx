@@ -11,6 +11,8 @@ import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { getReferralWallet, setReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -29,6 +31,17 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     useEffect(() => {
         if (queryParams?.referralId) {
             setReferralWallet(queryParams?.referralId);
+        }
+        if (queryParams?.referrerId) {
+            const fetchIdAddress = async () => {
+                const response = await axios.get(
+                    `${generalConfig.API_URL}/get-refferer-id-address/${queryParams.referrerId}`
+                );
+                if (response.data) {
+                    setReferralWallet(response.data);
+                }
+            };
+            fetchIdAddress();
         }
     }, []);
 

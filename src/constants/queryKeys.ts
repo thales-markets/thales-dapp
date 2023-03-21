@@ -274,6 +274,7 @@ export const QUERY_KEYS = {
             trader ? trader : undefined,
             refferer ? refferer : undefined,
         ],
+        ReferrerID: (walletAddress: string) => ['referrerId', walletAddress],
     },
     Governance: {
         Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],
