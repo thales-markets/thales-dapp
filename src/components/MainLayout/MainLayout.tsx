@@ -30,7 +30,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         if (queryParams?.referrerId) {
             const fetchIdAddress = async () => {
                 const response = await axios.get(
-                    `${generalConfig.API_URL}/get-refferer-id-address/${queryParams.referrerId}`
+                    `${generalConfig.API_URL}/get-refferer-id-address/${encodeURIComponent(queryParams.referrerId)}`
                 );
                 if (response.data) {
                     setReferralWallet(response.data);
