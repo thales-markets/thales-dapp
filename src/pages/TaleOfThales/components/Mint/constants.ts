@@ -62,7 +62,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 6,
         name: 'Camouflage Fisherman Collection',
         condition:
-            '"Camouflage Fisherman Collection" is unlocked for the top 10% participants in the Fishing Competition',
+            '"Camouflage Fisherman Collection" is unlocked for the top 20% participants in the Fishing Competition',
         items: [
             { name: 'Hat', src: '/miletus-nfts/NFT_20.png', itemId: 21 },
             { name: 'Robe', src: '/miletus-nfts/NFT_21.png', itemId: 22 },
@@ -72,7 +72,7 @@ export const NFT_COLLECTIONS = [
     {
         collectionId: 7,
         name: 'Luxury Fisherman Collection',
-        condition: '"Luxury Fisherman Collection" is unlocked for the top 1% participants in the Fishing Competition',
+        condition: '"Luxury Fisherman Collection" is unlocked for the top 5% participants in the Fishing Competition',
         items: [
             { name: 'Hat', src: '/miletus-nfts/NFT_23.png', itemId: 24 },
             { name: 'Robe', src: '/miletus-nfts/NFT_24.png', itemId: 25 },
