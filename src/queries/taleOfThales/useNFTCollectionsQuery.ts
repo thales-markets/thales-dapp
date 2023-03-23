@@ -16,7 +16,7 @@ const useNFTCollectionsQuery = (
             const { taleOfThalesNFTContract } = snxJSConnector as any;
             if (taleOfThalesNFTContract) {
                 for (const collection of NFT_COLLECTIONS) {
-                    const canMintCollection = await taleOfThalesNFTContract.addressCanMintCollection(
+                    const canMintCollection = await taleOfThalesNFTContract.isEligibleToMintCollection(
                         collection.collectionId,
                         walletAddress
                     );
