@@ -3,7 +3,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 1,
         name: 'Miletus Soldier Collection',
         condition:
-            '"Miletus Soldier Collection" is unlocked for all STAKERS who have staked 10 THALES or more before March 1st 2023',
+            '"Miletus Soldier Collection" is unlocked for all STAKERS who have staked 10 THALES or more before March 22nd 2023',
         items: [
             { name: 'Helmet', src: '/miletus-nfts/NFT_0.png', itemId: 1 },
             { name: 'Breastplate', src: '/miletus-nfts/NFT_1.png', itemId: 2 },
