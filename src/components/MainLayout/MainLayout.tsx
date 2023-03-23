@@ -8,6 +8,8 @@ import queryString from 'query-string';
 import { getReferralWallet, setReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { getNetworkId } from 'redux/modules/wallet';
+import axios from 'axios';
+import { generalConfig } from 'config/general';
 
 type MainLayoutProps = {
     children: React.ReactNode;
@@ -24,6 +26,17 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     useEffect(() => {
         if (queryParams?.referralId) {
             setReferralWallet(queryParams?.referralId);
+        }
+        if (queryParams?.referrerId) {
+            const fetchIdAddress = async () => {
+                const response = await axios.get(
+                    `${generalConfig.API_URL}/get-refferer-id-address/${encodeURIComponent(queryParams.referrerId)}`
+                );
+                if (response.data) {
+                    setReferralWallet(response.data);
+                }
+            };
+            fetchIdAddress();
         }
     }, []);
 

@@ -12,12 +12,11 @@ import { getIsAppReady } from 'redux/modules/app';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
 import { LightTooltip } from '../components';
-import { LINKS } from 'constants/links';
 import { getNetworkId } from 'redux/modules/wallet';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
 import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, Network, NetworkId } from 'utils/network';
 import Lottie from 'lottie-react';
 import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
 
@@ -59,12 +58,8 @@ export const TokentOverview: React.FC = () => {
                 <Title>{t('options.earn.overview.price-label')}</Title>
                 <Content>
                     {tokenInfo && tokenInfo.price ? (
-                        <LightTooltip title={t(`options.earn.overview.price-tooltip-l2`)}>
-                            <StyledLink
-                                href={isL2 ? LINKS.Token.UniswapL2 : LINKS.Token.Uniswap}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
+                        <LightTooltip title={t(getTitleForPrice(networkId))}>
+                            <StyledLink href={getUrlForSwap(networkId)} target="_blank" rel="noreferrer">
                                 {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
                                 <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                             </StyledLink>
@@ -120,7 +115,11 @@ export const TokentOverview: React.FC = () => {
                 <FlexDivCentered>
                     <LightTooltip title={t('options.earn.overview.celer-bridge-tooltip')}>
                         <StyledLink
-                            href="https://cbridge.celer.network/#/transfer?sourceChainId=1&destinationChainId=10&tokenSymbol=THALES"
+                            href={
+                                isL2
+                                    ? 'https://cbridge.celer.network/1/10/THALES'
+                                    : 'https://cbridge.celer.network/10/42161/THALES'
+                            }
                             target="_blank"
                             rel="noreferrer"
                         >
@@ -132,6 +131,30 @@ export const TokentOverview: React.FC = () => {
             </ItemContainer>
         </Container>
     );
+};
+
+const getUrlForSwap = (networkId: NetworkId) => {
+    switch (networkId) {
+        case Network['Mainnet-Ovm']:
+            return 'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11';
+        case Network.Arbitrum:
+            return 'https://app.camelot.exchange';
+
+        default:
+            return 'https://app.uniswap.org/#/swap?outputCurrency=0x8947da500Eb47F82df21143D0C01A29862a8C3c5';
+    }
+};
+
+const getTitleForPrice = (networkId: NetworkId) => {
+    switch (networkId) {
+        case Network['Mainnet-Ovm']:
+            return 'options.earn.overview.price-tooltip-l2';
+        case Network.Arbitrum:
+            return 'options.earn.overview.price-tooltip-camelot';
+
+        default:
+            return 'options.earn.overview.price-tooltip-l2';
+    }
 };
 
 const ItemContainer: React.FC<{ className?: string }> = (props) => (

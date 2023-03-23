@@ -17,7 +17,7 @@ import migrationActiveIcon from 'assets/images/migration-active.svg';
 import migrationIcon from 'assets/images/migration.svg';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
-import { getIsOVM } from 'utils/network';
+import { getIsArbitrum, getIsOVM } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
 
@@ -36,6 +36,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
 }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const isArb = getIsArbitrum(networkId);
 
     const [showNav, setShowNav] = useState(false);
 
@@ -61,7 +62,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                         }}
                         src={selectedSection === TokenTabSectionIdEnum.STAKING ? stakingActiveIcon : stakingIcon}
                     />
-                    {isL2 && (
+                    {(isL2 || isArb) && (
                         <Icon
                             onClick={() => {
                                 history.push({
@@ -80,7 +81,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                             }
                         />
                     )}
-                    {isL2 && (
+                    {(isL2 || isArb) && (
                         <Icon
                             onClick={() => {
                                 history.push({
@@ -95,7 +96,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                             src={selectedSection === TokenTabSectionIdEnum.VESTING ? vestingActiveIcon : vestingIcon}
                         />
                     )}
-                    {isL2 && (
+                    {(isL2 || isArb) && (
                         <Icon
                             onClick={() => {
                                 history.push({
@@ -114,29 +115,31 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                             }
                         />
                     )}
-                    <Icon
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: TokenTabEnum.LP_STAKING,
-                                }),
-                            });
-                            setSelectedTab(TokenTabEnum.LP_STAKING);
-                            setSelectedSection(TokenTabSectionIdEnum.LP_STAKING);
-                        }}
-                        src={
-                            selectedTab === TokenTabEnum.LP_STAKING
-                                ? isL2
-                                    ? lpl2ActiveIcon
-                                    : lpActiveIcon
-                                : isL2
-                                ? lpl2Icon
-                                : lpIcon
-                        }
-                    />
+                    {!isArb && (
+                        <Icon
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: TokenTabEnum.LP_STAKING,
+                                    }),
+                                });
+                                setSelectedTab(TokenTabEnum.LP_STAKING);
+                                setSelectedSection(TokenTabSectionIdEnum.LP_STAKING);
+                            }}
+                            src={
+                                selectedTab === TokenTabEnum.LP_STAKING
+                                    ? isL2
+                                        ? lpl2ActiveIcon
+                                        : lpActiveIcon
+                                    : isL2
+                                    ? lpl2Icon
+                                    : lpIcon
+                            }
+                        />
+                    )}
 
-                    {!isL2 && (
+                    {!isL2 && !isArb && (
                         <Icon
                             onClick={() => {
                                 history.push({
@@ -150,7 +153,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                             src={selectedTab === TokenTabEnum.MIGRATION ? migrationActiveIcon : migrationIcon}
                         />
                     )}
-                    {!isL2 && (
+                    {!isL2 && !isArb && (
                         <Icon
                             onClick={() => {
                                 history.push({

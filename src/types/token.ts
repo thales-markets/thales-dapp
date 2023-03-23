@@ -70,6 +70,7 @@ export type TokenTabSection = {
     id: TokenTabSectionIdEnum;
     title: string;
     description: string | ReactElement;
+    warning?: string | ReactElement;
     isButton: boolean;
     buttonWidth?: string;
 };
@@ -133,7 +134,6 @@ export type StakingReward = {
     thalesAmmVolume: number;
     rangedAmmVolume: number;
     sportsAmmVolume: number;
-    hasParticipatedInCurrentOrLastRoyale: boolean;
 };
 
 type Reward = {

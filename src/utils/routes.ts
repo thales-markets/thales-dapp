@@ -21,8 +21,8 @@ export const buildRangeMarketLink = (marketAddress: string, side?: string, order
         side || orderType ? `?side=${side}&orderType=${orderType}` : ''
     }`;
 
-export const buildReferralLink = (route: string, referralId: string) => {
-    return `${ifIpfsDeployment ? '#' : ''}${route}?referralId=${referralId.toLowerCase()}`;
+export const buildReferrerLink = (route: string, referralId: string) => {
+    return `${ifIpfsDeployment ? '#' : ''}${route}?referrerId=${referralId}`;
 };
 
 export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${route}`;

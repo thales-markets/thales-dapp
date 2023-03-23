@@ -276,11 +276,19 @@ export const Tip37Link: React.FC = () => {
     );
 };
 
-export const Tip48Link: React.FC = (props) => {
+export const Tip48Link: React.FC = () => {
     return (
         <DescriptionLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP48}>
-            {props.children}
+            TIP-48
         </DescriptionLink>
+    );
+};
+
+export const Tip125Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP125}>
+            TIP-125
+        </TooltipLink>
     );
 };
 

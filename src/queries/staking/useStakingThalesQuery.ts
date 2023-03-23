@@ -19,6 +19,7 @@ type StakingThalesQueryResponse = {
     maxBonusRewardsPercentage: number;
     mergeAccountEnabled: boolean;
     delegatedVolume: string;
+    isUserLPing: boolean;
 };
 
 const useStakingThalesQuery = (
@@ -42,6 +43,7 @@ const useStakingThalesQuery = (
                 maxBonusRewardsPercentage: 0,
                 mergeAccountEnabled: true,
                 delegatedVolume: ZERO_ADDRESS,
+                isUserLPing: false,
             };
 
             try {
@@ -83,6 +85,7 @@ const useStakingThalesQuery = (
                         unstakingAmount,
                         rewards,
                         delegatedVolume,
+                        isUserLPing,
                     ] = await Promise.all([
                         (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress),
@@ -90,6 +93,7 @@ const useStakingThalesQuery = (
                         (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
                         (snxJSConnector as any).stakingThalesContract.delegatedVolume(walletAddress),
+                        (snxJSConnector as any).liquidityPoolContract.isUserLPing(walletAddress),
                     ]);
 
                     staking.isUnstaking = isUnstaking;
@@ -99,6 +103,7 @@ const useStakingThalesQuery = (
                     staking.unstakingAmount = bigNumberFormatter(unstakingAmount);
                     staking.rewards = bigNumberFormatter(rewards);
                     staking.delegatedVolume = delegatedVolume;
+                    staking.isUserLPing = isUserLPing;
                 }
             } catch {}
 

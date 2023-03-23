@@ -703,7 +703,8 @@
                 "total-supply-label": "总供应",
                 "celer-bridge": "赛勒桥",
                 "celer-bridge-tooltip": "链条之间的快速桥梁 THALES",
-                "total-burned-label": "泰雷兹烧毁总数"
+                "total-burned-label": "泰雷兹烧毁总数",
+                "price-tooltip-camelot": "交换卡米洛特"
             },
             "merge-account": {
                 "merge-blocked-message": {
@@ -778,7 +779,8 @@
                         "network-fee-cancel": "取消",
                         "paused-message": "取消质押已暂停。",
                         "start-unstaking-tooltip": "在取消抵押冷却期间，您将无法抵押或取消抵押更多 THALES。",
-                        "cooldown-ended-text": "您现在可以取消质押 {{amount}}"
+                        "cooldown-ended-text": "您现在可以取消质押 {{amount}}",
+                        "user-lping-message": "您不能在为 Overtime 提供流动性的同时取消质押。"
                     },
                     "wallet-balance": "我的钱包余额",
                     "staked-balance": "我的质押余额",
@@ -796,7 +798,8 @@
                     "staked-directly": "直接质押",
                     "estimated-rewards": "本期预估奖励",
                     "not-eligible-message": "除非您直接抵押的余额大于 0，否则您没有资格获得抵押奖励",
-                    "bonus-estimated-rewards-tooltip": "<0>每 </0><1 /> 的最高奖金奖励为 {{max}}%。"
+                    "bonus-estimated-rewards-tooltip": "<0>每 </0><1 /> 的最高奖金奖励为 {{max}}%。",
+                    "bonus-apy-tooltip-arb": "<0>按照协议使用情况赚取 +{{max}}% 的奖金质押奖励</0><1 />。"
                 },
                 "rewards": {
                     "close-period": {
@@ -858,7 +861,8 @@
                         "base": "作为基础奖励",
                         "base-description": "THALES 质押产生的基本奖励（每周 {{baseRewards}}）",
                         "bonus": "作为奖金奖励",
-                        "bonus-description": "基本奖励之上的最高奖励奖励为 50%。奖励每周分配给协议使用桶 21,000 THALES，该桶计算来自 AMM 交易、范围 AMM 交易和 Overtime sport 的 AMM 交易的 sUSD 交易量，以及每周 9,000 THALES 给 SNX 质押者。 <0>了解更多。</0>"
+                        "bonus-description": "基本奖励之上的最高奖励奖励为 50%。奖励每周分配给协议使用桶 21,000 THALES，该桶计算来自 AMM 交易、范围 AMM 交易和 Overtime sport 的 AMM 交易的 sUSD 交易量，以及每周 9,000 THALES 给 SNX 质押者。 <0>了解更多。</0>",
+                        "bonus-description-arb": "基本奖励之上的最高奖励奖励为 50%。协议使用桶的奖金奖励是每周 {{ bonusRewards }}，该桶计算来自 AMM 交易、范围 AMM 交易和 Overtime sport 的 AMM 交易的 USDC 交易量。 <0>了解更多。</0>"
                     },
                     "volume": {
                         "ranged-desc": "当前的远程市场量：",
@@ -893,7 +897,8 @@
                         "label-2": "LP质押",
                         "tooltip": "提供THALES/WETH流动性，赚取THALES+OP双重奖励。点击<0>此处</0>了解更多信息。"
                     },
-                    "no-thales-staked": "您没有质押 THALES"
+                    "no-thales-staked": "您没有质押 THALES",
+                    "section-warning": "无人认领的每周奖励将被没收！"
                 },
                 "vesting": {
                     "vest": {
@@ -2006,9 +2011,13 @@
             "earned": "赢得",
             "total-fees": "总交易费用"
         },
-        "generate-link-btn": "生成链接",
+        "generate": {
+            "link-btn": "生成链接",
+            "id-create-success": "成功设置推荐人ID",
+            "id-exists": "推荐 ID 已存在"
+        },
         "form-label": "生成会员链接",
-        "description": "痛本身就是爱的痛，主要的生态问题，但我给这种倒下的时间，让一些很大的痛和痛。为了在大多数情况下，我们中的任何人都会从事任何类型的工作，除了利用它的目标。但电影中的痛苦是难以谴责的，在快乐中它想摆脱痛苦中的痛苦，没有结果。他们是盲人渴望的例外，他们看不到，他们是那些为了抚慰心灵苦难的过失而放弃责任的人。",
+        "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.",
         "table": {
             "transaction-date": "交易日期",
             "volume": "体积",
@@ -2050,7 +2059,8 @@
             "sharing": "分享推薦鏈接即表示您同意免責聲明",
             "and": "和",
             "terms": "條款"
-        }
+        },
+        "choose-referral": "选择您的推荐人 ID"
     },
     "wizard-page": {
         "question13-link-text": "看视频",
@@ -2149,7 +2159,8 @@
         "description-last": "每14天的奖励分配如下：<br/><br/> - 8,000 OP 分配给所有折扣代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外奖励，根据<tipLink>.",
         "itm-volume-label": "ITM 体积",
         "description-3-itm": "每14天的奖励分配如下：<br/><br/> - 2,000 OP + 3,000 THALES 分配给 ITM 代币买家<br/>- 5,000 OP + 7,000 THALES 分配给 OTM 代币买家<br/>- 8,000 OP + 10,000 THALES 给任何折扣代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外奖励，根据<tipLink>.",
-        "discounted-volume-label": "折扣量"
+        "discounted-volume-label": "折扣量",
+        "stay-tuned": "敬请期待新的奖励计划！"
     },
     "footer": {
         "discover": "发现",

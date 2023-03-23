@@ -14,7 +14,7 @@ export const stakingThales = {
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
-        [Network.Arbitrum]: 'TBD',
+        [Network.Arbitrum]: '0x160Ca569999601bca06109D42d561D85D6Bb4b57',
     },
     abi: [
         {

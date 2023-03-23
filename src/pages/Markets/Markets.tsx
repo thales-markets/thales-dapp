@@ -11,11 +11,7 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
-import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
-import InfoBanner from 'components/InfoBanner';
-import styled from 'styled-components';
-import { FlexDiv } from 'theme/common';
-import { Trans } from 'react-i18next';
+
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
@@ -24,8 +20,6 @@ import ElectionsBanner from 'components/ElectionsBanner';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
-
-const INFORMATION_BANNER_ACTIVE = false;
 
 const Markets: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -136,39 +130,6 @@ const Markets: React.FC = () => {
         <>
             {showOPBanner && <OpRewardsBanner width={90} />}
             <ElectionsBanner width={90} />
-            {INFORMATION_BANNER_ACTIVE && (
-                <BannerContainer>
-                    <InfoBanner>
-                        <Trans
-                            i18nKey="options.home.polygon-trading-competition-1"
-                            components={{
-                                bold: (
-                                    <strong
-                                        onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(
-                                            this,
-                                            137,
-                                            undefined
-                                        )}
-                                    />
-                                ),
-                            }}
-                        />
-                        ,
-                        <Trans
-                            i18nKey="options.home.polygon-trading-competition-2"
-                            components={{
-                                bold: (
-                                    <a
-                                        href="https://docs.thalesmarket.io/competitions-and-events/thales-polygon-trading-competition"
-                                        rel="noreferrer"
-                                        target="_blank"
-                                    />
-                                ),
-                            }}
-                        />
-                    </InfoBanner>
-                </BannerContainer>
-            )}
             <Suspense fallback={<></>}>
                 {showDiscountMarkets && <HotMarkets optionsMarkets={optionsMarkets} />}
             </Suspense>
@@ -182,21 +143,21 @@ const Markets: React.FC = () => {
     );
 };
 
-const BannerContainer = styled(FlexDiv)`
-    width: 90% !important;
-    padding-bottom: 50px;
-    strong {
-        font-weight: bold;
-        cursor: pointer;
-        margin-left: 0.2em;
-        color: var(--input-border-color);
-    }
-    a {
-        display: contents;
-        font-weight: bold;
-        cursor: pointer;
-        color: var(--input-border-color);
-    }
-`;
+// const BannerContainer = styled(FlexDiv)`
+//     width: 90% !important;
+//     padding-bottom: 50px;
+//     strong {
+//         font-weight: bold;
+//         cursor: pointer;
+//         margin-left: 0.2em;
+//         color: var(--input-border-color);
+//     }
+//     a {
+//         display: contents;
+//         font-weight: bold;
+//         cursor: pointer;
+//         color: var(--input-border-color);
+//     }
+// `;
 
 export default Markets;

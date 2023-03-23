@@ -205,16 +205,16 @@ export const UserSwap: React.FC = () => {
 const SwapWrapper = styled.div`
     position: absolute;
     width: 130px;
-    right: 234px;
+    right: 365px;
     top: 40px;
     @media (max-width: 1024px) {
-        right: 224px;
-        top: 22px;
+        right: 334px;
+        top: 20px;
     }
 
     @media (max-width: 400px) {
         right: 194px;
-        top: 22px;
+        top: 20px;
     }
 `;
 

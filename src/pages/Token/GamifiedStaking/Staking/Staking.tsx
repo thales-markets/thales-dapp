@@ -1,6 +1,12 @@
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import { THALES_CURRENCY } from 'constants/currency';
-import { StyledInfoIcon, StyledInfoIconGreen, StyledMaterialTooltip, Tip17Link } from 'pages/Token/components';
+import {
+    StyledInfoIcon,
+    StyledInfoIconGreen,
+    StyledMaterialTooltip,
+    Tip125Link,
+    Tip17Link,
+} from 'pages/Token/components';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import React, { useMemo, useState } from 'react';
@@ -17,6 +23,7 @@ import Stake from './Stake';
 import Unstake from './Unstake';
 import { isMobile } from 'utils/device';
 import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
+import { getIsOVM } from 'utils/network';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -44,6 +51,7 @@ const Staking: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isL2 = getIsOVM(networkId);
 
     const stakeOptions = {
         stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
@@ -143,8 +151,15 @@ const Staking: React.FC = () => {
                                     arrow={true}
                                     title={
                                         <Trans
-                                            i18nKey="options.earn.gamified-staking.staking.bonus-apy-tooltip"
-                                            components={[<span key="1" />, <Tip17Link key="2" />]}
+                                            i18nKey={
+                                                isL2
+                                                    ? 'options.earn.gamified-staking.staking.bonus-apy-tooltip'
+                                                    : 'options.earn.gamified-staking.staking.bonus-apy-tooltip-arb'
+                                            }
+                                            components={[
+                                                <span key="1" />,
+                                                isL2 ? <Tip17Link key="2" /> : <Tip125Link key="2" />,
+                                            ]}
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
@@ -233,7 +248,10 @@ const Staking: React.FC = () => {
                                     title={
                                         <Trans
                                             i18nKey="options.earn.gamified-staking.staking.bonus-estimated-rewards-tooltip"
-                                            components={[<span key="1" />, <Tip17Link key="2" />]}
+                                            components={[
+                                                <span key="1" />,
+                                                isL2 ? <Tip17Link key="2" /> : <Tip125Link key="2" />,
+                                            ]}
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }

@@ -703,7 +703,8 @@
                 "total-supply-label": "Общее количество",
                 "celer-bridge": "Целерский мост",
                 "celer-bridge-tooltip": "Быстрый мост THALES между цепями",
-                "total-burned-label": "Всего сожжено Thales"
+                "total-burned-label": "Всего сожжено Thales",
+                "price-tooltip-camelot": "Обмен на Камелот"
             },
             "merge-account": {
                 "merge-blocked-message": {
@@ -778,7 +779,8 @@
                         "info-tooltip": "Доступные вознаграждения за стейкинг будут затребованы как часть стартовой транзакции анстейкинга.",
                         "cooldown-ended-text": "Теперь вы можете отменить ставку {{amount}}",
                         "network-fee-unstake": "Отменить ставку",
-                        "cancel": "Отменить снятие ставок"
+                        "cancel": "Отменить снятие ставок",
+                        "user-lping-message": "Вы не можете отменить ставку, предоставляя ликвидность для Overtime."
                     },
                     "escrow-balance": "Депозитный баланс",
                     "total-thales-staked": "Всего ставок THALES",
@@ -796,7 +798,8 @@
                     "wallet-balance-tooltip": "Количество нестейкинговых THALES в вашем кошельке.",
                     "not-eligible-message": "Вы не имеете права на получение вознаграждения за стекинг, если ваш прямой баланс не превышает 0.",
                     "bonus-estimated-rewards-tooltip": "<0>Максимальное вознаграждение в размере {{max}}% за </0><1 />.",
-                    "estimated-rewards": "Предполагаемое вознаграждение за этот период"
+                    "estimated-rewards": "Предполагаемое вознаграждение за этот период",
+                    "bonus-apy-tooltip-arb": "<0>Получите +{{max}}% бонусных вознаграждений за стейкинг за использование протокола, согласно </0><1 />."
                 },
                 "rewards": {
                     "claiming": "Претензия",
@@ -854,7 +857,8 @@
                         "bonus-description": "Максимальные бонусные вознаграждения сверх базовых вознаграждений составляют 50%. Бонусные вознаграждения делятся на 21 000 THALES еженедельно для корзины использования протокола, которая подсчитывает объем sUSD от торговли AMM, ранжированной торговли AMM и торговли AMM Overtime sport, и 9 000 THALES в неделю для стейкеров SNX. <0>Подробнее...</0>",
                         "base-description": "Базовые вознаграждения, получаемые от THALES Staking ({{baseRewards}} еженедельно)",
                         "base": "В качестве базовых наград",
-                        "bonus": "В качестве бонусных вознаграждений"
+                        "bonus": "В качестве бонусных вознаграждений",
+                        "bonus-description-arb": "Максимальные бонусные вознаграждения сверх базовых вознаграждений составляют 50%. Бонусные вознаграждения составляют {{bonusRewards }} еженедельно для корзины использования протокола, которая подсчитывает объем USDC от торговли AMM, торговли AMM с диапазоном и торговли AMM Overtime sport. <0>Подробнее...</0>"
                     },
                     "volume": {
                         "ranged-desc": "Текущий объем рынка дальнего боя:",
@@ -889,7 +893,8 @@
                         "label-1": "талес/эт",
                         "label-2": "LP стейкинг"
                     },
-                    "no-thales-staked": "У вас нет ставок THALES"
+                    "no-thales-staked": "У вас нет ставок THALES",
+                    "section-warning": "Невостребованные еженедельные награды аннулируются!"
                 },
                 "vesting": {
                     "section-title": "Вестинг",
@@ -2002,9 +2007,13 @@
             "earned": "Заработано",
             "total-fees": "Общие торговые сборы"
         },
-        "generate-link-btn": "Создать ссылку",
+        "generate": {
+            "link-btn": "Создать ссылку",
+            "id-exists": "Идентификатор реферала уже существует",
+            "id-create-success": "Идентификатор реферала установлен успешно"
+        },
         "form-label": "Создать партнерскую ссылку",
-        "description": "Боль сама по себе любовь к боли, основные экологические проблемы, но я даю этому виду время, чтобы упасть, так что какая-то большая боль и боль. Для того, чтобы по большей части любой из нас приходил к выполнению любого рода занятий, кроме как для извлечения выгоды из него. Но боль в фильме не хочется осуждать, в наслаждении она хочет убежать от боли быть cillum in the pain, безрезультатно. Это те исключения, которых жаждут слепые, они не видят, они отказываются от своих обязанностей по вине, успокаивающей душевные невзгоды.",
+        "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.",
         "table": {
             "address": "Адрес",
             "earned": "Заработано",
@@ -2046,7 +2055,8 @@
             "sharing": "Делясь реферальной ссылкой, вы соглашаетесь с отказом от ответственности",
             "and": "и",
             "terms": "сроки"
-        }
+        },
+        "choose-referral": "Выберите свой реферальный идентификатор"
     },
     "wizard-page": {
         "buy-button2": "Купить с картой",
@@ -2145,7 +2155,8 @@
         "discounted-volume-label": "СКИДКА Объем",
         "length-info": "Текущая программа завершится 15-м туром.",
         "otm-volume-label": "Объем OTM",
-        "description-last": "Распределение наград за каждый 14-дневный раунд выглядит следующим образом:<br/><br/> - 8 000 OP разделены между всеми покупателями токенов со скидкой<br/><br/> - Дополнительные бонусные вознаграждения, если вы являетесь стейкером THALES, согласно<tipLink> ."
+        "description-last": "Распределение наград за каждый 14-дневный раунд выглядит следующим образом:<br/><br/> - 8 000 OP разделены между всеми покупателями токенов со скидкой<br/><br/> - Дополнительные бонусные вознаграждения, если вы являетесь стейкером THALES, согласно<tipLink> .",
+        "stay-tuned": "Следите за новостями о новой бонусной программе!"
     },
     "footer": {
         "about": "О",

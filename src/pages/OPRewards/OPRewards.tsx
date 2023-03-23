@@ -10,8 +10,6 @@ import {
     SummaryWrapper,
     SummaryInfo,
     Wrapper,
-    Tip53Link,
-    GuidelinesLink,
     AddressLink,
 } from './styled-components';
 import SelectInput from 'components/SelectInput';
@@ -54,7 +52,7 @@ const OPRewards: React.FC = () => {
 
     const PERIOD_DURATION_IN_DAYS = 14;
     const START_DATE = new Date(Date.UTC(2022, 6, 13, 12, 23, 0));
-    const NOW = new Date();
+    const NOW = new Date(Date.UTC(2023, 2, 7, 12, 23, 0));
 
     let CALCULATED_START = new Date(START_DATE.getTime());
     let PERIOD_COUNTER = 0;
@@ -71,7 +69,7 @@ const OPRewards: React.FC = () => {
                     1000,
             });
             CALCULATED_START = new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000);
-            if (PERIOD_COUNTER != 0) {
+            if (PERIOD_COUNTER > 14) {
                 options.push({
                     value: PERIOD_COUNTER,
                     label: `Round ${PERIOD_COUNTER}`,
@@ -84,7 +82,7 @@ const OPRewards: React.FC = () => {
         }
     }
 
-    const [period, setPeriod] = useState<number>(options.length > 0 ? options[options.length - 1].value : 0);
+    const [period, setPeriod] = useState<number>(16);
 
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
@@ -489,7 +487,7 @@ const OPRewards: React.FC = () => {
                         sortType: rewardsSort(),
                     },
                 ];
-            } else {
+            } else if (period < 15) {
                 return [
                     {
                         Header: t('op-rewards.table.wallet-address'),
@@ -564,6 +562,119 @@ const OPRewards: React.FC = () => {
                                     i18nKey={'op-rewards.table.reward-text-op'}
                                     values={{
                                         op: Number(cellProps.cell.value.op).toFixed(2),
+                                    }}
+                                    components={[<br key="0" />]}
+                                />
+                            </p>
+                        ),
+                        sortType: rewardsSort(),
+                    },
+                ];
+            } else {
+                return [
+                    {
+                        Header: t('op-rewards.table.wallet-address'),
+                        accessor: 'account',
+                        Cell: (cellProps: any) => (
+                            <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                <AddressLink
+                                    href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
+                                        ? t('op-rewards.table.my-rewards')
+                                        : truncateAddress(cellProps.cell.value)}
+                                </AddressLink>
+                            </p>
+                        ),
+                        disableSortBy: true,
+                    },
+                    {
+                        Header: t('op-rewards.table.itm-info'),
+                        accessor: 'itmInfo',
+                        Cell: (cellProps: any) => (
+                            <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                <Trans
+                                    i18nKey={'op-rewards.table.reward-text'}
+                                    values={{
+                                        thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                        op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                    }}
+                                    components={[<br key="0" />]}
+                                />
+                                <Tooltip
+                                    message={t('op-rewards.table.info-text', {
+                                        volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                        percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                    })}
+                                    type={'info'}
+                                    iconColor={'var(--primary-color)'}
+                                    container={{ display: 'inline-block' }}
+                                    interactive={true}
+                                />
+                            </p>
+                        ),
+                        sortType: itmRewardsSort(),
+                    },
+
+                    {
+                        Header: t('op-rewards.table.otm-info'),
+                        accessor: 'otmInfo',
+                        Cell: (cellProps: any) => (
+                            <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                <Trans
+                                    i18nKey={'op-rewards.table.reward-text'}
+                                    values={{
+                                        thales: Number(cellProps.cell.value.rewards.thales).toFixed(2),
+                                        op: Number(cellProps.cell.value.rewards.op).toFixed(2),
+                                    }}
+                                    components={[<br key="0" />]}
+                                />
+                                <Tooltip
+                                    message={t('op-rewards.table.info-text', {
+                                        volume: Number(cellProps.cell.value.volume).toFixed(2),
+                                        percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
+                                    })}
+                                    type={'info'}
+                                    iconColor={'var(--primary-color)'}
+                                    container={{ display: 'inline-block' }}
+                                    interactive={true}
+                                />
+                            </p>
+                        ),
+                        sortType: otmRewardsSort(),
+                    },
+                    {
+                        Header: () => (
+                            <>
+                                {t('op-rewards.table.protocol-reward')}
+                                <Tooltip
+                                    message={t('op-rewards.table.gamified-bonus-text')}
+                                    type={'info'}
+                                    iconColor={'var(--primary-color)'}
+                                    container={{ display: 'inline-block' }}
+                                    interactive={true}
+                                />
+                            </>
+                        ),
+                        accessor: 'calculatedProtocolBonusForPeriod',
+                        Cell: (cellProps: any) => (
+                            <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                {cellProps.cell.value} OP
+                            </p>
+                        ),
+                    },
+                    {
+                        Header: t('op-rewards.table.total-rewards'),
+                        accessor: 'totalRewards',
+                        Cell: (cellProps: any) => (
+                            <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                                <Trans
+                                    i18nKey={'op-rewards.table.reward-text'}
+                                    values={{
+                                        op: Number(cellProps.cell.value.op).toFixed(2),
+                                        thales: Number(cellProps.cell.value.thales).toFixed(2),
                                     }}
                                     components={[<br key="0" />]}
                                 />
@@ -714,13 +825,30 @@ const OPRewards: React.FC = () => {
                     </SummaryInfo>
                 </>
             );
-        } else {
+        } else if (period < 15) {
             return (
                 <>
                     <SummaryInfo>
                         {`${t('op-rewards.discounted-volume-label')}: ${formatCurrencyWithSign(
                             USD_SIGN,
                             summaryData.discountedVolume
+                        )}`}
+                    </SummaryInfo>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <SummaryInfo>
+                        {`${t('op-rewards.itm-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.itmVolume
+                        )}`}
+                    </SummaryInfo>
+                    <SummaryInfo>
+                        {`${t('op-rewards.otm-volume-label')}: ${formatCurrencyWithSign(
+                            USD_SIGN,
+                            summaryData.otmVolume
                         )}`}
                     </SummaryInfo>
                 </>
@@ -732,31 +860,14 @@ const OPRewards: React.FC = () => {
         <Wrapper>
             <ElectionsBanner />
             <Description>
-                <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
-                <Trans
-                    i18nKey={
-                        period < 7
-                            ? 'op-rewards.description-3'
-                            : period < 12
-                            ? 'op-rewards.description-3-itm'
-                            : 'op-rewards.description-last'
-                    }
-                    components={{ bold: <BoldText />, br: <br />, tipLink: <Tip53Link /> }}
-                ></Trans>
-                .
-                <Trans
-                    i18nKey={'op-rewards.description-4'}
-                    components={{ br: <br />, guidelinesLink: <GuidelinesLink /> }}
-                ></Trans>
-                . <br /> <br />
-                <Trans i18nKey={'op-rewards.length-info'} components={{ br: <br /> }}></Trans>
+                <Trans i18nKey={'op-rewards.stay-tuned'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
             </Description>
             <HeaderWrapper>
                 <RoundWrapper>
                     <SelectInput
                         options={options}
                         handleChange={(value) => setPeriod(Number(value))}
-                        defaultValue={period - 1}
+                        defaultValue={1}
                         width={300}
                     />
                     {maxTimestamp &&
