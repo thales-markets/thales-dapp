@@ -8,7 +8,7 @@ export const taleOfThalesNFT = {
         [Network.Kovan]: 'TBD',
         // added to resolve error with typings
         [Network.Goerli]: '', // TODO: goerli network remove or implement
-        [Network['Mainnet-Ovm']]: '0x890b559E10aD1aAE73713f2f1924aab4e60cf505',
+        [Network['Mainnet-Ovm']]: '0xA9218C6d51b87EB3ee74E14Cb5D50BDE00Be7021',
         [Network['Kovan-Ovm']]: 'TBD',
         [Network['Goerli-Ovm']]: '0x48a2984D7BDdBF7Af6c3822CcD26A583a70C0A65',
         [Network['POLYGON-MUMBAI']]: 'TBD',
