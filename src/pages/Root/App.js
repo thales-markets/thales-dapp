@@ -34,7 +34,7 @@ const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/
 const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
 const Leaderboard = lazy(() => import(/* webpackChunkName: "Leaderboard" */ '../Leaderboard'));
 
-const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Markets'));
+const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Markets/V2'));
 const RangeMarkets = lazy(() => import(/* webpackChunkName: "RangeMarkets" */ '../RangeMarkets'));
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));

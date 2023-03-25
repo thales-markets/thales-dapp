@@ -466,11 +466,11 @@ const Text = styled.span`
 `;
 
 const GreenText = styled(Text)`
-    color: #50ce99;
+    color: ${UI_COLORS.GREEN};
 `;
 
 const RedText = styled(Text)`
-    color: #c3244a;
+    color: ${UI_COLORS.RED};
 `;
 
 const YellowText = styled(Text)`

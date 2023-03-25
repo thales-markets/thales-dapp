@@ -40,10 +40,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const [inMaturityPhase, setMaturityPhase] = useState<boolean>(false);
     const [networkSwitched, setNetworkSwitched] = useState(false);
 
-    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
-        enabled: isAppReady && !isRangedMarket,
-    });
-
     const rangedMarketQuery = useRangedMarketQuery(marketAddress, {
         enabled: isAppReady && isRangedMarket,
     });
@@ -56,6 +52,10 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
         }
         setNetworkSwitched(true);
     }, [networkId]);
+
+    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
+        enabled: isAppReady && !isRangedMarket,
+    });
 
     useEffect(() => {
         const fetchMarketData = async () => {

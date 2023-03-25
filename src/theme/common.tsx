@@ -125,8 +125,8 @@ export const Background = styled.section`
             }
         }
     }
-    background-color: #04045a;
-    --background: #04045a;
+    background-color: #111221;
+    --background: #111221;
     --icon-color: #f7f7f7;
     --shadow: 0px 0px 40px #64d9fe;
     --primary-color: #f7f7f7;

@@ -91,8 +91,8 @@ const Background = styled.section`
         left: 275px;
         overflow: hidden;
     }
-    background-color: #04045a;
-    --background: #04045a;
+    background-color: #111221;
+    --background: #111221;
     --icon-color: #f7f7f7;
     --shadow: 0px 0px 40px #64d9fe;
     --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);

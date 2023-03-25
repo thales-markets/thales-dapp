@@ -7,6 +7,12 @@ import { ethers } from 'ethers';
 import { NetworkId } from './network';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 
+export enum SortDirection {
+    NONE,
+    ASC,
+    DESC,
+}
+
 export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
         markets.map((optionsMarket) => {
