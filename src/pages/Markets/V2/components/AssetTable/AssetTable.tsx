@@ -6,12 +6,12 @@ import { UI_COLORS } from 'constants/ui';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { OptionsMarkets } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets } from 'types/options';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 
 type TableProps = {
     markets: OptionsMarkets;
-    setMarket: React.Dispatch<React.SetStateAction<string>>;
+    setMarket: React.Dispatch<React.SetStateAction<HistoricalOptionsMarketInfo | undefined>>;
 };
 
 const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
@@ -105,7 +105,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 hover="#1B1C33"
                 onTableRowClick={(row) => {
                     setRowIndex(row.index);
-                    setMarket(row.original.address);
+                    setMarket(row.original);
                 }}
                 tableHeadCellStyles={TableHeaderStyle}
                 data={markets}

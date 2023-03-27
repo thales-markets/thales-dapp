@@ -1,8 +1,5 @@
 import { uniqBy } from 'lodash';
-import AMM from 'pages/AMMTrading/components/AMM';
-import { MarketProvider } from 'pages/AMMTrading/contexts/MarketContext';
 import { OpenOrdersMap, fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
-import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -10,8 +7,9 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { OptionsMarkets } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets } from 'types/options';
 import { sortCurrencies } from 'utils/currency';
+import AMM from './components/AMM';
 import AssetDropdown from './components/AssetDropdown';
 import AssetTable from './components/AssetTable';
 import DatesDropdown from './components/MaturityDateDropdown/DatesDropdown';
@@ -30,15 +28,12 @@ const Markets: React.FC = () => {
     const [maturityDate, setMaturityDate] = useState<number>();
     const [lastValidOpenOrdersMap, setLastValidOpenOrdersMap] = useState<OpenOrdersMap>(undefined);
     const [lastValidDiscountMap, setLastValidDiscountMap] = useState<DiscountMap>(undefined);
-    const [market, setMarket] = useState<string>('');
+    const [market, setMarket] = useState<HistoricalOptionsMarketInfo>();
 
     // queries
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: true });
     const openOrdersQuery = fetchAllMarketOrders(networkId, { enabled: true });
     const discountQuery = fetchDiscounts(networkId, { enabled: true });
-    const marketQuery = useBinaryOptionsMarketQuery(market, {
-        enabled: market !== '',
-    });
 
     // hooks
     const optionsMarkets: OptionsMarkets = useMemo(() => {
@@ -134,13 +129,6 @@ const Markets: React.FC = () => {
         return markets.sort((a, b) => a.strikePrice - b.strikePrice);
     }, [asset, maturityDate]);
 
-    const marketContext = useMemo(() => {
-        if (marketQuery.isSuccess && marketQuery.data) {
-            return marketQuery.data;
-        }
-        return null;
-    }, [marketQuery.isSuccess, market]);
-
     return (
         <Wrapper>
             <div style={{ width: '100%' }}>
@@ -159,11 +147,11 @@ const Markets: React.FC = () => {
                 </Container>
             </div>
             <AMMWrapper>
-                {marketContext !== null && (
-                    <MarketProvider optionsMarket={marketContext}>
-                        <AMM />
-                    </MarketProvider>
-                )}
+                <AMM
+                    marketAddress={market?.address ?? ''}
+                    longAddress={market?.longAddress ?? ''}
+                    shortAddress={market?.longAddress ?? ''}
+                ></AMM>
             </AMMWrapper>
         </Wrapper>
     );

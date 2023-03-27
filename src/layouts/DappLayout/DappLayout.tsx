@@ -136,7 +136,6 @@ const NewWrapper = styled.div`
         padding: 0 10px;
     }
     max-width: 1440px;
-    min-height: 100vh;
 `;
 
 export default DappLayout;
