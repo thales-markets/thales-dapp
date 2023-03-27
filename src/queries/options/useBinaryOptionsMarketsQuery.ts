@@ -11,6 +11,7 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
             const optionsMarkets: OptionsMarkets = await thalesData.binaryOptions.markets({
                 max: Infinity,
                 network: networkId,
+                minMaturity: Math.round(new Date().getTime() / 1000),
             });
 
             return optionsMarkets;
