@@ -703,7 +703,8 @@
                 "total-supply-label": "Общее количество",
                 "celer-bridge": "Целерский мост",
                 "celer-bridge-tooltip": "Быстрый мост THALES между цепями",
-                "total-burned-label": "Всего сожжено Thales"
+                "total-burned-label": "Всего сожжено Thales",
+                "price-tooltip-camelot": "Обмен на Камелот"
             },
             "merge-account": {
                 "merge-blocked-message": {
@@ -2006,7 +2007,11 @@
             "earned": "Заработано",
             "total-fees": "Общие торговые сборы"
         },
-        "generate-link-btn": "Создать ссылку",
+        "generate": {
+            "link-btn": "Создать ссылку",
+            "id-exists": "Идентификатор реферала уже существует",
+            "id-create-success": "Идентификатор реферала установлен успешно"
+        },
         "form-label": "Создать партнерскую ссылку",
         "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.",
         "table": {
@@ -2050,7 +2055,8 @@
             "sharing": "Делясь реферальной ссылкой, вы соглашаетесь с отказом от ответственности",
             "and": "и",
             "terms": "сроки"
-        }
+        },
+        "choose-referral": "Выберите свой реферальный идентификатор"
     },
     "wizard-page": {
         "buy-button2": "Купить с картой",
@@ -2264,5 +2270,11 @@
         "deposit-amount-label": "Сумма вклада",
         "nothing-to-withdraw-label": "Нечего снимать.",
         "withdraw-round-end-label": "Раунд заканчивается через: <counter />"
+    },
+    "tale-of-thales": {
+        "mint": {
+            "loading": "Пожалуйста, подождите...",
+            "successfully-minted": "Успешно отчеканено"
+        }
     }
 }

@@ -123,6 +123,7 @@
     "referral-page": {
         "title": "Referral",
         "choose-landing": "Choose landing page",
+        "choose-referral": "Choose your Referral ID",
         "pages": {
             "market-page": "Markets page",
             "range-market-page": "Ranged markets page",
@@ -137,7 +138,11 @@
             "copied": "Copied!"
         },
         "form-label": "Generate Affiliate link",
-        "generate-link-btn": "Generate link",
+        "generate": {
+            "id-exists": "Referral ID already exists",
+            "id-create-success": "Successfully set referral ID",
+            "link-btn": "Generate link"
+        },
         "statistics": {
             "trades": "Trades",
             "total-volume": "Total Volume",
@@ -834,6 +839,7 @@
                 "price-label": "Price",
                 "price-tooltip": "View DODO pool",
                 "price-tooltip-l2": "Swap on UNISWAP",
+                "price-tooltip-camelot": "Swap on Camelot",
                 "market-cap-label": "Market cap",
                 "earn-label": "Earn LP rewards",
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",
@@ -1956,6 +1962,12 @@
         "itm-volume-label": "ITM Volume",
         "otm-volume-label": "OTM Volume",
         "volume-tooltip": "Current rewards:\n {{op}} + {{thales}} per $1,000 of Buy Volume"
+    },
+    "tale-of-thales": {
+        "mint": {
+            "loading": "Please wait...",
+            "successfully-minted": "Successfully minted"
+        }
     },
     "vaults": {
         "title": "Vaults",

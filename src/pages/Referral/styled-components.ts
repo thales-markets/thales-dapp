@@ -10,8 +10,8 @@ export const FormWrapper = styled.div`
 `;
 
 export const Label = styled.span`
-    font-size: 21px;
-    line-height: 21px;
+    font-size: 18px;
+    line-height: 18px;
     color: var(--primary-color);
 `;
 
@@ -95,5 +95,23 @@ export const TableWrapper = styled.div`
 export const RowContrainer = styled.div`
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    margin: 7px 0;
+`;
+
+export const InputField = styled.input`
+    border: 1px solid var(--input-border-color);
+    background: rgba(0, 0, 0, 0);
+    border-radius: 30px;
+    color: var(--input-border-color);
+    width: 100%;
+    height: 34px;
+    font-size: 16px;
+    padding-left: 12px;
+    padding-right: 12px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    &::placeholder {
+        color: var(--input-border-color);
+    }
 `;

@@ -703,7 +703,8 @@
                 "total-supply-label": "总供应",
                 "celer-bridge": "赛勒桥",
                 "celer-bridge-tooltip": "链条之间的快速桥梁 THALES",
-                "total-burned-label": "泰雷兹烧毁总数"
+                "total-burned-label": "泰雷兹烧毁总数",
+                "price-tooltip-camelot": "交换卡米洛特"
             },
             "merge-account": {
                 "merge-blocked-message": {
@@ -2010,7 +2011,11 @@
             "earned": "赢得",
             "total-fees": "总交易费用"
         },
-        "generate-link-btn": "生成链接",
+        "generate": {
+            "link-btn": "生成链接",
+            "id-create-success": "成功设置推荐人ID",
+            "id-exists": "推荐 ID 已存在"
+        },
         "form-label": "生成会员链接",
         "description": "<bold>Thales Referrals Program is an on-chain incentivized user acquisition and onboarding tool.</bold><br>The program allows anyone to generate a Referral Link and share it with potential traders they are trying to onboard. If someone uses your Referral Link to start trading on Thales, <bold>you get a percentage from each trade of the person being referred, paid in USD collateral instantly and directly into your wallet</bold> (no need to claim, just share the link and accrue referral trading fees).<br><br>This way, everyone has a direct incentive to onboard as many new users to Thales as possible and benefit from their trading volume.<br><br>As a person sharing your personal Referral Link, you <bold>earn an equivalent of 50% of the trading fee</bold> (1% of total volume) from each trade the new user you onboarded executes.",
         "table": {
@@ -2054,7 +2059,8 @@
             "sharing": "分享推薦鏈接即表示您同意免責聲明",
             "and": "和",
             "terms": "條款"
-        }
+        },
+        "choose-referral": "选择您的推荐人 ID"
     },
     "wizard-page": {
         "question13-link-text": "看视频",
@@ -2268,5 +2274,11 @@
         "withdraw-round-end-label": "回合结束于：<counter />",
         "vault-filled-label": "保险库已满：{{amount}} / {{max}}",
         "variables-left": "<ul><li>利用率：{{utilizationRate}}</li><li>价格下限：{{priceLowerLimit}}</li><li>价格上限：{{priceUpperLimit}}</li><li>最大偏斜影响：{{skewImpactLimit}}</li><li>单一市场的最大分配：{{allocationLimitsPerMarketPerRound}}</li></ul>"
+    },
+    "tale-of-thales": {
+        "mint": {
+            "loading": "请稍等...",
+            "successfully-minted": "铸造成功"
+        }
     }
 }

@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
     DescriptionContainer,
     FormWrapper,
     HeaderContainer,
+    InputField,
     KeyValue,
     Label,
     RowContrainer,
@@ -28,7 +29,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import Container from 'pages/Leaderboard/styled-components';
 import useReferralTransactionsQuery, { ReferralTransactions } from 'queries/referral/useReferralTransactionsQuery';
 import useReferredTradersQuery, { ReferredTrader } from 'queries/referral/useReferredTradersQuery';
-import { buildReferralLink } from 'utils/routes';
+import { buildReferrerLink } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import useReferrerQuery from 'queries/referral/useReferrerQuery';
 import { orderBy } from 'lodash';
@@ -45,6 +46,10 @@ import { getIsOVM } from 'utils/network';
 import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
 import OutsideClickHandler from 'react-outside-click-handler';
+import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
+import { generalConfig } from 'config/general';
+import axios from 'axios';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const tabs = [
     {
@@ -62,6 +67,7 @@ const tabs = [
 ];
 
 const Referral: React.FC = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -69,12 +75,15 @@ const Referral: React.FC = () => {
     const showOPBanner = getIsOVM(networkId);
 
     const [tabIndex, setTabIndex] = useState(tabs[0].id);
-    const [landingPage, setLandingPage] = useState<number | undefined>(0);
+    const [landingPage, setLandingPage] = useState<number>(0);
     const [referralLink, setReferralLink] = useState('');
+    const [reffererID, setReffererID] = useState('');
+    const [savedReffererID, setSavedReffererID] = useState('');
     const [showMore, setShowMore] = useState(false);
     const [textHeight, setHeight] = useState('170px');
     const [showViewsDropdown, setShowViewsDropdown] = useState(false);
-    const { t } = useTranslation();
+
+    const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
 
     const landingPageOptions = [
         {
@@ -151,42 +160,72 @@ const Referral: React.FC = () => {
 
     const copyLink = () => {
         navigator.clipboard.writeText(referralLink);
-        toast(t('referral-page.modal.copied'));
+        toast(t('referral-page.modal.copied'), { type: 'success' });
     };
 
-    const generateLinkHandler = () => {
+    const populateReferralLink = (landingPageId: number, reffererId: string) => {
+        let link = ROUTES.Options.Home;
+        switch (landingPageId) {
+            case 0:
+                link = ROUTES.Options.Home;
+                break;
+            case 1:
+                link = ROUTES.Options.RangeMarkets;
+                break;
+            case 2:
+                link = ROUTES.Home;
+                break;
+            default:
+                link = ROUTES.Options.Home;
+        }
+        setReferralLink(`${window.location.origin}${buildReferrerLink(link, reffererId)}`);
+    };
+
+    const generateLinkHandler = useCallback(async () => {
         if (!walletAddress) {
             alert('Connect your wallet first.');
             return;
         }
 
-        if (landingPage == 0) {
-            setReferralLink(`${window.location.origin}${buildReferralLink(ROUTES.Options.Home, walletAddress)}`);
-        } else if (landingPage == 1) {
-            setReferralLink(
-                `${window.location.origin}${buildReferralLink(ROUTES.Options.RangeMarkets, walletAddress)}`
-            );
-        } else if (landingPage == 1) {
-            setReferralLink(
-                `${window.location.origin}${buildReferralLink(ROUTES.Options.RangeMarkets, walletAddress)}`
-            );
-        } else if (landingPage == 2) {
-            setReferralLink(`${window.location.origin}${buildReferralLink(ROUTES.Home, walletAddress)}`);
-        } else if (landingPage == 3) {
-            setReferralLink(`${window.location.origin}${buildReferralLink(ROUTES.Options.Token, walletAddress)}`);
-        } else if (landingPage == 4) {
-            setReferralLink(`${window.location.origin}${buildReferralLink(ROUTES.Options.Royal, walletAddress)}`);
-        } else if (landingPage == 5) {
-            setReferralLink(`${window.location.origin}${buildReferralLink(ROUTES.Options.Game, walletAddress)}`);
-        } else if (landingPage == 6) {
-            setReferralLink(`${window.location.origin}${buildReferralLink(ROUTES.Governance.Home, walletAddress)}`);
+        const signature = await (snxJSConnector as any).signer.signMessage(reffererID);
+        const response = await axios.post(`${generalConfig.API_URL}/update-refferer-id`, {
+            walletAddress,
+            reffererID,
+            signature,
+            previousReffererID: savedReffererID,
+        });
+        if (response.data.error) {
+            toast(t('referral-page.generate.id-exists'), { type: 'error' });
+        } else {
+            populateReferralLink(landingPage, reffererID);
+            setSavedReffererID(reffererID);
+            toast(t('referral-page.generate.id-create-success'), { type: 'success' });
         }
-    };
+    }, [reffererID, walletAddress, savedReffererID, t]);
+
+    useEffect(() => {
+        if (reffererIDQuery.isSuccess && reffererIDQuery.data) {
+            setReffererID(reffererIDQuery.data);
+            setSavedReffererID(reffererIDQuery.data);
+            populateReferralLink(landingPage, reffererIDQuery.data);
+        } else {
+            setReffererID('');
+            setSavedReffererID('');
+            setReferralLink('');
+        }
+    }, [reffererIDQuery.isSuccess, reffererIDQuery.data]);
 
     const handleReadMore = () => {
         if (!showMore) setHeight('370px');
         if (showMore) setHeight('170px');
         setShowMore(!showMore);
+    };
+
+    const handleLandingPageChange = (value: number | null | undefined) => {
+        setLandingPage(Number(value));
+        if (savedReffererID) {
+            populateReferralLink(Number(value), reffererID);
+        }
     };
 
     return (
@@ -199,25 +238,25 @@ const Referral: React.FC = () => {
                     <RowContrainer>
                         <SelectInput
                             options={landingPageOptions}
-                            handleChange={(value) => setLandingPage(Number(value))}
+                            handleChange={(value) => handleLandingPageChange(value)}
                             defaultValue={0}
                         />
                     </RowContrainer>
-                    {/* <Label>{t('referral-page.form-label')}</Label> */}
+                    <Label>{t('referral-page.choose-referral')}</Label>
+                    <RowContrainer>
+                        <InputField value={reffererID} onChange={(e) => setReffererID(e.target.value)} />
+                    </RowContrainer>
                     <Button
+                        disabled={!reffererID || savedReffererID === reffererID}
                         padding={'5px 0px'}
                         margin={'9px 0px 9px 0'}
                         active={true}
                         hoverShadow={'var(--button-shadow)'}
                         onClickHandler={generateLinkHandler}
                     >
-                        {t('referral-page.generate-link-btn')}
+                        {t('referral-page.generate.link-btn')}
                     </Button>
-                    <InputWithIcon
-                        text={referralLink}
-                        onIconClick={() => copyLink()}
-                        customIconClass={'icon icon--copy'}
-                    />
+                    <InputWithIcon text={referralLink} onIconClick={copyLink} customIconClass={'icon icon--copy'} />
                 </FormWrapper>
                 <StatisticsWrapper>
                     <KeyValue>

@@ -195,6 +195,20 @@ export const QUERY_KEYS = {
         ],
         Gelato: () => ['token', 'Gelato'],
     },
+    TaleOfThales: {
+        NFTCollections: (walletAddress: string, networkId: NetworkId) => [
+            'taleOfThales',
+            'NFTCollections',
+            walletAddress,
+            networkId,
+        ],
+        NFTBalances: (walletAddress: string, networkId: NetworkId) => [
+            'taleOfThales',
+            'NFTBalances',
+            walletAddress,
+            networkId,
+        ],
+    },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
         Quote: (networkId: NetworkId, amount: BigNumber) => ['swap', 'quote', networkId, amount],
@@ -274,6 +288,7 @@ export const QUERY_KEYS = {
             trader ? trader : undefined,
             refferer ? refferer : undefined,
         ],
+        ReferrerID: (walletAddress: string) => ['referrerId', walletAddress],
     },
     Governance: {
         Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],

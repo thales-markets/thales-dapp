@@ -73,6 +73,9 @@ const NetworkSwitchContainer = styled(FlexDivColumn)`
     svg {
         margin-right: 5px;
     }
+    @media (min-width: 500px) {
+        display: none;
+    }
 `;
 
 const SectionHeader = styled(UserCardSectionHeader)`

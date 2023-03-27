@@ -42,7 +42,6 @@ const InputWithIcon: React.FC<InputProps> = ({
             <Icon
                 className={customIconClass ? customIconClass : 'icon icon--search'}
                 onClick={() => (onIconClick ? onIconClick() : '')}
-                cursor={true}
             />
         </Wrapper>
     );
@@ -74,12 +73,12 @@ const InputField = styled.input`
     }
 `;
 
-const Icon = styled.i<{ cursor?: boolean }>`
+const Icon = styled.i`
     font-size: 15px;
     color: var(--input-border-color);
     position: absolute;
     right: 8px;
-    cursor: ${(_props) => (_props?.cursor ? 'pointer' : '')};
+    cursor: pointer;
 `;
 
 export default InputWithIcon;

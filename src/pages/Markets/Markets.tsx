@@ -7,7 +7,6 @@ import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
-import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
@@ -17,6 +16,7 @@ import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
 import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
 import ElectionsBanner from 'components/ElectionsBanner';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 
 const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './components/HotMarkets'));
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
@@ -119,10 +119,7 @@ const Markets: React.FC = () => {
         return [];
     }, [marketsQuery.isSuccess, marketsQuery.data, openOrdersMap, discountMap]);
 
-    const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
-        enabled: isAppReady && optionsMarkets.length > 0,
-        refetchInterval: false,
-    });
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery();
 
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 

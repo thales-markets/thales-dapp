@@ -24,6 +24,7 @@ import unclaimedRetroAirdropContract from './contracts/unclaimedRetroAirdrop';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import multipleCollateral from './contracts/multipleCollateralContract';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
+import taleOfThalesNFT from './contracts/taleOfThalesNFT';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -54,6 +55,7 @@ type SnxJSConnector = {
     unclaimedRetroAirdropContract?: ethers.Contract;
     unclaimedInvestorsRetroAirdropContract?: ethers.Contract;
     liquidityPoolContract?: ethers.Contract;
+    taleOfThalesNFTContract?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -115,6 +117,7 @@ const snxJSConnector: SnxJSConnector = {
             contractSettings
         );
         this.liquidityPoolContract = conditionalInitializeContract(liquidityPoolContract, contractSettings);
+        this.taleOfThalesNFTContract = conditionalInitializeContract(taleOfThalesNFT, contractSettings);
     },
 };
 
