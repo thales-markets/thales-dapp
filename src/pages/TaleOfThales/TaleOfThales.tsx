@@ -1,72 +1,100 @@
-import React, { useEffect } from 'react';
-import Unity, { UnityContext } from 'react-unity-webgl';
-import fullScreenImage from 'assets/images/full_screen_icon.png';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
-import axios from 'axios';
-import { useTranslation } from 'react-i18next';
-import Container from './styled-components/GameContainer';
-import { generalConfig } from 'config/general';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Metaverse from './components/Metaverse';
+import Mint from './components/Mint';
+import Story from './components/Story';
+import { history } from 'utils/routes';
 
-const unityContext = new UnityContext({
-    loaderUrl: '/miletus-game/build.loader.js',
-    dataUrl: '/miletus-game/build.data.unityweb',
-    frameworkUrl: '/miletus-game/build.framework.js.unityweb',
-    codeUrl: '/miletus-game/build.wasm.unityweb',
-});
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 const TaleOfThales: React.FC = () => {
-    const { t } = useTranslation();
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-
-    const handleOnClickFullscreen = () => {
-        unityContext.setFullscreen(true);
-    };
+    // const { t } = useTranslation();
+    const [activeTab, setActiveTab] = useState<number>(0);
 
     useEffect(() => {
-        unityContext.removeEventListener('StartGame');
-        unityContext.on('StartGame', async () => {
-            if (walletAddress) {
-                await axios.post(`${generalConfig.API_URL}/game-started`, {
-                    walletAddress,
-                });
-            } else {
-                await axios.post(`${generalConfig.API_URL}/game-started`);
-            }
-        });
-    }, [walletAddress]);
+        history.push({ pathname: location.pathname, search: location.search });
+    }, []);
 
     useEffect(() => {
-        unityContext.removeEventListener('EndGame');
-        unityContext.on('EndGame', async () => {
-            if (walletAddress) {
-                await axios.post(`${generalConfig.API_URL}/game-ended`, {
-                    walletAddress,
-                });
-            } else {
-                await axios.post(`${generalConfig.API_URL}/game-ended`);
-            }
-        });
-    }, [walletAddress]);
+        const listener = () => {
+            history.push({ pathname: location.pathname, search: location.search });
+        };
+        window.addEventListener('popstate', listener);
+        return () => window.removeEventListener('popstate', listener);
+    }, []);
 
     return (
-        <Container className="game" style={{ zIndex: 10 }}>
-            {!walletAddress && <Container.Msg>{t('game.connect-wallet-warning')}</Container.Msg>}
-            <Container.Center>
-                <Container.Wrapper>
-                    <Unity
-                        unityContext={unityContext}
-                        style={{
-                            height: 'auto',
-                            width: '100%',
-                        }}
-                    />
-                    <Container.Btn onClick={handleOnClickFullscreen} src={fullScreenImage} />
-                </Container.Wrapper>
-            </Container.Center>
-        </Container>
+        <>
+            <TabsContainer>
+                <Tab onClick={() => setActiveTab(0)} active={activeTab === 0}>
+                    Metaverse
+                </Tab>
+                <Tab
+                    onClick={async () => {
+                        if (activeTab === 0) {
+                            // @ts-ignore
+                            window?.webSocket?.close();
+                            await delay(100);
+                        }
+                        setActiveTab(1);
+                    }}
+                    active={activeTab === 1}
+                >
+                    Mint NFT
+                </Tab>
+                <Tab
+                    onClick={async () => {
+                        if (activeTab === 0) {
+                            // @ts-ignore
+                            window?.webSocket?.close();
+                            await delay(100);
+                        }
+                        setActiveTab(2);
+                    }}
+                    active={activeTab === 2}
+                >
+                    Story
+                </Tab>
+            </TabsContainer>
+            {activeTab === 0 && <Metaverse />}
+            {activeTab === 1 && <Mint />}
+            {activeTab === 2 && <Story />}
+        </>
     );
 };
+
+const TabsContainer = styled.div`
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    border-bottom: 4px solid var(--table-border-color);
+    border-radius: 3px;
+    @media (max-width: 1024px) {
+        margin-top: 30px;
+    }
+    @media (max-width: 768px) {
+        display: none;
+    }
+`;
+
+const Tab = styled.div<{ active: boolean }>`
+    font-weight: 400;
+    font-size: 25px;
+    text-align: center;
+    width: 25%;
+    font-family: Roboto !important;
+    font-style: normal;
+    color: var(--primary-color);
+    box-shadow: ${(props) => (props?.active ? '0px 4px var(--primary-filter-menu-active)' : '')};
+    text-transform: uppercase;
+    padding: 10px 5px;
+    cursor: pointer;
+    @media (max-width: 1192px) {
+        font-size: 23px;
+        padding: 5px;
+    }
+`;
 
 export default TaleOfThales;
