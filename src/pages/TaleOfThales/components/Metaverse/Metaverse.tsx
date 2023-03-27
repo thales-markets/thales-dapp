@@ -78,7 +78,7 @@ const Metaverse: React.FC = () => {
     });
 
     unityContext.on('showTweet', () => {
-        window.open('https://twitter.com/thalesmarket');
+        window.open('https://twitter.com/thalesmarket/status/1640387655367114764');
     });
 
     return (
