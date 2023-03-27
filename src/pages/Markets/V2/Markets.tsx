@@ -1,3 +1,4 @@
+import { uniqBy } from 'lodash';
 import AMM from 'pages/AMMTrading/components/AMM';
 import { MarketProvider } from 'pages/AMMTrading/contexts/MarketContext';
 import { OpenOrdersMap, fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
@@ -51,12 +52,15 @@ const Markets: React.FC = () => {
         const allAssets: Set<string> = new Set();
         const allDates: Set<number> = new Set();
 
-        optionsMarkets.forEach((market) => {
-            if (market.maturityDate > new Date().getTime()) {
-                if (!market.customMarket) allAssets.add(market.currencyKey);
-                if (market.currencyKey === asset) {
-                    allDates.add(market.maturityDate);
-                }
+        const curr = uniqBy(optionsMarkets, 'currencyKey');
+        const matur = uniqBy(optionsMarkets, 'maturityDate');
+
+        curr.map((market) => {
+            allAssets.add(market.currencyKey);
+        });
+        matur.map((market) => {
+            if (market.currencyKey === asset) {
+                allDates.add(market.maturityDate);
             }
         });
 

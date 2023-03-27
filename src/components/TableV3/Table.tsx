@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { SortDirection } from 'utils/options';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { OptionsMarkets } from 'types/options';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
@@ -67,9 +67,22 @@ const Table: React.FC<TableProps> = ({
     selectedRowColor,
 }) => {
     const { t } = useTranslation();
+    const [lastValidRates, setRates] = useState<Rates>();
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery({ enabled: showCurrentPrice });
-    const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
+
+    useEffect(() => {
+        if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
+            setRates(exchangeRatesMarketDataQuery.data);
+        }
+    }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data]);
+
+    const exchangeRates: Rates | undefined = useMemo(() => {
+        if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
+            return exchangeRatesMarketDataQuery.data;
+        }
+        return lastValidRates;
+    }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, lastValidRates]);
 
     const memoizedColumns = useMemo(() => columns, [...columnsDeps, t]);
     const {
@@ -220,7 +233,7 @@ const Table: React.FC<TableProps> = ({
                                                     </TableCell>
                                                 ))}
                                             </TableRow>
-                                            {indexForDrawingAndPrice?.index === rowIndex && (
+                                            {showCurrentPrice && indexForDrawingAndPrice?.index === rowIndex && (
                                                 <PriceWrapper>
                                                     <Price>
                                                         {formatCurrencyWithSign(

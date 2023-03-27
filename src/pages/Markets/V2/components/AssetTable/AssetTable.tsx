@@ -112,6 +112,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 columns={columns}
                 selectedRowIndex={rowIndex}
                 selectedRowColor="#4E9D9D"
+                showCurrentPrice={true}
             />
         </Wrapper>
     );
