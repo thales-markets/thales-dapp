@@ -9,7 +9,8 @@ export const bytesFormatter = (input: string) => ethers.utils.formatBytes32Strin
 
 export const parseBytes32String = (input: string) => ethers.utils.parseBytes32String(input);
 
-export const bigNumberFormatter = (value: BigNumberish) => Number(ethers.utils.formatEther(value));
+export const bigNumberFormatter = (value: BigNumberish, decimals?: number) =>
+    Number(ethers.utils.formatUnits(value, decimals ? decimals : 18));
 
 export const stableCoinFormatter = (value: BigNumberish, networkId: number, currency?: string) => {
     if (networkId == POLYGON_ID) {
