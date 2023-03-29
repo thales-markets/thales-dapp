@@ -568,7 +568,7 @@ const ViewButton = styled.div`
         font-weight: bold;
         font-size: 12px;
         text-transform: uppercase;
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
 `;
 
@@ -608,7 +608,7 @@ const ViewTitle = styled.p`
     font-size: 12px;
     line-height: 100%;
     text-transform: uppercase;
-    color: #64d9fe;
+    color: var(--color-highlight);
     @media (min-width: 769px) {
         display: none;
     }
@@ -624,7 +624,7 @@ const ViewItem = styled.div<{ active: boolean }>`
         cursor: pointer;
         font-family: Roboto !important;
         font-style: normal;
-        color: ${(_props) => (_props?.active ? '#64d9fe' : '#ffffff')};
+        color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
     }
 `;
 

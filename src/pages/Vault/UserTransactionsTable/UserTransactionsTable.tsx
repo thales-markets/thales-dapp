@@ -80,7 +80,7 @@ export const UserTransactionsTable: FC<UserTransactionsTableProps> = memo(
                     data={transactions}
                     isLoading={isLoading}
                     noResultsMessage={noResultsMessage}
-                    tableHeadCellStyles={{ color: '#64D9FE' }}
+                    tableHeadCellStyles={{ color: 'var(--color-highlight)' }}
                     tableRowCellStyles={{ fontSize: `${isMobile() ? '10px' : '14px'}` }}
                 />
             </>

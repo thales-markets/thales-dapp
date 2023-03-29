@@ -138,7 +138,7 @@ const TableText = styled.span`
     font-size: 14px;
     line-height: 16px;
 
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const GreenText = styled(TableText)`

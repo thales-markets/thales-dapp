@@ -82,7 +82,7 @@ const Date = styled.p`
     line-height: 18px;
     /* identical to box height */
 
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 export default DatesDropdown;

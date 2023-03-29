@@ -19,7 +19,7 @@ export const GridContainer = styled(GridDivCol)`
 
 export const Input = styled.input`
     background: var(--color-primary);
-    border: 1px solid #64d9fe;
+    border: 1px solid var(--color-highlight);
     box-sizing: border-box;
     mix-blend-mode: normal;
     border-radius: 12px;
@@ -57,7 +57,7 @@ export const InputLabel = styled.label`
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
-    color: #64d9fe;
+    color: var(--color-highlight);
     padding: 8px 0 0 15px;
     pointer-events: none;
     z-index: 3;

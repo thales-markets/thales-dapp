@@ -19,20 +19,20 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
             width: '100%',
             color: state.selectProps.menuColor,
             backgroundColor: ' var(--color-primary)',
-            border: '1px solid #64d9fe',
+            border: '1px solid var(--color-highlight)',
         }),
         option: (provided: any, state: any) => ({
             ...provided,
-            color: state?.isFocused || state.isSelected ? ' var(--color-primary)' : '#64d9fe',
-            backgroundColor: state?.isFocused || state.isSelected ? '#64d9fe' : ' var(--color-primary)',
+            color: state?.isFocused || state.isSelected ? ' var(--color-primary)' : 'var(--color-highlight)',
+            backgroundColor: state?.isFocused || state.isSelected ? 'var(--color-highlight)' : ' var(--color-primary)',
             opacity: state.isSelected ? 0.7 : 1,
             cursor: 'pointer',
         }),
         control: (provided: any) => ({
             ...provided,
             backgroundColor: ' var(--color-primary)',
-            borderColor: '#64d9fe',
-            color: '#64d9fe',
+            borderColor: 'var(--color-highlight)',
+            color: 'var(--color-highlight)',
             borderRadius: '15px',
             ':hover': {
                 ...provided[':hover'],
@@ -43,18 +43,18 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
         }),
         placeholder: (provided: any) => ({
             ...provided,
-            color: '#64d9fe',
+            color: 'var(--color-highlight)',
         }),
         singleValue: (provided: any) => ({
             ...provided,
-            color: '#64d9fe',
+            color: 'var(--color-highlight)',
         }),
         dropdownIndicator: (provided: any) => ({
             ...provided,
-            color: '#64d9fe',
+            color: 'var(--color-highlight)',
             [':hover']: {
                 ...provided[':hover'],
-                color: '#64d9fe',
+                color: 'var(--color-highlight)',
             },
         }),
     };

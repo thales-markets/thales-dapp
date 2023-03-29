@@ -51,14 +51,14 @@ const MenuCard = styled.div<ManuCardProps>`
     max-height: 95vh;
     overflow-y: auto;
     top: 40px;
-    border: 1px solid #64d9fe;
+    border: 1px solid var(--color-highlight);
     box-sizing: border-box;
     border-radius: 15px;
     z-index: 1000;
     background-color: var(--color-primary);
     --background: var(--color-primary);
     --icon-color: #f7f7f7;
-    --shadow-color: '#64D9FE';
+    --shadow-color: 'var(--color-highlight)';
     @media (max-width: 1024px) {
         width: 100%;
         max-width: 100%;

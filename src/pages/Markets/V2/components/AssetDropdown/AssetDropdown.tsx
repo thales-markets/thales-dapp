@@ -134,7 +134,7 @@ const CurrencyName = styled.p`
     font-size: 16px;
     line-height: 19px;
 
-    color: #ffffff;
+    color: var(--color-white);
 `;
 const CurrencyFullName = styled.p`
     font-family: 'Roboto';

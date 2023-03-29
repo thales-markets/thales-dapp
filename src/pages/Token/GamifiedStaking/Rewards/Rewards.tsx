@@ -867,7 +867,7 @@ const SectionWrapper = styled.section<{
                 return '#303656';
             case BackgroundType.CLAIM:
             case BackgroundType.CLAIM_ON_BEHALF:
-                return '#64d9fe80';
+                return 'var(--color-highlight)80';
             default:
                 return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
         }
@@ -926,7 +926,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
 
 const SectionContent = styled.span`
     font-family: 'Roboto';
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefault?: boolean }>`
@@ -1041,7 +1041,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                 return `
                     font-weight: 700;
                     font-size: 23px;
-                    color: ${props.isOp ? '#ffffff' : '#64D9FE'};
+                    color: ${props.isOp ? 'var(--color-white)' : 'var(--color-highlight)'};
                     text-transform: uppercase;
                     @media (max-width: 768px) {
                         font-size: 20px;
@@ -1092,7 +1092,7 @@ const SectionDetailsLabel = styled.span<{ color?: string }>`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: ${(props) => props.color ?? '#ffffff'};
+    color: ${(props) => props.color ?? 'var(--color-white)'};
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -1104,7 +1104,7 @@ const SectionDetailsValue = styled.span<{ color?: string }>`
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => props.color ?? '#ffffff'};
+    color: ${(props) => props.color ?? 'var(--color-white)'};
 `;
 
 const ButtonWrapperTooltip = styled.div`
@@ -1125,7 +1125,7 @@ const PeriodLabel = styled(SectionContent)`
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
-    color: #64d9fe;
+    color: var(--color-highlight);
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -1147,7 +1147,7 @@ const LpStakingLink = styled.span`
 const PlusSectionConnect = styled.div`
     text-align: center;
     grid-column: span 12;
-    color: #64d9fe;
+    color: var(--color-highlight);
     font-weight: 700;
     font-size: 30px;
 `;

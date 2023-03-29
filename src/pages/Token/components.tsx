@@ -120,7 +120,7 @@ export const FullRow = styled(FlexDiv)`
 export const StyledMaterialTooltip = withStyles(() => ({
     arrow: {
         '&:before': {
-            border: '1px solid #64D9FE',
+            border: '1px solid var(--color-highlight)',
         },
         color: '#0d1069',
         marginLeft: '0px!important',
@@ -135,7 +135,7 @@ export const StyledMaterialTooltip = withStyles(() => ({
         fontSize: '16px',
         lineHeight: '20px',
         letterSpacing: '0.4px',
-        color: '#ffffff',
+        color: 'var(--color-white)',
         maxWidth: window.innerWidth < 768 ? 350 : 400,
     },
 }))(MaterialTooltip);
@@ -148,7 +148,7 @@ export const TooltipLink = styled.a`
 `;
 
 export const DescriptionLink = styled.a`
-    color: #64d9fe;
+    color: var(--color-highlight);
     text-decoration: underline;
     &:hover {
         color: rgb(116, 139, 198);
@@ -181,13 +181,13 @@ export const BalanceIcon = styled.span`
 
 export const Line = styled.hr<{ margin?: string }>`
     height: 1px;
-    color: #ffffff;
+    color: var(--color-white);
     ${(props) => (props.margin ? `margin: ${props.margin}` : '')};
 `;
 
 export const DashedLine = styled.hr<{ gridRow: number; widthPer: number }>`
     border: none;
-    border-bottom: 2px dashed #64d9fe80;
+    border-bottom: 2px dashed var(--color-highlight) 80;
     grid-row: ${(props) => props.gridRow};
     grid-column: 1 / 13;
     width: ${(props) => props.widthPer}%;
@@ -205,7 +205,7 @@ export const DashedLineVertical = styled.hr<{
     mobileLong?: boolean;
 }>`
     border: none;
-    border-left: 2px dashed #64d9fe80;
+    border-left: 2px dashed var(--color-highlight) 80;
     grid-row: ${(props) => props.gridRow};
     grid-column-start: ${(props) => props.columnStart};
     margin-top: ${(props) => props.marginTop}px;

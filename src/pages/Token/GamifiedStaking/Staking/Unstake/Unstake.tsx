@@ -572,7 +572,7 @@ const CooldownText = styled.span`
     font-weight: normal;
     font-size: 14px;
     line-height: 24px;
-    color: #ffffff;
+    color: var(--color-white);
     text-transform: uppercase;
 `;
 

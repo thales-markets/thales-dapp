@@ -45,7 +45,7 @@ export const LeftContainer = styled(ContentContainer)`
 `;
 
 export const RightContainer = styled(ContentContainer)`
-    border: 2px solid #64d9fe;
+    border: 2px solid var(--color-highlight);
     border-radius: 15px;
     width: 40%;
     padding: 30px 40px 20px 40px;
@@ -70,7 +70,7 @@ export const RoundEndContainer = styled(FlexDivColumn)`
     span {
         font-size: 30px;
         font-weight: 600;
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
     margin-bottom: 15px;
 `;
@@ -82,7 +82,7 @@ export const RoundEndLabel = styled.p`
 export const RoundEnd = styled.p`
     font-weight: 600;
     font-size: 25px;
-    color: #64d9fe;
+    color: var(--color-highlight);
 `;
 
 export const RoundAllocationWrapper = styled(FlexDivCentered)`
@@ -112,7 +112,7 @@ export const RoundAllocationLabel = styled.p`
 export const RoundAllocation = styled.p`
     font-size: 25px;
     font-weight: 600;
-    color: #64d9fe;
+    color: var(--color-highlight);
 `;
 
 export const RoundInfoContainer = styled(FlexDivColumn)`
@@ -124,7 +124,7 @@ export const RoundInfoLabel = styled.p``;
 export const RoundInfo = styled.p`
     font-size: 20px;
     font-weight: 600;
-    color: #64d9fe;
+    color: var(--color-highlight);
 `;
 
 export const Description = styled.div`
@@ -163,7 +163,7 @@ export const VariablesTitle = styled.span`
     font-size: 20px;
     line-height: 100%;
     margin-top: 10px;
-    color: #64d9fe;
+    color: var(--color-highlight);
 `;
 
 export const Variables = styled(Description)`
@@ -239,7 +239,7 @@ export const VaultFilledGraphicPercentage = styled(FlexDivStart)<{ width: number
     height: 10px;
     left: 2px;
     top: 2px;
-    background: linear-gradient(269.97deg, #64d9fe 16.18%, #3f75ff 77.77%);
+    background: linear-gradient(269.97deg, var(--color-highlight) 16.18%, #3f75ff 77.77%);
     border-radius: 15px;
 `;
 
@@ -320,7 +320,7 @@ export const ToggleContainer = styled(FlexDiv)`
 `;
 
 export const Link = styled.a`
-    color: #64d9fe;
+    color: var(--color-highlight);
     &:hover {
         text-decoration: underline;
     }

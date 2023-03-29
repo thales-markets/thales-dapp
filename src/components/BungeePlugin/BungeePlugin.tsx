@@ -85,8 +85,8 @@ const BungeeWrapper = styled.div`
     position: relative;
     top: 100px;
     background: var(--color-primary);
-    border: 2px solid #64d9fe;
-    box-shadow: 0px 0px 90px 10px #64d9fe;
+    border: 2px solid var(--color-highlight);
+    box-shadow: 0px 0px 90px 10px var(--color-highlight);
     border-radius: 15px;
     outline: none;
 `;

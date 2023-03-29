@@ -235,7 +235,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
     &.selected {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid #64d9fe;
+        border: 2px solid var(--color-highlight);
         color: #f6f6fe;
         background: #1b1c33;
         input {
@@ -245,7 +245,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
     &:hover {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid #64d9fe;
+        border: 2px solid var(--color-highlight);
         color: #f6f6fe;
         background: #1b1c33;
         input {
@@ -283,8 +283,8 @@ const PlusMinus = styled(FlexDivColumnCentered)`
     border-left: 2px solid #748bc6;
     border-right: 2px solid #748bc6;
     &:hover {
-        border-left: 2px solid #64d9fe;
-        border-right: 2px solid #64d9fe;
+        border-left: 2px solid var(--color-highlight);
+        border-right: 2px solid var(--color-highlight);
         cursor: pointer;
     }
     @media (max-width: 767px) {
@@ -361,7 +361,7 @@ const PitchModal = withStyles(() => ({
         maxWidth: '900px',
         background: ' var(--color-primary)',
         overflow: 'auto',
-        border: '2px solid #64D9FE',
+        border: '2px solid var(--color-highlight)',
         color: '#F6F6FE',
     },
 }))(Dialog);

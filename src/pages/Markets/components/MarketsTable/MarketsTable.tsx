@@ -214,7 +214,7 @@ const Wrapper = styled(FlexDivRow)`
 `;
 
 const FormContainer = styled.div`
-    color: #64d9fe;
+    color: var(--color-highlight);
     display: flex;
     flex-direction: row;
     align-items: center;

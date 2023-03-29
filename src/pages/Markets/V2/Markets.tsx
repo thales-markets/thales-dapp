@@ -4,6 +4,7 @@ import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarket
 import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -22,6 +23,7 @@ type AssetsAndDates = {
 const Markets: React.FC = () => {
     // selectors
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     // states
     const [asset, setAsset] = useState<string>('ETH');
@@ -31,9 +33,9 @@ const Markets: React.FC = () => {
     const [market, setMarket] = useState<HistoricalOptionsMarketInfo>();
 
     // queries
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: true });
-    const openOrdersQuery = fetchAllMarketOrders(networkId, { enabled: true });
-    const discountQuery = fetchDiscounts(networkId, { enabled: true });
+    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
+    const openOrdersQuery = fetchAllMarketOrders(networkId, { enabled: isAppReady });
+    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
 
     // hooks
     const optionsMarkets: OptionsMarkets = useMemo(() => {

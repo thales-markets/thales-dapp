@@ -447,7 +447,7 @@ const SectionWrapper = styled.section<{
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.STAKE:
             case BackgroundType.CLAIM:
-                return '#64d9fe80';
+                return 'var(--color-highlight)80';
             default:
                 return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
         }
@@ -531,7 +531,7 @@ const SectionContentWrapper = styled.div<{
 
 const SectionContent = styled.span`
     font-family: 'Roboto';
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string }>`
@@ -644,13 +644,13 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
                 return `
                     font-weight: 700;
                     font-size: 25px;
-                    color: #64D9FE;
+                    color: var(--color-highlight);
                 `;
             case SectionType.CLAIM_INFO:
                 return `
                     font-weight: 700;
                     font-size: 25px;
-                    color: #64D9FE;
+                    color: var(--color-highlight);
                 `;
             default:
                 return '';
@@ -660,7 +660,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
         font-size: ${(props) =>
             props.type === SectionType.CLAIM || props.type === SectionType.CLAIM_INFO ? 18 : 15}px;
         line-height: 20px;
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
 `;
 
@@ -675,7 +675,7 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 17px;
     letter-spacing: 0.035em;
-    color: #ffffff;
+    color: var(--color-white);
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -707,7 +707,7 @@ const VerticalLineWrapper = styled.div`
 `;
 
 const VerticalLineCenter = styled.hr`
-    border: 1px solid #64d9fe80;
+    border: 1px solid var(--color-highlight) 80;
     position: absolute;
     top: -18px;
     left: 0;

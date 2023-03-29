@@ -113,7 +113,7 @@ export const StyledSlider = withStyles({
         width: 14,
         height: 14,
         marginTop: '-2px',
-        background: '#FFFFFF',
+        background: 'var(--color-white)',
         boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
         '&:focus, &:hover': {
             boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',

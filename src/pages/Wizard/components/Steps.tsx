@@ -579,7 +579,7 @@ const IconText = styled.p`
     font-weight: 600;
     font-size: 14px;
     line-height: 21px;
-    color: #64d9fe;
+    color: var(--color-highlight);
     padding-top: 5px;
 `;
 
@@ -610,7 +610,7 @@ const ArrowImg = styled.img<{ clickable: boolean }>`
 `;
 
 const SeparatorImg = styled.img`
-    background: #64d9fe;
+    background: var(--color-highlight);
     width: 4px;
     height: 72px;
     margin-top: 5px;
@@ -637,8 +637,8 @@ const BuyWrapper = styled.div`
     position: relative;
     top: 100px;
     background: var(--color-primary);
-    border: 2px solid #64d9fe;
-    box-shadow: 0px 0px 90px 10px #64d9fe;
+    border: 2px solid var(--color-highlight);
+    box-shadow: 0px 0px 90px 10px var(--color-highlight);
     border-radius: 15px;
     outline: none;
 `;
@@ -665,7 +665,7 @@ const BuyTitle = styled.div`
     line-height: 24px;
     position: relative;
     text-align: center;
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const ButtonLogoGroup = styled.div`
@@ -687,7 +687,7 @@ const Button = styled.div`
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    border: 1px solid #64d9fe;
+    border: 1px solid var(--color-highlight);
     border-radius: 30px;
     font-family: 'Sansation';
     font-style: normal;
@@ -695,7 +695,7 @@ const Button = styled.div`
     font-size: 12.5px;
     line-height: 14px;
     cursor: pointer;
-    color: #ffffff;
+    color: var(--color-white);
     background-color: transparent;
     padding: 5px 0px;
     margin-left: 30px;

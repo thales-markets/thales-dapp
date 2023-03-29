@@ -331,7 +331,7 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     &.selected {
         transition: 0.2s;
         color: #f6f6fe;
-        border-bottom: 5px solid #64d9fe;
+        border-bottom: 5px solid var(--color-highlight);
     }
     &:hover:not(.selected) {
         cursor: pointer;

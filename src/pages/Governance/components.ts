@@ -162,7 +162,7 @@ export const getColor = (status: string) => {
         case StatusEnum.Closed:
             return '#8208FC';
         default:
-            return '#64D9FE';
+            return 'var(--color-highlight)';
     }
 };
 
@@ -171,7 +171,7 @@ export const DetailsTitle = styled(FlexDivRow)`
     font-size: 20px;
     line-height: 24px;
     text-align: center;
-    color: #ffffff;
+    color: var(--color-white);
     margin-bottom: 5px;
     margin-top: 40px;
 `;

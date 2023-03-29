@@ -269,7 +269,7 @@ const DiscountTitle = styled.span`
     font-weight: 700;
     font-size: 20px;
     line-height: 30px;
-    color: #ffffff;
+    color: var(--color-white);
     margin-right: 6px;
 `;
 
@@ -278,7 +278,7 @@ const DiscountSubTitle = styled.span`
     font-weight: 400;
     font-size: 20px;
     line-height: 30px;
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const Arrow = styled.i<{ disabled?: boolean }>`

@@ -320,7 +320,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
             case BackgroundType.INFO:
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.STAKE:
-                return '#64d9fe80';
+                return 'var(--color-highlight)80';
             default:
                 return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
         }
@@ -364,7 +364,7 @@ const SectionContent = styled.span`
     font-family: 'Roboto';
     font-style: normal;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const SectionLabelContent = styled(SectionContent)`
@@ -385,7 +385,7 @@ const SectionValueContent = styled(SectionContent)`
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
 `;
 
@@ -405,7 +405,7 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: #ffffff;
+    color: var(--color-white);
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -418,7 +418,7 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boo
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => (props.unavailable ? '#ffcc00' : '#ffffff')};
+    color: ${(props) => (props.unavailable ? '#ffcc00' : 'var(--color-white)')};
     @media (max-width: 768px) {
         font-size: 14px;
     }

@@ -170,7 +170,7 @@ const ClaimMigratedRewards: React.FC = () => {
             </SectionHeader>
             <GridContainer style={{ height: '100%' }}>
                 <StyledStakingRewardsItem style={{ gridColumn: 'span 12' }}>
-                    <StakingRewardsLabel color="#64D9FE">
+                    <StakingRewardsLabel color="var(--color-highlight)">
                         {t('options.earn.thales-staking.staking-rewards.unclaimed-rewards.rewards-label')}
                     </StakingRewardsLabel>
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, balance)}</StakingRewardsContent>

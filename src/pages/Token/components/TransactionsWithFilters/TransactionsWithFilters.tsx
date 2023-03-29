@@ -121,7 +121,7 @@ const NoResultsContainer = styled.div<{ gridColumns?: number; gridColumnStart?: 
     grid-column: ${(props) => (props.gridColumnStart ? `${props.gridColumnStart} /` : '')} span
         ${(props) => (props.gridColumns ? props.gridColumns : '8')};
     grid-row: span 3;
-    background: #64d9fe80;
+    background: var(--color-highlight) 80;
     padding: 2px;
     margin-top: 20px;
     @media (max-width: 768px) {

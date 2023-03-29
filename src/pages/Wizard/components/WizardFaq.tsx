@@ -134,7 +134,7 @@ const FaqHeader = styled.p`
     font-weight: 700;
     font-size: 22px;
     line-height: 33px;
-    color: #ffffff;
+    color: var(--color-white);
     margin-top: 30px;
     margin-bottom: 20px;
 `;
@@ -152,7 +152,7 @@ const Question = styled.p`
     font-weight: 700;
     font-size: 20px;
     line-height: 54px;
-    color: #ffffff;
+    color: var(--color-white);
     padding-left: 30px;
     span {
         text-transform: lowercase;
@@ -175,7 +175,7 @@ const Answer = styled.p`
     font-size: 16px;
     line-height: 19px;
     text-align: justify;
-    color: #ffffff;
+    color: var(--color-white);
     cursor: text;
 `;
 

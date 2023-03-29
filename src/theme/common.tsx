@@ -128,15 +128,15 @@ export const Background = styled.section`
     background-color: #111221;
     --background: #111221;
     --icon-color: #f7f7f7;
-    --shadow: 0px 0px 40px #64d9fe;
+    --shadow: 0px 0px 40px var(--color-highlight);
     --primary-color: #f7f7f7;
-    --input-border-color: #64d9fe;
+    --input-border-color: var(--color-highlight);
     --table-border-color: rgba(100, 217, 254, 0.5);
-    --table-header-text-color: #64d9fe;
+    --table-header-text-color: var(--color-highlight);
     --disabled-item: #8181ac;
     --enabled-item: #f7f7f7;
-    --primary-filter-menu-active: #64d9fe;
-    --hotmarket-arrow-enabled: #64d9fe;
+    --primary-filter-menu-active: var(--color-highlight);
+    --hotmarket-arrow-enabled: var(--color-highlight);
     --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
 `;
 
@@ -418,7 +418,7 @@ export const UserCardSectionHeader = styled.span`
     font-weight: bold;
     font-size: 15px;
     line-height: 20px;
-    color: #64d9fe;
+    color: var(--color-highlight);
     text-transform: uppercase;
 `;
 

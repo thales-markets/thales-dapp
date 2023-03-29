@@ -192,7 +192,7 @@ const LearnButton = styled(Button)`
     line-height: 91.91%;
     text-align: center;
     text-transform: capitalize;
-    color: #ffffff;
+    color: var(--color-white);
     cursor: pointer;
     transition: 0.2s;
     z-index: 4;
@@ -455,7 +455,7 @@ const Link = styled.a`
     line-height: 91.91%;
     text-align: center;
     text-transform: capitalize;
-    color: #ffffff;
+    color: var(--color-white);
     cursor: pointer;
     display: flex;
     align-items: inherit;
@@ -469,7 +469,7 @@ const Logo = styled.i`
     margin-top: 4px;
     font-size: 5.2em;
     line-height: 1.75em;
-    color: #ffffff !important;
+    color: var(--color-white) !important;
     position: absolute;
 `;
 

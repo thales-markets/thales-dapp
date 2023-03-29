@@ -226,7 +226,7 @@ const BurgerWrapper = styled.div`
 const BurgerLine = styled.div`
     width: 27px;
     height: 4px;
-    background: #ffffff;
+    background: var(--color-white);
     border-radius: 5px;
     &:nth-child(2) {
         margin-top: 4px;

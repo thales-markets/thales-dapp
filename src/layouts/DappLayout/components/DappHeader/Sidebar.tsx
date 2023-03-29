@@ -236,8 +236,8 @@ const SidebarHtml = styled.nav`
     left: 0;
     width: 72px;
     height: 100vh;
-    z-index: 100;
-    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    z-index: 101;
+    background: linear-gradient(190.01deg, var(--color-highlight) -17.89%, var(--color-orange) 90.41%);
     padding: 35px 0;
     transition: width 0.3s ease;
     overflow: hidden;

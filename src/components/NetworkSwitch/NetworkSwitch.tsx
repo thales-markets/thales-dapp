@@ -284,7 +284,7 @@ const StyledMaterialTooltip = withStyles(() => ({
         fontSize: '16px',
         lineHeight: '20px',
         letterSpacing: '0.4px',
-        color: '#ffffff',
+        color: 'var(--color-white)',
     },
 }))(MaterialTooltip);
 

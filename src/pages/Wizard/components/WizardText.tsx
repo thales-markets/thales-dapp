@@ -72,7 +72,7 @@ export const Text = styled.p`
     font-size: 16px;
     line-height: 24px;
     text-align: justify;
-    color: #ffffff;
+    color: var(--color-white);
     margin-bottom: 14px;
     strong {
         font-weight: 800;

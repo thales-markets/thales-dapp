@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'center',
         },
         paper: {
-            backgroundColor: '#64d9fe',
+            backgroundColor: 'var(--color-highlight)',
             border: '2px solid #000',
             borderRadius: '10px',
             display: 'flex',
@@ -80,7 +80,7 @@ const LinkModal: React.FC<{ showModal: boolean; onClose: () => void; link: strin
                         <br />
                         <Button
                             inactiveBgColor={' var(--color-primary)'}
-                            inactiveTextColor={'#64d9fe'}
+                            inactiveTextColor={'var(--color-highlight)'}
                             padding={'5px 10px'}
                             margin={'10px 10px'}
                             onClickHandler={() => copyButtonHandler()}

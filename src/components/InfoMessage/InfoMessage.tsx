@@ -26,7 +26,7 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ message, hideIcon, fon
 
 const Container = styled.div`
     background: #79a8d0;
-    border: 1px solid #64d9fe;
+    border: 1px solid var(--color-highlight);
     border-radius: 5px;
     padding: 4px 10px;
 `;

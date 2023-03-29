@@ -132,7 +132,7 @@ const TableBody = styled.div`
     }
     ::-webkit-scrollbar-thumb {
         border-radius: 15px;
-        background: #ffffff;
+        background: var(--color-white);
     }
     ::-webkit-scrollbar-thumb:active {
         background: #44e1e2;

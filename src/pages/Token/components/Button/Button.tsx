@@ -77,10 +77,10 @@ const Button: React.FC<ButtonProps> = ({
             typedFontWeight = '700';
             typedMinHeight = '30px';
             typedActiveBg = '';
-            typedActiveBgColor = '#64d9fe';
+            typedActiveBgColor = 'var(--color-highlight)';
             typedActiveTextColor = ' var(--color-primary)';
             typedInactiveBgColor = '#00000000';
-            typedInactiveTextColor = '#64d9fe';
+            typedInactiveTextColor = 'var(--color-highlight)';
             typedHowerShadow = '0px 1px 30pxrgba(100,217,254,0.7)';
             break;
         case ButtonType.submit:
@@ -92,10 +92,10 @@ const Button: React.FC<ButtonProps> = ({
             typedFontWeight = '700';
             typedMinHeight = '36px';
             typedActiveBg = '';
-            typedActiveBgColor = '#64d9fe';
+            typedActiveBgColor = 'var(--color-highlight)';
             typedActiveTextColor = ' var(--color-primary)';
             typedInactiveBgColor = '#00000000';
-            typedInactiveTextColor = '#64d9fe';
+            typedInactiveTextColor = 'var(--color-highlight)';
             typedHowerShadow = '0px 1px 30px rgba(100,217,254,0.7)';
             break;
         case ButtonType.label:
@@ -108,7 +108,7 @@ const Button: React.FC<ButtonProps> = ({
             typedMinHeight = '15px';
             typedActiveBg = 'linear-gradient(-20deg,#801BF2 0%,#464DCF 100%)';
             typedActiveBgColor = '';
-            typedActiveTextColor = '#ffffff';
+            typedActiveTextColor = 'var(--color-white)';
             typedInactiveBgColor = '';
             typedInactiveTextColor = '#f6f6fe';
             typedHowerShadow = '';
@@ -123,7 +123,7 @@ const Button: React.FC<ButtonProps> = ({
             typedMinHeight = '36px';
             typedActiveBg = 'linear-gradient(270deg, #516aff 0%, #8208fc 100%)';
             typedActiveBgColor = '';
-            typedActiveTextColor = '#ffffff';
+            typedActiveTextColor = 'var(--color-white)';
             typedInactiveBgColor = 'linear-gradient(270deg, #516aff 0%, #8208fc 100%)';
             typedInactiveTextColor = '';
             typedHowerShadow = '';
@@ -137,10 +137,10 @@ const Button: React.FC<ButtonProps> = ({
             typedFontWeight = '700';
             typedMinHeight = '';
             typedActiveBg = '';
-            typedActiveBgColor = '#64d9fe';
+            typedActiveBgColor = 'var(--color-highlight)';
             typedActiveTextColor = ' var(--color-primary)';
             typedInactiveBgColor = '#00000000';
-            typedInactiveTextColor = '#64d9fe';
+            typedInactiveTextColor = 'var(--color-highlight)';
             typedHowerShadow = '';
     }
 
@@ -197,7 +197,7 @@ const Wrapper = styled.button<{
     justify-content: center;
     ${(props) => (props?.width ? `width: ${props.width}` : '')};
     ${(props) => (props?.height ? `height: ${props.height}` : '')};
-    border: ${(props) => (props?.activeBg ? '0' : '1px solid #64d9fe')};
+    border: ${(props) => (props?.activeBg ? '0' : '1px solid var(--color-highlight)')};
     border-radius: 30px;
     font-family: Roboto !important;
     font-weight: ${(props) => props?.fontWeight};

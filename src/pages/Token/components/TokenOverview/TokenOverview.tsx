@@ -288,21 +288,21 @@ const StyledLink = styled.a`
         fill: #f6f6fe;
     }
     &:hover {
-        color: #64d9fe;
+        color: var(--color-highlight);
         & path {
-            fill: #64d9fe;
+            fill: var(--color-highlight);
         }
     }
     @media (max-width: 767px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
     @media (max-width: 767px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
         & path {
-            fill: #64d9fe;
+            fill: var(--color-highlight);
         }
     }
 `;

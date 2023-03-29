@@ -125,9 +125,9 @@ const WrongNetworkWrapper = styled.div`
     max-width: 600px;
     padding: 0 100px;
     text-align: center;
-    border: 2px solid #64d9fe;
+    border: 2px solid var(--color-highlight);
     box-sizing: border-box;
-    box-shadow: 0px 0px 90px 10px #64d9fe;
+    box-shadow: 0px 0px 90px 10px var(--color-highlight);
     border-radius: 15px;
     @media (max-width: 767px) {
         padding: 5px;

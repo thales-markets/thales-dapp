@@ -34,7 +34,7 @@ const Text = styled(FlexDiv)`
     font-weight: normal;
     font-size: 16px;
     line-height: 30px;
-    color: #ffffff;
+    color: var(--color-white);
     align-items: center;
     @media (max-width: 767px) {
         margin-bottom: 20px;

@@ -274,7 +274,7 @@ const Price = styled.div`
     -webkit-box-pack: center;
     justify-content: center;
     padding: 4px 12px;
-    background-color: #6bd6d6;
+    background-color: var(--color-highlight);
     display: flex;
     position: absolute;
     top: 50%;

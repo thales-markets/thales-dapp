@@ -60,7 +60,7 @@ export const CardContainer = styled(FlexDivColumnCentered)`
     color: #f6f6fe;
     cursor: pointer;
     &:hover {
-        background: #64d9fe;
+        background: var(--color-highlight);
         box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
     }
 `;

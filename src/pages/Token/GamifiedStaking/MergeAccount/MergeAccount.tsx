@@ -478,7 +478,7 @@ const SectionWrapper = styled.section`
     box-sizing: border-box;
     border-radius: 15px;
     grid-column: 1 / span 4;
-    background: #64d9fe80;
+    background: var(--color-highlight) 80;
     padding: 2px;
     @media (max-width: 767px) {
         grid-column: span 12;
@@ -574,7 +574,7 @@ const InputLabel = styled.label`
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
-    color: #64d9fe;
+    color: var(--color-highlight);
     padding-left: 8px;
     pointer-events: none;
     z-index: 3;
@@ -632,21 +632,21 @@ const StyledLink = styled.a`
         fill: #f6f6fe;
     }
     &:hover {
-        color: #64d9fe;
+        color: var(--color-highlight);
         & path {
-            fill: #64d9fe;
+            fill: var(--color-highlight);
         }
     }
     @media (max-width: 767px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
     @media (max-width: 767px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
         & path {
-            fill: #64d9fe;
+            fill: var(--color-highlight);
         }
     }
 `;

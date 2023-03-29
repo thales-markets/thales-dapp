@@ -32,7 +32,7 @@ const SwapDialog: StyledComponent<'div', any, { royaleTheme?: boolean; contentTy
 }>`
     --background: var(--color-primary);
     --icon-color: #f7f7f7;
-    --border-color: #64d9fe;
+    --border-color: var(--color-highlight);
 
     font-weight: bold;
     font-size: 12px;
@@ -80,7 +80,7 @@ const SwapErrorMessage = styled.p<{
     align-self: center;
     align-items: center;
     font-weight: bold;
-    color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : '#FFFFFF !important')};
+    color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : 'var(--color-white) !important')};
     font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
 `;
 
@@ -115,7 +115,7 @@ const SwapText = styled.p<{ royaleTheme?: boolean; contentSize?: string; screenW
     text-transform: ${(props) => (!props.royaleTheme ? (props.contentSize === 'large' ? 'uppercase' : '') : '')};
     font-weight: ${(props) => (!props.royaleTheme ? (props.contentSize === 'large' ? '300' : '600') : '')};
     line-height: ${(props) => (!props.royaleTheme ? (props.contentSize === 'large' ? '91.6%' : '12px') : '12px')};
-    color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : '#FFFFFF !important')};
+    color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : 'var(--color-white) !important')};
     font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
     text-overflow: ellipsis;
     width: ${(props) => (props.contentSize && props.screenWidth && props.screenWidth <= 500 ? '90px' : '')};
@@ -128,7 +128,7 @@ const SwapNumericText = styled.p<{ royaleTheme?: boolean }>`
     font-weight: ${(props) => (props.royaleTheme ? '' : '400')};
     font-size: ${(props) => (props.royaleTheme ? '20px' : '25px')};
     text-transform: uppercase;
-    color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : '#FFFFFF !important')};
+    color: ${(props) => (props.royaleTheme ? 'var(--color) !important' : 'var(--color-white) !important')};
 `;
 
 const SwapMaxButton = styled.button<{ royaleTheme?: boolean }>`

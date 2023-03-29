@@ -72,7 +72,7 @@ const ThalesLogoText = styled.p`
     font-weight: 400;
     line-height: 8px;
     text-align: center;
-    color: #ffffff;
+    color: var(--color-white);
     @media (max-width: 768px) {
         height: 24px;
     }
@@ -122,7 +122,7 @@ const TextLink = styled.a`
     font-weight: 700;
     font-size: 14px;
     line-height: 17px;
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const FooterIcon = styled.i`
