@@ -237,7 +237,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
         margin-bottom: 19px;
         border: 2px solid #64d9fe;
         color: #f6f6fe;
-        background: #03044e;
+        background: #1b1c33;
         input {
             color: #f6f6fe;
         }
@@ -247,7 +247,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
         margin-bottom: 19px;
         border: 2px solid #64d9fe;
         color: #f6f6fe;
-        background: #03044e;
+        background: #1b1c33;
         input {
             color: #f6f6fe;
         }
@@ -359,7 +359,7 @@ const PitchModal = withStyles(() => ({
         borderRadius: '15px',
         width: '900px',
         maxWidth: '900px',
-        background: '#04045a',
+        background: ' var(--color-primary)',
         overflow: 'auto',
         border: '2px solid #64D9FE',
         color: '#F6F6FE',

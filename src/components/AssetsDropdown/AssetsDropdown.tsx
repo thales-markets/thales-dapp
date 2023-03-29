@@ -95,7 +95,7 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
 
 const Container = styled.div`
     position: absolute;
-    background: #04045a;
+    background: var(--color-primary);
     border: 2px solid #64d9fe;
     box-shadow: 0px 25px 30px 20px rgba(0, 0, 0, 0.25);
     border-radius: 15px;

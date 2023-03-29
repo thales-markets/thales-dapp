@@ -179,7 +179,7 @@ const TableContainer = styled(FlexDivColumn)`
         width: 5px;
     }
     ::-webkit-scrollbar-track {
-        background: #04045a;
+        background: var(--color-primary);
         border-radius: 8px;
     }
     ::-webkit-scrollbar-thumb {

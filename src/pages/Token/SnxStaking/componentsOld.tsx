@@ -12,7 +12,7 @@ export const EarnSection = styled.section<{
     display: flex;
     flex-direction: column;
     position: relative;
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 15px;
     color: white;
     grid-column: span 5;

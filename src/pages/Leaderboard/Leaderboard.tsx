@@ -458,7 +458,13 @@ const getRewardsTooltipMessage = (position: number, competitionType: Competition
 const TooltipAssetIcon: React.FC<any> = ({ title, styleProps }) => (
     <LightTooltip title={<span className="text-xxxs">{title}</span>}>
         <AssetIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', cursor: 'pointer', padding: 1, ...styleProps }}
+            style={{
+                border: '1px solid  var(--color-primary)',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                padding: 1,
+                ...styleProps,
+            }}
             width="12"
             height="12"
             className="tooltip-icon"

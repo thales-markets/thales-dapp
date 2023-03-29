@@ -146,7 +146,7 @@ const HeaderContainer = styled(FlexDivRowCentered)`
 
 const NoStakers = styled(FlexDivColumn)`
     min-height: 300px;
-    background: #04045a;
+    background: var(--color-primary);
     justify-content: space-evenly;
     align-items: center;
     align-self: center;

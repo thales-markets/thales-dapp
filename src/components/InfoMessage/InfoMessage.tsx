@@ -35,7 +35,7 @@ const Message = styled(FlexDivRow)<{ fontSize?: string; lineHeight?: string }>`
     font-weight: 500;
     font-size: ${(props) => (props.fontSize ? props.fontSize : '12px')};
     line-height: ${(props) => (props.lineHeight ? props.lineHeight : '16px')};
-    color: #04045a;
+    color: var(--color-primary); ;
 `;
 
 export const StyledInfoIIcon = styled(InfoIcon)`

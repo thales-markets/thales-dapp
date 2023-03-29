@@ -67,9 +67,9 @@ const MenuItem = styled.li`
     color: #f6f6fe;
     transition: background 300ms;
     &.selected {
-        color: #04045a;
+        color: var(--color-primary);
         .sidebar-icon {
-            color: #04045a;
+            color: var(--color-primary);
         }
     }
     .parent-hovered {

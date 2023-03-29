@@ -184,7 +184,7 @@ const StyledNFTContainerImage = styled.img`
 const Button = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
     background: #e1b689;
-    border: 2px dashed #04045a;
+    border: 2px dashed var(--color-primary);
     color: var(--background);
     width: 100%;
     height: 35px;
@@ -202,7 +202,7 @@ const Button = styled.button<{ invisible?: boolean }>`
 const CollectionButton = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
     background: #e1b689;
-    border: 2px dashed #04045a;
+    border: 2px dashed var(--color-primary);
     color: var(--background);
     width: 350px;
     height: 35px;

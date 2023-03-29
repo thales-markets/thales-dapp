@@ -562,7 +562,7 @@ const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
 `;
 
 const UnstakingPeriodConatiner = styled(FlexDivColumnCentered)`
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 10px;
     padding: 10px 0;
     text-align: center;

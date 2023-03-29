@@ -164,7 +164,7 @@ const ItemContainer: React.FC<{ className?: string }> = (props) => (
 );
 
 const Container = styled(FlexDiv)`
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 16px;
     border: 2px solid rgba(100, 217, 254, 0.5);
     margin-bottom: 10px;

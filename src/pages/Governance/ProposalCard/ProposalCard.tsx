@@ -67,7 +67,7 @@ export const CardContainer = styled(FlexDivColumnCentered)`
 
 const Card = styled.div`
     border-radius: 15px;
-    background: #04045a;
+    background: var(--color-primary);
     width: 100%;
     height: 100%;
     padding: 20px;

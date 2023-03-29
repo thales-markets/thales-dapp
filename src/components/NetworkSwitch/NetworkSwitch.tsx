@@ -213,7 +213,7 @@ const DropdownContainer = styled.div`
 `;
 
 const DropDown = styled(FlexDivColumn)`
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
     border: 1px solid #4f759b;
     border-radius: 20px;
     position: absolute;
@@ -276,7 +276,7 @@ const StyledMaterialTooltip = withStyles(() => ({
     },
     tooltip: {
         background:
-            'linear-gradient(#04045a 0%, #04045a 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
+            'linear-gradient( var(--color-primary) 0%,  var(--color-primary) 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
         border: '1px solid transparent',
         borderRadius: '5px',
         padding: '10px 15px',

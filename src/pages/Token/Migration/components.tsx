@@ -15,7 +15,7 @@ export const ResultContainer = styled(InputContainer)`
 `;
 
 export const Result = styled.div`
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 10px;
     border: none;
     height: 64px;

@@ -567,7 +567,7 @@ export const StyledMaterialTooltip = withStyles(() => ({
     },
     tooltip: {
         background:
-            'linear-gradient(#04045a 0%, #04045a 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
+            'linear-gradient( var(--color-primary) 0%,  var(--color-primary) 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
         border: '1px solid transparent',
         borderRadius: '5px',
         padding: '10px 15px',

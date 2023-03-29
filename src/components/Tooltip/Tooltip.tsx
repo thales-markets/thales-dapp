@@ -66,14 +66,14 @@ const icons = {
 
 const ModifiedTooltip = withStyles(() => ({
     arrow: {
-        color: '#04045a',
+        color: ' var(--color-primary)',
         fontSize: 10,
         '&:before': {
             border: `1px solid ${UI_COLORS.GREEN}`,
         },
     },
     tooltip: {
-        backgroundColor: '#04045a',
+        backgroundColor: ' var(--color-primary)',
         maxWidth: 220,
         border: `1px solid ${UI_COLORS.GREEN}`,
         borderRadius: '5px',

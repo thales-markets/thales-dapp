@@ -91,7 +91,7 @@ const Discount = styled.span`
     font-size: 40px;
     line-height: 100%;
     text-transform: capitalize;
-    color: #04045a;
+    color: var(--color-primary); ;
 `;
 
 const DiscountText = styled.span`
@@ -100,7 +100,7 @@ const DiscountText = styled.span`
     font-size: 15px;
     line-height: 100%;
     text-transform: capitalize;
-    color: #04045a;
+    color: var(--color-primary); ;
 `;
 
 const StyledComponents = {

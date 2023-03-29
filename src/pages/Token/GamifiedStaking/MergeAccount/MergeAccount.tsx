@@ -517,7 +517,7 @@ const SectionDescriptionParagraph = styled(FlexDivRow)`
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
     border-radius: 15px;
     padding: 20px;
     height: 100%;

@@ -107,7 +107,7 @@ const Wrapper = styled.div`
     justify-content: center;
     z-index: 99;
     backdrop-filter: blur(4px);
-    background: #04045a;
+    background: var(--color-primary); ;
 `;
 
 const ButtonWrapper = styled.div`
@@ -119,7 +119,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const WrongNetworkWrapper = styled.div`
-    background: #04045a;
+    background: var(--color-primary);
     display: flex;
     flex-direction: column;
     max-width: 600px;
@@ -156,7 +156,7 @@ const ExplanationText = styled.p`
 const NetworkButton = styled.button<{ margin: string }>`
     display: flex;
     font-family: 'Sansation' !important;
-    background: #04045a;
+    background: var(--color-primary);
     border: 1px solid rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
     border-radius: 30px;

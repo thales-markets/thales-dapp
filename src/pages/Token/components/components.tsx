@@ -18,7 +18,7 @@ export const GridContainer = styled(GridDivCol)`
 `;
 
 export const Input = styled.input`
-    background: #04045a;
+    background: var(--color-primary);
     border: 1px solid #64d9fe;
     box-sizing: border-box;
     mix-blend-mode: normal;
@@ -32,7 +32,7 @@ export const Input = styled.input`
     letter-spacing: 0.25px;
     color: #f6f6fe;
     &::selection {
-        color: #04045a;
+        color: var(--color-primary);
         background: #f6f6fe;
     }
     &:focus {

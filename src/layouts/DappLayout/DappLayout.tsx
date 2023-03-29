@@ -91,8 +91,8 @@ const Background = styled.section`
         left: 275px;
         overflow: hidden;
     }
-    background-color: #111221;
-    --background: #111221;
+    background-color: var(--color-primary);
+    --background: var(--color-primary);
     --icon-color: #f7f7f7;
     --shadow: 0px 0px 40px #64d9fe;
     --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
@@ -111,7 +111,7 @@ const Background = styled.section`
     --scrollbar-width: 12px;
     --color-scrollbar-hover: #f7f7f7;
     --button-bg-active: #64d9fe;
-    --button-text-active: #04045a;
+    --button-text-active: var(--color-primary);
     --button-bg-inactive: transparent;
     --button-text-inactive: #64d9fe;
     --notice-text: #64d9fe;

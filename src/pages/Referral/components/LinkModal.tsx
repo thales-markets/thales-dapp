@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
             flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#04045a',
+            color: ' var(--color-primary)',
             boxShadow: theme.shadows[5],
             padding: '5px',
             [theme.breakpoints.between(200, 520)]: {
@@ -79,7 +79,7 @@ const LinkModal: React.FC<{ showModal: boolean; onClose: () => void; link: strin
                         </p>
                         <br />
                         <Button
-                            inactiveBgColor={'#04045a'}
+                            inactiveBgColor={' var(--color-primary)'}
                             inactiveTextColor={'#64d9fe'}
                             padding={'5px 10px'}
                             margin={'10px 10px'}

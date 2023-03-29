@@ -250,7 +250,7 @@ export const SubmitButton = styled.button`
     font-size: 20px;
     font-weight: 700;
     line-height: 23px;
-    color: #04045a;
+    color: var(--color-primary);
     width: 252px;
     border: none;
     padding: 7px;

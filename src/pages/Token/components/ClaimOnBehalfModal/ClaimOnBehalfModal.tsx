@@ -212,7 +212,7 @@ const Container = styled(FlexDivColumnCentered)`
     line-height: 24px;
     border-radius: 15px;
     min-width: 70px;
-    background: #04045a;
+    background: var(--color-primary);
     border: 2px solid #64d9fe;
     box-shadow: 0px 0px 90px 10px #64d9fe;
     margin: auto;

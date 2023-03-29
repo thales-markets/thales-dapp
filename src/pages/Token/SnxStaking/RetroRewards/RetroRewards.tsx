@@ -312,7 +312,7 @@ const RetroRewards: React.FC = () => {
 
 const StyledSectionContentContainer = styled(SectionContentContainer)`
     grid-column: span 12;
-    background: #04045a;
+    background: var(--color-primary);
     padding: 20px;
     @media (max-width: 767px) {
         padding: 0 20px 20px 20px;
@@ -373,7 +373,7 @@ const TooltipContainer = styled(FlexDivColumnCentered)<{ borderColor: string }>`
     z-index: 999;
     height: 78px;
     padding: 10px 14px;
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
 `;
 
 const TooltipAmount = styled(FlexDivColumn)<{ color: string }>`

@@ -82,7 +82,7 @@ const Checkmark = styled.span`
         top: -2px;
         width: 5px;
         height: 10px;
-        border: solid #04045a;
+        border: solid var(--color-primary);
         border-width: 0 2px 2px 0;
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);

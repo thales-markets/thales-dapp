@@ -34,7 +34,7 @@ export const Input = styled.input`
     letter-spacing: 0.25px;
     color: #f6f6fe;
     &::selection {
-        color: #04045a;
+        color: var(--color-primary);
         background: #f6f6fe;
     }
     &:focus {
@@ -556,7 +556,7 @@ export const StyledModal = withStyles(() => ({
 }))(Dialog);
 
 export const ModalContainer = styled.div`
-    background: #04045a;
+    background: var(--color-primary);
     padding: 20px 30px 35px 30px;
     overflow: auto;
     border-radius: 23px;

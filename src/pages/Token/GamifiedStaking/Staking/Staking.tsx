@@ -335,7 +335,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
 const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?: BackgroundType }>`
     display: grid;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
     border-radius: 15px;
     align-items: center;
     @media (max-width: 768px) {

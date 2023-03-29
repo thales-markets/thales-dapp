@@ -55,8 +55,8 @@ const MenuCard = styled.div<ManuCardProps>`
     box-sizing: border-box;
     border-radius: 15px;
     z-index: 1000;
-    background-color: #04045a;
-    --background: #04045a;
+    background-color: var(--color-primary);
+    --background: var(--color-primary);
     --icon-color: #f7f7f7;
     --shadow-color: '#64D9FE';
     @media (max-width: 1024px) {

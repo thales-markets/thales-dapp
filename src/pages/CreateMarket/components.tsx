@@ -20,14 +20,14 @@ type TooltipIconProps = {
 
 const LightTooltip = withStyles(() => ({
     arrow: {
-        color: '#04045a',
+        color: ' var(--color-primary)',
         fontSize: 10,
         '&:before': {
             border: `1px solid ${UI_COLORS.GREEN}`,
         },
     },
     tooltip: {
-        backgroundColor: '#04045a',
+        backgroundColor: ' var(--color-primary)',
         maxWidth: 220,
         border: `1px solid ${UI_COLORS.GREEN}`,
         borderRadius: '5px',
@@ -38,7 +38,7 @@ const LightTooltip = withStyles(() => ({
 export const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <QuestionMarkIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            style={{ border: '1px solid  var(--color-primary)', borderRadius: '50%', padding: 1 }}
             width="12"
             height="12"
             className="tooltip-icon"
@@ -49,7 +49,7 @@ export const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
 export const TooltipInfoIcon: React.FC<TooltipIconProps> = ({ title }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <InfoIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            style={{ border: '1px solid  var(--color-primary)', borderRadius: '50%', padding: 1 }}
             width="12"
             height="12"
             className="tooltip-icon"
@@ -60,7 +60,7 @@ export const TooltipInfoIcon: React.FC<TooltipIconProps> = ({ title }) => (
 export const TooltipWarningIcon: React.FC<TooltipIconProps> = ({ title }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <Warning
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            style={{ border: '1px solid  var(--color-primary)', borderRadius: '50%', padding: 1 }}
             width="12"
             height="12"
             className="tooltip-icon"
@@ -71,7 +71,7 @@ export const TooltipWarningIcon: React.FC<TooltipIconProps> = ({ title }) => (
 export const TooltipDQIcon: React.FC<TooltipIconProps> = ({ title }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <DQ
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            style={{ border: '1px solid  var(--color-primary)', borderRadius: '50%', padding: 1 }}
             width="12"
             height="12"
             className="tooltip-icon"
@@ -82,7 +82,7 @@ export const TooltipDQIcon: React.FC<TooltipIconProps> = ({ title }) => (
 export const TooltipDollarIcon: React.FC<TooltipIconProps> = ({ title, iconProps }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <DollarIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1, ...iconProps }}
+            style={{ border: '1px solid  var(--color-primary)', borderRadius: '50%', padding: 1, ...iconProps }}
             width="12"
             height="12"
             className="tooltip-icon"
@@ -93,7 +93,13 @@ export const TooltipDollarIcon: React.FC<TooltipIconProps> = ({ title, iconProps
 export const TooltipAssetIcon: React.FC<any> = ({ title, styleProps }) => (
     <LightTooltip title={<span className="text-xxxs">{title}</span>} placement="top" arrow={true}>
         <AssetIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', cursor: 'pointer', padding: 1, ...styleProps }}
+            style={{
+                border: '1px solid  var(--color-primary)',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                padding: 1,
+                ...styleProps,
+            }}
             width="12"
             height="12"
             className="tooltip-icon"
@@ -185,7 +191,7 @@ export const Error = styled(Text)`
 export const InputsWrapper = styled(FlexDivColumn)`
     padding: 20px;
     border-radius: 12px;
-    background: #04045a;
+    background: var(--color-primary); ;
 `;
 
 const Wrapper = styled(FlexDivCentered)`

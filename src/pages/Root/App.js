@@ -45,7 +45,6 @@ const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
 const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token/Token'));
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales/TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
-const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
@@ -246,14 +245,6 @@ const App = () => {
             <Suspense fallback={<Loader />}>
                 <Router history={history}>
                     <Switch>
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.Royal}>
-                                <MainLayout>
-                                    <ThalesRoyal />
-                                </MainLayout>
-                            </Route>
-                        )}
-
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <DappLayout>
                                 <CreateMarket />

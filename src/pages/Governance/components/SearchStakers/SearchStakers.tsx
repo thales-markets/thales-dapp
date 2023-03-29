@@ -29,7 +29,7 @@ export const SearchInput = styled.input`
     line-height: 24px;
     padding: 0 10px;
     letter-spacing: 0.15px;
-    background: #04045a;
+    background: var(--color-primary);
     color: #f6f6fe;
     padding-left: 20px;
     padding-right: 44px;

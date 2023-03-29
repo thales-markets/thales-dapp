@@ -492,7 +492,7 @@ const SectionContentWrapper = styled.div<{
             : ''}
     ${(props) => (props.columnsSpan ? `grid-column: span ${props.columnsSpan};` : '')}
     height: 100%;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
     border-radius: 15px;
     align-items: center;
     ${(props) => {

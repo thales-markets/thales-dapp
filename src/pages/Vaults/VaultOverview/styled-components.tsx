@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 
 export const SpaContainer = styled(FlexDivColumn)`
-    background: linear-gradient(201.59deg, #04045a 37.82%, #2f2f99 107.42%);
+    background: linear-gradient(201.59deg, var(--color-primary) 37.82%, var(--color-secondary) 107.42%);
     border: 2px solid #64d9fe;
     box-shadow: 0px 0px 30px 20px rgba(4, 4, 90, 0.7);
     border-radius: 15px;
