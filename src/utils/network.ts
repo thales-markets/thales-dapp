@@ -216,3 +216,8 @@ export const getFeeCollateral = (networkId: NetworkId) => {
     if (getIsBSC(networkId)) return CRYPTO_CURRENCY_MAP.BNB;
     return CRYPTO_CURRENCY_MAP.ETH;
 };
+
+export const getDefaultDecimalsForNetwork = (networkId: NetworkId) => {
+    if (networkId == Network.Arbitrum) return 6;
+    return 18;
+};

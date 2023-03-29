@@ -2270,5 +2270,11 @@
         "deposit-amount-label": "Сумма вклада",
         "nothing-to-withdraw-label": "Нечего снимать.",
         "withdraw-round-end-label": "Раунд заканчивается через: <counter />"
+    },
+    "tale-of-thales": {
+        "mint": {
+            "loading": "Пожалуйста, подождите...",
+            "successfully-minted": "Успешно отчеканено"
+        }
     }
 }

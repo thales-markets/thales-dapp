@@ -2274,5 +2274,11 @@
         "withdraw-round-end-label": "回合结束于：<counter />",
         "vault-filled-label": "保险库已满：{{amount}} / {{max}}",
         "variables-left": "<ul><li>利用率：{{utilizationRate}}</li><li>价格下限：{{priceLowerLimit}}</li><li>价格上限：{{priceUpperLimit}}</li><li>最大偏斜影响：{{skewImpactLimit}}</li><li>单一市场的最大分配：{{allocationLimitsPerMarketPerRound}}</li></ul>"
+    },
+    "tale-of-thales": {
+        "mint": {
+            "loading": "请稍等...",
+            "successfully-minted": "铸造成功"
+        }
     }
 }
