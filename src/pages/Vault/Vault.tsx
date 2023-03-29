@@ -53,7 +53,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import ApprovalModal from 'components/ApprovalModal';
-import { checkAllowance } from 'utils/network';
+import { checkAllowance, getDefaultDecimalsForNetwork } from 'utils/network';
 import { BigNumber, ethers } from 'ethers';
 import SimpleLoader from 'components/SimpleLoader';
 import Transactions from './Transactions';
@@ -189,7 +189,10 @@ const Vault: React.FC<VaultProps> = (props) => {
             const collateralWithSigner = collateral.connect(signer);
             const getAllowance = async () => {
                 try {
-                    const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+                    const parsedAmount = ethers.utils.parseUnits(
+                        Number(amount).toString(),
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
                     const allowance = await checkAllowance(
                         parsedAmount,
                         collateralWithSigner,
@@ -246,7 +249,11 @@ const Vault: React.FC<VaultProps> = (props) => {
             setIsSubmitting(true);
             try {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
-                const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+
+                const parsedAmount = ethers.utils.parseUnits(
+                    Number(amount).toString(),
+                    getDefaultDecimalsForNetwork(networkId)
+                );
 
                 const tx = await sportVaultContractWithSigner.deposit(parsedAmount, {
                     gasLimit: MAX_L2_GAS_LIMIT,
