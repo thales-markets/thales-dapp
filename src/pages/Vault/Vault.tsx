@@ -249,7 +249,6 @@ const Vault: React.FC<VaultProps> = (props) => {
             setIsSubmitting(true);
             try {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
-
                 const parsedAmount = ethers.utils.parseUnits(
                     Number(amount).toString(),
                     getDefaultDecimalsForNetwork(networkId)
