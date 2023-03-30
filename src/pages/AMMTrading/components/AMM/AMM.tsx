@@ -1058,7 +1058,7 @@ export const MaxButton = styled.button`
     padding: 1px 8px;
     font-weight: 700;
     font-size: 10px;
-    color: var(--primary-color);
+    color: var(--color-white);
     background-color: rgba(100, 217, 254, 0.5);
     border-radius: 10px;
     line-height: 15.21px;

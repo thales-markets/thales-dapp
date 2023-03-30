@@ -27,7 +27,7 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                     tickLine={false}
                     axisLine={false}
                     orientation={'right'}
-                    tick={{ fill: 'var(--primary-color)' }}
+                    tick={{ fill: 'var(--color-white)' }}
                 />
                 <XAxis
                     dataKey={'timestamp'}
@@ -38,7 +38,7 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                         }
                         return format(val, 'dd MMM');
                     }}
-                    tick={{ fill: 'var(--primary-color)' }}
+                    tick={{ fill: 'var(--color-white)' }}
                     interval="preserveStartEnd"
                 />
                 {data && (

@@ -220,7 +220,7 @@ const OPRewards: React.FC = () => {
                                     percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                 })}
                                 type={'info'}
-                                iconColor={'var(--primary-color)'}
+                                iconColor={'var(--color-white)'}
                                 container={{ display: 'inline-block' }}
                                 interactive={true}
                             />
@@ -248,7 +248,7 @@ const OPRewards: React.FC = () => {
                                     percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                 })}
                                 type={'info'}
-                                iconColor={'var(--primary-color)'}
+                                iconColor={'var(--color-white)'}
                                 container={{ display: 'inline-block' }}
                                 interactive={true}
                             />
@@ -275,7 +275,7 @@ const OPRewards: React.FC = () => {
                                     percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                 })}
                                 type={'info'}
-                                iconColor={'var(--primary-color)'}
+                                iconColor={'var(--color-white)'}
                                 container={{ display: 'inline-block' }}
                                 interactive={true}
                             />
@@ -302,7 +302,7 @@ const OPRewards: React.FC = () => {
                                     percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                 })}
                                 type={'info'}
-                                iconColor={'var(--primary-color)'}
+                                iconColor={'var(--color-white)'}
                                 container={{ display: 'inline-block' }}
                                 interactive={true}
                             />
@@ -317,7 +317,7 @@ const OPRewards: React.FC = () => {
                             <Tooltip
                                 message={t('op-rewards.table.gamified-bonus-text')}
                                 type={'info'}
-                                iconColor={'var(--primary-color)'}
+                                iconColor={'var(--color-white)'}
                                 container={{ display: 'inline-block' }}
                                 interactive={true}
                             />
@@ -386,7 +386,7 @@ const OPRewards: React.FC = () => {
                                         percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                     })}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -414,7 +414,7 @@ const OPRewards: React.FC = () => {
                                         percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                     })}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -441,7 +441,7 @@ const OPRewards: React.FC = () => {
                                         percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                     })}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -456,7 +456,7 @@ const OPRewards: React.FC = () => {
                                 <Tooltip
                                     message={t('op-rewards.table.gamified-bonus-text')}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -525,7 +525,7 @@ const OPRewards: React.FC = () => {
                                         percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                     })}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -540,7 +540,7 @@ const OPRewards: React.FC = () => {
                                 <Tooltip
                                     message={t('op-rewards.table.gamified-bonus-text')}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -609,7 +609,7 @@ const OPRewards: React.FC = () => {
                                         percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                     })}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -637,7 +637,7 @@ const OPRewards: React.FC = () => {
                                         percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                                     })}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -652,7 +652,7 @@ const OPRewards: React.FC = () => {
                                 <Tooltip
                                     message={t('op-rewards.table.gamified-bonus-text')}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ display: 'inline-block' }}
                                     interactive={true}
                                 />
@@ -702,7 +702,7 @@ const OPRewards: React.FC = () => {
                                 thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.upThalesRewardsPerVolume),
                             })}
                             type={'info'}
-                            iconColor={'var(--primary-color)'}
+                            iconColor={'var(--color-white)'}
                             container={{ display: 'inline-block' }}
                             interactive={true}
                         />
@@ -718,7 +718,7 @@ const OPRewards: React.FC = () => {
                                 thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.downThalesRewardsPerVolume),
                             })}
                             type={'info'}
-                            iconColor={'var(--primary-color)'}
+                            iconColor={'var(--color-white)'}
                             container={{ display: 'inline-block' }}
                             interactive={true}
                         />
@@ -737,7 +737,7 @@ const OPRewards: React.FC = () => {
                                 ),
                             })}
                             type={'info'}
-                            iconColor={'var(--primary-color)'}
+                            iconColor={'var(--color-white)'}
                             container={{ display: 'inline-block' }}
                             interactive={true}
                         />
@@ -759,7 +759,7 @@ const OPRewards: React.FC = () => {
                                 ),
                             })}
                             type={'info'}
-                            iconColor={'var(--primary-color)'}
+                            iconColor={'var(--color-white)'}
                             container={{ display: 'inline-block' }}
                             interactive={true}
                         />
@@ -780,7 +780,7 @@ const OPRewards: React.FC = () => {
                                 thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.itmThalesRewardsPerVolume),
                             })}
                             type={'info'}
-                            iconColor={'var(--primary-color)'}
+                            iconColor={'var(--color-white)'}
                             container={{ display: 'inline-block' }}
                             interactive={true}
                         />
@@ -796,7 +796,7 @@ const OPRewards: React.FC = () => {
                                 thales: formatCurrencyWithKey(THALES_CURRENCY, summaryData.otmThalesRewardsPerVolume),
                             })}
                             type={'info'}
-                            iconColor={'var(--primary-color)'}
+                            iconColor={'var(--color-white)'}
                             container={{ display: 'inline-block' }}
                             interactive={true}
                         />
@@ -818,7 +818,7 @@ const OPRewards: React.FC = () => {
                                 ),
                             })}
                             type={'info'}
-                            iconColor={'var(--primary-color)'}
+                            iconColor={'var(--color-white)'}
                             container={{ display: 'inline-block' }}
                             interactive={true}
                         />

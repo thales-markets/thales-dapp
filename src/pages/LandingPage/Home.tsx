@@ -183,7 +183,7 @@ const Title = styled.p`
     }
     line-height: 91.91%;
     text-align: center;
-    color: var(--color);
+    color: var(--color-white);
 `;
 
 const FlexDiv = styled.div`
@@ -191,7 +191,7 @@ const FlexDiv = styled.div`
     width: 100%;
     justify-content: space-evenly;
     align-items: center;
-    color: var(--color);
+    color: var(--color-white);
     flex-wrap: wrap;
     &.initiatives {
         & > a > i {
@@ -305,7 +305,7 @@ const FaqQuestion = styled.p`
     font-weight: bold;
     font-size: 1.5em;
     line-height: 91.91%;
-    color: var(--color);
+    color: var(--color-white);
     margin-bottom: 1em;
     @media (max-width: 600px) {
         margin-bottom: 24px;
@@ -318,9 +318,9 @@ const FaqAnswer = styled.p`
     font-weight: 300;
     font-size: 1em;
     line-height: 1.2em;
-    color: var(--color);
+    color: var(--color-white);
     &:not(:last-child) {
-        border-bottom: 1px solid var(--color);
+        border-bottom: 1px solid var(--color-white);
         padding-bottom: 2em;
         margin-bottom: 2em;
         @media (max-width: 600px) {
@@ -332,7 +332,7 @@ const FaqAnswer = styled.p`
 
 const Info = styled.div`
     width: 100%;
-    color: var(--color);
+    color: var(--color-white);
     text-align: center;
     padding: 10px;
     font-size: 16px;

@@ -27,7 +27,7 @@ export const ViewEtherscanLink: React.FC<ViewEtherscanLinkProps> = ({ hash }) =>
 };
 
 const StyledLink = styled.a`
-    color: var(--primary-color);
+    color: var(--color-white);
     &:hover {
         color: var(--color-highlight);
     }
@@ -36,7 +36,7 @@ const StyledLink = styled.a`
 export const ArrowIcon = styled(ArrowHyperlinkIcon)`
     margin-left: 5px;
     ${StyledLink} {
-        fill: var(--primary-color);
+        fill: var(--color-white);
     }
     ${StyledLink}:hover & path {
         fill: var(--color-highlight);

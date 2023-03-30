@@ -26,7 +26,7 @@ export const CollateralName = styled.span`
     font-weight: 600;
     font-size: 21px;
     line-height: 25px;
-    color: var(--primary-color);
+    color: var(--color-white);
     text-transform: uppercase;
 `;
 

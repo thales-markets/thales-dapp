@@ -3,7 +3,7 @@
     font-family: Currencies !important;
     vertical-align: middle;
     font-size: 24px;
-    color: var(--color);
+    color: var(--color-white);
 }
 
 .icon--polygon:before {

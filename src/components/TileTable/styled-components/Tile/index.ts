@@ -77,7 +77,7 @@ const Tile: StyledComponent<
 const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(FlexDiv)<{
     lineHidden?: boolean;
 }>`
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     font-family: Roboto !important;
     font-weight: bold;
     height: 50px;
@@ -127,7 +127,7 @@ const Cell: StyledComponent<'div', any> & Cell = styled.div<{ direction?: string
     align-items: center;
     flex-direction: ${(props) => props.direction || 'column'};
     gap: ${(props) => (props.direction ? '3px' : '0')};
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     justify-content: center;
 `;
 

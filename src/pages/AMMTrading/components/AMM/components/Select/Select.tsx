@@ -212,7 +212,7 @@ const CustomInputContainer = styled.div`
 const CustomInput = styled.input`
     font-family: Roboto !important;
     font-weight: 600;
-    color: var(--primary-color);
+    color: var(--color-white);
     font-size: 15px;
     background: transparent;
     border: none;
@@ -223,15 +223,15 @@ const CustomInput = styled.input`
         outline: none;
     }
     &:-webkit-input-placeholder {
-        color: var(--primary-color);
+        color: var(--color-white);
         opacity: 0.7;
     }
     &:-ms-input-placeholder {
-        color: var(--primary-color);
+        color: var(--color-white);
         opacity: 0.7;
     }
     &::placeholder {
-        color: var(--primary-color);
+        color: var(--color-white);
         opacity: 0.7;
     }
 `;
@@ -239,7 +239,7 @@ const CustomInput = styled.input`
 const CustomInputLabel = styled.span`
     font-family: Roboto !important;
     font-weight: 600;
-    color: var(--primary-color);
+    color: var(--color-white);
     font-size: 15px;
 `;
 
@@ -262,7 +262,7 @@ const ValueContainer = styled.div`
 const Value = styled.input<{ color?: string; fontSize?: string }>`
     font-family: Roboto !important;
     font-weight: 600;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
     background: transparent;
     border: none;
@@ -276,7 +276,7 @@ const Value = styled.input<{ color?: string; fontSize?: string }>`
 
 const Arrow = styled.i<{ color?: string }>`
     content: url(${dropDown});
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     font-size: 18px;
 `;
 

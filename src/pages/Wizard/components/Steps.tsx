@@ -445,7 +445,7 @@ const NavItem = styled.div<{ clickable: boolean }>`
     letter-spacing: 0.035em;
     text-align: center;
     text-transform: uppercase;
-    color: var(--primary-color);
+    color: var(--color-white);
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
     &.active {
@@ -621,7 +621,7 @@ const Text = styled.p`
     font-weight: 400;
     font-size: 15px;
     line-height: 23px;
-    color: var(--color);
+    color: var(--color-white);
     a {
         font-weight: 700;
         text-decoration: underline;

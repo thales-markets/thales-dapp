@@ -169,7 +169,7 @@ const StyledRoyaleModal = withStyles(() => ({
     paper: {
         borderRadius: '5px',
         width: '500px',
-        background: 'var(--color)',
+        background: 'var(--color-white)',
         padding: '1px',
         overflow: 'hidden',
     },
@@ -178,7 +178,7 @@ const StyledRoyaleModal = withStyles(() => ({
 const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean; isMobile?: boolean }>`
     flex: 1 0 100%;
     justify-content: center;
-    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
+    color: ${(props) => (props.isRoyale ? 'var(--color-secondary) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     @media (max-width: 512px) {
         flex: 1 0 85%;
@@ -186,7 +186,7 @@ const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean; isMobile?: b
 `;
 
 const ApprovalModalContainer = styled(ModalContainer)<{ isRoyale?: boolean }>`
-    background: ${(props) => (props.isRoyale ? 'var(--color)' : '')};
+    background: ${(props) => (props.isRoyale ? 'var(--color-white)' : '')};
     border-radius: ${(props) => (props.isRoyale ? '5px' : '')};
 `;
 
@@ -199,8 +199,8 @@ const ApprovalInputContainer = styled(InputContainer)<{ isRoyale?: boolean }>`
 const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
     font-size: ${(props) => (props.isRoyale ? '20px' : '25px')};
     background: ${(props) => (props.isRoyale ? '#e3f7e9' : '')};
-    border: ${(props) => (props.isRoyale ? '2px solid var(--color-wrapper)' : '')};
-    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
+    border: ${(props) => (props.isRoyale ? '2px solid var(--color-secondary)' : '')};
+    color: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
     margin-left: ${(props) => (props.isRoyale ? '20px' : '')};
@@ -208,7 +208,7 @@ const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
     height: ${(props) => (props.isRoyale ? '43px' : '60px')};
     padding-top: ${(props) => (props.isRoyale ? '2px' : '0px')};
     &:focus {
-        border: ${(props) => (props.isRoyale ? '2px solid var(--color-wrapper)' : '')};
+        border: ${(props) => (props.isRoyale ? '2px solid var(--color-secondary)' : '')};
     }
 `;
 
@@ -223,26 +223,26 @@ const ApprovalCurrencyLabel = styled(CurrencyLabel)<{ isRoyale?: boolean }>`
 
 const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>`
     width: 289px;
-    color: ${(props) => (props.isRoyale ? 'var(--color) !important' : '')};
+    color: ${(props) => (props.isRoyale ? 'var(--color-white) !important' : '')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
-    background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
+    background: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
     border-radius: ${(props) => (props.isRoyale ? '20px' : '')};
     &:hover:not(:disabled) {
-        background: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
+        background: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
     }
 `;
 
 const CheckboxContainer = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
     margin: -12px 20px 0 0;
     label {
-        color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '')};
+        color: ${(props) => (props.isRoyale ? 'var(--color-secondary) !important' : '')};
         font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
         font-size: 16px;
         input:checked ~ .checkmark {
-            background-color: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
+            background-color: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
         }
     }
-    border: ${(props) => (props.isRoyale ? 'var(--color-wrapper)' : '')};
+    border: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
     span {
         :after {
             height: 12px;
@@ -250,13 +250,13 @@ const CheckboxContainer = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
             left: 4px;
             top: -1px;
             border-width: 0 3px 3px 0;
-            border: ${(props) => (props.isRoyale ? 'solid var(--color)' : '')};
+            border: ${(props) => (props.isRoyale ? 'solid var(--color-white)' : '')};
             border-width: 0 2px 2px 0;
         }
         height: 18px;
         width: 18px;
         margin-top: 2px;
-        border: ${(props) => (props.isRoyale ? '1px solid var(--color-wrapper)' : '')};
+        border: ${(props) => (props.isRoyale ? '1px solid var(--color-secondary)' : '')};
     }
 `;
 
@@ -267,7 +267,7 @@ const OrText = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.4px;
-    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '#f6f6fe')};
+    color: ${(props) => (props.isRoyale ? 'var(--color-secondary) !important' : '#f6f6fe')};
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     margin-bottom: 20px;
 `;
@@ -276,7 +276,7 @@ const ApprovalModalLabel = styled.p<{ isRoyale?: boolean }>`
     font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
     font-style: normal;
     font-size: 20px;
-    color: ${(props) => (props.isRoyale ? 'var(--color-wrapper) !important' : '#f6f6fe')};
+    color: ${(props) => (props.isRoyale ? 'var(--color-secondary) !important' : '#f6f6fe')};
 `;
 
 const FlexContainer = styled(FlexDivCentered)`

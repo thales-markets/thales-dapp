@@ -129,7 +129,7 @@ const Wrapper = styled.div<{
     border-radius: ${(_props) => (_props?.isRoyale ? '5px' : '15px')};
     border: ${(_props) => (_props?.isRoyale ? '2px solid #EE7C77' : '')};
     width: 100%;
-    background-color: ${(_props) => (_props?.type ? getBackgroundColor(_props.type) : 'var(--primary-color)')};
+    background-color: ${(_props) => (_props?.type ? getBackgroundColor(_props.type) : 'var(--color-white)')};
     color: ${(_props) => (_props.type ? '#000000' : 'var(--background)')};
     font-size: ${(_props) => (_props.fontSize ? _props.fontSize : '14px')};
     font-weight: 600;
@@ -145,7 +145,7 @@ const BottomColoredDiv = styled.div<{
 }>`
     display: ${(_props) => (_props?.isRoyale ? 'none' : '')};
     height: 8px;
-    background-color: ${(_props) => (_props?.type ? getColor(_props.type) : 'var(--primary-color)')};
+    background-color: ${(_props) => (_props?.type ? getColor(_props.type) : 'var(--color-white)')};
     border-radius: 0px 0px 12px 12px;
     width: 98.7%;
     position: absolute;

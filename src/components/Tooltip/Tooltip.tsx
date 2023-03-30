@@ -48,19 +48,19 @@ type PlacementType =
 const icons = {
     info: {
         className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
+        color: 'var(--color-white)',
     },
     warning: {
         className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
+        color: 'var(--color-white)',
     },
     success: {
         className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
+        color: 'var(--color-white)',
     },
     moneyBag: {
         className: 'v2-icon v2-icon--dollar',
-        color: 'var(--primary-color)',
+        color: 'var(--color-white)',
     },
 };
 

@@ -55,7 +55,7 @@ const Wrapper = styled.div`
 `;
 
 const Label = styled.span<{ fontSize?: string; color?: string }>`
-    color: ${(_props) => (_props?.color ? _props?.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props?.color : 'var(--color-white)')};
     font-size: ${(_props) => (_props?.fontSize ? _props?.fontSize : '24px')};
 `;
 

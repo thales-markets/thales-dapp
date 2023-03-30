@@ -66,7 +66,7 @@ const BannerContainer = styled(FlexDiv)<{ width?: number }>`
 
 const Info = styled.div`
     width: 100%;
-    color: var(--color);
+    color: var(--color-white);
     text-align: center;
     padding: 10px;
     font-size: 16px;

@@ -7,12 +7,12 @@ const Pagination = styled(TablePagination)`
     width: 100%;
     max-width: 1200px;
     height: auto;
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     .MuiIconButton-root.Mui-disabled {
-        color: var(--disabled-item);
+        color: var(--color-tertiary);
     }
     .MuiTablePagination-selectIcon {
-        color: var(--primary-color);
+        color: var(--color-white);
     }
     .MuiIconButton-root {
         @media (max-width: 768px) {

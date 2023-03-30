@@ -140,7 +140,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     max-width: 130px;
     cursor: pointer;
     border-right: 2px solid rgba(100, 217, 254, 0.5);
-    color: var(--icon-color);
+    color: var(--color-white);
     font-family: Sansation !important;
     font-style: normal;
     font-weight: normal;
@@ -184,7 +184,7 @@ const SelectedNetworkContainer = styled.div<{ cursor: string }>`
     justify-content: center;
     max-width: 130px;
     width: 130px;
-    color: var(--icon-color);
+    color: var(--color-white);
     cursor: ${(props) => props.cursor};
     flex-direction: column;
     z-index: 1;

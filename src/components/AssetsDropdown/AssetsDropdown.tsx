@@ -101,7 +101,7 @@ const Container = styled.div`
     border-radius: 15px;
     z-index: 2;
     padding: 20px;
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     width: 200px;
     @media (max-width: 768px) {
         top: 0;

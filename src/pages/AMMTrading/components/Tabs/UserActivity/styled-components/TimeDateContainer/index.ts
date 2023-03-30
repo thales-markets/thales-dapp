@@ -11,7 +11,7 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
+    color: var(--color-white);
     width: 110px;
 `;
 

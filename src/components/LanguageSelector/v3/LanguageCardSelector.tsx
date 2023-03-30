@@ -42,7 +42,7 @@ const LanguageContainer = styled.div<{ selected?: boolean }>`
     cursor: pointer;
     text-align: center;
     margin-top: 10px;
-    color: ${(props: any) => (props.selected ? 'var(--icon-color)' : '#8181ac')};
+    color: ${(props: any) => (props.selected ? 'var(--color-white)' : '#8181ac')};
 `;
 
 const FlagIcon = styled.i`

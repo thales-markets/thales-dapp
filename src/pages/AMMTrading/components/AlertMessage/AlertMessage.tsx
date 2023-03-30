@@ -48,7 +48,7 @@ const Wrapper = styled.div<{
     ${(_props) => (_props.close ? 'display: none' : '')};
     padding: 5px;
     width: 100%;
-    background-color: ${(_props) => (_props?.background ? _props?.background : 'var(--primary-color)')};
+    background-color: ${(_props) => (_props?.background ? _props?.background : 'var(--color-white)')};
     color: ${(_props) => (_props.color ? _props.color : 'var(--background)')};
     font-size: ${(_props) => (_props.fontSize ? _props.fontSize : '14px')};
     font-weight: 600;

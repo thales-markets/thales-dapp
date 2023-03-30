@@ -72,7 +72,7 @@ const PageTitle = styled.p`
     font-style: normal;
     font-weight: 600;
     font-size: 35px;
-    color: var(--primary-color);
+    color: var(--color-white);
 
     @media (max-width: 1024px) {
         margin-top: 20px;

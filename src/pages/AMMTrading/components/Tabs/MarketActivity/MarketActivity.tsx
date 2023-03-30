@@ -80,7 +80,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
             case 'out':
                 return UI_COLORS.OUT_COLOR;
             default:
-                return 'var(--primary-color)';
+                return 'var(--color-white)';
         }
     };
 

@@ -30,7 +30,7 @@ const ValueContainer: StyledComponent<'div', any> & ValueContainerChildren = sty
 const Value = styled.input<{ color?: string; fontSize?: string }>`
     font-family: Roboto !important;
     font-weight: 600;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
     background: transparent;
     border: none;
@@ -45,7 +45,7 @@ const Value = styled.input<{ color?: string; fontSize?: string }>`
 const SubValue = styled.span<{ color?: string; fontSize?: string }>`
     font-family: Roboto !important;
     font-weight: 600;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
 `;
 

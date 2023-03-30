@@ -55,7 +55,7 @@ const ThalesLogoContainer = styled.div`
 `;
 
 const ThalesLogo = styled.i`
-    color: var(--icon-color);
+    color: var(--color-white);
     font-size: 88px;
     height: 83px;
     @media (max-width: 768px) {
@@ -82,7 +82,7 @@ const FlexDiv = styled.div`
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    color: var(--color);
+    color: var(--color-white);
     flex-wrap: wrap;
 `;
 
@@ -134,7 +134,7 @@ const FooterIcon = styled.i`
         pointer-events: none;
     }
     font-size: 3em;
-    color: var(--color);
+    color: var(--color-white);
 `;
 
 export default Footer;

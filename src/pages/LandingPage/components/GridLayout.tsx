@@ -115,7 +115,7 @@ const Title = styled.p`
     font-size: 5.5em;
     line-height: 92.3%;
     text-align: center;
-    color: var(--color);
+    color: var(--color-white);
     @media (max-width: 600px) {
         font-size: 38px;
     }
@@ -127,7 +127,7 @@ const Subtitle = styled.p`
     font-size: 2.5em;
     line-height: 95%;
     text-align: center;
-    color: var(--color);
+    color: var(--color-white);
     margin-top: 20px;
     @media (max-width: 600px) {
         font-size: 20px;
@@ -418,7 +418,7 @@ const ContTitle = styled.p`
     font-weight: bold;
     font-size: 3.5em;
     line-height: 95%;
-    color: var(--color);
+    color: var(--color-white);
     margin-top: 10px;
     margin-bottom: 0.75em;
     @media (max-width: 800px) {
@@ -440,7 +440,7 @@ const ContSubTitle = styled.p`
 
         text-align: justify;
         white-space: pre-line;
-        color: var(--color);
+        color: var(--color-white);
         @media (max-width: 600px) {
             padding-top: 20px;
         }

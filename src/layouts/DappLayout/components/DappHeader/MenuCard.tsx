@@ -104,7 +104,7 @@ const CloseIcon = styled.i`
     padding: 4px;
     box-sizing: content-box;
     cursor: pointer;
-    color: var(--icon-color);
+    color: var(--color-white);
 `;
 
 const LogoContainer = styled.div`
@@ -118,7 +118,7 @@ const LogoContainer = styled.div`
 `;
 
 const ThalesLogo = styled.i`
-    color: var(--icon-color);
+    color: var(--color-white);
     font-size: 140px;
 `;
 

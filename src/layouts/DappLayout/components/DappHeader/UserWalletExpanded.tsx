@@ -95,7 +95,7 @@ const WalletContainer = styled.div`
     width: 100%;
     margin: 9px auto;
     padding: 4px 12px;
-    border: 2px solid var(--icon-color);
+    border: 2px solid var(--color-white);
     border-radius: 20px;
     @media (max-width: 1024px) {
         flex: 1;
@@ -107,14 +107,14 @@ const WalletContainer = styled.div`
 `;
 
 const WalletIcon = styled.i`
-    color: var(--icon-color);
+    color: var(--color-white);
     font-size: 20px;
     padding-right: 5px;
     display: inline;
 `;
 
 const WalletAddress = styled.p`
-    color: var(--icon-color);
+    color: var(--color-white);
     font-family: Sansation !important;
     font-style: normal;
     font-weight: normal;

@@ -168,13 +168,13 @@ const BalanceContainer = styled.div`
 
 const Balance = styled.span`
     font-size: 13px;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 const TokenIcon = styled.i<{ color?: string }>`
     font-size: 20px;
     margin-left: 8px;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
 `;
 
 export default WalletBalance;

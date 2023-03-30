@@ -165,7 +165,7 @@ const Item = styled.span`
     width: 50px;
     height: 45px;
     margin-bottom: -10px;
-    color: var(--primary-color);
+    color: var(--color-white);
     cursor: pointer;
     text-align: center;
     opacity: 0.5;

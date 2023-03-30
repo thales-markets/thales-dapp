@@ -250,7 +250,7 @@ const RangeMarketsTable: React.FC<RangeMarketsTableProps> = ({ exchangeRates, op
                                     message={t('options.home.markets-table.twap-tooltip')}
                                     link={currencyKeyToDataFeedSourceMap[_props?.value]?.link}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ width: '15px' }}
                                     interactive={true}
                                 />
@@ -717,7 +717,7 @@ export const PaginationWrapper = styled(TablePagination)`
     width: 100%;
     max-width: 1200px;
     height: auto;
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     .MuiToolbar-root {
         padding: 0;
         display: flex;
@@ -742,7 +742,7 @@ export const PaginationWrapper = styled(TablePagination)`
     }
 
     .MuiIconButton-root.Mui-disabled {
-        color: var(--disabled-item);
+        color: var(--color-tertiary);
     }
     .MuiTablePagination-toolbar > .MuiTablePagination-caption:last-of-type {
         display: block;
@@ -845,7 +845,7 @@ const Item = styled.span`
     width: 50px;
     height: 45px;
     margin-bottom: -10px;
-    color: var(--primary-color);
+    color: var(--color-white);
     cursor: pointer;
     text-align: center;
     opacity: 0.5;

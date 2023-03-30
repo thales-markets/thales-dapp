@@ -294,7 +294,7 @@ const Leaderboard: React.FC = () => {
                                             target="_blank"
                                             rel="noreferrer"
                                         >
-                                            <p style={{ color: 'var(--color)' }}>{cellProps.cell.value}</p>
+                                            <p style={{ color: 'var(--color-white)' }}>{cellProps.cell.value}</p>
                                         </a>
                                     );
                                 },
@@ -307,7 +307,7 @@ const Leaderboard: React.FC = () => {
                                             <Tooltip
                                                 message={t('options.leaderboard.table.netprofit-col-tooltip')}
                                                 type={'info'}
-                                                iconColor={'var(--primary-color)'}
+                                                iconColor={'var(--color-white)'}
                                                 container={{ width: '15px' }}
                                                 interactive={true}
                                             />

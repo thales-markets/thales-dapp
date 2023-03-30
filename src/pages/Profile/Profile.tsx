@@ -278,7 +278,7 @@ const NavItem = styled.p`
     line-height: 40px;
     font-size: 15px;
     text-transform: uppercase;
-    color: var(--primary-color);
+    color: var(--color-white);
     cursor: pointer;
     padding: 0 50px;
     white-space: pre;

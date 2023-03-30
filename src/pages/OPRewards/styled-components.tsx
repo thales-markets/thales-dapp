@@ -22,7 +22,7 @@ export const HeaderWrapper = styled(FlexDivRow)`
 
 export const RoundWrapper = styled(FlexDivStart)`
     font-size: 20px;
-    color: var(--primary-color);
+    color: var(--color-white);
     align-items: center;
     @media screen and (max-width: 767px) {
         flex-direction: column;
@@ -32,7 +32,7 @@ export const RoundWrapper = styled(FlexDivStart)`
 export const RoundEndWrapper = styled(FlexDivStart)`
     margin-left: 15px;
     margin-right: 15px;
-    color: var(--primary-color);
+    color: var(--color-white);
     @media screen and (max-width: 767px) {
         margin-left: 0px;
         margin-right: 0px;
@@ -43,13 +43,13 @@ export const RoundEndWrapper = styled(FlexDivStart)`
 
 export const RoundEndLabel = styled.span`
     margin-right: 6px;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 export const SummaryWrapper = styled(FlexDivStart)`
     font-size: 18px;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--color-white);
     align-items: center;
     margin-bottom: 10px;
     @media screen and (max-width: 767px) {
@@ -71,7 +71,7 @@ export const SummaryInfo = styled(FlexDivStart)`
 
 export const Description = styled.p`
     font-size: 16px;
-    color: var(--primary-color);
+    color: var(--color-white);
     margin-bottom: 10px;
 `;
 

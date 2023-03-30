@@ -396,25 +396,25 @@ type TooltipIconProps = {
 
 const StyledRoyaleTooltip = withStyles(() => ({
     arrow: {
-        color: 'var(--color-wrapper)',
+        color: 'var(--color-secondary)',
         width: '20px !important',
         height: '16px !important',
         marginTop: '-16px !important',
         marginLeft: '0 !important',
         marginBottom: '-14px !important',
         '&::before': {
-            border: '2px solid var(--color)',
+            border: '2px solid var(--color-white)',
         },
     },
     tooltip: {
-        background: 'var(--color-wrapper)',
+        background: 'var(--color-secondary)',
         borderRadius: '10px',
-        border: '2px solid var(--color)',
+        border: '2px solid var(--color-white)',
         padding: '10px',
         fontSize: '12px',
         lineHeight: '16px',
         letterSpacing: '0.4px',
-        color: 'var(--color)',
+        color: 'var(--color-white)',
     },
 }))(MaterialTooltip);
 

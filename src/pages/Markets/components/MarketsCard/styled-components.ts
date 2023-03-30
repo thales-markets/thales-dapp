@@ -47,7 +47,7 @@ const AssetInfo = styled.div`
 const CardText = styled.span`
     display: block;
     font-family: Roboto !important;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 const Header = styled(CardText)`
@@ -73,7 +73,7 @@ const AssetNameContainer = styled.div`
     flex-direction: column;
     text-align: left;
     font-size: 15px;
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     /* word-spacing: 50px; */
 `;
 

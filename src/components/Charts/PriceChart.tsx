@@ -214,7 +214,7 @@ const Price = styled.p`
     font-size: 15px;
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    color: var(--icon-color);
+    color: var(--color-white);
 `;
 
 const ChartFooter = styled.div`
@@ -233,7 +233,7 @@ const FooterInfo = styled.p`
 `;
 
 const TimerangeChange = styled(FooterInfo)<{ fontSize?: string }>`
-    color: var(--icon-color);
+    color: var(--color-white);
     text-align: left;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
 `;

@@ -93,8 +93,8 @@ const SelectedNetworkContainer = styled.div<{ dropdownOpen: boolean; cursor: str
     max-width: 135px;
     width: 135px;
     margin: 9px auto;
-    border: 2px solid var(--icon-color);
-    color: var(--icon-color);
+    border: 2px solid var(--color-white);
+    color: var(--color-white);
     border-radius: 20px;
     cursor: ${(props) => props.cursor};
     flex-direction: column;

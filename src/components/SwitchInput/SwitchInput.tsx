@@ -37,7 +37,7 @@ const Slider = styled.span<{ switchValue: boolean }>`
     right: ${(props) => (props.switchValue ? '3px' : '')};
     width: 14px;
     height: 14px;
-    background-color: var(--icon-color);
+    background-color: var(--color-white);
 `;
 
 export default SwitchInput;

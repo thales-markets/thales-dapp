@@ -128,7 +128,7 @@ const BalanceInfoContainer = styled.div`
     justify-content: center;
     text-align: center;
     position: absolute;
-    color: var(--icon-color);
+    color: var(--color-white);
 `;
 
 const PartialAmount = styled.p`

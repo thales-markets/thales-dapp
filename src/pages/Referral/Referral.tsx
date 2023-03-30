@@ -503,7 +503,7 @@ const Referral: React.FC = () => {
                 <Tooltip
                     message={t('referral-page.disclaimer')}
                     type={'info'}
-                    iconColor={'var(--primary-color)'}
+                    iconColor={'var(--color-white)'}
                     container={{ width: '15px' }}
                     interactive={true}
                 />
@@ -512,7 +512,7 @@ const Referral: React.FC = () => {
                     target="_blank"
                     rel="noreferrer"
                     href={termsOfUse}
-                    style={{ color: 'var(--primary-color)', marginLeft: '5px', textDecoration: 'underline' }}
+                    style={{ color: 'var(--color-white)', marginLeft: '5px', textDecoration: 'underline' }}
                 >
                     {' '}
                     {t('referral-page.footer.terms')}
@@ -532,7 +532,7 @@ const ReferralFooter = styled.div`
     flex-direction: row;
     position: relative;
     font-size: 16px;
-    color: var(--primary-color);
+    color: var(--color-white);
     @media screen and (max-width: 520px) {
         margin-top: 50px;
         margin-bottom: 10px;

@@ -867,7 +867,7 @@ const SectionWrapper = styled.section<{
                 return '#303656';
             case BackgroundType.CLAIM:
             case BackgroundType.CLAIM_ON_BEHALF:
-                return 'var(--color-highlight)80';
+                return 'var(--color-highlight)';
             default:
                 return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
         }

@@ -16,5 +16,5 @@ export const tooltipLabelStyle = {
     fontSize: 12,
     lineHeight: 1.8,
     letterSpacing: 1,
-    color: 'var(--primary-color)',
+    color: 'var(--color-white)',
 };

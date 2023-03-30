@@ -21,7 +21,7 @@ export const WrapperForText = styled.div`
 export const TradingCompText = styled.p`
     font-size: 18px;
     font-family: 'Roboto' !important;
-    color: var(--primary-color);
+    color: var(--color-white);
     line-height: 25px;
     strong {
         font-weight: bold;
@@ -144,7 +144,7 @@ const MenuItem = styled.div<{
     ${(_props) => (!_props?.noStrech ? 'flex: 1' : '')};
     font-family: Roboto !important;
     font-style: normal;
-    color: ${(_props) => (_props?.customActiveLabelColor ? _props?.customActiveLabelColor : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.customActiveLabelColor ? _props?.customActiveLabelColor : 'var(--color-white)')};
     box-shadow: ${(_props) =>
         _props?.active
             ? _props?.customActiveColor

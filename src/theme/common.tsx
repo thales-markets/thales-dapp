@@ -442,7 +442,7 @@ export const InputContainer = styled.div`
 `;
 
 export const NoDataText = styled.span`
-    color: var(--primary-color);
+    color: var(--color-white);
     font-size: 24px;
     @media (max-width: 768px) {
         font-size: 15px;

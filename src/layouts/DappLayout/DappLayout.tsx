@@ -93,10 +93,8 @@ const Background = styled.section`
     }
     background-color: var(--color-primary);
     --background: var(--color-primary);
-    --icon-color: #f7f7f7;
     --shadow: 0px 0px 40px var(--color-highlight);
     --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
-    --primary-color: #f7f7f7;
     --input-border-color: var(--color-highlight);
     --table-border-color: rgba(100, 217, 254, 0.5);
     --table-border-hover-color: rgba(100, 217, 254, 1);
@@ -106,8 +104,6 @@ const Background = styled.section`
     --primary-filter-menu-active: var(--color-highlight);
     --hotmarket-arrow-enabled: var(--color-highlight);
     --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
-    --color: #f7f7f7;
-    --color-wrapper: #4673bd;
     --scrollbar-width: 12px;
     --color-scrollbar-hover: #f7f7f7;
     --button-bg-active: var(--color-highlight);

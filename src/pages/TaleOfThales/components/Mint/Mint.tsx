@@ -142,7 +142,7 @@ const CollectionTitleContainer = styled.div`
 
 const CollectionTitle = styled.span`
     font-family: basis33 !important;
-    color: var(--primary-color);
+    color: var(--color-white);
     text-transform: uppercase;
     font-size: 28px;
     line-height: 105%;

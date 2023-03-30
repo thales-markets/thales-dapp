@@ -40,7 +40,7 @@ const XAxisContainer: StyledComponent<'div', any, { numberOfTicks: number }> & C
 `;
 
 const Day = styled.div`
-    color: var(--primary-color);
+    color: var(--color-white);
     font-size: 16px;
     width: 32px;
     text-align: center;
@@ -53,7 +53,7 @@ const DayNumerical = styled.div`
 `;
 
 const Divider = styled.div`
-    background-color: var(--primary-color);
+    background-color: var(--color-white);
     width: 6px;
     height: 80px;
     border-radius: 5px;

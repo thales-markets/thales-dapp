@@ -19,7 +19,7 @@ const InputField = styled.input`
     display: block;
     width: 65px;
     border: 1px solid var(--input-border-color);
-    color: var(--primary-color);
+    color: var(--color-white);
     background: transparent;
     padding: 5px 17px 5px 14px;
     border-radius: 30px;
@@ -34,7 +34,7 @@ const InputField = styled.input`
 `;
 
 const Percentage = styled.span`
-    color: var(--primary-color);
+    color: var(--color-white);
     position: absolute;
     display: block;
     right: 10px;
@@ -51,7 +51,7 @@ const SlippageInput: StyledComponent<'div', any> & SlippageInputChildren = style
 `;
 
 const Title = styled.span`
-    color: var(--primary-color);
+    color: var(--color-white);
     font-family: Roboto !important;
     font-size: 14px;
     margin-bottom: 9px;

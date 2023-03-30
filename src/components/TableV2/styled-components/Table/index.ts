@@ -29,7 +29,7 @@ const Table: StyledComponent<'div', any> & Children = styled.div`
     font-family: Roboto !important;
     font-style: normal;
     width: 100%;
-    color: var(--primary-color);
+    color: var(--color-white);
     max-width: 1200px;
 `;
 
@@ -42,7 +42,7 @@ const Cell = styled.div<CellProps>`
     flex: 1 !important;
     display: flex;
     flex-direction: row;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 const RowMobile = styled.div`
@@ -85,7 +85,6 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
     ${(_props) =>
         _props?.isUser
             ? `
-                background-color: #3498db;
                 margin-top: 14px;
                 box-shadow: var(--shadow);
                 border-radius: 15px;
@@ -149,7 +148,7 @@ export const NoDataContainer = styled.div`
 `;
 
 export const NoDataText = styled.div`
-    color: var(--primary-color);
+    color: var(--color-white);
     font-size: 24px;
 `;
 
