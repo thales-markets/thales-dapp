@@ -65,6 +65,7 @@ import { ReactComponent as MAGICIcon } from 'assets/currencies/crypto/MAGIC.svg'
 import { ReactComponent as DPXIcon } from 'assets/currencies/crypto/DOPEX.svg';
 import { ReactComponent as GMXIcon } from 'assets/currencies/crypto/GMX.svg';
 import { ReactComponent as CAKEIcon } from 'assets/currencies/crypto/CAKE.svg';
+import { ReactComponent as ARBIcon } from 'assets/currencies/crypto/ARB.svg';
 import { ReactComponent as XAUIcon } from 'assets/synths/sXAU.svg';
 import { ReactComponent as XAGIcon } from 'assets/synths/sXAG.svg';
 
@@ -128,6 +129,7 @@ export const SYNTHS = [
 export const SYNTHS_MAP = keyBy(SYNTHS);
 
 export const CRYPTO_CURRENCY = [
+    'ARB',
     'KNC',
     'COMP',
     'REN',
@@ -267,6 +269,7 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.USDC]: USDCIcon,
     [CRYPTO_CURRENCY_MAP.USDT]: USDTIcon,
     [CRYPTO_CURRENCY_MAP.OP]: OPIcon,
+    [CRYPTO_CURRENCY_MAP.ARB]: ARBIcon,
     [CRYPTO_CURRENCY_MAP.LOOKS]: LOOKSIcon,
     [CRYPTO_CURRENCY_MAP.DYDX]: DYDXIcon,
     [CRYPTO_CURRENCY_MAP.ETC]: ETCIcon,
@@ -339,6 +342,7 @@ export const currencyKeyToNameMap = {
     [SYNTHS_MAP.sSOL]: 'Solana',
     [CRYPTO_CURRENCY_MAP.PERP]: 'Perpetual Protocol',
     [CRYPTO_CURRENCY_MAP.APE]: 'Apecoin',
+    [CRYPTO_CURRENCY_MAP.ARB]: 'Arbitrum',
     [CRYPTO_CURRENCY_MAP.CVX]: 'Convex Finance',
     [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
     [CRYPTO_CURRENCY_MAP.OHM]: 'Optimism',
@@ -424,6 +428,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.CVX]: 'convex-finance',
     [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
     [CRYPTO_CURRENCY_MAP.OP]: 'optimism',
+    [CRYPTO_CURRENCY_MAP.ARB]: 'arbitrum',
     [CRYPTO_CURRENCY_MAP.LOOKS]: 'lookscoin',
     [CRYPTO_CURRENCY_MAP.DYDX]: 'dydx',
     [CRYPTO_CURRENCY_MAP.ETC]: 'ethereum-classic',
@@ -603,6 +608,10 @@ export const currencyKeyToDataFeedSourceMap = {
         link: '',
     },
     [CRYPTO_CURRENCY_MAP.CAKE]: {
+        source: 'CHAINLINK',
+        link: '',
+    },
+    [CRYPTO_CURRENCY_MAP.ARB]: {
         source: 'CHAINLINK',
         link: '',
     },
