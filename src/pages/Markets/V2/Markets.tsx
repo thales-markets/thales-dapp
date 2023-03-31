@@ -13,6 +13,7 @@ import AMM from './components/AMM';
 import AssetDropdown from './components/AssetDropdown';
 import AssetTable from './components/AssetTable';
 import DatesDropdown from './components/MaturityDateDropdown/DatesDropdown';
+import PriceChart from './components/PriceChart/PriceChart';
 
 type AssetsAndDates = {
     allAssets: string[];
@@ -137,6 +138,9 @@ const Markets: React.FC = () => {
                             allDates={AssetsAndDates.allDates}
                         ></DatesDropdown>
                     )}
+                </Container>
+                <Container>
+                    <PriceChart asset={asset} />
                 </Container>
                 <Container>
                     <AssetTable setMarket={setMarket} markets={marketsByAssetAndDate} />

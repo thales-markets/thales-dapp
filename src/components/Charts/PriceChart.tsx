@@ -122,9 +122,6 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                         fontWeight: 600,
                                         color: 'white',
                                     }}
-                                    formatter={(value: number) => {
-                                        return ['$' + value.toFixed(2)];
-                                    }}
                                 />
                             )}
                             {showTooltip && <XAxis tick={<CustomizedAxisTick />} tickLine={false} axisLine={false} />}

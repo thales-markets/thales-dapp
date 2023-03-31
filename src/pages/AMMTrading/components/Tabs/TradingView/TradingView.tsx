@@ -1,5 +1,5 @@
 import React from 'react';
-import TradingViewWidget from 'react-tradingview-widget';
+// import TradingViewWidget from 'react-tradingview-widget';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 
 import { assetToTradingViewMap } from 'config/tradingView';
@@ -14,7 +14,7 @@ const TradingView: React.FC = () => {
     return (
         <Container>
             <div id="tradingview_f42fd"></div>
-            <TradingViewWidget
+            {/* <TradingViewWidget
                 symbol={symbol}
                 save_image={false}
                 autosize={true}
@@ -24,7 +24,7 @@ const TradingView: React.FC = () => {
                 hide_side_toolbar={false}
                 container_id={'tradingview_f42fd'}
                 theme="Dark"
-            />
+            /> */}
             <CopyrightLabel>
                 <TradingViewLink href={`https://www.tradingview.com/symbols/${symbol}`}>{symbol}</TradingViewLink>
                 {' by TradingView'}
