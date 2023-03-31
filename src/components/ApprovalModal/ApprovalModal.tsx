@@ -38,7 +38,6 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
     onClose,
     isRoyale,
 }) => {
-    console.log(tokenSymbol);
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [amount, setAmount] = useState<number | string>(defaultAmount);
