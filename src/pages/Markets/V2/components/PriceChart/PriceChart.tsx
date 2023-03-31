@@ -4,6 +4,7 @@ import { XAxis, YAxis, Area, AreaChart, ResponsiveContainer, Tooltip } from 'rec
 import { currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import styled from 'styled-components';
 import { format } from 'date-fns';
+import Toggle from './components/DateToggle/Toggle';
 
 type PriceChartProps = {
     asset: string;
@@ -14,9 +15,25 @@ const coinGeckoClient = new CoinGeckoClient({
     autoRetry: true,
 });
 
+const ToggleButtons = [
+    { label: '1D', value: 1 },
+    { label: '1W', value: 7 },
+    { label: '2W', value: 14 },
+    { label: '1M', value: 30 },
+    { label: '6M', value: 182 },
+    { label: '1Y', value: 365 },
+];
+
 const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [maxPrice, setMaxPrice] = useState(0);
+    const [minPrice, setMinPrice] = useState(0);
+    const [dateRange, setDateRange] = useState(14); // default date range
+
+    const handleDateRangeChange = (value: number) => {
+        setDateRange(value);
+        // fetch data based on new date range here...
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,42 +41,45 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
                 const result = await coinGeckoClient.coinIdMarketChart({
                     id: currencyKeyToCoinGeckoIndexMap[asset],
                     vs_currency: 'usd',
-                    days: 30,
+                    days: dateRange,
                 });
                 const priceData = result.prices.map((price) => ({
                     date: format(new Date(price[0]), 'MM/dd'),
                     price: Number(price[1].toFixed(0)),
                 }));
                 const maxPrice = Math.max(...priceData.map((d) => d.price));
+                const minPrice = Math.min(...priceData.map((d) => d.price));
 
                 // Math.round(maxPrice / 10)
 
                 setData(priceData);
                 setMaxPrice(Number(maxPrice.toFixed(0)));
+                setMinPrice(Number(minPrice.toFixed(0)));
             } catch (e) {
                 console.log('COINGECKO error: ', e);
             }
         };
         fetchData();
-    }, [asset]);
+    }, [asset, dateRange]);
 
     console.log('maxPrice: ', maxPrice);
 
     return (
         <Wrapper>
+            <Toggle options={ToggleButtons} onChange={handleDateRangeChange} />
             {data && (
                 <ResponsiveContainer width="100%" height={200}>
-                    <AreaChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                    <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
                         <XAxis
-                            tick={{ fontSize: '12px', fill: 'var(--color-white)' }}
+                            tick={{ fontSize: '12px', fontFamily: 'Roboto', fill: 'var(--color-white)' }}
                             tickLine={{ stroke: 'var(--color-white)' }}
                             axisLine={{ stroke: 'var(--color-white)' }}
                             dataKey="date"
                             interval={100}
                         />
                         <YAxis
-                            domain={[0, maxPrice]}
-                            tick={{ fontSize: '12px', fill: 'var(--color-white)' }}
+                            domain={[minPrice, maxPrice]}
+                            tick={{ fontSize: '12px', fontFamily: 'Roboto', fill: 'var(--color-white)' }}
                             tickLine={{ stroke: 'var(--color-white)' }}
                             axisLine={{ stroke: 'var(--color-white)' }}
                             tickCount={8}
