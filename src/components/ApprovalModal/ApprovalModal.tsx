@@ -13,14 +13,13 @@ import { ModalContainer, ModalHeader, ModalTitle, StyledModal } from 'components
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import onboardConnector from 'utils/onboardConnector';
 import NumericInput from 'components/NumericInput';
-import { getDefaultDecimalsForNetwork } from 'utils/network';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
@@ -41,7 +40,6 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
 }) => {
     console.log(tokenSymbol);
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [amount, setAmount] = useState<number | string>(defaultAmount);
     const [approveAll, setApproveAll] = useState<boolean>(true);
@@ -76,7 +74,9 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
                             ? ethers.constants.MaxUint256
                             : ethers.utils.parseUnits(
                                   Number(amount).toString(),
-                                  getDefaultDecimalsForNetwork(networkId)
+                                  tokenSymbol?.toUpperCase() === 'USDC' || tokenSymbol?.toUpperCase() === 'USDT'
+                                      ? 6
+                                      : 18
                               )
                     )
                 }
