@@ -125,6 +125,7 @@ const Markets: React.FC = () => {
             : TradingMarkets;
         return markets.sort((a, b) => a.strikePrice - b.strikePrice);
     }, [asset, maturityDate, openOrdersMap, discountMap]);
+    console.log('');
 
     return (
         <Wrapper>
