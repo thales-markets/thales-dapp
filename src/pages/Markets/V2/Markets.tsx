@@ -1,4 +1,3 @@
-import { uniqBy } from 'lodash';
 import { OpenOrdersMap, fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
@@ -49,13 +48,8 @@ const Markets: React.FC = () => {
         const allAssets: Set<string> = new Set();
         const allDates: Set<number> = new Set();
 
-        const curr = uniqBy(optionsMarkets, 'currencyKey');
-        const matur = uniqBy(optionsMarkets, 'maturityDate');
-
-        curr.map((market) => {
+        optionsMarkets.map((market) => {
             allAssets.add(market.currencyKey);
-        });
-        matur.map((market) => {
             if (market.currencyKey === asset) {
                 allDates.add(market.maturityDate);
             }
