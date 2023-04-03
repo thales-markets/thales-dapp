@@ -3,7 +3,7 @@ import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { MAX_L2_GAS_LIMIT, OP_REWARDS_MULTIPLIER } from 'constants/options';
+import { OP_REWARDS_MULTIPLIER, getMaxGasLimitForNetwork } from 'constants/options';
 import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
 import Button from 'pages/Token/components/Button';
@@ -342,7 +342,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const tx = (await stakingThalesContractWithSigner.claimReward({
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 })) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 

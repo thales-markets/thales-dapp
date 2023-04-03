@@ -47,11 +47,11 @@ import { AccountMarketInfo, OrderSide, OptionSide, StableCoins } from 'types/opt
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import {
     COLLATERALS,
-    MAX_L2_GAS_LIMIT,
     MINIMUM_AMM_LIQUIDITY,
     MIN_SCEW_IMPACT,
     SIDE,
     SLIPPAGE_PERCENTAGE,
+    getMaxGasLimitForNetwork,
 } from 'constants/options';
 import {
     checkAllowance,
@@ -339,9 +339,9 @@ const AMM: React.FC = () => {
                     parsedTotal,
                     parsedSlippage
                 );
-                setGasLimit(MAX_L2_GAS_LIMIT);
+                setGasLimit(getMaxGasLimitForNetwork(networkId));
                 setL1Fee(l1FeeInWei ? l1FeeInWei : 0);
-                return MAX_L2_GAS_LIMIT;
+                return getMaxGasLimitForNetwork(networkId);
             } else if (isBSC || isPolygon || isArbitrum) {
                 const gasLimit = await getEstimatedGasFees(
                     isNonDefaultStable,
@@ -360,8 +360,8 @@ const AMM: React.FC = () => {
                 setGasLimit(safeGasLimit);
                 return safeGasLimit;
             } else {
-                setGasLimit(MAX_L2_GAS_LIMIT);
-                return MAX_L2_GAS_LIMIT;
+                setGasLimit(getMaxGasLimitForNetwork(networkId));
+                return getMaxGasLimitForNetwork(networkId);
             }
         } catch (e) {
             console.log(e);

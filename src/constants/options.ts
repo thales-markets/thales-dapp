@@ -128,7 +128,7 @@ export const L2_EXERCISE_GAS_LIMIT = 1000000;
 export const MIN_SCEW_IMPACT = 0.0;
 
 export const getMaxGasLimitForNetwork = (networkId: NetworkId) => {
-    if (networkId == Network.Arbitrum) return undefined;
+    if (networkId == Network.Arbitrum) return null;
     return MAX_L2_GAS_LIMIT;
 };
 
