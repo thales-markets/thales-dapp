@@ -38,6 +38,7 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
     onClose,
     isRoyale,
 }) => {
+    console.log(tokenSymbol);
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [amount, setAmount] = useState<number | string>(defaultAmount);
@@ -69,7 +70,14 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
                 disabled={isButtonDisabled}
                 onClick={() =>
                     onSubmit(
-                        approveAll ? ethers.constants.MaxUint256 : ethers.utils.parseEther(Number(amount).toString())
+                        approveAll
+                            ? ethers.constants.MaxUint256
+                            : ethers.utils.parseUnits(
+                                  Number(amount).toString(),
+                                  tokenSymbol?.toUpperCase() === 'USDC' || tokenSymbol?.toUpperCase() === 'USDT'
+                                      ? 6
+                                      : 18
+                              )
                     )
                 }
             >
