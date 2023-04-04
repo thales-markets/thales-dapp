@@ -32,7 +32,7 @@ const Sidebar: React.FC = () => {
     const showWizardPage = !isPolygon && !isMobileState && !isBSC && !isArbitrum;
     const showTokenPage = !isPolygon && !isBSC;
     const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
-    const showVaultsPage = !isPolygon && !isBSC;
+    const showVaultsPage = !isPolygon && !isBSC && !isArbitrum;
 
     useEffect(() => {
         const handleResize = debounce(() => {
