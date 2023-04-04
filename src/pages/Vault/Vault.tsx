@@ -46,21 +46,20 @@ import { getIsAppReady } from 'redux/modules/app';
 import { UserVaultData, VaultData } from 'types/vault';
 import useVaultDataQuery from 'queries/vault/useVaultDataQuery';
 import { formatCurrencyWithSign, formatPercentage, formatCurrency } from 'utils/formatters/number';
-import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'components/TimeRemaining';
 import useUserVaultDataQuery from 'queries/vault/useUserVaultDataQuery';
 import snxJSConnector from 'utils/snxJSConnector';
 import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import ApprovalModal from 'components/ApprovalModal';
-import { checkAllowance } from 'utils/network';
+import { checkAllowance, getDefaultCollateral, getDefaultDecimalsForNetwork } from 'utils/network';
 import { BigNumber, ethers } from 'ethers';
 import SimpleLoader from 'components/SimpleLoader';
 import Transactions from './Transactions';
 import PnL from './PnL';
 import { RouteComponentProps } from 'react-router-dom';
 import vaultContract from 'utils/contracts/sportVaultContract';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
@@ -74,6 +73,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import Footer from 'components/Footer';
 import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -189,7 +189,10 @@ const Vault: React.FC<VaultProps> = (props) => {
             const collateralWithSigner = collateral.connect(signer);
             const getAllowance = async () => {
                 try {
-                    const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+                    const parsedAmount = ethers.utils.parseUnits(
+                        Number(amount).toString(),
+                        getDefaultDecimalsForNetwork(networkId)
+                    );
                     const allowance = await checkAllowance(
                         parsedAmount,
                         collateralWithSigner,
@@ -217,7 +220,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const collateralWithSigner = collateral.connect(signer);
 
                 const tx = (await collateralWithSigner.approve(vaultAddress, approveAmount, {
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 })) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
@@ -226,7 +229,9 @@ const Vault: React.FC<VaultProps> = (props) => {
                     toast.update(
                         id,
                         getSuccessToastOptions(
-                            t('options.market.toast-messsage.approve-success', { token: SYNTHS_MAP.sUSD })
+                            t('options.market.toast-messsage.approve-success', {
+                                token: getDefaultCollateral(networkId),
+                            })
                         )
                     );
                     setIsAllowing(false);
@@ -246,10 +251,13 @@ const Vault: React.FC<VaultProps> = (props) => {
             setIsSubmitting(true);
             try {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
-                const parsedAmount = ethers.utils.parseEther(Number(amount).toString());
+                const parsedAmount = ethers.utils.parseUnits(
+                    Number(amount).toString(),
+                    getDefaultDecimalsForNetwork(networkId)
+                );
 
                 const tx = await sportVaultContractWithSigner.deposit(parsedAmount, {
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
 
@@ -275,7 +283,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
 
                 const tx = await sportVaultContractWithSigner.withdrawalRequest({
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
 
@@ -301,7 +309,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
 
                 const tx = await sportVaultContractWithSigner.closeRound({
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
 
@@ -335,9 +343,11 @@ const Vault: React.FC<VaultProps> = (props) => {
             return (
                 <SubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sUSD })
+                        ? t('common.enable-wallet-access.approve-label', {
+                              currencyKey: getDefaultCollateral(networkId),
+                          })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: SYNTHS_MAP.sUSD,
+                              currencyKey: getDefaultCollateral(networkId),
                           })}
                 </SubmitButton>
             );
@@ -653,7 +663,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                             />
                                             <InputLabel>{t('vault.deposit-amount-label')}</InputLabel>
                                             <CurrencyLabel className={isDepositAmountInputDisabled ? 'disabled' : ''}>
-                                                {SYNTHS_MAP.sUSD}
+                                                {getDefaultCollateral(networkId)}
                                             </CurrencyLabel>
                                             <FieldValidationMessage
                                                 showValidation={
@@ -861,7 +871,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 {openApprovalModal && (
                     <ApprovalModal
                         defaultAmount={amount}
-                        tokenSymbol={SYNTHS_MAP.sUSD}
+                        tokenSymbol={getDefaultCollateral(networkId)}
                         isAllowing={isAllowing}
                         onSubmit={handleAllowance}
                         onClose={() => setOpenApprovalModal(false)}

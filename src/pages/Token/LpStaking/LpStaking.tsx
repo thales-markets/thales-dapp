@@ -22,7 +22,7 @@ import { ButtonType } from '../components/Button/Button';
 import onboardConnector from 'utils/onboardConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { formatGasLimit } from 'utils/network';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchLPStakingQuery } from 'utils/queryConnector';
@@ -158,7 +158,7 @@ const LpStaking: React.FC = () => {
                     (snxJSConnector as any).signer
                 );
                 const tx = (await lpStakingRewardsContractWithSigner.getReward({
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 })) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 

@@ -20,7 +20,6 @@ import SimpleLoader from '../../components/SimpleLoader';
 import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
 import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { FlexDivColumnCentered } from 'theme/common';
 import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
 import { LP_TOKEN } from 'constants/currency';
@@ -28,6 +27,7 @@ import ApprovalModal from 'components/ApprovalModal';
 import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
 import { isMobile } from 'utils/device';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 
 type Properties = {
     isStakingPaused: boolean;
@@ -124,7 +124,9 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             setIsStaking(true);
             const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToStake.toString());
-            const tx = await lpStakingRewardsContractWithSigner.stake(amount, { gasLimit: MAX_L2_GAS_LIMIT });
+            const tx = await lpStakingRewardsContractWithSigner.stake(amount, {
+                gasLimit: getMaxGasLimitForNetwork(networkId),
+            });
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {

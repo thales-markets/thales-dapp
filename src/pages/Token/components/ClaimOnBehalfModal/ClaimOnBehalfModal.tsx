@@ -14,12 +14,12 @@ import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getIsAppReady } from 'redux/modules/app';
 import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/components';
 import useStakingClaimOnBehalfQuery from 'queries/staking/useStakingClaimOnBehalfQuery';
 import Button from '../Button';
 import { ButtonType } from '../Button/Button';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -71,7 +71,7 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
                 getAddress(account),
                 !canClaimOnBehalf,
                 {
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 }
             );
             const txResult = await tx.wait();

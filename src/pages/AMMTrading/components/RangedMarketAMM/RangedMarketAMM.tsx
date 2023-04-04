@@ -48,7 +48,7 @@ import { OrderSide, RangedMarketBalanceInfo, RangedMarketPositionType, StableCoi
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import {
     COLLATERALS,
-    MAX_L2_GAS_LIMIT,
+    getMaxGasLimitForNetwork,
     MINIMUM_AMM_LIQUIDITY,
     RANGE_SIDE,
     SLIPPAGE_PERCENTAGE,
@@ -363,9 +363,9 @@ const AMM: React.FC = () => {
                     parsedTotal,
                     parsedSlippage
                 );
-                setGasLimit(MAX_L2_GAS_LIMIT);
+                setGasLimit(getMaxGasLimitForNetwork(networkId));
                 setL1Fee(l1FeeInWei ? l1FeeInWei : 0);
-                return MAX_L2_GAS_LIMIT;
+                return getMaxGasLimitForNetwork(networkId);
             } else if (isPolygon || isArbitrum || isBSC) {
                 const gasLimit = await getEstimatedGasFees(
                     isNonDefaultStable,
@@ -384,8 +384,8 @@ const AMM: React.FC = () => {
                 setGasLimit(safeGasLimit);
                 return safeGasLimit;
             } else {
-                setGasLimit(MAX_L2_GAS_LIMIT);
-                return MAX_L2_GAS_LIMIT;
+                setGasLimit(getMaxGasLimitForNetwork(networkId));
+                return getMaxGasLimitForNetwork(networkId);
             }
         } catch (e) {
             console.log(e);
