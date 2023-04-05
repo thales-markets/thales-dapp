@@ -1,10 +1,51 @@
+import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
+import { connectorsForWallets, RainbowKitProvider, wallet, darkTheme } from '@rainbow-me/rainbowkit';
+import dotenv from 'dotenv';
+import { merge } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
-import dotenv from 'dotenv';
-dotenv.config();
+import { WagmiConfig, configureChains, createClient, chain } from 'wagmi';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { infuraProvider } from 'wagmi/providers/infura';
+import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
-import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
+import WalletDisclaimer from 'components/WalletDisclaimer';
+dotenv.config();
+
+const { chains, provider } = configureChains(
+    [chain.mainnet, chain.optimism, chain.optimismGoerli, chain.polygon, chain.arbitrum],
+    [
+        infuraProvider({ stallTimeout: 2000 }),
+        alchemyProvider({ stallTimeout: 2000 }),
+        infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID, stallTimeout: 2000 }),
+        publicProvider(),
+    ]
+);
+
+const connectors = connectorsForWallets([
+    {
+        groupName: 'Recommended',
+        wallets: [
+            wallet.injected({ chains }), //  ensure all injected wallets are supported
+            wallet.metaMask({ chains }),
+            wallet.ledger({ chains }),
+            wallet.walletConnect({ chains }), // ensure all WalletConnect-based wallets are supported
+            wallet.coinbase({ appName: 'Overtime', chains }),
+            wallet.trust({ chains }),
+            wallet.imToken({ chains }),
+            wallet.rainbow({ chains }),
+        ],
+    },
+]);
+
+const wagmiClient = createClient({
+    autoConnect: true,
+    connectors,
+    provider,
+});
+
+const customTheme = merge(darkTheme(), { colors: { modalBackground: '#1A1C2B' } });
 
 const instance = createInstance({
     urlBase: 'https://data.thalesmarket.io',
@@ -35,7 +76,18 @@ const Root: React.FC<RootProps> = ({ store }) => {
     return (
         <Provider store={store}>
             <MatomoProvider value={instance}>
-                <App />
+                <WagmiConfig client={wagmiClient}>
+                    <RainbowKitProvider
+                        chains={chains}
+                        theme={customTheme}
+                        appInfo={{
+                            appName: 'Overtime',
+                            disclaimer: WalletDisclaimer,
+                        }}
+                    >
+                        <App />
+                    </RainbowKitProvider>
+                </WagmiConfig>
             </MatomoProvider>
         </Provider>
     );
