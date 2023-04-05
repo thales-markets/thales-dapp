@@ -15,7 +15,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 2,
         name: 'Bronze Soldier Collection',
         condition:
-            '"Bronze Soldier Collection" is unlocked for everybody with an on-chain volume in the last 4 weeks greater or equal than $100',
+            '"Bronze Soldier Collection" is unlocked for everybody with a total of $100 or more of on-chain volume generated in the last 4 weeks',
         items: [
             { name: 'Helmet', src: '/miletus-nfts/NFT_4.png', itemId: 5 },
             { name: 'Breastplate', src: '/miletus-nfts/NFT_5.png', itemId: 6 },
@@ -27,7 +27,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 3,
         name: 'Silver Soldier Collection',
         condition:
-            '"Silver Soldier Collection" is unlocked for everybody with an on-chain volume in the last 4 weeks greater or equal than $1,000',
+            '"Silver Soldier Collection" is unlocked for everybody with a total of $1,000 or more of on-chain volume generated in the last 4 weeks',
         items: [
             { name: 'Helmet', src: '/miletus-nfts/NFT_8.png', itemId: 9 },
             { name: 'Breastplate', src: '/miletus-nfts/NFT_9.png', itemId: 10 },
@@ -39,7 +39,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 4,
         name: 'Gold Soldier Collection',
         condition:
-            '"Gold Soldier Collection" is unlocked for everybody with an on-chain volume in the last 4 weeks greater or equal than $10,000',
+            '"Gold Soldier Collection" is unlocked for everybody with a total of $10,000 or more of on-chain volume generated in the last 4 weeks',
         items: [
             { name: 'Helmet', src: '/miletus-nfts/NFT_12.png', itemId: 13 },
             { name: 'Breastplate', src: '/miletus-nfts/NFT_13.png', itemId: 14 },
