@@ -45,16 +45,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
                 });
                 const priceData = result.prices.map((price) => ({
                     date: format(new Date(price[0]), 'MM/dd'),
-                    price: Number(price[1].toFixed(0)),
+                    price: Number(price[1].toFixed(2)),
                 }));
                 const maxPrice = Math.max(...priceData.map((d) => d.price));
                 const minPrice = Math.min(...priceData.map((d) => d.price));
 
-                // Math.round(maxPrice / 10)
-
                 setData(priceData);
-                setMaxPrice(Number(maxPrice.toFixed(0)));
-                setMinPrice(Number(minPrice.toFixed(0)));
+                setMaxPrice(Number(maxPrice.toFixed(2)));
+                setMinPrice(Number(minPrice.toFixed(2)));
             } catch (e) {
                 console.log('COINGECKO error: ', e);
             }
@@ -66,7 +64,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
 
     return (
         <Wrapper>
-            <Toggle options={ToggleButtons} onChange={handleDateRangeChange} />
+            <Toggle options={ToggleButtons} defaultSelectedIndex={2} onChange={handleDateRangeChange} />
             {data && (
                 <ResponsiveContainer width="100%" height={200}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
@@ -83,8 +81,18 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
                             tickLine={{ stroke: 'var(--color-white)' }}
                             axisLine={{ stroke: 'var(--color-white)' }}
                             tickCount={8}
+                            orientation="right"
+                            width={60}
                         />
-                        <Tooltip />
+                        <Tooltip
+                            contentStyle={{
+                                backgroundColor: 'var(--color-tertiary)',
+                                color: 'var(--color-white)',
+                                border: 'none',
+                                fontFamily: 'Roboto',
+                                fontSize: 14,
+                            }}
+                        />
                         <Area
                             type="monotone"
                             dataKey="price"

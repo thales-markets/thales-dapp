@@ -4,10 +4,11 @@ import styled from 'styled-components';
 type ToggleProps = {
     options: { label: string; value: number }[];
     onChange: (value: number) => void;
+    defaultSelectedIndex?: number;
 };
 
-const Toggle: React.FC<ToggleProps> = ({ options, onChange }) => {
-    const [activeOption, setActiveOption] = useState(options[0].value);
+const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex = 0 }) => {
+    const [activeOption, setActiveOption] = useState(options[defaultSelectedIndex].value);
 
     const handleClick = (value: number) => {
         setActiveOption(value);
