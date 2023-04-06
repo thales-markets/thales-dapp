@@ -1,5 +1,4 @@
 export const LOCAL_STORAGE_KEYS = {
-    SELECTED_WALLET: 'selectedWallet',
     REFERRAL_WALLET: 'referralId',
     MARKET_WIDGET_CURRENT_LAYOUT: 'marketWidgetCurrentLayout',
     MARKET_WIDGET_FULL_LAYOUT: 'marketWidgetFullLayout',

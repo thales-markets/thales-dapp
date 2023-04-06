@@ -1,18 +1,20 @@
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import Loader from 'components/Loader';
-import { initOnboard } from 'config/onboard';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import useLocalStorage from 'hooks/useLocalStorage';
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
-import { getIsAppReady, setAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
-import { defaultNetwork, getIsOVM, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
-import onboardConnector from 'utils/onboardConnector';
+import { setAppReady } from 'redux/modules/app';
+import {
+    getNetworkId,
+    getWalletAddress,
+    updateNetworkSettings,
+    updateWallet,
+    getIsWalletConnected,
+} from 'redux/modules/wallet';
+import { defaultNetwork, getIsPolygon, isNetworkSupported, hasEthereumInjected } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -21,6 +23,8 @@ import { ethers } from 'ethers';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { useAccount, useProvider, useSigner, useClient, useDisconnect } from 'wagmi';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -52,14 +56,19 @@ const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRe
 
 const App = () => {
     const dispatch = useDispatch();
-    const isAppReady = useSelector((state) => getIsAppReady(state));
     const walletAddress = useSelector((state) => getWalletAddress(state));
-    const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
+    const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
     const networkId = useSelector((state) => getNetworkId(state));
+
     const isPolygon = getIsPolygon(networkId);
-    const [snxJSConnector, setSnxJSConnector] = useState();
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
+
+    const provider = useProvider(!hasEthereumInjected() && { chainId: networkId }); // for incognito mode set chainId from dApp
+    const { address } = useAccount();
+    const { data: signer } = useSigner();
+    const client = useClient();
+    const { disconnect } = useDisconnect();
 
     const { trackPageView } = useMatomo();
 
@@ -83,54 +92,55 @@ const App = () => {
     const cookies = new Cookies();
 
     useEffect(() => {
-        let ledgerProvider = null;
-        if (isLedgerLive) {
-            ledgerProvider = new IFrameEthereumProvider();
-        }
-        const provider = loadProvider({
-            infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
-            provider: isLedgerLive ? ledgerProvider : window.ethereum,
-            networkId,
-        });
-
         const init = async () => {
-            try {
-                const providerNetworkId = (await provider.getNetwork()).chainId;
-                const name = SUPPORTED_NETWORKS_NAMES[providerNetworkId];
+            let providerNetworkId = address && (await provider.getNetwork()).chainId;
+            let mmChainId = undefined;
 
-                if (isLedgerLive) {
-                    const accounts = await ledgerProvider.enable();
-                    const account = accounts[0];
-                    dispatch(updateWallet({ walletAddress: account }));
-                    ledgerProvider.on('accountsChanged', (accounts) => {
-                        if (accounts.length > 0) {
-                            dispatch(updateWallet({ walletAddress: accounts[0] }));
-                        }
-                    });
-                }
-
-                dispatch(updateNetworkSettings({ networkId: providerNetworkId, networkName: name?.toLowerCase() }));
-
-                if (!snxJSConnector) {
-                    import(/* webpackChunkName: "snxJSConnector" */ 'utils/snxJSConnector').then((snx) => {
-                        if (isLedgerLive) {
-                            snx.default.setContractSettings({
-                                networkId: providerNetworkId,
-                                provider,
-                                signer: provider.getSigner(),
-                            });
-                        } else {
-                            snx.default.setContractSettings({ networkId: providerNetworkId, provider });
-                        }
-                        setSnxJSConnector(snx.default);
-                        dispatch(setAppReady());
-                    });
+            if (!providerNetworkId) {
+                // can't use wagmi when wallet is not connected
+                if (hasEthereumInjected()) {
+                    mmChainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }), 16);
+                    if (isNetworkSupported(mmChainId)) {
+                        providerNetworkId = mmChainId;
+                    } else {
+                        providerNetworkId = defaultNetwork.networkId;
+                        disconnect();
+                    }
                 } else {
-                    snxJSConnector.setContractSettings({ ...snxJSConnector, networkId: providerNetworkId, provider });
+                    // without MM, for incognito mode
+                    providerNetworkId = networkId;
                 }
-            } catch (e) {
+            }
+            try {
+                // when switching network will throw Error: underlying network changed and then ignore network update
+                signer && signer.provider && (await signer.provider.getNetwork()).chainId;
+
+                // TODO: do we still need this with Wagmi ledger
+                let ledgerProvider = null;
+                if (isLedgerLive) {
+                    ledgerProvider = new IFrameEthereumProvider();
+                }
+
+                // can't use wagmi provider when wallet exists in browser but locked, then use MM network if supported
+                const selectedProvider = isLedgerLive
+                    ? ledgerProvider
+                    : !address && hasEthereumInjected() && isNetworkSupported(mmChainId)
+                    ? new ethers.providers.Web3Provider(window.ethereum, 'any')
+                    : provider;
+
+                snxJSConnector.setContractSettings({
+                    networkId: providerNetworkId,
+                    provider: selectedProvider,
+                    signer,
+                });
+
+                dispatch(updateNetworkSettings({ networkId: providerNetworkId }));
                 dispatch(setAppReady());
-                console.log(e);
+            } catch (e) {
+                if (!e.toString().includes('Error: underlying network changed')) {
+                    dispatch(setAppReady());
+                    console.log(e);
+                }
             }
         };
         init();
@@ -142,97 +152,37 @@ const App = () => {
         return () => {
             document.removeEventListener('market-notification', handler);
         };
-    }, [networkId]);
+    }, [dispatch, provider, signer, networkId, disconnect, address]);
 
     useEffect(() => {
-        // Init value of theme selected from the cookie
-
-        if (isAppReady && networkId && isNetworkSupported(networkId)) {
-            const onboard = initOnboard(networkId, {
-                address: (walletAddress) => {
-                    dispatch(updateWallet({ walletAddress: walletAddress }));
-                },
-                network: (networkId) => {
-                    if (networkId) {
-                        if (isNetworkSupported(networkId)) {
-                            if (onboardConnector.onboard.getState().wallet.provider) {
-                                const provider = loadProvider({
-                                    provider: onboardConnector.onboard.getState().wallet.provider,
-                                });
-                                const signer = provider.getSigner();
-                                const useOvm = getIsOVM(networkId);
-
-                                snxJSConnector.setContractSettings({
-                                    networkId,
-                                    provider,
-                                    signer,
-                                    useOvm,
-                                });
-                            } else {
-                                const useOvm = getIsOVM(networkId);
-                                snxJSConnector.setContractSettings({ networkId, useOvm });
-                            }
-
-                            onboardConnector.onboard.config({ networkId });
-                        }
-                        dispatch(
-                            updateNetworkSettings({
-                                networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
-                            })
-                        );
-                    }
-                },
-                wallet: async (wallet) => {
-                    if (wallet.provider) {
-                        const provider = loadProvider({
-                            provider: wallet.provider,
-                        });
-                        const signer = provider.getSigner();
-                        const network = await provider.getNetwork();
-                        const networkId = network.chainId;
-                        const useOvm = getIsOVM(networkId);
-                        if (networkId && isNetworkSupported(networkId)) {
-                            snxJSConnector.setContractSettings({
-                                networkId,
-                                provider,
-                                signer,
-                                useOvm,
-                            });
-                            setSelectedWallet(wallet.name);
-                        }
-                        dispatch(
-                            updateNetworkSettings({
-                                networkId,
-                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
-                            })
-                        );
-                    } else {
-                        setSelectedWallet(null);
-                    }
-                },
-            });
-
-            onboardConnector.setOnBoard(onboard);
-        }
-    }, [isAppReady]);
-
-    // load previously saved wallet
-    useEffect(() => {
-        if (onboardConnector.onboard && selectedWallet) {
-            // backward compatible for old wallet selection logic;
-            const sWallet = selectedWallet === 'MetaMask' ? 'Browser Wallet' : selectedWallet;
-            onboardConnector.onboard.walletSelect(sWallet);
-        }
-    }, [isAppReady, onboardConnector.onboard, selectedWallet]);
+        dispatch(updateWallet({ walletAddress: address }));
+    }, [address, dispatch]);
 
     useEffect(() => {
+        const autoConnect = async () => {
+            // TD-1083: There is a known issue with MetaMask extension, where a "disconnect" event is emitted
+            // when you switch from MetaMask's default networks to custom networks.
+            await client.autoConnect();
+        };
+
         if (window.ethereum) {
-            window.ethereum.on('accountsChanged', (accounts) => {
-                dispatch(updateWallet({ walletAddress: accounts[0] }));
+            window.ethereum.on('chainChanged', (chainIdHex) => {
+                const chainId = parseInt(chainIdHex, 16);
+                if (!address) {
+                    // when wallet exists in browser but locked and changing network from MM update networkId manually
+                    const supportedNetworkId = isNetworkSupported(chainId) ? chainId : defaultNetwork.networkId;
+                    dispatch(updateNetworkSettings({ networkId: supportedNetworkId }));
+                }
+                if (isNetworkSupported(chainId)) {
+                    if (window.ethereum.isMetaMask && !isWalletConnected) {
+                        autoConnect();
+                    }
+                } else {
+                    disconnect();
+                }
             });
         }
-    }, [isAppReady]);
+    }, [client, isWalletConnected, dispatch, disconnect, provider, signer, address]);
 
     const onSnackbarClosed = (e) => {
         if (e) {
@@ -413,13 +363,6 @@ const App = () => {
             </Suspense>
         </QueryClientProvider>
     );
-};
-
-const loadProvider = ({ infuraId, provider, networkId }) => {
-    if (!provider && !infuraId) throw new Error('No web3 provider');
-    if (provider) return new ethers.providers.Web3Provider(provider, 'any');
-    if (infuraId)
-        return new ethers.providers.InfuraProvider(networkId ? networkId : defaultNetwork.networkId, infuraId);
 };
 
 export default App;

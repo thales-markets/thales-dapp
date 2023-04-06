@@ -1,16 +1,17 @@
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
-import { connectorsForWallets, RainbowKitProvider, wallet, darkTheme } from '@rainbow-me/rainbowkit';
+import { RainbowKitProvider, connectorsForWallets, darkTheme, wallet } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/dist/index.css';
+import WalletDisclaimer from 'components/WalletDisclaimer';
 import dotenv from 'dotenv';
 import { merge } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
-import { WagmiConfig, configureChains, createClient, chain } from 'wagmi';
+import { WagmiConfig, chain, configureChains, createClient } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
-import WalletDisclaimer from 'components/WalletDisclaimer';
 dotenv.config();
 
 const { chains, provider } = configureChains(

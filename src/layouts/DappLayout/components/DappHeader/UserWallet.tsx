@@ -1,11 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-
 import { truncateAddress } from 'utils/formatters/string';
 import { useTranslation } from 'react-i18next';
-
-import onboardConnector from 'utils/onboardConnector';
-
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -15,11 +11,13 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;
 
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -47,9 +45,7 @@ const UserWallet: React.FC = () => {
                                 action: 'click-on-wallet-when-connected',
                             });
                         }
-                        isWalletConnected
-                            ? navigateTo(buildHref(ROUTES.Options.Profile))
-                            : onboardConnector.connectWallet();
+                        isWalletConnected ? navigateTo(buildHref(ROUTES.Options.Profile)) : openConnectModal?.();
                     }}
                 >
                     {walletAddress
