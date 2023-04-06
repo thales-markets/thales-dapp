@@ -3,7 +3,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 1,
         name: 'Miletus Soldier Collection',
         condition:
-            '"Miletus Soldier Collection" is unlocked for all STAKERS who have staked 10 THALES or more before March 22nd 2023',
+            '"Miletus Soldier Collection" is unlocked for all STAKERS who have staked 10 THALES or more on March 22nd 2023',
         items: [
             { name: 'Helmet', src: '/miletus-nfts/NFT_0.png', itemId: 1 },
             { name: 'Breastplate', src: '/miletus-nfts/NFT_1.png', itemId: 2 },
@@ -15,7 +15,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 2,
         name: 'Bronze Soldier Collection',
         condition:
-            '"Bronze Soldier Collection" is unlocked for everybody with an on-chain volume greater or equal than $100',
+            '"Bronze Soldier Collection" is unlocked for everybody with a total of $100 or more of on-chain volume generated in the last 4 weeks',
         items: [
             { name: 'Helmet', src: '/miletus-nfts/NFT_4.png', itemId: 5 },
             { name: 'Breastplate', src: '/miletus-nfts/NFT_5.png', itemId: 6 },
@@ -27,7 +27,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 3,
         name: 'Silver Soldier Collection',
         condition:
-            '"Silver Soldier Collection" is unlocked for everybody with an on-chain volume greater or equal than $1000',
+            '"Silver Soldier Collection" is unlocked for everybody with a total of $1,000 or more of on-chain volume generated in the last 4 weeks',
         items: [
             { name: 'Helmet', src: '/miletus-nfts/NFT_8.png', itemId: 9 },
             { name: 'Breastplate', src: '/miletus-nfts/NFT_9.png', itemId: 10 },
@@ -39,7 +39,7 @@ export const NFT_COLLECTIONS = [
         collectionId: 4,
         name: 'Gold Soldier Collection',
         condition:
-            '"Gold Soldier Collection" is unlocked for everybody with an on-chain volume greater or equal than $10,000',
+            '"Gold Soldier Collection" is unlocked for everybody with a total of $10,000 or more of on-chain volume generated in the last 4 weeks',
         items: [
             { name: 'Helmet', src: '/miletus-nfts/NFT_12.png', itemId: 13 },
             { name: 'Breastplate', src: '/miletus-nfts/NFT_13.png', itemId: 14 },

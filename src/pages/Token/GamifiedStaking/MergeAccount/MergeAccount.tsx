@@ -12,7 +12,6 @@ import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getIsAppReady } from 'redux/modules/app';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import { ArrowContainer } from 'pages/Token/Migration/components';
@@ -28,6 +27,7 @@ import { orderBy } from 'lodash';
 import { TransactionFilterEnum } from 'types/token';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -185,7 +185,7 @@ const MergeAccount: React.FC = () => {
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
 
             const tx = await stakingThalesContractWithSigner.mergeAccount(getAddress(destAddress), {
-                gasLimit: MAX_L2_GAS_LIMIT,
+                gasLimit: getMaxGasLimitForNetwork(networkId),
             });
             const txResult = await tx.wait();
 
@@ -210,7 +210,7 @@ const MergeAccount: React.FC = () => {
             const tx = await stakingThalesContractWithSigner.delegateVolume(
                 getAddress(delegatedVolumeAddress !== ZERO_ADDRESS ? ZERO_ADDRESS : delegateDestAddress),
                 {
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 }
             );
             const txResult = await tx.wait();

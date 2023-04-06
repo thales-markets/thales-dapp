@@ -60,7 +60,6 @@ import Transactions from './Transactions';
 import PnL from './PnL';
 import { RouteComponentProps } from 'react-router-dom';
 import vaultContract from 'utils/contracts/sportVaultContract';
-import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
@@ -74,6 +73,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import Footer from 'components/Footer';
 import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -220,7 +220,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const collateralWithSigner = collateral.connect(signer);
 
                 const tx = (await collateralWithSigner.approve(vaultAddress, approveAmount, {
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 })) as ethers.ContractTransaction;
                 setOpenApprovalModal(false);
                 const txResult = await tx.wait();
@@ -257,7 +257,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 );
 
                 const tx = await sportVaultContractWithSigner.deposit(parsedAmount, {
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
 
@@ -283,7 +283,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
 
                 const tx = await sportVaultContractWithSigner.withdrawalRequest({
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
 
@@ -309,7 +309,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
 
                 const tx = await sportVaultContractWithSigner.closeRound({
-                    gasLimit: MAX_L2_GAS_LIMIT,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
 
