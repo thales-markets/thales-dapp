@@ -21,7 +21,6 @@
         "@types/jest": "^26.0.20",
         "axios": "^0.21.1",
         "bignumber.js": "^9.0.1",
-        "bnc-onboard": "^1.39.1",
         "browserslist": "^4.19.1",
         "date-fns": "^2.19.0",
         "ethereum-blockies-base64": "^1.0.2",

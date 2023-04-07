@@ -3,16 +3,20 @@ import styled from 'styled-components';
 import { truncateAddress } from 'utils/formatters/string';
 import { useTranslation } from 'react-i18next';
 import { UserCardSectionHeader } from 'theme/common';
-import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
+import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import { useDisconnect } from 'wagmi';
 
 const truncateAddressNumberOfCharacters = 5;
 
 const UserWalletExpanded: React.FC = () => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
+    const { openAccountModal } = useAccountModal();
+    const { disconnect } = useDisconnect();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isLedgerLive = isLedgerDappBrowserProvider();
@@ -21,7 +25,7 @@ const UserWalletExpanded: React.FC = () => {
         <Wrapper>
             <UserCardSectionHeader>{t('common.user-info-card.wallet')}</UserCardSectionHeader>
             <Container>
-                <WalletContainer onClick={() => (isWalletConnected ? '' : onboardConnector.connectWallet())}>
+                <WalletContainer onClick={() => (isWalletConnected ? '' : openConnectModal?.())}>
                     <WalletIcon className="sidebar-icon icon--wallet" />
                     <WalletAddress>
                         {walletAddress
@@ -35,12 +39,10 @@ const UserWalletExpanded: React.FC = () => {
                 </WalletContainer>
                 {isWalletConnected && !isLedgerLive && (
                     <WalletOptions>
-                        <Button style={{ marginRight: '3px' }} onClick={() => onboardConnector.onboard.walletSelect()}>
+                        <Button style={{ marginRight: '3px' }} onClick={openAccountModal}>
                             {t('common.user-info-card.switch')}
                         </Button>
-                        <Button onClick={() => onboardConnector.disconnectWallet()}>
-                            {t('common.user-info-card.disconnect')}
-                        </Button>
+                        <Button onClick={() => disconnect()}>{t('common.user-info-card.disconnect')}</Button>
                     </WalletOptions>
                 )}
             </Container>

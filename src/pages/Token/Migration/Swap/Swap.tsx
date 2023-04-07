@@ -17,7 +17,6 @@ import { getIsWalletConnected, getNetwork, getNetworkId, getWalletAddress } from
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { checkAllowance, formatGasLimit } from 'utils/network';
-import onboardConnector from 'utils/onboardConnector';
 import { LEGACY_THALES_CURRENCY, THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
@@ -37,9 +36,11 @@ import {
 } from '../components';
 import SimpleLoader from '../../components/SimpleLoader';
 import ApprovalModal from 'components/ApprovalModal';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const Swap: React.FC = () => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -190,7 +191,7 @@ const Swap: React.FC = () => {
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <DefaultSubmitButton onClick={() => onboardConnector.connectWallet()}>
+                <DefaultSubmitButton onClick={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </DefaultSubmitButton>
             );
