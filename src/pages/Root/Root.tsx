@@ -7,21 +7,34 @@ import { merge } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
-import { WagmiConfig, chain, configureChains, createClient } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { Chain, WagmiConfig, chain, configureChains, createClient } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
 dotenv.config();
 
+const bscChain: Chain = {
+    id: 56,
+    name: 'BNB Smart Chain',
+    network: 'bsc',
+    nativeCurrency: {
+        decimals: 18,
+        name: 'BNB',
+        symbol: 'BNB',
+    },
+    rpcUrls: {
+        default: 'https://rpc.ankr.com/bsc',
+        public: 'https://rpc.ankr.com/bsc',
+    },
+    blockExplorers: {
+        etherscan: { name: 'BscScan', url: 'https://bscscan.com' },
+        default: { name: 'BscScan', url: 'https://bscscan.com' },
+    },
+};
+
 const { chains, provider } = configureChains(
-    [chain.mainnet, chain.optimism, chain.optimismGoerli, chain.polygon, chain.arbitrum],
-    [
-        infuraProvider({ stallTimeout: 2000 }),
-        alchemyProvider({ stallTimeout: 2000 }),
-        infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID, stallTimeout: 2000 }),
-        publicProvider(),
-    ]
+    [chain.mainnet, chain.optimism, chain.optimismGoerli, chain.polygon, chain.arbitrum, bscChain],
+    [infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID, stallTimeout: 2000 }), publicProvider()]
 );
 
 const connectors = connectorsForWallets([
