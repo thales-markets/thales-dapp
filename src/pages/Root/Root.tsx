@@ -59,7 +59,7 @@ const wagmiClient = createClient({
     provider,
 });
 
-const customTheme = merge(darkTheme(), { colors: { modalBackground: '#1A1C2B' } });
+const customTheme = merge(darkTheme(), { colors: { modalBackground: '#0e1069' } });
 
 const instance = createInstance({
     urlBase: 'https://data.thalesmarket.io',

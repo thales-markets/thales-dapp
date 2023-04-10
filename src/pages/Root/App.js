@@ -14,7 +14,13 @@ import {
     updateWallet,
     getIsWalletConnected,
 } from 'redux/modules/wallet';
-import { defaultNetwork, getIsPolygon, isNetworkSupported, hasEthereumInjected } from 'utils/network';
+import {
+    defaultNetwork,
+    getIsPolygon,
+    isNetworkSupported,
+    hasEthereumInjected,
+    SUPPORTED_NETWORKS_NAMES,
+} from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -111,15 +117,23 @@ const App = () => {
                     providerNetworkId = networkId;
                 }
             }
+
+            let ledgerProvider = null;
+            if (isLedgerLive) {
+                ledgerProvider = new IFrameEthereumProvider();
+                const accounts = await ledgerProvider.enable();
+                const account = accounts[0];
+                dispatch(updateWallet({ walletAddress: account }));
+                ledgerProvider.on('accountsChanged', (accounts) => {
+                    if (accounts.length > 0) {
+                        dispatch(updateWallet({ walletAddress: accounts[0] }));
+                    }
+                });
+            }
+
             try {
                 // when switching network will throw Error: underlying network changed and then ignore network update
                 signer && signer.provider && (await signer.provider.getNetwork()).chainId;
-
-                // TODO: do we still need this with Wagmi ledger
-                let ledgerProvider = null;
-                if (isLedgerLive) {
-                    ledgerProvider = new IFrameEthereumProvider();
-                }
 
                 // can't use wagmi provider when wallet exists in browser but locked, then use MM network if supported
                 const selectedProvider = isLedgerLive
@@ -131,10 +145,15 @@ const App = () => {
                 snxJSConnector.setContractSettings({
                     networkId: providerNetworkId,
                     provider: selectedProvider,
-                    signer,
+                    signer: isLedgerLive ? ledgerProvider.getSigner() : signer,
                 });
 
-                dispatch(updateNetworkSettings({ networkId: providerNetworkId }));
+                dispatch(
+                    updateNetworkSettings({
+                        networkId: providerNetworkId,
+                        networkName: SUPPORTED_NETWORKS_NAMES[providerNetworkId]?.toLowerCase(),
+                    })
+                );
                 dispatch(setAppReady());
             } catch (e) {
                 if (!e.toString().includes('Error: underlying network changed')) {
@@ -171,7 +190,12 @@ const App = () => {
                 if (!address) {
                     // when wallet exists in browser but locked and changing network from MM update networkId manually
                     const supportedNetworkId = isNetworkSupported(chainId) ? chainId : defaultNetwork.networkId;
-                    dispatch(updateNetworkSettings({ networkId: supportedNetworkId }));
+                    dispatch(
+                        updateNetworkSettings({
+                            networkId: supportedNetworkId,
+                            networkName: SUPPORTED_NETWORKS_NAMES[supportedNetworkId]?.toLowerCase(),
+                        })
+                    );
                 }
                 if (isNetworkSupported(chainId)) {
                     if (window.ethereum.isMetaMask && !isWalletConnected) {
