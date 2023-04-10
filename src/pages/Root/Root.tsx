@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { Chain, WagmiConfig, chain, configureChains, createClient } from 'wagmi';
 import { infuraProvider } from 'wagmi/providers/infura';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
 dotenv.config();
@@ -32,9 +33,53 @@ const bscChain: Chain = {
     },
 };
 
+type RpcProvider = {
+    ankr: string;
+    chainnode: string;
+    blast: string;
+};
+
+const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
+    1: {
+        ankr: '',
+        chainnode: '',
+        blast: 'eth-mainnet',
+    },
+    10: {
+        ankr: 'optimism',
+        chainnode: 'optimism-mainnet',
+        blast: 'optimism-mainnet',
+    },
+    56: {
+        ankr: '',
+        chainnode: '',
+        blast: 'bsc-mainnet',
+    },
+    137: {
+        ankr: '',
+        chainnode: '',
+        blast: 'polygon-mainnet',
+    },
+    420: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: '' },
+    42161: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
+};
+
 const { chains, provider } = configureChains(
     [chain.mainnet, chain.optimism, chain.optimismGoerli, chain.polygon, chain.arbitrum, bscChain],
-    [infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID, stallTimeout: 2000 }), publicProvider()]
+    [
+        jsonRpcProvider({
+            rpc: (chain) => ({
+                http: !CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].blast
+                    ? chain.rpcUrls.default
+                    : `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].blast}.blastapi.io/${
+                          process.env.REACT_APP_BLAST_PROJECT_ID
+                      }`,
+            }),
+            stallTimeout: 1500,
+        }),
+        infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID, stallTimeout: 1500 }),
+        publicProvider(),
+    ]
 );
 
 const connectors = connectorsForWallets([

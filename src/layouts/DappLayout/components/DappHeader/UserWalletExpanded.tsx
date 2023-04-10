@@ -40,7 +40,7 @@ const UserWalletExpanded: React.FC = () => {
                 {isWalletConnected && !isLedgerLive && (
                     <WalletOptions>
                         <Button style={{ marginRight: '3px' }} onClick={openAccountModal}>
-                            {t('common.user-info-card.switch')}
+                            {t('common.user-info-card.options')}
                         </Button>
                         <Button onClick={() => disconnect()}>{t('common.user-info-card.disconnect')}</Button>
                     </WalletOptions>

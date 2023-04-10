@@ -43,7 +43,7 @@
         },
         "wallet": {
             "my-thales": "My Thales",
-            "switch-wallet": "Switch Wallet",
+            "wallet-options": "Wallet Options",
             "disconnect-wallet": "Disconnect Wallet",
             "display-name": "Display Name",
             "change-display-name": "Change Display Name",
@@ -360,7 +360,7 @@
             "network": "Network",
             "language": "Language",
             "disconnect": "Disconnect",
-            "switch": "Switch",
+            "options": "Options",
             "display-name": "Display Name",
             "change-display-name": "Change Display Name"
         },

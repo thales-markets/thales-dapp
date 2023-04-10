@@ -66,7 +66,7 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
                             }}
                             onClick={openAccountModal}
                         >
-                            {t(`user-info.wallet.switch-wallet`)}
+                            {t(`user-info.wallet.wallet-options`)}
                         </DialogButton>
                         <DialogButton
                             className="primary text-xs"
