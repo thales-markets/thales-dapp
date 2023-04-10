@@ -9,11 +9,11 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { HistoricalOptionsMarketInfo, OptionsMarkets } from 'types/options';
 import { sortCurrencies } from 'utils/currency';
-import AMM from './components/AMM';
 import AssetDropdown from './components/AssetDropdown';
 import AssetTable from './components/AssetTable';
 import DatesDropdown from './components/MaturityDateDropdown/DatesDropdown';
 import PriceChart from './components/PriceChart/PriceChart';
+import AMMv2 from './components/AMMv2/AMMv2';
 
 type AssetsAndDates = {
     allAssets: string[];
@@ -148,11 +148,7 @@ const Markets: React.FC = () => {
                 </Container>
             </div>
             <AMMWrapper>
-                <AMM
-                    marketAddress={market?.address ?? ''}
-                    longAddress={market?.longAddress ?? ''}
-                    shortAddress={market?.longAddress ?? ''}
-                ></AMM>
+                <AMMv2 market={market}></AMMv2>
             </AMMWrapper>
         </Wrapper>
     );
