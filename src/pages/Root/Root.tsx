@@ -1,5 +1,5 @@
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
-import { RainbowKitProvider, connectorsForWallets, darkTheme, wallet } from '@rainbow-me/rainbowkit';
+import { RainbowKitProvider, connectorsForWallets, darkTheme } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/dist/index.css';
 import WalletDisclaimer from 'components/WalletDisclaimer';
 import dotenv from 'dotenv';
@@ -7,31 +7,24 @@ import { merge } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
-import { Chain, WagmiConfig, chain, configureChains, createClient } from 'wagmi';
+import {
+    injectedWallet,
+    rainbowWallet,
+    metaMaskWallet,
+    coinbaseWallet,
+    walletConnectWallet,
+    braveWallet,
+    ledgerWallet,
+    imTokenWallet,
+    trustWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { optimism, optimismGoerli, arbitrum, mainnet, polygon, bsc } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
 dotenv.config();
-
-const bscChain: Chain = {
-    id: 56,
-    name: 'BNB Smart Chain',
-    network: 'bsc',
-    nativeCurrency: {
-        decimals: 18,
-        name: 'BNB',
-        symbol: 'BNB',
-    },
-    rpcUrls: {
-        default: 'https://rpc.ankr.com/bsc',
-        public: 'https://rpc.ankr.com/bsc',
-    },
-    blockExplorers: {
-        etherscan: { name: 'BscScan', url: 'https://bscscan.com' },
-        default: { name: 'BscScan', url: 'https://bscscan.com' },
-    },
-};
 
 type RpcProvider = {
     ankr: string;
@@ -65,19 +58,19 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
 };
 
 const { chains, provider } = configureChains(
-    [chain.mainnet, chain.optimism, chain.optimismGoerli, chain.polygon, chain.arbitrum, bscChain],
+    [mainnet, optimism, optimismGoerli, polygon, arbitrum, bsc],
     [
         jsonRpcProvider({
             rpc: (chain) => ({
                 http: !CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].blast
-                    ? chain.rpcUrls.default
+                    ? chain.rpcUrls.default.http[0]
                     : `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].blast}.blastapi.io/${
                           process.env.REACT_APP_BLAST_PROJECT_ID
                       }`,
             }),
             stallTimeout: 1500,
         }),
-        infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID, stallTimeout: 1500 }),
+        infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '', stallTimeout: 1500 }),
         publicProvider(),
     ]
 );
@@ -86,14 +79,15 @@ const connectors = connectorsForWallets([
     {
         groupName: 'Recommended',
         wallets: [
-            wallet.injected({ chains }), //  ensure all injected wallets are supported
-            wallet.metaMask({ chains }),
-            wallet.ledger({ chains }),
-            wallet.walletConnect({ chains }), // ensure all WalletConnect-based wallets are supported
-            wallet.coinbase({ appName: 'Overtime', chains }),
-            wallet.trust({ chains }),
-            wallet.imToken({ chains }),
-            wallet.rainbow({ chains }),
+            injectedWallet({ chains }), //  ensure all injected wallets are supported
+            metaMaskWallet({ chains }),
+            ledgerWallet({ chains }),
+            walletConnectWallet({ chains }), // ensure all WalletConnect-based wallets are supported
+            coinbaseWallet({ appName: 'Overtime', chains }),
+            trustWallet({ chains }),
+            imTokenWallet({ chains }),
+            rainbowWallet({ chains }),
+            braveWallet({ chains }),
         ],
     },
 ]);
