@@ -35,7 +35,7 @@ type RpcProvider = {
 const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
     1: {
         ankr: '',
-        chainnode: '',
+        chainnode: 'mainnet',
         blast: 'eth-mainnet',
     },
     10: {
@@ -50,10 +50,10 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
     },
     137: {
         ankr: '',
-        chainnode: '',
+        chainnode: 'polygon-mainnet',
         blast: 'polygon-mainnet',
     },
-    420: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: '' },
+    420: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
     42161: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
 };
 
