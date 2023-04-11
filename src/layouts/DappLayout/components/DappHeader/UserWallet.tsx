@@ -2,9 +2,9 @@ import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { truncateAddress } from 'utils/formatters/string';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress, switchToNetworkId } from 'redux/modules/wallet';
 import { buildHref, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
@@ -12,12 +12,14 @@ import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { NetworkId, hasEthereumInjected } from 'utils/network';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;
 
     const { t } = useTranslation();
     const { openConnectModal } = useConnectModal();
+    const dispatch = useDispatch();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -75,8 +77,13 @@ const UserWallet: React.FC = () => {
                                         <NetworkItem
                                             key={id}
                                             onClick={() => {
-                                                setIsDropdownOpen(!isDropdownOpen);
-                                                SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].changeNetwork(+id);
+                                                if (hasEthereumInjected()) {
+                                                    setIsDropdownOpen(!isDropdownOpen);
+                                                    SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].changeNetwork(+id);
+                                                } else {
+                                                    // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
+                                                    dispatch(switchToNetworkId({ networkId: Number(id) as NetworkId }));
+                                                }
                                             }}
                                         >
                                             {React.createElement(SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].icon, {

@@ -9,6 +9,7 @@ import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { setAppReady } from 'redux/modules/app';
 import {
     getNetworkId,
+    getSwitchToNetworkId,
     getWalletAddress,
     updateNetworkSettings,
     updateWallet,
@@ -65,12 +66,13 @@ const App = () => {
     const walletAddress = useSelector((state) => getWalletAddress(state));
     const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
     const networkId = useSelector((state) => getNetworkId(state));
+    const switchToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
 
     const isPolygon = getIsPolygon(networkId);
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
 
-    const provider = useProvider(!hasEthereumInjected() && { chainId: networkId }); // for incognito mode set chainId from dApp
+    const provider = useProvider(!hasEthereumInjected() && { chainId: switchToNetworkId }); // for incognito mode set chainId from dApp
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const client = useClient();
@@ -114,7 +116,7 @@ const App = () => {
                     }
                 } else {
                     // without MM, for incognito mode
-                    providerNetworkId = networkId;
+                    providerNetworkId = switchToNetworkId;
                 }
             }
 
@@ -171,7 +173,7 @@ const App = () => {
         return () => {
             document.removeEventListener('market-notification', handler);
         };
-    }, [dispatch, provider, signer, networkId, disconnect, address]);
+    }, [dispatch, provider, signer, networkId, switchToNetworkId, disconnect, address]);
 
     useEffect(() => {
         dispatch(updateWallet({ walletAddress: address }));
