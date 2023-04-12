@@ -25,7 +25,10 @@ const UserWalletExpanded: React.FC = () => {
         <Wrapper>
             <UserCardSectionHeader>{t('common.user-info-card.wallet')}</UserCardSectionHeader>
             <Container>
-                <WalletContainer onClick={() => (isWalletConnected ? '' : openConnectModal?.())}>
+                <WalletContainer
+                    isClickable={!isWalletConnected}
+                    onClick={() => (isWalletConnected ? '' : openConnectModal?.())}
+                >
                     <WalletIcon className="sidebar-icon icon--wallet" />
                     <WalletAddress>
                         {walletAddress
@@ -89,7 +92,7 @@ const Button = styled.div`
     cursor: pointer;
 `;
 
-const WalletContainer = styled.div`
+const WalletContainer = styled.div<{ isClickable: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,6 +102,7 @@ const WalletContainer = styled.div`
     padding: 4px 12px;
     border: 2px solid var(--icon-color);
     border-radius: 20px;
+    cursor: ${(props) => (props.isClickable ? 'pointer' : 'default')};
     @media (max-width: 1024px) {
         flex: 1;
         width: auto;

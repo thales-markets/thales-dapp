@@ -79,15 +79,15 @@ const connectors = connectorsForWallets([
     {
         groupName: 'Recommended',
         wallets: [
-            injectedWallet({ chains }), //  ensure all injected wallets are supported
             metaMaskWallet({ chains }),
-            ledgerWallet({ chains }),
             walletConnectWallet({ chains }), // ensure all WalletConnect-based wallets are supported
-            coinbaseWallet({ appName: 'Overtime', chains }),
-            trustWallet({ chains }),
-            imTokenWallet({ chains }),
-            rainbowWallet({ chains }),
             braveWallet({ chains }),
+            ledgerWallet({ chains }),
+            trustWallet({ chains }),
+            injectedWallet({ chains }), //  ensure all injected wallets are supported
+            coinbaseWallet({ appName: 'Overtime', chains }),
+            rainbowWallet({ chains }),
+            imTokenWallet({ chains }),
         ],
     },
 ]);
