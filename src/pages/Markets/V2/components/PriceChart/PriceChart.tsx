@@ -108,8 +108,10 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice }) => {
                                 label={{
                                     value: `Strike price: $${selectedPrice}`,
                                     fill: 'var(--color-highlight)',
-                                    position: 'center',
-                                    dy: -20,
+                                    fontFamily: 'Roboto',
+                                    fontSize: '14px',
+                                    position: 'insideRight',
+                                    dy: -10,
                                 }}
                             />
                         )}
