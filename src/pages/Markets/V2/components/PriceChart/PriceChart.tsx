@@ -77,7 +77,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice }) => {
                             interval={100}
                         />
                         <YAxis
-                            domain={[minPrice, maxPrice]}
+                            domain={[parseInt((minPrice / 1.5).toFixed(0)), parseInt((1.2 * maxPrice).toFixed(0))]}
                             tick={{ fontSize: '12px', fontFamily: 'Roboto', fill: 'var(--color-white)' }}
                             tickLine={{ stroke: 'var(--color-white)' }}
                             axisLine={{ stroke: 'var(--color-white)' }}
