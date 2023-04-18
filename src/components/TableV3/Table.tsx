@@ -41,6 +41,7 @@ type TableProps = {
     hover?: string;
     selectedRowIndex?: number;
     selectedRowColor?: string;
+    highlightMarkets?: Set<string>;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -65,6 +66,7 @@ const Table: React.FC<TableProps> = ({
     hover,
     selectedRowIndex,
     selectedRowColor,
+    highlightMarkets,
 }) => {
     const { t } = useTranslation();
     const [lastValidRates, setRates] = useState<Rates>();
@@ -190,6 +192,8 @@ const Table: React.FC<TableProps> = ({
                     <TableBody {...getTableBodyProps()}>
                         {stickyRow ?? <></>}
                         {(currentPage !== undefined ? page : rows).map((row, rowIndex: any) => {
+                            const highlight = highlightMarkets?.has((row.original as any).address.toLowerCase());
+
                             prepareRow(row);
 
                             return (
@@ -207,7 +211,9 @@ const Table: React.FC<TableProps> = ({
                                         <>
                                             <TableRow
                                                 background={
-                                                    selectedRowIndex && selectedRowIndex === rowIndex
+                                                    highlight
+                                                        ? 'var(--color-highlight-2)'
+                                                        : selectedRowIndex && selectedRowIndex === rowIndex
                                                         ? selectedRowColor
                                                         : 'transparent'
                                                 }
@@ -221,17 +227,19 @@ const Table: React.FC<TableProps> = ({
                                                 cursorPointer={!!onTableRowClick}
                                                 onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
                                             >
-                                                {row.cells.map((cell, cellIndex: any) => (
-                                                    <TableCell
-                                                        style={tableRowCellStyles}
-                                                        {...cell.getCellProps()}
-                                                        key={cellIndex}
-                                                        width={cell.column.width}
-                                                        id={cell.column.id}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableCell>
-                                                ))}
+                                                {row.cells.map((cell, cellIndex: any) => {
+                                                    return (
+                                                        <TableCell
+                                                            style={tableRowCellStyles}
+                                                            {...cell.getCellProps()}
+                                                            key={cellIndex}
+                                                            width={cell.column.width}
+                                                            id={cell.column.id}
+                                                        >
+                                                            {cell.render('Cell')}
+                                                        </TableCell>
+                                                    );
+                                                })}
                                             </TableRow>
                                             {showCurrentPrice && indexForDrawingAndPrice?.index === rowIndex && (
                                                 <PriceWrapper>

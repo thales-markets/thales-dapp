@@ -12,6 +12,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 type TableProps = {
     markets: OptionsMarkets;
     setMarket: React.Dispatch<React.SetStateAction<HistoricalOptionsMarketInfo | undefined>>;
+    // highlightMarkets: Set<string>;
 };
 
 const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
@@ -112,6 +113,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 columns={columns}
                 selectedRowIndex={rowIndex}
                 selectedRowColor="#4E9D9D"
+                // highlightMarkets={highlightMarkets}
                 showCurrentPrice={true}
             />
         </Wrapper>

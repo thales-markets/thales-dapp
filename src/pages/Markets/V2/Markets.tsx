@@ -13,7 +13,7 @@ import AssetDropdown from './components/AssetDropdown';
 import AssetTable from './components/AssetTable';
 import DatesDropdown from './components/MaturityDateDropdown/DatesDropdown';
 import PriceChart from './components/PriceChart/PriceChart';
-import AMMv2 from './components/AMMv2/AMMv2';
+import AMM from './components/AMM/AMM';
 
 type AssetsAndDates = {
     allAssets: string[];
@@ -34,6 +34,7 @@ const Markets: React.FC = () => {
 
     // queries
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
+    // const rangeMarketsQuery = useRangedMarketsQuery(networkId, { enabled: market !== undefined });
     const openOrdersQuery = fetchAllMarketOrders(networkId, { enabled: isAppReady });
     const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
 
@@ -44,6 +45,13 @@ const Markets: React.FC = () => {
         }
         return [];
     }, [networkId, marketsQuery]);
+
+    // const rangeOptionsMarkets: RangedMarket[] = useMemo(() => {
+    //     if (rangeMarketsQuery.isSuccess) {
+    //         return rangeMarketsQuery.data;
+    //     }
+    //     return [];
+    // }, [networkId, rangeMarketsQuery]);
 
     const AssetsAndDates: AssetsAndDates = useMemo(() => {
         const allAssets: Set<string> = new Set();
@@ -125,7 +133,29 @@ const Markets: React.FC = () => {
             : TradingMarkets;
         return markets.sort((a, b) => a.strikePrice - b.strikePrice);
     }, [asset, maturityDate, openOrdersMap, discountMap]);
-    console.log('');
+
+    // const highlightMarkets = useMemo(() => {
+    //     const result = new Set<string>();
+    //     rangeOptionsMarkets
+    //         .filter((rangeMarket) => {
+    //             return (
+    //                 rangeMarket.maturityDate === maturityDate &&
+    //                 rangeMarket.currencyKey === asset &&
+    //                 (rangeMarket.leftMarket.id.toLowerCase() === market?.address.toLowerCase() ||
+    //                     rangeMarket.rightMarket.id.toLowerCase() === market?.address.toLowerCase())
+    //             );
+    //         })
+    //         .map((rangeMarket) => {
+    //             if (rangeMarket.leftMarket.id.toLowerCase() === market?.address.toLowerCase()) {
+    //                 return result.add(rangeMarket.rightMarket.id);
+    //             } else {
+    //                 return result.add(rangeMarket.leftMarket.id);
+    //             }
+    //         });
+    //     return result;
+    // }, [rangeOptionsMarkets, asset, maturityDate, market]);
+
+    // console.log('highlight number: ', highlightMarkets.size);
 
     return (
         <Wrapper>
@@ -148,7 +178,11 @@ const Markets: React.FC = () => {
                 </Container>
             </div>
             <AMMWrapper>
-                <AMMv2 market={market}></AMMv2>
+                <AMM
+                    longAddress={market?.longAddress ?? ''}
+                    shortAddress={market?.shortAddress ?? ''}
+                    marketAddress={market?.address ?? ''}
+                ></AMM>
             </AMMWrapper>
         </Wrapper>
     );
