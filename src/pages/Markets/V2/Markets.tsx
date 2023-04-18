@@ -171,7 +171,7 @@ const Markets: React.FC = () => {
                     )}
                 </Container>
                 <Container>
-                    <PriceChart asset={asset} />
+                    <PriceChart asset={asset} selectedPrice={market?.strikePrice} />
                 </Container>
                 <Container>
                     <AssetTable setMarket={setMarket} markets={marketsByAssetAndDate} />

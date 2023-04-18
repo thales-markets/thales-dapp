@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CoinGeckoClient } from 'coingecko-api-v3';
-import { XAxis, YAxis, Area, AreaChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { XAxis, YAxis, Area, AreaChart, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
 import { currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import styled from 'styled-components';
 import { format } from 'date-fns';
@@ -8,6 +8,7 @@ import Toggle from './components/DateToggle/Toggle';
 
 type PriceChartProps = {
     asset: string;
+    selectedPrice: number | undefined;
 };
 
 const coinGeckoClient = new CoinGeckoClient({
@@ -24,7 +25,7 @@ const ToggleButtons = [
     { label: '1Y', value: 365 },
 ];
 
-const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
+const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice }) => {
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [maxPrice, setMaxPrice] = useState(0);
     const [minPrice, setMinPrice] = useState(0);
@@ -99,6 +100,19 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset }) => {
                             stroke="var(--color-white)"
                             fill="var(--color-tertiary)"
                         />
+                        {selectedPrice && (
+                            <ReferenceLine
+                                y={selectedPrice}
+                                stroke="var(--color-highlight)"
+                                strokeDasharray="3 3"
+                                label={{
+                                    value: `Strike price: $${selectedPrice}`,
+                                    fill: 'var(--color-highlight)',
+                                    position: 'center',
+                                    dy: -20,
+                                }}
+                            />
+                        )}
                     </AreaChart>
                 </ResponsiveContainer>
             )}
