@@ -60,4 +60,10 @@ export const LINKS = {
         Guidelines: 'https://thalesmarket.medium.com/thales-op-rewards-distribution-all-you-need-to-know-b566eff3b708',
     },
     Vaults: 'https://thalesmarket.medium.com/thales-vaults-are-finally-live-48dae2c57b9c',
+    UniswapBuyThalesOp:
+        'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11&chain=optimism',
+    UniswapBuyThalesArbitrum:
+        'https://app.uniswap.org/#/swap?outputCurrency=0xE85B662Fe97e8562f4099d8A1d5A92D4B453bF30&chain=arbitrum',
+    ThalesStaking: 'https://thalesmarket.io/token',
+    ThalesTip99: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-99.md',
 };

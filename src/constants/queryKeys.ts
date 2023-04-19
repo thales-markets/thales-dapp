@@ -324,6 +324,12 @@ export const QUERY_KEYS = {
         PnL: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'pnl', networkId],
         UserTransactions: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'userTransactions', networkId],
     },
+    LiquidityPool: {
+        Data: (networkId: NetworkId) => ['liquidityPool', 'data', networkId],
+        UserData: (walletAddress: string, networkId: NetworkId) => ['liquidityPool', 'data', walletAddress, networkId],
+        PnL: (networkId: NetworkId) => ['liquidityPool', 'pnl', networkId],
+        UserTransactions: (networkId: NetworkId) => ['liquidityPool', 'userTransactions', networkId],
+    },
 };
 
 export default QUERY_KEYS;
