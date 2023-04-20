@@ -6,7 +6,7 @@ import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-lo
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
-import { Network } from 'utils/network';
+import { Network, NetworkId } from 'utils/network';
 
 export const GWEI_UNIT = 1000000000;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -18,7 +18,11 @@ export type NetworkMapper = Record<number, number>;
 export type DropdownNetwork = {
     name: string;
     icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-    changeNetwork: (networkId: number, callback?: VoidFunction) => void;
+    changeNetwork: (
+        networkId: number,
+        callback?: VoidFunction,
+        switchNetwork?: ((switchToNetorkId?: NetworkId) => void) | undefined
+    ) => void;
 };
 
 export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
@@ -144,7 +148,11 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     10: {
         name: 'Optimism',
         icon: OpLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (
+            networkId: number,
+            callback?: VoidFunction,
+            switchNetwork?: ((switchToNetorkId?: NetworkId) => void) | undefined
+        ) => {
             const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network['Mainnet-Ovm'];
             const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
 
@@ -154,6 +162,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: optimismNetworkParms.chainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     if (switchError.code === 4902) {
                         try {
@@ -170,6 +179,8 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         }
                     } else {
                         console.log(switchError);
+                        // When wallet_switchEthereumChain is not supported e.g. Coinbase
+                        switchNetwork?.(Number(networkId) as NetworkId);
                     }
                 }
             }
@@ -178,7 +189,11 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     137: {
         name: 'Polygon',
         icon: PolygonLogo,
-        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
+        changeNetwork: async (
+            networkId: number,
+            callback?: VoidFunction,
+            switchNetwork?: ((switchToNetorkId?: NetworkId) => void) | undefined
+        ) => {
             // const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? SnxNetworkId['Mainnet-Ovm'];
             const polygonNetworkParams = POLYGON_NETWORKS[networkId];
 
@@ -206,6 +221,8 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         }
                     } else {
                         console.log(switchError);
+                        // When wallet_switchEthereumChain is not supported e.g. Coinbase
+                        switchNetwork?.(Number(networkId) as NetworkId);
                     }
                 }
             }
@@ -214,7 +231,11 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     1: {
         name: 'Mainnet',
         icon: EthereumLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (
+            networkId: number,
+            callback?: VoidFunction,
+            switchNetwork?: ((switchToNetorkId?: NetworkId) => void) | undefined
+        ) => {
             const formattedChainId = hexStripZeros(BigNumber.from(networkId).toHexString());
 
             if (typeof window.ethereum !== 'undefined') {
@@ -223,8 +244,11 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: formattedChainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     console.log(switchError);
+                    // When wallet_switchEthereumChain is not supported e.g. Coinbase
+                    switchNetwork?.(Number(networkId) as NetworkId);
                 }
             }
         },
@@ -232,7 +256,11 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     56: {
         name: 'BNBChain',
         icon: BSCLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (
+            networkId: number,
+            callback?: VoidFunction,
+            switchNetwork?: ((switchToNetorkId?: NetworkId) => void) | undefined
+        ) => {
             const bscNetworkParams = BSC_NETWORK[networkId];
 
             if (typeof window.ethereum !== 'undefined') {
@@ -241,8 +269,11 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: bscNetworkParams.chainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     console.log(switchError);
+                    // When wallet_switchEthereumChain is not supported e.g. Coinbase
+                    switchNetwork?.(Number(networkId) as NetworkId);
                 }
             }
         },
@@ -250,7 +281,11 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     42161: {
         name: 'Arbitrum',
         icon: ArbitrumLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (
+            networkId: number,
+            callback?: VoidFunction,
+            switchNetwork?: ((switchToNetorkId?: NetworkId) => void) | undefined
+        ) => {
             const arbNetworkParams = ARBITRUM_NETWORK[networkId];
 
             if (typeof window.ethereum !== 'undefined') {
@@ -259,8 +294,11 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: arbNetworkParams.chainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     console.log(switchError);
+                    // When wallet_switchEthereumChain is not supported e.g. Coinbase
+                    switchNetwork?.(Number(networkId) as NetworkId);
                 }
             }
         },

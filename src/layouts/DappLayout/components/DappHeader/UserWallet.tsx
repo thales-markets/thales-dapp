@@ -13,6 +13,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { NetworkId, hasEthereumInjected } from 'utils/network';
+import { useSwitchNetwork } from 'wagmi';
 
 const UserWallet: React.FC = () => {
     const truncateAddressNumberOfCharacters = 5;
@@ -20,6 +21,7 @@ const UserWallet: React.FC = () => {
     const { t } = useTranslation();
     const { openConnectModal } = useConnectModal();
     const dispatch = useDispatch();
+    const { switchNetwork } = useSwitchNetwork();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -79,11 +81,15 @@ const UserWallet: React.FC = () => {
                                             onClick={() => {
                                                 if (hasEthereumInjected()) {
                                                     setIsDropdownOpen(!isDropdownOpen);
-                                                    SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].changeNetwork(+id);
-                                                } else {
-                                                    // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
-                                                    dispatch(switchToNetworkId({ networkId: Number(id) as NetworkId }));
+                                                    SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].changeNetwork(
+                                                        +id,
+                                                        undefined,
+                                                        switchNetwork
+                                                    );
                                                 }
+                                                // Trigger App.js init
+                                                // do not use updateNetworkSettings(networkId) as it will trigger queries before provider in App.js is initialized
+                                                dispatch(switchToNetworkId({ networkId: Number(id) as NetworkId }));
                                             }}
                                         >
                                             {React.createElement(SUPPORTED_MAINNET_NETWORK_IDS_MAP[id].icon, {

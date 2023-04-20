@@ -12,6 +12,7 @@ import {
     getSwitchToNetworkId,
     getWalletAddress,
     updateNetworkSettings,
+    switchToNetworkId,
     updateWallet,
     getIsWalletConnected,
 } from 'redux/modules/wallet';
@@ -30,7 +31,7 @@ import { ethers } from 'ethers';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
-import { useAccount, useProvider, useSigner, useClient, useDisconnect } from 'wagmi';
+import { useAccount, useProvider, useSigner, useClient, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
@@ -64,19 +65,20 @@ const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRe
 const App = () => {
     const dispatch = useDispatch();
     const walletAddress = useSelector((state) => getWalletAddress(state));
-    const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
     const networkId = useSelector((state) => getNetworkId(state));
-    const switchToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
+    const switchedToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
+    const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
 
     const isPolygon = getIsPolygon(networkId);
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
 
-    const provider = useProvider(!hasEthereumInjected() && { chainId: switchToNetworkId }); // for incognito mode set chainId from dApp
     const { address } = useAccount();
+    const provider = useProvider(!isWalletConnected && { chainId: switchedToNetworkId }); // when wallet not connected force chain
     const { data: signer } = useSigner();
     const client = useClient();
     const { disconnect } = useDisconnect();
+    const { chain } = useNetwork();
 
     const { trackPageView } = useMatomo();
 
@@ -101,25 +103,6 @@ const App = () => {
 
     useEffect(() => {
         const init = async () => {
-            let providerNetworkId = address && (await provider.getNetwork()).chainId;
-            let mmChainId = undefined;
-
-            if (!providerNetworkId) {
-                // can't use wagmi when wallet is not connected
-                if (hasEthereumInjected()) {
-                    mmChainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }), 16);
-                    if (isNetworkSupported(mmChainId)) {
-                        providerNetworkId = mmChainId;
-                    } else {
-                        providerNetworkId = defaultNetwork.networkId;
-                        disconnect();
-                    }
-                } else {
-                    // without MM, for incognito mode
-                    providerNetworkId = switchToNetworkId;
-                }
-            }
-
             let ledgerProvider = null;
             if (isLedgerLive) {
                 ledgerProvider = new IFrameEthereumProvider();
@@ -134,19 +117,16 @@ const App = () => {
             }
 
             try {
-                // when switching network will throw Error: underlying network changed and then ignore network update
-                signer && signer.provider && (await signer.provider.getNetwork()).chainId;
-
-                // can't use wagmi provider when wallet exists in browser but locked, then use MM network if supported
-                const selectedProvider = isLedgerLive
+                const chainIdFromProvider = (await provider.getNetwork()).chainId;
+                const providerNetworkId = isLedgerLive
                     ? ledgerProvider
-                    : !address && hasEthereumInjected() && isNetworkSupported(mmChainId)
-                    ? new ethers.providers.Web3Provider(window.ethereum, 'any')
-                    : provider;
+                    : !!address
+                    ? chainIdFromProvider
+                    : switchedToNetworkId;
 
                 snxJSConnector.setContractSettings({
                     networkId: providerNetworkId,
-                    provider: selectedProvider,
+                    provider,
                     signer: isLedgerLive ? ledgerProvider.getSigner() : signer,
                 });
 
@@ -173,42 +153,30 @@ const App = () => {
         return () => {
             document.removeEventListener('market-notification', handler);
         };
-    }, [dispatch, provider, signer, networkId, switchToNetworkId, disconnect, address]);
+    }, [dispatch, provider, signer, switchedToNetworkId, address]);
 
     useEffect(() => {
         dispatch(updateWallet({ walletAddress: address }));
     }, [address, dispatch]);
 
     useEffect(() => {
-        const autoConnect = async () => {
-            // TD-1083: There is a known issue with MetaMask extension, where a "disconnect" event is emitted
-            // when you switch from MetaMask's default networks to custom networks.
-            await client.autoConnect();
-        };
-
         if (window.ethereum) {
-            window.ethereum.on('chainChanged', (chainIdHex) => {
-                const chainId = parseInt(chainIdHex, 16);
-                if (!address) {
-                    // when wallet exists in browser but locked and changing network from MM update networkId manually
-                    const supportedNetworkId = isNetworkSupported(chainId) ? chainId : defaultNetwork.networkId;
-                    dispatch(
-                        updateNetworkSettings({
-                            networkId: supportedNetworkId,
-                            networkName: SUPPORTED_NETWORKS_NAMES[supportedNetworkId]?.toLowerCase(),
-                        })
-                    );
-                }
-                if (isNetworkSupported(chainId)) {
-                    if (window.ethereum.isMetaMask && !isWalletConnected) {
-                        autoConnect();
-                    }
-                } else {
-                    disconnect();
+            window.ethereum.on('chainChanged', (chainIdParam) => {
+                const chainId = Number.isInteger(chainIdParam) ? chainIdParam : parseInt(chainIdParam, 16);
+
+                if (!address && isNetworkSupported(chainId)) {
+                    // when wallet disconnected reflect network change from browser wallet to dApp
+                    dispatch(switchToNetworkId({ networkId: chainId }));
                 }
             });
         }
-    }, [client, isWalletConnected, dispatch, disconnect, provider, signer, address]);
+    }, [dispatch, address]);
+
+    useEffect(() => {
+        if (chain?.unsupported) {
+            disconnect();
+        }
+    }, [disconnect, chain]);
 
     const onSnackbarClosed = (e) => {
         if (e) {

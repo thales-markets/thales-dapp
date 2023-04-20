@@ -12,7 +12,7 @@ export type WalletSliceState = {
     walletAddress: string | null;
     networkId: NetworkId;
     networkName: string;
-    switchToNetworkId: NetworkId; // used to trigger manually network switch in App.js when there are no wallets (incognito)
+    switchToNetworkId: NetworkId; // used to trigger manually network switch in App.js
     gasSpeed: GasSpeed;
     customGasPrice: number | null;
     gasLimit: number;
