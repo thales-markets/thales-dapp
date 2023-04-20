@@ -14,7 +14,6 @@ import {
     updateNetworkSettings,
     switchToNetworkId,
     updateWallet,
-    getIsWalletConnected,
 } from 'redux/modules/wallet';
 import { getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
@@ -60,14 +59,13 @@ const App = () => {
     const walletAddress = useSelector((state) => getWalletAddress(state));
     const networkId = useSelector((state) => getNetworkId(state));
     const switchedToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
-    const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
 
     const isPolygon = getIsPolygon(networkId);
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
 
     const { address } = useAccount();
-    const provider = useProvider(!isWalletConnected && { chainId: switchedToNetworkId }); // when wallet not connected force chain
+    const provider = useProvider({ chainId: switchedToNetworkId });
     const { data: signer } = useSigner();
     const { disconnect } = useDisconnect();
     const { chain } = useNetwork();
