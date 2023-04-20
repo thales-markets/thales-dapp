@@ -16,22 +16,15 @@ import {
     updateWallet,
     getIsWalletConnected,
 } from 'redux/modules/wallet';
-import {
-    defaultNetwork,
-    getIsPolygon,
-    isNetworkSupported,
-    hasEthereumInjected,
-    SUPPORTED_NETWORKS_NAMES,
-} from 'utils/network';
+import { getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import Cookies from 'universal-cookie';
-import { ethers } from 'ethers';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
-import { useAccount, useProvider, useSigner, useClient, useDisconnect, useNetwork } from 'wagmi';
+import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
@@ -76,7 +69,6 @@ const App = () => {
     const { address } = useAccount();
     const provider = useProvider(!isWalletConnected && { chainId: switchedToNetworkId }); // when wallet not connected force chain
     const { data: signer } = useSigner();
-    const client = useClient();
     const { disconnect } = useDisconnect();
     const { chain } = useNetwork();
 
