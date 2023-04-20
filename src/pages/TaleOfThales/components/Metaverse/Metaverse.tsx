@@ -71,11 +71,11 @@ const Metaverse: React.FC = () => {
     });
 
     unityContext.on('openThalesMarkets', () => {
-        window.open('https://thalesmarket.io/markets');
+        window.open('https://thalesmarket.io/markets?mtm_campaign=tot');
     });
 
     unityContext.on('openOvertimeMarkets', () => {
-        window.open('https://overtimemarkets.xyz/#/markets');
+        window.open('https://overtimemarkets.xyz/?mtm_campaign=tot#/markets');
     });
 
     unityContext.on('showTweet', () => {
