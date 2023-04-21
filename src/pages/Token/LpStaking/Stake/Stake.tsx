@@ -86,7 +86,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                     console.log(e);
                 }
             };
-            if (isWalletConnected) {
+            if (isWalletConnected && gelatoContractWithSigner.signer) {
                 getAllowance();
             }
         }

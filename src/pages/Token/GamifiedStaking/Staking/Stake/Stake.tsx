@@ -92,7 +92,7 @@ const Stake: React.FC = () => {
                     console.log(e);
                 }
             };
-            if (isWalletConnected) {
+            if (isWalletConnected && thalesTokenContractWithSigner.signer) {
                 getAllowance();
             }
         }
