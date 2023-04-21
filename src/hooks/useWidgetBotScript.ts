@@ -14,7 +14,7 @@ const useWidgetBotScript = (preventWidgetLoad: boolean) => {
         script.onload = () => {
             new (window as any).Crate({
                 server: '906484044915687464',
-                channel: '906723153349316638',
+                channel: '907009541965742080',
                 css: `
                 @media (max-width: 950px) {
                     &:not(.open) .button {
