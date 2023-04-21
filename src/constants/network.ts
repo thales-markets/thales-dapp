@@ -6,7 +6,7 @@ import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-lo
 import { FunctionComponent, SVGProps } from 'react';
 import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from 'ethers';
-import { Network, NetworkId } from 'utils/network';
+import { Network } from 'utils/network';
 
 export const GWEI_UNIT = 1000000000;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
