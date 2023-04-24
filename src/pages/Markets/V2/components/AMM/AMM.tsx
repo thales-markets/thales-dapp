@@ -37,7 +37,6 @@ import {
     formatPercentage,
     truncToDecimals,
 } from 'utils/formatters/number';
-import onboardConnector from 'utils/onboardConnector';
 
 import { AccountMarketInfo, OrderSide, OptionSide, StableCoins } from 'types/options';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
@@ -79,6 +78,7 @@ import {
     prepareTransactionForAMM,
 } from 'utils/amm';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -92,6 +92,7 @@ type AMMProps = {
 
 const AMM: React.FC<AMMProps> = ({ marketAddress, longAddress, shortAddress }) => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -666,7 +667,7 @@ const AMM: React.FC<AMMProps> = ({ marketAddress, longAddress, shortAddress }) =
         }
         if (!isWalletConnected) {
             return (
-                <Button {...defaultButtonProps} onClickHandler={() => onboardConnector.connectWallet()}>
+                <Button {...defaultButtonProps} onClickHandler={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );

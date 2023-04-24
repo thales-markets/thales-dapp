@@ -41,7 +41,6 @@ import {
     formatPercentage,
     truncToDecimals,
 } from 'utils/formatters/number';
-import onboardConnector from 'utils/onboardConnector';
 
 import { OrderSide, RangedMarketBalanceInfo, RangedMarketPositionType, StableCoins } from 'types/options';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
@@ -88,6 +87,7 @@ import {
 } from 'utils/amm';
 import CollateralSelector from 'components/CollateralSelector';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -102,6 +102,7 @@ type RangedAMMProps = {
 const AMM: React.FC<RangedAMMProps> = ({ marketAddress, inAddress, outAddress }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const { openConnectModal } = useConnectModal();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -717,7 +718,7 @@ const AMM: React.FC<RangedAMMProps> = ({ marketAddress, inAddress, outAddress })
         }
         if (!isWalletConnected) {
             return (
-                <Button {...defaultButtonProps} onClickHandler={() => onboardConnector.connectWallet()}>
+                <Button {...defaultButtonProps} onClickHandler={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
