@@ -45,8 +45,7 @@
             "change-display-name": "Изменить отображаемое имя",
             "in-wallet": "В кошельке",
             "total-staked": "Общая сумма в стэйке",
-            "total-escrowed": "Общая сумма в эскроу",
-            "wallet-options": "Варианты кошелька"
+            "total-escrowed": "Общая сумма в эскроу"
         }
     },
     "landing-page": {
@@ -244,8 +243,7 @@
             "switch": "Выключатель",
             "disconnect": "Отключить",
             "display-name": "Показать имя",
-            "change-display-name": "Изменить отображаемое имя",
-            "options": "Параметры"
+            "change-display-name": "Изменить отображаемое имя"
         },
         "no-data": "Нет данных для отображения",
         "long": "длинная",

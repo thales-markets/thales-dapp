@@ -30,6 +30,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { formattedDuration } from 'utils/formatters/date';
 import { MaxButton, ThalesWalletAmountLabel } from '../../../Migration/components';
+import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import SimpleLoader from '../../../components/SimpleLoader';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
@@ -40,7 +41,6 @@ import { ButtonType } from 'pages/Token/components/Button/Button';
 import { isMobile } from 'utils/device';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -50,7 +50,6 @@ const addDurationPeriod = (date: Date, unstakeDurationPeriod: number) => {
 
 const Unstake: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -302,7 +301,7 @@ const Unstake: React.FC = () => {
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button active={true} onClickHandler={openConnectModal} type={ButtonType.submit}>
+                <Button active={true} onClickHandler={() => onboardConnector.connectWallet()} type={ButtonType.submit}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );

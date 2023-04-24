@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from '../../../components/SimpleLoader';
 import { MaxButton, ThalesWalletAmountLabel } from '../../../Migration/components';
+import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -28,11 +29,9 @@ import ApprovalModal from 'components/ApprovalModal';
 import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
 import { isMobile } from 'utils/device';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const Stake: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -92,7 +91,7 @@ const Stake: React.FC = () => {
                     console.log(e);
                 }
             };
-            if (isWalletConnected && thalesTokenContractWithSigner.signer) {
+            if (isWalletConnected) {
                 getAllowance();
             }
         }
@@ -182,7 +181,7 @@ const Stake: React.FC = () => {
     const getStakeButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button active={true} onClickHandler={openConnectModal} type={ButtonType.submit}>
+                <Button active={true} onClickHandler={() => onboardConnector.connectWallet()} type={ButtonType.submit}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );

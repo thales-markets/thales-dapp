@@ -121,6 +121,9 @@ const snxJSConnector: SnxJSConnector = {
     },
 };
 
+// const initializeContract = (contract: any, contractSettings: any) =>
+//     new ethers.Contract(contract.addresses[contractSettings.networkId || 1], contract.abi, snxJSConnector.provider);
+
 const conditionalInitializeContract = (contract: any, contractSettings: any) =>
     contract.addresses[contractSettings.networkId || 1] !== 'TBD'
         ? new ethers.Contract(

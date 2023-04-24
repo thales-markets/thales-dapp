@@ -42,6 +42,7 @@ import {
     formatPercentage,
     truncToDecimals,
 } from 'utils/formatters/number';
+import onboardConnector from 'utils/onboardConnector';
 
 import { OrderSide, RangedMarketBalanceInfo, RangedMarketPositionType, StableCoins } from 'types/options';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
@@ -76,6 +77,7 @@ import queryString from 'query-string';
 import { getReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
+// import CollateralSelector from 'components/CollateralSelector';
 import { getSellToken, getSellTokenCurrency } from 'utils/options';
 import {
     getAmountToApprove,
@@ -87,7 +89,6 @@ import {
 } from 'utils/amm';
 import CollateralSelector from 'components/CollateralSelector';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -95,7 +96,6 @@ const THREE_PERCENT = 0.03;
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
     const rangedMarketData = useRangedMarketContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -725,7 +725,7 @@ const AMM: React.FC = () => {
         }
         if (!isWalletConnected) {
             return (
-                <Button {...defaultButtonProps} onClickHandler={openConnectModal}>
+                <Button {...defaultButtonProps} onClickHandler={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );

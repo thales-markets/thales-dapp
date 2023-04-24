@@ -7,9 +7,8 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
 import { truncateAddress } from 'utils/formatters/string';
+import onboardConnector from 'utils/onboardConnector';
 import './media.scss';
-import { useAccountModal } from '@rainbow-me/rainbowkit';
-import { useDisconnect } from 'wagmi';
 
 type UserInfoRoyaleDialogProps = {
     open: boolean;
@@ -27,8 +26,6 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
     theme,
 }) => {
     const { t } = useTranslation();
-    const { openAccountModal } = useAccountModal();
-    const { disconnect } = useDisconnect();
 
     const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: open });
 
@@ -64,9 +61,11 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
                                 padding: '4px 24px',
                                 alignSelf: 'flex-end',
                             }}
-                            onClick={openAccountModal}
+                            onClick={() => {
+                                onboardConnector.onboard.walletSelect();
+                            }}
                         >
-                            {t(`user-info.wallet.wallet-options`)}
+                            {t(`user-info.wallet.switch-wallet`)}
                         </DialogButton>
                         <DialogButton
                             className="primary text-xs"
@@ -77,7 +76,7 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
                                 alignSelf: 'flex-end',
                             }}
                             onClick={() => {
-                                disconnect();
+                                onboardConnector.disconnectWallet();
                                 handleClose(false);
                             }}
                         >

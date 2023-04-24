@@ -1,7 +1,10 @@
 import { useQuery, UseQueryOptions } from 'react-query';
+import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 import { generalConfig } from 'config/general';
+
+dotenv.config();
 
 export interface Leaderboard {
     leaderboard: [

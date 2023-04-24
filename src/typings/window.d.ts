@@ -24,7 +24,5 @@ declare global {
             request: (args: RequestArguments) => Promise<unknown>;
             isMetaMask: boolean;
         };
-        MSStream;
-        opera;
     }
 }

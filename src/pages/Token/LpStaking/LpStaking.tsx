@@ -19,6 +19,7 @@ import NetworkFees from '../components/NetworkFees';
 import ValidationMessage from 'components/ValidationMessage';
 import Button from '../components/Button';
 import { ButtonType } from '../components/Button/Button';
+import onboardConnector from 'utils/onboardConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { formatGasLimit } from 'utils/network';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -26,7 +27,6 @@ import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchLPStakingQuery } from 'utils/queryConnector';
 import { isMobile } from 'utils/device';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 enum SectionType {
     INFO,
@@ -36,7 +36,6 @@ enum SectionType {
 
 const LpStaking: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -183,7 +182,7 @@ const LpStaking: React.FC = () => {
                     width={isMobile() ? '100%' : '50%'}
                     type={ButtonType.submit}
                     active={true}
-                    onClickHandler={openConnectModal}
+                    onClickHandler={() => onboardConnector.connectWallet()}
                 >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>

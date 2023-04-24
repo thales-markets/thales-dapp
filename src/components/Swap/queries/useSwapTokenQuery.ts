@@ -1,7 +1,10 @@
 import { useQuery, UseQueryOptions } from 'react-query';
+import dotenv from 'dotenv';
 import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { BigNumber } from '@ethersproject/bignumber';
+
+dotenv.config();
 
 interface Swap {
     toToken: Token;

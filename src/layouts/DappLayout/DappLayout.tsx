@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
@@ -13,8 +13,6 @@ import { getReferralWallet, setReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
 import { generalConfig } from 'config/general';
-import { isAndroid, isMetamask, isMobile } from 'utils/device';
-import useWidgetBotScript from 'hooks/useWidgetBotScript';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -29,8 +27,6 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     const queryParams = queryString.parse(rawParams?.search);
 
     const { trackPageView } = useMatomo();
-
-    const [preventDiscordWidgetLoad, setPreventDiscordWidgetLoad] = useState(true);
 
     useEffect(() => {
         if (queryParams?.referralId) {
@@ -69,18 +65,6 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     useEffect(() => {
         document.getElementsByTagName('body')[0].style.overflow = isNetworkSupported(networkId) ? 'auto' : 'hidden';
     }, [networkId]);
-
-    useEffect(() => {
-        const checkMetamaskBrowser = async () => {
-            const isMetamaskBrowser = isMobile() && (await isMetamask());
-            // Do not load Discord Widget Bot on Android MM browser due to issue with MM wallet connect
-            // issue raised on https://github.com/rainbow-me/rainbowkit/issues/1181
-            setPreventDiscordWidgetLoad(isMetamaskBrowser && isAndroid());
-        };
-        checkMetamaskBrowser();
-    }, []);
-
-    useWidgetBotScript(preventDiscordWidgetLoad);
 
     return (
         <Background id="main-content">
