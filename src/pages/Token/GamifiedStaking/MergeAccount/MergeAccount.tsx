@@ -8,7 +8,6 @@ import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
@@ -28,9 +27,11 @@ import { TransactionFilterEnum } from 'types/token';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getMaxGasLimitForNetwork } from 'constants/options';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '-';
@@ -235,7 +236,7 @@ const MergeAccount: React.FC = () => {
                     type={ButtonType.submit}
                     width={isMobile() ? '100%' : '50%'}
                     active={true}
-                    onClickHandler={() => onboardConnector.connectWallet()}
+                    onClickHandler={openConnectModal}
                 >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
@@ -277,7 +278,7 @@ const MergeAccount: React.FC = () => {
                     type={ButtonType.submit}
                     width={isMobile() ? '100%' : '50%'}
                     active={true}
-                    onClickHandler={() => onboardConnector.connectWallet()}
+                    onClickHandler={openConnectModal}
                 >
                     {t('common.wallet.connect-your-wallet')}
                 </Button>

@@ -10,7 +10,6 @@ import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
@@ -20,6 +19,7 @@ import useStakingClaimOnBehalfQuery from 'queries/staking/useStakingClaimOnBehal
 import Button from '../Button';
 import { ButtonType } from '../Button/Button';
 import { getMaxGasLimitForNetwork } from 'constants/options';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -27,6 +27,7 @@ type ClaimOnBehalfModalProps = {
 
 const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '-';
@@ -95,12 +96,7 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button
-                    type={ButtonType.submit}
-                    width={'50%'}
-                    active={true}
-                    onClickHandler={() => onboardConnector.connectWallet()}
-                >
+                <Button type={ButtonType.submit} width={'50%'} active={true} onClickHandler={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );

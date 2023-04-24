@@ -44,14 +44,24 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                     <ButtonWrapper>
                         <NetworkButton
                             margin={''}
-                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[10].changeNetwork.bind(this, 10, undefined)}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[10].changeNetwork.bind(
+                                this,
+                                10,
+                                undefined,
+                                undefined
+                            )}
                         >
                             <OpLogo />
                             <span>{t(`common.unsupported-network.button.optimism`)}</span>
                         </NetworkButton>
                         <NetworkButton
                             margin={''}
-                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(this, 137, undefined)}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[137].changeNetwork.bind(
+                                this,
+                                137,
+                                undefined,
+                                undefined
+                            )}
                         >
                             <PolygonLogo />
                             <span>{t(`common.unsupported-network.button.polygon`)}</span>
@@ -63,6 +73,7 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                             onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[42161].changeNetwork.bind(
                                 this,
                                 42161,
+                                undefined,
                                 undefined
                             )}
                         >
@@ -71,7 +82,12 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                         </NetworkButton>
                         <NetworkButton
                             margin={''}
-                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[56].changeNetwork.bind(this, 56, undefined)}
+                            onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[56].changeNetwork.bind(
+                                this,
+                                56,
+                                undefined,
+                                undefined
+                            )}
                         >
                             <BSCLogo />
                             <span>{t(`common.unsupported-network.button.bsc`)}</span>
@@ -81,7 +97,12 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                         {!hideMainnet && (
                             <NetworkButton
                                 margin=""
-                                onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[1].changeNetwork.bind(this, 1, undefined)}
+                                onClick={SUPPORTED_MAINNET_NETWORK_IDS_MAP[1].changeNetwork.bind(
+                                    this,
+                                    1,
+                                    undefined,
+                                    undefined
+                                )}
                             >
                                 <EthereumLogo />
                                 <span>{t(`common.unsupported-network.button.mainnet`)}</span>
