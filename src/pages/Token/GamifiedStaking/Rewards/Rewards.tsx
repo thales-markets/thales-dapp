@@ -36,7 +36,6 @@ import { FlexDivEnd } from 'theme/common';
 import { StakingReward, TokenTabEnum } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import onboardConnector from 'utils/onboardConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -44,6 +43,7 @@ import { isMobile } from 'utils/device';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
 import { getStableCoinForNetwork } from 'utils/currency';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 enum SectionType {
     INFO,
@@ -61,6 +61,7 @@ type RewardsProperties = {
 
 const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -387,7 +388,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const getClaimButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button type={ButtonType.submit} active={true} onClickHandler={() => onboardConnector.connectWallet()}>
+                <Button type={ButtonType.submit} active={true} onClickHandler={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
