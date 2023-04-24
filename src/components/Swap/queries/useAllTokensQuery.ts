@@ -1,6 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
+import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
+
+dotenv.config();
 
 export interface Token {
     address: string;

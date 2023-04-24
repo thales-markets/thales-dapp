@@ -12,13 +12,17 @@ import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
 import DisplayNameForm from 'components/DisplayNameForm/DisplayNameForm';
 
+interface ManuCardProps {
+    visibility: boolean;
+}
+
 const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ showCard, setShowCard }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const showThalesBalance = !getIsPolygon(networkId) && !getIsArbitrum(networkId) && !getIsBSC(networkId);
     return (
-        <MenuCard isVisible={showCard} className={'dark'}>
+        <MenuCard visibility={showCard} className={'dark'}>
             <CloseIcon className="icon icon--x-sign" onClick={() => setShowCard(!showCard)} />
             <CardWrapper>
                 <LogoContainer>
@@ -39,8 +43,8 @@ const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ 
     );
 };
 
-const MenuCard = styled.div<{ isVisible: boolean }>`
-    display: ${(props) => (props.isVisible ? 'block' : 'none')};
+const MenuCard = styled.div<ManuCardProps>`
+    display: ${({ visibility }) => (visibility ? 'block' : 'none')};
     position: absolute;
     max-width: 280px;
     right: 35px;

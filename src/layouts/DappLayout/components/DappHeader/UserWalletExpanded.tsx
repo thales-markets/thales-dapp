@@ -3,20 +3,16 @@ import styled from 'styled-components';
 import { truncateAddress } from 'utils/formatters/string';
 import { useTranslation } from 'react-i18next';
 import { UserCardSectionHeader } from 'theme/common';
+import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
-import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import { useDisconnect } from 'wagmi';
 
 const truncateAddressNumberOfCharacters = 5;
 
 const UserWalletExpanded: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
-    const { openAccountModal } = useAccountModal();
-    const { disconnect } = useDisconnect();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isLedgerLive = isLedgerDappBrowserProvider();
@@ -25,10 +21,7 @@ const UserWalletExpanded: React.FC = () => {
         <Wrapper>
             <UserCardSectionHeader>{t('common.user-info-card.wallet')}</UserCardSectionHeader>
             <Container>
-                <WalletContainer
-                    isClickable={!isWalletConnected}
-                    onClick={() => (isWalletConnected ? '' : openConnectModal?.())}
-                >
+                <WalletContainer onClick={() => (isWalletConnected ? '' : onboardConnector.connectWallet())}>
                     <WalletIcon className="sidebar-icon icon--wallet" />
                     <WalletAddress>
                         {walletAddress
@@ -42,10 +35,12 @@ const UserWalletExpanded: React.FC = () => {
                 </WalletContainer>
                 {isWalletConnected && !isLedgerLive && (
                     <WalletOptions>
-                        <Button style={{ marginRight: '3px' }} onClick={openAccountModal}>
-                            {t('common.user-info-card.options')}
+                        <Button style={{ marginRight: '3px' }} onClick={() => onboardConnector.onboard.walletSelect()}>
+                            {t('common.user-info-card.switch')}
                         </Button>
-                        <Button onClick={() => disconnect()}>{t('common.user-info-card.disconnect')}</Button>
+                        <Button onClick={() => onboardConnector.disconnectWallet()}>
+                            {t('common.user-info-card.disconnect')}
+                        </Button>
                     </WalletOptions>
                 )}
             </Container>
@@ -92,7 +87,7 @@ const Button = styled.div`
     cursor: pointer;
 `;
 
-const WalletContainer = styled.div<{ isClickable: boolean }>`
+const WalletContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -102,7 +97,6 @@ const WalletContainer = styled.div<{ isClickable: boolean }>`
     padding: 4px 12px;
     border: 2px solid var(--icon-color);
     border-radius: 20px;
-    cursor: ${(props) => (props.isClickable ? 'pointer' : 'default')};
     @media (max-width: 1024px) {
         flex: 1;
         width: auto;

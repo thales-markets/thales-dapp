@@ -6,10 +6,10 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import Container from '../../styled-components/GameContainer';
+import onboardConnector from 'utils/onboardConnector';
 import { getIsAppReady } from 'redux/modules/app';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-metaverse/build.loader.js',
@@ -20,7 +20,6 @@ const unityContext = new UnityContext({
 
 const Metaverse: React.FC = () => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -66,16 +65,16 @@ const Metaverse: React.FC = () => {
                 })
             );
         } else {
-            openConnectModal?.();
+            onboardConnector.connectWallet();
         }
     });
 
     unityContext.on('openThalesMarkets', () => {
-        window.open('https://thalesmarket.io/markets?mtm_campaign=tot');
+        window.open('https://thalesmarket.io/markets');
     });
 
     unityContext.on('openOvertimeMarkets', () => {
-        window.open('https://overtimemarkets.xyz/?mtm_campaign=tot#/markets');
+        window.open('https://overtimemarkets.xyz/#/markets');
     });
 
     unityContext.on('showTweet', () => {

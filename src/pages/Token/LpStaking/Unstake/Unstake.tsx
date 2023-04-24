@@ -17,6 +17,7 @@ import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/fo
 import { dispatchMarketNotification } from 'utils/options';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
 import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
+import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
@@ -24,7 +25,6 @@ import { LP_TOKEN } from 'constants/currency';
 import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
 import { isMobile } from 'utils/device';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type Properties = {
     staked: number;
@@ -32,7 +32,6 @@ type Properties = {
 
 const Unstake: React.FC<Properties> = ({ staked }) => {
     const { t } = useTranslation();
-    const { openConnectModal } = useConnectModal();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -116,7 +115,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
             return (
                 <Button
                     active={true}
-                    onClickHandler={openConnectModal}
+                    onClickHandler={() => onboardConnector.connectWallet()}
                     type={ButtonType.submit}
                     width={isMobile() ? '100%' : '60%'}
                 >

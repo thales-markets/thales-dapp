@@ -43,7 +43,7 @@
         },
         "wallet": {
             "my-thales": "My Thales",
-            "wallet-options": "Wallet Options",
+            "switch-wallet": "Switch Wallet",
             "disconnect-wallet": "Disconnect Wallet",
             "display-name": "Display Name",
             "change-display-name": "Change Display Name",
@@ -265,7 +265,7 @@
         },
         "wallet": {
             "connect-your-wallet": "Connect wallet",
-            "disclaimer-info": "By connecting a wallet you agree to Thales DAO <terms>Terms of Use</terms> and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <disclaimer>disclaimer</disclaimer>"
+            "disclaimer-info": "By connecting a wallet you agree to Thales DAO Terms Of Use and Privacy Policy and acknowledge that you have read and understand the Thales DAO protocol <a target=\"_blank\" href={{link}}>disclaimer</a>"
         },
         "errors": {
             "try-again": "Try again. AMM data is changed.",
@@ -360,7 +360,7 @@
             "network": "Network",
             "language": "Language",
             "disconnect": "Disconnect",
-            "options": "Options",
+            "switch": "Switch",
             "display-name": "Display Name",
             "change-display-name": "Change Display Name"
         },
