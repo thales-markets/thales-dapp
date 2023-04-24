@@ -6,16 +6,18 @@ import { UI_COLORS } from 'constants/ui';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { HistoricalOptionsMarketInfo, OptionsMarkets } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, RangedMarketUI } from 'types/options';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 
 type TableProps = {
     markets: OptionsMarkets;
+    rangeMarkets: RangedMarketUI[];
     setMarket: React.Dispatch<React.SetStateAction<HistoricalOptionsMarketInfo | undefined>>;
+    type: number | 'positional' | 'ranged';
     // highlightMarkets: Set<string>;
 };
 
-const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
+const AssetTable: React.FC<TableProps> = ({ markets, setMarket, rangeMarkets, type }) => {
     // selectors
     const { t } = useTranslation();
 
@@ -27,78 +29,120 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
     // hooks
 
     const columns: Array<any> = useMemo(() => {
-        return [
-            {
-                id: 'strikePrice',
-                Header: t(`options.home.markets-table.strike-price-col`),
-                accessor: (row: any) => {
-                    return <TableText>{formatCurrencyWithSign(USD_SIGN, row.strikePrice, 2)}</TableText>;
-                },
-            },
-            {
-                id: 'discountedSide',
-                Header: t(`options.home.markets-table.discount-col`),
-                accessor: 'discountedSide',
-                Cell: (_props: any) => {
-                    if (
-                        _props.cell.value &&
-                        (_props.row.original.availableLongs > 0 || _props.row.original.availableShorts > 0)
-                    ) {
-                        return (
-                            <>
-                                <Icon
-                                    style={{
-                                        color: _props.cell.value === 'DOWN' ? '#e53720' : '#4fbf67',
-                                        marginRight: 8,
-                                    }}
-                                    className={`v2-icon v2-icon--${_props.cell.value.toLowerCase()}`}
-                                ></Icon>
-                                <TableText>{_props.row.original.discount}%</TableText>
-                            </>
-                        );
-                    } else {
-                        return <TableText>/</TableText>;
-                    }
-                },
-            },
-            {
-                Header: t(`options.home.markets-table.amm-size-col`),
-                accessor: (row: any) => {
-                    if (Number(row.availableLongs) > 0 || Number(row.availableShorts) > 0) {
-                        return (
-                            <RatioText
-                                green={Number(row.availableLongs).toFixed(1)}
-                                red={Number(row.availableShorts).toFixed(1)}
-                            />
-                        );
-                    }
-                    return (
-                        <YellowText>
-                            {row?.phase !== 'maturity'
-                                ? t('options.home.markets-table.out-of-liquidity')
-                                : t('options.market.overview.maturity-label')}
-                        </YellowText>
-                    );
-                },
-            },
-            {
-                Header: t(`options.home.markets-table.price-up-down-col`),
-                accessor: (row: any) => (
-                    <RatioText
-                        green={formatCurrencyWithSign(USD_SIGN, row.longPrice, 2)}
-                        red={formatCurrencyWithSign(USD_SIGN, row.shortPrice, 2)}
-                    />
-                ),
-            },
-            {
-                id: 'poolSize',
-                Header: t(`options.home.markets-table.pool-size-col`),
-                accessor: (row: any) => {
-                    return <TableText>{formatCurrencyWithSign(USD_SIGN, row.poolSize, 2)}</TableText>;
-                },
-            },
-        ];
-    }, [markets]);
+        return type === 0
+            ? [
+                  {
+                      id: 'strikePrice',
+                      Header: t(`options.home.markets-table.strike-price-col`),
+                      accessor: (row: any) => {
+                          return <TableText>{formatCurrencyWithSign(USD_SIGN, row.strikePrice, 2)}</TableText>;
+                      },
+                  },
+                  {
+                      id: 'discountedSide',
+                      Header: t(`options.home.markets-table.discount-col`),
+                      accessor: 'discountedSide',
+                      Cell: (_props: any) => {
+                          if (
+                              _props.cell.value &&
+                              (_props.row.original.availableLongs > 0 || _props.row.original.availableShorts > 0)
+                          ) {
+                              return (
+                                  <>
+                                      <Icon
+                                          style={{
+                                              color: _props.cell.value === 'DOWN' ? '#e53720' : '#4fbf67',
+                                              marginRight: 8,
+                                          }}
+                                          className={`v2-icon v2-icon--${_props.cell.value.toLowerCase()}`}
+                                      ></Icon>
+                                      <TableText>{_props.row.original.discount}%</TableText>
+                                  </>
+                              );
+                          } else {
+                              return <TableText>/</TableText>;
+                          }
+                      },
+                  },
+                  {
+                      Header: t(`options.home.markets-table.amm-size-col`),
+                      accessor: (row: any) => {
+                          if (Number(row.availableLongs) > 0 || Number(row.availableShorts) > 0) {
+                              return (
+                                  <RatioText
+                                      green={Number(row.availableLongs).toFixed(1)}
+                                      red={Number(row.availableShorts).toFixed(1)}
+                                  />
+                              );
+                          }
+                          return (
+                              <YellowText>
+                                  {row?.phase !== 'maturity'
+                                      ? t('options.home.markets-table.out-of-liquidity')
+                                      : t('options.market.overview.maturity-label')}
+                              </YellowText>
+                          );
+                      },
+                  },
+                  {
+                      Header: t(`options.home.markets-table.price-up-down-col`),
+                      accessor: (row: any) => (
+                          <RatioText
+                              green={formatCurrencyWithSign(USD_SIGN, row.longPrice, 2)}
+                              red={formatCurrencyWithSign(USD_SIGN, row.shortPrice, 2)}
+                          />
+                      ),
+                  },
+                  {
+                      id: 'poolSize',
+                      Header: t(`options.home.markets-table.pool-size-col`),
+                      accessor: (row: any) => {
+                          return <TableText>{formatCurrencyWithSign(USD_SIGN, row.poolSize, 2)}</TableText>;
+                      },
+                  },
+              ]
+            : [
+                  {
+                      id: 'range',
+                      Header: t(`options.home.markets-table.strike-price-col`),
+                      accessor: (row: any) => {
+                          return <TableText>{row.range}</TableText>;
+                      },
+                  },
+
+                  {
+                      Header: t(`options.home.markets-table.amm-size-col`),
+                      accessor: (row: any) => {
+                          if (Number(row.availableIn) > 0 || Number(row.availableOut) > 0) {
+                              return (
+                                  <RatioText
+                                      green={Number(row.availableIn).toFixed(1)}
+                                      red={Number(row.availableOut).toFixed(1)}
+                                  />
+                              );
+                          }
+                          return (
+                              <YellowText>
+                                  {row?.phase !== 'maturity'
+                                      ? t('options.home.markets-table.out-of-liquidity')
+                                      : t('options.market.overview.maturity-label')}
+                              </YellowText>
+                          );
+                      },
+                  },
+                  {
+                      Header: t(`options.home.markets-table.price-in-out-col`),
+                      accessor: (row: any) => (
+                          <RatioText
+                              green={formatCurrencyWithSign(USD_SIGN, row.inPrice, 2)}
+                              red={formatCurrencyWithSign(USD_SIGN, row.outPrice, 2)}
+                          />
+                      ),
+                  },
+              ];
+    }, [markets, rangeMarkets, type]);
+
+    console.log('columns: ', columns);
 
     return (
         <Wrapper>
@@ -109,12 +153,11 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                     setMarket(row.original);
                 }}
                 tableHeadCellStyles={TableHeaderStyle}
-                data={markets}
+                data={type === 0 ? markets : rangeMarkets}
                 columns={columns}
                 selectedRowIndex={rowIndex}
                 selectedRowColor="#4E9D9D"
-                // highlightMarkets={highlightMarkets}
-                showCurrentPrice={true}
+                showCurrentPrice={type === 0}
             />
         </Wrapper>
     );

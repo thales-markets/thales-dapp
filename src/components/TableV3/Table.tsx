@@ -2,7 +2,6 @@ import React, { useMemo, DependencyList, CSSProperties, useEffect, useState } fr
 import { useTable, useSortBy, Column, Row, usePagination } from 'react-table';
 import SimpleLoader from 'components/SimpleLoader';
 import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
 import { SortDirection } from 'utils/options';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
 import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuery';
@@ -46,7 +45,7 @@ type TableProps = {
 
 const Table: React.FC<TableProps> = ({
     columns = [],
-    columnsDeps = [],
+
     data = [],
     options = {},
     noResultsMessage = null,
@@ -68,7 +67,6 @@ const Table: React.FC<TableProps> = ({
     selectedRowColor,
     highlightMarkets,
 }) => {
-    const { t } = useTranslation();
     const [lastValidRates, setRates] = useState<Rates>();
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery({ enabled: showCurrentPrice });
@@ -86,7 +84,6 @@ const Table: React.FC<TableProps> = ({
         return lastValidRates;
     }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, lastValidRates]);
 
-    const memoizedColumns = useMemo(() => columns, [...columnsDeps, t]);
     const {
         getTableProps,
         getTableBodyProps,
@@ -99,7 +96,7 @@ const Table: React.FC<TableProps> = ({
         page,
     } = useTable(
         {
-            columns: memoizedColumns,
+            columns: columns,
             data,
             ...options,
             initialState,

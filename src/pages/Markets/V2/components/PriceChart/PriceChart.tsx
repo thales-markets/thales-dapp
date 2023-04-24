@@ -9,6 +9,7 @@ import Toggle from './components/DateToggle/Toggle';
 type PriceChartProps = {
     asset: string;
     selectedPrice: number | undefined;
+    selectedRightPrice?: number;
 };
 
 const coinGeckoClient = new CoinGeckoClient({
@@ -25,7 +26,7 @@ const ToggleButtons = [
     { label: '1Y', value: 365 },
 ];
 
-const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice }) => {
+const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice }) => {
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [maxPrice, setMaxPrice] = useState(0);
     const [minPrice, setMinPrice] = useState(0);
@@ -107,6 +108,22 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice }) => {
                                 strokeDasharray="3 3"
                                 label={{
                                     value: `Strike price: $${selectedPrice}`,
+                                    fill: 'var(--color-highlight)',
+                                    fontFamily: 'Roboto',
+                                    fontSize: '14px',
+                                    position: 'insideRight',
+                                    dy: -10,
+                                }}
+                            />
+                        )}
+
+                        {selectedRightPrice && (
+                            <ReferenceLine
+                                y={selectedRightPrice}
+                                stroke="var(--color-highlight)"
+                                strokeDasharray="3 3"
+                                label={{
+                                    value: `Strike price: $${selectedRightPrice}`,
                                     fill: 'var(--color-highlight)',
                                     fontFamily: 'Roboto',
                                     fontSize: '14px',
