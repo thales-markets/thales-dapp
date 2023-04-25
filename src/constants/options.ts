@@ -7,6 +7,13 @@ export const PHASE: Record<Phase, number> = {
     expiry: 2,
 };
 
+export enum POSITIONS {
+    UP = 'UP',
+    DOWN = 'DOWN',
+    IN = 'IN',
+    OUT = 'OUT',
+}
+
 export const MARKET_TYPE: Record<MarketType | number, number | MarketType> = {
     ranged: 1,
     0: 'positional',
