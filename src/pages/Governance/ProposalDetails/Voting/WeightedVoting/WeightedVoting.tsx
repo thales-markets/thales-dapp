@@ -7,7 +7,6 @@ import { VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/co
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
-import snxJSConnector from 'utils/snxJSConnector';
 import { refetchProposal } from 'utils/queryConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { percentageOfTotal } from 'utils/voting/weighted';
@@ -20,6 +19,7 @@ import useProposalQuery from 'queries/governance/useProposalQuery';
 import { CloseIconContainer } from 'components/OldVersion/old-components';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
+import { Web3Provider } from '@ethersproject/providers';
 
 type WeightedVotingProps = {
     proposal: Proposal;
@@ -80,7 +80,8 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
             const hub = 'https://hub.snapshot.org';
             const client = new snapshot.Client712(hub);
 
-            await client.vote((snxJSConnector as any).provider, walletAddress, {
+            // using Web3Provider instead of wagmi provider due to an error _signTypedData is not a function
+            await client.vote(new Web3Provider(window.ethereum as any, 'any'), walletAddress, {
                 space: proposal.space.id,
                 proposal: proposal.id,
                 type: proposal.type as ProposalType,
