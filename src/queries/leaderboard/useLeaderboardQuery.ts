@@ -1,12 +1,9 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import dotenv from 'dotenv';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 import notSigned from 'assets/images/royale/not-signed.svg';
 import { truncateAddress } from 'utils/formatters/string';
 import { generalConfig } from 'config/general';
-
-dotenv.config();
 
 type User = {
     walletAddress: string;

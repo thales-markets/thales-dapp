@@ -1,13 +1,13 @@
-import React, { lazy, Suspense, useEffect, useMemo } from 'react';
+import React, { lazy, Suspense, useMemo } from 'react';
 import { RootState } from 'redux/rootReducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux/modules/wallet';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
 import { USD_SIGN } from 'constants/currency';
-import { getIsOVM, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsOVM } from 'utils/network';
 import { formatCurrencyWithSignInRange } from 'utils/formatters/number';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
@@ -24,27 +24,10 @@ const RangeMarketsTable = lazy(
 );
 
 const RangeMarkets: React.FC = () => {
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const dispatch = useDispatch();
 
     const showOPBanner = getIsOVM(networkId);
-
-    useEffect(() => {
-        if (!isWalletConnected && window.ethereum) {
-            (window.ethereum as any).on('chainChanged', (chainId: any) => {
-                const networkIdInt = Number(chainId) as NetworkId;
-
-                dispatch(
-                    updateNetworkSettings({
-                        networkId: networkIdInt,
-                        networkName: SUPPORTED_NETWORKS_NAMES[networkIdInt]?.toLowerCase(),
-                    })
-                );
-            });
-        }
-    }, []);
 
     const marketsQuery = useRangedMarketsQuery(networkId);
 

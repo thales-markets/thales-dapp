@@ -18,13 +18,13 @@ import separator from 'assets/images/wizard/vertical-line.svg';
 
 import { POLYGON_ID } from 'constants/network';
 import ROUTES from 'constants/routes';
-import onboardConnector from 'utils/onboardConnector';
 
 import SimpleLoader from 'components/SimpleLoader';
 import SPAAnchor from 'components/SPAAnchor';
 import { XButton } from 'theme/common';
 import { WizardSteps } from '../Wizard';
 import BungeePlugin from 'components/BungeePlugin';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -45,6 +45,8 @@ const MMURL = 'https://metamask.io/download/';
 const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
 
 const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurrentStep }) => {
+    const { openConnectModal } = useConnectModal();
+
     const [installMetamask, setInstallMetamask] = useState(false);
     const [metamaskInstaleld, setMetamaskInstaleld] = useState(typeof window.ethereum !== 'undefined');
 
@@ -124,7 +126,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             } else {
                 const delayMs = ref.current?.getBoundingClientRect().top || 500;
                 await delay(delayMs < 300 ? 300 : delayMs);
-                onboardConnector.connectWallet();
+                openConnectModal?.();
             }
         }
     };

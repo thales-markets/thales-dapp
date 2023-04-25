@@ -45,7 +45,8 @@
             "change-display-name": "变更显示名称",
             "in-wallet": "钱包内",
             "total-staked": "所有质押",
-            "total-escrowed": "所有锁仓"
+            "total-escrowed": "所有锁仓",
+            "wallet-options": "钱包选项"
         }
     },
     "landing-page": {
@@ -243,7 +244,8 @@
             "disconnect": "断开",
             "switch": "转变",
             "display-name": "显示名称",
-            "change-display-name": "更改显示名称"
+            "change-display-name": "更改显示名称",
+            "options": "选项"
         },
         "no-data": "没有任何数据可显示",
         "long": "长",
