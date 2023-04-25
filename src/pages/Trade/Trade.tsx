@@ -5,9 +5,9 @@ const TradePage: React.FC = () => {
     // selectors
 
     // states
-    const [currencyKey, setCurrencyKey] = useState('ETH');
-    const [maturityDate, setMaturityDate] = useState<Date | undefined>();
-    const [positionType, setPositionType] = useState(POSITIONS.UP);
+    const [_currencyKey, _setCurrencyKey] = useState('ETH');
+    const [_maturityDate, _setMaturityDate] = useState<Date | undefined>();
+    const [_positionType, _setPositionType] = useState(POSITIONS.UP);
 
     // queries
 
