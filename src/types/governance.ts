@@ -21,6 +21,8 @@ export type SpaceStrategy = {
         address?: string;
         decimals: number;
         symbol: string;
+        blockOptimism?: number;
+        blockArbitrum?: number;
     };
 };
 
