@@ -22,7 +22,6 @@ import { erc20Contract } from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { truncateAddress } from 'utils/formatters/string';
 import { checkAllowance, getIsOVM, getIsPolygon } from 'utils/network';
-import onboardConnector from 'utils/onboardConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import useRoyalePassIdQuery from '../../Queries/useRoyalePassIdQuery';
@@ -33,6 +32,7 @@ import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelecto
 import './media.scss';
 import UserInfoRoyaleDialog from './UserInfoRoyaleDialog/UserInfoRoyaleDialog';
 import { ROYALE_OF_ROYALES_NEXT } from '../../../../constants/state';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -58,6 +58,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     latestSeason,
 }) => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -309,7 +310,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                         {!walletAddress && (
                             <HeaderButton
                                 onClick={() => {
-                                    onboardConnector.connectWallet();
+                                    openConnectModal?.();
                                     setShowBurgerMenu(BurgerState.Hide);
                                 }}
                             >

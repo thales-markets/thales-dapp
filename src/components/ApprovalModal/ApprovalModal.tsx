@@ -18,8 +18,8 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
-import onboardConnector from 'utils/onboardConnector';
 import NumericInput from 'components/NumericInput';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
@@ -40,6 +40,8 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
 }) => {
     console.log(tokenSymbol);
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
+
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [amount, setAmount] = useState<number | string>(defaultAmount);
     const [approveAll, setApproveAll] = useState<boolean>(true);
@@ -52,7 +54,7 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <ApprovalSubmitButton isRoyale={isRoyale} onClick={() => onboardConnector.connectWallet()}>
+                <ApprovalSubmitButton isRoyale={isRoyale} onClick={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </ApprovalSubmitButton>
             );
