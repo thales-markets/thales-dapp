@@ -250,6 +250,8 @@ const OPRewards: React.FC = () => {
             <Description>
                 <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
                 <Trans i18nKey={'op-rewards.description-1'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <Trans i18nKey={'op-rewards.description-itm'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <Trans i18nKey={'op-rewards.description-otm'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
                 <Trans i18nKey={'op-rewards.length-info'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
             </Description>
             <HeaderWrapper>
