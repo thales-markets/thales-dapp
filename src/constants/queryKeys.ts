@@ -105,6 +105,7 @@ export const QUERY_KEYS = {
         AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
         DiscountMap: (networkId: NetworkId) => ['binaryOptions', 'discountMap', networkId],
         AvailableAssets: () => ['binaryOptions', 'availableAssets'],
+        MaturityDatesByAsset: (asset: string) => ['binaryOptions', 'maturityDatesByAsset', asset],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],

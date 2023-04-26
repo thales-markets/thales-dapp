@@ -323,7 +323,11 @@ const Table: React.FC<TableProps> = ({
                                 );
 
                                 if (row.original.link) {
-                                    return <SPAAnchor href={row.original.link}>{rowComponent}</SPAAnchor>;
+                                    return (
+                                        <SPAAnchor key={index} href={row.original.link}>
+                                            {rowComponent}
+                                        </SPAAnchor>
+                                    );
                                 }
 
                                 if (row.original.sticky) return;
