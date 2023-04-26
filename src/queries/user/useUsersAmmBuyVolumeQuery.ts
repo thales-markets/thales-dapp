@@ -9,7 +9,6 @@ export type UsersAmmBuyVolume = {
             address: string;
             itmInfo: any;
             otmInfo: any;
-            staking: number;
             totalRewards: any;
         }
     ];
@@ -31,7 +30,6 @@ const useUsersAmmBuyVolumeQuery = (
                     address: record.address,
                     itmInfo: record.itm,
                     otmInfo: record.otm,
-                    staking: record.stackingRewards,
                     totalRewards: record.totalRewards,
                 };
             });

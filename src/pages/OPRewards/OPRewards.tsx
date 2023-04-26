@@ -42,12 +42,12 @@ const OPRewards: React.FC = () => {
 
     const [searchQuery, setSearchQuery] = useState<string>('');
 
-    const PERIOD_DURATION_IN_DAYS = 14;
+    const PERIOD_DURATION_IN_DAYS = 7;
     const START_DATE = new Date(Date.UTC(2023, 3, 26, 12, 23, 0));
     const NOW = new Date();
 
     let CALCULATED_START = new Date(START_DATE.getTime());
-    let PERIOD_COUNTER = 0;
+    let PERIOD_COUNTER = 1;
 
     const options: Array<{ value: number; label: string }> = [];
     const periodRangeTimestamps = [];
@@ -61,12 +61,11 @@ const OPRewards: React.FC = () => {
                     1000,
             });
             CALCULATED_START = new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000);
-            if (PERIOD_COUNTER > 14) {
-                options.push({
-                    value: PERIOD_COUNTER,
-                    label: `Round ${PERIOD_COUNTER}`,
-                });
-            }
+
+            options.push({
+                value: PERIOD_COUNTER,
+                label: `Round ${PERIOD_COUNTER}`,
+            });
 
             PERIOD_COUNTER++;
         } else {
@@ -74,7 +73,7 @@ const OPRewards: React.FC = () => {
         }
     }
 
-    const [period, setPeriod] = useState<number>(0);
+    const [period, setPeriod] = useState<number>(1);
 
     const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
@@ -89,7 +88,6 @@ const OPRewards: React.FC = () => {
                 account: string;
                 itmInfo: any;
                 otmInfo: any;
-                calculatedProtocolBonusForPeriod: string;
                 totalRewards: number;
                 sticky: boolean;
             }> = [];
@@ -99,7 +97,6 @@ const OPRewards: React.FC = () => {
                     account: reward.address,
                     itmInfo: reward.itmInfo,
                     otmInfo: reward.otmInfo,
-                    calculatedProtocolBonusForPeriod: reward.staking.toFixed(2),
                     totalRewards: reward.totalRewards,
                     sticky: walletAddress.toLowerCase() == reward.address.toLowerCase() ? true : false,
                 });
@@ -215,24 +212,6 @@ const OPRewards: React.FC = () => {
                 sortType: otmRewardsSort(),
             },
             {
-                Header: () => (
-                    <>
-                        {t('op-rewards.table.protocol-reward')}
-                        <Tooltip
-                            message={t('op-rewards.table.gamified-bonus-text')}
-                            type={'info'}
-                            iconColor={'var(--primary-color)'}
-                            container={{ display: 'inline-block' }}
-                            interactive={true}
-                        />
-                    </>
-                ),
-                accessor: 'calculatedProtocolBonusForPeriod',
-                Cell: (cellProps: any) => (
-                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>{cellProps.cell.value} OP</p>
-                ),
-            },
-            {
                 Header: t('op-rewards.table.total-rewards'),
                 accessor: 'totalRewards',
                 Cell: (cellProps: any) => (
@@ -276,7 +255,7 @@ const OPRewards: React.FC = () => {
                     <SelectInput
                         options={options}
                         handleChange={(value) => setPeriod(Number(value))}
-                        defaultValue={1}
+                        defaultValue={0}
                         width={300}
                     />
                     {maxTimestamp &&
