@@ -7,7 +7,6 @@ import { VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/co
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
-import snxJSConnector from 'utils/snxJSConnector';
 import { refetchProposal } from 'utils/queryConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { ProposalTypeEnum } from 'constants/governance';
@@ -15,6 +14,7 @@ import ValidationMessage from 'components/ValidationMessage';
 import voting from 'utils/voting';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
+import { Web3Provider } from '@ethersproject/providers';
 
 type SingleChoiceVotingProps = {
     proposal: Proposal;
@@ -35,7 +35,8 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
             const hub = 'https://hub.snapshot.org';
             const client = new snapshot.Client712(hub);
 
-            await client.vote((snxJSConnector as any).provider, walletAddress, {
+            // using Web3Provider instead of wagmi provider due to an error _signTypedData is not a function
+            await client.vote(new Web3Provider(window.ethereum as any, 'any'), walletAddress, {
                 space: proposal.space.id,
                 proposal: proposal.id,
                 type: proposal.type as ProposalType,

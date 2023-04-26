@@ -5,8 +5,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Text } from 'theme/common';
-import onboardConnector from 'utils/onboardConnector';
 import './media.scss';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type WalletNotConnectedDialogProps = {
     open: boolean;
@@ -15,6 +15,7 @@ type WalletNotConnectedDialogProps = {
 
 export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> = ({ open, setOpen }) => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const onClose = () => {
         setOpen(false);
     };
@@ -83,7 +84,7 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
                         }}
                         onClick={() => {
                             onClose();
-                            onboardConnector.connectWallet();
+                            openConnectModal?.();
                         }}
                     >
                         {t('options.royale.wallet-not-connected-dialog.button')}

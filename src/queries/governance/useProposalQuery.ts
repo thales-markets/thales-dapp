@@ -3,7 +3,14 @@ import snapshot from '@snapshot-labs/snapshot.js';
 import { ethers } from 'ethers';
 import { uniqBy } from 'lodash';
 import request, { gql } from 'graphql-request';
-import { SNAPSHOT_GRAPHQL_URL, SpaceKey, StatusEnum } from 'constants/governance';
+import {
+    BLOCK_ARBITRUM,
+    BLOCK_OPTIMISM,
+    SNAPSHOT_GRAPHQL_URL,
+    SpaceKey,
+    StatusEnum,
+    VOTING_COUNCIL_PROPOSAL_ID,
+} from 'constants/governance';
 import { MappedVotes, Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import voting from 'utils/voting';
@@ -104,6 +111,14 @@ const useProposalQuery = (
                     finalScores[key][vote.voter] = vote.vp_by_strategy[key];
                 });
             });
+
+            if (proposal.id === VOTING_COUNCIL_PROPOSAL_ID && proposal.state !== StatusEnum.Closed) {
+                proposal.strategies[0].params = {
+                    ...proposal.strategies[0].params,
+                    blockOptimism: BLOCK_OPTIMISM,
+                    blockArbitrum: BLOCK_ARBITRUM,
+                };
+            }
 
             const scores =
                 proposal.state === StatusEnum.Closed

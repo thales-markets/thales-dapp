@@ -18,7 +18,6 @@ import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from '../../components/SimpleLoader';
 import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
-import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { FlexDivColumnCentered } from 'theme/common';
 import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
@@ -28,6 +27,7 @@ import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
 import { isMobile } from 'utils/device';
 import { getMaxGasLimitForNetwork } from 'constants/options';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type Properties = {
     isStakingPaused: boolean;
@@ -35,6 +35,7 @@ type Properties = {
 
 const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -85,7 +86,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                     console.log(e);
                 }
             };
-            if (isWalletConnected) {
+            if (isWalletConnected && gelatoContractWithSigner.signer) {
                 getAllowance();
             }
         }
@@ -171,7 +172,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             return (
                 <Button
                     active={true}
-                    onClickHandler={() => onboardConnector.connectWallet()}
+                    onClickHandler={openConnectModal}
                     type={ButtonType.submit}
                     width={isMobile() ? '100%' : '60%'}
                 >

@@ -1,10 +1,104 @@
+import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
+import { RainbowKitProvider, connectorsForWallets, darkTheme } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/dist/index.css';
+import WalletDisclaimer from 'components/WalletDisclaimer';
+import dotenv from 'dotenv';
+import { merge } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
-import dotenv from 'dotenv';
-dotenv.config();
+import {
+    injectedWallet,
+    rainbowWallet,
+    metaMaskWallet,
+    coinbaseWallet,
+    walletConnectWallet,
+    braveWallet,
+    ledgerWallet,
+    imTokenWallet,
+    trustWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { optimism, optimismGoerli, arbitrum, mainnet, polygon, bsc } from 'wagmi/chains';
+import { infuraProvider } from 'wagmi/providers/infura';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
-import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
+dotenv.config();
+
+type RpcProvider = {
+    ankr: string;
+    chainnode: string;
+    blast: string;
+};
+
+const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
+    1: {
+        ankr: '',
+        chainnode: 'mainnet',
+        blast: 'eth-mainnet',
+    },
+    10: {
+        ankr: 'optimism',
+        chainnode: 'optimism-mainnet',
+        blast: 'optimism-mainnet',
+    },
+    56: {
+        ankr: '',
+        chainnode: '',
+        blast: 'bsc-mainnet',
+    },
+    137: {
+        ankr: '',
+        chainnode: 'polygon-mainnet',
+        blast: 'polygon-mainnet',
+    },
+    420: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
+    42161: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
+};
+
+const { chains, provider } = configureChains(
+    [mainnet, optimism, optimismGoerli, polygon, arbitrum, bsc],
+    [
+        jsonRpcProvider({
+            rpc: (chain) => ({
+                http: !CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode
+                    ? chain.rpcUrls.default.http[0]
+                    : `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].chainnode}.chainnodes.org/${
+                          process.env.REACT_APP_CHAINNODE_PROJECT_ID
+                      }`,
+            }),
+            stallTimeout: 2000,
+        }),
+        infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '', stallTimeout: 2000 }),
+        publicProvider(),
+    ]
+);
+
+const connectors = connectorsForWallets([
+    {
+        groupName: 'Recommended',
+        wallets: [
+            metaMaskWallet({ chains }),
+            walletConnectWallet({ chains }), // ensure all WalletConnect-based wallets are supported
+            braveWallet({ chains }),
+            ledgerWallet({ chains }),
+            trustWallet({ chains }),
+            injectedWallet({ chains }), //  ensure all injected wallets are supported
+            coinbaseWallet({ appName: 'Overtime', chains }),
+            rainbowWallet({ chains }),
+            imTokenWallet({ chains }),
+        ],
+    },
+]);
+
+const wagmiClient = createClient({
+    autoConnect: true,
+    connectors,
+    provider,
+});
+
+const customTheme = merge(darkTheme(), { colors: { modalBackground: '#0e1069' } });
 
 const instance = createInstance({
     urlBase: 'https://data.thalesmarket.io',
@@ -35,7 +129,18 @@ const Root: React.FC<RootProps> = ({ store }) => {
     return (
         <Provider store={store}>
             <MatomoProvider value={instance}>
-                <App />
+                <WagmiConfig client={wagmiClient}>
+                    <RainbowKitProvider
+                        chains={chains}
+                        theme={customTheme}
+                        appInfo={{
+                            appName: 'Overtime',
+                            disclaimer: WalletDisclaimer,
+                        }}
+                    >
+                        <App />
+                    </RainbowKitProvider>
+                </WagmiConfig>
             </MatomoProvider>
         </Provider>
     );

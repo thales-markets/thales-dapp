@@ -1,8 +1,8 @@
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 
 import { RootState } from 'redux/rootReducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId, updateNetworkSettings } from 'redux/modules/wallet';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
@@ -11,7 +11,7 @@ import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMar
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
 
-import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
 import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
@@ -22,7 +22,6 @@ const HotMarkets = lazy(() => import(/* webpackChunkName: "HotMarkets" */ './com
 const MarketsTable = lazy(() => import(/* webpackChunkName: "MarketsTable" */ './components/MarketsTable'));
 
 const Markets: React.FC = () => {
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [lastValidOpenOrdersMap, setLastValidOpenOrdersMap] = useState<OpenOrdersMap>(undefined);
@@ -32,23 +31,6 @@ const Markets: React.FC = () => {
 
     const showDiscountMarkets =
         getIsOVM(networkId) || getIsArbitrum(networkId) || getIsPolygon(networkId) || getIsBSC(networkId);
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (!isWalletConnected && window.ethereum) {
-            (window.ethereum as any).on('chainChanged', (chainId: any) => {
-                const networkIdInt = Number(chainId) as NetworkId;
-
-                dispatch(
-                    updateNetworkSettings({
-                        networkId: networkIdInt,
-                        networkName: SUPPORTED_NETWORKS_NAMES[networkIdInt]?.toLowerCase(),
-                    })
-                );
-            });
-        }
-    }, []);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
 

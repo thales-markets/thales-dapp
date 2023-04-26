@@ -21,7 +21,7 @@ export const SNAPSHOT_MESSAGE_API_URL = 'https://hub.snapshot.org/api/message';
 export const MESSAGE_VOTE_TYPE = 'vote';
 export const MESSAGE_VERSION = '0.1.3';
 
-export const VOTING_COUNCIL_PROPOSAL_ID = '0x7e3c98677e7d918f0c4f1ac6dda2b89ce36063f383a316ed7d86e9d061e42ad8';
+export const VOTING_COUNCIL_PROPOSAL_ID = '0xfb0b6c5f7eaf8f40032be7f8b38965294a4b809cedcf48b0533e68682ea4043a';
 export const COUNCIL_PROPOSAL_ID = '0x7e3c98677e7d918f0c4f1ac6dda2b89ce36063f383a316ed7d86e9d061e42ad8';
 export const VOTING_ORACLE_COUNCIL_PROPOSAL_ID = '0xb94b357561a620ab38777f75aba7f6d14d21e019911c2c1ff5cd88e5f1b18eeb';
 export const FIRST_COUNCIL_ELECTIONS_ID = 'QmcKWQZYyj6Z7iaWpUR3unjNU5otchQsARSVjE4utYSyv3';
@@ -48,3 +48,6 @@ export const EXCLUDED_PROPOSALS = [
     '0xab831f0a6faf785b1829f343ad744b89fa87b0e9d0dc76232affe43ae76111a6',
     '0xbe858d9db6b9abc060bcf2c064f642a1dd3f8dd3ba396328938dee87c51dbd25',
 ];
+
+export const BLOCK_OPTIMISM = 93902848;
+export const BLOCK_ARBITRUM = 83864135;

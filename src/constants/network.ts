@@ -144,7 +144,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     10: {
         name: 'Optimism',
         icon: OpLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? Network['Mainnet-Ovm'];
             const optimismNetworkParms = OPTIMISM_NETWORKS[switchTo];
 
@@ -154,6 +154,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: optimismNetworkParms.chainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     if (switchError.code === 4902) {
                         try {
@@ -214,7 +215,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     1: {
         name: 'Mainnet',
         icon: EthereumLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const formattedChainId = hexStripZeros(BigNumber.from(networkId).toHexString());
 
             if (typeof window.ethereum !== 'undefined') {
@@ -223,6 +224,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: formattedChainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     console.log(switchError);
                 }
@@ -232,7 +234,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     56: {
         name: 'BNBChain',
         icon: BSCLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const bscNetworkParams = BSC_NETWORK[networkId];
 
             if (typeof window.ethereum !== 'undefined') {
@@ -241,6 +243,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: bscNetworkParams.chainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     console.log(switchError);
                 }
@@ -250,7 +253,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
     42161: {
         name: 'Arbitrum',
         icon: ArbitrumLogo,
-        changeNetwork: async (networkId: number) => {
+        changeNetwork: async (networkId: number, callback?: VoidFunction) => {
             const arbNetworkParams = ARBITRUM_NETWORK[networkId];
 
             if (typeof window.ethereum !== 'undefined') {
@@ -259,6 +262,7 @@ export const SUPPORTED_MAINNET_NETWORK_IDS_MAP: Record<string, DropdownNetwork> 
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: arbNetworkParams.chainId }],
                     });
+                    callback && callback();
                 } catch (switchError: any) {
                     console.log(switchError);
                 }
