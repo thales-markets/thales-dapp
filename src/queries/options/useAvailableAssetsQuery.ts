@@ -4,7 +4,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { uniq } from 'lodash';
 
-const useAvailableAssetsQuery = (options?: UseQueryOptions) => {
+const useAvailableAssetsQuery = (options?: UseQueryOptions<string[]>) => {
     return useQuery<string[]>(
         QUERY_KEYS.BinaryOptions.AvailableAssets(),
         async () => {
