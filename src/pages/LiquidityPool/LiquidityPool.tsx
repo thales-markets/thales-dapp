@@ -40,7 +40,6 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import onboardConnector from 'utils/onboardConnector';
 import { LiquidityPoolPnlType, LiquidityPoolTab } from 'constants/liquidityPool';
 import NumericInput from 'pages/Token/components/NumericInput';
 import { getIsAppReady } from 'redux/modules/app';
@@ -71,9 +70,11 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
+    const { openConnectModal } = useConnectModal();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -342,11 +343,7 @@ const LiquidityPool: React.FC = () => {
 
     const getDepositSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <SubmitButton onClick={() => onboardConnector.connectWallet()}>
-                    {t('common.wallet.connect-your-wallet')}
-                </SubmitButton>
-            );
+            return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
         }
         if (insufficientBalance) {
             return <SubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</SubmitButton>;
@@ -376,11 +373,7 @@ const LiquidityPool: React.FC = () => {
 
     const getWithdrawSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <SubmitButton onClick={() => onboardConnector.connectWallet()}>
-                    {t('common.wallet.connect-your-wallet')}
-                </SubmitButton>
-            );
+            return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
         }
         return (
             <SubmitButton disabled={isRequestWithdrawalButtonDisabled} onClick={handleWithdrawalRequest}>
