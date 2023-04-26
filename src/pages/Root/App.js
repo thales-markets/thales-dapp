@@ -25,6 +25,7 @@ import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
+import TradePage from 'pages/Trade/Trade';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -273,6 +274,12 @@ const App = () => {
                                 </DappLayout>
                             )}
                         />
+
+                        <Route exact path={ROUTES.Options.Trade}>
+                            <DappLayout>
+                                <TradePage />
+                            </DappLayout>
+                        </Route>
 
                         <Route exact path={ROUTES.Options.Home}>
                             <DappLayout>
