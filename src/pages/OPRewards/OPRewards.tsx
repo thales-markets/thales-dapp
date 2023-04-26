@@ -75,8 +75,8 @@ const OPRewards: React.FC = () => {
 
     const [period, setPeriod] = useState<number>(1);
 
-    const minTimestamp = periodRangeTimestamps[period]?.minTimestamp || undefined;
-    const maxTimestamp = periodRangeTimestamps[period]?.maxTimestamp || undefined;
+    const minTimestamp = periodRangeTimestamps[period - 1]?.minTimestamp || undefined;
+    const maxTimestamp = periodRangeTimestamps[period - 1]?.maxTimestamp || undefined;
 
     const usersAmmBuyVolumeQuery = useUsersAmmBuyVolumeQuery(networkId, period, { enabled: isAppReady });
 
