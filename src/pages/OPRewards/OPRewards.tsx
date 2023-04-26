@@ -248,7 +248,9 @@ const OPRewards: React.FC = () => {
         <Wrapper>
             <ElectionsBanner />
             <Description>
-                <Trans i18nKey={'op-rewards.stay-tuned'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <Trans i18nKey={'op-rewards.description-1'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <Trans i18nKey={'op-rewards.length-info'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
             </Description>
             <HeaderWrapper>
                 <RoundWrapper>
