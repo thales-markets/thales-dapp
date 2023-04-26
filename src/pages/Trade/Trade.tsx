@@ -31,8 +31,8 @@ const TradePage: React.FC = () => {
         if (assetsQuery.isSuccess) return assetsQuery.data;
         return [];
     }, [assetsQuery, networkId, maturityQuery]);
-    console.log(allAssets);
 
+    console.log(allAssets);
     return (
         <>
             <Trading
@@ -45,8 +45,6 @@ const TradePage: React.FC = () => {
             />
         </>
     );
-    console.log(allAssets);
-    return <></>;
 };
 
 export default TradePage;
