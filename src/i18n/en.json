@@ -1927,13 +1927,13 @@
     "op-rewards": {
         "title": "OP Rewards",
         "stay-tuned": "Stay tuned for new reward program soon!",
-        "description": "<bold>The Trading Incentives program</bold> is split into separate 14 day rounds. <br/> <br/> After each round a fixed amount of OP tokens are to be distributed proportionally among all Buy Volume drivers across the Thales marketplace.<br/><br/>",
-        "description-2": "Total amount of tokens allocated as Trading Incentives: <bold>200,000 OP + 350,000 THALES</bold> <br/><br/>",
-        "description-3": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 9,000 OP + 15,000 THALES split between UP token Buyers <br/>    - 9,000 OP + 15,000 THALES split between DOWN token Buyers<br/>        - 5,000 OP + 10,000 THALES split between Ranged Markets IN/OUT tokens Buyers<br/><br/>  - 5,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
-        "description-3-itm": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 2,000 OP + 3,000 THALES split between ITM token Buyers <br/>    - 5,000 OP + 7,000 THALES split between OTM token Buyers<br/>      - 8,000 OP + 10,000 THALES towards any Discounted Tokens Buyers<br/><br/>      - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
+        "description": "Thales markets is now incentivized with extra OP and THALES rewards each week. <br/><br/> ",
+        "description-1": "The amount of rewards will be distributed pro-rata as follows: <br/><br/>      - 2,000 OP + 2,000 THALES for ITM (In the money) positions<br/> <br/>    - 2,000 OP + 2,000 THALES for OTM (Out of the money) positions <br/><br/>",
+        "description-itm": "ITM (In The Money) represents a position that would be successful if matured immediately. Example: BTC is at 30k and you buy an UP position with strike price 29k. <br/><br/>",
+        "description-otm": "OTM (Out of The Money) positions would be resolved immediately as unsuccessful. Example: BTC is at 30k and you buy a DOWN position with strike price 29k.<br/><br/>",
         "description-4": "<br/><br/>You can find all the detailed infomation on how to participate in <guidelinesLink>.",
         "description-last": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 3,000 OP + 3,000 THALES split between all ITM Tokens Buyers <br/> <br/>  - 3,000 OP + 3,000 THALES split between all OTM Tokens Buyers <br/> <br/>   - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
-        "length-info": "Current program will conclude with the 16th Round.",
+        "length-info": "The counter in this page will indicate when every round starts and ends, lasting 1 week, and also show how much rewards you'll be receiveing at the end of the round.<br/>  Please be aware that the amount of rewards displayed is just an estimation based on current amounts.",
         "table": {
             "wallet-address": "Wallet address",
             "my-wallet-address": " My wallet address",
