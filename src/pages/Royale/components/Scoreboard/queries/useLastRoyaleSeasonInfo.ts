@@ -27,7 +27,6 @@ const useLatestRoyaleSeasonInfo = (options?: UseQueryOptions<LatestRoyaleSeasonI
             return getFromContract(thalesRoyaleContract);
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

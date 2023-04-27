@@ -39,7 +39,6 @@ const useRoyaleArenaContractQuery = (
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

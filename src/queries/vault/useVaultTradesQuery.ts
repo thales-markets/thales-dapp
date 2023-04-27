@@ -43,7 +43,6 @@ const useVaultTradesQuery = (vaultAddress: string, networkId: NetworkId, options
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

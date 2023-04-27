@@ -1,4 +1,4 @@
-export const sportsVaultContract = {
+export const ammVaultContract = {
     abi: [
         {
             anonymous: false,
@@ -621,4 +621,4 @@ export const sportsVaultContract = {
     ],
 };
 
-export default sportsVaultContract;
+export default ammVaultContract;

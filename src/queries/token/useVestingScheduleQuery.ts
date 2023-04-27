@@ -21,14 +21,14 @@ const useVestingScheduleQuery = (
         async () => {
             const promises = [];
             for (let index = 0; index < NUMBER_OF_VESTING_PERIODS; index++) {
-                promises.push(await (snxJSConnector as any).escrowThalesContract.vestingEntries(walletAddress, index));
+                promises.push((snxJSConnector as any).escrowThalesContract.vestingEntries(walletAddress, index));
             }
 
             const vestingEntries = await Promise.all(promises);
 
             const [currentVestingPeriod, lastPeriodTimeStamp] = await Promise.all([
-                await (snxJSConnector as any).escrowThalesContract.currentVestingPeriod(),
-                await (snxJSConnector as any).stakingThalesContract.lastPeriodTimeStamp(),
+                (snxJSConnector as any).escrowThalesContract.currentVestingPeriod(),
+                (snxJSConnector as any).stakingThalesContract.lastPeriodTimeStamp(),
             ]);
 
             const lastPeriodDateTime = new Date(Number(lastPeriodTimeStamp) * 1000);

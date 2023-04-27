@@ -14,7 +14,6 @@ const useLatestSeasonQuery = (options?: UseQueryOptions<number>) => {
             return 0;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

@@ -17,7 +17,6 @@ const useRoyaleDataForScoreboard = (selectedSeason: number, options?: UseQueryOp
             return getFromContract(selectedSeason, thalesRoyaleContract);
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

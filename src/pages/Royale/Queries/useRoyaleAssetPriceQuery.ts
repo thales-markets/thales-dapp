@@ -16,7 +16,6 @@ const useRoyaleAssetPriceQuery = (royaleAsset: string, options?: UseQueryOptions
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );
