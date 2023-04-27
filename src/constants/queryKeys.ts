@@ -127,12 +127,6 @@ export const QUERY_KEYS = {
             networkId,
             type_in,
         ],
-        OPProtocolRewards: (networkId: NetworkId, minTimestamp?: number, maxTimestamp?: number) => [
-            'opprotocolreward',
-            networkId,
-            minTimestamp,
-            maxTimestamp,
-        ],
         UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['transactions', networkId, period],
         VestingSchedule: (walletAddress: string, networkId: NetworkId) => [
             'token',
@@ -142,21 +136,9 @@ export const QUERY_KEYS = {
             networkId,
         ],
         Info: (networkId: NetworkId) => ['token', 'info', networkId],
-        StakingMigrationOptout: (walletAddress: string, networkId: NetworkId) => [
-            'token',
-            'stakingMigrationOptout',
-            walletAddress,
-            networkId,
-        ],
         StakingRewards: (walletAddress: string, networkId: NetworkId) => [
             'token',
             'stakingRewards',
-            walletAddress,
-            networkId,
-        ],
-        MigratedRetroRewards: (walletAddress: string, networkId: NetworkId) => [
-            'token',
-            'migratedRetroRewards',
             walletAddress,
             networkId,
         ],

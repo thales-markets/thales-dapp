@@ -54,10 +54,6 @@ export const refetchUserTrades = (marketAddress: string, walletAddress: string) 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress));
 };
 
-export const refetchMigratedRetroRewards = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.MigratedRetroRewards(walletAddress, networkId));
-};
-
 export const refetchMigratedInvestorsRetroRewards = (walletAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.Token.MigratedInvestorsRetroRewards(walletAddress, networkId)
