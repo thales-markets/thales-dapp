@@ -9,7 +9,6 @@ const useAvailableAssetsQuery = (options?: UseQueryOptions<string[]>) => {
         QUERY_KEYS.BinaryOptions.AvailableAssets(),
         async () => {
             const result = await (snxJSConnector as any).binaryOptionsMarketDataContract.getAvailableAssets();
-            console.log(result);
             return uniq(result).map((data: any) => {
                 return parseBytes32String(data);
             });
