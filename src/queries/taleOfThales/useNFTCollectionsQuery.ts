@@ -26,7 +26,6 @@ const useNFTCollectionsQuery = (
             return response;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

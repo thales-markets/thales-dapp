@@ -54,19 +54,6 @@ export const refetchUserTrades = (marketAddress: string, walletAddress: string) 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress));
 };
 
-export const refetchWatchlistedMarkets = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Watchlist(walletAddress, networkId));
-};
-
-export const refetchOrders = (networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Orders('buys', networkId));
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Orders('sells', networkId));
-};
-
-export const refetchRetroAirdrop = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.RetroAirdrop(walletAddress, networkId));
-};
-
 export const refetchMigratedRetroRewards = (walletAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.MigratedRetroRewards(walletAddress, networkId));
 };

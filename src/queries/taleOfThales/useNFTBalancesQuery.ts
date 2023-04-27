@@ -22,7 +22,6 @@ const useNFTBalancesQuery = (
             return NFTBalances;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );
