@@ -182,6 +182,7 @@ const OPRewards: React.FC = () => {
                     </p>
                 ),
                 sortType: itmRewardsSort(),
+                sortDescFirst: true,
             },
 
             {
@@ -210,6 +211,7 @@ const OPRewards: React.FC = () => {
                     </p>
                 ),
                 sortType: otmRewardsSort(),
+                sortDescFirst: true,
             },
             {
                 Header: t('op-rewards.table.total-rewards'),
@@ -227,6 +229,7 @@ const OPRewards: React.FC = () => {
                     </p>
                 ),
                 sortType: rewardsSort(),
+                sortDescFirst: true,
             },
         ];
     };
@@ -310,11 +313,11 @@ const rewardsSort = () => (rowA: any, rowB: any) => {
 };
 
 const itmRewardsSort = () => (rowA: any, rowB: any) => {
-    return rowA.original.discountedInfo.rewards.op - rowB.original.itmInfo.rewards.op;
+    return rowA.original.itmInfo.rewards.op - rowB.original.itmInfo.rewards.op;
 };
 
 const otmRewardsSort = () => (rowA: any, rowB: any) => {
-    return rowA.original.discountedInfo.rewards.op - rowB.original.otmInfo.rewards.op;
+    return rowA.original.otmInfo.rewards.op - rowB.original.otmInfo.rewards.op;
 };
 
 export default OPRewards;
