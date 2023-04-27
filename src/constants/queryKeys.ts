@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers';
 import { NetworkId } from 'utils/network';
 import { SpaceKey } from './governance';
+import { POSITIONS } from './options';
 
 export const QUERY_KEYS = {
     WalletBalances: {
@@ -106,6 +107,13 @@ export const QUERY_KEYS = {
         DiscountMap: (networkId: NetworkId) => ['binaryOptions', 'discountMap', networkId],
         AvailableAssets: () => ['binaryOptions', 'availableAssets'],
         MaturityDatesByAsset: (asset: string) => ['binaryOptions', 'maturityDatesByAsset', asset],
+        MarketsByAssetAndDate: (asset: string, date: Date, position: POSITIONS) => [
+            'binaryOptions',
+            'marketsByAssetAndDate',
+            asset,
+            date,
+            position,
+        ],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],

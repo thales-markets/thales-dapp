@@ -2,11 +2,12 @@ import { POSITIONS } from 'constants/options';
 import Trading from './components/Trading/Trading';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
 import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesByAssetQuery';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
+import useMarketsByAssetAndDateQuery from 'queries/options/useMarketsByAssetAndDateQuery';
 
 const TradePage: React.FC = () => {
     // selectors
@@ -23,16 +24,38 @@ const TradePage: React.FC = () => {
         enabled: isAppReady,
         refetchInterval: false,
     });
-
-    const maturityQuery = useMaturityDatesByAssetQueryQuery(_currencyKey);
+    const maturityQuery = useMaturityDatesByAssetQueryQuery(_currencyKey, {
+        enabled: isAppReady,
+        refetchInterval: false,
+    });
+    const marketsQuery = useMarketsByAssetAndDateQuery(_currencyKey, _maturityDate as Date, _positionType, {
+        enabled: _maturityDate !== undefined,
+        refetchInterval: false,
+    });
 
     // hooks
     const allAssets = useMemo(() => {
         if (assetsQuery.isSuccess) return assetsQuery.data;
         return [];
-    }, [assetsQuery, networkId, maturityQuery]);
+    }, [assetsQuery, networkId]);
 
-    console.log(allAssets);
+    const allDates = useMemo(() => {
+        if (maturityQuery.isSuccess) return maturityQuery.data;
+        return [];
+    }, [networkId, maturityQuery]);
+
+    const allMarkets = useMemo(() => {
+        if (marketsQuery.isSuccess) return marketsQuery.data;
+        return [];
+    }, [networkId, marketsQuery]);
+
+    useEffect(() => {
+        if (allDates.length) {
+            _setMaturityDate(allDates[0]);
+        }
+    }, [allDates]);
+
+    console.log(allAssets, allMarkets);
     return (
         <>
             <Trading
