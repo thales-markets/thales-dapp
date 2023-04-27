@@ -16,7 +16,6 @@ const usePositionsQuery = (selectedSeason: number, networkId: NetworkId, options
             return getFromContract(thalesRoyaleContract, selectedSeason);
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

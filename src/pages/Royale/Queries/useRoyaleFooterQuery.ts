@@ -22,7 +22,6 @@ const useRoyaleFooterQuery = (selectedSeason: number, options?: UseQueryOptions<
             return getFromContract(thalesRoyaleContract, selectedSeason);
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

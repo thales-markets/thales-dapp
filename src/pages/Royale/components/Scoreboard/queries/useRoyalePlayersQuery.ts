@@ -108,7 +108,6 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
             return users;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

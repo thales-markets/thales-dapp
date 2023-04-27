@@ -15,7 +15,6 @@ const useRoyalePassQuery = (walletAddress: string, options?: UseQueryOptions<Roy
             return getFromContract(thalesRoyalePassContract, walletAddress);
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

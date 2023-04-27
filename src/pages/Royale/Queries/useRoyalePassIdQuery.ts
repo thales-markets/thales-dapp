@@ -26,7 +26,6 @@ const useRoyalePassIdQuery = (walletAddress: string, networkId: NetworkId, optio
             }
         },
         {
-            refetchInterval: 3000,
             ...options,
         }
     );
