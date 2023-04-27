@@ -41,7 +41,6 @@ const TradePage: React.FC = () => {
                 positionType={_positionType}
                 strikePrice={20900}
                 marketAddress="0x7eed10dfc2c636fd6e8100c38769813ed3771cbe"
-                positionAddress="0xa6D3368305d696D54D0b27C4925C5b7e5150655B"
             />
         </>
     );

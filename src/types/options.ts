@@ -239,6 +239,11 @@ export type AccountMarketInfo = {
     short: number;
 };
 
+export type MarketParametersInfo = {
+    longAddress: string;
+    shortAddress: string;
+};
+
 export type RangedMarketBalanceInfo = {
     in: number;
     out: number;

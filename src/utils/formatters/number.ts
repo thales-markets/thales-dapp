@@ -129,3 +129,7 @@ export const calculateAndFormatPercentage = (first: number, second: number) => {
     const smaller = first > second ? second : first;
     return (greater - smaller) / smaller;
 };
+
+export const roundNumberToDecimals = (value: number, decimals = DEFAULT_CURRENCY_DECIMALS) => {
+    return +(Math.round(Number(value + 'e+' + decimals)) + 'e-' + decimals);
+};
