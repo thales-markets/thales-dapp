@@ -1,5 +1,3 @@
-import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +9,7 @@ import styled from 'styled-components';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getIsOVM } from 'utils/network';
 import useOpThalesBalanceQuery from '../../queries/walletBalances/useOpThalesBalanceQuery';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 
 type ThalesBalanceProps = {
     showTitle?: boolean;
@@ -33,13 +32,8 @@ const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
         enabled: isAppReady && isWalletConnected && !isL2,
     });
 
-    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
+    const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isL2,
-        refetchInterval: 60 * 1000,
-    });
-
-    const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
         refetchInterval: 60 * 1000,
     });
 
@@ -50,8 +44,10 @@ const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
         : opThalesBalanceQuery.isSuccess
         ? Number(opThalesBalanceQuery.data.balance)
         : 0;
-    const staked = stakingThalesQuery.isSuccess ? stakingThalesQuery.data.thalesStaked : 0;
-    const escrowedBalance = escrowThalesQuery.isSuccess ? escrowThalesQuery.data.escrowedBalance : 0;
+    const staked =
+        userStakingDataQuery.isSuccess && userStakingDataQuery.data ? userStakingDataQuery.data.thalesStaked : 0;
+    const escrowedBalance =
+        userStakingDataQuery.isSuccess && userStakingDataQuery.data ? userStakingDataQuery.data.escrowedBalance : 0;
 
     const proportions = useMemo(() => {
         return calculateWidth(inWallet, staked, escrowedBalance);

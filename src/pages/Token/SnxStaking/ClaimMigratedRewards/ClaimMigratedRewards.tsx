@@ -46,7 +46,7 @@ const ClaimMigratedRewards: React.FC = () => {
         migratedRewards.reward &&
         migratedRewards.hasClaimRights &&
         !migratedRewards.claimed &&
-        !migratedRewards.isClaimPaused;
+        !migratedRewards.isPaused;
 
     const migratedRewardsQuery = useMigratedInvestorsRetroRewardsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!unclaimedInvestorsRetroAirdropContract,
@@ -188,18 +188,18 @@ const ClaimMigratedRewards: React.FC = () => {
                                 : t('options.earn.thales-staking.staking-rewards.claim') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
                         </DefaultSubmitButton>
-                        {migratedRewards && migratedRewards.isClaimPaused && (
+                        {migratedRewards && migratedRewards.isPaused && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.paused-message')}
                             </ClaimMessage>
                         )}
-                        {migratedRewards && !migratedRewards.isClaimPaused && !migratedRewards.hasClaimRights && (
+                        {migratedRewards && !migratedRewards.isPaused && !migratedRewards.hasClaimRights && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
                             </ClaimMessage>
                         )}
                         {migratedRewards &&
-                            !migratedRewards.isClaimPaused &&
+                            !migratedRewards.isPaused &&
                             migratedRewards.hasClaimRights &&
                             migratedRewards.claimed && (
                                 <ClaimMessage>

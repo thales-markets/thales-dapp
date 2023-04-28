@@ -27,13 +27,7 @@ import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLim
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import {
-    refetchAmmData,
-    refetchTrades,
-    refetchUserBalance,
-    refetchUserTrades,
-    refetchWalletBalances,
-} from 'utils/queryConnector';
+import { refetchAmmData, refetchTrades, refetchUserTrades, refetchBalances } from 'utils/queryConnector';
 import {
     calculateAndFormatPercentage,
     formatCurrency,
@@ -589,11 +583,10 @@ const AMM: React.FC = () => {
                         )
                     )
                 );
-                refetchWalletBalances(walletAddress, networkId);
-                refetchAmmData(walletAddress, optionsMarket?.address, networkId);
+                refetchBalances(walletAddress, networkId);
+                refetchAmmData(walletAddress, optionsMarket?.address);
                 refetchTrades(optionsMarket?.address);
                 refetchUserTrades(optionsMarket?.address, walletAddress);
-                refetchUserBalance(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');

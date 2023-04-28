@@ -20,12 +20,12 @@ import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
 import thalesRoyalePassportContract from './contracts/thalesRoyalePassportContract';
 import bridgeContract from './contracts/bridgeContract';
 import usdcContract from './contracts/collateralContract';
-import unclaimedRetroAirdropContract from './contracts/unclaimedRetroAirdrop';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import multipleCollateral from './contracts/multipleCollateralContract';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import taleOfThalesNFT from './contracts/taleOfThalesNFT';
 import ammVaultDataContract from 'utils/contracts/ammVaultDataContract';
+import stakingDataContract from 'utils/contracts/stakingDataContract';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -58,6 +58,7 @@ type SnxJSConnector = {
     liquidityPoolContract?: ethers.Contract;
     taleOfThalesNFTContract?: ethers.Contract;
     ammVaultDataContract?: ethers.Contract;
+    stakingDataContract?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -110,10 +111,6 @@ const snxJSConnector: SnxJSConnector = {
         this.lpStakingRewardsContract = conditionalInitializeContract(lpStakingRewardsContract, contractSettings);
         this.gelatoContract = conditionalInitializeContract(gelatoContract, contractSettings);
         this.bridgeContract = conditionalInitializeContract(bridgeContract, contractSettings);
-        this.unclaimedRetroAirdropContract = conditionalInitializeContract(
-            unclaimedRetroAirdropContract,
-            contractSettings
-        );
         this.unclaimedInvestorsRetroAirdropContract = conditionalInitializeContract(
             unclaimedInvestorsRetroAirdropContract,
             contractSettings
@@ -121,6 +118,7 @@ const snxJSConnector: SnxJSConnector = {
         this.liquidityPoolContract = conditionalInitializeContract(liquidityPoolContract, contractSettings);
         this.taleOfThalesNFTContract = conditionalInitializeContract(taleOfThalesNFT, contractSettings);
         this.ammVaultDataContract = conditionalInitializeContract(ammVaultDataContract, contractSettings);
+        this.stakingDataContract = conditionalInitializeContract(stakingDataContract, contractSettings);
     },
 };
 

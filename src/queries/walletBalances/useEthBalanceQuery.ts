@@ -12,7 +12,6 @@ const useEthBalanceQuery = (walletAddress: string, options?: UseQueryOptions<str
             return Number(ethers.utils.formatEther(balance)).toFixed(4);
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

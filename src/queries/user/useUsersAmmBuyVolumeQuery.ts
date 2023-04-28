@@ -37,7 +37,6 @@ const useUsersAmmBuyVolumeQuery = (
             return { rewards };
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

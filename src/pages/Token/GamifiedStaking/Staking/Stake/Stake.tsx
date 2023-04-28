@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line, BalanceIcon } from '../../../components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
@@ -15,13 +15,12 @@ import { BigNumber, ethers } from 'ethers';
 import ValidationMessage from 'components/ValidationMessage';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { checkAllowance, formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
-import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
+import { refetchTokenQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from '../../../components/SimpleLoader';
 import { MaxButton, ThalesWalletAmountLabel } from '../../../Migration/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { FlexDivColumnCentered } from 'theme/common';
 import ApprovalModal from 'components/ApprovalModal';
@@ -29,6 +28,8 @@ import Button from 'pages/Token/components/Button';
 import { ButtonType } from 'pages/Token/components/Button/Button';
 import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { UserStakingData } from 'types/token';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 
 const Stake: React.FC = () => {
     const { t } = useTranslation();
@@ -48,18 +49,33 @@ const Stake: React.FC = () => {
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const isL2 = getIsOVM(networkId);
     const { stakingThalesContract } = snxJSConnector as any;
+    const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
 
     const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
+
+    const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
+    useEffect(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            setLastValidUserStakingData(userStakingDataQuery.data);
+        }
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data]);
+
+    const userStakingData: UserStakingData | undefined = useMemo(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            return userStakingDataQuery.data;
+        }
+        return lastValidUserStakingData;
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data, lastValidUserStakingData]);
+
     const thalesBalance =
         thalesBalanceQuery.isSuccess && thalesBalanceQuery.data ? Number(thalesBalanceQuery.data.balance) : 0;
-    const isUnstaking = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.isUnstaking;
-    const isStakingPaused = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.paused;
+    const isUnstaking = userStakingData && userStakingData.isUnstaking;
+    const isStakingPaused = userStakingData && userStakingData.isPaused;
 
     const isAmountEntered = Number(amountToStake) > 0;
     const insufficientBalance = Number(amountToStake) > thalesBalance || !thalesBalance;
@@ -142,7 +158,6 @@ const Stake: React.FC = () => {
             if (txResult && txResult.transactionHash) {
                 dispatchMarketNotification(t('options.earn.gamified-staking.staking.stake.confirmation-message'));
                 refetchTokenQueries(walletAddress, networkId);
-                refetchUserTokenTransactions(walletAddress, networkId);
                 setAmountToStake('');
                 setIsStaking(false);
             }

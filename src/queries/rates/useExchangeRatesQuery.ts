@@ -26,7 +26,7 @@ const useExchangeRatesQuery = (options?: UseQueryOptions<Rates>) => {
             return exchangeRates;
         },
         {
-            refetchInterval: 5000,
+            refetchInterval: 60 * 1000,
             ...options,
         }
     );

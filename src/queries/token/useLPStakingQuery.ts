@@ -45,7 +45,6 @@ const useLPStakingThalesQuery = (
             return staking;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );
