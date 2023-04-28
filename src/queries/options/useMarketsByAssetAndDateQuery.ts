@@ -15,7 +15,7 @@ type MarketInfo = {
 
 const useMarketsByAssetAndDateQuery = (
     asset: string,
-    date: Date,
+    date: number,
     position: POSITIONS,
     options?: UseQueryOptions<MarketInfo[]>
 ) => {
@@ -24,7 +24,7 @@ const useMarketsByAssetAndDateQuery = (
         async () => {
             const result = await (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketsForAssetAndStrikeDate(
                 ethers.utils.formatBytes32String(asset),
-                Number(date.getTime() / 1000)
+                Number(date / 1000)
             );
 
             const allMarkets = uniq(result).filter((value) => value !== '0x0000000000000000000000000000000000000000');
@@ -36,12 +36,14 @@ const useMarketsByAssetAndDateQuery = (
             const finalResult = result1.filter((marketInfo: any) => Number(marketInfo.liquidity) !== 0);
 
             return finalResult.map((market: any) => {
+                const discount = Number(ethers.utils.formatEther(market.priceImpact));
+
                 return {
                     address: market.market,
                     liquidity: ethers.utils.formatEther(market.liquidity),
                     price: ethers.utils.formatEther(market.price),
                     strikePrice: ethers.utils.formatEther(market.strikePrice),
-                    discount: ethers.utils.formatEther(market.priceImpact),
+                    discount: discount > 0 ? discount * 100 : 0,
                 };
             });
         },

@@ -107,7 +107,7 @@ export const QUERY_KEYS = {
         DiscountMap: (networkId: NetworkId) => ['binaryOptions', 'discountMap', networkId],
         AvailableAssets: () => ['binaryOptions', 'availableAssets'],
         MaturityDatesByAsset: (asset: string) => ['binaryOptions', 'maturityDatesByAsset', asset],
-        MarketsByAssetAndDate: (asset: string, date: Date, position: POSITIONS) => [
+        MarketsByAssetAndDate: (asset: string, date: number, position: POSITIONS) => [
             'binaryOptions',
             'marketsByAssetAndDate',
             asset,

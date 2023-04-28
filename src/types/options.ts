@@ -82,6 +82,14 @@ export type HistoricalOptionsMarketInfo = {
     ammLiquidity?: number;
 };
 
+export type MarketInfo = {
+    address: string;
+    liquidity: number;
+    price: number;
+    strikePrice: number;
+    discount: number;
+};
+
 export type RangedMarket = {
     address: string;
     timestamp: number;
