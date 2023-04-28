@@ -133,7 +133,7 @@ const Table: React.FC<TableProps> = ({
                         indexOfElement = i;
                         break;
                     }
-                    if (markets[i].strikePrice < currentPrice && markets[i + 1].strikePrice > currentPrice) {
+                    if (markets[i].strikePrice > currentPrice && markets[i + 1].strikePrice < currentPrice) {
                         indexOfElement = i;
                         break;
                     }

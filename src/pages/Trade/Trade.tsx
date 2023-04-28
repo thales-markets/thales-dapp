@@ -63,7 +63,6 @@ const TradePage: React.FC = () => {
         }
     }, [allDates]);
 
-    console.log(allAssets, allMarkets);
     return (
         <Wrapper>
             <Banners />

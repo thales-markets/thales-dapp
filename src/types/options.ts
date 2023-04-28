@@ -83,6 +83,7 @@ export type HistoricalOptionsMarketInfo = {
 };
 
 export type MarketInfo = {
+    currencyKey: string;
     address: string;
     liquidity: number;
     price: number;

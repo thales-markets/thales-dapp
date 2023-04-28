@@ -4,14 +4,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { POSITIONS } from 'constants/options';
 import { uniq } from 'lodash';
-
-type MarketInfo = {
-    address: string;
-    liquidity: number;
-    price: number;
-    strikePrice: number;
-    discount: number;
-};
+import { MarketInfo } from 'types/options';
 
 const useMarketsByAssetAndDateQuery = (
     asset: string,
@@ -34,18 +27,22 @@ const useMarketsByAssetAndDateQuery = (
                 position === POSITIONS.UP ? 0 : 1
             );
             const finalResult = result1.filter((marketInfo: any) => Number(marketInfo.liquidity) !== 0);
+            return finalResult
+                .map((market: any) => {
+                    const discount = Math.round(Number(ethers.utils.formatEther(market.priceImpact)) * 10000);
 
-            return finalResult.map((market: any) => {
-                const discount = Number(ethers.utils.formatEther(market.priceImpact));
-
-                return {
-                    address: market.market,
-                    liquidity: ethers.utils.formatEther(market.liquidity),
-                    price: ethers.utils.formatEther(market.price),
-                    strikePrice: ethers.utils.formatEther(market.strikePrice),
-                    discount: discount > 0 ? discount * 100 : 0,
-                };
-            });
+                    return {
+                        currencyKey: asset,
+                        address: market.market,
+                        liquidity: Number(ethers.utils.formatEther(market.liquidity)),
+                        price: Number(ethers.utils.formatEther(market.price)),
+                        strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
+                        discount: discount > 0 ? discount / 100 : 0,
+                    };
+                })
+                .sort((a: MarketInfo, b: MarketInfo) => {
+                    return b.strikePrice - a.strikePrice;
+                });
         },
         {
             refetchInterval: 5000,
