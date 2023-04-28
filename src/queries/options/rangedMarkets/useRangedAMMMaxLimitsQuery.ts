@@ -91,7 +91,6 @@ const useRangedAMMMaxLimitsQuery = (
             return ammMaxLimits;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

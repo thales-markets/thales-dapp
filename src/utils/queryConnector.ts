@@ -61,6 +61,13 @@ export const refetchAmmData = (walletAddress: string, marketAddress: string) => 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
 };
 
+export const refetchRangedAmmData = (walletAddress: string, marketAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(
+        QUERY_KEYS.WalletBalances.Positions(marketAddress, walletAddress, networkId)
+    );
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
+};
+
 export const refetchTokenQueries = (walletAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.StakingData(networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.UserStakingData(walletAddress, networkId));

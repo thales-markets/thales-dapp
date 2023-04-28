@@ -25,7 +25,6 @@ const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
 
     const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isL2,
-        refetchInterval: 60 * 1000,
     });
 
     const opThalesBalanceQuery = useOpThalesBalanceQuery(walletAddress, networkId, {
@@ -34,7 +33,6 @@ const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
 
     const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isL2,
-        refetchInterval: 60 * 1000,
     });
 
     const inWallet = isL2

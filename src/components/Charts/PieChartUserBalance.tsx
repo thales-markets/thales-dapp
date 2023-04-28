@@ -33,7 +33,6 @@ const PieChartUserBalance: React.FC = () => {
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '',
-        refetchInterval: 5000,
     });
 
     const stableBalance = stableBalanceQuery?.isSuccess && stableBalanceQuery?.data ? stableBalanceQuery.data : null;

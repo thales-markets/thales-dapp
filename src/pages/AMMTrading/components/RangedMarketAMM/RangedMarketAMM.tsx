@@ -28,7 +28,7 @@ import useRangedAMMMaxLimitsQuery, {
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import { refetchAmmData, refetchTrades, refetchUserTrades, refetchBalances } from 'utils/queryConnector';
+import { refetchRangedAmmData, refetchTrades, refetchUserTrades, refetchBalances } from 'utils/queryConnector';
 import {
     calculateAndFormatPercentage,
     formatCurrency,
@@ -616,7 +616,7 @@ const AMM: React.FC = () => {
                     )
                 );
                 refetchBalances(walletAddress, networkId);
-                refetchAmmData(walletAddress, rangedMarketData?.address);
+                refetchRangedAmmData(walletAddress, rangedMarketData?.address, networkId);
                 refetchTrades(rangedMarketData?.address);
                 refetchUserTrades(rangedMarketData?.address, walletAddress);
                 setIsSubmitting(false);

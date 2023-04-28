@@ -51,7 +51,6 @@ export const UserSwap: React.FC = () => {
 
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '' && isMultiCollateralSupported,
-        refetchInterval: 5000,
     });
 
     const multipleStableBalancesData =
@@ -64,7 +63,6 @@ export const UserSwap: React.FC = () => {
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && walletAddress !== '' && !isMultiCollateralSupported,
-        refetchInterval: 5000,
     });
 
     const stableBalance = stableBalanceQuery?.isSuccess && stableBalanceQuery?.data ? stableBalanceQuery.data : null;

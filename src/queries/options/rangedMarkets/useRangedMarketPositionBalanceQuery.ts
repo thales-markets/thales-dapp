@@ -50,7 +50,6 @@ const useRangedMarketPositionBalanceQuery = (
             };
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

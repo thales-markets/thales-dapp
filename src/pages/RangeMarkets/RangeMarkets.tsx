@@ -58,7 +58,6 @@ const RangeMarkets: React.FC = () => {
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets as any, {
         enabled: isAppReady && optionsMarkets.length > 0,
-        refetchInterval: false,
     });
 
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;

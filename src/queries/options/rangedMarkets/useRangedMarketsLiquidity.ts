@@ -30,7 +30,7 @@ export const useRangedMarketsLiquidity = (network: NetworkId, options?: UseQuery
             return mappedOpenOrdersMap;
         },
         {
-            refetchInterval: 5000,
+            refetchInterval: 60 * 1000,
             ...options,
         }
     );
