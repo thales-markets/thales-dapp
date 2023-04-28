@@ -2,13 +2,10 @@ import { ethers, Signer } from 'ethers';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import vestingEscrow from './contracts/vestingEscrow';
-import airdrop from './contracts/airdrop';
-import ongoingAirdrop from './contracts/ongoingAirdrop';
 import stakingThales from './contracts/stakingThales';
 import thalesContract from './contracts/thalesContract';
 import escrowThales from './contracts/escrowThales';
 import priceFeedContract from './contracts/priceFeedContract';
-import limitOrderProtocol1inchContract from './contracts/limitOrderProtocol1inchContract';
 import ammContract from './contracts/ammContract';
 import rangedMarketAMMContract from './contracts/rangedMarketsAMM';
 import thalesRoyaleContract from './contracts/thalesRoyalContract';
@@ -42,7 +39,6 @@ type SnxJSConnector = {
     thalesTokenContract?: ethers.Contract;
     escrowThalesContract?: ethers.Contract;
     priceFeedContract?: ethers.Contract;
-    limitOrderProtocol1inchContract?: ethers.Contract;
     ammContract?: ethers.Contract;
     rangedMarketAMMContract?: ethers.Contract;
     thalesRoyaleContract?: ethers.Contract;
@@ -87,17 +83,11 @@ const snxJSConnector: SnxJSConnector = {
             conditionalInitializeContract(multipleCollateral['USDT'], contractSettings),
         ];
 
-        this.retroAirdropContract = conditionalInitializeContract(airdrop, contractSettings);
         this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);
-        this.ongoingAirdropContract = conditionalInitializeContract(ongoingAirdrop, contractSettings);
         this.stakingThalesContract = conditionalInitializeContract(stakingThales, contractSettings);
         this.thalesTokenContract = conditionalInitializeContract(thalesContract, contractSettings);
         this.escrowThalesContract = conditionalInitializeContract(escrowThales, contractSettings);
         this.priceFeedContract = conditionalInitializeContract(priceFeedContract, contractSettings);
-        this.limitOrderProtocol1inchContract = conditionalInitializeContract(
-            limitOrderProtocol1inchContract,
-            contractSettings
-        );
         this.ammContract = conditionalInitializeContract(ammContract, contractSettings);
         this.rangedMarketAMMContract = conditionalInitializeContract(rangedMarketAMMContract, contractSettings);
         this.thalesRoyaleContract = conditionalInitializeContract(thalesRoyaleContract, contractSettings);
