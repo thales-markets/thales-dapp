@@ -7,7 +7,6 @@ import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import {
     COLLATERALS,
     MINIMUM_AMM_LIQUIDITY,
-    MIN_SCEW_IMPACT,
     POSITIONS,
     POSITIONS_TO_SIDE_MAP,
     SIDE,
@@ -35,12 +34,12 @@ import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAdd
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
-import { StableCoins } from 'types/options';
+import { MarketInfo, StableCoins } from 'types/options';
 import { getAmountToApprove, getEstimatedGasFees, getQuoteFromAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
-import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
+import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrency, formatCurrencyWithKey, roundNumberToDecimals } from 'utils/formatters/number';
 import {
     checkAllowance,
@@ -66,13 +65,12 @@ type TradingProps = {
     currencyKey: string;
     maturityDate: number;
     positionType: POSITIONS;
-    strikePrice: number;
-    marketAddress: string;
+    market: MarketInfo;
 };
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
-const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionType, strikePrice, marketAddress }) => {
+const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionType, market }) => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();
@@ -91,25 +89,22 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const [total, setTotal] = useState<number | string>(''); // total to pay or buyInAmount
     const [potentialReturn, setPotentialReturn] = useState<number | string>(''); // profit
     const [isPotentialReturnAvailable, setIsPotentialReturnAvailable] = useState(true); // profit available
-    const [priceImpact, setPriceImpact] = useState<number | string>(''); // discount if negative otherwise skew
-    const [basePriceImpact, setBasePriceImpact] = useState<number | string>(''); // discount if negative otherwise skew
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [hasAllowance, setAllowance] = useState(false);
     const [isGettingQuote, setIsGettingQuote] = useState(false);
     const [selectedStableIndex, setStableIndex] = useState(userSelectedCollateral);
     const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
-    const [maxLimitExceeded, setMaxLimitExceeded] = useState(false);
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [isPriceChanged, setIsPriceChanged] = useState(false);
-    const [maxLimit, setMaxLimit] = useState(0);
+    const [maxLimit, setMaxLimit] = useState(0); // liquidity
     const [_isAmountValid, setIsAmountValid] = useState(true); // TODO: add validation on amount
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
 
-    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(marketAddress, networkId, {
-        enabled: isAppReady && !!marketAddress,
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, {
+        enabled: isAppReady && !!market.address,
     });
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
@@ -117,11 +112,11 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && getIsMultiCollateralSupported(networkId),
     });
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketAddress, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !!marketAddress,
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
+        enabled: isAppReady && isWalletConnected && !!market.address,
     });
-    const marketParametersInfoQuery = useBinaryOptionsMarketParametersInfoQuery(marketAddress, {
-        enabled: isAppReady && !!marketAddress,
+    const marketParametersInfoQuery = useBinaryOptionsMarketParametersInfoQuery(market.address, {
+        enabled: isAppReady && !!market.address,
     });
 
     const ammMaxLimits = useMemo(() => {
@@ -178,7 +173,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         isSubmitting ||
         !isWalletConnected ||
         insufficientBalance ||
-        maxLimitExceeded ||
+        insufficientLiquidity ||
         isGettingQuote ||
         isAmmTradingDisabled ||
         !hasAllowance;
@@ -209,7 +204,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const resetData = () => {
         setPrice('');
         setTotal('');
-        setPriceImpact('');
         setPotentialReturn('');
         setGasLimit(null);
         setIsPotentialReturnAvailable(isBuy);
@@ -279,12 +273,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                     isBuy,
                     ammContractWithSigner,
                     parsedAmount,
-                    marketAddress,
+                    market.address,
                     POSITIONS_TO_SIDE_MAP[positionType],
                     collateral.address
                 );
 
-                const [ammQuotes, ammPriceImpact]: Array<BigNumber> = await Promise.all(promises);
+                const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
                 const ammQuote = isNonDefaultStable ? (ammQuotes as any)[0] : ammQuotes;
 
                 const ammPrice =
@@ -302,7 +296,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
                     )
                 );
-                setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - MIN_SCEW_IMPACT : 0);
                 setPotentialReturn(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
                 setIsPotentialReturnAvailable(isBuy);
 
@@ -318,7 +311,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
                 if (isSubmit) {
                     latestGasLimit = await fetchGasLimit(
-                        marketAddress,
+                        market.address,
                         POSITIONS_TO_SIDE_MAP[positionType],
                         parsedAmount,
                         ammQuote,
@@ -336,7 +329,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         hasAllowance
                     ) {
                         fetchGasLimit(
-                            marketAddress,
+                            market.address,
                             POSITIONS_TO_SIDE_MAP[positionType],
                             parsedAmount,
                             ammQuote,
@@ -439,7 +432,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 isNonDefaultStable,
                 isBuy,
                 ammContractWithSigner,
-                marketAddress,
+                market.address,
                 POSITIONS_TO_SIDE_MAP[positionType],
                 parsedAmount,
                 parsedTotal,
@@ -462,9 +455,9 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 );
                 // TODO: check if all refetches are required
                 refetchWalletBalances(walletAddress, networkId);
-                refetchAmmData(walletAddress, marketAddress, networkId);
-                refetchTrades(marketAddress);
-                refetchUserTrades(marketAddress, walletAddress);
+                refetchAmmData(walletAddress, market.address, networkId);
+                refetchTrades(market.address);
+                refetchUserTrades(market.address, walletAddress);
                 refetchUserBalance(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
@@ -556,27 +549,23 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         const parsedAmount = ethers.utils.parseEther(amount.toString());
         const parsedTotal = stableCoinParser(total.toString(), networkId);
         const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
-        fetchGasLimit(marketAddress, POSITIONS_TO_SIDE_MAP[positionType], parsedAmount, parsedTotal, parsedSlippage);
+        fetchGasLimit(market.address, POSITIONS_TO_SIDE_MAP[positionType], parsedAmount, parsedTotal, parsedSlippage);
     }, [isWalletConnected, hasAllowance]);
 
     useEffect(() => {
         let max = 0;
         let base = 0;
-        let baseImpact = 0;
         if (ammMaxLimits) {
             if (isLong) {
                 max = isBuy ? ammMaxLimits.maxBuyLong : ammMaxLimits.maxSellLong;
                 base = isBuy ? ammMaxLimits.buyLongPrice : ammMaxLimits.sellLongPrice;
-                baseImpact = isBuy ? ammMaxLimits.buyLongPriceImpact : ammMaxLimits.sellLongPriceImpact;
             } else {
                 max = isBuy ? ammMaxLimits.maxBuyShort : ammMaxLimits.maxSellShort;
                 base = isBuy ? ammMaxLimits.buyShortPrice : ammMaxLimits.sellShortPrice;
-                baseImpact = isBuy ? ammMaxLimits.buyShortPriceImpact : ammMaxLimits.sellShortPriceImpact;
             }
         }
         setMaxLimit(max);
         setBasePrice(base);
-        setBasePriceImpact(baseImpact);
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
     }, [ammMaxLimits, isLong, isBuy]);
 
@@ -596,7 +585,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     }, [amount, total, isBuy, stableBalance, tokenBalance]);
 
     useEffect(() => {
-        setMaxLimitExceeded(Number(amount) > maxLimit);
+        setInsufficientLiquidity(Number(amount) > maxLimit);
     }, [amount, maxLimit]);
 
     const getSubmitButton = () => {
@@ -641,13 +630,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 </Button>
             );
         }
-        if (maxLimitExceeded) {
-            return (
-                <Button {...defaultButtonProps} disabled={true}>
-                    {t(`common.errors.insufficient-liquidity`)}
-                </Button>
-            );
-        }
         if (!hasAllowance) {
             return (
                 <Button {...defaultButtonProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
@@ -682,32 +664,30 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     return (
         <>
             <Container>
-                <MarketInfo>
+                <MarketDetails>
                     <FlexDivColumnCentered>
-                        <span>{`${currencyKey} ${positionType} ${strikePrice ? '> ' + strikePrice : ''}`}</span>
+                        <span>{`${currencyKey} ${positionType} ${
+                            market.strikePrice ? '> ' + market.strikePrice : ''
+                        }`}</span>
                         <span>{`End Date ${maturityDate ? new Date(maturityDate).toLocaleDateString() : '-'}`}</span>
                     </FlexDivColumnCentered>
                     <FlexDivColumnCentered>
                         <span>{`Price per position ${
                             isGettingQuote
                                 ? '...'
-                                : Number(price) > 0 || Number(basePrice) > 0
+                                : positionAddress
                                 ? formatCurrency(Number(price) > 0 ? price : basePrice, 4)
                                 : '-'
                         }`}</span>
                         <span>{`Bonus per position ${
                             isGettingQuote
                                 ? '-'
-                                : Number(price) > 0 || Number(basePrice) > 0
-                                ? getFormattedBonus(
-                                      Number(price) > 0
-                                          ? convertPriceImpactToBonus(Number(priceImpact))
-                                          : convertPriceImpactToBonus(Number(basePriceImpact))
-                                  )
+                                : positionAddress
+                                ? getFormattedBonus(convertPriceImpactToBonus(market.discount))
                                 : '-'
                         }`}</span>
                     </FlexDivColumnCentered>
-                </MarketInfo>
+                </MarketDetails>
                 <Input
                     value={amount}
                     valueType={'number'}
@@ -718,7 +698,9 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 <Finalize>
                     <Column>
                         <FlexDivColumnCentered>
-                            <span style={{ textAlign: 'center' }}>{`If bitcoin stays ABOVE ${strikePrice}`}</span>
+                            <span
+                                style={{ textAlign: 'center' }}
+                            >{`If bitcoin stays ABOVE ${market.strikePrice}`}</span>
                             <span style={{ textAlign: 'center' }}>{`@${new Date(
                                 maturityDate
                             ).toLocaleDateString()} you will earn ${potentialProfitFormatted}`}</span>
@@ -764,7 +746,7 @@ const Container = styled(FlexDivRow)`
     height: 70px;
 `;
 
-const MarketInfo = styled(FlexDivCentered)`
+const MarketDetails = styled(FlexDivCentered)`
     width: 320px;
     background: #2b3139;
     border-radius: 8px;

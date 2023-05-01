@@ -93,8 +93,7 @@ const TradePage: React.FC = () => {
                 currencyKey={currencyKey}
                 maturityDate={maturityDate || 0}
                 positionType={positionType}
-                strikePrice={market?.strikePrice || 0}
-                marketAddress={market?.address || ''}
+                market={market || { currencyKey: '', address: '', liquidity: 0, price: 0, strikePrice: 0, discount: 0 }}
             />
         </Wrapper>
     );
