@@ -5,7 +5,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { MarketInfo } from 'types/options';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 
 type TableProps = {
     markets: MarketInfo[];
@@ -42,13 +42,11 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 Header: t(`options.home.markets-table.discount-col`),
                 accessor: 'discountedSide',
                 Cell: (_props: any) => {
-                    return <TableText>{_props.row.original.discount}%</TableText>;
+                    return <TableText>{formatPercentage(_props.row.original.discount)}</TableText>;
                 },
             },
         ];
     }, [markets]);
-
-    console.log('columns: ', columns);
 
     return (
         <Wrapper>

@@ -62,8 +62,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         fetchData();
     }, [asset, dateRange]);
 
-    console.log('maxPrice: ', maxPrice);
-
     return (
         <Wrapper>
             <Toggle options={ToggleButtons} defaultSelectedIndex={2} onChange={handleDateRangeChange} />

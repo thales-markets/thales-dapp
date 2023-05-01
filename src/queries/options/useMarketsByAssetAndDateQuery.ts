@@ -29,7 +29,7 @@ const useMarketsByAssetAndDateQuery = (
             const finalResult = result1.filter((marketInfo: any) => Number(marketInfo.liquidity) !== 0);
             return finalResult
                 .map((market: any) => {
-                    const discount = Math.round(Number(ethers.utils.formatEther(market.priceImpact)) * 10000);
+                    const discount = Number(ethers.utils.formatEther(market.priceImpact));
 
                     return {
                         currencyKey: asset,
@@ -37,7 +37,7 @@ const useMarketsByAssetAndDateQuery = (
                         liquidity: Number(ethers.utils.formatEther(market.liquidity)),
                         price: Number(ethers.utils.formatEther(market.price)),
                         strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
-                        discount: discount > 0 ? discount / 100 : 0,
+                        discount: discount < 0 ? discount : 0,
                     };
                 })
                 .sort((a: MarketInfo, b: MarketInfo) => {

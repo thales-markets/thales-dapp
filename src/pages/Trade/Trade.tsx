@@ -22,22 +22,22 @@ const TradePage: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     // states
-    const [_currencyKey, _setCurrencyKey] = useState('ETH');
-    const [_maturityDate, _setMaturityDate] = useState<number | undefined>();
-    const [_positionType, _setPositionType] = useState(POSITIONS.UP);
-    const [_market, setMarket] = useState<MarketInfo | undefined>(undefined);
+    const [currencyKey, setCurrencyKey] = useState('ETH');
+    const [maturityDate, setMaturityDate] = useState<number | undefined>();
+    const [positionType, _setPositionType] = useState(POSITIONS.UP);
+    const [market, setMarket] = useState<MarketInfo | undefined>(undefined);
 
     // queries
     const assetsQuery = useAvailableAssetsQuery({
         enabled: isAppReady,
         refetchInterval: false,
     });
-    const maturityQuery = useMaturityDatesByAssetQueryQuery(_currencyKey, {
+    const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, {
         enabled: isAppReady,
         refetchInterval: false,
     });
-    const marketsQuery = useMarketsByAssetAndDateQuery(_currencyKey, _maturityDate as number, _positionType, {
-        enabled: _maturityDate !== undefined,
+    const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, maturityDate as number, positionType, {
+        enabled: maturityDate !== undefined,
         refetchInterval: false,
     });
 
@@ -59,7 +59,7 @@ const TradePage: React.FC = () => {
 
     useEffect(() => {
         if (allDates.length) {
-            _setMaturityDate(allDates[0]);
+            setMaturityDate(allDates[0]);
         }
     }, [allDates]);
 
@@ -71,19 +71,18 @@ const TradePage: React.FC = () => {
                     <FlexDivRowCentered>
                         <div>
                             {allAssets && (
-                                <AssetDropdown asset={_currencyKey} setAsset={_setCurrencyKey} allAssets={allAssets} />
+                                <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
                             )}
                         </div>
                         <div>
-                            {allDates}
                             <DatesDropdown
-                                date={_maturityDate}
-                                setDate={_setMaturityDate}
+                                date={maturityDate}
+                                setDate={setMaturityDate}
                                 allDates={allDates}
                             ></DatesDropdown>
                         </div>
                     </FlexDivRowCentered>
-                    <PriceChart asset={_currencyKey} selectedPrice={_market?.strikePrice}></PriceChart>
+                    <PriceChart asset={currencyKey} selectedPrice={market?.strikePrice}></PriceChart>
                 </LeftSide>
                 <RightSide>
                     <AssetTable setMarket={setMarket} markets={allMarkets} />
@@ -91,11 +90,11 @@ const TradePage: React.FC = () => {
             </ContentWrapper>
 
             <Trading
-                currencyKey={_currencyKey}
-                maturityDate={new Date(new Date().setDate(new Date().getDate() + 10))}
-                positionType={_positionType}
-                strikePrice={20900}
-                marketAddress="0x7eed10dfc2c636fd6e8100c38769813ed3771cbe"
+                currencyKey={currencyKey}
+                maturityDate={maturityDate || 0}
+                positionType={positionType}
+                strikePrice={market?.strikePrice || 0}
+                marketAddress={market?.address || ''}
             />
         </Wrapper>
     );

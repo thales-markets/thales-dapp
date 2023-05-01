@@ -20,7 +20,7 @@ import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
 import Input from 'pages/AMMTrading/components/AMM/components/Input';
-import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
+import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useBinaryOptionsMarketParametersInfoQuery from 'queries/options/useBinaryOptionsMarketParametersInfoQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
@@ -35,18 +35,13 @@ import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAdd
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
-import { AccountMarketInfo, StableCoins } from 'types/options';
+import { StableCoins } from 'types/options';
 import { getAmountToApprove, getEstimatedGasFees, getQuoteFromAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import {
-    formatCurrency,
-    formatCurrencyWithKey,
-    formatPercentage,
-    roundNumberToDecimals,
-} from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, roundNumberToDecimals } from 'utils/formatters/number';
 import {
     checkAllowance,
     getIsArbitrum,
@@ -56,6 +51,7 @@ import {
     getIsPolygon,
     getProvider,
 } from 'utils/network';
+import { convertPriceImpactToBonus, getFormattedBonus } from 'utils/options';
 import {
     refetchAmmData,
     refetchTrades,
@@ -68,7 +64,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 
 type TradingProps = {
     currencyKey: string;
-    maturityDate: Date;
+    maturityDate: number;
     positionType: POSITIONS;
     strikePrice: number;
     marketAddress: string;
@@ -110,18 +106,16 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const [maxLimit, setMaxLimit] = useState(0);
     const [_isAmountValid, setIsAmountValid] = useState(true); // TODO: add validation on amount
 
+    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
+
     const ammMaxLimitsQuery = useAmmMaxLimitsQuery(marketAddress, networkId, {
         enabled: isAppReady && !!marketAddress,
     });
-    const ammMaxLimits =
-        ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? (ammMaxLimitsQuery.data as AmmMaxLimits) : undefined;
-
-    const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
-    const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && isMultiCollateralSupported,
-    });
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
+    });
+    const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && getIsMultiCollateralSupported(networkId),
     });
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketAddress, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!marketAddress,
@@ -129,21 +123,37 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const marketParametersInfoQuery = useBinaryOptionsMarketParametersInfoQuery(marketAddress, {
         enabled: isAppReady && !!marketAddress,
     });
-    const isLong = POSITIONS_TO_SIDE_MAP[positionType] === SIDE.long;
-    const positionAddress =
-        marketParametersInfoQuery.isSuccess && marketParametersInfoQuery.data && isLong
-            ? marketParametersInfoQuery.data.longAddress
-            : marketParametersInfoQuery.data?.shortAddress;
 
-    const walletBalancesMap = stableBalanceQuery.isSuccess && stableBalanceQuery.data ? stableBalanceQuery.data : null;
-    const stableBalance = isMultiCollateralSupported
-        ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[selectedStableIndex] as StableCoins)
-        : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId) as StableCoins);
+    const ammMaxLimits = useMemo(() => {
+        return ammMaxLimitsQuery.isSuccess ? ammMaxLimitsQuery.data : undefined;
+    }, [networkId, ammMaxLimitsQuery]);
 
-    const optBalances =
-        isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data
-            ? (accountMarketInfoQuery.data as AccountMarketInfo)
+    const walletBalancesMap = useMemo(() => {
+        return stableBalanceQuery.isSuccess ? stableBalanceQuery.data : null;
+    }, [networkId, stableBalanceQuery]);
+
+    const stableBalance = useMemo(() => {
+        return multipleStableBalances.isSuccess
+            ? isMultiCollateralSupported
+                ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[selectedStableIndex] as StableCoins)
+                : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId) as StableCoins)
+            : null;
+    }, [networkId, multipleStableBalances, walletBalancesMap, selectedStableIndex]);
+
+    const optBalances = useMemo(() => {
+        return isWalletConnected && accountMarketInfoQuery.isSuccess
+            ? accountMarketInfoQuery.data
             : { long: 0, short: 0 };
+    }, [networkId, accountMarketInfoQuery, isWalletConnected]);
+
+    const isLong = POSITIONS_TO_SIDE_MAP[positionType] === SIDE.long;
+    const positionAddress = useMemo(() => {
+        return marketParametersInfoQuery.isSuccess && marketParametersInfoQuery.data
+            ? isLong
+                ? marketParametersInfoQuery.data.longAddress
+                : marketParametersInfoQuery.data.shortAddress
+            : undefined;
+    }, [networkId, marketParametersInfoQuery, isLong]);
 
     const isOVM = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
@@ -529,7 +539,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 console.log(e);
             }
         };
-        if (isWalletConnected) {
+        if (isWalletConnected && erc20Instance.signer) {
             getAllowance();
         }
     }, [walletAddress, isWalletConnected, isBuy, hasAllowance, isAllowing]);
@@ -674,8 +684,8 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             <Container>
                 <MarketInfo>
                     <FlexDivColumnCentered>
-                        <span>{`${currencyKey} ${positionType} > ${strikePrice}`}</span>
-                        <span>{`End Date ${maturityDate.toLocaleDateString()}`}</span>
+                        <span>{`${currencyKey} ${positionType} ${strikePrice ? '> ' + strikePrice : ''}`}</span>
+                        <span>{`End Date ${maturityDate ? new Date(maturityDate).toLocaleDateString() : '-'}`}</span>
                     </FlexDivColumnCentered>
                     <FlexDivColumnCentered>
                         <span>{`Price per position ${
@@ -689,7 +699,11 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                             isGettingQuote
                                 ? '-'
                                 : Number(price) > 0 || Number(basePrice) > 0
-                                ? formatPercentage(Number(price) > 0 ? -priceImpact : basePriceImpact)
+                                ? getFormattedBonus(
+                                      Number(price) > 0
+                                          ? convertPriceImpactToBonus(Number(priceImpact))
+                                          : convertPriceImpactToBonus(Number(basePriceImpact))
+                                  )
                                 : '-'
                         }`}</span>
                     </FlexDivColumnCentered>
@@ -705,9 +719,9 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                     <Column>
                         <FlexDivColumnCentered>
                             <span style={{ textAlign: 'center' }}>{`If bitcoin stays ABOVE ${strikePrice}`}</span>
-                            <span
-                                style={{ textAlign: 'center' }}
-                            >{`@${maturityDate.toLocaleDateString()} you will earn ${potentialProfitFormatted}`}</span>
+                            <span style={{ textAlign: 'center' }}>{`@${new Date(
+                                maturityDate
+                            ).toLocaleDateString()} you will earn ${potentialProfitFormatted}`}</span>
                         </FlexDivColumnCentered>
                         {getSubmitButton()}
                     </Column>

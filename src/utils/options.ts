@@ -118,3 +118,7 @@ export const getSellTokenCurrency = (
         return OPTIONS_CURRENCY_MAP[positionSide];
     }
 };
+
+export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100);
+
+export const getFormattedBonus = (bonus: number | undefined) => `+${Math.ceil(Number(bonus))}%`;
