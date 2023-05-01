@@ -27,7 +27,13 @@ import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLim
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import { refetchAmmData, refetchTrades, refetchUserTrades, refetchBalances } from 'utils/queryConnector';
+import {
+    refetchAmmData,
+    refetchTrades,
+    refetchUserTrades,
+    refetchBalances,
+    refetchWalletBalances,
+} from 'utils/queryConnector';
 import {
     calculateAndFormatPercentage,
     formatCurrency,

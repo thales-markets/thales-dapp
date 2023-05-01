@@ -2162,7 +2162,10 @@
         "itm-volume-label": "ITM 体积",
         "description-3-itm": "每14天的奖励分配如下：<br/><br/> - 2,000 OP + 3,000 THALES 分配给 ITM 代币买家<br/>- 5,000 OP + 7,000 THALES 分配给 OTM 代币买家<br/>- 8,000 OP + 10,000 THALES 给任何折扣代币买家<br/><br/>- 如果您是 THALES 质押者，将获得额外奖励，根据<tipLink>.",
         "discounted-volume-label": "折扣量",
-        "stay-tuned": "敬请期待新的奖励计划！"
+        "stay-tuned": "敬请期待新的奖励计划！",
+        "description-otm": "OTM (Out of The Money) 头寸将被立即解决为不成功。示例：BTC 价格为 30k，您以 29k 的行使价购买了一个 DOWN 头寸。<br/><br/>",
+        "description-itm": "ITM (In The Money) 代表如果立即成熟就会成功的头寸。示例：BTC 为 30k，您以 29k 的行使价买入 UP 头寸。<br/><br/>",
+        "description-1": "奖励金额将按比例分配如下：<br/><br/> - 2,000 OP + 2,000 THALES 用于 ITM（货币）头寸<br/><br/>- 2,000 OP + 2,000 THALES 用于 OTM（虚值）头寸<br/><br/>"
     },
     "footer": {
         "discover": "发现",
