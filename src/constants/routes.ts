@@ -6,7 +6,6 @@ export const ROUTES = {
         Whitepaper: '/article/whitepaper',
     },
     Options: {
-        Trade: '/trade',
         Home: '/markets',
         RangeMarkets: '/ranged-markets',
         HotMarkets: '/markets?anchor=hot-markets',
