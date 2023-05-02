@@ -382,6 +382,14 @@
         }
     },
     "options": {
+        "trade": {
+            "trading": {
+                "end-date": "End date",
+                "position-price": "Price per position",
+                "position-bonus": "Bonus per position",
+                "user-wallet": "User wallet"
+            }
+        },
         "phases": {
             "all": "all",
             "trading": "trading",

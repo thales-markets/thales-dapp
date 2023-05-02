@@ -458,3 +458,15 @@ export const NoDataContainer = styled.div`
         margin-top: 10px;
     }
 `;
+
+// TODO: define colors
+export const Colors = {
+    GRAY: '#2B3139',
+    GRAY_LIGHT: '#808997',
+    GRAY_DARK: '#181A20',
+    WHITE: '#FFFFFF',
+    GREEN: '#03DAC6',
+    BLUE: '',
+    RED: '',
+    YELLOW: '',
+};

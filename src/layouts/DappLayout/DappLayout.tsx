@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import Loader from 'components/Loader';
 import styled from 'styled-components';
@@ -15,6 +15,8 @@ import axios from 'axios';
 import { generalConfig } from 'config/general';
 import { isAndroid, isMetamask, isMobile } from 'utils/device';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
+import { Theme } from 'constants/ui';
+import { setTheme } from 'redux/modules/ui';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -23,6 +25,8 @@ type DappLayoutProps = {
 };
 
 const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
+    const dispatch = useDispatch();
+
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const rawParams = useLocation();
@@ -80,6 +84,10 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
         checkMetamaskBrowser();
     }, []);
 
+    useEffect(() => {
+        dispatch(setTheme(Theme.DARK));
+    }, []);
+
     useWidgetBotScript(preventDiscordWidgetLoad);
 
     return (
@@ -107,7 +115,7 @@ const Background = styled.section`
         left: 275px;
         overflow: hidden;
     }
-    background-color: var(--color-primary);
+    background-color: ${(props) => props.theme.background.primary};
     --background: var(--color-primary);
     --shadow: 0px 0px 40px var(--color-highlight);
     --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);

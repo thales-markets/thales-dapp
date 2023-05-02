@@ -25,6 +25,10 @@ import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
+import ThemeProvider from 'layouts/Theme';
+import { Theme } from 'constants/ui';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import localStore from 'utils/localStore';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -74,11 +78,14 @@ const App = () => {
     queryConnector.setQueryClient();
 
     useEffect(() => {
+        const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
+        const theme = lsTheme !== undefined ? lsTheme : Theme.DARK;
+
         trackPageView({
             customDimensions: [
                 {
                     id: 3,
-                    value: Number(cookies.get('home-theme')) == 0 ? 0 : 1,
+                    value: theme,
                 },
                 {
                     id: 4,
@@ -175,168 +182,170 @@ const App = () => {
     };
 
     return (
-        <QueryClientProvider client={queryConnector.queryClient}>
-            <Suspense fallback={<Loader />}>
-                <Router history={history}>
-                    <Switch>
-                        <Route exact path={ROUTES.Options.CreateMarket}>
-                            <DappLayout>
-                                <CreateMarket />
-                            </DappLayout>
-                        </Route>
-
-                        <Route
-                            exact
-                            path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
-                            render={(routeProps) => (
+        <ThemeProvider>
+            <QueryClientProvider client={queryConnector.queryClient}>
+                <Suspense fallback={<Loader />}>
+                    <Router history={history}>
+                        <Switch>
+                            <Route exact path={ROUTES.Options.CreateMarket}>
                                 <DappLayout>
-                                    <GovernancePage {...routeProps} />
-                                </DappLayout>
-                            )}
-                        />
-                        <Route exact path={ROUTES.Options.Game}>
-                            <DappLayout>
-                                <TaleOfThales />
-                            </DappLayout>
-                        </Route>
-                        <Route exact path={ROUTES.Options.Profile}>
-                            <DappLayout>
-                                <Profile />
-                            </DappLayout>
-                        </Route>
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.Token}>
-                                <DappLayout>
-                                    <TokenPage />
+                                    <CreateMarket />
                                 </DappLayout>
                             </Route>
-                        )}
 
-                        <Route exact path={ROUTES.Options.Referral}>
-                            <DappLayout>
-                                <Referral />
-                            </DappLayout>
-                        </Route>
-
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.Vaults}>
-                                <DappLayout>
-                                    <Vaults />
-                                </DappLayout>
-                            </Route>
-                        )}
-
-                        {!isPolygon && (
                             <Route
                                 exact
-                                path={ROUTES.Options.Vault}
+                                path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
                                 render={(routeProps) => (
                                     <DappLayout>
-                                        <Vault {...routeProps} />
+                                        <GovernancePage {...routeProps} />
                                     </DappLayout>
                                 )}
                             />
-                        )}
-
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.OPRewards}>
+                            <Route exact path={ROUTES.Options.Game}>
                                 <DappLayout>
-                                    <OPRewards />
+                                    <TaleOfThales />
                                 </DappLayout>
                             </Route>
-                        )}
-
-                        {isPolygon && (
-                            <Route exact path={ROUTES.Options.Leaderboard}>
+                            <Route exact path={ROUTES.Options.Profile}>
                                 <DappLayout>
-                                    <Leaderboard />
+                                    <Profile />
                                 </DappLayout>
                             </Route>
-                        )}
-
-                        <Route
-                            exact
-                            path={ROUTES.Options.MarketMatch}
-                            render={(routeProps) => (
-                                <DappLayout>
-                                    <AMMTrading {...routeProps} />
-                                </DappLayout>
+                            {!isPolygon && (
+                                <Route exact path={ROUTES.Options.Token}>
+                                    <DappLayout>
+                                        <TokenPage />
+                                    </DappLayout>
+                                </Route>
                             )}
-                        />
 
-                        <Route
-                            exact
-                            path={ROUTES.Options.RangeMarketMatch}
-                            render={(routeProps) => (
+                            <Route exact path={ROUTES.Options.Referral}>
                                 <DappLayout>
-                                    <AMMTrading {...routeProps} />
+                                    <Referral />
                                 </DappLayout>
+                            </Route>
+
+                            {!isPolygon && (
+                                <Route exact path={ROUTES.Options.Vaults}>
+                                    <DappLayout>
+                                        <Vaults />
+                                    </DappLayout>
+                                </Route>
                             )}
-                        />
 
-                        <Route exact path={ROUTES.Options.Home}>
-                            <DappLayout>
-                                <Markets />
-                            </DappLayout>
-                        </Route>
+                            {!isPolygon && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.Vault}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <Vault {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
 
-                        <Route exact path={ROUTES.Options.RangeMarkets}>
-                            <DappLayout>
-                                <RangeMarkets />
-                            </DappLayout>
-                        </Route>
+                            {!isPolygon && (
+                                <Route exact path={ROUTES.Options.OPRewards}>
+                                    <DappLayout>
+                                        <OPRewards />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        <Route exact path={ROUTES.Options.Wizard}>
-                            <DappLayout>
-                                <Wizard />
-                            </DappLayout>
-                        </Route>
+                            {isPolygon && (
+                                <Route exact path={ROUTES.Options.Leaderboard}>
+                                    <DappLayout>
+                                        <Leaderboard />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        <Route exact path={ROUTES.Home}>
-                            <MainLayout>
-                                <Home />
-                            </MainLayout>
-                        </Route>
+                            <Route
+                                exact
+                                path={ROUTES.Options.MarketMatch}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <AMMTrading {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
 
-                        <Route exact path={ROUTES.Article.Token}>
-                            <MainLayout>
-                                <Token />
-                            </MainLayout>
-                        </Route>
-                        <Route exact path={ROUTES.Article.Governance}>
-                            <MainLayout>
-                                <Governance />
-                            </MainLayout>
-                        </Route>
-                        <Route exact path={ROUTES.Article.Whitepaper}>
-                            <MainLayout>
-                                <Whitepaper />
-                            </MainLayout>
-                        </Route>
-                        <Route>
-                            <Redirect to={ROUTES.Options.Home} />
-                            <DappLayout>
-                                <Markets />
-                            </DappLayout>
-                        </Route>
-                    </Switch>
-                </Router>
-                <ReactQueryDevtools initialIsOpen={false} />
-                <Snackbar
-                    open={snackbarDetails.isOpen}
-                    onClose={onSnackbarClosed}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                    autoHideDuration={5000}
-                >
-                    <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
-                        {snackbarDetails.message}
-                    </Alert>
-                </Snackbar>
-            </Suspense>
-        </QueryClientProvider>
+                            <Route
+                                exact
+                                path={ROUTES.Options.RangeMarketMatch}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <AMMTrading {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
+
+                            <Route exact path={ROUTES.Options.Home}>
+                                <DappLayout>
+                                    <Markets />
+                                </DappLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Options.RangeMarkets}>
+                                <DappLayout>
+                                    <RangeMarkets />
+                                </DappLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Options.Wizard}>
+                                <DappLayout>
+                                    <Wizard />
+                                </DappLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Home}>
+                                <MainLayout>
+                                    <Home />
+                                </MainLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Article.Token}>
+                                <MainLayout>
+                                    <Token />
+                                </MainLayout>
+                            </Route>
+                            <Route exact path={ROUTES.Article.Governance}>
+                                <MainLayout>
+                                    <Governance />
+                                </MainLayout>
+                            </Route>
+                            <Route exact path={ROUTES.Article.Whitepaper}>
+                                <MainLayout>
+                                    <Whitepaper />
+                                </MainLayout>
+                            </Route>
+                            <Route>
+                                <Redirect to={ROUTES.Options.Home} />
+                                <DappLayout>
+                                    <Markets />
+                                </DappLayout>
+                            </Route>
+                        </Switch>
+                    </Router>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                    <Snackbar
+                        open={snackbarDetails.isOpen}
+                        onClose={onSnackbarClosed}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                        autoHideDuration={5000}
+                    >
+                        <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
+                            {snackbarDetails.message}
+                        </Alert>
+                    </Snackbar>
+                </Suspense>
+            </QueryClientProvider>
+        </ThemeProvider>
     );
 };
 

@@ -2,7 +2,7 @@ import ElectionsBanner from 'components/ElectionsBanner';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import SPAAnchor from 'components/SPAAnchor';
 import ROUTES from 'constants/routes';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { buildHref, navigateTo } from 'utils/routes';
@@ -10,11 +10,19 @@ import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from '../../constants/network';
 import BlogPosts from './components/BlogPosts';
 import Footer from './components/Footer';
 import GridLayout from './components/GridLayout';
+import { Theme } from 'constants/ui';
+import { setTheme } from 'redux/modules/ui';
+import { useDispatch } from 'react-redux';
 
 const INFORMATION_BANNER_ACTIVE = false;
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setTheme(Theme.DARK));
+    }, []);
 
     return (
         <Background>

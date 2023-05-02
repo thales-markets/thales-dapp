@@ -1696,6 +1696,14 @@
                 "paid": "有薪酬的",
                 "expires": "过期@"
             }
+        },
+        "trade": {
+            "trading": {
+                "position-price": "每个位置的价格",
+                "user-wallet": "用户钱包",
+                "position-bonus": "每个位置的奖金",
+                "end-date": "结束日期"
+            }
         }
     },
     "governance": {
