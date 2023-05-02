@@ -42,12 +42,14 @@ const Wrapper = styled.div`
     position: relative;
     z-index: 100;
     max-height: 23px;
+    height: 23px;
 `;
 
 const Container = styled.div`
     width: 267px;
     max-height: 23px;
     padding: 5px 15px;
+    height: 23px;
 
     display: flex;
     justify-content: flex-start;

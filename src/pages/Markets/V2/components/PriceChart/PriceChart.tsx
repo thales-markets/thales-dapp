@@ -64,7 +64,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 
     return (
         <Wrapper>
-            <Toggle options={ToggleButtons} defaultSelectedIndex={2} onChange={handleDateRangeChange} />
             {data && (
                 <ResponsiveContainer width="100%" height={200}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
@@ -96,8 +95,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         <Area
                             type="monotone"
                             dataKey="price"
-                            stroke="var(--color-white)"
-                            fill="var(--color-tertiary)"
+                            stroke="#F7B91A"
+                            strokeWidth={2}
+                            fill="var(--color-primary)"
                         />
                         {selectedPrice && (
                             <ReferenceLine
@@ -133,6 +133,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                     </AreaChart>
                 </ResponsiveContainer>
             )}
+            <Toggle options={ToggleButtons} defaultSelectedIndex={2} onChange={handleDateRangeChange} />
         </Wrapper>
     );
 };
