@@ -467,6 +467,6 @@ export const Colors = {
     WHITE: '#FFFFFF',
     GREEN: '#03DAC6',
     BLUE: '',
-    RED: '',
+    RED: '#DE496D',
     YELLOW: '',
 };

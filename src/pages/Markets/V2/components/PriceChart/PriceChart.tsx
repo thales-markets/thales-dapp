@@ -1,10 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CoinGeckoClient } from 'coingecko-api-v3';
-import { XAxis, YAxis, Area, AreaChart, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
-import { currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
+import { XAxis, YAxis, Area, AreaChart, ResponsiveContainer, Tooltip, ReferenceLine, CartesianGrid } from 'recharts';
+import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 import Toggle from './components/DateToggle/Toggle';
+import {
+    calculatePercentageChange,
+    formatCurrencyWithSign,
+    formatPricePercentageGrowth,
+} from 'utils/formatters/number';
+import usePriceDataQuery from 'queries/price/usePriceDataQuery';
+import { FlexDivSpaceBetween } from 'theme/common';
+import { useSelector } from 'react-redux';
+import { getTheme } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
+import { ThemeMap } from 'constants/ui';
 
 type PriceChartProps = {
     asset: string;
@@ -27,10 +38,29 @@ const ToggleButtons = [
 ];
 
 const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice }) => {
+    const theme = useSelector((state: RootState) => getTheme(state));
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [maxPrice, setMaxPrice] = useState(0);
     const [minPrice, setMinPrice] = useState(0);
     const [dateRange, setDateRange] = useState(14); // default date range
+
+    const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
+
+    const processedPriceData = useMemo(() => {
+        if (priceData.isSuccess && priceData.data && priceData?.data?.prices) {
+            if (priceData?.data?.prices?.length) {
+                const processedPriceData = priceData.data.prices;
+                return calculatePercentageChange(
+                    processedPriceData[processedPriceData.length - 1][1],
+                    processedPriceData[0][1]
+                );
+            }
+        }
+
+        return 0;
+    }, [priceData]);
+
+    console.log(asset);
 
     const handleDateRangeChange = (value: number) => {
         setDateRange(value);
@@ -62,26 +92,36 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         fetchData();
     }, [asset, dateRange]);
 
+    console.log(theme);
+
     return (
         <Wrapper>
+            <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
+                <IconPriceWrapper>
+                    <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
+                    <Price>{data ? formatCurrencyWithSign(USD_SIGN, data[data?.length - 1].price) : 'N/A'}</Price>
+                </IconPriceWrapper>
+                <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
+            </FlexDivSpaceBetween>
             {data && (
-                <ResponsiveContainer width="100%" height={200}>
+                <ResponsiveContainer width="100%" height={266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
+                        <CartesianGrid stroke="#2B3139" strokeDasharray="1" />
                         <XAxis
-                            tick={{ fontSize: '12px', fontFamily: 'Roboto', fill: 'var(--color-white)' }}
-                            tickLine={{ stroke: 'var(--color-white)' }}
+                            tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
+                            tickLine={false}
                             axisLine={{ stroke: 'var(--color-white)' }}
                             dataKey="date"
-                            interval={100}
+                            interval={25}
                         />
                         <YAxis
-                            domain={[parseInt((minPrice / 1.5).toFixed(0)), parseInt((1.2 * maxPrice).toFixed(0))]}
-                            tick={{ fontSize: '12px', fontFamily: 'Roboto', fill: 'var(--color-white)' }}
-                            tickLine={{ stroke: 'var(--color-white)' }}
+                            domain={[parseInt((minPrice / 1.5).toFixed(0)), parseInt((1.1 * maxPrice).toFixed(0))]}
+                            tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
+                            tickLine={false}
                             axisLine={{ stroke: 'var(--color-white)' }}
                             tickCount={8}
                             orientation="right"
-                            width={60}
+                            tickFormatter={(value) => formatCurrencyWithSign(USD_SIGN, value)}
                         />
                         <Tooltip
                             contentStyle={{
@@ -142,6 +182,41 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-height: 300px;
+`;
+
+const IconPriceWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+`;
+
+const Icon = styled.i`
+    font-size: 32px;
+`;
+
+const Price = styled.span`
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 100%;
+    padding:
+    /* or 22px */
+
+    text-transform: capitalize;
+    color: ${(props) => props.theme.textColor.primary};
+`;
+
+const PriceChange = styled.span<{ up: boolean }>`
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 100%;
+    padding:
+    /* or 22px */
+
+    text-transform: capitalize;
+    color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
 `;
 
 export default PriceChart;

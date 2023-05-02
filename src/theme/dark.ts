@@ -10,7 +10,7 @@ export default {
     textColor: {
         primary: Colors.WHITE,
         secondary: Colors.GRAY_LIGHT,
-        tertiary: '',
+        tertiary: Colors.RED,
         quaternary: Colors.GREEN,
     },
     borderColor: {
