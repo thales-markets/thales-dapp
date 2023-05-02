@@ -20,16 +20,16 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
     return (
         <Wrapper>
             <Container onClick={setOpen.bind(this, !open)}>
-                {date && <Date onClick={setDate.bind(this, date)}>Expires {formatShortDateFromTimestamp(date)}</Date>}
+                {date && <Date onClick={setDate.bind(this, date)}>{formatShortDateFromTimestamp(date)}</Date>}
             </Container>
             {open && (
                 <Dropdown onClick={setOpen.bind(this, !open)}>
                     {allDates.map((_date, index) => {
                         if (date === _date) return;
                         return (
-                            <Date key={index} onClick={setDate.bind(this, _date)}>
-                                Expires {formatShortDateFromTimestamp(_date)}
-                            </Date>
+                            <DateContainer key={index}>
+                                <Date onClick={setDate.bind(this, _date)}>{formatShortDateFromTimestamp(_date)}</Date>
+                            </DateContainer>
                         );
                     })}
                 </Dropdown>
@@ -41,36 +41,33 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
 const Wrapper = styled.div`
     position: relative;
     z-index: 100;
-    max-height: 36px;
+    max-height: 23px;
 `;
 
 const Container = styled.div`
-    width: 346px;
-    height: 36px;
-    padding: 0 16px;
+    width: 267px;
+    max-height: 23px;
+    padding: 5px 15px;
 
     display: flex;
     justify-content: flex-start;
     align-items: center;
 
-    border-radius: 16px;
-    background: #27283f;
+    border-radius: 8px;
+    background: var(--color-secondary);
     cursor: pointer;
 `;
 
 const Dropdown = styled.div`
-    margin-top: 9px;
-    width: 346px;
-    padding: 10px 16px;
-    gap: 18px;
-
+    margin-top: 5px;
+    width: 267px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
 
-    border-radius: 16px;
-    background: #27283f;
+    border-radius: 8px;
+    background: var(--color-secondary);
     cursor: pointer;
 `;
 
@@ -78,11 +75,20 @@ const Date = styled.p`
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 600;
-    font-size: 15px;
-    line-height: 18px;
-    /* identical to box height */
+    font-size: 13px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: var(--color-text);
+`;
 
-    color: var(--color-white);
+const DateContainer = styled.div`
+    border-radius: 8px;
+    background: var(--color-secondary);
+    &:hover {
+        background: var(--color-secondary-hover);
+    }
+    width: 100%;
+    padding: 5px 15px;
 `;
 
 export default DatesDropdown;

@@ -68,7 +68,7 @@ const TradePage: React.FC = () => {
             <Banners />
             <ContentWrapper>
                 <LeftSide>
-                    <FlexDivRowCentered>
+                    <FlexDivRowCentered style={{ gap: 15 }}>
                         <div>
                             {allAssets && (
                                 <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
@@ -116,6 +116,7 @@ const ContentWrapper = styled.div`
     display: flex;
     gap: 30px;
     height: 400px;
+    margin-top: 20px;
 `;
 const LeftSide = styled.div`
     height: 100%;

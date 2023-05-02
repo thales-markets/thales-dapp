@@ -178,11 +178,14 @@ input[type='number'] {
     --sal: env(safe-area-inset-left);
 
     --color-primary: #111221;
-    --color-secondary: #050838;
+    --color-secondary: #2b3139;
+    --color-secondary-hover: #2a2e33;
     --color-tertiary: #1b1c33;
     --color-highlight: #79b1ff;
     --color-highlight-2: rgba(121, 177, 255, 0.6);
     --color-white: #f4f4f4;
+
+    --color-text: #808997;
 
     // --color-primary: #1e1e1e;
     // --color-secondary: #2b3139;
