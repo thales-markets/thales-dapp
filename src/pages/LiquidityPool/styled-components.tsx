@@ -167,8 +167,9 @@ export const Title = styled.span`
     font-size: 25px;
     line-height: 100%;
     margin-bottom: 10px;
+    margin-top: 20px;
     @media (max-width: 767px) {
-        margin-top: 20px;
+        margin-top: 10px;
         margin-bottom: 0;
     }
 `;

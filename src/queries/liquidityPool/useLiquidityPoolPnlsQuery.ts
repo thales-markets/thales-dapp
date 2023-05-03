@@ -10,7 +10,7 @@ const useLiquidityPoolPnlsQuery = (networkId: NetworkId, options?: UseQueryOptio
         QUERY_KEYS.LiquidityPool.PnL(networkId),
         async () => {
             try {
-                const liquidityPoolPnls = await thalesData.sportMarkets.liquidityPoolPnls({
+                const liquidityPoolPnls = await thalesData.binaryOptions.liquidityPoolPnls({
                     network: networkId,
                 });
 

@@ -12,7 +12,7 @@ const useLiquidityPoolUserTransactionsQuery = (
         QUERY_KEYS.LiquidityPool.UserTransactions(networkId),
         async () => {
             try {
-                const liquidityPoolUserTransactions = await thalesData.sportMarkets.liquidityPoolUserTransactions({
+                const liquidityPoolUserTransactions = await thalesData.binaryOptions.liquidityPoolUserTransactions({
                     network: networkId,
                 });
                 return liquidityPoolUserTransactions;

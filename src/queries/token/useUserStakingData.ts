@@ -45,13 +45,13 @@ const useUserStakingDataQuery = (
                 mergeAccountEnabled: true,
             };
             try {
-                const { stakingDataContract, liquidityPoolContract } = snxJSConnector;
+                const { stakingDataContract, sportLiquidityPoolContract } = snxJSConnector;
 
-                if (stakingDataContract && liquidityPoolContract) {
+                if (stakingDataContract && sportLiquidityPoolContract) {
                     const [contractStakingData, contractUserStakingData, isUserLPing] = await Promise.all([
                         stakingDataContract.getStakingData(),
                         stakingDataContract.getUserStakingData(walletAddress),
-                        liquidityPoolContract.isUserLPing(walletAddress),
+                        sportLiquidityPoolContract.isUserLPing(walletAddress),
                     ]);
 
                     userStakingData.thalesStaked =

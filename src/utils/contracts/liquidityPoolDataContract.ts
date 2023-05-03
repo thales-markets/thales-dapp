@@ -1,10 +1,19 @@
+import { Network } from 'utils/network';
+
 export const liquidityPoolDataContract = {
     addresses: {
-        5: '',
-        10: '0x23823f1C7C4AE2Acef3bCCFCD5F282AE078150C2',
-        42: '',
-        420: '0xB0b68F811Eb18E63aD942A7EcAE038715d4026c6',
-        42161: '0x230893C24804B89D0ec3FFfFa243CE32C6b6541B',
+        [Network.Mainnet]: 'TBD',
+        [Network.Ropsten]: 'TBD',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: 'TBD',
+        [Network.Goerli]: 'TBD',
+        [Network['Mainnet-Ovm']]: 'TBD',
+        [Network['Kovan-Ovm']]: 'TBD',
+        [Network['Goerli-Ovm']]: '0x265F42a1F5dBEef66C514764766588a549610499',
+        [Network['POLYGON-MUMBAI']]: 'TBD',
+        [Network['POLYGON-MAINNET']]: 'TBD',
+        [Network.BSC]: 'TBD',
+        [Network.Arbitrum]: 'TBD',
     },
     abi: [
         {

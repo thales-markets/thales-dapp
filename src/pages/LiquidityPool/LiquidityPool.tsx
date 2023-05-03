@@ -71,6 +71,8 @@ import OpRewardsBanner from 'components/OpRewardsBanner';
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { getStableCoinForNetwork } from 'utils/currency';
+import { getCurrencyKeyStableBalance } from 'utils/balances';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -100,7 +102,9 @@ const LiquidityPool: React.FC = () => {
 
     useEffect(() => {
         if (paymentTokenBalanceQuery.isSuccess && paymentTokenBalanceQuery.data !== undefined) {
-            setPaymentTokenBalance(Number(paymentTokenBalanceQuery.data));
+            setPaymentTokenBalance(
+                getCurrencyKeyStableBalance(paymentTokenBalanceQuery.data, getStableCoinForNetwork(networkId))
+            );
         }
     }, [paymentTokenBalanceQuery.isSuccess, paymentTokenBalanceQuery.data]);
 
@@ -224,7 +228,7 @@ const LiquidityPool: React.FC = () => {
     const handleAllowance = async (approveAmount: BigNumber) => {
         const { signer, collateral, liquidityPoolContract } = snxJSConnector;
         if (signer && collateral && liquidityPoolContract) {
-            const id = toast.loading(t('market.toast-message.transaction-pending'));
+            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsAllowing(true);
 
             try {
@@ -254,7 +258,7 @@ const LiquidityPool: React.FC = () => {
     const handleDeposit = async () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('market.toast-message.transaction-pending'));
+            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
                 const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
@@ -285,7 +289,7 @@ const LiquidityPool: React.FC = () => {
     const handleWithdrawalRequest = async () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('market.toast-message.transaction-pending'));
+            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
                 const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
@@ -315,7 +319,7 @@ const LiquidityPool: React.FC = () => {
     const closeRound = async () => {
         const { signer, liquidityPoolContract } = snxJSConnector;
         if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('market.toast-message.transaction-pending'));
+            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
                 const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
