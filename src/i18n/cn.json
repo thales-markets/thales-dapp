@@ -1703,7 +1703,8 @@
                 "user-wallet": "用户钱包",
                 "position-bonus": "每个位置的奖金",
                 "end-date": "结束日期",
-                "enter-amount": "输入金额"
+                "enter-amount": "输入金额",
+                "select-market": "选择市场"
             }
         }
     },

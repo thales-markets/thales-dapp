@@ -44,7 +44,8 @@ export default {
             },
         },
         textColor: {
-            primary: '',
+            primary: Colors.WHITE,
+            secondary: Colors.GRAY_LIGHT,
         },
         borderColor: {
             primary: Colors.GRAY,

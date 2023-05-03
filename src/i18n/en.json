@@ -388,7 +388,8 @@
                 "position-price": "Price per position",
                 "position-bonus": "Bonus per position",
                 "user-wallet": "User wallet",
-                "enter-amount": "Enter amount"
+                "enter-amount": "Enter amount",
+                "select-market": "Select market"
             }
         },
         "phases": {

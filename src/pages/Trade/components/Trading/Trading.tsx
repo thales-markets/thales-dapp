@@ -39,7 +39,14 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { formatShortDate } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import { formatCurrencyWithKey, formatCurrencyWithSign, roundNumberToDecimals } from 'utils/formatters/number';
+import {
+    countDecimals,
+    formatCurrencyWithKey,
+    formatCurrencyWithSign,
+    roundNumberToDecimals,
+    truncDecimals,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import {
     checkAllowance,
     getIsArbitrum,
@@ -85,7 +92,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const [positionAmount, setPositionAmount] = useState<number | string>('');
     const [positionPrice, setPositionPrice] = useState<number | string>('');
     const [basePrice, setBasePrice] = useState<number | string>('');
-    const [totalPrice, setTotalPrice] = useState<number | string>('');
+    const [paidAmount, setPaidAmount] = useState<number | string>('');
     const [profit, setProfit] = useState<number | string>('');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [hasAllowance, setAllowance] = useState(false);
@@ -103,6 +110,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, {
         enabled: isAppReady && !!market.address,
+        refetchInterval: false,
     });
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
@@ -112,6 +120,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     });
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
         enabled: isAppReady && isWalletConnected && !!market.address,
+        refetchInterval: false,
     });
     const marketParametersInfoQuery = useBinaryOptionsMarketParametersInfoQuery(market.address, {
         enabled: isAppReady && !!market.address,
@@ -152,19 +161,19 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
-    const isPositionAmountEntered = Number(positionAmount) > 0;
+    const isPositionAmountPositive = Number(positionAmount) > 0;
     const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported;
     const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
-    const isPositionPriceEntered = Number(positionPrice) > 0;
-    const isTotalPriceEntered = Number(totalPrice) > 0;
+    const isPositionPricePositive = Number(positionPrice) > 0;
+    const isPaidAmountEntered = Number(paidAmount) > 0;
     const tokenBalance = isLong ? optBalances.long : optBalances.short;
 
-    const insufficientBalance = stableBalance < Number(totalPrice) || !stableBalance;
+    const insufficientBalance = stableBalance < Number(paidAmount) || !stableBalance;
 
     const isButtonDisabled =
-        !isTotalPriceEntered ||
-        !isPositionPriceEntered ||
-        !isPositionAmountEntered ||
+        !isPaidAmountEntered ||
+        !isPositionPricePositive ||
+        !isPositionAmountPositive ||
         isSubmitting ||
         !isWalletConnected ||
         insufficientBalance ||
@@ -196,7 +205,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const resetData = () => {
         setPositionAmount('');
         setPositionPrice('');
-        setTotalPrice('');
         setProfit('');
         setGasLimit(null);
     };
@@ -248,18 +256,22 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         }
     };
 
-    const fetchAmmPriceData = async (isRefresh: boolean, isSubmit = false) => {
+    const fetchAmmPriceData = async (totalToPay: number, isRefresh: boolean, isSubmit = false) => {
         let priceChanged = false;
         let latestGasLimit = null;
         if (!isRefresh && !isSubmit) {
             setIsFetchingQuote(true);
         }
-        if (isPositionAmountEntered) {
+
+        const calcPrice = !positionPrice ? Number(basePrice) : Number(positionPrice);
+        if (totalToPay > 0 && calcPrice > 0) {
+            const suggestedAmount = totalToPay / calcPrice;
+
             try {
                 const { ammContract, signer } = snxJSConnector as any;
                 const ammContractWithSigner = ammContract.connect(signer);
 
-                const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
+                const parsedAmount = ethers.utils.parseEther(suggestedAmount.toString());
                 const promises = getQuoteFromAMM(
                     isNonDefaultStable,
                     true,
@@ -278,22 +290,18 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         ammQuote,
                         networkId,
                         isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
-                    ) / Number(positionAmount);
+                    ) / suggestedAmount;
 
+                const calcAmount = totalToPay / ammPrice;
+                const calcPositionAmount = calcAmount < liquidity ? calcAmount : truncToDecimals(liquidity);
+                setPositionAmount(calcPositionAmount);
                 setPositionPrice(ammPrice);
-                setTotalPrice(
-                    stableCoinFormatter(
-                        ammQuote,
-                        networkId,
-                        isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
-                    )
-                );
                 setProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
 
                 const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
                 const isQuoteChanged =
                     ammPrice !== positionPrice ||
-                    totalPrice !==
+                    totalToPay !==
                         stableCoinFormatter(
                             ammQuote,
                             networkId,
@@ -328,7 +336,8 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         );
                     }
                 }
-                priceChanged = ammPrice !== positionPrice;
+                // TODO: check this when price is changed as position amount is changed
+                priceChanged = truncDecimals(ammPrice, 4) !== truncDecimals(Number(positionPrice), 4);
             } catch (e) {
                 console.log(e);
                 resetData();
@@ -389,7 +398,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
         const id = toast.loading(t('amm.progress'));
 
-        const { priceChanged, latestGasLimit } = await fetchAmmPriceData(true, true);
+        const { priceChanged, latestGasLimit } = await fetchAmmPriceData(Number(paidAmount), true, true);
         if (priceChanged) {
             toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
             setIsPriceChanged(true);
@@ -397,11 +406,11 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             return;
         }
         try {
-            const { ammContract } = snxJSConnector as any;
-            const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
+            const { ammContract, signer } = snxJSConnector as any;
+            const ammContractWithSigner = ammContract.connect(signer);
 
             const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
-            const parsedTotal = stableCoinParser(totalPrice.toString(), networkId);
+            const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
             const gasPrice = await snxJSConnector.provider?.getGasPrice();
 
@@ -450,11 +459,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 refetchUserBalance(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
+                setPaidAmount('');
 
                 trackEvent({
                     category: 'AMM',
                     action: `buy-with-${COLLATERALS[selectedStableIndex]}`,
-                    value: Number(totalPrice),
+                    value: Number(paidAmount),
                 });
             }
         } catch (e) {
@@ -465,12 +475,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     };
 
     useDebouncedEffect(() => {
-        fetchAmmPriceData(false);
-    }, [positionAmount, walletAddress, isPositionAmountEntered, selectedStableIndex]);
+        fetchAmmPriceData(Number(paidAmount), false);
+    }, [paidAmount, walletAddress, selectedStableIndex]);
 
     useInterval(async () => {
-        fetchAmmPriceData(true);
-    }, 5000);
+        fetchAmmPriceData(Number(paidAmount), true);
+    }, 60000); // TODO: check this
 
     useEffect(() => {
         refetchWalletBalances(walletAddress, networkId);
@@ -501,7 +511,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         const getAllowance = async () => {
             try {
                 const parsedAmount: BigNumber = stableCoinParser(
-                    Number(totalPrice)?.toString(),
+                    Number(paidAmount)?.toString(),
                     networkId,
                     COLLATERALS[selectedStableIndex]
                 );
@@ -520,7 +530,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     useEffect(() => {
         setPositionAmount('');
-        dispatch(setBuyState(true));
+        dispatch(setBuyState(true)); // TODO: check if this is needed
     }, []);
 
     useEffect(() => {
@@ -528,7 +538,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             return;
         }
         const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
-        const parsedTotal = stableCoinParser(totalPrice.toString(), networkId);
+        const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
         const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
         fetchGasLimit(market.address, POSITIONS_TO_SIDE_MAP[positionType], parsedAmount, parsedTotal, parsedSlippage);
     }, [isWalletConnected, hasAllowance]);
@@ -548,7 +558,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         setLiquidity(max);
         setBasePrice(base);
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
-    }, [ammMaxLimits, isLong]);
+    }, [ammMaxLimits?.buyLongPrice, isLong]);
 
     useEffect(() => {
         toast(getWarningToastOptions(t('amm.price-changed-warning')));
@@ -558,14 +568,21 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         setIsAmountValid(
             Number(positionAmount) === 0 ||
                 (Number(positionAmount) > 0 &&
-                    ((Number(totalPrice) > 0 && Number(totalPrice) <= stableBalance) ||
-                        (Number(totalPrice) === 0 && stableBalance > 0)))
+                    ((Number(paidAmount) > 0 && Number(paidAmount) <= stableBalance) ||
+                        (Number(paidAmount) === 0 && stableBalance > 0)))
         );
-    }, [positionAmount, totalPrice, stableBalance, tokenBalance]);
+    }, [positionAmount, paidAmount, stableBalance, tokenBalance]);
 
     useEffect(() => {
         setInsufficientLiquidity(Number(positionAmount) > liquidity);
     }, [positionAmount, liquidity]);
+
+    const onTotalPriceValueChange = async (value: number | string) => {
+        if (countDecimals(Number(value)) > 2 || value === Number(paidAmount)) {
+            return;
+        }
+        setPaidAmount(value);
+    };
 
     const getSubmitButton = () => {
         const defaultButtonProps = {
@@ -574,6 +591,13 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             active: true,
         };
 
+        if (!market.address) {
+            return (
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t('options.trade.trading.select-market')}
+                </Button>
+            );
+        }
         if (isAmmTradingDisabled) {
             return (
                 <Button disabled={true} {...defaultButtonProps}>
@@ -602,7 +626,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 </Button>
             );
         }
-        if (!isPositionAmountEntered) {
+        if (!isPaidAmountEntered) {
             return (
                 <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.enter-amount`)}
@@ -631,11 +655,24 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         );
     };
 
+    const onMaxClick = async () => {
+        trackEvent({
+            category: 'AMM',
+            action: 'click-on-max-button',
+        });
+
+        const maxPaidAmount = roundNumberToDecimals(Number(stableBalance) * (1 - SLIPPAGE_PERCENTAGE[2] / 100));
+        setPaidAmount(maxPaidAmount);
+    };
+
+    const formDisabled = isSubmitting || isAmmTradingDisabled;
+
+    // console.log(positionAmount);
     // TODO:
     const potentialProfitFormatted = isFetchingQuote
         ? '...'
         : Number(positionPrice) > 0
-        ? `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), Number(profit) * Number(totalPrice))}`
+        ? `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), Number(profit) * Number(paidAmount))}`
         : '-';
 
     return (
@@ -681,16 +718,23 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                     </Text>
                 </ColumnCenter>
             </MarketDetails>
-            <TradeInput>
-                <Input
-                    value={positionAmount}
-                    valueType={'number'}
-                    placeholder={t('options.trade.trading.enter-amount')}
-                    subValue={positionType}
-                    valueChange={(value) => setPositionAmount(value)}
-                    container={{ width: '320px', height: '70px' }}
-                />
-            </TradeInput>
+            <Input
+                value={paidAmount}
+                valueType={'number'}
+                disabled={!market.address}
+                placeholder={t('options.trade.trading.enter-amount')}
+                valueChange={(value) => onTotalPriceValueChange(value)}
+                container={{ width: '320px', height: '70px' }}
+            >
+                <InputActions>
+                    <MaxButton
+                        onClick={() => onMaxClick()}
+                        disabled={formDisabled || insufficientLiquidity || isFetchingQuote}
+                    >
+                        {t('common.max')}
+                    </MaxButton>
+                </InputActions>
+            </Input>
             <FinalizeTrade>
                 <ColumnSpaceBetween>
                     <FlexDivColumnCentered>
@@ -705,7 +749,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             {openApprovalModal && (
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
-                    defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * Number(totalPrice))}
+                    defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * Number(paidAmount))}
                     tokenSymbol={collateral.currencyOrSellPosition}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
@@ -728,10 +772,40 @@ const MarketDetails = styled(FlexDivRowCentered)`
     padding: 10px;
 `;
 
-const TradeInput = styled.div`
-    position: relative;
-    display: flex;
-    justify-content: center;
+const InputActions = styled.div`
+    position: absolute;
+    right: 30px;
+`;
+
+const MaxButton = styled.button`
+    padding: 1px 8px;
+    font-weight: 700;
+    font-size: 10px;
+    color: var(--color-white);
+    background-color: rgba(100, 217, 254, 0.5);
+    border-radius: 10px;
+    line-height: 15.21px;
+    border: none;
+    outline: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    &:focus {
+        outline: none;
+        border: none;
+    }
+    &:active {
+        outline: none;
+        border-style: none;
+    }
+    &:disabled {
+        opacity: 0.6;
+    }
+`;
+
+const FinalizeTrade = styled(FlexDivCentered)`
+    width: 320px;
+    color: ${(props) => props.theme.textColor.primary};
+    font-size: 13px;
 `;
 
 const Text = styled.span`
@@ -757,12 +831,6 @@ const VerticalLine = styled.div`
     background: ${(props) => props.theme.background.tertiary};
     border-radius: 6px;
     margin: 0 5px;
-`;
-
-const FinalizeTrade = styled(FlexDivCentered)`
-    width: 320px;
-    color: #ffffff;
-    font-size: 13px;
 `;
 
 const ColumnCenter = styled(FlexDivColumnCentered)`

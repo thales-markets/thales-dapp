@@ -4,11 +4,11 @@ import { TooltipStyles } from 'constants/ui';
 import styled from 'styled-components';
 
 export const Title = styled.div<{ color?: string; fontSize?: string }>`
-    font-family: Roboto !important;
+    font-family: Titillium Regular !important;
     font-weight: 400;
     margin-bottom: 5px;
     text-transform: uppercase;
-    color: ${(props) => (props?.color ? props.color : 'var(--input-border-color)')};
+    color: ${(props) => (props?.color ? props.color : props.theme.input.borderColor.primary)};
     font-size: ${(props) => (props?.fontSize ? props.fontSize : '14px')};
 `;
 
@@ -19,11 +19,13 @@ export const ValueContainer = styled.div`
     align-items: baseline;
 `;
 
-export const Value = styled.input<{ color?: string; fontSize?: string }>`
-    font-family: Roboto !important;
-    font-weight: 600;
-    color: ${(props) => (props?.color ? props.color : 'var(--color-white)')};
-    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
+export const Value = styled.input<{ color?: string; fontSize?: string; disabled: boolean }>`
+    font-family: Titillium Regular !important;
+    font-weight: 400;
+    color: ${(props) => (props?.color ? props.color : props.theme.input.textColor.primary)};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '18px')};
+    text-transform: capitalize;
+    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'initial')};
     background: transparent;
     border: none;
     padding: 0;
@@ -32,13 +34,9 @@ export const Value = styled.input<{ color?: string; fontSize?: string }>`
         border: none;
         outline: none;
     }
-`;
-
-export const SubValue = styled.span<{ color?: string; fontSize?: string }>`
-    font-family: Roboto !important;
-    font-weight: 600;
-    color: ${(props) => (props?.color ? props.color : 'var(--color-white)')};
-    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
+    ::placeholder {
+        color: ${(props) => props.theme.input.textColor.secondary};
+    }
 `;
 
 export const Container = styled.div<{

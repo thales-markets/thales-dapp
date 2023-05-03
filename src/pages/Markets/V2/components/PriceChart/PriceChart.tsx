@@ -60,8 +60,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         return 0;
     }, [priceData]);
 
-    console.log(asset);
-
     const handleDateRangeChange = (value: number) => {
         setDateRange(value);
         // fetch data based on new date range here...

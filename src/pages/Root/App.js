@@ -19,7 +19,6 @@ import { getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'util
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import Cookies from 'universal-cookie';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
@@ -94,8 +93,6 @@ const App = () => {
             ],
         });
     }, [walletAddress]);
-
-    const cookies = new Cookies();
 
     useEffect(() => {
         const init = async () => {
