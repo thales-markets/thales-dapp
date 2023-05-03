@@ -2,7 +2,7 @@ import { Colors } from './common';
 
 export default {
     background: {
-        primary: '',
+        primary: Colors.GRAY_LIGHT,
         secondary: '',
         tertiary: '',
         quaternary: '',
