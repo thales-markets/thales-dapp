@@ -144,14 +144,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 y={selectedPrice}
                                 stroke="#F7B91A"
                                 strokeDasharray="3 3"
-                                label={{
-                                    value: `Strike price: $${selectedPrice}`,
-                                    fill: '#F7B91A',
-                                    fontFamily: 'Inter !important',
-                                    fontSize: '10px',
-                                    position: 'insideRight',
-                                    dy: -10,
-                                }}
+                                label={<CustomLabel price={selectedPrice} />}
                             />
                         )}
 
@@ -177,6 +170,37 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         </Wrapper>
     );
 };
+
+const CustomLabel = (props) => {
+    console.log(props);
+    return (
+        <SVGBorder y={props.viewBox.y - 8} x={props.viewBox.width - 70}>
+            <Rectangle rx={10}></Rectangle>
+            <Text x={8} y={11}>
+                {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
+            </Text>
+        </SVGBorder>
+    );
+};
+
+const SVGBorder = styled.svg`
+    width: 70px;
+    height: 16px;
+`;
+
+const Rectangle = styled.rect`
+    stroke-width: 1px;
+    width: 70px;
+    height: 16px;
+    stroke: ${(props) => props.theme.borderColor.secondary};
+    fill: ${(props) => props.theme.background.primary};
+`;
+
+const Text = styled.text`
+    fill: ${(props) => props.theme.borderColor.secondary};
+    font-size: 10px;
+    font-family: Inter !important;
+`;
 
 const Wrapper = styled.div`
     width: 100%;
