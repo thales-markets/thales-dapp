@@ -653,7 +653,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const isMaxButtonDisabled =
         !market.address || isSubmitting || isAmmTradingDisabled || insufficientLiquidity || isFetchingQuote;
 
-    console.log(positionAmount);
+    // console.log(positionAmount);
     // TODO:
     const potentialProfitFormatted = isFetchingQuote
         ? '...'
