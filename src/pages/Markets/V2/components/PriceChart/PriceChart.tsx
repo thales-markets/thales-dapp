@@ -169,7 +169,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
     );
 };
 
-const CustomLabel = (props) => {
+const CustomLabel = (props: any) => {
     return (
         <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 70}>
             <Rectangle rx={10} y={1}></Rectangle>
