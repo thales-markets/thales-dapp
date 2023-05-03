@@ -28,6 +28,15 @@ export const sportLiquidityPoolContract = {
         {
             anonymous: false,
             inputs: [
+                { indexed: false, internalType: 'address', name: '_whitelistAddress', type: 'address' },
+                { indexed: false, internalType: 'bool', name: '_flag', type: 'bool' },
+            ],
+            name: 'AddedIntoWhitelistStaker',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
                 { indexed: false, internalType: 'address', name: 'user', type: 'address' },
                 { indexed: false, internalType: 'uint256', name: 'amount', type: 'uint256' },
             ],
@@ -107,6 +116,12 @@ export const sportLiquidityPoolContract = {
         },
         {
             anonymous: false,
+            inputs: [{ indexed: false, internalType: 'uint256', name: 'roundLength', type: 'uint256' }],
+            name: 'RoundLengthChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
             inputs: [
                 { indexed: false, internalType: 'uint256', name: '_round', type: 'uint256' },
                 { indexed: false, internalType: 'address', name: 'roundPool', type: 'address' },
@@ -174,10 +189,9 @@ export const sportLiquidityPoolContract = {
             inputs: [
                 { internalType: 'address', name: 'market', type: 'address' },
                 { internalType: 'uint256', name: 'sUSDAmount', type: 'uint256' },
-                { internalType: 'enum ISportsAMM.Position', name: 'position', type: 'uint8' },
             ],
             name: 'commitTrade',
-            outputs: [{ internalType: 'address', name: 'liquidityPoolRound', type: 'address' }],
+            outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
@@ -265,7 +279,7 @@ export const sportLiquidityPoolContract = {
                 { internalType: 'enum ISportsAMM.Position', name: 'position', type: 'uint8' },
             ],
             name: 'getOptionsForBuy',
-            outputs: [{ internalType: 'address', name: 'liquidityPoolRound', type: 'address' }],
+            outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
@@ -276,7 +290,7 @@ export const sportLiquidityPoolContract = {
                 { internalType: 'address', name: 'position', type: 'address' },
             ],
             name: 'getOptionsForBuyByAddress',
-            outputs: [{ internalType: 'address', name: 'liquidityPoolRound', type: 'address' }],
+            outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
@@ -298,6 +312,13 @@ export const sportLiquidityPoolContract = {
             inputs: [{ internalType: 'uint256', name: 'round', type: 'uint256' }],
             name: 'getRoundStartTime',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'hasMarketsReadyToBeExercised',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -335,6 +356,13 @@ export const sportLiquidityPoolContract = {
             type: 'function',
         },
         {
+            inputs: [{ internalType: 'address', name: 'user', type: 'address' }],
+            name: 'isUserLPing',
+            outputs: [{ internalType: 'bool', name: 'isUserInLP', type: 'bool' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             inputs: [],
             name: 'maxAllowedDeposit',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -366,6 +394,13 @@ export const sportLiquidityPoolContract = {
             inputs: [],
             name: 'nominatedOwner',
             outputs: [{ internalType: 'address', name: '', type: 'address' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'onlyWhitelistedStakersAllowed',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -454,6 +489,13 @@ export const sportLiquidityPoolContract = {
             type: 'function',
         },
         {
+            inputs: [{ internalType: 'bool', name: 'flagToSet', type: 'bool' }],
+            name: 'setOnlyWhitelistedStakersAllowed',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
             name: 'setOwner',
             outputs: [],
@@ -461,8 +503,22 @@ export const sportLiquidityPoolContract = {
             type: 'function',
         },
         {
+            inputs: [{ internalType: 'bool', name: '_setPausing', type: 'bool' }],
+            name: 'setPaused',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'address', name: '_poolRoundMastercopy', type: 'address' }],
             name: 'setPoolRoundMastercopy',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'uint256', name: '_roundLength', type: 'uint256' }],
+            name: 'setRoundLength',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -494,6 +550,16 @@ export const sportLiquidityPoolContract = {
                 { internalType: 'bool', name: '_flag', type: 'bool' },
             ],
             name: 'setWhitelistedAddresses',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'address[]', name: '_whitelistedAddresses', type: 'address[]' },
+                { internalType: 'bool', name: '_flag', type: 'bool' },
+            ],
+            name: 'setWhitelistedStakerAddresses',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -553,6 +619,31 @@ export const sportLiquidityPoolContract = {
         },
         {
             inputs: [
+                { internalType: 'address[]', name: 'tokens', type: 'address[]' },
+                { internalType: 'address payable', name: 'account', type: 'address' },
+                { internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { internalType: 'bool', name: 'all', type: 'bool' },
+            ],
+            name: 'transferTokens',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'address[]', name: 'tokens', type: 'address[]' },
+                { internalType: 'address payable', name: 'account', type: 'address' },
+                { internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { internalType: 'bool', name: 'all', type: 'bool' },
+                { internalType: 'address', name: 'pool', type: 'address' },
+            ],
+            name: 'transferTokensFromLiquidityPool',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
                 { internalType: 'uint256', name: '', type: 'uint256' },
                 { internalType: 'address', name: '', type: 'address' },
             ],
@@ -581,6 +672,13 @@ export const sportLiquidityPoolContract = {
         {
             inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'whitelistedDeposits',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
+            name: 'whitelistedStakers',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',

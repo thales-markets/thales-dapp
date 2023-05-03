@@ -3,6 +3,8 @@ import { InputContainer } from 'pages/Token/components/components';
 import React from 'react';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivStart, FlexDivRow, FlexDiv } from 'theme/common';
+import MaterialTooltip from '@material-ui/core/Tooltip';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;
@@ -363,3 +365,34 @@ export const TipLink: React.FC<{ href: string }> = ({ children, href }) => {
         </TextLink>
     );
 };
+
+export const StyledMaterialTooltip = withStyles(() => ({
+    arrow: {
+        '&:before': {
+            border: '1px solid #64D9FE',
+        },
+        color: '#0d1069',
+        marginLeft: '0px!important',
+    },
+    tooltip: {
+        background:
+            'linear-gradient(#04045a 0%, #04045a 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
+        border: '1px solid transparent',
+        borderRadius: '5px',
+        padding: '10px 15px',
+        fontWeight: 400,
+        fontSize: '16px',
+        lineHeight: '20px',
+        letterSpacing: '0.4px',
+        color: '#ffffff',
+        maxWidth: 500,
+    },
+}))(MaterialTooltip);
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    top: 2px;
+    margin-left: 5px;
+    width: 15px;
+    height: 15px;
+    position: relative;
+`;

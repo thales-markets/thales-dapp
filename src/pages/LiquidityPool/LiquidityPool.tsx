@@ -7,7 +7,6 @@ import {
     ButtonContainer,
     Wrapper,
     ToggleContainer,
-    // Description,
     LiquidityPoolFilledGraphicContainer,
     LiquidityPoolFilledGraphicPercentage,
     LiquidityPoolFilledText,
@@ -36,6 +35,8 @@ import {
     TipLink,
     InputWrapper,
     MaxButton,
+    StyledMaterialTooltip,
+    StyledInfoIcon,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -62,7 +63,7 @@ import Tooltip from 'components/Tooltip';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
 import { LINKS } from 'constants/links';
-// import MaxAllowanceTooltip from './components/MaxAllowanceTooltip';
+import MaxAllowanceTooltip from './components/MaxAllowanceTooltip';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { CurrencyLabel, InputLabel } from 'pages/Token/components/components';
@@ -813,19 +814,24 @@ const LiquidityPool: React.FC = () => {
                                                 USD_SIGN,
                                                 userLiquidityPoolData ? userLiquidityPoolData.maxDeposit : 0
                                             )}
-                                            {/* <Tooltip
-                                            overlay={
-                                                <MaxAllowanceTooltip
-                                                    stakedThales={
-                                                        userLiquidityPoolData ? userLiquidityPoolData.stakedThales : 0
-                                                    }
-                                                    stakedThalesMultiplier={liquidityPoolData.stakedThalesMultiplier}
-                                                />
-                                            }
-                                            overlayClassName="lp-max-allowance"
-                                            iconFontSize={14}
-                                            marginLeft={2}
-                                        /> */}
+                                            <StyledMaterialTooltip
+                                                arrow
+                                                interactive
+                                                title={
+                                                    <MaxAllowanceTooltip
+                                                        stakedThales={
+                                                            userLiquidityPoolData
+                                                                ? userLiquidityPoolData.stakedThales
+                                                                : 0
+                                                        }
+                                                        stakedThalesMultiplier={
+                                                            liquidityPoolData.stakedThalesMultiplier
+                                                        }
+                                                    />
+                                                }
+                                            >
+                                                <StyledInfoIcon />
+                                            </StyledMaterialTooltip>
                                         </LiquidityPoolInfo>
                                     </LiquidityPoolInfoContainer>
                                     {isWithdrawalRequested && (
