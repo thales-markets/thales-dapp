@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     ClaimMessage,
     EarnSection,
@@ -15,18 +15,15 @@ import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-
 import styled from 'styled-components';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
+import { refetchTokenQueries } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
-
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { formattedDuration } from 'utils/formatters/date';
 import { MaxButton, ThalesWalletAmountLabel } from '../../../Migration/components';
@@ -41,6 +38,8 @@ import { isMobile } from 'utils/device';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { UserStakingData } from 'types/token';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -69,17 +68,29 @@ const Unstake: React.FC = () => {
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const isL2 = getIsOVM(networkId);
     const { stakingThalesContract } = snxJSConnector as any;
+    const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
 
-    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
+    const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
-    const thalesStaked =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.thalesStaked) : 0;
-    const unstakingAmount =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.unstakingAmount) : 0;
-    const isStakingPaused = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.paused;
-    const isUserLPing = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.isUserLPing;
+    useEffect(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            setLastValidUserStakingData(userStakingDataQuery.data);
+        }
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data]);
+
+    const userStakingData: UserStakingData | undefined = useMemo(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            return userStakingDataQuery.data;
+        }
+        return lastValidUserStakingData;
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data, lastValidUserStakingData]);
+
+    const thalesStaked = userStakingData ? userStakingData.thalesStaked : 0;
+    const unstakingAmount = userStakingData ? userStakingData.unstakingAmount : 0;
+    const isUserLPing = userStakingData && userStakingData.isUserLPing;
+    const isStakingPaused = userStakingData && userStakingData.isPaused;
 
     const isAmountEntered = Number(amountToUnstake) > 0;
     const insufficientBalance = Number(amountToUnstake) > thalesStaked || !thalesStaked;
@@ -99,15 +110,15 @@ const Unstake: React.FC = () => {
     const isUnstakeButtonDisabled = isUnstaking || isCanceling || !stakingThalesContract || !isWalletConnected;
 
     useEffect(() => {
-        if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { isUnstaking, lastUnstakeTime, unstakeDurationPeriod } = stakingThalesQuery.data;
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            const { isUnstaking, lastUnstakeTime, unstakeDurationPeriod } = userStakingDataQuery.data;
             setIsUnstakingInContract(isUnstaking);
             setUnstakeDurationPeriod(unstakeDurationPeriod);
             if (isUnstaking) {
                 setUnstakeEndTime(addDurationPeriod(new Date(lastUnstakeTime), unstakeDurationPeriod));
             }
         }
-    }, [stakingThalesQuery.isSuccess, stakingThalesQuery.data]);
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data]);
 
     useEffect(() => {
         const fetchL1FeeStartUnstake = async (stakingThalesContractWithSigner: any, amount: any) => {
@@ -232,7 +243,6 @@ const Unstake: React.FC = () => {
                     t('options.earn.gamified-staking.staking.unstake.cooldown-confirmation-message')
                 );
                 refetchTokenQueries(walletAddress, networkId);
-                refetchUserTokenTransactions(walletAddress, networkId);
                 setAmountToUnstake('');
                 setIsUnstakingInContract(true);
                 setUnstakeEndTime(addDurationPeriod(new Date(), unstakeDurationPeriod));
@@ -261,7 +271,6 @@ const Unstake: React.FC = () => {
                     t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message')
                 );
                 refetchTokenQueries(walletAddress, networkId);
-                refetchUserTokenTransactions(walletAddress, networkId);
                 setIsUnstakingInContract(false);
                 setUnstakingEnded(true);
                 setIsUnstaking(false);
@@ -287,7 +296,6 @@ const Unstake: React.FC = () => {
 
             if (txResult && txResult.transactionHash) {
                 refetchTokenQueries(walletAddress, networkId);
-                refetchUserTokenTransactions(walletAddress, networkId);
                 setIsUnstakingInContract(false);
                 setUnstakingEnded(true);
                 setIsCanceling(false);
@@ -490,7 +498,7 @@ const Unstake: React.FC = () => {
                     <ThalesWalletAmountLabel>
                         {!isMobile() && <BalanceIcon />}
                         {isWalletConnected ? (
-                            stakingThalesQuery.isLoading ? (
+                            userStakingDataQuery.isLoading ? (
                                 <SimpleLoader />
                             ) : (
                                 t('options.earn.gamified-staking.staking.unstake.balance') +

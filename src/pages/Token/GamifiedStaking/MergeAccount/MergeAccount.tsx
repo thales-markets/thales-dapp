@@ -12,7 +12,6 @@ import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { getIsAppReady } from 'redux/modules/app';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import { ArrowContainer } from 'pages/Token/Migration/components';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { isMobile } from 'utils/device';
@@ -28,6 +27,7 @@ import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperl
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -61,11 +61,11 @@ const MergeAccount: React.FC = () => {
             isAddress(delegateDestAddress) &&
             getAddress(walletAddress) !== getAddress(delegateDestAddress));
 
-    const srcStakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady,
+    const srcStakingThalesQuery = useUserStakingDataQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
     });
 
-    const destStakingThalesQuery = useStakingThalesQuery(destAddress, networkId, {
+    const destStakingThalesQuery = useUserStakingDataQuery(destAddress, networkId, {
         enabled: isAppReady && isDestAddressValid,
     });
 

@@ -74,6 +74,7 @@ import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { refetchVaultData } from 'utils/queryConnector';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -266,6 +267,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     toast.update(id, getSuccessToastOptions(t('vault.button.deposit-confirmation-message')));
                     setAmount('');
                     setIsSubmitting(false);
+                    refetchVaultData(vaultAddress, walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
@@ -292,6 +294,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     toast.update(id, getSuccessToastOptions(t('vault.button.request-withdrawal-confirmation-message')));
                     setAmount('');
                     setIsSubmitting(false);
+                    refetchVaultData(vaultAddress, walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
@@ -317,6 +320,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 if (txResult && txResult.events) {
                     toast.update(id, getSuccessToastOptions(t('vault.button.close-round-confirmation-message')));
                     setIsSubmitting(false);
+                    refetchVaultData(vaultAddress, walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);

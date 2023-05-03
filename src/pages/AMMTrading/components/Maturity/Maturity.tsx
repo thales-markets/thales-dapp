@@ -21,7 +21,7 @@ import { formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/net
 import { getIsAppReady } from 'redux/modules/app';
 import { AccountMarketInfo } from 'types/options';
 import { BINARY_OPTIONS_EVENTS } from 'constants/events';
-import { refetchMarketQueries, refetchUserBalance } from 'utils/queryConnector';
+import { refetchMarketQueries, refetchBalances } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { L2_EXERCISE_GAS_LIMIT } from 'constants/options';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -166,7 +166,7 @@ const Maturity: React.FC = () => {
                     })
                 );
                 refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
-                refetchUserBalance(walletAddress, networkId);
+                refetchBalances(walletAddress, networkId);
                 setIsExercising(false);
             }
         } catch (e) {

@@ -24,7 +24,7 @@ import {
     getTransactionPrice,
     Network,
 } from 'utils/network';
-import { refetchUserBalance } from 'utils/queryConnector';
+import { refetchBalances } from 'utils/queryConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
@@ -220,7 +220,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                 };
                 const tx = await signer.sendTransaction(transactionData);
                 await tx.wait();
-                refetchUserBalance(walletAddress as any, networkId);
+                refetchBalances(walletAddress as any, networkId);
                 setLoading(false);
                 toast.update(id, getSuccessToastOptions(t('options.swap.tx-success', { token: toToken.symbol })));
                 return {

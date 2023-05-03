@@ -20,7 +20,7 @@ import { formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/net
 import { getIsAppReady } from 'redux/modules/app';
 import { RangedMarketBalanceInfo } from 'types/options';
 import { RANGE_MARKET_EVENTS } from 'constants/events';
-import { refetchRangeMarketQueries, refetchUserBalance } from 'utils/queryConnector';
+import { refetchRangeMarketQueries, refetchBalances } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { L2_EXERCISE_GAS_LIMIT } from 'constants/options';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -171,7 +171,7 @@ const RangeMaturity: React.FC = () => {
                     })
                 );
                 refetchRangeMarketQueries(walletAddress, BOMContract.address, rangedMarketData.address, networkId);
-                refetchUserBalance(walletAddress, networkId);
+                refetchBalances(walletAddress, networkId);
                 setIsExercising(false);
             }
         } catch (e) {

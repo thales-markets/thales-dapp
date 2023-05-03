@@ -66,7 +66,6 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

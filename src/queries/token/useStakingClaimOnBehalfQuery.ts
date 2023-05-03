@@ -14,7 +14,7 @@ const useStakingClaimOnBehalfQuery = (
     options?: UseQueryOptions<StakingClaimOnBehalfResponse>
 ) => {
     return useQuery<StakingClaimOnBehalfResponse>(
-        QUERY_KEYS.Staking.ClaimOnBehalf(walletAddress, networkId),
+        QUERY_KEYS.Token.ClaimOnBehalf(walletAddress, networkId),
         async () => {
             const response: StakingClaimOnBehalfResponse = {
                 enabledAddresses: [],
@@ -39,7 +39,6 @@ const useStakingClaimOnBehalfQuery = (
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

@@ -118,7 +118,6 @@ const useBinaryOptionsUserTradesQuery = (
             return trades;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

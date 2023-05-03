@@ -91,7 +91,6 @@ const useAmmMaxLimitsQuery = (marketAddress: string, networkId: number, options?
             return ammMaxLimits;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

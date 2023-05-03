@@ -3,6 +3,10 @@ import { Network } from 'utils/network';
 export const sportVaultDataContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
+        [Network.Ropsten]: 'TBD',
+        [Network.Rinkeby]: 'TBD',
+        [Network.Kovan]: 'TBD',
+        [Network.Goerli]: 'TBD',
         [Network['Mainnet-Ovm']]: '0x70164a1ec9D21c4dBA2b4f9B23750F9C7D03286b',
         [Network['Kovan-Ovm']]: 'TBD',
         [Network['Goerli-Ovm']]: 'TBD',

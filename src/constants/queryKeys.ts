@@ -15,12 +15,6 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        Vesting: (walletAddress: string, networkId: NetworkId) => [
-            'walletBalances',
-            'vesting',
-            walletAddress,
-            networkId,
-        ],
         Positions: (walletAddress: string, marketAddress: string, networkId: NetworkId) => [
             'walletBalances',
             'positions',
@@ -109,17 +103,30 @@ export const QUERY_KEYS = {
         EthBalance: (walletAddress: string) => ['user', 'ethBalance', walletAddress],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
     },
-    Staking: {
-        Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],
-        Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
+    Staking: {},
+    Token: {
+        StakingData: (networkId: NetworkId) => ['token', 'staking', 'data', networkId],
+        UserStakingData: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'staking',
+            'data',
+            walletAddress,
+            networkId,
+        ],
+        UserVestingData: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'vesting',
+            'data',
+            walletAddress,
+            networkId,
+        ],
         ClaimOnBehalf: (walletAddress: string, networkId: NetworkId) => [
+            'token',
             'staking',
             'claimOnBehalf',
             walletAddress,
             networkId,
         ],
-    },
-    Token: {
         Transactions: (walletAddress: string | undefined, networkId: NetworkId, type_in: string | undefined) => [
             'token',
             'transactions',
@@ -127,35 +134,28 @@ export const QUERY_KEYS = {
             networkId,
             type_in,
         ],
-        UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['transactions', networkId, period],
-        VestingSchedule: (walletAddress: string, networkId: NetworkId) => [
-            'token',
-            'vesting',
-            'schedule',
-            walletAddress,
-            networkId,
-        ],
-        Info: (networkId: NetworkId) => ['token', 'info', networkId],
-        StakingRewards: (walletAddress: string, networkId: NetworkId) => [
-            'token',
-            'stakingRewards',
-            walletAddress,
-            networkId,
-        ],
         MigratedInvestorsRetroRewards: (walletAddress: string, networkId: NetworkId) => [
             'token',
             'migratedInvestorsRetroRewards',
             walletAddress,
             networkId,
         ],
-        LPStaking: (walletAddress: string, networkId: NetworkId) => ['token', 'LPStaking', walletAddress, networkId],
-        GelatoBalance: (walletAddress: string, networkId: NetworkId) => [
+        VestingEscrow: (walletAddress: string, networkId: NetworkId) => [
             'token',
-            'GelatoBalance',
+            'vestingEscrow',
             walletAddress,
             networkId,
         ],
-        Gelato: () => ['token', 'Gelato'],
+        LPStaking: (walletAddress: string, networkId: NetworkId) => ['token', 'lpStaking', walletAddress, networkId],
+        GelatoBalance: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'gelatoBalance',
+            walletAddress,
+            networkId,
+        ],
+        Gelato: () => ['token', 'gelato'],
+        UsersAmmBuyVolume: (networkId: NetworkId, period: number) => ['transactions', networkId, period],
+        Info: (networkId: NetworkId) => ['token', 'info', networkId],
     },
     TaleOfThales: {
         NFTCollections: (walletAddress: string, networkId: NetworkId) => [
