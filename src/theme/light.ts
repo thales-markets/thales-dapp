@@ -45,6 +45,7 @@ export default {
         },
         textColor: {
             primary: '',
+            secondary: '',
         },
         borderColor: {
             primary: '',

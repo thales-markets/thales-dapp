@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, CustomTooltip, SubValue, Title, Value, ValueContainer } from './styled-components/Container';
+import { Container, CustomTooltip, Title, Value, ValueContainer } from './styled-components/Container';
 
 type InputProps = {
     title?: string;
@@ -13,9 +13,6 @@ type InputProps = {
     valueEditDisable?: boolean;
     valueColor?: string;
     valueFontSize?: string;
-    subValue?: any;
-    subValueColor?: string;
-    subValueFontSize?: string;
     disabled?: boolean;
     displayTooltip?: boolean;
     tooltipText?: string;
@@ -41,9 +38,6 @@ const Input: React.FC<InputProps> = ({
     valueEditDisable,
     valueColor,
     valueFontSize,
-    subValue,
-    subValueColor,
-    subValueFontSize,
     disabled,
     displayTooltip,
     tooltipText,
@@ -92,16 +86,13 @@ const Input: React.FC<InputProps> = ({
                             value={typeof value == 'string' || typeof value == 'number' ? value : ''}
                             placeholder={placeholder}
                             onChange={handleChange}
-                            disabled={valueEditDisable || disabled}
+                            disabled={!!valueEditDisable || !!disabled}
                             type={valueType ? valueType : ''}
                             onFocus={onFocus}
                             onBlur={onBlur}
                             readOnly={typeof handleChange !== 'function' || disabled}
                         />
                     )}
-                    <SubValue color={subValueColor} fontSize={subValueFontSize}>
-                        {subValue}
-                    </SubValue>
                 </ValueContainer>
                 {children}
             </Container>

@@ -462,12 +462,12 @@ export const NoDataContainer = styled.div`
 // TODO: define colors
 export const Colors = {
     GRAY: '#2B3139',
-    GRAY_LIGHT: '#808997',
+    GRAY_LIGHT: '#848E9C',
     GRAY_DARK: '#181A20',
     WHITE: '#FFFFFF',
-    GREEN: '#03DAC6',
-    GREEN_LIGHT: '#03DAC6B3',
+    GREEN: '#03DAC5',
+    GREEN_LIGHT: '#03DAC5B3',
     BLUE: '',
     RED: '#DE496D',
-    YELLOW: '',
+    YELLOW: '#F7B91A',
 };
