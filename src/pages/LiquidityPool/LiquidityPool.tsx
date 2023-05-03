@@ -244,7 +244,9 @@ const LiquidityPool: React.FC = () => {
                 if (txResult && txResult.transactionHash) {
                     toast.update(
                         id,
-                        getSuccessToastOptions(t('market.toast-message.approve-success', { token: collateral }))
+                        getSuccessToastOptions(
+                            t('options.market.toast-messsage.approve-success', { token: collateral })
+                        )
                     );
                     setIsAllowing(false);
                 }
