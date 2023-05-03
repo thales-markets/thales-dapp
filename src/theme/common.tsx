@@ -470,4 +470,5 @@ export const Colors = {
     BLUE: '',
     RED: '#DE496D',
     YELLOW: '',
+    ORANGE: '#F7B91A',
 };

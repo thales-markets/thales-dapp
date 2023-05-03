@@ -110,15 +110,15 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         <XAxis
                             tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
                             tickLine={false}
-                            axisLine={{ stroke: 'var(--color-white)' }}
+                            axisLine={false}
                             dataKey="date"
                             interval={25}
                         />
                         <YAxis
-                            domain={[parseInt((minPrice / 1.5).toFixed(0)), parseInt((1.1 * maxPrice).toFixed(0))]}
+                            domain={[parseInt((minPrice / 1.1).toFixed(0)), parseInt((1.1 * maxPrice).toFixed(0))]}
                             tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
                             tickLine={false}
-                            axisLine={{ stroke: 'var(--color-white)' }}
+                            axisLine={false}
                             tickCount={8}
                             orientation="right"
                             tickFormatter={(value) => formatCurrencyWithSign(USD_SIGN, value)}
@@ -142,13 +142,13 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         {selectedPrice && (
                             <ReferenceLine
                                 y={selectedPrice}
-                                stroke="var(--color-highlight)"
+                                stroke="#F7B91A"
                                 strokeDasharray="3 3"
                                 label={{
                                     value: `Strike price: $${selectedPrice}`,
-                                    fill: 'var(--color-highlight)',
-                                    fontFamily: 'Roboto',
-                                    fontSize: '14px',
+                                    fill: '#F7B91A',
+                                    fontFamily: 'Inter !important',
+                                    fontSize: '10px',
                                     position: 'insideRight',
                                     dy: -10,
                                 }}

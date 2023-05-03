@@ -15,7 +15,7 @@ export default {
     },
     borderColor: {
         primary: '',
-        secondary: '',
+        secondary: Colors.ORANGE,
         tertiary: '',
         quaternary: '',
     },
