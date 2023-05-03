@@ -90,8 +90,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         fetchData();
     }, [asset, dateRange]);
 
-    console.log(theme);
-
     return (
         <Wrapper>
             <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
@@ -108,15 +106,15 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         <XAxis
                             tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
                             tickLine={false}
-                            axisLine={{ stroke: 'var(--color-white)' }}
+                            axisLine={false}
                             dataKey="date"
                             interval={25}
                         />
                         <YAxis
-                            domain={[parseInt((minPrice / 1.5).toFixed(0)), parseInt((1.1 * maxPrice).toFixed(0))]}
+                            domain={[parseInt((minPrice / 1.1).toFixed(0)), parseInt((1.1 * maxPrice).toFixed(0))]}
                             tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
                             tickLine={false}
-                            axisLine={{ stroke: 'var(--color-white)' }}
+                            axisLine={false}
                             tickCount={8}
                             orientation="right"
                             tickFormatter={(value) => formatCurrencyWithSign(USD_SIGN, value)}
@@ -140,16 +138,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         {selectedPrice && (
                             <ReferenceLine
                                 y={selectedPrice}
-                                stroke="var(--color-highlight)"
+                                stroke="#F7B91A"
                                 strokeDasharray="3 3"
-                                label={{
-                                    value: `Strike price: $${selectedPrice}`,
-                                    fill: 'var(--color-highlight)',
-                                    fontFamily: 'Roboto',
-                                    fontSize: '14px',
-                                    position: 'insideRight',
-                                    dy: -10,
-                                }}
+                                label={<CustomLabel price={selectedPrice} />}
                             />
                         )}
 
@@ -175,6 +166,36 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         </Wrapper>
     );
 };
+
+const CustomLabel = (props) => {
+    return (
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 70}>
+            <Rectangle rx={10} y={1}></Rectangle>
+            <Text x={8} y={13}>
+                {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
+            </Text>
+        </SVGBorder>
+    );
+};
+
+const SVGBorder = styled.svg`
+    width: 70px;
+    height: 20px;
+`;
+
+const Rectangle = styled.rect`
+    stroke-width: 1px;
+    width: 70px;
+    height: 18px;
+    stroke: ${(props) => props.theme.borderColor.secondary};
+    fill: ${(props) => props.theme.background.primary};
+`;
+
+const Text = styled.text`
+    fill: ${(props) => props.theme.borderColor.secondary};
+    font-size: 10px;
+    font-family: Inter !important;
+`;
 
 const Wrapper = styled.div`
     width: 100%;
