@@ -13,7 +13,7 @@ import {
     SLIPPAGE_PERCENTAGE,
     getMaxGasLimitForNetwork,
 } from 'constants/options';
-import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
@@ -102,7 +102,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
-    const [isPriceChanged, setIsPriceChanged] = useState(false);
     const [liquidity, setLiquidity] = useState(0);
     const [_isAmountValid, setIsAmountValid] = useState(true); // TODO: add validation on amount
 
@@ -336,7 +335,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         );
                     }
                 }
-                // TODO: check this when price is changed as position amount is changed
+                // Between 2 calls ammPrice will be always different as it is based on position amount which is changed when price is changed
                 priceChanged = truncDecimals(ammPrice, 4) !== truncDecimals(Number(positionPrice), 4);
             } catch (e) {
                 console.log(e);
@@ -394,14 +393,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
-        setIsPriceChanged(false);
 
         const id = toast.loading(t('amm.progress'));
 
         const { priceChanged, latestGasLimit } = await fetchAmmPriceData(Number(paidAmount), true, true);
         if (priceChanged) {
             toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
-            setIsPriceChanged(true);
             setIsSubmitting(false);
             return;
         }
@@ -529,7 +526,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     }, [walletAddress, isWalletConnected, hasAllowance, isAllowing]);
 
     useEffect(() => {
-        setPositionAmount('');
         dispatch(setBuyState(true)); // TODO: check if this is needed
     }, []);
 
@@ -558,11 +554,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         setLiquidity(max);
         setBasePrice(base);
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
-    }, [ammMaxLimits?.buyLongPrice, isLong]);
-
-    useEffect(() => {
-        toast(getWarningToastOptions(t('amm.price-changed-warning')));
-    }, [isPriceChanged]);
+    }, [ammMaxLimits, isLong]);
 
     useEffect(() => {
         setIsAmountValid(
@@ -661,11 +653,14 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             action: 'click-on-max-button',
         });
 
+        if (isMaxButtonDisabled) return;
+
         const maxPaidAmount = roundNumberToDecimals(Number(stableBalance) * (1 - SLIPPAGE_PERCENTAGE[2] / 100));
         setPaidAmount(maxPaidAmount);
     };
 
-    const formDisabled = isSubmitting || isAmmTradingDisabled;
+    const isMaxButtonDisabled =
+        !market.address || isSubmitting || isAmmTradingDisabled || insufficientLiquidity || isFetchingQuote;
 
     // console.log(positionAmount);
     // TODO:
@@ -727,10 +722,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 container={{ width: '320px', height: '70px' }}
             >
                 <InputActions>
-                    <MaxButton
-                        onClick={() => onMaxClick()}
-                        disabled={formDisabled || insufficientLiquidity || isFetchingQuote}
-                    >
+                    <MaxButton onClick={() => onMaxClick()} disabled={isMaxButtonDisabled}>
                         {t('common.max')}
                     </MaxButton>
                 </InputActions>
