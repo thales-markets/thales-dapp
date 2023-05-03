@@ -26,7 +26,6 @@ const useRoundsQuery = (selectedSeason: number, networkId: NetworkId, options?: 
             return sortedRounds;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

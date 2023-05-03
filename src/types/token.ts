@@ -8,7 +8,7 @@ type AccountInfo = {
 };
 
 export type Airdrop = {
-    isClaimPaused: boolean;
+    isPaused: boolean;
     hasClaimRights: boolean;
     claimed: boolean;
     accountInfo?: AccountInfo;
@@ -106,10 +106,16 @@ export type VestingScheduleItem = {
 
 export type VestingSchedule = VestingScheduleItem[];
 
+export type UserVestingData = {
+    claimable: number;
+    rawClaimable: string;
+    vestingSchedule: VestingSchedule;
+};
+
 export type StakingReward = {
     closingDate: number;
     period: number;
-    isClaimPaused: boolean;
+    isPaused: boolean;
     hasClaimRights: boolean;
     claimed: boolean;
     canClosePeriod: boolean;
@@ -147,7 +153,7 @@ type Reward = {
 };
 
 export type MigratedReward = {
-    isClaimPaused: boolean;
+    isPaused: boolean;
     hasClaimRights: boolean;
     claimed: boolean;
     reward?: Reward;
@@ -169,8 +175,58 @@ type RetroReward = {
 };
 
 export type MigratedRetroReward = {
-    isClaimPaused: boolean;
+    isPaused: boolean;
     hasClaimRights: boolean;
     claimed: boolean;
     reward?: RetroReward;
+};
+
+export type StakingData = {
+    period: number;
+    unstakeDurationPeriod: number;
+    closingDate: number;
+    isPaused: boolean;
+    baseRewardsPool: number;
+    bonusRewardsPool: number;
+    totalStakedAmount: number;
+    maxSnxBonusPercentage: number;
+    maxAmmBonusPercentage: number;
+    maxThalesRoyaleBonusPercentage: number;
+    maxBonusRewardsPercentage: number;
+    snxVolumeRewardsMultiplier: number;
+    ammVolumeRewardsMultiplier: number;
+    canClosePeriod: boolean;
+    mergeAccountEnabled: boolean;
+    totalEscrowBalanceNotIncludedInStaking: number;
+    totalEscrowedRewards: number;
+};
+
+export type UserStakingData = {
+    thalesStaked: number;
+    hasClaimRights: boolean;
+    claimed: boolean;
+    isUnstaking: boolean;
+    lastUnstakeTime: number;
+    unstakingAmount: number;
+    delegatedVolume: string;
+    rewards: number;
+    baseRewards: number;
+    totalBonus: number;
+    snxBonus: number;
+    ammBonus: number;
+    maxSnxBonus: number;
+    maxAmmBonus: number;
+    maxThalesRoyaleBonus: number;
+    snxStaked: number;
+    ammVolume: number;
+    thalesAmmVolume: number;
+    rangedAmmVolume: number;
+    sportsAmmVolume: number;
+    escrowedBalance: number;
+    claimable: number;
+    rawClaimable: string;
+    isUserLPing: boolean;
+    isPaused: boolean;
+    unstakeDurationPeriod: number;
+    mergeAccountEnabled: boolean;
 };

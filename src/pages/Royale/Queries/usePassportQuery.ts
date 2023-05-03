@@ -25,7 +25,6 @@ const useRoyalePasportQuery = (
             return passports;
         },
         {
-            refetchInterval: 3000,
             ...options,
         }
     );

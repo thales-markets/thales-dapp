@@ -13,7 +13,7 @@ import { BigNumber, ethers } from 'ethers';
 import ValidationMessage from 'components/ValidationMessage';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { checkAllowance, formatGasLimit, getL1FeeInWei } from 'utils/network';
-import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
+import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from '../../components/SimpleLoader';
@@ -133,7 +133,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             if (txResult && txResult.transactionHash) {
                 dispatchMarketNotification(t('options.earn.gamified-staking.staking.stake.confirmation-message'));
                 refetchTokenQueries(walletAddress, networkId);
-                refetchUserTokenTransactions(walletAddress, networkId);
+                refetchLPStakingQueries(walletAddress, networkId);
                 setAmountToStake('');
                 setIsStaking(false);
             }

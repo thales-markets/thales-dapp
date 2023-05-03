@@ -14,7 +14,6 @@ const useRoyalePassportsURIsQuery = (tokenIds: number[], options?: UseQueryOptio
             return getFromContract(tokenIds, thalesRoyalePassportContract);
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

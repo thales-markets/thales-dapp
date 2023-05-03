@@ -5,20 +5,16 @@ import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { VestingInfo } from 'types/token';
 
-const useVestingBalanceQuery = (
-    walletAddress: string,
-    networkId: NetworkId,
-    options?: UseQueryOptions<VestingInfo>
-) => {
+const useVestingEscrowQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<VestingInfo>) => {
     return useQuery<VestingInfo>(
-        QUERY_KEYS.WalletBalances.Vesting(walletAddress, networkId),
+        QUERY_KEYS.Token.VestingEscrow(walletAddress, networkId),
         async () => {
             const [unlocked, initialLocked, totalClaimed, startTime, endTime] = await Promise.all([
-                await (snxJSConnector as any).vestingEscrowContract.balanceOf(walletAddress),
-                await (snxJSConnector as any).vestingEscrowContract.initialLocked(walletAddress),
-                await (snxJSConnector as any).vestingEscrowContract.totalClaimed(walletAddress),
-                await (snxJSConnector as any).vestingEscrowContract.startTime(),
-                await (snxJSConnector as any).vestingEscrowContract.endTime(),
+                (snxJSConnector as any).vestingEscrowContract.balanceOf(walletAddress),
+                (snxJSConnector as any).vestingEscrowContract.initialLocked(walletAddress),
+                (snxJSConnector as any).vestingEscrowContract.totalClaimed(walletAddress),
+                (snxJSConnector as any).vestingEscrowContract.startTime(),
+                (snxJSConnector as any).vestingEscrowContract.endTime(),
             ]);
 
             const vestingInfo: VestingInfo = {
@@ -32,10 +28,9 @@ const useVestingBalanceQuery = (
             return vestingInfo;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );
 };
 
-export default useVestingBalanceQuery;
+export default useVestingEscrowQuery;

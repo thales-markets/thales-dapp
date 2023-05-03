@@ -30,7 +30,7 @@ export const fetchDiscounts = (network: NetworkId, options?: UseQueryOptions<Dis
             }
         },
         {
-            refetchInterval: 30 * 1000,
+            refetchInterval: 60 * 1000,
             ...options,
         }
     );

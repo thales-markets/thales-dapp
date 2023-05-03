@@ -34,7 +34,6 @@ const usePlayerPositionsQuery = (
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

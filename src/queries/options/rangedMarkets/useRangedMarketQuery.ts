@@ -90,7 +90,6 @@ const useRangedMarketQuery = (marketAddress: string, options?: UseQueryOptions<R
             }
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

@@ -12,7 +12,6 @@ const useBinaryOptionsTransactionsQuery = (
         QUERY_KEYS.BinaryOptions.RecentTransactions(marketAddress),
         () => thalesData.binaryOptions.optionTransactions({ market: marketAddress, network: networkId }),
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

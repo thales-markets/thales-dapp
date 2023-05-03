@@ -13,7 +13,7 @@ type ElectionsBannerProps = {
     width?: number;
 };
 
-const SHOW_BANNER = true;
+const SHOW_BANNER = false;
 
 const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width }) => {
     const textLink = useMemo(() => {

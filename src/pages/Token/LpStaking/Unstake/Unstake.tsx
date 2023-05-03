@@ -10,7 +10,7 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import styled from 'styled-components';
-import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
+import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
@@ -99,7 +99,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                     t('options.earn.gamified-staking.staking.unstake.unstake-confirmation-message')
                 );
                 refetchTokenQueries(walletAddress, networkId);
-                refetchUserTokenTransactions(walletAddress, networkId);
+                refetchLPStakingQueries(walletAddress, networkId);
                 setUnstakingEnded(true);
                 setIsUnstaking(false);
                 setGasLimit(null);

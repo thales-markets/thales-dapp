@@ -179,7 +179,6 @@ const useProposalQuery = (
         },
         {
             ...options,
-            refetchInterval: 5000,
         }
     );
 };
