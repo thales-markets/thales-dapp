@@ -3,7 +3,7 @@ import logoOvertime from 'assets/images/token/logo-overtime.svg';
 import ValidationMessage from 'components/ValidationMessage';
 import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY } from 'constants/currency';
 import { LINKS } from 'constants/links';
-import { OP_REWARDS_MULTIPLIER, getMaxGasLimitForNetwork } from 'constants/options';
+import { getMaxGasLimitForNetwork } from 'constants/options';
 import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
 import Button from 'pages/Token/components/Button';
@@ -171,9 +171,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         !isClaiming &&
         !isClosingPeriod;
 
-    const opAmmBonus = ammBonus * OP_REWARDS_MULTIPLIER;
-    const maxOpAmmBonus = maxAmmBonus * OP_REWARDS_MULTIPLIER;
-
     const maxAmmVolume = baseRewards * ammVolumeRewardsMultiplier;
     const additionalAmmVolume = maxAmmVolume - ammVolume > 0 ? maxAmmVolume - ammVolume : 0;
     const ammVolumeNeededForMaxBonus =
@@ -208,7 +205,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     // Protocol usage
     const protocolRewardThales = formatCurrencyWithKey(THALES_CURRENCY, ammBonus);
-    const protocolRewardOp = formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus);
     const protocolVolumeFormatted = formatCurrencyWithKey(getStableCoinForNetwork(networkId), ammVolume);
     const protocolVolumeNeededForBonusFormatted =
         ammVolumeNeededForMaxBonus > 0
@@ -216,18 +212,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             : '';
 
     const protocolMaxRewardFormatted = isClaimAvailable
-        ? isL2
-            ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus) +
-              ' + ' +
-              formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, maxOpAmmBonus)
-            : formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus)
-        : isL2
-        ? formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100)) +
-          ' + ' +
-          formatCurrencyWithKey(
-              CRYPTO_CURRENCY_MAP.OP,
-              estimatedRewards * (maxAmmBonusPercentage / 100) * OP_REWARDS_MULTIPLIER
-          )
+        ? formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus)
         : formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards * (maxAmmBonusPercentage / 100));
 
     // SNX staking
@@ -472,20 +457,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionValueContent type={SectionType.CLAIM}>
                         {formatCurrencyWithKey(THALES_CURRENCY, totalThalesRewards)}
                     </SectionValueContent>
-                    {isL2 && (
-                        <>
-                            <SectionValueContent type={SectionType.CLAIM} isOp={true}>
-                                {' + ' + formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.OP, opAmmBonus)}
-                            </SectionValueContent>
-                            <StyledMaterialTooltip
-                                arrow={true}
-                                title={<Trans i18nKey="options.earn.gamified-staking.rewards.claim.op-tooltip" />}
-                                interactive
-                            >
-                                <StyledInfoIcon />
-                            </StyledMaterialTooltip>
-                        </>
-                    )}
                 </SectionValue>
                 <NetworkFeesWrapper>
                     <Line margin={'0 0 10px 0'} />
@@ -698,7 +669,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         volume: protocolVolumeFormatted,
                         bonus: protocolVolumeNeededForBonusFormatted,
                         rewards: protocolMaxRewardFormatted,
-                        mainAddition: isL2 ? protocolRewardOp : undefined,
+                        mainAddition: undefined,
                     }
                 )}
             </SectionWrapper>
