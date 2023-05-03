@@ -7,7 +7,7 @@ import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import {
     COLLATERALS,
     MINIMUM_AMM_LIQUIDITY,
-    POSITIONS,
+    Positions,
     POSITIONS_TO_SIDE_MAP,
     SIDE,
     SLIPPAGE_PERCENTAGE,
@@ -70,7 +70,7 @@ import Input from '../Input';
 type TradingProps = {
     currencyKey: string;
     maturityDate: number;
-    positionType: POSITIONS;
+    positionType: Positions;
     market: MarketInfo;
 };
 
@@ -667,7 +667,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 <ColumnCenter>
                     <Text>
                         <TextLabel>{`${currencyKey} ${positionType}`}</TextLabel>
-                        <TextValue>{market.strikePrice ? (positionType === POSITIONS.UP ? '>' : '<') : ''}</TextValue>
+                        <TextValue>{market.strikePrice ? (positionType === Positions.UP ? '>' : '<') : ''}</TextValue>
                         <TextValue>
                             {market.strikePrice ? formatCurrencyWithSign(USD_SIGN, market.strikePrice) : ''}
                         </TextValue>

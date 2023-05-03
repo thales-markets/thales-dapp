@@ -2,14 +2,14 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { POSITIONS } from 'constants/options';
+import { Positions } from 'constants/options';
 import { uniq } from 'lodash';
 import { MarketInfo } from 'types/options';
 
 const useMarketsByAssetAndDateQuery = (
     asset: string,
     date: number,
-    position: POSITIONS,
+    position: Positions,
     options?: UseQueryOptions<MarketInfo[]>
 ) => {
     return useQuery<MarketInfo[]>(
@@ -24,7 +24,7 @@ const useMarketsByAssetAndDateQuery = (
 
             const result1 = await (snxJSConnector as any).binaryOptionsMarketDataContract.getActiveMarketsInfoPerPosition(
                 allMarkets,
-                position === POSITIONS.UP ? 0 : 1
+                position === Positions.UP ? 0 : 1
             );
             const finalResult = result1.filter((marketInfo: any) => Number(marketInfo.liquidity) !== 0);
             return finalResult

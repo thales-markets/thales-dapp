@@ -1,4 +1,4 @@
-import { POSITIONS } from 'constants/options';
+import { Positions } from 'constants/options';
 import Trading from './components/Trading/Trading';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
 import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesByAssetQuery';
@@ -24,7 +24,7 @@ const TradePage: React.FC = () => {
     // states
     const [currencyKey, setCurrencyKey] = useState('ETH');
     const [maturityDate, setMaturityDate] = useState<number | undefined>();
-    const [positionType, _setPositionType] = useState(POSITIONS.UP);
+    const [positionType, _setPositionType] = useState(Positions.UP);
     const [market, setMarket] = useState<MarketInfo | undefined>(undefined);
 
     // queries

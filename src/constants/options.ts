@@ -7,14 +7,14 @@ export const PHASE: Record<Phase, number> = {
     expiry: 2,
 };
 
-export enum POSITIONS {
+export enum Positions {
     UP = 'UP',
     DOWN = 'DOWN',
     IN = 'IN',
     OUT = 'OUT',
 }
 
-export const POSITIONS_TO_SIDE_MAP: Record<POSITIONS, number> = {
+export const POSITIONS_TO_SIDE_MAP: Record<Positions, number> = {
     UP: 0,
     DOWN: 1,
     IN: 0,
