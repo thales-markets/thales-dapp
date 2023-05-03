@@ -117,6 +117,7 @@ const ContentWrapper = styled.div`
     gap: 30px;
     height: 400px;
     margin-top: 20px;
+    margin-bottom: 35px;
 `;
 const LeftSide = styled.div`
     height: 100%;

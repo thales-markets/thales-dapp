@@ -31,17 +31,27 @@ const Wrapper = styled.div`
     align-items: center;
     margin-top: 20px;
     margin-bottom: 10px;
+    justify-content: center;
+    gap: 6px;
 `;
 
 const Button = styled.button<{ isActive: boolean }>`
-    background-color: ${(props) => (props.isActive ? 'var(--color-highlight)' : 'var(--color-tertiary)')};
-    color: ${(props) => (props.isActive ? 'var(--color-primary)' : 'var(--color-white)')};
-    font-weight: ${(props) => (props.isActive ? 600 : 400)};
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    margin-right: 8px;
-    font-size: 14px;
+    background-color: ${(props) => (props.isActive ? 'var(--color-secondary)' : 'var(--color-primary)')};
+    border: 1px solid #2b3139;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    max-width: 35px;
+    width: 100%;
+    height: 31px;
+
+    font-size: 13px;
+    line-height: 13px;
+    font-weight: 600;
+    color: var(--color-text);
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 

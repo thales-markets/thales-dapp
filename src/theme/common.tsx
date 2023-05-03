@@ -468,6 +468,6 @@ export const Colors = {
     GREEN: '#03DAC6',
     GREEN_LIGHT: '#03DAC6B3',
     BLUE: '',
-    RED: '',
+    RED: '#DE496D',
     YELLOW: '',
 };
