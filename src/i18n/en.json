@@ -387,7 +387,8 @@
                 "end-date": "End date",
                 "position-price": "Price per position",
                 "position-bonus": "Bonus per position",
-                "user-wallet": "User wallet"
+                "user-wallet": "User wallet",
+                "enter-amount": "Enter amount"
             }
         },
         "phases": {

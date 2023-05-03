@@ -5,6 +5,7 @@ type InputProps = {
     title?: string;
     titleColor?: string;
     titleFontSize?: string;
+    placeholder?: string;
     value: string | number | React.ReactNode;
     valueAsComponent?: boolean;
     valueChange?: (value: string | number) => void;
@@ -20,12 +21,9 @@ type InputProps = {
     tooltipText?: string;
     container?: {
         width?: string;
+        height?: string;
         margin?: string;
         padding?: string;
-        height?: string;
-        borderColor?: string;
-        borderStyle?: string;
-        background?: string;
         zIndex?: number;
     };
     children?: any;
@@ -35,6 +33,7 @@ const Input: React.FC<InputProps> = ({
     title,
     titleColor,
     titleFontSize,
+    placeholder,
     value,
     valueAsComponent,
     valueChange,
@@ -72,13 +71,10 @@ const Input: React.FC<InputProps> = ({
             <Container
                 disabled={disabled}
                 width={container?.width}
-                margin={container?.margin}
                 height={container?.height}
+                margin={container?.margin}
                 padding={container?.padding}
-                background={container?.background}
-                borderColor={container?.borderColor}
-                borderStyle={container?.borderStyle}
-                shadow={focus ? 'var(--button-shadow)' : undefined}
+                isFocused={focus}
                 zIndex={container?.zIndex}
             >
                 {title && (
@@ -94,6 +90,7 @@ const Input: React.FC<InputProps> = ({
                             color={valueColor}
                             fontSize={valueFontSize}
                             value={typeof value == 'string' || typeof value == 'number' ? value : ''}
+                            placeholder={placeholder}
                             onChange={handleChange}
                             disabled={valueEditDisable || disabled}
                             type={valueType ? valueType : ''}

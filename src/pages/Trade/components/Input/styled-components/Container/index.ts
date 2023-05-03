@@ -42,24 +42,22 @@ export const SubValue = styled.span<{ color?: string; fontSize?: string }>`
 `;
 
 export const Container = styled.div<{
-    borderColor?: string;
-    borderStyle?: string;
     disabled?: boolean;
     width?: string;
-    margin?: string;
     height?: string;
+    margin?: string;
     padding?: string;
-    shadow?: string;
-    background?: string;
     zIndex?: number;
+    isFocused?: boolean;
 }>`
     width: ${(props) => (props?.width ? props.width : '100%')};
-    margin: ${(props) => (props?.margin ? props.margin : '')};
-    ${(props) => (props?.height ? `height: ${props.height}` : '')};
+    ${(props) => (props?.margin ? `margin: ${props.margin};` : '')}
+    ${(props) => (props?.height ? `height: ${props.height};` : '')}
     display: flex;
     flex-direction: column;
-    border: 0.8px solid ${(props) => (props?.borderColor ? props.borderColor : 'var(--card-border-color)')};
-    border-style: ${(props) => (props?.borderStyle ? props.borderStyle : 'solid')};
+    border: 1px solid
+        ${(props) =>
+            props?.isFocused ? props.theme.input.borderColor.focus.primary : props.theme.input.borderColor.primary};
     border-radius: 10px;
     justify-content: center;
     padding: ${(props) => (props?.padding ? props.padding : '5px 10px')};
@@ -67,9 +65,9 @@ export const Container = styled.div<{
     margin-bottom: 8px;
     position: relative;
     opacity: ${(props) => (props?.disabled ? '0.5 !important' : '1')};
-    ${(props) => (props?.shadow ? `box-shadow: ${props.shadow}` : '')};
-    background: ${(props) => (props?.background ? props.background : 'transparent')};
-    ${(props) => (props?.zIndex ? `z-index: ${props.zIndex}` : '')};
+    ${(props) => (props?.isFocused ? `box-shadow: 0px 1px 30px ${props.theme.input.borderColor.focus.primary};` : '')}
+    background: transparent;
+    ${(props) => (props?.zIndex ? `z-index: ${props.zIndex};` : '')}
 `;
 
 export const CustomTooltip = withStyles(() => ({

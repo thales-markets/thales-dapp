@@ -2,7 +2,6 @@ import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/Button';
-import Switch from 'components/SwitchInput/SwitchInputNew';
 import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import {
@@ -12,7 +11,6 @@ import {
     POSITIONS_TO_SIDE_MAP,
     SIDE,
     SLIPPAGE_PERCENTAGE,
-    TradeSide,
     getMaxGasLimitForNetwork,
 } from 'constants/options';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions } from 'constants/ui';
@@ -84,13 +82,11 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const userSelectedCollateral = useSelector((state: RootState) => getSelectedCollateral(state));
 
-    const [tradeSide, setTradeSide] = useState(TradeSide.BUY);
     const [positionAmount, setPositionAmount] = useState<number | string>('');
     const [positionPrice, setPositionPrice] = useState<number | string>('');
     const [basePrice, setBasePrice] = useState<number | string>('');
     const [totalPrice, setTotalPrice] = useState<number | string>('');
     const [profit, setProfit] = useState<number | string>('');
-    const [isProfitAvailable, setIsProfitAvailable] = useState(true);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [hasAllowance, setAllowance] = useState(false);
     const [isFetchingQuote, setIsFetchingQuote] = useState(false);
@@ -157,16 +153,13 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
     const isPositionAmountEntered = Number(positionAmount) > 0;
-    const isBuy = tradeSide === TradeSide.BUY;
-    const isNonDefaultStable = isBuy && selectedStableIndex !== 0 && isMultiCollateralSupported;
+    const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported;
     const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
     const isPositionPriceEntered = Number(positionPrice) > 0;
     const isTotalPriceEntered = Number(totalPrice) > 0;
     const tokenBalance = isLong ? optBalances.long : optBalances.short;
 
-    const insufficientBalance = isBuy
-        ? stableBalance < Number(totalPrice) || !stableBalance
-        : tokenBalance < Number(positionAmount) || !tokenBalance;
+    const insufficientBalance = stableBalance < Number(totalPrice) || !stableBalance;
 
     const isButtonDisabled =
         !isTotalPriceEntered ||
@@ -187,12 +180,9 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             address =
                 snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedStableIndex]?.address;
             currencyOrSellPosition = COLLATERALS[selectedStableIndex];
-        } else if (isBuy) {
+        } else {
             address = snxJSConnector.collateral?.address;
             currencyOrSellPosition = getStableCoinForNetwork(networkId);
-        } else {
-            address = positionAddress;
-            currencyOrSellPosition = positionType;
         }
 
         return { address, currencyOrSellPosition };
@@ -209,7 +199,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         setTotalPrice('');
         setProfit('');
         setGasLimit(null);
-        setIsProfitAvailable(isBuy);
     };
 
     const fetchGasLimit = async (
@@ -231,7 +220,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             } else if (isBSC || isPolygon || isArbitrum) {
                 const gasLimit = await getEstimatedGasFees(
                     isNonDefaultStable,
-                    isBuy,
+                    true,
                     ammContractWithSigner,
                     marketAddress,
                     side,
@@ -273,7 +262,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
                 const promises = getQuoteFromAMM(
                     isNonDefaultStable,
-                    isBuy,
+                    true,
                     ammContractWithSigner,
                     parsedAmount,
                     market.address,
@@ -299,8 +288,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
                     )
                 );
-                setProfit(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
-                setIsProfitAvailable(isBuy);
+                setProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
 
                 const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
                 const isQuoteChanged =
@@ -362,7 +350,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         const amountToApprove = getAmountToApprove(
             approveAmount,
             isNonDefaultStable,
-            isBuy,
+            true,
             selectedStableIndex,
             networkId
         );
@@ -433,7 +421,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
                 isNonDefaultStable,
-                isBuy,
+                true,
                 ammContractWithSigner,
                 market.address,
                 POSITIONS_TO_SIDE_MAP[positionType],
@@ -451,9 +439,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 toast.update(
                     id,
                     getSuccessToastOptions(
-                        t(
-                            `options.market.trade-options.place-order.swap-confirm-button.${tradeSide}.confirmation-message`
-                        )
+                        t(`options.market.trade-options.place-order.swap-confirm-button.buy.confirmation-message`)
                     )
                 );
                 // TODO: check if all refetches are required
@@ -465,18 +451,11 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 setIsSubmitting(false);
                 resetData();
 
-                if (isBuy) {
-                    trackEvent({
-                        category: 'AMM',
-                        action: `buy-with-${COLLATERALS[selectedStableIndex]}`,
-                        value: Number(totalPrice),
-                    });
-                } else {
-                    trackEvent({
-                        category: 'AMM',
-                        action: 'sell-to-amm',
-                    });
-                }
+                trackEvent({
+                    category: 'AMM',
+                    action: `buy-with-${COLLATERALS[selectedStableIndex]}`,
+                    value: Number(totalPrice),
+                });
             }
         } catch (e) {
             console.log(e);
@@ -487,7 +466,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     useDebouncedEffect(() => {
         fetchAmmPriceData(false);
-    }, [positionAmount, isBuy, walletAddress, isPositionAmountEntered, selectedStableIndex]);
+    }, [positionAmount, walletAddress, isPositionAmountEntered, selectedStableIndex]);
 
     useInterval(async () => {
         fetchAmmPriceData(true);
@@ -522,7 +501,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         const getAllowance = async () => {
             try {
                 const parsedAmount: BigNumber = stableCoinParser(
-                    Number(isBuy ? totalPrice : positionAmount)?.toString(),
+                    Number(totalPrice)?.toString(),
                     networkId,
                     COLLATERALS[selectedStableIndex]
                 );
@@ -537,12 +516,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         if (isWalletConnected && erc20Instance.signer) {
             getAllowance();
         }
-    }, [walletAddress, isWalletConnected, isBuy, hasAllowance, isAllowing]);
+    }, [walletAddress, isWalletConnected, hasAllowance, isAllowing]);
 
     useEffect(() => {
         setPositionAmount('');
-        tradeSide == TradeSide.BUY ? dispatch(setBuyState(true)) : dispatch(setBuyState(false));
-    }, [tradeSide]);
+        dispatch(setBuyState(true));
+    }, []);
 
     useEffect(() => {
         if (isButtonDisabled) {
@@ -559,17 +538,17 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         let base = 0;
         if (ammMaxLimits) {
             if (isLong) {
-                max = isBuy ? ammMaxLimits.maxBuyLong : ammMaxLimits.maxSellLong;
-                base = isBuy ? ammMaxLimits.buyLongPrice : ammMaxLimits.sellLongPrice;
+                max = ammMaxLimits.maxBuyLong;
+                base = ammMaxLimits.buyLongPrice;
             } else {
-                max = isBuy ? ammMaxLimits.maxBuyShort : ammMaxLimits.maxSellShort;
-                base = isBuy ? ammMaxLimits.buyShortPrice : ammMaxLimits.sellShortPrice;
+                max = ammMaxLimits.maxBuyShort;
+                base = ammMaxLimits.buyShortPrice;
             }
         }
         setLiquidity(max);
         setBasePrice(base);
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
-    }, [ammMaxLimits, isLong, isBuy]);
+    }, [ammMaxLimits, isLong]);
 
     useEffect(() => {
         toast(getWarningToastOptions(t('amm.price-changed-warning')));
@@ -579,12 +558,10 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         setIsAmountValid(
             Number(positionAmount) === 0 ||
                 (Number(positionAmount) > 0 &&
-                    (isBuy
-                        ? (Number(totalPrice) > 0 && Number(totalPrice) <= stableBalance) ||
-                          (Number(totalPrice) === 0 && stableBalance > 0)
-                        : Number(positionAmount) <= tokenBalance))
+                    ((Number(totalPrice) > 0 && Number(totalPrice) <= stableBalance) ||
+                        (Number(totalPrice) === 0 && stableBalance > 0)))
         );
-    }, [positionAmount, totalPrice, isBuy, stableBalance, tokenBalance]);
+    }, [positionAmount, totalPrice, stableBalance, tokenBalance]);
 
     useEffect(() => {
         setInsufficientLiquidity(Number(positionAmount) > liquidity);
@@ -648,8 +625,8 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         return (
             <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleSubmit}>
                 {!isSubmitting
-                    ? t(`options.market.trade-options.place-order.swap-confirm-button.${tradeSide}.label`)
-                    : t(`options.market.trade-options.place-order.swap-confirm-button.${tradeSide}.progress-label`)}
+                    ? t(`options.market.trade-options.place-order.swap-confirm-button.buy.label`)
+                    : t(`options.market.trade-options.place-order.swap-confirm-button.buy.progress-label`)}
             </Button>
         );
     };
@@ -658,116 +635,84 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const potentialProfitFormatted = isFetchingQuote
         ? '...'
         : Number(positionPrice) > 0
-        ? isProfitAvailable
-            ? `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), Number(profit) * Number(totalPrice))}`
-            : '-'
+        ? `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), Number(profit) * Number(totalPrice))}`
         : '-';
 
     return (
-        <>
-            <Container>
-                <MarketDetails>
-                    <ColumnCenter>
-                        <Text>
-                            <TextLabel>{`${currencyKey} ${positionType}`}</TextLabel>
-                            <TextValue>
-                                {market.strikePrice ? (positionType === POSITIONS.UP ? '>' : '<') : ''}
-                            </TextValue>
-                            <TextValue>
-                                {market.strikePrice ? formatCurrencyWithSign(USD_SIGN, market.strikePrice) : ''}
-                            </TextValue>
-                        </Text>
-                        <Text>
-                            <TextLabel>{t('options.trade.trading.end-date')}</TextLabel>
-                            <TextValue>{maturityDate ? formatShortDate(maturityDate) : '-'}</TextValue>
-                        </Text>
-                    </ColumnCenter>
-                    <VerticalLine />
-                    <ColumnCenter>
-                        <Text>
-                            <TextLabel>{t('options.trade.trading.position-price')}</TextLabel>
-                            <TextValue>
-                                {isFetchingQuote
-                                    ? '...'
-                                    : positionAddress
-                                    ? formatCurrencyWithSign(
-                                          USD_SIGN,
-                                          Number(positionPrice) > 0 ? positionPrice : basePrice
-                                      )
-                                    : '-'}
-                            </TextValue>
-                        </Text>
-                        <Text>
-                            <TextLabel>{t('options.trade.trading.position-bonus')}</TextLabel>
-                            <TextValue isBonus={true}>
-                                {isFetchingQuote
-                                    ? '...'
-                                    : positionAddress
-                                    ? getFormattedBonus(convertPriceImpactToBonus(market.discount))
-                                    : '-'}
-                            </TextValue>
-                        </Text>
-                    </ColumnCenter>
-                </MarketDetails>
-                <TradeInput>
-                    <UserWallet>
-                        <Text>
-                            <TextLabel>{t('options.trade.trading.user-wallet')}</TextLabel>
-                            <TextValue>{tokenBalance}</TextValue>
-                            <TextValue>{positionType}</TextValue>
-                        </Text>
-                    </UserWallet>
-                    <Input
-                        value={positionAmount}
-                        valueType={'number'}
-                        subValue={positionType}
-                        valueChange={(value) => setPositionAmount(value)}
-                        container={{ width: '320px', height: '70px', zIndex: 1 }}
-                    />
-                </TradeInput>
-                <FinalizeTrade>
-                    <ColumnSpaceBetween>
-                        <FlexDivColumnCentered>
-                            <span
-                                style={{ textAlign: 'center' }}
-                            >{`If bitcoin stays ABOVE ${market.strikePrice}`}</span>
-                            <span style={{ textAlign: 'center' }}>{`@${new Date(
-                                maturityDate
-                            ).toLocaleDateString()} you will earn ${potentialProfitFormatted}`}</span>
-                        </FlexDivColumnCentered>
-                        {getSubmitButton()}
-                    </ColumnSpaceBetween>
-                </FinalizeTrade>
-                {openApprovalModal && (
-                    <ApprovalModal
-                        // add three percent to approval amount to take into account price changes
-                        defaultAmount={roundNumberToDecimals(
-                            ONE_HUNDRED_AND_THREE_PERCENT * (isBuy ? Number(totalPrice) : Number(positionAmount))
-                        )}
-                        tokenSymbol={collateral.currencyOrSellPosition}
-                        isAllowing={isAllowing}
-                        onSubmit={handleAllowance}
-                        onClose={() => setOpenApprovalModal(false)}
-                    />
-                )}
-            </Container>
-            <Switch
-                active={!isBuy}
-                width={'94px'}
-                height={'32px'}
-                dotSize={'22px'}
-                label={{
-                    firstLabel: t('common.buy').toUpperCase(),
-                    secondLabel: t('common.sell').toUpperCase(),
-                    fontSize: '25px',
-                }}
-                shadow={true}
-                dotBackground={'var(--amm-switch-circle)'}
-                handleClick={() => {
-                    isBuy ? setTradeSide(TradeSide.SELL) : setTradeSide(TradeSide.BUY);
-                }}
-            />
-        </>
+        <Container>
+            <MarketDetails>
+                <ColumnCenter>
+                    <Text>
+                        <TextLabel>{`${currencyKey} ${positionType}`}</TextLabel>
+                        <TextValue>{market.strikePrice ? (positionType === POSITIONS.UP ? '>' : '<') : ''}</TextValue>
+                        <TextValue>
+                            {market.strikePrice ? formatCurrencyWithSign(USD_SIGN, market.strikePrice) : ''}
+                        </TextValue>
+                    </Text>
+                    <Text>
+                        <TextLabel>{t('options.trade.trading.end-date')}</TextLabel>
+                        <TextValue>{maturityDate ? formatShortDate(maturityDate) : '-'}</TextValue>
+                    </Text>
+                </ColumnCenter>
+                <VerticalLine />
+                <ColumnCenter>
+                    <Text>
+                        <TextLabel>{t('options.trade.trading.position-price')}</TextLabel>
+                        <TextValue>
+                            {isFetchingQuote
+                                ? '...'
+                                : positionAddress
+                                ? formatCurrencyWithSign(
+                                      USD_SIGN,
+                                      Number(positionPrice) > 0 ? positionPrice : basePrice
+                                  )
+                                : '-'}
+                        </TextValue>
+                    </Text>
+                    <Text>
+                        <TextLabel>{t('options.trade.trading.position-bonus')}</TextLabel>
+                        <TextValue isBonus={true}>
+                            {isFetchingQuote
+                                ? '...'
+                                : positionAddress
+                                ? getFormattedBonus(convertPriceImpactToBonus(market.discount))
+                                : '-'}
+                        </TextValue>
+                    </Text>
+                </ColumnCenter>
+            </MarketDetails>
+            <TradeInput>
+                <Input
+                    value={positionAmount}
+                    valueType={'number'}
+                    placeholder={t('options.trade.trading.enter-amount')}
+                    subValue={positionType}
+                    valueChange={(value) => setPositionAmount(value)}
+                    container={{ width: '320px', height: '70px' }}
+                />
+            </TradeInput>
+            <FinalizeTrade>
+                <ColumnSpaceBetween>
+                    <FlexDivColumnCentered>
+                        <span style={{ textAlign: 'center' }}>{`If bitcoin stays ABOVE ${market.strikePrice}`}</span>
+                        <span style={{ textAlign: 'center' }}>{`@${new Date(
+                            maturityDate
+                        ).toLocaleDateString()} you will earn ${potentialProfitFormatted}`}</span>
+                    </FlexDivColumnCentered>
+                    {getSubmitButton()}
+                </ColumnSpaceBetween>
+            </FinalizeTrade>
+            {openApprovalModal && (
+                <ApprovalModal
+                    // add three percent to approval amount to take into account price changes
+                    defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * Number(totalPrice))}
+                    tokenSymbol={collateral.currencyOrSellPosition}
+                    isAllowing={isAllowing}
+                    onSubmit={handleAllowance}
+                    onClose={() => setOpenApprovalModal(false)}
+                />
+            )}
+        </Container>
     );
 };
 
@@ -787,14 +732,6 @@ const TradeInput = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
-`;
-
-const UserWallet = styled.div`
-    position: absolute;
-    top: -8px;
-    background: ${(props) => props.theme.background.primary};
-    padding: 0 10px;
-    z-index: 2;
 `;
 
 const Text = styled.span`

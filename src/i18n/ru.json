@@ -1698,7 +1698,8 @@
                 "end-date": "Дата окончания",
                 "position-price": "Цена за позицию",
                 "user-wallet": "Кошелек пользователя",
-                "position-bonus": "Бонус за позицию"
+                "position-bonus": "Бонус за позицию",
+                "enter-amount": "Введите сумму"
             }
         }
     },

@@ -2,16 +2,16 @@ import { Colors } from './common';
 
 export default {
     background: {
-        primary: Colors.GRAY_DARK,
-        secondary: Colors.GRAY,
-        tertiary: Colors.GRAY_LIGHT,
+        primary: '',
+        secondary: '',
+        tertiary: '',
         quaternary: '',
     },
     textColor: {
-        primary: Colors.WHITE,
-        secondary: Colors.GRAY_LIGHT,
+        primary: '',
+        secondary: '',
         tertiary: '',
-        quaternary: Colors.GREEN,
+        quaternary: '',
     },
     borderColor: {
         primary: '',
@@ -47,10 +47,10 @@ export default {
             primary: '',
         },
         borderColor: {
-            primary: Colors.GRAY,
+            primary: '',
             secondary: '',
             focus: {
-                primary: Colors.GREEN_LIGHT,
+                primary: '',
             },
         },
     },

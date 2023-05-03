@@ -21,11 +21,6 @@ export const POSITIONS_TO_SIDE_MAP: Record<POSITIONS, number> = {
     OUT: 1,
 };
 
-export enum TradeSide {
-    BUY = 'buy',
-    SELL = 'sell',
-}
-
 export const MARKET_TYPE: Record<MarketType | number, number | MarketType> = {
     ranged: 1,
     0: 'positional',
