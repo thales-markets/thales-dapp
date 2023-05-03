@@ -92,8 +92,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         fetchData();
     }, [asset, dateRange]);
 
-    console.log(theme);
-
     return (
         <Wrapper>
             <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
@@ -172,11 +170,10 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 };
 
 const CustomLabel = (props) => {
-    console.log(props);
     return (
-        <SVGBorder y={props.viewBox.y - 8} x={props.viewBox.width - 70}>
-            <Rectangle rx={10}></Rectangle>
-            <Text x={8} y={11}>
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 70}>
+            <Rectangle rx={10} y={1}></Rectangle>
+            <Text x={8} y={13}>
                 {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
             </Text>
         </SVGBorder>
@@ -185,13 +182,13 @@ const CustomLabel = (props) => {
 
 const SVGBorder = styled.svg`
     width: 70px;
-    height: 16px;
+    height: 20px;
 `;
 
 const Rectangle = styled.rect`
     stroke-width: 1px;
     width: 70px;
-    height: 16px;
+    height: 18px;
     stroke: ${(props) => props.theme.borderColor.secondary};
     fill: ${(props) => props.theme.background.primary};
 `;
