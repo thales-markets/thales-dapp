@@ -249,7 +249,7 @@ const App = () => {
                         )}
 
                         {!isPolygon && (
-                            <Route exact path={ROUTES.LiquidityPool}>
+                            <Route exact path={ROUTES.Options.LiquidityPool}>
                                 <DappLayout>
                                     <LiquidityPool />
                                 </DappLayout>
