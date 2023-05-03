@@ -60,11 +60,8 @@ const useUserStakingDataQuery = (
                             : bigNumberFormatter(contractUserStakingData.thalesStaked);
                     userStakingData.hasClaimRights = bigNumberFormatter(contractUserStakingData.rewards) > 0;
                     userStakingData.claimed =
-                        Number(
-                            await (snxJSConnector as any).stakingThalesContract.getLastPeriodOfClaimedRewards(
-                                walletAddress
-                            )
-                        ) === Number(contractUserStakingData.periodsOfStaking);
+                        Number(contractUserStakingData.lastPeriodOfClaimedRewards) ===
+                        Number(contractStakingData.periodsOfStaking);
                     userStakingData.isUnstaking = contractUserStakingData.unstaking;
                     userStakingData.lastUnstakeTime = Number(contractUserStakingData.lastUnstakeTime) * 1000;
                     userStakingData.unstakingAmount = bigNumberFormatter(contractUserStakingData.unstakingAmount);
