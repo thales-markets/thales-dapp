@@ -49,31 +49,35 @@ const OPRewards: React.FC = () => {
     let CALCULATED_START = new Date(START_DATE.getTime());
     let PERIOD_COUNTER = 1;
 
-    const options: Array<{ value: number; label: string }> = [];
-    const periodRangeTimestamps = [];
-
-    while (true) {
-        if (CALCULATED_START.getTime() < NOW.getTime()) {
-            periodRangeTimestamps.push({
-                minTimestamp: CALCULATED_START.getTime() / 1000,
-                maxTimestamp:
-                    new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000).getTime() /
-                    1000,
-            });
-            CALCULATED_START = new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000);
-
-            options.push({
-                value: PERIOD_COUNTER,
-                label: `Round ${PERIOD_COUNTER}`,
-            });
-
-            PERIOD_COUNTER++;
-        } else {
-            break;
-        }
-    }
-
+    const periodRangeTimestamps: any = [];
     const [period, setPeriod] = useState<number>(1);
+
+    const options = useMemo(() => {
+        const options: Array<{ value: number; label: string }> = [];
+        while (true) {
+            if (CALCULATED_START.getTime() < NOW.getTime()) {
+                periodRangeTimestamps.push({
+                    minTimestamp: CALCULATED_START.getTime() / 1000,
+                    maxTimestamp:
+                        new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000).getTime() /
+                        1000,
+                });
+                CALCULATED_START = new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000);
+
+                options.push({
+                    value: PERIOD_COUNTER,
+                    label: `Round ${PERIOD_COUNTER}`,
+                });
+
+                PERIOD_COUNTER++;
+            } else {
+                break;
+            }
+        }
+
+        setPeriod(PERIOD_COUNTER - 1);
+        return options;
+    }, []);
 
     const minTimestamp = periodRangeTimestamps[period - 1]?.minTimestamp || undefined;
     const maxTimestamp = periodRangeTimestamps[period - 1]?.maxTimestamp || undefined;
@@ -262,7 +266,7 @@ const OPRewards: React.FC = () => {
                     <SelectInput
                         options={options}
                         handleChange={(value) => setPeriod(Number(value))}
-                        defaultValue={0}
+                        defaultValue={period - 1}
                         width={300}
                     />
                     {maxTimestamp &&
