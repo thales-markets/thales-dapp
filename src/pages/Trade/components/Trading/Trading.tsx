@@ -18,7 +18,6 @@ import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
 import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
-import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import useBinaryOptionsMarketParametersInfoQuery from 'queries/options/useBinaryOptionsMarketParametersInfoQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
@@ -117,10 +116,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && getIsMultiCollateralSupported(networkId),
     });
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !!market.address,
-        refetchInterval: false,
-    });
     const marketParametersInfoQuery = useBinaryOptionsMarketParametersInfoQuery(market.address, {
         enabled: isAppReady && !!market.address,
     });
@@ -141,12 +136,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             : null;
     }, [networkId, multipleStableBalances, walletBalancesMap, selectedStableIndex]);
 
-    const optBalances = useMemo(() => {
-        return isWalletConnected && accountMarketInfoQuery.isSuccess
-            ? accountMarketInfoQuery.data
-            : { long: 0, short: 0 };
-    }, [networkId, accountMarketInfoQuery, isWalletConnected]);
-
     const isLong = POSITIONS_TO_SIDE_MAP[positionType] === SIDE.long;
     const positionAddress = useMemo(() => {
         return marketParametersInfoQuery.isSuccess && marketParametersInfoQuery.data
@@ -165,7 +154,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
     const isPositionPricePositive = Number(positionPrice) > 0;
     const isPaidAmountEntered = Number(paidAmount) > 0;
-    const tokenBalance = isLong ? optBalances.long : optBalances.short;
 
     const insufficientBalance = stableBalance < Number(paidAmount) || !stableBalance;
 
@@ -473,7 +461,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     useDebouncedEffect(() => {
         fetchAmmPriceData(Number(paidAmount), false);
-    }, [paidAmount, walletAddress, selectedStableIndex]);
+    }, [paidAmount, market.address, walletAddress, selectedStableIndex]);
 
     useInterval(async () => {
         fetchAmmPriceData(Number(paidAmount), true);
@@ -481,7 +469,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     useEffect(() => {
         refetchWalletBalances(walletAddress, networkId);
-    }, [walletAddress]);
+    }, [walletAddress, networkId]);
 
     // If sUSD balance is zero, select first stable with nonzero value as default
     useEffect(() => {
@@ -494,7 +482,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             const defaultStableBalance = getDefaultStableIndexByBalance(multipleStableBalances?.data);
             setStableIndex(defaultStableBalance);
         }
-    }, [multipleStableBalances?.data]);
+    }, [multipleStableBalances?.data, selectedStableIndex, isMultiCollateralSupported]);
 
     useEffect(() => {
         setStableIndex(userSelectedCollateral);
@@ -523,7 +511,16 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         if (isWalletConnected && erc20Instance.signer) {
             getAllowance();
         }
-    }, [walletAddress, isWalletConnected, hasAllowance, isAllowing]);
+    }, [
+        collateral.address,
+        networkId,
+        paidAmount,
+        selectedStableIndex,
+        walletAddress,
+        isWalletConnected,
+        hasAllowance,
+        isAllowing,
+    ]);
 
     useEffect(() => {
         dispatch(setBuyState(true)); // TODO: check if this is needed
@@ -537,7 +534,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
         const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
         fetchGasLimit(market.address, POSITIONS_TO_SIDE_MAP[positionType], parsedAmount, parsedTotal, parsedSlippage);
-    }, [isWalletConnected, hasAllowance]);
+    }, [isButtonDisabled, networkId, isWalletConnected, hasAllowance, positionAmount, market.address]);
 
     useEffect(() => {
         let max = 0;
@@ -563,7 +560,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                     ((Number(paidAmount) > 0 && Number(paidAmount) <= stableBalance) ||
                         (Number(paidAmount) === 0 && stableBalance > 0)))
         );
-    }, [positionAmount, paidAmount, stableBalance, tokenBalance]);
+    }, [positionAmount, paidAmount, stableBalance]);
 
     useEffect(() => {
         setInsufficientLiquidity(Number(positionAmount) > liquidity);
@@ -577,12 +574,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     };
 
     const getSubmitButton = () => {
-        const defaultButtonProps = {
-            width: '320px',
-            height: '34px',
-            active: true,
-        };
-
         if (!market.address) {
             return (
                 <Button disabled={true} {...defaultButtonProps}>
@@ -662,7 +653,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const isMaxButtonDisabled =
         !market.address || isSubmitting || isAmmTradingDisabled || insufficientLiquidity || isFetchingQuote;
 
-    // console.log(positionAmount);
+    console.log(positionAmount);
     // TODO:
     const potentialProfitFormatted = isFetchingQuote
         ? '...'
@@ -719,7 +710,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 disabled={!market.address}
                 placeholder={t('options.trade.trading.enter-amount')}
                 valueChange={(value) => onTotalPriceValueChange(value)}
-                container={{ width: '320px', height: '70px' }}
+                container={inputFieldProps}
             >
                 <InputActions>
                     <MaxButton onClick={() => onMaxClick()} disabled={isMaxButtonDisabled}>
@@ -752,16 +743,30 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     );
 };
 
+const inputFieldProps = { width: '330px', height: '70px' };
+
+const defaultButtonProps = {
+    width: '100%',
+    height: '34px',
+    active: true,
+};
+
 const Container = styled(FlexDivRow)`
     min-width: 980px;
     height: 70px;
 `;
 
 const MarketDetails = styled(FlexDivRowCentered)`
-    width: 320px;
+    width: 330px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     padding: 10px;
+`;
+
+const FinalizeTrade = styled(FlexDivCentered)`
+    width: 330px;
+    color: ${(props) => props.theme.textColor.primary};
+    font-size: 13px;
 `;
 
 const InputActions = styled.div`
@@ -794,12 +799,6 @@ const MaxButton = styled.button`
     }
 `;
 
-const FinalizeTrade = styled(FlexDivCentered)`
-    width: 320px;
-    color: ${(props) => props.theme.textColor.primary};
-    font-size: 13px;
-`;
-
 const Text = styled.span`
     font-family: 'Titillium Regular' !important;
     font-style: normal;
@@ -830,6 +829,7 @@ const ColumnCenter = styled(FlexDivColumnCentered)`
 `;
 
 const ColumnSpaceBetween = styled.div`
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;

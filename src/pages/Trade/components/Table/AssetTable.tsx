@@ -1,7 +1,7 @@
 import TableV3 from 'components/TableV3';
 
 import { USD_SIGN } from 'constants/currency';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { MarketInfo } from 'types/options';
@@ -23,6 +23,10 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
     // queries
 
     // hooks
+    useEffect(() => {
+        setRowIndex(undefined);
+        setMarket(undefined);
+    }, [markets]);
 
     const columns: Array<any> = useMemo(() => {
         return [
