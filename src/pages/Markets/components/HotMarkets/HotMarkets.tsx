@@ -258,7 +258,7 @@ const DiscountBanner = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
-    top: -20px;
+    margin-bottom: 20px;
     @media (max-width: 768px) {
         display: none;
     }
