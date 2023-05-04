@@ -92,7 +92,7 @@ const App = () => {
                 },
             ],
         });
-    }, [walletAddress]);
+    }, [walletAddress, trackPageView]);
 
     useEffect(() => {
         const init = async () => {
@@ -146,7 +146,7 @@ const App = () => {
         return () => {
             document.removeEventListener('market-notification', handler);
         };
-    }, [dispatch, provider, signer, switchedToNetworkId, address]);
+    }, [dispatch, provider, signer, switchedToNetworkId, address, isLedgerLive]);
 
     useEffect(() => {
         dispatch(updateWallet({ walletAddress: address }));

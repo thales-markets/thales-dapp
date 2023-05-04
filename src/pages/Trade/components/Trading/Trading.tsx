@@ -575,7 +575,9 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         }
         setLiquidity(max);
         setBasePrice(base);
-        setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
+        if (market.address) {
+            setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
+        }
     }, [ammMaxLimits, isLong]);
 
     useEffect(() => {

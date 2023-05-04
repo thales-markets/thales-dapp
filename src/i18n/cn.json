@@ -370,7 +370,8 @@
                 "twap-tooltip": "该资产使用来自 Uniswap V3 池对的 TWAP 价格馈送：",
                 "price-in-out-col": "价格进/出",
                 "iv-tooltip": "目前为该资产设置的隐含波动率为 xx%",
-                "discount-col": "折扣"
+                "discount-col": "折扣",
+                "roi": "投资回报率"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",
