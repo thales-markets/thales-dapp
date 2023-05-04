@@ -1,6 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { CoinGeckoClient } from 'coingecko-api-v3';
-import { XAxis, YAxis, Area, AreaChart, ResponsiveContainer, Tooltip, ReferenceLine, CartesianGrid } from 'recharts';
+import {
+    XAxis,
+    YAxis,
+    Area,
+    AreaChart,
+    ResponsiveContainer,
+    Tooltip,
+    ReferenceLine,
+    CartesianGrid,
+    ReferenceArea,
+} from 'recharts';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import styled from 'styled-components';
 import { format } from 'date-fns';
@@ -16,11 +26,13 @@ import { useSelector } from 'react-redux';
 import { getTheme } from 'redux/modules/ui';
 import { RootState } from 'redux/rootReducer';
 import { ThemeMap } from 'constants/ui';
+import { Positions } from 'constants/options';
 
 type PriceChartProps = {
     asset: string;
     selectedPrice: number | undefined;
     selectedRightPrice?: number;
+    position: Positions;
 };
 
 const coinGeckoClient = new CoinGeckoClient({
@@ -37,7 +49,7 @@ const ToggleButtons = [
     { label: '1Y', value: 365 },
 ];
 
-const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice }) => {
+const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice, position }) => {
     const theme = useSelector((state: RootState) => getTheme(state));
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [dateRange, setDateRange] = useState(14); // default date range
@@ -156,6 +168,16 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             />
                         )}
 
+                        {selectedPrice && (
+                            <ReferenceArea
+                                y1={selectedPrice}
+                                y2={ticks ? (position === Positions.UP ? ticks[ticks.length - 1] : ticks[0]) : 0}
+                                stroke={ThemeMap[theme].textColor.quaternary}
+                                fill={ThemeMap[theme].textColor.quaternary}
+                                fillOpacity={0.2}
+                            />
+                        )}
+
                         {selectedRightPrice && (
                             <ReferenceLine
                                 y={selectedRightPrice}
@@ -256,9 +278,6 @@ const Price = styled.span`
     font-weight: 700;
     font-size: 22px;
     line-height: 100%;
-    padding:
-    /* or 22px */
-
     text-transform: capitalize;
     color: ${(props) => props.theme.textColor.primary};
 `;
@@ -268,9 +287,6 @@ const PriceChange = styled.span<{ up: boolean }>`
     font-weight: 700;
     font-size: 22px;
     line-height: 100%;
-    padding:
-    /* or 22px */
-
     text-transform: capitalize;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
 `;

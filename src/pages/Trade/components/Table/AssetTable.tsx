@@ -4,6 +4,7 @@ import { USD_SIGN } from 'constants/currency';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { Colors } from 'theme/common';
 import { MarketInfo } from 'types/options';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 
@@ -39,19 +40,19 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: (row: any) => {
-                    return <TableText>{formatCurrencyWithSign(USD_SIGN, row.strikePrice, 2)}</TableText>;
+                    return <TableText price={false}>{formatCurrencyWithSign(USD_SIGN, row.strikePrice, 2)}</TableText>;
                 },
             },
             {
-                Header: t(`options.home.markets-table.price-up-down-col`),
-                accessor: (row: any) => <TableText>{formatCurrencyWithSign(USD_SIGN, row.price, 2)}</TableText>,
+                Header: t(`options.home.markets-table.roi`),
+                accessor: (row: any) => <TableText price={true}>{row.price.toFixed(0)}%</TableText>,
             },
             {
                 id: 'discountedSide',
                 Header: t(`options.home.markets-table.discount-col`),
                 accessor: 'discountedSide',
                 Cell: (_props: any) => {
-                    return <TableText>{formatPercentage(_props.row.original.discount)}</TableText>;
+                    return <TableText price={true}>{formatPercentage(_props.row.original.discount)}</TableText>;
                 },
             },
         ];
@@ -77,26 +78,30 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
 };
 
 const TableHeaderStyle: React.CSSProperties = {
-    fontFamily: 'Roboto',
+    fontFamily: 'Inter !important',
     fontStyle: 'normal',
-    fontWeight: 400,
-    fontSize: 14,
-    lineHeight: '16px',
-    color: 'rgba(255, 255, 255, 0.4)',
+    fontWeight: 500,
+    fontSize: 13,
+    lineHeight: '90%',
+    color: Colors.GRAY_LIGHT,
 };
 
 const Wrapper = styled.div`
     width: 100%;
+    max-width: 344px;
 `;
 
-const TableText = styled.span`
-    font-family: 'Roboto';
+const TableText = styled.span<{ price: boolean }>`
+    font-family: 'Titillium Web !important';
     font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 285.5%;
+    /* or 37px */
 
-    color: var(--color-white);
+    text-align: center;
+    text-transform: uppercase;
+    color: ${(props) => (props.price ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
 `;
 
 export default AssetTable;

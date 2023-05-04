@@ -15,6 +15,7 @@ import AssetDropdown from 'pages/Markets/V2/components/AssetDropdown';
 import DatesDropdown from 'pages/Markets/V2/components/MaturityDateDropdown';
 import { FlexDivRowCentered } from 'theme/common';
 import PriceChart from 'pages/Markets/V2/components/PriceChart/PriceChart';
+import RadioButtons from './components/RadioButtons/RadioButtons';
 
 const TradePage: React.FC = () => {
     // selectors
@@ -82,9 +83,14 @@ const TradePage: React.FC = () => {
                             ></DatesDropdown>
                         </div>
                     </FlexDivRowCentered>
-                    <PriceChart asset={currencyKey} selectedPrice={market?.strikePrice}></PriceChart>
+                    <PriceChart
+                        position={positionType}
+                        asset={currencyKey}
+                        selectedPrice={market?.strikePrice}
+                    ></PriceChart>
                 </LeftSide>
                 <RightSide>
+                    <RadioButtons onChange={_setPositionType} selected={positionType} />
                     <AssetTable setMarket={setMarket} markets={allMarkets} />
                 </RightSide>
             </ContentWrapper>
@@ -109,6 +115,7 @@ const Banners = styled.div`
 const Wrapper = styled.div`
     width: 100%;
     max-width: 1000px;
+    justify-content: space-between;
 `;
 
 const ContentWrapper = styled.div`
@@ -121,10 +128,14 @@ const ContentWrapper = styled.div`
 `;
 const LeftSide = styled.div`
     height: 100%;
+    width: 100%;
+    max-width: 600px;
 `;
 const RightSide = styled.div`
     width: 100%;
     height: 100%;
+    max-width: 350px;
+    gap: 20px;
 `;
 
 export default TradePage;

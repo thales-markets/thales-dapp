@@ -366,10 +366,12 @@ const TableRowHead = styled(TableRow)`
 `;
 
 const TableCell = styled(FlexDivCentered)<{ width?: number | string; id: string }>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex: 1;
     min-width: 0px;
     max-width: ${(props) => (props.width ? props.width : 'initial')};
-    justify-content: ${(props) => CellAlignment[props.id] || 'left'};
     &:first-child {
         padding-left: 18px;
     }
@@ -397,6 +399,9 @@ const TableCell = styled(FlexDivCentered)<{ width?: number | string; id: string 
 `;
 
 const TableCellHead = styled(TableCell)<{ cssProp?: CSSPropertiesWithMedia }>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 600;
     font-size: 15px;
     letter-spacing: 0.5px;
@@ -457,12 +462,12 @@ const SortIcon = styled.i<{ selected: boolean; sortDirection: SortDirection }>`
     }
 `;
 
-const CellAlignment: Record<string, string> = {
-    wallet: 'center',
-    points: 'center',
-    rewards: 'center',
-    finishTime: 'center',
-};
+// const CellAlignment: Record<string, string> = {
+//     wallet: 'center',
+//     points: 'center',
+//     rewards: 'center',
+//     finishTime: 'center',
+// };
 
 const ExpandableRow = styled.div`
     display: block;
