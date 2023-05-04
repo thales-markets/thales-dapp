@@ -5,7 +5,7 @@ import numbro from 'numbro';
 
 type NumericValue = string | number;
 
-const DEFAULT_CURRENCY_DECIMALS = 2;
+export const DEFAULT_CURRENCY_DECIMALS = 2;
 export const SHORT_CRYPTO_CURRENCY_DECIMALS = 4;
 export const LONG_CRYPTO_CURRENCY_DECIMALS = 8;
 
