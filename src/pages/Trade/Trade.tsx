@@ -16,6 +16,7 @@ import DatesDropdown from 'pages/Markets/V2/components/MaturityDateDropdown';
 import { FlexDivRowCentered } from 'theme/common';
 import PriceChart from 'pages/Markets/V2/components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
+import BannerCarousel from './components/BannerCarousel/BannerCarousel';
 
 const TradePage: React.FC = () => {
     // selectors
@@ -66,7 +67,7 @@ const TradePage: React.FC = () => {
 
     return (
         <Wrapper>
-            <Banners />
+            <BannerCarousel />
             <ContentWrapper>
                 <LeftSide>
                     <FlexDivRowCentered style={{ gap: 15 }}>
@@ -104,13 +105,6 @@ const TradePage: React.FC = () => {
         </Wrapper>
     );
 };
-
-const Banners = styled.div`
-    width: 100%;
-    height: 120px;
-    border: 1px solid var(--color-white);
-    border-radius: 12px;
-`;
 
 const Wrapper = styled.div`
     width: 100%;
