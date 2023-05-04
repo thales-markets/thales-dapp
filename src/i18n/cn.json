@@ -1704,7 +1704,8 @@
                 "position-bonus": "每个位置的奖金",
                 "end-date": "结束日期",
                 "enter-amount": "输入金额",
-                "select-market": "选择市场"
+                "select-market": "选择市场",
+                "select-price": "选择价格"
             }
         }
     },

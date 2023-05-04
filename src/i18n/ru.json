@@ -1700,7 +1700,8 @@
                 "user-wallet": "Кошелек пользователя",
                 "position-bonus": "Бонус за позицию",
                 "enter-amount": "Введите сумму",
-                "select-market": "Выберите рынок"
+                "select-market": "Выберите рынок",
+                "select-price": "Выберите цену"
             }
         }
     },

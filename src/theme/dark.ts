@@ -29,7 +29,7 @@ export default {
             primary: '',
             secondary: '',
             tertiary: '',
-            quaternary: '',
+            quaternary: Colors.YELLOW,
         },
         borderColor: {
             primary: '',

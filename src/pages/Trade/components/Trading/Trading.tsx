@@ -39,12 +39,13 @@ import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForN
 import { formatShortDate } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import {
+    DEFAULT_CURRENCY_DECIMALS,
+    SHORT_CRYPTO_CURRENCY_DECIMALS,
     countDecimals,
     formatCurrencyWithKey,
     formatCurrencyWithSign,
     roundNumberToDecimals,
     truncDecimals,
-    truncToDecimals,
 } from 'utils/formatters/number';
 import {
     checkAllowance,
@@ -277,13 +278,17 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
                     ) / suggestedAmount;
 
-                const calcAmount = totalToPay / ammPrice;
-                const calcPositionAmount = isMax
-                    ? calcAmount < liquidity
-                        ? calcAmount
-                        : truncToDecimals(liquidity)
-                    : calcAmount;
-                setPositionAmount(calcPositionAmount);
+                let calcAmount = totalToPay / ammPrice;
+                if (isMax) {
+                    if (calcAmount >= liquidity) {
+                        calcAmount = Number(truncDecimals(liquidity));
+                        setPaidAmount(calcAmount * ammPrice);
+                    } else {
+                        setPaidAmount(totalToPay);
+                    }
+                }
+
+                setPositionAmount(calcAmount);
                 setPositionPrice(ammPrice);
                 setProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
 
@@ -326,7 +331,9 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                     }
                 }
                 // Between 2 calls ammPrice will be always different as it is based on position amount which is changed when price is changed
-                priceChanged = truncDecimals(ammPrice, 4) !== truncDecimals(Number(positionPrice), 4);
+                priceChanged =
+                    truncDecimals(ammPrice, SHORT_CRYPTO_CURRENCY_DECIMALS) !==
+                    truncDecimals(Number(positionPrice), SHORT_CRYPTO_CURRENCY_DECIMALS);
             } catch (e) {
                 console.log(e);
                 resetData();
@@ -576,10 +583,10 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
         if (insufficientLiquidity) {
             isValid = false;
-            setErrorMessageKey(t('common.errors.max-limit-exceeded'));
+            setErrorMessageKey('common.errors.max-limit-exceeded');
         } else if ((Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) || stableBalance === 0) {
             isValid = false;
-            setErrorMessageKey(t('common.errors.insufficient-balance-wallet'));
+            setErrorMessageKey('common.errors.insufficient-balance-wallet');
         }
 
         setIsAmountValid(isValid);
@@ -600,7 +607,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         if (!market.address) {
             return (
                 <Button disabled={true} {...defaultButtonProps}>
-                    {t('options.trade.trading.select-market')}
+                    {t('options.trade.trading.select-price')}
                 </Button>
             );
         }
@@ -670,13 +677,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         if (isMaxButtonDisabled) return;
 
         const maxPaidAmount = roundNumberToDecimals(Number(stableBalance) * (1 - SLIPPAGE_PERCENTAGE[2] / 100));
-        fetchAmmPriceData(Number(maxPaidAmount), false, false, true);
+        fetchAmmPriceData(maxPaidAmount, false, false, true);
     };
 
     const isMaxButtonDisabled =
         !market.address || isSubmitting || isAmmTradingDisabled || insufficientLiquidity || isFetchingQuote;
 
-    // console.log(positionAmount);
     // TODO:
     const potentialProfitFormatted = isFetchingQuote
         ? '...'
@@ -687,21 +693,25 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     return (
         <Container>
             <MarketDetails>
-                <ColumnCenter>
-                    <Text>
-                        <TextLabel>{`${currencyKey} ${positionType}`}</TextLabel>
-                        <TextValue>{market.strikePrice ? (positionType === Positions.UP ? '>' : '<') : ''}</TextValue>
-                        <TextValue>
-                            {market.strikePrice ? formatCurrencyWithSign(USD_SIGN, market.strikePrice) : ''}
-                        </TextValue>
-                    </Text>
-                    <Text>
-                        <TextLabel>{t('options.trade.trading.end-date')}</TextLabel>
-                        <TextValue>{maturityDate ? formatShortDate(maturityDate) : '-'}</TextValue>
-                    </Text>
-                </ColumnCenter>
-                <VerticalLine />
-                <ColumnCenter>
+                {market.address ? (
+                    <ColumnCenter fitContent={true}>
+                        <Text>
+                            <TextLabel>{`${currencyKey} ${positionType}`}</TextLabel>
+                            <TextValue>{positionType === Positions.UP ? '>' : '<'}</TextValue>
+                            <TextValue>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</TextValue>
+                        </Text>
+                        <Text>
+                            <TextLabel>{t('options.trade.trading.end-date')}</TextLabel>
+                            <TextValue>{formatShortDate(maturityDate)}</TextValue>
+                        </Text>
+                    </ColumnCenter>
+                ) : (
+                    <ColumnCenter>
+                        <TextInfo>{t('options.trade.trading.select-price')}</TextInfo>
+                    </ColumnCenter>
+                )}
+                <VerticalLine height="38px" margin={market.address ? '' : '0 20px 0 0'} />
+                <ColumnCenter fitContent={true} minWidth={market.address ? '150px' : ''}>
                     <Text>
                         <TextLabel>{t('options.trade.trading.position-price')}</TextLabel>
                         <TextValue>
@@ -710,9 +720,10 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                                 : positionAddress
                                 ? formatCurrencyWithSign(
                                       USD_SIGN,
-                                      Number(positionPrice) > 0 ? positionPrice : basePrice
+                                      Number(positionPrice) > 0 ? positionPrice : basePrice,
+                                      DEFAULT_CURRENCY_DECIMALS
                                   )
-                                : '-'}
+                                : USD_SIGN}
                         </TextValue>
                     </Text>
                     <Text>
@@ -722,7 +733,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                                 ? '...'
                                 : positionAddress
                                 ? getFormattedBonus(convertPriceImpactToBonus(market.discount))
-                                : '-'}
+                                : '%'}
                         </TextValue>
                     </Text>
                 </ColumnCenter>
@@ -744,8 +755,9 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             >
                 <InputActions>
                     <MaxButton onClick={() => onMaxClick()} disabled={isMaxButtonDisabled}>
-                        {t('common.max')}
+                        <TextMax>{t('common.max')}</TextMax>
                     </MaxButton>
+                    <VerticalLine width="1px" height="25px" />
                 </InputActions>
             </Input>
             <FinalizeTrade>
@@ -799,34 +811,16 @@ const FinalizeTrade = styled(FlexDivCentered)`
     font-size: 13px;
 `;
 
-const InputActions = styled.div`
+const InputActions = styled(FlexDivRow)`
     position: absolute;
     right: 30px;
 `;
 
-const MaxButton = styled.button`
-    padding: 1px 8px;
-    font-weight: 700;
-    font-size: 10px;
+const MaxButton = styled(FlexDivCentered)<{ disabled?: boolean }>`
+    ${(props) => (props.disabled ? `opacity: 0.6;` : '')}
+    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+    padding: 0 7px;
     color: var(--color-white);
-    background-color: rgba(100, 217, 254, 0.5);
-    border-radius: 10px;
-    line-height: 15.21px;
-    border: none;
-    outline: none;
-    text-transform: uppercase;
-    cursor: pointer;
-    &:focus {
-        outline: none;
-        border: none;
-    }
-    &:active {
-        outline: none;
-        border-style: none;
-    }
-    &:disabled {
-        opacity: 0.6;
-    }
 `;
 
 const Text = styled.span`
@@ -845,17 +839,25 @@ const TextValue = styled.span<{ isBonus?: boolean }>`
     color: ${(props) => (props.isBonus ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
     padding-left: 5px;
 `;
-
-const VerticalLine = styled.div`
-    width: 2px;
-    height: 38px;
-    background: ${(props) => props.theme.background.tertiary};
-    border-radius: 6px;
-    margin: 0 5px;
+const TextInfo = styled(Text)`
+    text-align: center;
+    color: ${(props) => props.theme.textColor.primary};
+`;
+const TextMax = styled(Text)`
+    color: ${(props) => props.theme.button.textColor.quaternary};
 `;
 
-const ColumnCenter = styled(FlexDivColumnCentered)`
-    max-width: fit-content;
+const VerticalLine = styled.div<{ width?: string; height?: string; margin?: string }>`
+    width: ${(props) => (props.width ? props.width : '2px')};
+    height: ${(props) => (props.height ? props.height : '100%')};
+    background: ${(props) => props.theme.background.tertiary};
+    border-radius: 6px;
+    ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
+`;
+
+const ColumnCenter = styled(FlexDivColumnCentered)<{ fitContent?: boolean; minWidth?: string }>`
+    ${(props) => (props.fitContent ? `max-width: fit-content;` : '')}
+    ${(props) => (props.minWidth ? `min-width: ${props.minWidth};` : '')}
 `;
 
 const ColumnSpaceBetween = styled.div`
