@@ -77,6 +77,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                     date: format(new Date(price[0]), 'MM/dd'),
                     price: Number(price[1].toFixed(2)),
                 }));
+
                 const maxPrice = Math.max(...priceData.map((d) => d.price));
                 const minPrice = Math.min(...priceData.map((d) => d.price));
 
@@ -108,7 +109,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             tickLine={false}
                             axisLine={false}
                             dataKey="date"
-                            interval={25}
+                            domain={['auto', 'auto']}
+                            padding={{ right: 50 }}
                         />
                         <YAxis
                             domain={[parseInt((minPrice / 1.1).toFixed(0)), parseInt((1.1 * maxPrice).toFixed(0))]}
@@ -135,6 +137,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             strokeWidth={2}
                             fill="var(--color-primary)"
                         />
+
+                        <ReferenceLine
+                            y={data[data?.length - 1].price}
+                            stroke="#F7B91A"
+                            strokeDasharray="3 3"
+                            label={<CustomLabel price={data[data?.length - 1].price} />}
+                        />
+
                         {selectedPrice && (
                             <ReferenceLine
                                 y={selectedPrice}
