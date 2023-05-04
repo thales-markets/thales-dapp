@@ -40,9 +40,9 @@ const ToggleButtons = [
 const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice }) => {
     const theme = useSelector((state: RootState) => getTheme(state));
     const [data, setData] = useState<{ date: string; price: number }[]>();
-    const [maxPrice, setMaxPrice] = useState(0);
-    const [minPrice, setMinPrice] = useState(0);
     const [dateRange, setDateRange] = useState(14); // default date range
+
+    const [ticks, setTicks] = useState<number[]>();
 
     const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
 
@@ -78,12 +78,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                     price: Number(price[1].toFixed(2)),
                 }));
 
-                const maxPrice = Math.max(...priceData.map((d) => d.price));
-                const minPrice = Math.min(...priceData.map((d) => d.price));
-
                 setData(priceData);
-                setMaxPrice(Number(maxPrice.toFixed(2)));
-                setMinPrice(Number(minPrice.toFixed(2)));
+
+                setTicks(getTicks(priceData[priceData.length - 1].price));
             } catch (e) {
                 console.log('COINGECKO error: ', e);
             }
@@ -110,16 +107,21 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             axisLine={false}
                             dataKey="date"
                             domain={['auto', 'auto']}
-                            padding={{ right: 50 }}
+                            padding={{ right: 45 }}
                         />
                         <YAxis
-                            domain={[parseInt((minPrice / 1.1).toFixed(0)), parseInt((1.1 * maxPrice).toFixed(0))]}
-                            tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
+                            domain={[ticks ? ticks[0] : 0, ticks ? ticks[ticks.length - 1] : 0]}
+                            tick={{
+                                fontSize: '10px',
+                                fontFamily: 'Inter',
+                                fill: ThemeMap[theme].textColor.secondary,
+                                width: 100,
+                            }}
                             tickLine={false}
                             axisLine={false}
                             tickCount={8}
                             orientation="right"
-                            tickFormatter={(value) => formatCurrencyWithSign(USD_SIGN, value)}
+                            tickFormatter={(value) => formatYAxisTick(value)}
                         />
                         <Tooltip
                             contentStyle={{
@@ -179,9 +181,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 
 const CustomLabel = (props: any) => {
     return (
-        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 70}>
-            <Rectangle rx={10} y={1}></Rectangle>
-            <Text x={8} y={13}>
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
+            <Rectangle rx={10} y={3}></Rectangle>
+            <Text x={8} y={14}>
                 {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
             </Text>
         </SVGBorder>
@@ -196,7 +198,7 @@ const SVGBorder = styled.svg`
 const Rectangle = styled.rect`
     stroke-width: 1px;
     width: 70px;
-    height: 18px;
+    height: 16px;
     stroke: ${(props) => props.theme.borderColor.secondary};
     fill: ${(props) => props.theme.background.primary};
 `;
@@ -247,5 +249,56 @@ const PriceChange = styled.span<{ up: boolean }>`
     text-transform: capitalize;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
 `;
+
+const formatYAxisTick = (value: number) => {
+    let stepSize;
+
+    if (value < 1) {
+        stepSize = 0.05;
+    } else if (value < 10) {
+        stepSize = 0.2;
+    } else if (value < 100) {
+        stepSize = 0.5;
+    } else if (value < 1000) {
+        stepSize = 50;
+    } else {
+        stepSize = Math.pow(10, Math.floor(Math.log10(value)) - 1);
+    }
+
+    const ticks = [];
+    for (let tick = stepSize; tick <= value; tick += stepSize) {
+        ticks.push(tick);
+    }
+
+    return ticks.length ? formatCurrencyWithSign(USD_SIGN, ticks[ticks.length - 1]) : '';
+};
+
+const getTicks = (value: number) => {
+    let stepSize;
+    const tickCount = 5;
+
+    if (value < 1) {
+        stepSize = 0.05;
+    } else if (value < 10) {
+        stepSize = 0.2;
+    } else if (value < 100) {
+        stepSize = 0.5;
+    } else if (value < 1000) {
+        stepSize = 50;
+    } else {
+        stepSize = Math.pow(10, Math.floor(Math.log10(value)) - 1);
+    }
+
+    const centerTick = Math.round(value / stepSize) * stepSize;
+    const startTick = centerTick - tickCount * stepSize;
+    const endTick = centerTick + tickCount * stepSize;
+    const ticks = [];
+
+    for (let tick = startTick; tick <= endTick; tick += stepSize) {
+        ticks.push(tick);
+    }
+
+    return ticks;
+};
 
 export default PriceChart;

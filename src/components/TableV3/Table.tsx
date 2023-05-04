@@ -264,7 +264,7 @@ const Table: React.FC<TableProps> = ({
 const PriceWrapper = styled.div`
     width: 100%;
     height: 0;
-    border-top: 1px dashed #fff;
+    border-top: 1px dashed ${(props) => props.theme.borderColor.secondary};
     margin: 8px 0;
     position: relative;
 `;
@@ -272,19 +272,30 @@ const PriceWrapper = styled.div`
 const Price = styled.div`
     box-sizing: border-box;
     margin: 0px;
-    min-width: 0px;
-    border-radius: 28px;
+    min-width: 80px;
+    border-radius: 22px;
     -webkit-box-align: center;
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    padding: 4px 12px;
-    background-color: var(--color-highlight);
+    padding: 3px 10px;
+    background-color: ${(props) => props.theme.background.primary};
     display: flex;
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 90%;
+    /* identical to box height, or 9px */
+
+    text-align: center;
+    color: ${(props) => props.theme.borderColor.secondary};
 `;
 
 const ExpandableRowReact: React.FC<{
