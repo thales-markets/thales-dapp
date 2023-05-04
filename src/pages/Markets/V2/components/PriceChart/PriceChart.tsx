@@ -150,9 +150,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         {selectedPrice && (
                             <ReferenceLine
                                 y={selectedPrice}
-                                stroke="#F7B91A"
+                                stroke="#03DAC6"
                                 strokeDasharray="3 3"
-                                label={<CustomLabel price={selectedPrice} />}
+                                label={<CustomLabel2 price={selectedPrice} />}
                             />
                         )}
 
@@ -205,6 +205,31 @@ const Rectangle = styled.rect`
 
 const Text = styled.text`
     fill: ${(props) => props.theme.borderColor.secondary};
+    font-size: 10px;
+    font-family: Inter !important;
+`;
+
+const CustomLabel2 = (props: any) => {
+    return (
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
+            <Rectangle2 rx={10} y={3}></Rectangle2>
+            <Text2 x={8} y={14}>
+                {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
+            </Text2>
+        </SVGBorder>
+    );
+};
+
+const Rectangle2 = styled.rect`
+    stroke-width: 1px;
+    width: 70px;
+    height: 16px;
+    stroke: ${(props) => props.theme.borderColor.quaternary};
+    fill: ${(props) => props.theme.background.primary};
+`;
+
+const Text2 = styled.text`
+    fill: ${(props) => props.theme.textColor.quaternary};
     font-size: 10px;
     font-family: Inter !important;
 `;
