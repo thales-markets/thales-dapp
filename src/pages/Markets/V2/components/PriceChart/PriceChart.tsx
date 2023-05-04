@@ -123,15 +123,16 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         />
                         <YAxis
                             domain={[ticks ? ticks[0] : 0, ticks ? ticks[ticks.length - 1] : 0]}
+                            ticks={ticks}
                             tick={{
                                 fontSize: '10px',
                                 fontFamily: 'Inter',
                                 fill: ThemeMap[theme].textColor.secondary,
                                 width: 100,
                             }}
+                            tickCount={8}
                             tickLine={false}
                             axisLine={false}
-                            tickCount={8}
                             orientation="right"
                             tickFormatter={(value) => formatYAxisTick(value)}
                         />
@@ -316,7 +317,7 @@ const formatYAxisTick = (value: number) => {
 
 const getTicks = (value: number) => {
     let stepSize;
-    const tickCount = 5;
+    const tickCount = 4;
 
     if (value < 1) {
         stepSize = 0.05;

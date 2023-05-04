@@ -12,7 +12,6 @@ import { sortCurrencies } from 'utils/currency';
 import AssetDropdown from './components/AssetDropdown';
 import AssetTable from './components/AssetTable';
 import DatesDropdown from './components/MaturityDateDropdown/DatesDropdown';
-import PriceChart from './components/PriceChart/PriceChart';
 import AMM from './components/AMM/AMM';
 import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import { useRangedMarketsLiquidity } from 'queries/options/rangedMarkets/useRangedMarketsLiquidity';
@@ -215,13 +214,6 @@ const Markets: React.FC = () => {
                             allDates={AssetsAndDates.allDates}
                         ></DatesDropdown>
                     )}
-                </Container>
-                <Container>
-                    <PriceChart
-                        asset={asset}
-                        selectedPrice={marketType === 1 ? (market as any)?.leftPrice : market?.strikePrice}
-                        selectedRightPrice={marketType === 1 ? (market as any)?.rightPrice : undefined}
-                    />
                 </Container>
                 <Container>
                     <AssetTable

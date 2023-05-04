@@ -115,7 +115,6 @@ const Banners = styled.div`
 const Wrapper = styled.div`
     width: 100%;
     max-width: 1000px;
-    justify-content: space-between;
 `;
 
 const ContentWrapper = styled.div`
@@ -125,6 +124,7 @@ const ContentWrapper = styled.div`
     height: 400px;
     margin-top: 20px;
     margin-bottom: 35px;
+    justify-content: space-between;
 `;
 const LeftSide = styled.div`
     height: 100%;
