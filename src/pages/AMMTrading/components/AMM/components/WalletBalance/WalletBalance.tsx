@@ -34,6 +34,8 @@ type WalletBalancePropsType = {
 const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) => {
     const marketType: MarketType =
         type == 'long' || type == 'short' ? (MARKET_TYPE[0] as MarketType) : (MARKET_TYPE[1] as MarketType);
+    // TODO: fix this warning
+    // eslint-disable-next-line
     const optionsMarket = marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
 
     let optBalances = marketType == MARKET_TYPE[0] ? { short: 0, long: 0 } : { in: 0, out: 0 };

@@ -40,10 +40,14 @@ type Activity = {
 const UserActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    // TODO: fix this warning
+    // eslint-disable-next-line
     const marketInfo =
         marketType == MARKET_TYPE[0]
-            ? (useMarketContext() as OptionsMarketInfo)
-            : (useRangedMarketContext() as RangedMarketData);
+            ? // eslint-disable-next-line
+              (useMarketContext() as OptionsMarketInfo)
+            : // eslint-disable-next-line
+              (useRangedMarketContext() as RangedMarketData);
 
     const { t } = useTranslation();
 

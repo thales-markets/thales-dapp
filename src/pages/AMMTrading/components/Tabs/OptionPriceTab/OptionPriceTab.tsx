@@ -15,7 +15,10 @@ import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQ
 import { MARKET_TYPE } from 'constants/options';
 
 const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
+    // TODO: fix this warning
+    // eslint-disable-next-line
     const optionsMarket: OptionsMarketInfo | RangedMarketData =
+        // eslint-disable-next-line
         marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));

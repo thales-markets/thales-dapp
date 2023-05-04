@@ -75,7 +75,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         } else if (typeof window.ethereum !== 'undefined') {
             setCurrentStep(WizardSteps.CONNECT_METAMASK);
         }
-    }, [isWalletConnected]);
+    }, [isWalletConnected, setCurrentStep]);
 
     // After click on install check every 1s if user installed Metamask
     useInterval(

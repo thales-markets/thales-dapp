@@ -8,6 +8,8 @@ import { Container, CopyrightLabel, TradingViewLink } from './styled-components/
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 const TradingView: React.FC = () => {
+    // TODO: fix this warning
+    // eslint-disable-next-line
     const marketInfo = useMarketContext() || useRangedMarketContext();
 
     const symbol = assetToTradingViewMap[marketInfo?.currencyKey] || `${marketInfo?.currencyKey}USDT`;

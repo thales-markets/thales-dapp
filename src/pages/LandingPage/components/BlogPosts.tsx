@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import mediumPostsQuery from '../queries/mediumPostsQuery';
+import useMediumPostsQuery from '../queries/mediumPostsQuery';
 
 // import nextArrow from 'assets/images/arrow-next.svg';
 // import backArrow from 'assets/images/arrow-previous.svg';
@@ -18,7 +18,7 @@ const formatDate = (timestamp: Date) => {
 };
 
 const BlogPosts: React.FC = () => {
-    const blogPostsQuery = mediumPostsQuery({ enabled: true });
+    const blogPostsQuery = useMediumPostsQuery({ enabled: true });
     const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
     const blogPosts =
         blogPostsQuery.isSuccess && blogPostsQuery?.data?.length

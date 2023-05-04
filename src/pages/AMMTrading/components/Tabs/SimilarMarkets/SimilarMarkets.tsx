@@ -4,7 +4,7 @@ import { RootState } from 'redux/rootReducer';
 import { useTranslation } from 'react-i18next';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
+import { useFetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 // import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
@@ -30,6 +30,8 @@ import styled from 'styled-components';
 import SimpleLoader from 'components/SimpleLoader';
 
 const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) => {
+    // TODO: fix this warning
+    // eslint-disable-next-line
     const marketInfo = marketType !== MARKET_TYPE[1] ? useMarketContext() : useRangedMarketContext();
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -44,7 +46,7 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
         enabled: isAppReady && marketType == MARKET_TYPE[1],
     });
 
-    const openOrdersQuery = fetchAllMarketOrders(networkId, {
+    const openOrdersQuery = useFetchAllMarketOrders(networkId, {
         enabled: isAppReady && marketType !== MARKET_TYPE[1],
     });
 

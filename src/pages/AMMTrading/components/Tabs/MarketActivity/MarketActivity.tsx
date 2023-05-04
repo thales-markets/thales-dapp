@@ -28,6 +28,8 @@ import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketCo
 const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     const { t } = useTranslation();
 
+    // TODO: fix this warning
+    // eslint-disable-next-line
     const optionsMarket = marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));

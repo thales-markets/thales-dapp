@@ -6,7 +6,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { fetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
+import { useFetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
 
 import { sortOptionsMarkets } from 'utils/options';
 import Loader from 'components/Loader';
@@ -34,7 +34,7 @@ const Markets: React.FC = () => {
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
 
-    const openOrdersQuery = fetchAllMarketOrders(networkId, { enabled: isAppReady });
+    const openOrdersQuery = useFetchAllMarketOrders(networkId, { enabled: isAppReady });
 
     useEffect(() => {
         if (openOrdersQuery.isSuccess && openOrdersQuery.data) {
