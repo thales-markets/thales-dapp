@@ -1,6 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { CoinGeckoClient } from 'coingecko-api-v3';
-import { XAxis, YAxis, Area, AreaChart, ResponsiveContainer, Tooltip, ReferenceLine, CartesianGrid } from 'recharts';
+import {
+    XAxis,
+    YAxis,
+    Area,
+    AreaChart,
+    ResponsiveContainer,
+    Tooltip,
+    ReferenceLine,
+    CartesianGrid,
+    ReferenceArea,
+} from 'recharts';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 import styled from 'styled-components';
 import { format } from 'date-fns';
@@ -16,11 +26,13 @@ import { useSelector } from 'react-redux';
 import { getTheme } from 'redux/modules/ui';
 import { RootState } from 'redux/rootReducer';
 import { ThemeMap } from 'constants/ui';
+import { Positions } from 'constants/options';
 
 type PriceChartProps = {
     asset: string;
     selectedPrice: number | undefined;
     selectedRightPrice?: number;
+    position: Positions;
 };
 
 const coinGeckoClient = new CoinGeckoClient({
@@ -37,7 +49,7 @@ const ToggleButtons = [
     { label: '1Y', value: 365 },
 ];
 
-const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice }) => {
+const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice, position }) => {
     const theme = useSelector((state: RootState) => getTheme(state));
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [dateRange, setDateRange] = useState(14); // default date range
@@ -150,9 +162,19 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         {selectedPrice && (
                             <ReferenceLine
                                 y={selectedPrice}
-                                stroke="#F7B91A"
+                                stroke="#03DAC6"
                                 strokeDasharray="3 3"
-                                label={<CustomLabel price={selectedPrice} />}
+                                label={<CustomLabel2 price={selectedPrice} />}
+                            />
+                        )}
+
+                        {selectedPrice && (
+                            <ReferenceArea
+                                y1={selectedPrice}
+                                y2={ticks ? (position === Positions.UP ? ticks[ticks.length - 1] : ticks[0]) : 0}
+                                stroke={ThemeMap[theme].textColor.quaternary}
+                                fill={ThemeMap[theme].textColor.quaternary}
+                                fillOpacity={0.2}
                             />
                         )}
 
@@ -209,6 +231,31 @@ const Text = styled.text`
     font-family: Inter !important;
 `;
 
+const CustomLabel2 = (props: any) => {
+    return (
+        <SVGBorder y={props.viewBox.y - 10} x={props.viewBox.width - 50}>
+            <Rectangle2 rx={10} y={3}></Rectangle2>
+            <Text2 x={8} y={14}>
+                {formatCurrencyWithSign(USD_SIGN, props.price, 2)}
+            </Text2>
+        </SVGBorder>
+    );
+};
+
+const Rectangle2 = styled.rect`
+    stroke-width: 1px;
+    width: 70px;
+    height: 16px;
+    stroke: ${(props) => props.theme.borderColor.quaternary};
+    fill: ${(props) => props.theme.background.primary};
+`;
+
+const Text2 = styled.text`
+    fill: ${(props) => props.theme.textColor.quaternary};
+    font-size: 10px;
+    font-family: Inter !important;
+`;
+
 const Wrapper = styled.div`
     width: 100%;
     height: 100%;
@@ -231,9 +278,6 @@ const Price = styled.span`
     font-weight: 700;
     font-size: 22px;
     line-height: 100%;
-    padding:
-    /* or 22px */
-
     text-transform: capitalize;
     color: ${(props) => props.theme.textColor.primary};
 `;
@@ -243,9 +287,6 @@ const PriceChange = styled.span<{ up: boolean }>`
     font-weight: 700;
     font-size: 22px;
     line-height: 100%;
-    padding:
-    /* or 22px */
-
     text-transform: capitalize;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
 `;

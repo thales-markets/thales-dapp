@@ -164,12 +164,12 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, rangeMarkets, ty
 };
 
 const TableHeaderStyle: React.CSSProperties = {
-    fontFamily: 'Roboto',
+    fontFamily: 'Inter !important',
     fontStyle: 'normal',
-    fontWeight: 400,
-    fontSize: 14,
-    lineHeight: '16px',
-    color: 'rgba(255, 255, 255, 0.4)',
+    fontWeight: 500,
+    fontSize: 13,
+    lineHeight: '90%',
+    color: `${(props: any) => props.theme.background.primary}`,
 };
 
 const Wrapper = styled.div`

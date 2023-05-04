@@ -35,7 +35,7 @@ const useMarketsByAssetAndDateQuery = (
                         currencyKey: asset,
                         address: market.market,
                         liquidity: Number(ethers.utils.formatEther(market.liquidity)),
-                        price: Number(ethers.utils.formatEther(market.price)),
+                        price: calculatePotentialProfit(Number(ethers.utils.formatEther(market.price))),
                         strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
                         discount: discount < 0 ? discount : 0,
                     };
@@ -49,6 +49,10 @@ const useMarketsByAssetAndDateQuery = (
             ...options,
         }
     );
+};
+
+const calculatePotentialProfit = (price: number) => {
+    return ((1 - price) / price) * 100;
 };
 
 export default useMarketsByAssetAndDateQuery;

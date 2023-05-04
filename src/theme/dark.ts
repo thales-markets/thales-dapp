@@ -17,7 +17,7 @@ export default {
         primary: '',
         secondary: Colors.ORANGE,
         tertiary: '',
-        quaternary: '',
+        quaternary: Colors.GREEN,
     },
     button: {
         background: {
