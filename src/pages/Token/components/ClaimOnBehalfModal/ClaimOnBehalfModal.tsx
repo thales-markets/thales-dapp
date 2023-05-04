@@ -15,7 +15,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { getIsAppReady } from 'redux/modules/app';
 import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/components';
-import useStakingClaimOnBehalfQuery from 'queries/staking/useStakingClaimOnBehalfQuery';
+import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
 import Button from '../Button';
 import { ButtonType } from '../Button/Button';
 import { getMaxGasLimitForNetwork } from 'constants/options';

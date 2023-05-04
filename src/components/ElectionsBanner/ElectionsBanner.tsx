@@ -13,7 +13,7 @@ type ElectionsBannerProps = {
     width?: number;
 };
 
-const SHOW_BANNER = true;
+const SHOW_BANNER = false;
 
 const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width }) => {
     const textLink = useMemo(() => {
@@ -46,7 +46,7 @@ const ElectionsBanner: React.FC<ElectionsBannerProps> = ({ isLandingPage, width 
 
 const BannerContainer = styled(FlexDiv)<{ width?: number }>`
     width: ${(props) => props.width || 100}%;
-    padding-bottom: 40px;
+    padding-bottom: 10px;
     strong {
         font-weight: bold;
         cursor: pointer;

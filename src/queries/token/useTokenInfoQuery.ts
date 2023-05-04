@@ -73,7 +73,6 @@ const useTokenInfoQuery = (networkId: NetworkId, options?: UseQueryOptions<Token
             return undefined;
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

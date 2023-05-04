@@ -58,7 +58,6 @@ const Profile: React.FC = () => {
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
-        refetchInterval: false,
     });
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
     const isPolygon = getIsPolygon(networkId);

@@ -2,15 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { useTranslation } from 'react-i18next';
-
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import { useFetchAllMarketOrders, OpenOrdersMap } from 'queries/options/fetchAllMarketOrders';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-// import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-
 import { SimilarMarketsContainer } from './styled-components/SimilarMarkets';
-
 import { getNetworkId } from 'redux/modules/wallet';
 import { sortOptionsMarkets } from 'utils/options';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
@@ -141,7 +137,6 @@ const SimilarMarkets: React.FC<{ marketType?: MarketType }> = ({ marketType }) =
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery({
         enabled: isAppReady && (optionsMarkets.length > 0 || rangedMarkets?.length > 0),
-        refetchInterval: false,
     });
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 

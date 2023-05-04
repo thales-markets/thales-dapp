@@ -7,13 +7,11 @@ import {
     Tip125Link,
     Tip17Link,
 } from 'pages/Token/components';
-import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
@@ -24,6 +22,9 @@ import Unstake from './Unstake';
 import { isMobile } from 'utils/device';
 import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
 import { getIsOVM } from 'utils/network';
+import useStakingDataQuery from 'queries/token/useStakingDataQuery';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import { StakingData, UserStakingData } from 'types/token';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -47,11 +48,14 @@ const aprToApy = (interest: number) => ((1 + interest / 100 / APR_FREQUENCY) ** 
 
 const Staking: React.FC = () => {
     const { t } = useTranslation();
-
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isL2 = getIsOVM(networkId);
+
+    const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
+    const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
 
     const stakeOptions = {
         stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
@@ -59,41 +63,59 @@ const Staking: React.FC = () => {
     };
     const [stakeOption, setStakeOption] = useState(stakeOptions.stake.value);
 
-    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady,
-    });
-    const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
+    const stakingDataQuery = useStakingDataQuery(networkId, {
         enabled: isAppReady,
     });
 
-    const totalStakedAmount =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.totalStakedAmount : 0;
-    const fixedPeriodReward =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.fixedPeriodReward : 0;
-    const totalEscrowedRewards =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.totalEscrowedRewards : 0;
-    const totalEscrowBalanceNotIncludedInStaking =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data
-            ? escrowThalesQuery.data.totalEscrowBalanceNotIncludedInStaking
-            : 0;
-    const maxBonusRewardsPercentage =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.maxBonusRewardsPercentage : 0;
-    const thalesStaked =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.thalesStaked : 0;
-    const escrowedBalance =
-        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? escrowThalesQuery.data.escrowedBalance : 0;
-    const unstakingAmount =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.unstakingAmount : 0;
+    useEffect(() => {
+        if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
+            setLastValidStakingData(stakingDataQuery.data);
+        }
+    }, [stakingDataQuery.isSuccess, stakingDataQuery.data]);
+
+    const stakingData: StakingData | undefined = useMemo(() => {
+        if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
+            return stakingDataQuery.data;
+        }
+        return lastValidStakingData;
+    }, [stakingDataQuery.isSuccess, stakingDataQuery.data, lastValidStakingData]);
+
+    const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    useEffect(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            setLastValidUserStakingData(userStakingDataQuery.data);
+        }
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data]);
+
+    const userStakingData: UserStakingData | undefined = useMemo(() => {
+        if (userStakingDataQuery.isSuccess && userStakingDataQuery.data) {
+            return userStakingDataQuery.data;
+        }
+        return lastValidUserStakingData;
+    }, [userStakingDataQuery.isSuccess, userStakingDataQuery.data, lastValidUserStakingData]);
+
+    const totalStakedAmount = stakingData ? stakingData.totalStakedAmount : 0;
+    const baseRewardsPool = stakingData ? stakingData.baseRewardsPool : 0;
+    const totalEscrowedRewards = stakingData ? stakingData.totalEscrowedRewards : 0;
+    const totalEscrowBalanceNotIncludedInStaking = stakingData ? stakingData.totalEscrowBalanceNotIncludedInStaking : 0;
+    const maxBonusRewardsPercentage = stakingData ? stakingData.maxBonusRewardsPercentage : 0;
+
+    const thalesStaked = userStakingData ? userStakingData.thalesStaked : 0;
+    const escrowedBalance = userStakingData ? userStakingData.escrowedBalance : 0;
+    const unstakingAmount = userStakingData ? userStakingData.unstakingAmount : 0;
 
     const APR = useMemo(
         () =>
             totalStakedAmount === 0
                 ? 0
-                : (Number(fixedPeriodReward) * 52 * 100) /
+                : (Number(baseRewardsPool) * 52 * 100) /
                   (Number(totalStakedAmount) +
                       Number(totalEscrowedRewards) -
                       Number(totalEscrowBalanceNotIncludedInStaking)),
-        [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+        [baseRewardsPool, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
     const bonusAPR = useMemo(() => (APR * maxBonusRewardsPercentage) / 100, [APR]);
@@ -129,7 +151,7 @@ const Staking: React.FC = () => {
         );
     };
 
-    const estimatedRewards = useMemo(() => (myStakedShare / 100) * fixedPeriodReward, [myStakedShare]);
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare]);
     const bonusEstimatedRewards = useMemo(() => (estimatedRewards * maxBonusRewardsPercentage) / 100, [
         estimatedRewards,
     ]);

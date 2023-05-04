@@ -24,7 +24,7 @@ import { formatGasLimit } from 'utils/network';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
-import { refetchLPStakingQuery } from 'utils/queryConnector';
+import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
 import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
@@ -165,7 +165,8 @@ const LpStaking: React.FC = () => {
 
                 if (txResult && txResult.transactionHash) {
                     dispatchMarketNotification(t('options.earn.lp-staking.claim.claimed'));
-                    refetchLPStakingQuery(walletAddress, networkId);
+                    refetchTokenQueries(walletAddress, networkId);
+                    refetchLPStakingQueries(walletAddress, networkId);
                     setIsClaiming(false);
                 }
             } catch (e) {

@@ -18,7 +18,6 @@ const useBinaryOptionsUserTransactionsQuery = (
                 network: networkId,
             }),
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

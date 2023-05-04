@@ -51,7 +51,7 @@ export const useFetchAllMarketOrders = (network: NetworkId, options?: UseQueryOp
             }
         },
         {
-            refetchInterval: 5 * 1000,
+            refetchInterval: 60 * 1000,
             ...options,
         }
     );

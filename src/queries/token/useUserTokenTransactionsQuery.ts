@@ -19,7 +19,6 @@ const useUserTokenTransactionsQuery = (
                 type_in,
             }),
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

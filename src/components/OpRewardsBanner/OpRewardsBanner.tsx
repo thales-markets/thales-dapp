@@ -16,7 +16,7 @@ type OpRewardsBannerProps = {
     width?: number;
 };
 
-const SHOW_BANNER = false;
+const SHOW_BANNER = true;
 
 const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -46,7 +46,7 @@ const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width 
 
 const BannerContainer = styled(FlexDiv)<{ width?: number }>`
     width: ${(props) => props.width || 100}%;
-    padding-bottom: 40px;
+    padding-bottom: 10px;
     strong {
         font-weight: bold;
         cursor: pointer;

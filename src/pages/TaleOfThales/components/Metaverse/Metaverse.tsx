@@ -7,9 +7,9 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import Container from '../../styled-components/GameContainer';
 import { getIsAppReady } from 'redux/modules/app';
-import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import useNFTBalancesQuery from 'queries/taleOfThales/useNFTBalancesQuery';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 
 const unityContext = new UnityContext({
     loaderUrl: '/miletus-metaverse/build.loader.js',
@@ -25,11 +25,12 @@ const Metaverse: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
+    const userStakingDataQuery = useUserStakingDataQuery(walletAddress, networkId, {
         enabled: isAppReady && !!walletAddress,
     });
 
-    const thalesStaked = stakingThalesQuery.isSuccess ? stakingThalesQuery.data.thalesStaked : 0;
+    const thalesStaked =
+        userStakingDataQuery.isSuccess && userStakingDataQuery.data ? userStakingDataQuery.data.thalesStaked : 0;
 
     const NFTBalancesQuery = useNFTBalancesQuery(walletAddress || '', networkId, {
         enabled: isAppReady && !!walletAddress,

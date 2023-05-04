@@ -60,7 +60,7 @@ import { convertPriceImpactToBonus, getFormattedBonus } from 'utils/options';
 import {
     refetchAmmData,
     refetchTrades,
-    refetchUserBalance,
+    refetchBalances,
     refetchUserTrades,
     refetchWalletBalances,
 } from 'utils/queryConnector';
@@ -446,11 +446,10 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                     )
                 );
                 // TODO: check if all refetches are required
-                refetchWalletBalances(walletAddress, networkId);
-                refetchAmmData(walletAddress, market.address, networkId);
+                refetchBalances(walletAddress, networkId);
+                refetchAmmData(walletAddress, market.address);
                 refetchTrades(market.address);
                 refetchUserTrades(market.address, walletAddress);
-                refetchUserBalance(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
                 setPaidAmount('');

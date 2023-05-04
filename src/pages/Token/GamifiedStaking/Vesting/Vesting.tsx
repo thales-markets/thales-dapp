@@ -9,8 +9,7 @@ import { ButtonType } from 'pages/Token/components/Button/Button';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { ButtonContainer, Line } from 'pages/Token/components';
 import YourTransactions from './Transactions';
-import useEscrowThalesQuery from 'queries/staking/useEscrowThalesQuery';
-import useVestingScheduleQuery from 'queries/token/useVestingScheduleQuery';
+import useUserVestingDataQuery from 'queries/token/useUserVestingDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -25,6 +24,8 @@ import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import DateTimeContainer from './styled-components/TimeDateContainer';
 import { isMobile } from 'utils/device';
+import { UserVestingData } from 'types/token';
+import { refetchTokenQueries } from 'utils/queryConnector';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
@@ -33,27 +34,51 @@ const Vesting: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [isClaiming, setIsClaiming] = useState(false);
-    const [claimable, setClaimable] = useState<number | string>('0');
-    const [rawClaimable, setRawClaimable] = useState<string>('0');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
-    const { escrowThalesContract, stakingThalesContract } = snxJSConnector as any;
+    const { escrowThalesContract } = snxJSConnector as any;
+    const [lastValidUserVestingData, setLastValidUserVestingData] = useState<UserVestingData | undefined>(undefined);
 
-    const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && !!escrowThalesContract,
-    });
-    const scheduleQuery = useVestingScheduleQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && !!escrowThalesContract && !!stakingThalesContract,
+    const userVestingDataQuery = useUserVestingDataQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
     });
 
     useEffect(() => {
-        if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
-            setClaimable(escrowThalesQuery.data.claimable);
-            setRawClaimable(escrowThalesQuery.data.rawClaimable);
+        if (userVestingDataQuery.isSuccess && userVestingDataQuery.data) {
+            setLastValidUserVestingData(userVestingDataQuery.data);
         }
-    }, [escrowThalesQuery.isSuccess, escrowThalesQuery.data]);
+    }, [userVestingDataQuery.isSuccess, userVestingDataQuery.data]);
+
+    const userVestingData: UserVestingData | undefined = useMemo(() => {
+        if (userVestingDataQuery.isSuccess && userVestingDataQuery.data) {
+            return userVestingDataQuery.data;
+        }
+        return lastValidUserVestingData;
+    }, [userVestingDataQuery.isSuccess, userVestingDataQuery.data, lastValidUserVestingData]);
+
+    const scheduleData = userVestingData ? userVestingData.vestingSchedule : [];
+    const claimable = userVestingData ? userVestingData.claimable : 0;
+    const rawClaimable = userVestingData ? userVestingData.rawClaimable : '0';
+
+    const generateRows = (data: any[]) => {
+        const sortedData = data.sort((a, b) => a.date - b.date);
+        const rows: TileRow[] = sortedData.map((row) => {
+            return {
+                cells: [
+                    { value: row.date },
+                    {
+                        value: `${formatCurrencyWithKey(THALES_CURRENCY, row.amount)}`,
+                        valueFontSize: isMobile() ? 12 : 15,
+                    },
+                ],
+                heightSmall: true,
+            };
+        });
+
+        return rows;
+    };
 
     useEffect(() => {
         const fetchL1Fee = async (escrowThalesContractWithSigner: any, toVest: any) => {
@@ -85,29 +110,6 @@ const Vesting: React.FC = () => {
         fetchGasLimit();
     }, [isWalletConnected, walletAddress, claimable, escrowThalesContract]);
 
-    const scheduleData = useMemo(() => (scheduleQuery.isSuccess && scheduleQuery.data ? scheduleQuery.data : []), [
-        networkId,
-        scheduleQuery.data,
-    ]);
-
-    const generateRows = (data: any[]) => {
-        const sortedData = data.sort((a, b) => a.date - b.date);
-        const rows: TileRow[] = sortedData.map((row) => {
-            return {
-                cells: [
-                    { value: row.date },
-                    {
-                        value: `${formatCurrencyWithKey(THALES_CURRENCY, row.amount)}`,
-                        valueFontSize: isMobile() ? 12 : 15,
-                    },
-                ],
-                heightSmall: true,
-            };
-        });
-
-        return rows;
-    };
-
     const handleVest = async () => {
         try {
             setTxErrorMessage(null);
@@ -121,7 +123,7 @@ const Vesting: React.FC = () => {
 
             if (txResult && txResult.transactionHash) {
                 dispatchMarketNotification(t('options.earn.gamified-staking.vesting.vest.confirmation-message'));
-                setClaimable('0');
+                refetchTokenQueries(walletAddress, networkId);
                 setIsClaiming(false);
             }
         } catch (e) {
@@ -187,7 +189,7 @@ const Vesting: React.FC = () => {
                     <TileTable
                         firstColumnRenderer={(row: TileRow | string) => <SchedulerFirstColumn value={row} />}
                         rows={generateRows(scheduleData)}
-                        isLoading={scheduleQuery.isLoading}
+                        isLoading={userVestingDataQuery.isLoading}
                         noResultsMessage={
                             scheduleData.length === 0
                                 ? t(`options.earn.gamified-staking.vesting.schedule-no-results`)

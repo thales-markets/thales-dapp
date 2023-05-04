@@ -46,7 +46,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
 }) => {
     const { t } = useTranslation();
 
-    const priceData = usePriceDataQuery({ currencyKey, currencyVs, days }, { refetchInterval: false });
+    const priceData = usePriceDataQuery({ currencyKey, currencyVs, days });
     const processedPriceData = useMemo(() => {
         let data: any = [];
 

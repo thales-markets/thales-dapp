@@ -28,13 +28,7 @@ import useRangedAMMMaxLimitsQuery, {
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import {
-    refetchAmmData,
-    refetchTrades,
-    refetchUserBalance,
-    refetchUserTrades,
-    refetchWalletBalances,
-} from 'utils/queryConnector';
+import { refetchRangedAmmData, refetchTrades, refetchUserTrades, refetchBalances } from 'utils/queryConnector';
 import {
     calculateAndFormatPercentage,
     formatCurrency,
@@ -189,7 +183,7 @@ const AMM: React.FC = () => {
     });
 
     useEffect(() => {
-        refetchWalletBalances(walletAddress, networkId);
+        refetchBalances(walletAddress, networkId);
     }, [walletAddress]);
 
     // If sUSD balance is zero, select first stable with nonzero value as default
@@ -621,11 +615,10 @@ const AMM: React.FC = () => {
                         )
                     )
                 );
-                refetchWalletBalances(walletAddress, networkId);
-                refetchAmmData(walletAddress, rangedMarketData?.address, networkId);
+                refetchBalances(walletAddress, networkId);
+                refetchRangedAmmData(walletAddress, rangedMarketData?.address, networkId);
                 refetchTrades(rangedMarketData?.address);
                 refetchUserTrades(rangedMarketData?.address, walletAddress);
-                refetchUserBalance(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');

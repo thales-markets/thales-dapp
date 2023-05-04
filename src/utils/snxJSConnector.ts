@@ -2,13 +2,10 @@ import { ethers, Signer } from 'ethers';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import vestingEscrow from './contracts/vestingEscrow';
-import airdrop from './contracts/airdrop';
-import ongoingAirdrop from './contracts/ongoingAirdrop';
 import stakingThales from './contracts/stakingThales';
 import thalesContract from './contracts/thalesContract';
 import escrowThales from './contracts/escrowThales';
 import priceFeedContract from './contracts/priceFeedContract';
-import limitOrderProtocol1inchContract from './contracts/limitOrderProtocol1inchContract';
 import ammContract from './contracts/ammContract';
 import rangedMarketAMMContract from './contracts/rangedMarketsAMM';
 import thalesRoyaleContract from './contracts/thalesRoyalContract';
@@ -20,11 +17,12 @@ import thalesRoyalePassContract from './contracts/thalesRoyalePassContract';
 import thalesRoyalePassportContract from './contracts/thalesRoyalePassportContract';
 import bridgeContract from './contracts/bridgeContract';
 import usdcContract from './contracts/collateralContract';
-import unclaimedRetroAirdropContract from './contracts/unclaimedRetroAirdrop';
 import unclaimedInvestorsRetroAirdropContract from './contracts/unclaimedInvestorsRetroAirdrop';
 import multipleCollateral from './contracts/multipleCollateralContract';
 import liquidityPoolContract from 'utils/contracts/liquidityPoolContract';
 import taleOfThalesNFT from './contracts/taleOfThalesNFT';
+import ammVaultDataContract from 'utils/contracts/ammVaultDataContract';
+import stakingDataContract from 'utils/contracts/stakingDataContract';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -41,7 +39,6 @@ type SnxJSConnector = {
     thalesTokenContract?: ethers.Contract;
     escrowThalesContract?: ethers.Contract;
     priceFeedContract?: ethers.Contract;
-    limitOrderProtocol1inchContract?: ethers.Contract;
     ammContract?: ethers.Contract;
     rangedMarketAMMContract?: ethers.Contract;
     thalesRoyaleContract?: ethers.Contract;
@@ -56,6 +53,8 @@ type SnxJSConnector = {
     unclaimedInvestorsRetroAirdropContract?: ethers.Contract;
     liquidityPoolContract?: ethers.Contract;
     taleOfThalesNFTContract?: ethers.Contract;
+    ammVaultDataContract?: ethers.Contract;
+    stakingDataContract?: ethers.Contract;
     setContractSettings: (contractSettings: any) => void;
 };
 
@@ -84,17 +83,11 @@ const snxJSConnector: SnxJSConnector = {
             conditionalInitializeContract(multipleCollateral['USDT'], contractSettings),
         ];
 
-        this.retroAirdropContract = conditionalInitializeContract(airdrop, contractSettings);
         this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);
-        this.ongoingAirdropContract = conditionalInitializeContract(ongoingAirdrop, contractSettings);
         this.stakingThalesContract = conditionalInitializeContract(stakingThales, contractSettings);
         this.thalesTokenContract = conditionalInitializeContract(thalesContract, contractSettings);
         this.escrowThalesContract = conditionalInitializeContract(escrowThales, contractSettings);
         this.priceFeedContract = conditionalInitializeContract(priceFeedContract, contractSettings);
-        this.limitOrderProtocol1inchContract = conditionalInitializeContract(
-            limitOrderProtocol1inchContract,
-            contractSettings
-        );
         this.ammContract = conditionalInitializeContract(ammContract, contractSettings);
         this.rangedMarketAMMContract = conditionalInitializeContract(rangedMarketAMMContract, contractSettings);
         this.thalesRoyaleContract = conditionalInitializeContract(thalesRoyaleContract, contractSettings);
@@ -108,16 +101,14 @@ const snxJSConnector: SnxJSConnector = {
         this.lpStakingRewardsContract = conditionalInitializeContract(lpStakingRewardsContract, contractSettings);
         this.gelatoContract = conditionalInitializeContract(gelatoContract, contractSettings);
         this.bridgeContract = conditionalInitializeContract(bridgeContract, contractSettings);
-        this.unclaimedRetroAirdropContract = conditionalInitializeContract(
-            unclaimedRetroAirdropContract,
-            contractSettings
-        );
         this.unclaimedInvestorsRetroAirdropContract = conditionalInitializeContract(
             unclaimedInvestorsRetroAirdropContract,
             contractSettings
         );
         this.liquidityPoolContract = conditionalInitializeContract(liquidityPoolContract, contractSettings);
         this.taleOfThalesNFTContract = conditionalInitializeContract(taleOfThalesNFT, contractSettings);
+        this.ammVaultDataContract = conditionalInitializeContract(ammVaultDataContract, contractSettings);
+        this.stakingDataContract = conditionalInitializeContract(stakingDataContract, contractSettings);
     },
 };
 

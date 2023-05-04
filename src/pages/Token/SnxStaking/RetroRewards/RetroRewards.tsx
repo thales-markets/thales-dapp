@@ -6,7 +6,7 @@ import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'the
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import useVestingBalanceQuery from 'queries/walletBalances/useVestingBalanceQuery';
+import useVestingBalanceQuery from 'queries/token/useVestingEscrowQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { VestingInfo } from 'types/token';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -28,7 +28,7 @@ import {
     StyledMaterialTooltip,
     Tip37Link,
 } from '../../components';
-import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
+import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
@@ -122,7 +122,7 @@ const RetroRewards: React.FC = () => {
 
                 if (txResult && txResult.transactionHash) {
                     dispatchMarketNotification(t('options.earn.snx-stakers.confirmation-message'));
-                    refetchVestingBalance(walletAddress, networkId);
+                    refetchVestingEscrow(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setVestingInfo({
                         ...vestingInfo,

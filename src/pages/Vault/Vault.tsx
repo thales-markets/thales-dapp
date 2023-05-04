@@ -59,7 +59,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import Transactions from './Transactions';
 import PnL from './PnL';
 import { RouteComponentProps } from 'react-router-dom';
-import vaultContract from 'utils/contracts/sportVaultContract';
+import vaultContract from 'utils/contracts/ammVaultContract';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
@@ -74,6 +74,7 @@ import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { refetchVaultData } from 'utils/queryConnector';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -251,13 +252,13 @@ const Vault: React.FC<VaultProps> = (props) => {
             const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
-                const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
+                const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
                 const parsedAmount = ethers.utils.parseUnits(
                     Number(amount).toString(),
                     getDefaultDecimalsForNetwork(networkId)
                 );
 
-                const tx = await sportVaultContractWithSigner.deposit(parsedAmount, {
+                const tx = await ammVaultContractWithSigner.deposit(parsedAmount, {
                     gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
@@ -266,6 +267,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     toast.update(id, getSuccessToastOptions(t('vault.button.deposit-confirmation-message')));
                     setAmount('');
                     setIsSubmitting(false);
+                    refetchVaultData(vaultAddress, walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
@@ -281,9 +283,9 @@ const Vault: React.FC<VaultProps> = (props) => {
             const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
-                const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
+                const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
 
-                const tx = await sportVaultContractWithSigner.withdrawalRequest({
+                const tx = await ammVaultContractWithSigner.withdrawalRequest({
                     gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
@@ -292,6 +294,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                     toast.update(id, getSuccessToastOptions(t('vault.button.request-withdrawal-confirmation-message')));
                     setAmount('');
                     setIsSubmitting(false);
+                    refetchVaultData(vaultAddress, walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
@@ -307,9 +310,9 @@ const Vault: React.FC<VaultProps> = (props) => {
             const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
             setIsSubmitting(true);
             try {
-                const sportVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
+                const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
 
-                const tx = await sportVaultContractWithSigner.closeRound({
+                const tx = await ammVaultContractWithSigner.closeRound({
                     gasLimit: getMaxGasLimitForNetwork(networkId),
                 });
                 const txResult = await tx.wait();
@@ -317,6 +320,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                 if (txResult && txResult.events) {
                     toast.update(id, getSuccessToastOptions(t('vault.button.close-round-confirmation-message')));
                     setIsSubmitting(false);
+                    refetchVaultData(vaultAddress, walletAddress, networkId);
                 }
             } catch (e) {
                 console.log(e);
