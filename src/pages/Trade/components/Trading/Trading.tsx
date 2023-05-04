@@ -577,7 +577,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         if (market.address) {
             setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
         }
-    }, [ammMaxLimits, isLong]);
+    }, [ammMaxLimits, isLong, market.address]);
 
     useEffect(() => {
         let isValid = true;

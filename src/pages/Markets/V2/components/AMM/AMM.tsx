@@ -26,8 +26,8 @@ import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils
 import {
     refetchAmmData,
     refetchTrades,
-    refetchUserBalance,
     refetchUserTrades,
+    refetchBalances,
     refetchWalletBalances,
 } from 'utils/queryConnector';
 import {
@@ -554,11 +554,10 @@ const AMM: React.FC<AMMProps> = ({ marketAddress, longAddress, shortAddress }) =
                         )
                     )
                 );
-                refetchWalletBalances(walletAddress, networkId);
-                refetchAmmData(walletAddress, marketAddress, networkId);
+                refetchBalances(walletAddress, networkId);
+                refetchAmmData(walletAddress, marketAddress);
                 refetchTrades(marketAddress);
                 refetchUserTrades(marketAddress, walletAddress);
-                refetchUserBalance(walletAddress, networkId);
                 setIsSubmitting(false);
                 resetData();
                 setAmount('');
