@@ -49,14 +49,15 @@ const OPRewards: React.FC = () => {
     let CALCULATED_START = new Date(START_DATE.getTime());
     let PERIOD_COUNTER = 1;
 
-    const periodRangeTimestamps: any = [];
     const [period, setPeriod] = useState<number>(1);
+    const [periodRangeTimestamps, setPeriodRangeTimestamps] = useState<any>();
 
     const options = useMemo(() => {
         const options: Array<{ value: number; label: string }> = [];
+        const periodRangeTimestampsLocal: any = [];
         while (true) {
             if (CALCULATED_START.getTime() < NOW.getTime()) {
-                periodRangeTimestamps.push({
+                periodRangeTimestampsLocal.push({
                     minTimestamp: CALCULATED_START.getTime() / 1000,
                     maxTimestamp:
                         new Date(CALCULATED_START.getTime() + PERIOD_DURATION_IN_DAYS * 24 * 60 * 60 * 1000).getTime() /
@@ -75,12 +76,10 @@ const OPRewards: React.FC = () => {
             }
         }
 
+        setPeriodRangeTimestamps(periodRangeTimestampsLocal);
         setPeriod(PERIOD_COUNTER - 1);
         return options;
     }, []);
-
-    const minTimestamp = periodRangeTimestamps[period - 1]?.minTimestamp || undefined;
-    const maxTimestamp = periodRangeTimestamps[period - 1]?.maxTimestamp || undefined;
 
     const usersAmmBuyVolumeQuery = useUsersAmmBuyVolumeQuery(networkId, period, { enabled: isAppReady });
 
@@ -116,7 +115,7 @@ const OPRewards: React.FC = () => {
         }
 
         return [];
-    }, [minTimestamp, maxTimestamp, period, usersAmmBuyVolumeQuery?.data, searchQuery, walletAddress]);
+    }, [period, usersAmmBuyVolumeQuery?.data, searchQuery, walletAddress]);
 
     const summaryData = useMemo(() => {
         const itmVolume = tableData.reduce((a, { itmInfo }) => a + itmInfo.volume, 0);
@@ -269,11 +268,17 @@ const OPRewards: React.FC = () => {
                         defaultValue={period - 1}
                         width={300}
                     />
-                    {maxTimestamp &&
-                        (NOW.getTime() < maxTimestamp * 1000 ? (
+                    {periodRangeTimestamps &&
+                        periodRangeTimestamps[period - 1]?.maxTimestamp &&
+                        (NOW.getTime() < periodRangeTimestamps[period - 1].maxTimestamp * 1000 ? (
                             <RoundEndWrapper>
                                 <RoundEndLabel>{t('op-rewards.round-end-label')}:</RoundEndLabel>
-                                <TimeRemaining end={maxTimestamp * 1000} fontSize={20} showFullCounter zIndex={0} />
+                                <TimeRemaining
+                                    end={periodRangeTimestamps[period - 1].maxTimestamp * 1000}
+                                    fontSize={20}
+                                    showFullCounter
+                                    zIndex={0}
+                                />
                             </RoundEndWrapper>
                         ) : (
                             <RoundEndWrapper>
