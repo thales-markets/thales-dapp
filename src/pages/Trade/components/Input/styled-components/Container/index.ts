@@ -63,7 +63,6 @@ export const Container = styled.div<{
     margin-bottom: 8px;
     position: relative;
     opacity: ${(props) => (props?.disabled ? '0.5 !important' : '1')};
-    ${(props) => (props?.isFocused ? `box-shadow: 0px 1px 30px ${props.theme.input.borderColor.focus.primary};` : '')}
     background: transparent;
     ${(props) => (props?.zIndex ? `z-index: ${props.zIndex};` : '')}
 `;

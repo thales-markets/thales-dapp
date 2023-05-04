@@ -19,14 +19,19 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
 
     // states
     const [rowIndex, setRowIndex] = useState<number>();
+    const [firstMarketAddress, setFirstMarketAddress] = useState(markets.length ? markets[0].address : '');
 
     // queries
 
     // hooks
     useEffect(() => {
-        setRowIndex(undefined);
-        setMarket(undefined);
-    }, [markets]);
+        const marketAddress = markets.length ? markets[0].address : '';
+        if (firstMarketAddress !== marketAddress) {
+            setRowIndex(undefined);
+            setMarket(undefined);
+        }
+        setFirstMarketAddress(marketAddress);
+    }, [markets, setMarket, firstMarketAddress]);
 
     const columns: Array<any> = useMemo(() => {
         return [
@@ -50,7 +55,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 },
             },
         ];
-    }, [markets]);
+    }, [t]);
 
     return (
         <Wrapper>

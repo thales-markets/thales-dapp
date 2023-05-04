@@ -21,7 +21,7 @@ import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsMarketParametersInfoQuery from 'queries/options/useBinaryOptionsMarketParametersInfoQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -102,7 +102,8 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [liquidity, setLiquidity] = useState(0);
-    const [_isAmountValid, setIsAmountValid] = useState(true); // TODO: add validation on amount
+    const [isAmountValid, setIsAmountValid] = useState(true);
+    const [errorMessageKey, setErrorMessageKey] = useState('');
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
 
@@ -122,11 +123,11 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     const ammMaxLimits = useMemo(() => {
         return ammMaxLimitsQuery.isSuccess ? ammMaxLimitsQuery.data : undefined;
-    }, [networkId, ammMaxLimitsQuery]);
+    }, [ammMaxLimitsQuery]);
 
     const walletBalancesMap = useMemo(() => {
         return stableBalanceQuery.isSuccess ? stableBalanceQuery.data : null;
-    }, [networkId, stableBalanceQuery]);
+    }, [stableBalanceQuery]);
 
     const stableBalance = useMemo(() => {
         return multipleStableBalances.isSuccess
@@ -134,7 +135,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[selectedStableIndex] as StableCoins)
                 : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId) as StableCoins)
             : null;
-    }, [networkId, multipleStableBalances, walletBalancesMap, selectedStableIndex]);
+    }, [networkId, multipleStableBalances, walletBalancesMap, selectedStableIndex, isMultiCollateralSupported]);
 
     const isLong = POSITIONS_TO_SIDE_MAP[positionType] === SIDE.long;
     const positionAddress = useMemo(() => {
@@ -143,7 +144,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 ? marketParametersInfoQuery.data.longAddress
                 : marketParametersInfoQuery.data.shortAddress
             : undefined;
-    }, [networkId, marketParametersInfoQuery, isLong]);
+    }, [marketParametersInfoQuery, isLong]);
 
     const isOVM = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
@@ -182,7 +183,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         }
 
         return { address, currencyOrSellPosition };
-    }, [selectedStableIndex, networkId]);
+    }, [selectedStableIndex, networkId, isNonDefaultStable]);
 
     const referral =
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
@@ -196,54 +197,51 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         setGasLimit(null);
     };
 
-    const fetchGasLimit = async (
-        marketAddress: string,
-        side: any,
-        parsedAmount: any,
-        parsedTotal: any,
-        parsedSlippage: any
-    ) => {
-        try {
-            const { ammContract, signer } = snxJSConnector as any;
-            const ammContractWithSigner = ammContract.connect(signer);
+    const fetchGasLimit = useCallback(
+        async (marketAddress: string, side: any, parsedAmount: any, parsedTotal: any, parsedSlippage: any) => {
+            try {
+                const { ammContract, signer } = snxJSConnector as any;
+                const ammContractWithSigner = ammContract.connect(signer);
 
-            if (isOVM) {
-                const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
-                setGasLimit(maxGasLimitForNetwork);
+                if (isOVM) {
+                    const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
+                    setGasLimit(maxGasLimitForNetwork);
 
-                return maxGasLimitForNetwork;
-            } else if (isBSC || isPolygon || isArbitrum) {
-                const gasLimit = await getEstimatedGasFees(
-                    isNonDefaultStable,
-                    true,
-                    ammContractWithSigner,
-                    marketAddress,
-                    side,
-                    parsedAmount,
-                    parsedTotal,
-                    parsedSlippage,
-                    collateral.address,
-                    referral
-                );
+                    return maxGasLimitForNetwork;
+                } else if (isBSC || isPolygon || isArbitrum) {
+                    const gasLimit = await getEstimatedGasFees(
+                        isNonDefaultStable,
+                        true,
+                        ammContractWithSigner,
+                        marketAddress,
+                        side,
+                        parsedAmount,
+                        parsedTotal,
+                        parsedSlippage,
+                        collateral.address,
+                        referral
+                    );
 
-                const safeGasLimit = Math.round(Number(+gasLimit + 0.1 * +gasLimit));
-                setGasLimit(safeGasLimit);
+                    const safeGasLimit = Math.round(Number(+gasLimit + 0.1 * +gasLimit));
+                    setGasLimit(safeGasLimit);
 
-                return safeGasLimit;
-            } else {
-                const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
-                setGasLimit(maxGasLimitForNetwork);
+                    return safeGasLimit;
+                } else {
+                    const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
+                    setGasLimit(maxGasLimitForNetwork);
 
-                return maxGasLimitForNetwork;
+                    return maxGasLimitForNetwork;
+                }
+            } catch (e) {
+                console.log(e);
+                setGasLimit(null);
+                return null;
             }
-        } catch (e) {
-            console.log(e);
-            setGasLimit(null);
-            return null;
-        }
-    };
+        },
+        [collateral.address, isArbitrum, isBSC, isNonDefaultStable, isOVM, isPolygon, networkId, referral]
+    );
 
-    const fetchAmmPriceData = async (totalToPay: number, isRefresh: boolean, isSubmit = false) => {
+    const fetchAmmPriceData = async (totalToPay: number, isRefresh: boolean, isSubmit = false, isMax = false) => {
         let priceChanged = false;
         let latestGasLimit = null;
         if (!isRefresh && !isSubmit) {
@@ -280,7 +278,11 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                     ) / suggestedAmount;
 
                 const calcAmount = totalToPay / ammPrice;
-                const calcPositionAmount = calcAmount < liquidity ? calcAmount : truncToDecimals(liquidity);
+                const calcPositionAmount = isMax
+                    ? calcAmount < liquidity
+                        ? calcAmount
+                        : truncToDecimals(liquidity)
+                    : calcAmount;
                 setPositionAmount(calcPositionAmount);
                 setPositionPrice(ammPrice);
                 setProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
@@ -465,7 +467,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     useInterval(async () => {
         fetchAmmPriceData(Number(paidAmount), true);
-    }, 60000); // TODO: check this
+    }, 30000);
 
     useEffect(() => {
         refetchWalletBalances(walletAddress, networkId);
@@ -482,7 +484,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             const defaultStableBalance = getDefaultStableIndexByBalance(multipleStableBalances?.data);
             setStableIndex(defaultStableBalance);
         }
-    }, [multipleStableBalances?.data, selectedStableIndex, isMultiCollateralSupported]);
+    }, [
+        multipleStableBalances?.isSuccess,
+        multipleStableBalances?.data,
+        selectedStableIndex,
+        isMultiCollateralSupported,
+    ]);
 
     useEffect(() => {
         setStableIndex(userSelectedCollateral);
@@ -512,6 +519,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
             getAllowance();
         }
     }, [
+        dispatch,
         collateral.address,
         networkId,
         paidAmount,
@@ -524,7 +532,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
 
     useEffect(() => {
         dispatch(setBuyState(true)); // TODO: check if this is needed
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (isButtonDisabled) {
@@ -534,7 +542,17 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
         const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
         fetchGasLimit(market.address, POSITIONS_TO_SIDE_MAP[positionType], parsedAmount, parsedTotal, parsedSlippage);
-    }, [isButtonDisabled, networkId, isWalletConnected, hasAllowance, positionAmount, market.address]);
+    }, [
+        fetchGasLimit,
+        paidAmount,
+        positionType,
+        isButtonDisabled,
+        networkId,
+        isWalletConnected,
+        hasAllowance,
+        positionAmount,
+        market.address,
+    ]);
 
     useEffect(() => {
         let max = 0;
@@ -554,13 +572,18 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
     }, [ammMaxLimits, isLong]);
 
     useEffect(() => {
-        setIsAmountValid(
-            Number(positionAmount) === 0 ||
-                (Number(positionAmount) > 0 &&
-                    ((Number(paidAmount) > 0 && Number(paidAmount) <= stableBalance) ||
-                        (Number(paidAmount) === 0 && stableBalance > 0)))
-        );
-    }, [positionAmount, paidAmount, stableBalance]);
+        let isValid = true;
+
+        if (insufficientLiquidity) {
+            isValid = false;
+            setErrorMessageKey(t('common.errors.max-limit-exceeded'));
+        } else if ((Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) || stableBalance === 0) {
+            isValid = false;
+            setErrorMessageKey(t('common.errors.insufficient-balance-wallet'));
+        }
+
+        setIsAmountValid(isValid);
+    }, [paidAmount, stableBalance, insufficientLiquidity, t]);
 
     useEffect(() => {
         setInsufficientLiquidity(Number(positionAmount) > liquidity);
@@ -647,7 +670,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         if (isMaxButtonDisabled) return;
 
         const maxPaidAmount = roundNumberToDecimals(Number(stableBalance) * (1 - SLIPPAGE_PERCENTAGE[2] / 100));
-        setPaidAmount(maxPaidAmount);
+        fetchAmmPriceData(Number(maxPaidAmount), false, false, true);
     };
 
     const isMaxButtonDisabled =
@@ -711,6 +734,13 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 placeholder={t('options.trade.trading.enter-amount')}
                 valueChange={(value) => onTotalPriceValueChange(value)}
                 container={inputFieldProps}
+                displayTooltip={!isAmountValid}
+                tooltipText={t(errorMessageKey, {
+                    currencyKey: getStableCoinForNetwork(
+                        networkId,
+                        isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
+                    ),
+                })}
             >
                 <InputActions>
                     <MaxButton onClick={() => onMaxClick()} disabled={isMaxButtonDisabled}>
