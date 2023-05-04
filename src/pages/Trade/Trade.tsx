@@ -32,15 +32,12 @@ const TradePage: React.FC = () => {
     // queries
     const assetsQuery = useAvailableAssetsQuery({
         enabled: isAppReady,
-        refetchInterval: false,
     });
     const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, {
         enabled: isAppReady,
-        refetchInterval: false,
     });
     const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, maturityDate as number, positionType, {
         enabled: maturityDate !== undefined,
-        refetchInterval: false,
     });
 
     // hooks

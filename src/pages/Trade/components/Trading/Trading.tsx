@@ -26,7 +26,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
-import { setBuyState } from 'redux/modules/marketWidgets';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -57,13 +56,7 @@ import {
     getProvider,
 } from 'utils/network';
 import { convertPriceImpactToBonus, getFormattedBonus } from 'utils/options';
-import {
-    refetchAmmData,
-    refetchTrades,
-    refetchBalances,
-    refetchUserTrades,
-    refetchWalletBalances,
-} from 'utils/queryConnector';
+import { refetchAmmData, refetchBalances, refetchWalletBalances } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import Input from '../Input';
@@ -170,6 +163,9 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         isFetchingQuote ||
         isAmmTradingDisabled ||
         !hasAllowance;
+
+    const isMaxButtonDisabled =
+        !market.address || isSubmitting || isAmmTradingDisabled || insufficientLiquidity || isFetchingQuote;
 
     const collateral = useMemo(() => {
         let address = undefined;
@@ -445,12 +441,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         t(`options.market.trade-options.place-order.swap-confirm-button.buy.confirmation-message`)
                     )
                 );
-                // TODO: check if all refetches are required
+
                 refetchBalances(walletAddress, networkId);
                 refetchAmmData(walletAddress, market.address);
-                refetchTrades(market.address);
-                refetchUserTrades(market.address, walletAddress);
+
                 setIsSubmitting(false);
+
                 resetData();
                 setPaidAmount('');
 
@@ -535,10 +531,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         hasAllowance,
         isAllowing,
     ]);
-
-    useEffect(() => {
-        dispatch(setBuyState(true)); // TODO: check if this is needed
-    }, [dispatch]);
 
     useEffect(() => {
         if (isButtonDisabled) {
@@ -680,9 +672,6 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         const maxPaidAmount = roundNumberToDecimals(Number(stableBalance) * (1 - SLIPPAGE_PERCENTAGE[2] / 100));
         fetchAmmPriceData(maxPaidAmount, false, false, true);
     };
-
-    const isMaxButtonDisabled =
-        !market.address || isSubmitting || isAmmTradingDisabled || insufficientLiquidity || isFetchingQuote;
 
     // TODO:
     const potentialProfitFormatted = isFetchingQuote

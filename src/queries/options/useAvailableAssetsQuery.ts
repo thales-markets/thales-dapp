@@ -14,7 +14,6 @@ const useAvailableAssetsQuery = (options?: UseQueryOptions<string[]>) => {
             });
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

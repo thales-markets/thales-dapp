@@ -45,7 +45,6 @@ const useMarketsByAssetAndDateQuery = (
                 });
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );

@@ -23,7 +23,6 @@ const useMaturityDatesByAssetQueryQuery = (asset: string, options?: UseQueryOpti
             return Array.from(resultSet).sort((a, b) => a - b);
         },
         {
-            refetchInterval: 5000,
             ...options,
         }
     );
