@@ -957,7 +957,7 @@ const LiquidityPool: React.FC = () => {
                                             )}
                                             {userLiquidityPoolData &&
                                                 userLiquidityPoolData.balanceCurrentRound > 0 &&
-                                                !isWithdrawalRequested && (
+                                                userLiquidityPoolData.balanceTotal > 0 && (
                                                     <Tooltip
                                                         message={t(`liquidity-pool.estimated-amount-tooltip`)}
                                                         type={'info'}
