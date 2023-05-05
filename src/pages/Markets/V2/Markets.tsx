@@ -1,6 +1,6 @@
 import { OpenOrdersMap, useFetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { DiscountMap, useDiscountMarkets } from 'queries/options/useDiscountMarkets';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -47,7 +47,7 @@ const Markets: React.FC = () => {
         enabled: isAppReady && marketType === MARKET_TYPE.ranged,
     });
     const openOrdersQuery = useFetchAllMarketOrders(networkId, { enabled: isAppReady });
-    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
+    const discountQuery = useDiscountMarkets(networkId, { enabled: isAppReady });
 
     // hooks
     const optionsMarkets: OptionsMarkets = useMemo(() => {

@@ -46,11 +46,16 @@ export default {
         textColor: {
             primary: '',
             secondary: '',
+            tertiary: '',
+            quaternary: Colors.RED,
         },
         borderColor: {
             primary: '',
             secondary: '',
             focus: {
+                primary: '',
+            },
+            error: {
                 primary: '',
             },
         },

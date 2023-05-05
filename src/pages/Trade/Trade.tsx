@@ -26,7 +26,7 @@ const TradePage: React.FC = () => {
     // states
     const [currencyKey, setCurrencyKey] = useState('ETH');
     const [maturityDate, setMaturityDate] = useState<number | undefined>();
-    const [positionType, _setPositionType] = useState(Positions.UP);
+    const [positionType, setPositionType] = useState(Positions.UP);
     const [market, setMarket] = useState<MarketInfo | undefined>(undefined);
 
     // queries
@@ -88,7 +88,7 @@ const TradePage: React.FC = () => {
                     ></PriceChart>
                 </LeftSide>
                 <RightSide>
-                    <RadioButtons onChange={_setPositionType} selected={positionType} />
+                    <RadioButtons onChange={setPositionType} selected={positionType} />
                     <AssetTable setMarket={setMarket} markets={allMarkets} />
                 </RightSide>
             </ContentWrapper>

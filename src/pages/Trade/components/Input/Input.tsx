@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Container, CustomTooltip, Title, Value, ValueContainer } from './styled-components/Container';
+import { Container, Title, Value, ValueContainer } from './styled-components/Container';
+import Tooltip from '@material-ui/core/Tooltip';
+import styled from 'styled-components';
 
 type InputProps = {
     title?: string;
@@ -14,8 +16,8 @@ type InputProps = {
     valueColor?: string;
     valueFontSize?: string;
     disabled?: boolean;
-    displayTooltip?: boolean;
-    tooltipText?: string;
+    showError?: boolean;
+    errorMessage?: string;
     container?: {
         width?: string;
         height?: string;
@@ -39,8 +41,8 @@ const Input: React.FC<InputProps> = ({
     valueColor,
     valueFontSize,
     disabled,
-    displayTooltip,
-    tooltipText,
+    showError,
+    errorMessage,
     container,
     children,
 }) => {
@@ -61,7 +63,7 @@ const Input: React.FC<InputProps> = ({
     };
 
     return (
-        <CustomTooltip open={displayTooltip} title={tooltipText ? tooltipText : ''}>
+        <CustomTooltip open={showError} title={errorMessage ? errorMessage : ''} placement="bottom-start">
             <Container
                 disabled={disabled}
                 width={container?.width}
@@ -69,6 +71,7 @@ const Input: React.FC<InputProps> = ({
                 margin={container?.margin}
                 padding={container?.padding}
                 isFocused={focus}
+                isError={showError}
                 zIndex={container?.zIndex}
             >
                 {title && (
@@ -99,5 +102,17 @@ const Input: React.FC<InputProps> = ({
         </CustomTooltip>
     );
 };
+
+const CustomTooltip = styled((props) => <Tooltip classes={{ popper: props.className }} {...props} />)`
+    & .MuiTooltip-tooltip {
+        margin: 0;
+        font-family: Titillium Regular !important;
+        font-weight: 600;
+        font-size: 13px;
+        line-height: 15px;
+        color: ${(props) => props.theme.input.textColor.quaternary};
+        background-color: transparent;
+    }
+`;
 
 export default Input;

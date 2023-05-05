@@ -14,7 +14,7 @@ import Loader from 'components/Loader';
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
-import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { DiscountMap, useDiscountMarkets } from 'queries/options/useDiscountMarkets';
 import ElectionsBanner from 'components/ElectionsBanner';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 
@@ -49,7 +49,7 @@ const Markets: React.FC = () => {
         return lastValidOpenOrdersMap;
     }, [openOrdersQuery.isSuccess, openOrdersQuery.data, lastValidOpenOrdersMap]);
 
-    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
+    const discountQuery = useDiscountMarkets(networkId, { enabled: isAppReady });
 
     useEffect(() => {
         if (discountQuery.isSuccess && discountQuery.data) {

@@ -736,8 +736,8 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 placeholder={t('options.trade.trading.enter-amount')}
                 valueChange={(value) => onTotalPriceValueChange(value)}
                 container={inputFieldProps}
-                displayTooltip={!isAmountValid}
-                tooltipText={t(errorMessageKey, {
+                showError={!isAmountValid}
+                errorMessage={t(errorMessageKey, {
                     currencyKey: getStableCoinForNetwork(
                         networkId,
                         isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
