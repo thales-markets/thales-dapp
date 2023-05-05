@@ -60,6 +60,7 @@ import { refetchAmmData, refetchBalances, refetchWalletBalances } from 'utils/qu
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import Input from '../Input';
+import CollateralSelector from 'components/CollateralSelector/CollateralSelectorV2';
 
 type TradingProps = {
     currencyKey: string;
@@ -566,10 +567,10 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         }
         setLiquidity(max);
         setBasePrice(base);
-        if (market.address) {
+        if (market.address && ammMaxLimitsQuery.data) {
             setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
         }
-    }, [ammMaxLimits, isLong, market.address]);
+    }, [ammMaxLimitsQuery.data, ammMaxLimits, isLong, market.address]);
 
     useEffect(() => {
         let isValid = true;
@@ -748,6 +749,12 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         <TextMax>{t('common.max')}</TextMax>
                     </MaxButton>
                     <VerticalLine width="1px" height="25px" />
+                    <CollateralSelector
+                        collateralArray={COLLATERALS}
+                        selectedItem={selectedStableIndex}
+                        onChangeCollateral={(index) => setStableIndex(index)}
+                        disabled={isMaxButtonDisabled}
+                    />
                 </InputActions>
             </Input>
             <FinalizeTrade>
@@ -803,13 +810,13 @@ const FinalizeTrade = styled(FlexDivCentered)`
 
 const InputActions = styled(FlexDivRow)`
     position: absolute;
-    right: 30px;
+    right: 10px;
 `;
 
 const MaxButton = styled(FlexDivCentered)<{ disabled?: boolean }>`
     ${(props) => (props.disabled ? `opacity: 0.6;` : '')}
     cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-    padding: 0 7px;
+    margin: 0 7px;
     color: var(--color-white);
 `;
 

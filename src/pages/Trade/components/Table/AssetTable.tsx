@@ -4,7 +4,7 @@ import { USD_SIGN } from 'constants/currency';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Colors } from 'theme/common';
+import { Colors, FlexDivColumn } from 'theme/common';
 import { MarketInfo } from 'types/options';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 
@@ -86,8 +86,9 @@ const TableHeaderStyle: React.CSSProperties = {
     color: Colors.GRAY_LIGHT,
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled(FlexDivColumn)`
     width: 100%;
+    height: calc(100% - 20px);
     max-width: 344px;
 `;
 
