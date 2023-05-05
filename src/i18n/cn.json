@@ -1707,6 +1707,14 @@
                 "enter-amount": "输入金额",
                 "select-market": "选择市场",
                 "select-price": "选择价格"
+            },
+            "amm-trading": {
+                "enter-amount": "输入金额",
+                "end-date": "结束日期",
+                "position-price": "每个位置的价格",
+                "user-wallet": "用户钱包",
+                "position-bonus": "每个位置的奖金",
+                "select-price": "选择价格"
             }
         }
     },

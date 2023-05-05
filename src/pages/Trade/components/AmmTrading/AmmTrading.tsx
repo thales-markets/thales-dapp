@@ -62,7 +62,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import Input from '../Input';
 import CollateralSelector from 'components/CollateralSelector/CollateralSelectorV2';
 
-type TradingProps = {
+type AmmTradingProps = {
     currencyKey: string;
     maturityDate: number;
     positionType: Positions;
@@ -71,7 +71,7 @@ type TradingProps = {
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
-const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionType, market }) => {
+const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, positionType, market }) => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();
@@ -601,7 +601,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
         if (!market.address) {
             return (
                 <Button disabled={true} {...defaultButtonProps}>
-                    {t('options.trade.trading.select-price')}
+                    {t('options.trade.amm-trading.select-price')}
                 </Button>
             );
         }
@@ -692,19 +692,19 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                             <TextValue>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</TextValue>
                         </Text>
                         <Text>
-                            <TextLabel>{t('options.trade.trading.end-date')}</TextLabel>
+                            <TextLabel>{t('options.trade.amm-trading.end-date')}</TextLabel>
                             <TextValue>{formatShortDate(maturityDate)}</TextValue>
                         </Text>
                     </ColumnCenter>
                 ) : (
                     <ColumnCenter>
-                        <TextInfo>{t('options.trade.trading.select-price')}</TextInfo>
+                        <TextInfo>{t('options.trade.amm-trading.select-price')}</TextInfo>
                     </ColumnCenter>
                 )}
                 <VerticalLine height="38px" margin={market.address ? '' : '0 20px 0 0'} />
                 <ColumnCenter fitContent={true} minWidth={market.address ? '150px' : ''}>
                     <Text>
-                        <TextLabel>{t('options.trade.trading.position-price')}</TextLabel>
+                        <TextLabel>{t('options.trade.amm-trading.position-price')}</TextLabel>
                         <TextValue>
                             {isFetchingQuote
                                 ? '...'
@@ -718,7 +718,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                         </TextValue>
                     </Text>
                     <Text>
-                        <TextLabel>{t('options.trade.trading.position-bonus')}</TextLabel>
+                        <TextLabel>{t('options.trade.amm-trading.position-bonus')}</TextLabel>
                         <TextValue isBonus={true}>
                             {isFetchingQuote
                                 ? '...'
@@ -733,7 +733,7 @@ const Trading: React.FC<TradingProps> = ({ currencyKey, maturityDate, positionTy
                 value={paidAmount}
                 valueType={'number'}
                 disabled={!market.address}
-                placeholder={t('options.trade.trading.enter-amount')}
+                placeholder={t('options.trade.amm-trading.enter-amount')}
                 valueChange={(value) => onTotalPriceValueChange(value)}
                 container={inputFieldProps}
                 showError={!isAmountValid}
@@ -865,4 +865,4 @@ const ColumnSpaceBetween = styled.div`
     justify-content: space-between;
 `;
 
-export default Trading;
+export default AmmTrading;

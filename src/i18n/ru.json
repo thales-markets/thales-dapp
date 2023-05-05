@@ -1703,6 +1703,14 @@
                 "enter-amount": "Введите сумму",
                 "select-market": "Выберите рынок",
                 "select-price": "Выберите цену"
+            },
+            "amm-trading": {
+                "end-date": "Дата окончания",
+                "enter-amount": "Введите сумму",
+                "position-price": "Цена за позицию",
+                "position-bonus": "Бонус за позицию",
+                "select-price": "Выберите цену",
+                "user-wallet": "Кошелек пользователя"
             }
         }
     },

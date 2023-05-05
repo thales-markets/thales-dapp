@@ -1,5 +1,5 @@
 import { Positions } from 'constants/options';
-import Trading from './components/Trading/Trading';
+import AmmTrading from './components/AmmTrading/AmmTrading';
 import useAvailableAssetsQuery from 'queries/options/useAvailableAssetsQuery';
 import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesByAssetQuery';
 import React, { useMemo, useState, useEffect } from 'react';
@@ -93,7 +93,7 @@ const TradePage: React.FC = () => {
                 </RightSide>
             </ContentWrapper>
 
-            <Trading
+            <AmmTrading
                 currencyKey={currencyKey}
                 maturityDate={maturityDate || 0}
                 positionType={positionType}

@@ -383,7 +383,7 @@
     },
     "options": {
         "trade": {
-            "trading": {
+            "amm-trading": {
                 "end-date": "End date",
                 "position-price": "Price per position",
                 "position-bonus": "Bonus per position",

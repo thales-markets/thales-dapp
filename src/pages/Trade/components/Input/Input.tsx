@@ -63,7 +63,7 @@ const Input: React.FC<InputProps> = ({
     };
 
     return (
-        <CustomTooltip open={showError} title={errorMessage ? errorMessage : ''} placement="bottom-start">
+        <CustomTooltip open={showError} title={errorMessage ? errorMessage : ''} placement="bottom">
             <Container
                 disabled={disabled}
                 width={container?.width}
@@ -105,13 +105,13 @@ const Input: React.FC<InputProps> = ({
 
 const CustomTooltip = styled((props) => <Tooltip classes={{ popper: props.className }} {...props} />)`
     & .MuiTooltip-tooltip {
-        margin: 0;
+        margin: -12px 0 0 0;
         font-family: Titillium Regular !important;
         font-weight: 600;
         font-size: 13px;
         line-height: 15px;
         color: ${(props) => props.theme.input.textColor.quaternary};
-        background-color: transparent;
+        background-color: ${(props) => props.theme.background.primary};
     }
 `;
 
