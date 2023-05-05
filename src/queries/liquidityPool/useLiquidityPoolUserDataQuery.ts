@@ -23,7 +23,9 @@ const useLiquidityPoolUserDataQuery = (
                 stakedThales: 0,
                 maxDeposit: 0,
                 availableToDeposit: 0,
-                neededStakedThalesToWithdraw: 0,
+                withdrawalShare: 0,
+                isPartialWithdrawalRequested: false,
+                withdrawalAmount: 0,
             };
 
             const decimals = getDefaultDecimalsForNetwork(networkId);
@@ -35,6 +37,12 @@ const useLiquidityPoolUserDataQuery = (
                         walletAddress
                     );
 
+                    userLiquidityPoolData.isWithdrawalRequested = contractUserLiquidityPoolData.withdrawalRequested;
+                    userLiquidityPoolData.withdrawalShare = bigNumberFormatter(
+                        contractUserLiquidityPoolData.withdrawalShare
+                    );
+                    userLiquidityPoolData.isPartialWithdrawalRequested = userLiquidityPoolData.withdrawalShare > 0;
+
                     userLiquidityPoolData.balanceCurrentRound = bigNumberFormatter(
                         contractUserLiquidityPoolData.balanceCurrentRound,
                         decimals
@@ -43,10 +51,17 @@ const useLiquidityPoolUserDataQuery = (
                         contractUserLiquidityPoolData.balanceNextRound,
                         decimals
                     );
-                    userLiquidityPoolData.balanceTotal = contractUserLiquidityPoolData.withdrawalRequested
-                        ? 0
-                        : userLiquidityPoolData.balanceCurrentRound + userLiquidityPoolData.balanceNextRound;
-                    userLiquidityPoolData.isWithdrawalRequested = contractUserLiquidityPoolData.withdrawalRequested;
+                    userLiquidityPoolData.withdrawalAmount = userLiquidityPoolData.isWithdrawalRequested
+                        ? userLiquidityPoolData.isPartialWithdrawalRequested
+                            ? userLiquidityPoolData.balanceCurrentRound * userLiquidityPoolData.withdrawalShare
+                            : userLiquidityPoolData.balanceCurrentRound
+                        : 0;
+
+                    userLiquidityPoolData.balanceTotal =
+                        userLiquidityPoolData.balanceCurrentRound -
+                        userLiquidityPoolData.withdrawalAmount +
+                        userLiquidityPoolData.balanceNextRound;
+
                     userLiquidityPoolData.hasDepositForCurrentRound = userLiquidityPoolData.balanceCurrentRound > 0;
                     userLiquidityPoolData.hasDepositForNextRound = userLiquidityPoolData.balanceNextRound > 0;
                     userLiquidityPoolData.maxDeposit = bigNumberFormatter(
@@ -57,9 +72,6 @@ const useLiquidityPoolUserDataQuery = (
                     userLiquidityPoolData.availableToDeposit = bigNumberFormatter(
                         contractUserLiquidityPoolData.availableToDeposit,
                         decimals
-                    );
-                    userLiquidityPoolData.neededStakedThalesToWithdraw = bigNumberFormatter(
-                        contractUserLiquidityPoolData.neededStakedThalesToWithdraw
                     );
 
                     return userLiquidityPoolData;

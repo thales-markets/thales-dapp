@@ -1,4 +1,4 @@
-import { Tooltip, withStyles } from '@material-ui/core';
+import { Slider, Tooltip, withStyles } from '@material-ui/core';
 import { InputContainer } from 'pages/Token/components/components';
 import React from 'react';
 import styled from 'styled-components';
@@ -157,6 +157,9 @@ export const ContentInfo = styled.p`
 
 export const WarningContentInfo = styled(ContentInfo)`
     color: #ffcc00;
+    i {
+        color: #ffcc00;
+    }
 `;
 
 export const BoldContent = styled.span`
@@ -252,13 +255,12 @@ export const MaxButton = styled(SubmitButton)`
     position: absolute;
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     border-radius: 15px;
-    width: 53px;
-    min-height: 17px;
+    width: 48px;
     font-size: 10px;
-    line-height: 15px;
+    line-height: 13px;
     letter-spacing: 1px;
     text-align: center;
-    padding: 0px 12px;
+    padding: 0px 8px;
     color: #f6f6fe;
     right: 15px;
     top: 8px;
@@ -273,6 +275,17 @@ export const InputWrapper = styled(InputContainer)`
     margin-bottom: 5px;
     input {
         border: 2px solid rgba(100, 217, 254, 0.5);
+        font-size: 14px;
+        height: 48px;
+        padding: 18px 68px 0 15px;
+    }
+    .currency-label {
+        font-size: 14px;
+        padding: 24px 16px 20px 0;
+    }
+    .input-label {
+        font-size: 13px;
+        padding: 6px 0 0 18px;
     }
 `;
 
@@ -296,7 +309,7 @@ export const LoaderContainer = styled(FlexDivCentered)`
 export const ToggleContainer = styled(FlexDiv)`
     font-weight: 600;
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     text-transform: uppercase;
 `;
 
@@ -395,4 +408,67 @@ export const StyledInfoIcon = styled(InfoIcon)`
     width: 15px;
     height: 15px;
     position: relative;
+`;
+
+export const RadioButtonContainer = styled(FlexDivColumnCentered)`
+    align-items: center;
+    label {
+        text-transform: uppercase;
+    }
+`;
+
+export const SliderContainer = styled.div`
+    position: relative;
+    width: 100%;
+    padding: 0 5px;
+    margin-bottom: 10px;
+`;
+
+export const StyledSlider = withStyles({
+    root: {
+        color: '#04C19D',
+        '&$disabled': {
+            color: '#04C19D',
+            opacity: 0.5,
+        },
+        padding: '6px 0 10px 0',
+    },
+    thumb: {
+        width: 14,
+        height: 14,
+        marginTop: '-2px',
+        background: '#FFFFFF',
+        boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
+        '&:focus, &:hover': {
+            boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
+        },
+        '&$disabled': {
+            width: 14,
+            height: 14,
+            marginTop: '-2px',
+            marginLeft: '-6px',
+            boxShadow: 'none',
+            outline: 0,
+        },
+    },
+    track: {
+        height: 10,
+        borderRadius: 10,
+    },
+    rail: {
+        height: 10,
+        borderRadius: 10,
+    },
+    disabled: {},
+})(Slider);
+
+export const SliderRange = styled.div`
+    font-size: 13px;
+    line-height: 13px;
+    letter-spacing: 0.4px;
+    color: #04c19d;
+    &.disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
 `;

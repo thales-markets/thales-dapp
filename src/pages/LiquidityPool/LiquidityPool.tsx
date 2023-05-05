@@ -37,6 +37,10 @@ import {
     MaxButton,
     StyledMaterialTooltip,
     StyledInfoIcon,
+    SliderContainer,
+    SliderRange,
+    StyledSlider,
+    RadioButtonContainer,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -45,7 +49,7 @@ import { LiquidityPoolPnlType, LiquidityPoolTab } from 'constants/liquidityPool'
 import NumericInput from 'pages/Token/components/NumericInput';
 import { getIsAppReady } from 'redux/modules/app';
 import { UserLiquidityPoolData, LiquidityPoolData } from 'types/liquidityPool';
-import { formatCurrencyWithSign, formatPercentage, formatCurrency } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'components/TimeRemaining';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -74,6 +78,8 @@ import Footer from 'components/Footer';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
+import { FlexDivRow } from 'theme/common';
+import RadioButton from 'components/RadioButton/RadioButton';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -95,6 +101,11 @@ const LiquidityPool: React.FC = () => {
     const [lastValidUserLiquidityPoolData, setLastValidUserLiquidityPoolData] = useState<
         UserLiquidityPoolData | undefined
     >(undefined);
+    const [withdrawAll, setWithdrawAll] = useState<boolean>(true);
+    const [withdrawalPercentage, setWithdrawalPercentage] = useState<number | string>(10);
+    const [isWithdrawalPercentageValid, setIsWithdrawalPercentageValid] = useState<boolean>(true);
+    const [withdrawalAmount, setWithdrawalAmount] = useState<number>(0);
+
     const collateral = getDefaultCollateral(networkId);
 
     const paymentTokenBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
@@ -145,7 +156,12 @@ const LiquidityPool: React.FC = () => {
 
     const isAmountEntered = Number(amount) > 0;
     const invalidAmount =
-        liquidityPoolData && Number(liquidityPoolData.minDepositAmount) > Number(amount) && isAmountEntered;
+        liquidityPoolData &&
+        Number(liquidityPoolData.minDepositAmount) > Number(amount) &&
+        userLiquidityPoolData &&
+        !userLiquidityPoolData.hasDepositForCurrentRound &&
+        !userLiquidityPoolData.hasDepositForNextRound &&
+        isAmountEntered;
     const insufficientBalance =
         (Number(paymentTokenBalance) < Number(amount) || Number(paymentTokenBalance) === 0) && isWalletConnected;
 
@@ -164,20 +180,15 @@ const LiquidityPool: React.FC = () => {
 
     const isWithdrawalRequested = userLiquidityPoolData && userLiquidityPoolData.isWithdrawalRequested;
     const nothingToWithdraw = userLiquidityPoolData && userLiquidityPoolData.balanceCurrentRound === 0;
-    const isMoreStakedThalesNeededToWithdraw =
-        userLiquidityPoolData &&
-        userLiquidityPoolData.neededStakedThalesToWithdraw > userLiquidityPoolData.stakedThales;
-    const stakedThalesNeededToWithdraw = userLiquidityPoolData
-        ? userLiquidityPoolData.neededStakedThalesToWithdraw - userLiquidityPoolData.stakedThales
-        : 0;
 
     const isRequestWithdrawalButtonDisabled =
         !isWalletConnected ||
         isSubmitting ||
         nothingToWithdraw ||
-        isMoreStakedThalesNeededToWithdraw ||
         (userLiquidityPoolData && userLiquidityPoolData.hasDepositForNextRound) ||
         liquidityPoolPaused;
+
+    const isPartialWithdrawalDisabled = isRequestWithdrawalButtonDisabled || withdrawAll;
 
     const isDepositButtonDisabled =
         !isWalletConnected ||
@@ -296,10 +307,15 @@ const LiquidityPool: React.FC = () => {
             setIsSubmitting(true);
             try {
                 const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
+                const parsedPercentage = ethers.utils.parseEther((Number(withdrawalPercentage) / 100).toString());
 
-                const tx = await liquidityPoolContractWithSigner.withdrawalRequest({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
+                const tx = withdrawAll
+                    ? await liquidityPoolContractWithSigner.withdrawalRequest({
+                          gasLimit: getMaxGasLimitForNetwork(networkId),
+                      })
+                    : await liquidityPoolContractWithSigner.partialWithdrawalRequest(parsedPercentage, {
+                          gasLimit: getMaxGasLimitForNetwork(networkId),
+                      });
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
@@ -383,7 +399,10 @@ const LiquidityPool: React.FC = () => {
             return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
         }
         return (
-            <SubmitButton disabled={isRequestWithdrawalButtonDisabled} onClick={handleWithdrawalRequest}>
+            <SubmitButton
+                disabled={isRequestWithdrawalButtonDisabled || !isWithdrawalPercentageValid}
+                onClick={handleWithdrawalRequest}
+            >
                 {t('liquidity-pool.button.request-withdrawal-label')}
             </SubmitButton>
         );
@@ -398,6 +417,24 @@ const LiquidityPool: React.FC = () => {
     const setMaxAmount = () => {
         setAmount(Math.trunc(userLiquidityPoolData ? userLiquidityPoolData.availableToDeposit * 100 : 0) / 100);
     };
+
+    useEffect(
+        () =>
+            setIsWithdrawalPercentageValid(
+                (Number(withdrawalPercentage) <= 90 && Number(withdrawalPercentage) >= 10) || withdrawAll
+            ),
+        [withdrawalPercentage, withdrawAll]
+    );
+
+    useEffect(() => {
+        if (userLiquidityPoolData) {
+            setWithdrawalAmount(
+                withdrawAll
+                    ? userLiquidityPoolData.balanceCurrentRound
+                    : (userLiquidityPoolData.balanceCurrentRound * Number(withdrawalPercentage)) / 100
+            );
+        }
+    }, [withdrawalPercentage, withdrawAll, userLiquidityPoolData]);
 
     return (
         <>
@@ -494,8 +531,20 @@ const LiquidityPool: React.FC = () => {
                                                     : ''
                                             }
                                         />
-                                        <InputLabel>{t('vault.deposit-amount-label')}</InputLabel>
-                                        <CurrencyLabel className={isDepositAmountInputDisabled ? 'disabled' : ''}>
+                                        <InputLabel
+                                            className={
+                                                isDepositAmountInputDisabled ? 'input-label disabled' : 'input-label'
+                                            }
+                                        >
+                                            {t('vault.deposit-amount-label')}
+                                        </InputLabel>
+                                        <CurrencyLabel
+                                            className={
+                                                isDepositAmountInputDisabled
+                                                    ? 'currency-label disabled'
+                                                    : 'currency-label'
+                                            }
+                                        >
                                             {collateral}
                                         </CurrencyLabel>
                                         <MaxButton disabled={isDepositAmountInputDisabled} onClick={setMaxAmount}>
@@ -557,17 +606,6 @@ const LiquidityPool: React.FC = () => {
                                                                 <WarningContentInfo>
                                                                     <Trans i18nKey="liquidity-pool.withdrawal-deposit-warning" />
                                                                 </WarningContentInfo>
-                                                            ) : isMoreStakedThalesNeededToWithdraw ? (
-                                                                <WarningContentInfo>
-                                                                    <Trans
-                                                                        i18nKey="liquidity-pool.withdrawal-staked-thales-warning"
-                                                                        values={{
-                                                                            amount: formatCurrency(
-                                                                                stakedThalesNeededToWithdraw
-                                                                            ),
-                                                                        }}
-                                                                    />
-                                                                </WarningContentInfo>
                                                             ) : (
                                                                 <>
                                                                     <ContentInfo>
@@ -596,6 +634,123 @@ const LiquidityPool: React.FC = () => {
                                                                     <ContentInfo>
                                                                         <Trans i18nKey="liquidity-pool.withdrawal-message" />
                                                                     </ContentInfo>
+                                                                    <RadioButtonContainer>
+                                                                        <RadioButton
+                                                                            checked={withdrawAll}
+                                                                            value={'true'}
+                                                                            onChange={() => setWithdrawAll(true)}
+                                                                            label={t(
+                                                                                `liquidity-pool.full-withdrawal-label`
+                                                                            )}
+                                                                        />
+                                                                        <RadioButton
+                                                                            checked={!withdrawAll}
+                                                                            value={'false'}
+                                                                            onChange={() => setWithdrawAll(false)}
+                                                                            label={t(
+                                                                                `liquidity-pool.partial-withdrawal-label`
+                                                                            )}
+                                                                        />
+                                                                    </RadioButtonContainer>
+                                                                    <InputWrapper>
+                                                                        <NumericInput
+                                                                            value={withdrawalPercentage}
+                                                                            onChange={(_, value) =>
+                                                                                setWithdrawalPercentage(value)
+                                                                            }
+                                                                            disabled={isPartialWithdrawalDisabled}
+                                                                            className={
+                                                                                isWithdrawalPercentageValid
+                                                                                    ? ''
+                                                                                    : 'error'
+                                                                            }
+                                                                            step="1"
+                                                                        />
+                                                                        <InputLabel
+                                                                            className={`input-label ${
+                                                                                isPartialWithdrawalDisabled
+                                                                                    ? 'disabled'
+                                                                                    : ''
+                                                                            }`}
+                                                                        >
+                                                                            {t(`liquidity-pool.percentage-label`)}
+                                                                        </InputLabel>
+                                                                        <CurrencyLabel
+                                                                            className={`currency-label ${
+                                                                                isPartialWithdrawalDisabled
+                                                                                    ? 'disabled'
+                                                                                    : ''
+                                                                            }`}
+                                                                        >
+                                                                            %
+                                                                        </CurrencyLabel>
+                                                                        <FieldValidationMessage
+                                                                            showValidation={
+                                                                                !isWithdrawalPercentageValid
+                                                                            }
+                                                                            message={t(
+                                                                                Number(withdrawalPercentage) == 0
+                                                                                    ? 'common.errors.enter-percentage'
+                                                                                    : 'common.errors.invalid-percentage-range',
+                                                                                { min: 10, max: 90 }
+                                                                            )}
+                                                                        />
+                                                                    </InputWrapper>
+                                                                    <SliderContainer>
+                                                                        <StyledSlider
+                                                                            value={Number(withdrawalPercentage)}
+                                                                            step={1}
+                                                                            max={90}
+                                                                            min={10}
+                                                                            onChange={(_, value) =>
+                                                                                setWithdrawalPercentage(Number(value))
+                                                                            }
+                                                                            disabled={isPartialWithdrawalDisabled}
+                                                                        />
+                                                                        <FlexDivRow>
+                                                                            <SliderRange
+                                                                                className={
+                                                                                    isPartialWithdrawalDisabled
+                                                                                        ? 'disabled'
+                                                                                        : ''
+                                                                                }
+                                                                            >
+                                                                                10%
+                                                                            </SliderRange>
+                                                                            <SliderRange
+                                                                                className={
+                                                                                    isPartialWithdrawalDisabled
+                                                                                        ? 'disabled'
+                                                                                        : ''
+                                                                                }
+                                                                            >
+                                                                                90%
+                                                                            </SliderRange>
+                                                                        </FlexDivRow>
+                                                                    </SliderContainer>
+                                                                    <ContentInfo>
+                                                                        <Trans
+                                                                            i18nKey="liquidity-pool.withdrawal-amount-label"
+                                                                            components={{
+                                                                                bold: <BoldContent />,
+                                                                            }}
+                                                                            values={{
+                                                                                amount: formatCurrencyWithSign(
+                                                                                    USD_SIGN,
+                                                                                    withdrawalAmount
+                                                                                ),
+                                                                            }}
+                                                                        />
+                                                                        <Tooltip
+                                                                            message={t(
+                                                                                `liquidity-pool.estimated-amount-tooltip`
+                                                                            )}
+                                                                            type={'info'}
+                                                                            container={{ display: 'inline' }}
+                                                                            iconFontSize={14}
+                                                                            iconTop={-2}
+                                                                        />
+                                                                    </ContentInfo>
                                                                 </>
                                                             )}
                                                         </>
@@ -611,7 +766,11 @@ const LiquidityPool: React.FC = () => {
                                             <>
                                                 <ContentInfo>
                                                     <Trans
-                                                        i18nKey="liquidity-pool.withdrawal-requested-message"
+                                                        i18nKey={`liquidity-pool.${
+                                                            userLiquidityPoolData.isPartialWithdrawalRequested
+                                                                ? 'partial'
+                                                                : 'full'
+                                                        }-withdrawal-requested-message`}
                                                         components={{
                                                             bold: <BoldContent />,
                                                             tooltip: (
@@ -629,10 +788,16 @@ const LiquidityPool: React.FC = () => {
                                                         values={{
                                                             amount: formatCurrencyWithSign(
                                                                 USD_SIGN,
-                                                                userLiquidityPoolData.balanceCurrentRound
+                                                                userLiquidityPoolData.withdrawalAmount
+                                                            ),
+                                                            percentage: formatPercentage(
+                                                                userLiquidityPoolData.withdrawalShare
                                                             ),
                                                         }}
                                                     />
+                                                </ContentInfo>
+                                                <ContentInfo>
+                                                    <Trans i18nKey="liquidity-pool.withdrawal-requested-message" />
                                                 </ContentInfo>
                                             </>
                                         )}
@@ -839,22 +1004,35 @@ const LiquidityPool: React.FC = () => {
                                     {isWithdrawalRequested && (
                                         <WarningContentInfo>
                                             <Trans
-                                                i18nKey="liquidity-pool.withdrawal-request-label"
+                                                i18nKey={`liquidity-pool.${
+                                                    userLiquidityPoolData.isPartialWithdrawalRequested
+                                                        ? 'partial'
+                                                        : 'full'
+                                                }-withdrawal-request-label`}
+                                                components={{
+                                                    tooltip: (
+                                                        <Tooltip
+                                                            message={t(`liquidity-pool.estimated-amount-tooltip`)}
+                                                            type={'info'}
+                                                            container={{ display: 'inline' }}
+                                                            iconFontSize={14}
+                                                            iconTop={-2}
+                                                        />
+                                                    ),
+                                                }}
                                                 values={{
                                                     amount: formatCurrencyWithSign(
                                                         USD_SIGN,
                                                         userLiquidityPoolData
-                                                            ? userLiquidityPoolData.balanceCurrentRound
+                                                            ? userLiquidityPoolData.withdrawalAmount
+                                                            : 0
+                                                    ),
+                                                    percentage: formatPercentage(
+                                                        userLiquidityPoolData
+                                                            ? userLiquidityPoolData.withdrawalShare
                                                             : 0
                                                     ),
                                                 }}
-                                            />
-                                            <Tooltip
-                                                message={t(`vault.estimated-amount-tooltip`)}
-                                                type={'info'}
-                                                container={{ display: 'inline' }}
-                                                iconFontSize={14}
-                                                iconTop={-2}
                                             />
                                         </WarningContentInfo>
                                     )}

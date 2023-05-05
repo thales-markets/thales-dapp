@@ -465,6 +465,13 @@ export const liquidityPoolContract = {
             type: 'function',
         },
         {
+            inputs: [{ internalType: 'uint256', name: 'share', type: 'uint256' }],
+            name: 'partialWithdrawalRequest',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [],
             name: 'paused',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -738,6 +745,13 @@ export const liquidityPoolContract = {
             inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'withdrawalRequested',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'address', name: '', type: 'address' }],
+            name: 'withdrawalShare',
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
