@@ -1,20 +1,22 @@
 import TableV3 from 'components/TableV3';
 
 import { USD_SIGN } from 'constants/currency';
+import { Positions } from 'constants/options';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Colors, FlexDivColumn } from 'theme/common';
-import { MarketInfo } from 'types/options';
+import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 
 type TableProps = {
-    markets: MarketInfo[];
-    setMarket: React.Dispatch<React.SetStateAction<MarketInfo | undefined>>;
+    markets: MarketInfo[] | RangedMarketPerPosition[];
+    setMarket: React.Dispatch<React.SetStateAction<MarketInfo | RangedMarketPerPosition | undefined>>;
+    position: Positions;
     // highlightMarkets: Set<string>;
 };
 
-const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
+const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
     // selectors
     const { t } = useTranslation();
 
@@ -40,7 +42,18 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: (row: any) => {
-                    return <TableText price={false}>{formatCurrencyWithSign(USD_SIGN, row.strikePrice, 2)}</TableText>;
+                    console.log('row: ', row);
+                    return (
+                        <TableText price={false}>
+                            {position === Positions.UP || position === Positions.DOWN
+                                ? formatCurrencyWithSign(USD_SIGN, row.strikePrice, 2)
+                                : `${formatCurrencyWithSign(USD_SIGN, row.leftPrice, 2)} - ${formatCurrencyWithSign(
+                                      USD_SIGN,
+                                      row.rightPrice,
+                                      2
+                                  )}`}
+                        </TableText>
+                    );
                 },
             },
             {
@@ -56,7 +69,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 },
             },
         ];
-    }, [t]);
+    }, [t, markets]);
 
     return (
         <Wrapper>
@@ -71,7 +84,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket }) => {
                 columns={columns}
                 selectedRowIndex={rowIndex}
                 selectedRowColor="#4E9D9D"
-                showCurrentPrice={true}
+                showCurrentPrice={position === Positions.UP || position === Positions.DOWN}
             />
         </Wrapper>
     );
@@ -102,6 +115,7 @@ const TableText = styled.span<{ price: boolean }>`
 
     text-align: center;
     text-transform: uppercase;
+    white-space: nowrap;
     color: ${(props) => (props.price ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
 `;
 

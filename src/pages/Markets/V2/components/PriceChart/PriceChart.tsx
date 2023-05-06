@@ -100,6 +100,55 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         fetchData();
     }, [asset, dateRange]);
 
+    const getReferenceArea = () => {
+        if (position === Positions.UP || position === Positions.DOWN) {
+            if (selectedPrice) {
+                return (
+                    <ReferenceArea
+                        y1={selectedPrice}
+                        y2={ticks ? (position === Positions.UP ? ticks[ticks.length - 1] : ticks[0]) : 0}
+                        stroke={ThemeMap[theme].textColor.quaternary}
+                        fill={ThemeMap[theme].textColor.quaternary}
+                        fillOpacity={0.2}
+                    />
+                );
+            }
+        } else {
+            if (selectedRightPrice) {
+                if (position === Positions.IN) {
+                    return (
+                        <ReferenceArea
+                            y1={selectedPrice}
+                            y2={selectedRightPrice}
+                            stroke={ThemeMap[theme].textColor.quaternary}
+                            fill={ThemeMap[theme].textColor.quaternary}
+                            fillOpacity={0.2}
+                        />
+                    );
+                } else {
+                    return (
+                        <>
+                            <ReferenceArea
+                                y1={selectedPrice}
+                                y2={ticks ? ticks[0] : 0}
+                                stroke={ThemeMap[theme].textColor.quaternary}
+                                fill={ThemeMap[theme].textColor.quaternary}
+                                fillOpacity={0.2}
+                            />
+                            <ReferenceArea
+                                y1={selectedRightPrice}
+                                y2={ticks ? ticks[ticks.length - 1] : 0}
+                                stroke={ThemeMap[theme].textColor.quaternary}
+                                fill={ThemeMap[theme].textColor.quaternary}
+                                fillOpacity={0.2}
+                            />
+                        </>
+                    );
+                }
+            }
+        }
+    };
+
     return (
         <Wrapper>
             <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
@@ -169,29 +218,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             />
                         )}
 
-                        {selectedPrice && (
-                            <ReferenceArea
-                                y1={selectedPrice}
-                                y2={ticks ? (position === Positions.UP ? ticks[ticks.length - 1] : ticks[0]) : 0}
-                                stroke={ThemeMap[theme].textColor.quaternary}
-                                fill={ThemeMap[theme].textColor.quaternary}
-                                fillOpacity={0.2}
-                            />
-                        )}
+                        {getReferenceArea()}
 
                         {selectedRightPrice && (
                             <ReferenceLine
                                 y={selectedRightPrice}
-                                stroke="var(--color-highlight)"
+                                stroke="#03DAC6"
                                 strokeDasharray="3 3"
-                                label={{
-                                    value: `Strike price: $${selectedRightPrice}`,
-                                    fill: 'var(--color-highlight)',
-                                    fontFamily: 'Roboto',
-                                    fontSize: '14px',
-                                    position: 'insideRight',
-                                    dy: -10,
-                                }}
+                                label={<CustomLabel2 price={selectedRightPrice} />}
                             />
                         )}
                     </AreaChart>

@@ -9,7 +9,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import useMarketsByAssetAndDateQuery from 'queries/options/useMarketsByAssetAndDateQuery';
 import styled from 'styled-components';
-import { MarketInfo } from 'types/options';
+import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import AssetTable from './components/Table/AssetTable';
 import AssetDropdown from 'pages/Markets/V2/components/AssetDropdown';
 import DatesDropdown from 'pages/Markets/V2/components/MaturityDateDropdown';
@@ -27,7 +27,7 @@ const TradePage: React.FC = () => {
     const [currencyKey, setCurrencyKey] = useState('ETH');
     const [maturityDate, setMaturityDate] = useState<number | undefined>();
     const [positionType, setPositionType] = useState(Positions.UP);
-    const [market, setMarket] = useState<MarketInfo | undefined>(undefined);
+    const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
 
     // queries
     const assetsQuery = useAvailableAssetsQuery({
@@ -36,7 +36,7 @@ const TradePage: React.FC = () => {
     const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, {
         enabled: isAppReady,
     });
-    const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, maturityDate as number, positionType, {
+    const marketsQuery = useMarketsByAssetAndDateQuery(networkId, currencyKey, maturityDate as number, positionType, {
         enabled: maturityDate !== undefined,
     });
 
@@ -62,6 +62,25 @@ const TradePage: React.FC = () => {
         }
     }, [allDates]);
 
+    const getSelectedPrice = () => {
+        if (market) {
+            if (positionType === Positions.UP || positionType === Positions.DOWN) {
+                return (market as MarketInfo).strikePrice;
+            } else {
+                return (market as RangedMarketPerPosition).leftPrice;
+            }
+        }
+    };
+    const getSelectedRightPrice = () => {
+        if (market) {
+            if (positionType === Positions.UP || positionType === Positions.DOWN) {
+                return undefined;
+            } else {
+                return (market as RangedMarketPerPosition).rightPrice;
+            }
+        }
+    };
+
     return (
         <Wrapper>
             <BannerCarousel />
@@ -84,12 +103,13 @@ const TradePage: React.FC = () => {
                     <PriceChart
                         position={positionType}
                         asset={currencyKey}
-                        selectedPrice={market?.strikePrice}
+                        selectedPrice={getSelectedPrice()}
+                        selectedRightPrice={getSelectedRightPrice()}
                     ></PriceChart>
                 </LeftSide>
                 <RightSide>
                     <RadioButtons onChange={setPositionType} selected={positionType} />
-                    <AssetTable setMarket={setMarket} markets={allMarkets} />
+                    <AssetTable setMarket={setMarket} markets={allMarkets} position={positionType} />
                 </RightSide>
             </ContentWrapper>
 
@@ -97,7 +117,16 @@ const TradePage: React.FC = () => {
                 currencyKey={currencyKey}
                 maturityDate={maturityDate || 0}
                 positionType={positionType}
-                market={market || { currencyKey: '', address: '', liquidity: 0, price: 0, strikePrice: 0, discount: 0 }}
+                market={
+                    (market as MarketInfo) || {
+                        currencyKey: '',
+                        address: '',
+                        liquidity: 0,
+                        price: 0,
+                        strikePrice: 0,
+                        discount: 0,
+                    }
+                }
             />
         </Wrapper>
     );

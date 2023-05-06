@@ -620,7 +620,12 @@ export const binaryOptionsMarketDataContract = {
                         },
                         {
                             internalType: 'uint256',
-                            name: 'strikePrice',
+                            name: 'leftPrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'rightPrice',
                             type: 'uint256',
                         },
                     ],

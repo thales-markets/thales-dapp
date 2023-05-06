@@ -91,6 +91,16 @@ export type MarketInfo = {
     discount: number;
 };
 
+export type RangedMarketPerPosition = {
+    currencyKey: string;
+    address: string;
+    liquidity: number;
+    price: number;
+    leftPrice: number;
+    rightPrice: number;
+    discount: number;
+};
+
 export type RangedMarket = {
     address: string;
     timestamp: number;
