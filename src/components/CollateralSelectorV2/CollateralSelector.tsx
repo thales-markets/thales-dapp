@@ -29,7 +29,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
                     <TextCollateralWrapper>
                         <TextCollateral>{collateralArray[selectedItem]}</TextCollateral>
                     </TextCollateralWrapper>
-                    <Arrow className={open ? `icon icon--arrow-up` : `icon icon--arrow-down`} />
+                    <Arrow className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
                 </SelectedCollateral>
                 {open && (
                     <Dropdown onClick={() => setOpen(!open)}>
