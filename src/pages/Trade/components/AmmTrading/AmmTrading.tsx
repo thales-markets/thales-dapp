@@ -67,7 +67,7 @@ import {
     getIsPolygon,
     getProvider,
 } from 'utils/network';
-import { refetchAmmData, refetchBalances, refetchWalletBalances } from 'utils/queryConnector';
+import { refetchAmmData, refetchBalances, refetchRangedAmmData, refetchWalletBalances } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import Input from '../Input';
@@ -110,13 +110,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [errorMessageKey, setErrorMessageKey] = useState('');
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
-    const isRanged = [Positions.IN, Positions.OUT].includes(market.positionType);
+    const isRangedAmm = [Positions.IN, Positions.OUT].includes(market.positionType);
 
     const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, {
-        enabled: isAppReady && !isRanged && !!market.address,
+        enabled: isAppReady && !isRangedAmm && !!market.address,
     });
     const rangedAmmMaxLimitsQuery = useRangedAMMMaxLimitsQuery(market.address, networkId, {
-        enabled: isAppReady && isRanged && !!market.address,
+        enabled: isAppReady && isRangedAmm && !!market.address,
     });
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
@@ -153,7 +153,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported;
     const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
     const isRangedAmmTradingDisabled =
-        isRanged &&
+        isRangedAmm &&
         rangedAmmMaxLimits &&
         !rangedAmmMaxLimits.in.maxBuy &&
         !rangedAmmMaxLimits.in.maxSell &&
@@ -175,13 +175,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         insufficientBalance ||
         insufficientLiquidity ||
         isFetchingQuote ||
-        (isRanged ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
+        (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
         !hasAllowance;
 
     const isMaxButtonDisabled =
         !market.address ||
         isSubmitting ||
-        (isRanged ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
+        (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
         insufficientLiquidity ||
         isFetchingQuote;
 
@@ -269,10 +269,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
             try {
                 const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
-                const ammContractWithSigner = (isRanged ? rangedMarketAMMContract : ammContract).connect(signer);
+                const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
 
                 const parsedAmount = ethers.utils.parseEther(suggestedAmount.toString());
-                const promises = isRanged
+                const promises = isRangedAmm
                     ? [
                           getQuoteFromRangedAMM(
                               isNonDefaultStable,
@@ -426,8 +426,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             return;
         }
         try {
-            const { ammContract, signer } = snxJSConnector as any;
-            const ammContractWithSigner = ammContract.connect(signer);
+            const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
+            const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
 
             const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
             const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
@@ -473,7 +473,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 );
 
                 refetchBalances(walletAddress, networkId);
-                refetchAmmData(walletAddress, market.address);
+                isRangedAmm
+                    ? refetchRangedAmmData(walletAddress, market.address, networkId)
+                    : refetchAmmData(walletAddress, market.address);
 
                 setIsSubmitting(false);
 
@@ -481,7 +483,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 setPaidAmount('');
 
                 trackEvent({
-                    category: 'AMM',
+                    category: isRangedAmm ? 'RangeAMM' : 'AMM',
                     action: `buy-with-${COLLATERALS[selectedStableIndex]}`,
                     value: Number(paidAmount),
                 });
@@ -597,7 +599,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     useEffect(() => {
         let max = 0;
         let base = 0;
-        if (isRanged) {
+        if (isRangedAmm) {
             if (rangedAmmMaxLimits) {
                 if (isInPosition) {
                     max = rangedAmmMaxLimits.in.maxBuy;
@@ -618,7 +620,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         setLiquidity(max);
         setBasePrice(base);
-        if (market.address && (isRanged ? rangedAmmMaxLimitsQuery.data : ammMaxLimitsQuery.data)) {
+        if (market.address && (isRangedAmm ? rangedAmmMaxLimitsQuery.data : ammMaxLimitsQuery.data)) {
             setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
         }
     }, [
@@ -626,7 +628,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         ammMaxLimits,
         isLong,
         market.address,
-        isRanged,
+        isRangedAmm,
         rangedAmmMaxLimitsQuery.data,
         rangedAmmMaxLimits,
         isInPosition,
@@ -680,7 +682,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 </Button>
             );
         }
-        if (isRanged ? isRangedAmmTradingDisabled : isAmmTradingDisabled) {
+        if (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) {
             return (
                 <Button disabled={true} {...defaultButtonProps}>
                     {t('amm.amm-disabled')}
@@ -762,7 +764,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                             {market.address ? (
                                 <>
                                     <TextValue uppercase={true}>{PositionTypeFormatted}</TextValue>
-                                    {isRanged ? (
+                                    {isRangedAmm ? (
                                         <>
                                             <TextValue>
                                                 {formatCurrencyWithSign(
