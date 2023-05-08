@@ -42,7 +42,6 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: (row: any) => {
-                    console.log('row: ', row);
                     return (
                         <TableText price={false}>
                             {position === Positions.UP || position === Positions.DOWN

@@ -57,6 +57,7 @@ const Container = styled(FlexDivStart)`
     position: relative;
     margin: 0 7px;
     align-items: center;
+    z-index: 2;
 `;
 
 const Text = styled.span`

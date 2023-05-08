@@ -1471,7 +1471,12 @@
             },
             "ratio": "比率",
             "in": "在",
-            "out": "出去"
+            "out": "出去",
+            "on": "在",
+            "below": "以下",
+            "between": "之间",
+            "not-between": "不在之间",
+            "above": "多于"
         },
         "swap": {
             "button-text": "获取 {{token}}",
@@ -1714,7 +1719,11 @@
                 "position-price": "每个位置的价格",
                 "user-wallet": "用户钱包",
                 "position-bonus": "每个位置的奖金",
-                "select-price": "选择价格"
+                "select-price": "选择价格",
+                "you-win": "你赢了",
+                "based-price": "基于价格",
+                "asset-price": "如果{{asset}}的价格是",
+                "pick-price": "选择一个价格"
             }
         }
     },

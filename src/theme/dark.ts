@@ -21,12 +21,12 @@ export default {
     },
     button: {
         background: {
-            primary: '',
+            primary: Colors.GREEN,
             secondary: '',
             tertiary: '',
         },
         textColor: {
-            primary: '',
+            primary: Colors.GREEN_DARK,
             secondary: '',
             tertiary: '',
             quaternary: Colors.YELLOW,
