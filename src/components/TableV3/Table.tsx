@@ -39,8 +39,6 @@ type TableProps = {
     showCurrentPrice?: boolean;
     hover?: string;
     selectedRowIndex?: number;
-    selectedRowColor?: string;
-    highlightMarkets?: Set<string>;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -62,10 +60,7 @@ const Table: React.FC<TableProps> = ({
     expandedRow,
     stickyRow,
     showCurrentPrice,
-    hover,
     selectedRowIndex,
-    selectedRowColor,
-    highlightMarkets,
 }) => {
     const [lastValidRates, setRates] = useState<Rates>();
 
@@ -189,8 +184,6 @@ const Table: React.FC<TableProps> = ({
                     <TableBody {...getTableBodyProps()}>
                         {stickyRow ?? <></>}
                         {(currentPage !== undefined ? page : rows).map((row, rowIndex: any) => {
-                            const highlight = highlightMarkets?.has((row.original as any).address.toLowerCase());
-
                             prepareRow(row);
 
                             return (
@@ -207,18 +200,7 @@ const Table: React.FC<TableProps> = ({
                                     ) : (
                                         <>
                                             <TableRow
-                                                background={
-                                                    highlight
-                                                        ? 'var(--color-highlight-2)'
-                                                        : selectedRowIndex && selectedRowIndex === rowIndex
-                                                        ? selectedRowColor
-                                                        : 'transparent'
-                                                }
-                                                hover={
-                                                    selectedRowIndex && selectedRowIndex === rowIndex
-                                                        ? selectedRowColor
-                                                        : hover
-                                                }
+                                                selected={selectedRowIndex === rowIndex}
                                                 style={tableRowStyles}
                                                 {...row.getRowProps()}
                                                 cursorPointer={!!onTableRowClick}
@@ -347,18 +329,15 @@ const TableBody = styled.div`
     width: 100%;
 `;
 
-const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; hover?: string; background?: string }>`
+const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; hover?: string; background?: string; selected?: boolean }>`
     cursor: ${(props) => (props.cursorPointer ? 'pointer' : 'default')};
-    min-height: 38px;
+    min-height: 24px;
     font-weight: 600;
     font-size: 14px;
     line-height: 100%;
     letter-spacing: 0.25px;
-    border-bottom: 2px dotted #111221;
-    background-color: ${(props) => (props.background ? props.background : 'transparent')};
-    &:hover {
-        background-color: ${(props) => (props.hover ? props.hover : 'transparent')};
-    }
+    border-radius: ${(props) => (props.selected ? '30px' : '')};
+    background-color: ${(props) => (props.selected ? props.theme.background.quaternary : 'transparent')};
 `;
 
 const TableRowHead = styled(TableRow)`
@@ -372,12 +351,6 @@ const TableCell = styled(FlexDivCentered)<{ width?: number | string; id: string 
     flex: 1;
     min-width: 0px;
     max-width: ${(props) => (props.width ? props.width : 'initial')};
-    &:first-child {
-        padding-left: 18px;
-    }
-    &:last-child {
-        padding-right: 18px;
-    }
     @media (max-width: 767px) {
         font-size: 12px;
         &:first-child {
