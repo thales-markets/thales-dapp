@@ -11,10 +11,10 @@ import useMarketsByAssetAndDateQuery from 'queries/options/useMarketsByAssetAndD
 import styled from 'styled-components';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import AssetTable from './components/Table/AssetTable';
-import AssetDropdown from 'pages/Markets/V2/components/AssetDropdown';
-import DatesDropdown from 'pages/Markets/V2/components/MaturityDateDropdown';
+import AssetDropdown from './components/AssetDropdown';
+import DatesDropdown from './components/MaturityDateDropdown';
 import { FlexDivRowCentered } from 'theme/common';
-import PriceChart from 'pages/Markets/V2/components/PriceChart/PriceChart';
+import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
 
