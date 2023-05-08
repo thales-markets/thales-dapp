@@ -1,17 +1,17 @@
 import { Layout } from 'react-grid-layout';
 import { ToastPosition, TypeOptions } from 'react-toastify';
-import darkTheme from 'theme/dark';
-import lightTheme from 'theme/light';
+import darkTheme from 'theme/themes/dark';
+import royaleTheme from 'theme/themes/royale';
 import { ThemeInterface } from 'types/ui';
 
 export enum Theme {
     DARK,
-    LIGHT,
+    ROYALE,
 }
 
 export const ThemeMap: Record<Theme, ThemeInterface> = {
     [Theme.DARK]: darkTheme,
-    [Theme.LIGHT]: lightTheme,
+    [Theme.ROYALE]: royaleTheme,
 };
 
 export enum MarketWidgetKey {

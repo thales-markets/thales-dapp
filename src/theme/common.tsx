@@ -413,7 +413,7 @@ export const GradientText = styled.span<{ gradient: string; fontSize: number; fo
 `;
 
 export const UserCardSectionHeader = styled.span`
-    font-family: Sansation !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -459,6 +459,7 @@ export const NoDataContainer = styled.div`
     }
 `;
 
+// TODO: Update color names
 export const Colors = {
     GRAY: '#2B3139',
     GRAY_LIGHT: '#848E9C',
@@ -468,7 +469,9 @@ export const Colors = {
     GREEN_LIGHT: '#03DAC5B3',
     GREEN_DARK: '#121212',
     BLUE: '',
+    BLUE_DARK: '#050838',
     RED: '#DE496D',
     YELLOW: '#F7B91A',
-    ORANGE: '#F7B91A',
+    PURPLE: '1b1c33',
+    PURPLE_DARK: '111221',
 };

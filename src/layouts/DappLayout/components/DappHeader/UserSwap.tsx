@@ -219,7 +219,7 @@ const SwapWrapper = styled.div`
 const SwapButton = styled.div<{ clickable: boolean }>`
     display: -webkit-flex;
     background-color: var(--input-border-color);
-    font-family: Sansation !important;
+    font-family: ${(props) => props.theme.fontFamily};
     color: var(--background);
     border-radius: 15px;
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};

@@ -144,7 +144,7 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     cursor: pointer;
     border-right: 2px solid rgba(100, 217, 254, 0.5);
     color: var(--color-white);
-    font-family: Sansation !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: normal;
     font-size: 12.5px;

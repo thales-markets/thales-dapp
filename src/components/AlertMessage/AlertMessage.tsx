@@ -178,7 +178,7 @@ const AlertMessageIcon = styled(Image)<{
 const AlertMessageTitle = styled.p<{
     isRoyale?: boolean;
 }>`
-    font-family: ${(_props) => (_props?.isRoyale ? 'Sansation !important' : 'Roboto !important')};
+    font-family: ${(props) => props.theme.fontFamily}};
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
@@ -190,7 +190,7 @@ const AlertMessageTitle = styled.p<{
 const AlertMessageText = styled.p<{
     isRoyale?: boolean;
 }>`
-    font-family: ${(_props) => (_props?.isRoyale ? 'Sansation !important' : 'Roboto !important')};
+    font-family: ${(props) => props.theme.fontFamily}};
     font-style: normal;
     font-weight: normal;
     font-size: 15px;

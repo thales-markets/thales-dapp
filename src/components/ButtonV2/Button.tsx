@@ -113,7 +113,7 @@ const Wrapper = styled.button<{
             props?.hoverBorderEffect && !props?.disabled ? `border: ${props.theme.button.borderColor.secondary}` : ''}
     }
     &:disabled {
-        opacity: 0.6;
+        opacity: 0.7;
     }
 `;
 

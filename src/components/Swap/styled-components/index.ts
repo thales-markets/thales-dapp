@@ -30,18 +30,13 @@ const SwapDialog: StyledComponent<'div', any, { royaleTheme?: boolean; contentTy
     royaleTheme?: boolean;
     contentType?: string;
 }>`
-    --background: var(--color-primary);
-    --icon-color: #f7f7f7;
-    --border-color: var(--color-highlight);
-
     font-weight: bold;
     font-size: 12px;
     line-height: 24px;
     border-radius: ${(props) => (props.royaleTheme ? '5px' : '15px')};
     min-width: 70px;
-    background: ${(props) => (props.royaleTheme ? 'var(--color-secondary)' : 'var(--background)')};
-    border: ${(props) => (props.royaleTheme ? '2px solid var(--color-white)' : '2px solid var(--border-color)')};
-    box-shadow: ${(props) => (props.royaleTheme ? '' : '0px 0px 90px 10px var(--border-color)')};
+    background: ${(props) => props.theme.background.primary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     margin: auto;
     position: relative;
     top: 200px;
@@ -68,7 +63,7 @@ const SwapCloseButton = styled(XButton)<{
     filter: ${(props) =>
         props.royaleTheme
             ? 'invert(14%) sepia(42%) saturate(290%) hue-rotate(104deg) brightness(100%) contrast(94%)'
-            : 'invert(27%) sepia(100%) saturate(850%) hue-rotate(162deg) brightness(101%) contrast(99%)'};
+            : 'invert(62%) sepia(22%) saturate(220%) hue-rotate(175deg) brightness(87%) contrast(87%)'};
 `;
 
 const SwapErrorMessage = styled.p<{
@@ -80,15 +75,18 @@ const SwapErrorMessage = styled.p<{
     align-self: center;
     align-items: center;
     font-weight: bold;
-    color: ${(props) => (props.royaleTheme ? 'var(--color-white) !important' : 'var(--color-white) !important')};
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
+    color: ${(props) => props.theme.textColor.primary};
+    font-family: ${(props) => props.theme.fontFamily};
 `;
 
 const SwapSectionWrapper = styled(FlexDivColumn)<{
     royaleTheme?: boolean;
 }>`
-    background: ${(props) => (props.royaleTheme ? 'var(--color-secondary)' : 'var(--background)')};
-    border: ${(props) => (props.royaleTheme ? '5px solid var(--color-white)' : '1px solid var(--border-color)')};
+    background: ${(props) => props.theme.background.primary};
+    border: ${(props) =>
+        props.royaleTheme
+            ? `5px solid ${props.theme.borderColor.primary}`
+            : `1px solid ${props.theme.borderColor.primary}`};
     padding: 16px;
     padding-bottom: 0;
     border-radius: ${(props) => (props.royaleTheme ? '5px' : '15px')};
@@ -115,29 +113,29 @@ const SwapText = styled.p<{ royaleTheme?: boolean; contentSize?: string; screenW
     text-transform: ${(props) => (!props.royaleTheme ? (props.contentSize === 'large' ? 'uppercase' : '') : '')};
     font-weight: ${(props) => (!props.royaleTheme ? (props.contentSize === 'large' ? '300' : '600') : '')};
     line-height: ${(props) => (!props.royaleTheme ? (props.contentSize === 'large' ? '91.6%' : '12px') : '12px')};
-    color: ${(props) => (props.royaleTheme ? 'var(--color-white) !important' : 'var(--color-white) !important')};
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
+    color: ${(props) => props.theme.textColor.primary};
+    font-family: ${(props) => props.theme.fontFamily};
     text-overflow: ellipsis;
     width: ${(props) => (props.contentSize && props.screenWidth && props.screenWidth <= 500 ? '90px' : '')};
     overflow: hidden;
 `;
 
 const SwapNumericText = styled.p<{ royaleTheme?: boolean }>`
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: ${(props) => (props.royaleTheme ? '' : 'normal')};
     font-weight: ${(props) => (props.royaleTheme ? '' : '400')};
     font-size: ${(props) => (props.royaleTheme ? '20px' : '25px')};
     text-transform: uppercase;
-    color: ${(props) => (props.royaleTheme ? 'var(--color-white) !important' : 'var(--color-white) !important')};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SwapMaxButton = styled.button<{ royaleTheme?: boolean }>`
     cursor: pointer;
-    background-color: ${(props) => (props.royaleTheme ? 'var(--color-white)' : 'var(--border-color)')};
-    color: ${(props) => (props.royaleTheme ? 'var(--color-secondary)' : 'var(--background)')};
+    background-color: ${(props) => props.theme.button.background.primary};
+    color: ${(props) => props.theme.button.textColor.primary};
     border: transparent;
     border-radius: 20px;
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
+    font-family: ${(props) => props.theme.fontFamily};
     font-size: 12px;
     line-height: 12px;
     letter-spacing: 0.4px;
@@ -156,10 +154,9 @@ const SwapSelect = styled(ReactSelect)<{ royaleTheme?: boolean }>`
         }
     }
     & > div {
-        font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
-        background: ${(props) =>
-            props.royaleTheme ? 'var(--color-secondary) !important' : 'var(--background) !important'};
-        border: ${(props) => (props.royaleTheme ? 'none !important' : 'none !important')};
+        font-family: ${(props) => props.theme.fontFamily};
+        background: ${(props) => props.theme.background.primary} !important;
+        border: none !important;
     }
     .react-select__single-value,
     .react-select__single-value > div {
@@ -169,18 +166,19 @@ const SwapSelect = styled(ReactSelect)<{ royaleTheme?: boolean }>`
         border: none !important;
     }
     .react-select__option {
-        font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
-        color: ${(props) => (props.royaleTheme ? 'var(--color-white) !important' : 'var(--border-color) !important')};
-        background: ${(props) =>
-            props.royaleTheme ? 'var(--color-secondary) !important' : 'var(--background) !important'};
-        border: ${(props) => (props.royaleTheme ? 'none !important' : 'none !important')};
+        font-family: ${(props) => props.theme.fontFamily};
+        color: ${(props) => props.theme.textColor.primary};
+        background: ${(props) => props.theme.background.secondary};
+        border: none !important;
         &:hover {
-            background: ${(props) =>
-                props.royaleTheme ? 'var(--color-white) !important' : 'var(--border-color) !important'};
+            background: ${(props) => props.theme.background.primary};
             & > div > div > p {
-                color: ${(props) => (props.royaleTheme ? 'var(--color-secondary) !important' : '')};
+                color: ${(props) => props.theme.textColor.primary};
             }
         }
+    }
+    .react-select__menu {
+        background: ${(props) => props.theme.background.secondary} !important;
     }
 `;
 
@@ -198,10 +196,10 @@ const SwapNumericInput = styled(NumericInput)<{ royaleTheme?: boolean; screenWid
     font-style: normal;
     font-weight: ${(props) => (props.royaleTheme ? '' : '400')};
     line-height: ${(props) => (props.royaleTheme ? '' : '91.6%')};
-    background: ${(props) => (props.royaleTheme ? 'var(--color-secondary)' : 'var(--background)')};
-    border: ${(props) => (props.royaleTheme ? '1px solid var(--color-secondary)' : 'none !important')};
-    color: ${(props) => (props.royaleTheme ? 'var(--color-white)' : '')};
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
+    background: ${(props) => props.theme.background.primary};
+    border: ${(props) => props.theme.input.borderColor.primary};
+    color: ${(props) => props.theme.input.textColor.primary};
+    font-family: ${(props) => props.theme.fontFamily};
     margin-bottom: ${(props) => (props.royaleTheme ? '4px' : '')};
     &:focus {
         border: none !important;
@@ -216,9 +214,12 @@ const SwapSceletonWrapper: StyledComponent<'div', any, { royaleTheme?: boolean }
         height: 64px;
     }
     max-height: ${(props) => (props.royaleTheme ? '106px' : '94px')};
-    background: ${(props) => (props.royaleTheme ? 'var(--color-background)' : 'var(--background)')};
+    background: ${(props) => props.theme.background.primary};
     border-radius: ${(props) => (props.royaleTheme ? '5px' : '15px')};
-    border: ${(props) => (props.royaleTheme ? '5px solid var(--color-white)' : '2px solid var(--border-color)')};
+    border: ${(props) =>
+        props.royaleTheme
+            ? `5px solid ${props.theme.borderColor.primary}`
+            : `2px solid ${props.theme.borderColor.primary}`};
     padding: 16px;
     margin: 20px 20px 20px;
     &.visible {
@@ -248,14 +249,14 @@ const SwapTextSceleton: StyledComponent<'div', any, { royaleTheme?: boolean; con
                 ? '80px'
                 : '120px'
             : ''};
-    background: ${(props) => (props.royaleTheme ? 'var(--color-white)' : 'var(--border-color)')};
+    background: ${(props) => props.theme.background.primary};
 `;
 
 const SwapImageSceleton: StyledComponent<'div', any, { royaleTheme?: boolean }> = styled.div<{ royaleTheme?: boolean }>`
     height: 32px;
     width: 32px;
     border-radius: 50%;
-    background: ${(props) => (props.royaleTheme ? 'var(--color-white)' : 'var(--border-color)')};
+    background: ${(props) => props.theme.background.primary};
     margin-right: 6px;
 `;
 
@@ -265,16 +266,15 @@ const SwapConfirmButton: StyledComponent<'button', any, { royaleTheme?: boolean 
     cursor: pointer;
     align-items: center;
     cursor: pointer;
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
     line-height: 22px;
-    background: ${(props) => (props.royaleTheme ? 'var(--color-white)' : 'var(--border-color)')};
-    border: ${(props) => (props.royaleTheme ? '1px solid var(--color-white)' : '1px solid var(--border-color)')};
+    background: ${(props) => props.theme.button.background.primary};
+    border: 1px solid ${(props) => props.theme.button.borderColor.primary};
+    color: ${(props) => props.theme.button.textColor.primary};
     box-sizing: border-box;
-    box-shadow: ${(props) =>
-        props.royaleTheme ? ' 0px 0px 30px var(--color-white);' : ' 0px 0px 0px var(--border-color);'};
     border-radius: 20px;
     padding: 6px 15px 6px 20px;
     margin: 15px 20px;

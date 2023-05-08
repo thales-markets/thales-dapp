@@ -1,4 +1,4 @@
-import { Colors } from './common';
+import { Colors } from '../common';
 
 export default {
     fontFamily: "'Titillium Regular' !important",
@@ -15,8 +15,8 @@ export default {
         quaternary: Colors.GREEN,
     },
     borderColor: {
-        primary: '',
-        secondary: Colors.ORANGE,
+        primary: Colors.GRAY_LIGHT,
+        secondary: Colors.YELLOW,
         tertiary: '',
         quaternary: Colors.GREEN,
     },
@@ -33,7 +33,7 @@ export default {
             quaternary: Colors.YELLOW,
         },
         borderColor: {
-            primary: '',
+            primary: Colors.GREEN,
             secondary: '',
         },
     },

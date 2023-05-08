@@ -180,7 +180,7 @@ const ApprovalModalTitle = styled(ModalTitle)<{ isRoyale?: boolean; isMobile?: b
     flex: 1 0 100%;
     justify-content: center;
     color: ${(props) => (props.isRoyale ? 'var(--color-secondary) !important' : '')};
-    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    font-family: ${(props) => props.theme.fontFamily};
     @media (max-width: 512px) {
         flex: 1 0 85%;
     }
@@ -202,7 +202,7 @@ const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
     background: ${(props) => (props.isRoyale ? '#e3f7e9' : '')};
     border: ${(props) => (props.isRoyale ? '2px solid var(--color-secondary)' : '')};
     color: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
-    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    font-family: ${(props) => props.theme.fontFamily};
     margin-bottom: ${(props) => (props.isRoyale ? '4px' : '')};
     margin-left: ${(props) => (props.isRoyale ? '20px' : '')};
     border-radius: ${(props) => (props.isRoyale ? '30px' : '')};
@@ -215,7 +215,7 @@ const ApprovalNumericInput = styled(NumericInput)<{ isRoyale?: boolean }>`
 
 const ApprovalCurrencyLabel = styled(CurrencyLabel)<{ isRoyale?: boolean }>`
     color: ${(props) => (props.isRoyale ? 'var(--color--wrapper) !important' : '')};
-    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    font-family: ${(props) => props.theme.fontFamily};
     padding: ${(props) => (props.isRoyale ? '9px 16px 17px 0' : '23px 16px 17px 0')};
     font-size: ${(props) => (props.isRoyale ? '20px' : '15px')};
     line-height: ${(props) => (props.isRoyale ? '22px' : '')};
@@ -225,7 +225,7 @@ const ApprovalCurrencyLabel = styled(CurrencyLabel)<{ isRoyale?: boolean }>`
 const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>`
     width: 289px;
     color: ${(props) => (props.isRoyale ? 'var(--color-white) !important' : '')};
-    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    font-family: ${(props) => props.theme.fontFamily};
     background: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
     border-radius: ${(props) => (props.isRoyale ? '20px' : '')};
     &:hover:not(:disabled) {
@@ -237,7 +237,7 @@ const CheckboxContainer = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
     margin: -12px 20px 0 0;
     label {
         color: ${(props) => (props.isRoyale ? 'var(--color-secondary) !important' : '')};
-        font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+        font-family: ${(props) => props.theme.fontFamily}};
         font-size: 16px;
         input:checked ~ .checkmark {
             background-color: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
@@ -269,12 +269,12 @@ const OrText = styled(FlexDivCentered)<{ isRoyale?: boolean }>`
     line-height: 24px;
     letter-spacing: 0.4px;
     color: ${(props) => (props.isRoyale ? 'var(--color-secondary) !important' : '#f6f6fe')};
-    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    font-family: ${(props) => props.theme.fontFamily}};
     margin-bottom: 20px;
 `;
 
 const ApprovalModalLabel = styled.p<{ isRoyale?: boolean }>`
-    font-family: ${(props) => (props.isRoyale ? 'Sansation !important' : '')};
+    font-family: ${(props) => props.theme.fontFamily}};
     font-style: normal;
     font-size: 20px;
     color: ${(props) => (props.isRoyale ? 'var(--color-secondary) !important' : '#f6f6fe')};

@@ -50,7 +50,7 @@ const FlagIcon = styled.i`
 `;
 
 const LanguageName = styled.p`
-    font-family: Sansation !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: bold;
     font-size: 12px;

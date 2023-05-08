@@ -1,39 +1,39 @@
-import { Colors } from './common';
+import { Colors } from '../common';
 
 export default {
-    fontFamily: "'Titillium Regular' !important",
+    fontFamily: "'Sansation' !important",
     background: {
-        primary: Colors.GRAY_LIGHT,
+        primary: Colors.BLUE_DARK,
         secondary: '',
         tertiary: '',
         quaternary: '',
     },
     textColor: {
-        primary: '',
+        primary: Colors.WHITE,
         secondary: '',
         tertiary: '',
         quaternary: '',
     },
     borderColor: {
-        primary: '',
+        primary: Colors.WHITE,
         secondary: '',
         tertiary: '',
         quaternary: '',
     },
     button: {
         background: {
-            primary: '',
+            primary: Colors.WHITE,
             secondary: '',
             tertiary: '',
         },
         textColor: {
-            primary: '',
+            primary: Colors.BLUE_DARK,
             secondary: '',
             tertiary: '',
             quaternary: '',
         },
         borderColor: {
-            primary: '',
+            primary: Colors.WHITE,
             secondary: '',
         },
     },
@@ -45,13 +45,13 @@ export default {
             },
         },
         textColor: {
-            primary: '',
+            primary: Colors.WHITE,
             secondary: '',
             tertiary: '',
             quaternary: Colors.RED,
         },
         borderColor: {
-            primary: '',
+            primary: Colors.BLUE_DARK,
             secondary: '',
             focus: {
                 primary: '',
