@@ -6,7 +6,7 @@ export default {
         primary: Colors.GRAY_DARK,
         secondary: Colors.GRAY,
         tertiary: Colors.GRAY_LIGHT,
-        quaternary: '',
+        quaternary: Colors.GREEN,
     },
     textColor: {
         primary: Colors.WHITE,
