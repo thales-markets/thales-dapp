@@ -7,13 +7,13 @@ export const liquidityPoolContract = {
         [Network.Rinkeby]: 'TBD',
         [Network.Kovan]: 'TBD',
         [Network.Goerli]: 'TBD',
-        [Network['Mainnet-Ovm']]: 'TBD',
+        [Network['Mainnet-Ovm']]: '0xC10a0A6fF6496E0BD896F9f6da5a7B640b85ea40',
         [Network['Kovan-Ovm']]: 'TBD',
         [Network['Goerli-Ovm']]: '0x7e98D27847e06261bE499E248060DCD6F7B82303',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
-        [Network.Arbitrum]: 'TBD',
+        [Network.Arbitrum]: '0xea4c2343Fd3C239c23Dd37dd3ee51AEc84544735',
     },
     abi: [
         {
