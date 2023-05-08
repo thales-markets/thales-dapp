@@ -84,7 +84,7 @@ const Wrapper = styled.button<{
     ${(props) => (props?.height ? `height: ${props.height}` : '')};
     border: 1px solid ${(props) => props.theme.button.background.primary};
     border-radius: 30px;
-    font-family: Titillium Regular !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-weight: 700;
     font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
     cursor: ${(props) => (props?.disabled ? 'not-allowed' : 'pointer')};

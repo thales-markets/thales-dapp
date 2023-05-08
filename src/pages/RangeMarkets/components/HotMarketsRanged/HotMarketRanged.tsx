@@ -104,7 +104,7 @@ const HotMarketRanged: React.FC<HotRangedMarket> = ({
 };
 
 const CurrencyKey = styled.span<{ fontSize?: string }>`
-    font-family: Titillium Regular !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     display: block;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};

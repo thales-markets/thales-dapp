@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Title = styled.div<{ color?: string; fontSize?: string }>`
-    font-family: Titillium Regular !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-weight: 400;
     margin-bottom: 5px;
     text-transform: uppercase;
@@ -17,7 +17,7 @@ export const ValueContainer = styled.div`
 `;
 
 export const Value = styled.input<{ color?: string; fontSize?: string; disabled: boolean }>`
-    font-family: Titillium Regular !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-weight: 400;
     color: ${(props) => (props?.color ? props.color : props.theme.input.textColor.primary)};
     font-size: ${(props) => (props?.fontSize ? props.fontSize : '18px')};

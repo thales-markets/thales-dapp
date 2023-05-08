@@ -801,7 +801,7 @@ const MaxButton = styled(FlexDivCentered)<{ disabled?: boolean }>`
 `;
 
 const Text = styled.span`
-    font-family: 'Titillium Regular' !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: 700;
     font-size: 13px;

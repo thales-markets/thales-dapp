@@ -66,7 +66,7 @@ const Wrapper = styled.div`
 `;
 
 export const Text = styled.p`
-    font-family: 'Titillium Web';
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: 400;
     font-size: 16px;

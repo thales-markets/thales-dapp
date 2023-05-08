@@ -105,12 +105,11 @@ const Wrapper = styled(FlexDivColumn)`
 `;
 
 const TableText = styled.span<{ price: boolean }>`
-    font-family: 'Titillium Web !important';
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: 500;
     font-size: 13px;
-    line-height: 285.5%;
-    /* or 37px */
+    line-height: 37px;
 
     text-align: center;
     text-transform: uppercase;
