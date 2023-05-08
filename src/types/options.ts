@@ -1,6 +1,6 @@
 import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers';
-import { OrderPeriod } from 'constants/options';
+import { OrderPeriod, Positions } from 'constants/options';
 
 export type Phase = 'trading' | 'maturity' | 'expiry';
 
@@ -89,6 +89,7 @@ export type MarketInfo = {
     price: number;
     strikePrice: number;
     discount: number;
+    positionType: Positions;
 };
 
 export type RangedMarketPerPosition = {
@@ -99,6 +100,7 @@ export type RangedMarketPerPosition = {
     leftPrice: number;
     rightPrice: number;
     discount: number;
+    positionType: Positions;
 };
 
 export type RangedMarket = {

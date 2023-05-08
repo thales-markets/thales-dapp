@@ -1404,7 +1404,8 @@
             "above": "Above",
             "below": "Below",
             "between": "Between",
-            "not-between": "Not between"
+            "not-between": "Not between",
+            "and": "And"
         },
         "swap": {
             "button-text": "Get {{token}}",

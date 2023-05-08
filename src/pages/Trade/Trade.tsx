@@ -116,15 +116,17 @@ const TradePage: React.FC = () => {
             <AmmTrading
                 currencyKey={currencyKey}
                 maturityDate={maturityDate || 0}
-                positionType={positionType}
                 market={
-                    (market as MarketInfo) || {
+                    market || {
                         currencyKey: '',
                         address: '',
                         liquidity: 0,
                         price: 0,
                         strikePrice: 0,
+                        leftPrice: 0,
+                        rightPrice: 0,
                         discount: 0,
+                        positionType: Positions.UP,
                     }
                 }
             />

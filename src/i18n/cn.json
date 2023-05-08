@@ -1476,7 +1476,8 @@
             "below": "以下",
             "between": "之间",
             "not-between": "不在之间",
-            "above": "多于"
+            "above": "多于",
+            "and": "和"
         },
         "swap": {
             "button-text": "获取 {{token}}",

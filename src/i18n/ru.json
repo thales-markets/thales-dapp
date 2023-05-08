@@ -1472,7 +1472,8 @@
             "between": "Между",
             "below": "Ниже",
             "on": "На",
-            "above": "Выше"
+            "above": "Выше",
+            "and": "И"
         },
         "swap": {
             "button-text": "Приобрести {{token}}",

@@ -14,13 +14,13 @@ const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange }) => {
         <Wrapper>
             {Object.values(Positions).map((position, index) => {
                 return (
-                    <>
+                    <React.Fragment key={index}>
                         <RadioWrapper onClick={onChange.bind(this, position)} key={index}>
                             {selected === position ? <RadionOn /> : <RadionOff />}
                             <Label> {position}</Label>
                         </RadioWrapper>
                         {index === 1 && <Separator />}
-                    </>
+                    </React.Fragment>
                 );
             })}
         </Wrapper>

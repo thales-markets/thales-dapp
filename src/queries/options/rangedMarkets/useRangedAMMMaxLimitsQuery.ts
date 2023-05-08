@@ -26,7 +26,7 @@ const useRangedAMMMaxLimitsQuery = (
     options?: UseQueryOptions<RangeAmmMaxLimits>
 ) => {
     return useQuery<RangeAmmMaxLimits>(
-        QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress),
+        QUERY_KEYS.BinaryOptions.RangedAmmMaxLimits(marketAddress),
         async () => {
             const ammMaxLimits: RangeAmmMaxLimits = {
                 in: {

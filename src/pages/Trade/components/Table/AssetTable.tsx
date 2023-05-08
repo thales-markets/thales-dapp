@@ -76,7 +76,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
                 },
             },
         ];
-    }, [t, markets, rowIndex]);
+    }, [t, position, rowIndex]);
 
     return (
         <Wrapper>
@@ -84,7 +84,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
                 hover="#1B1C33"
                 onTableRowClick={(row) => {
                     setRowIndex(row.index);
-                    setMarket(row.original);
+                    setMarket({ ...row.original, positionType: position });
                 }}
                 tableHeadCellStyles={TableHeaderStyle}
                 data={markets}

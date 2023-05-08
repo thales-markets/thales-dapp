@@ -19,9 +19,9 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
             <Asset asset={asset} setAsset={setAsset.bind(this, asset)} />
             {open && (
                 <AssetContainer>
-                    {allAssets.map((_asset) => {
+                    {allAssets.map((_asset, index) => {
                         if (_asset !== asset) {
-                            return <Asset asset={_asset} setAsset={setAsset.bind(this, _asset)} />;
+                            return <Asset key={index} asset={_asset} setAsset={setAsset.bind(this, _asset)} />;
                         }
                     })}
                 </AssetContainer>
