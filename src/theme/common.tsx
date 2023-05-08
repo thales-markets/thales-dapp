@@ -471,7 +471,7 @@ export const Colors = {
     BLUE: '',
     BLUE_DARK: '#050838',
     RED: '#DE496D',
-    YELLOW: '#F7B91A',
+    ORANGE: '#F7B91A',
     PURPLE: '1b1c33',
     PURPLE_DARK: '111221',
 };

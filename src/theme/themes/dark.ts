@@ -16,7 +16,7 @@ export default {
     },
     borderColor: {
         primary: Colors.GRAY_LIGHT,
-        secondary: Colors.YELLOW,
+        secondary: Colors.ORANGE,
         tertiary: '',
         quaternary: Colors.GREEN,
     },
@@ -30,7 +30,7 @@ export default {
             primary: Colors.GREEN_DARK,
             secondary: '',
             tertiary: '',
-            quaternary: Colors.YELLOW,
+            quaternary: Colors.ORANGE,
         },
         borderColor: {
             primary: Colors.GREEN,
