@@ -65,5 +65,5 @@ export const LINKS = {
     UniswapBuyThalesArbitrum:
         'https://app.uniswap.org/#/swap?outputCurrency=0xE85B662Fe97e8562f4099d8A1d5A92D4B453bF30&chain=arbitrum',
     ThalesStaking: 'https://thalesmarket.io/token',
-    ThalesTip99: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-99.md',
+    ThalesTip139: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-139.md',
 };
