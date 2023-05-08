@@ -8,7 +8,7 @@ import {
 } from 'constants/currency';
 import { COLLATERALS_INDEX } from 'constants/options';
 import { StableCoins } from 'types/options';
-import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, NetworkId } from './network';
+import { getIsArbitrum, getIsBSC, getIsPolygon } from './network';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
 export const isCryptoCurrency = (currencyKey: CurrencyKey) => !!CRYPTO_CURRENCY_MAP[currencyKey];
