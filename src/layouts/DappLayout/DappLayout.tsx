@@ -128,7 +128,7 @@ const Background = styled.section`
     --primary-filter-menu-active: var(--color-highlight);
     --hotmarket-arrow-enabled: var(--color-highlight);
     --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
-    --scrollbar-width: 12px;
+    --scrollbar-width: 10px;
     --color-scrollbar-hover: #f7f7f7;
     --button-bg-active: var(--color-highlight);
     --button-text-active: var(--color-primary);

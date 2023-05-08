@@ -68,7 +68,12 @@ const useMarketsByAssetAndDateQuery = (
                     position === Positions.IN ? 0 : 1
                 );
 
-                const finalResult = rangedMarketsInfo.filter((marketInfo: any) => Number(marketInfo.liquidity) !== 0);
+                const finalResult = rangedMarketsInfo.filter(
+                    (marketInfo: any) =>
+                        Number(ethers.utils.formatEther(marketInfo.liquidity)) !== 0 &&
+                        Number(ethers.utils.formatEther(marketInfo.price)) !== 0
+                );
+
                 return finalResult
                     .map((market: any) => {
                         const discount = Number(ethers.utils.formatEther(market.priceImpact));

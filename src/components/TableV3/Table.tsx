@@ -332,43 +332,34 @@ const TableBody = styled.div`
 const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; hover?: string; background?: string; selected?: boolean }>`
     cursor: ${(props) => (props.cursorPointer ? 'pointer' : 'default')};
     min-height: 24px;
+    height: 35px;
     font-weight: 600;
     font-size: 14px;
     line-height: 100%;
     letter-spacing: 0.25px;
-    border-radius: ${(props) => (props.selected ? '30px' : '')};
+    border-radius: 30px;
     background-color: ${(props) => (props.selected ? props.theme.background.quaternary : 'transparent')};
+    &:hover {
+        background-color: ${(props) =>
+            props.selected ? props.theme.background.quaternary : props.theme.background.secondary};
+    }
+
+    justify-content: space-around;
+    align-items: center;
 `;
 
 const TableRowHead = styled(TableRow)`
-    min-height: 40px;
+    &:hover {
+        background-color: transparent !important;
+    }
 `;
 
 const TableCell = styled(FlexDivCentered)<{ width?: number | string; id: string }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 1;
     min-width: 0px;
     max-width: ${(props) => (props.width ? props.width : 'initial')};
-    @media (max-width: 767px) {
-        font-size: 12px;
-        &:first-child {
-            padding-left: 6px;
-        }
-        &:last-child {
-            padding-right: 6px;
-        }
-    }
-    @media (max-width: 512px) {
-        font-size: 10px;
-        &:first-child {
-            padding-left: 6px;
-        }
-        &:last-child {
-            padding-right: 0;
-        }
-    }
 `;
 
 const TableCellHead = styled(TableCell)<{ cssProp?: CSSPropertiesWithMedia }>`

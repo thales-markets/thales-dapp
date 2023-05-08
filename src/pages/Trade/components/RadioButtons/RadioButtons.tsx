@@ -12,12 +12,15 @@ type RadioButtonsProps = {
 const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange }) => {
     return (
         <Wrapper>
-            {Object.values(Positions).map((position) => {
+            {Object.values(Positions).map((position, index) => {
                 return (
-                    <RadioWrapper onClick={onChange.bind(this, position)} key={position}>
-                        {selected === position ? <RadionOn /> : <RadionOff />}
-                        <Label> {position}</Label>
-                    </RadioWrapper>
+                    <>
+                        <RadioWrapper onClick={onChange.bind(this, position)} key={index}>
+                            {selected === position ? <RadionOn /> : <RadionOff />}
+                            <Label> {position}</Label>
+                        </RadioWrapper>
+                        {index === 1 && <Separator />}
+                    </>
                 );
             })}
         </Wrapper>
@@ -47,6 +50,13 @@ const Label = styled.span`
     text-transform: uppercase;
 
     color: ${(props) => props.theme.textColor.secondary};
+`;
+
+const Separator = styled.div`
+    background: ${(props) => props.theme.textColor.secondary};
+    border-radius: 3px;
+    width: 2px;
+    height: 15px;
 `;
 
 export default RadioButtons;
