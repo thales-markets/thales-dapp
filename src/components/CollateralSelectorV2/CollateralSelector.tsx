@@ -57,10 +57,11 @@ const Container = styled(FlexDivStart)`
     position: relative;
     margin: 0 7px;
     align-items: center;
+    z-index: 2;
 `;
 
 const Text = styled.span`
-    font-family: 'Titillium Regular' !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: 600;
     font-size: 13px;

@@ -1,6 +1,7 @@
 import { Colors } from './common';
 
 export default {
+    fontFamily: "'Titillium Regular' !important",
     background: {
         primary: Colors.GRAY_LIGHT,
         secondary: '',

@@ -81,7 +81,7 @@ const SwapErrorMessage = styled.p<{
     align-items: center;
     font-weight: bold;
     color: ${(props) => (props.royaleTheme ? 'var(--color-white) !important' : 'var(--color-white) !important')};
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
 `;
 
 const SwapSectionWrapper = styled(FlexDivColumn)<{
@@ -116,14 +116,14 @@ const SwapText = styled.p<{ royaleTheme?: boolean; contentSize?: string; screenW
     font-weight: ${(props) => (!props.royaleTheme ? (props.contentSize === 'large' ? '300' : '600') : '')};
     line-height: ${(props) => (!props.royaleTheme ? (props.contentSize === 'large' ? '91.6%' : '12px') : '12px')};
     color: ${(props) => (props.royaleTheme ? 'var(--color-white) !important' : 'var(--color-white) !important')};
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
     text-overflow: ellipsis;
     width: ${(props) => (props.contentSize && props.screenWidth && props.screenWidth <= 500 ? '90px' : '')};
     overflow: hidden;
 `;
 
 const SwapNumericText = styled.p<{ royaleTheme?: boolean }>`
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
     font-style: ${(props) => (props.royaleTheme ? '' : 'normal')};
     font-weight: ${(props) => (props.royaleTheme ? '' : '400')};
     font-size: ${(props) => (props.royaleTheme ? '20px' : '25px')};
@@ -137,7 +137,7 @@ const SwapMaxButton = styled.button<{ royaleTheme?: boolean }>`
     color: ${(props) => (props.royaleTheme ? 'var(--color-secondary)' : 'var(--background)')};
     border: transparent;
     border-radius: 20px;
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
     font-size: 12px;
     line-height: 12px;
     letter-spacing: 0.4px;
@@ -156,7 +156,7 @@ const SwapSelect = styled(ReactSelect)<{ royaleTheme?: boolean }>`
         }
     }
     & > div {
-        font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
+        font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
         background: ${(props) =>
             props.royaleTheme ? 'var(--color-secondary) !important' : 'var(--background) !important'};
         border: ${(props) => (props.royaleTheme ? 'none !important' : 'none !important')};
@@ -169,7 +169,7 @@ const SwapSelect = styled(ReactSelect)<{ royaleTheme?: boolean }>`
         border: none !important;
     }
     .react-select__option {
-        font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
+        font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
         color: ${(props) => (props.royaleTheme ? 'var(--color-white) !important' : 'var(--border-color) !important')};
         background: ${(props) =>
             props.royaleTheme ? 'var(--color-secondary) !important' : 'var(--background) !important'};
@@ -201,7 +201,7 @@ const SwapNumericInput = styled(NumericInput)<{ royaleTheme?: boolean; screenWid
     background: ${(props) => (props.royaleTheme ? 'var(--color-secondary)' : 'var(--background)')};
     border: ${(props) => (props.royaleTheme ? '1px solid var(--color-secondary)' : 'none !important')};
     color: ${(props) => (props.royaleTheme ? 'var(--color-white)' : '')};
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
     margin-bottom: ${(props) => (props.royaleTheme ? '4px' : '')};
     &:focus {
         border: none !important;
@@ -265,7 +265,7 @@ const SwapConfirmButton: StyledComponent<'button', any, { royaleTheme?: boolean 
     cursor: pointer;
     align-items: center;
     cursor: pointer;
-    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : 'Titillium Regular !important')};
+    font-family: ${(props) => (props.royaleTheme ? 'Sansation !important' : props.theme.fontFamily)};
     font-style: normal;
     font-weight: bold;
     font-size: 20px;

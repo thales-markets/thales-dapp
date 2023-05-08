@@ -1,6 +1,7 @@
 import { Colors } from './common';
 
 export default {
+    fontFamily: "'Titillium Regular' !important",
     background: {
         primary: Colors.GRAY_DARK,
         secondary: Colors.GRAY,
@@ -21,12 +22,12 @@ export default {
     },
     button: {
         background: {
-            primary: '',
+            primary: Colors.GREEN,
             secondary: '',
             tertiary: '',
         },
         textColor: {
-            primary: '',
+            primary: Colors.GREEN_DARK,
             secondary: '',
             tertiary: '',
             quaternary: Colors.YELLOW,

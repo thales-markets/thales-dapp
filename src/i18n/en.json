@@ -384,10 +384,10 @@
     "options": {
         "trade": {
             "amm-trading": {
-                "end-date": "End date",
-                "position-price": "Price per position",
-                "position-bonus": "Bonus per position",
-                "user-wallet": "User wallet",
+                "asset-price": "If {{asset}} price is",
+                "pick-price": "Pick a price",
+                "based-price": "Based on price",
+                "you-win": "You win",
                 "enter-amount": "Enter amount",
                 "select-price": "Select price"
             }
@@ -1399,7 +1399,12 @@
                 "label": "Use legacy signing",
                 "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing, and selecting this option can resolve the issue."
             },
-            "ratio": "Ratio"
+            "ratio": "Ratio",
+            "on": "On",
+            "above": "Above",
+            "below": "Below",
+            "between": "Between",
+            "not-between": "Not between"
         },
         "swap": {
             "button-text": "Get {{token}}",

@@ -42,7 +42,6 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: (row: any) => {
-                    console.log('row: ', row);
                     return (
                         <TableText price={false}>
                             {position === Positions.UP || position === Positions.DOWN
@@ -106,12 +105,11 @@ const Wrapper = styled(FlexDivColumn)`
 `;
 
 const TableText = styled.span<{ price: boolean }>`
-    font-family: 'Titillium Web !important';
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: 500;
     font-size: 13px;
-    line-height: 285.5%;
-    /* or 37px */
+    line-height: 37px;
 
     text-align: center;
     text-transform: uppercase;

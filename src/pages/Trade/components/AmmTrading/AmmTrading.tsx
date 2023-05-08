@@ -1,14 +1,15 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
-import Button from 'components/Button';
+import Button from 'components/ButtonV2';
+import CollateralSelector from 'components/CollateralSelectorV2';
 import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import {
     COLLATERALS,
     MINIMUM_AMM_LIQUIDITY,
-    Positions,
     POSITIONS_TO_SIDE_MAP,
+    Positions,
     SIDE,
     SLIPPAGE_PERCENTAGE,
     getMaxGasLimitForNetwork,
@@ -18,7 +19,6 @@ import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
 import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
-import useBinaryOptionsMarketParametersInfoQuery from 'queries/options/useBinaryOptionsMarketParametersInfoQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -29,16 +29,20 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered } from 'theme/common';
+import { FlexDivCentered, FlexDivRow, FlexDivRowCentered } from 'theme/common';
 import { MarketInfo, StableCoins } from 'types/options';
 import { getAmountToApprove, getEstimatedGasFees, getQuoteFromAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
-import { formatShortDate } from 'utils/formatters/date';
+import {
+    getDefaultStableIndexByBalance,
+    getStableCoinBalance,
+    getStableCoinForNetwork,
+    getSynthName,
+} from 'utils/currency';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import {
-    DEFAULT_CURRENCY_DECIMALS,
     SHORT_CRYPTO_CURRENCY_DECIMALS,
     countDecimals,
     formatCurrencyWithKey,
@@ -55,12 +59,10 @@ import {
     getIsPolygon,
     getProvider,
 } from 'utils/network';
-import { convertPriceImpactToBonus, getFormattedBonus } from 'utils/options';
 import { refetchAmmData, refetchBalances, refetchWalletBalances } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import Input from '../Input';
-import CollateralSelector from 'components/CollateralSelector/CollateralSelectorV2';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -87,7 +89,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
     const [positionPrice, setPositionPrice] = useState<number | string>('');
     const [basePrice, setBasePrice] = useState<number | string>('');
     const [paidAmount, setPaidAmount] = useState<number | string>('');
-    const [profit, setProfit] = useState<number | string>('');
+    const [priceProfit, setPriceProfit] = useState<number | string>('');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [hasAllowance, setAllowance] = useState(false);
     const [isFetchingQuote, setIsFetchingQuote] = useState(false);
@@ -112,9 +114,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && getIsMultiCollateralSupported(networkId),
     });
-    const marketParametersInfoQuery = useBinaryOptionsMarketParametersInfoQuery(market.address, {
-        enabled: isAppReady && !!market.address,
-    });
 
     const ammMaxLimits = useMemo(() => {
         return ammMaxLimitsQuery.isSuccess ? ammMaxLimitsQuery.data : undefined;
@@ -132,15 +131,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
             : null;
     }, [networkId, multipleStableBalances, walletBalancesMap, selectedStableIndex, isMultiCollateralSupported]);
 
-    const isLong = POSITIONS_TO_SIDE_MAP[positionType] === SIDE.long;
-    const positionAddress = useMemo(() => {
-        return marketParametersInfoQuery.isSuccess && marketParametersInfoQuery.data
-            ? isLong
-                ? marketParametersInfoQuery.data.longAddress
-                : marketParametersInfoQuery.data.shortAddress
-            : undefined;
-    }, [marketParametersInfoQuery, isLong]);
-
     const isOVM = getIsOVM(networkId);
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
@@ -150,6 +140,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
     const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
     const isPositionPricePositive = Number(positionPrice) > 0;
     const isPaidAmountEntered = Number(paidAmount) > 0;
+    const isLong = POSITIONS_TO_SIDE_MAP[positionType] === SIDE.long;
 
     const insufficientBalance = stableBalance < Number(paidAmount) || !stableBalance;
 
@@ -191,7 +182,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
     const resetData = () => {
         setPositionAmount('');
         setPositionPrice('');
-        setProfit('');
+        setPriceProfit('');
         setGasLimit(null);
     };
 
@@ -287,7 +278,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
 
                 setPositionAmount(calcAmount);
                 setPositionPrice(ammPrice);
-                setProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
+                setPriceProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
 
                 const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
                 const isQuoteChanged =
@@ -597,6 +588,18 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
         setPaidAmount(value);
     };
 
+    const onMaxClick = async () => {
+        trackEvent({
+            category: 'AMM',
+            action: 'click-on-max-button',
+        });
+
+        if (isMaxButtonDisabled) return;
+
+        const maxPaidAmount = roundNumberToDecimals(Number(stableBalance) * (1 - SLIPPAGE_PERCENTAGE[2] / 100));
+        fetchAmmPriceData(maxPaidAmount, false, false, true);
+    };
+
     const getSubmitButton = () => {
         if (!market.address) {
             return (
@@ -662,109 +665,86 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
         );
     };
 
-    const onMaxClick = async () => {
-        trackEvent({
-            category: 'AMM',
-            action: 'click-on-max-button',
-        });
-
-        if (isMaxButtonDisabled) return;
-
-        const maxPaidAmount = roundNumberToDecimals(Number(stableBalance) * (1 - SLIPPAGE_PERCENTAGE[2] / 100));
-        fetchAmmPriceData(maxPaidAmount, false, false, true);
-    };
-
-    // TODO:
     const potentialProfitFormatted = isFetchingQuote
         ? '...'
-        : Number(positionPrice) > 0
-        ? `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), Number(profit) * Number(paidAmount))}`
-        : '-';
+        : `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), Number(priceProfit) * Number(paidAmount))}`;
+
+    const PositionTypeFormatted =
+        positionType === Positions.UP
+            ? t('options.common.above')
+            : positionType === Positions.DOWN
+            ? t('options.common.below')
+            : positionType === Positions.IN
+            ? t('options.common.between')
+            : t('options.common.not-between');
 
     return (
         <Container>
-            <MarketDetails>
-                {market.address ? (
-                    <ColumnCenter fitContent={true}>
+            <TradingDetails>
+                <ColumnSpaceBetween>
+                    <FlexDivCentered>
                         <Text>
-                            <TextLabel>{`${currencyKey} ${positionType}`}</TextLabel>
-                            <TextValue>{positionType === Positions.UP ? '>' : '<'}</TextValue>
-                            <TextValue>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</TextValue>
+                            <TextLabel>
+                                {t('options.trade.amm-trading.asset-price', { asset: getSynthName(currencyKey) })}
+                            </TextLabel>
+                            {market.address ? (
+                                <>
+                                    <TextValue uppercase={true}>{PositionTypeFormatted}</TextValue>
+                                    <TextValue>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</TextValue>
+                                </>
+                            ) : (
+                                <TextValue>{'( ' + t('options.trade.amm-trading.pick-price') + ' )'}</TextValue>
+                            )}
                         </Text>
+                    </FlexDivCentered>
+                    <FlexDivCentered>
                         <Text>
-                            <TextLabel>{t('options.trade.amm-trading.end-date')}</TextLabel>
-                            <TextValue>{formatShortDate(maturityDate)}</TextValue>
+                            <TextLabel>{t('options.common.on')}</TextLabel>
+                            <TextValue>{formatShortDateWithTime(maturityDate)}</TextValue>
                         </Text>
-                    </ColumnCenter>
-                ) : (
-                    <ColumnCenter>
-                        <TextInfo>{t('options.trade.amm-trading.select-price')}</TextInfo>
-                    </ColumnCenter>
-                )}
-                <VerticalLine height="38px" margin={market.address ? '' : '0 20px 0 0'} />
-                <ColumnCenter fitContent={true} minWidth={market.address ? '150px' : ''}>
-                    <Text>
-                        <TextLabel>{t('options.trade.amm-trading.position-price')}</TextLabel>
-                        <TextValue>
-                            {isFetchingQuote
-                                ? '...'
-                                : positionAddress
-                                ? formatCurrencyWithSign(
-                                      USD_SIGN,
-                                      Number(positionPrice) > 0 ? positionPrice : basePrice,
-                                      DEFAULT_CURRENCY_DECIMALS
-                                  )
-                                : USD_SIGN}
-                        </TextValue>
-                    </Text>
-                    <Text>
-                        <TextLabel>{t('options.trade.amm-trading.position-bonus')}</TextLabel>
-                        <TextValue isBonus={true}>
-                            {isFetchingQuote
-                                ? '...'
-                                : positionAddress
-                                ? getFormattedBonus(convertPriceImpactToBonus(market.discount))
-                                : '%'}
-                        </TextValue>
-                    </Text>
-                </ColumnCenter>
-            </MarketDetails>
-            <Input
-                value={paidAmount}
-                valueType={'number'}
-                disabled={!market.address}
-                placeholder={t('options.trade.amm-trading.enter-amount')}
-                valueChange={(value) => onTotalPriceValueChange(value)}
-                container={inputFieldProps}
-                showError={!isAmountValid}
-                errorMessage={t(errorMessageKey, {
-                    currencyKey: getStableCoinForNetwork(
-                        networkId,
-                        isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
-                    ),
-                })}
-            >
-                <InputActions>
-                    <MaxButton onClick={() => onMaxClick()} disabled={isMaxButtonDisabled}>
-                        <TextMax>{t('common.max')}</TextMax>
-                    </MaxButton>
-                    <VerticalLine width="1px" height="25px" />
-                    <CollateralSelector
-                        collateralArray={COLLATERALS}
-                        selectedItem={selectedStableIndex}
-                        onChangeCollateral={(index) => setStableIndex(index)}
-                        disabled={isMaxButtonDisabled}
-                    />
-                </InputActions>
-            </Input>
+                    </FlexDivCentered>
+                    <FlexDivCentered>
+                        <Text>
+                            <TextLabel>{t('options.trade.amm-trading.you-win')}</TextLabel>
+                            <TextValue isProfit={true}>
+                                {Number(priceProfit) > 0 && Number(paidAmount) > 0
+                                    ? potentialProfitFormatted
+                                    : '( ' + t('options.trade.amm-trading.based-price') + ' )'}
+                            </TextValue>
+                        </Text>
+                    </FlexDivCentered>
+                </ColumnSpaceBetween>
+            </TradingDetails>
             <FinalizeTrade>
                 <ColumnSpaceBetween>
-                    <FlexDivColumnCentered>
-                        <span style={{ textAlign: 'center' }}>{`If bitcoin stays ABOVE ${market.strikePrice}`}</span>
-                        <span style={{ textAlign: 'center' }}>{`@${new Date(
-                            maturityDate
-                        ).toLocaleDateString()} you will earn ${potentialProfitFormatted}`}</span>
-                    </FlexDivColumnCentered>
+                    <Input
+                        value={paidAmount}
+                        valueType={'number'}
+                        disabled={!market.address}
+                        placeholder={t('options.trade.amm-trading.enter-amount')}
+                        valueChange={(value) => onTotalPriceValueChange(value)}
+                        container={inputFieldProps}
+                        showError={!isAmountValid}
+                        errorMessage={t(errorMessageKey, {
+                            currencyKey: getStableCoinForNetwork(
+                                networkId,
+                                isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
+                            ),
+                        })}
+                    >
+                        <InputActions>
+                            <MaxButton onClick={() => onMaxClick()} disabled={isMaxButtonDisabled}>
+                                <TextMax>{t('common.max')}</TextMax>
+                            </MaxButton>
+                            <VerticalLine />
+                            <CollateralSelector
+                                collateralArray={COLLATERALS}
+                                selectedItem={selectedStableIndex}
+                                onChangeCollateral={(index) => setStableIndex(index)}
+                                disabled={isMaxButtonDisabled}
+                            />
+                        </InputActions>
+                    </Input>
                     {getSubmitButton()}
                 </ColumnSpaceBetween>
             </FinalizeTrade>
@@ -782,7 +762,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, posi
     );
 };
 
-const inputFieldProps = { width: '330px', height: '70px' };
+const inputFieldProps = { width: '350px', height: '40px' };
 
 const defaultButtonProps = {
     width: '100%',
@@ -792,18 +772,18 @@ const defaultButtonProps = {
 
 const Container = styled(FlexDivRow)`
     min-width: 980px;
-    height: 70px;
+    height: 85px;
 `;
 
-const MarketDetails = styled(FlexDivRowCentered)`
-    width: 330px;
+const TradingDetails = styled(FlexDivRowCentered)`
+    width: 600px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     padding: 10px;
 `;
 
 const FinalizeTrade = styled(FlexDivCentered)`
-    width: 330px;
+    width: 350px;
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
 `;
@@ -821,7 +801,7 @@ const MaxButton = styled(FlexDivCentered)<{ disabled?: boolean }>`
 `;
 
 const Text = styled.span`
-    font-family: 'Titillium Regular' !important;
+    font-family: ${(props) => props.theme.fontFamily};
     font-style: normal;
     font-weight: 700;
     font-size: 13px;
@@ -832,29 +812,20 @@ const Text = styled.span`
 const TextLabel = styled.span`
     color: ${(props) => props.theme.textColor.secondary};
 `;
-const TextValue = styled.span<{ isBonus?: boolean }>`
-    color: ${(props) => (props.isBonus ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
+const TextValue = styled.span<{ isProfit?: boolean; uppercase?: boolean }>`
+    color: ${(props) => (props.isProfit ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
     padding-left: 5px;
-`;
-const TextInfo = styled(Text)`
-    text-align: center;
-    color: ${(props) => props.theme.textColor.primary};
+    ${(props) => (props.uppercase ? 'text-transform: uppercase;' : '')}
 `;
 const TextMax = styled(Text)`
     color: ${(props) => props.theme.button.textColor.quaternary};
 `;
 
-const VerticalLine = styled.div<{ width?: string; height?: string; margin?: string }>`
-    width: ${(props) => (props.width ? props.width : '2px')};
-    height: ${(props) => (props.height ? props.height : '100%')};
+const VerticalLine = styled.div`
+    width: 1px;
+    height: 25px;
     background: ${(props) => props.theme.background.tertiary};
     border-radius: 6px;
-    ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
-`;
-
-const ColumnCenter = styled(FlexDivColumnCentered)<{ fitContent?: boolean; minWidth?: string }>`
-    ${(props) => (props.fitContent ? `max-width: fit-content;` : '')}
-    ${(props) => (props.minWidth ? `min-width: ${props.minWidth};` : '')}
 `;
 
 const ColumnSpaceBetween = styled.div`
