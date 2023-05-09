@@ -70,6 +70,10 @@ export const InputLabel = styled.label`
         font-size: 12px;
         padding-left: 10px;
     }
+    &.disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
 `;
 
 export const CurrencyLabel = styled.label`

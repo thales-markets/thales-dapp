@@ -53,6 +53,7 @@ const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../
 
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
+const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
 
 const App = () => {
     const dispatch = useDispatch();
@@ -245,6 +246,14 @@ const App = () => {
                                     </DappLayout>
                                 )}
                             />
+                        )}
+
+                        {!isPolygon && (
+                            <Route exact path={ROUTES.Options.LiquidityPool}>
+                                <DappLayout>
+                                    <LiquidityPool />
+                                </DappLayout>
+                            </Route>
                         )}
 
                         {!isPolygon && (

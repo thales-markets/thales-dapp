@@ -34,7 +34,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42: 'KOVAN',
     10: 'OPTIMISTIC',
     69: 'KOVAN-OPTIMISTIC',
-    420: 'GOERLI-OPTIMISTIC',
+    420: 'GOERLI-OPTIMISM',
     80001: 'POLYGON-MUMBAI',
     137: 'POLYGON-MAINNET',
     56: 'BSC-MAINNET',

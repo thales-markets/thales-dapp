@@ -45,12 +45,18 @@ const useUserStakingDataQuery = (
                 mergeAccountEnabled: true,
             };
             try {
-                const { stakingDataContract, liquidityPoolContract } = snxJSConnector;
+                const { stakingDataContract, sportLiquidityPoolContract, liquidityPoolContract } = snxJSConnector;
 
-                if (stakingDataContract && liquidityPoolContract) {
-                    const [contractStakingData, contractUserStakingData, isUserLPing] = await Promise.all([
+                if (stakingDataContract && sportLiquidityPoolContract && liquidityPoolContract) {
+                    const [
+                        contractStakingData,
+                        contractUserStakingData,
+                        isUserSportLPing,
+                        isUserLPing,
+                    ] = await Promise.all([
                         stakingDataContract.getStakingData(),
                         stakingDataContract.getUserStakingData(walletAddress),
+                        sportLiquidityPoolContract.isUserLPing(walletAddress),
                         liquidityPoolContract.isUserLPing(walletAddress),
                     ]);
 
@@ -91,7 +97,7 @@ const useUserStakingDataQuery = (
                     userStakingData.escrowedBalance = bigNumberFormatter(contractUserStakingData.escrowedBalance);
                     userStakingData.claimable = bigNumberFormatter(contractUserStakingData.claimable);
                     userStakingData.rawClaimable = contractUserStakingData.claimable;
-                    userStakingData.isUserLPing = isUserLPing;
+                    userStakingData.isUserLPing = isUserSportLPing || isUserLPing;
                     userStakingData.isPaused = contractStakingData.paused;
                     userStakingData.unstakeDurationPeriod = Number(contractStakingData.unstakeDurationPeriod) * 1000;
                     userStakingData.mergeAccountEnabled = contractStakingData.mergeAccountEnabled;
