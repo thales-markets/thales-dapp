@@ -484,7 +484,4 @@ export const Colors = {
     RED_DARK: '#D66D75',
 
     ORANGE: '#F7B91A',
-
-    PURPLE: '1b1c33',
-    PURPLE_DARK: '111221',
 };
