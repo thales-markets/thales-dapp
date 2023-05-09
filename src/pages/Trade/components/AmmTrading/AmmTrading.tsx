@@ -67,7 +67,7 @@ import {
     getIsPolygon,
     getProvider,
 } from 'utils/network';
-import { refetchAmmData, refetchBalances, refetchRangedAmmData, refetchWalletBalances } from 'utils/queryConnector';
+import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import Input from '../Input';
@@ -151,7 +151,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const isArbitrum = getIsArbitrum(networkId);
     const isPositionAmountPositive = Number(positionAmount) > 0;
     const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported;
-    const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
+    const isAmmTradingDisabled = !isRangedAmm && ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
     const isRangedAmmTradingDisabled =
         isRangedAmm &&
         rangedAmmMaxLimits &&
@@ -215,8 +215,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const fetchGasLimit = useCallback(
         async (marketAddress: string, side: any, parsedAmount: any, parsedTotal: any, parsedSlippage: any) => {
             try {
-                const { ammContract, signer } = snxJSConnector as any;
-                const ammContractWithSigner = ammContract.connect(signer);
+                const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
+                const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
 
                 if (isOVM) {
                     const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
@@ -253,7 +253,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 return null;
             }
         },
-        [collateral.address, isArbitrum, isBSC, isNonDefaultStable, isOVM, isPolygon, networkId, referral]
+        [collateral.address, isArbitrum, isBSC, isNonDefaultStable, isOVM, isPolygon, networkId, referral, isRangedAmm]
     );
 
     const fetchAmmPriceData = async (totalToPay: number, isRefresh: boolean, isSubmit = false, isMax = false) => {
@@ -376,8 +376,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const handleAllowance = async (approveAmount: BigNumber) => {
         const erc20Instance = new ethers.Contract(collateral.address as any, erc20Contract.abi, snxJSConnector.signer);
-        const { ammContract } = snxJSConnector;
-        const addressToApprove = ammContract ? ammContract.address : '';
+        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
+        const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
         const amountToApprove = getAmountToApprove(
             approveAmount,
             isNonDefaultStable,
@@ -510,7 +510,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     }, [market.address]);
 
     useEffect(() => {
-        refetchWalletBalances(walletAddress, networkId);
+        refetchBalances(walletAddress, networkId);
     }, [walletAddress, networkId]);
 
     // If sUSD balance is zero, select first stable with nonzero value as default
@@ -537,8 +537,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(collateral.address as any, erc20Contract.abi, snxJSConnector.signer);
-        const { ammContract } = snxJSConnector;
-        const addressToApprove = ammContract ? ammContract.address : '';
+        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
+        const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
         const getAllowance = async () => {
             try {
@@ -568,6 +568,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         isWalletConnected,
         hasAllowance,
         isAllowing,
+        isRangedAmm,
     ]);
 
     useEffect(() => {
@@ -652,8 +653,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     }, [paidAmount, stableBalance, insufficientLiquidity, t, isWalletConnected]);
 
     useEffect(() => {
-        setInsufficientLiquidity(Number(positionAmount) > liquidity);
-    }, [positionAmount, liquidity]);
+        if (market.address) {
+            setInsufficientLiquidity(Number(positionAmount) > liquidity);
+        }
+    }, [positionAmount, liquidity, market.address]);
 
     const onTotalPriceValueChange = async (value: number | string) => {
         if (countDecimals(Number(value)) > 2 || value === Number(paidAmount)) {
@@ -664,7 +667,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const onMaxClick = async () => {
         trackEvent({
-            category: 'AMM',
+            category: isRangedAmm ? 'RangeAMM' : 'AMM',
             action: 'click-on-max-button',
         });
 
