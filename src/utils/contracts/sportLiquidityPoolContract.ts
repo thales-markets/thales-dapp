@@ -1,19 +1,19 @@
 import { Network } from 'utils/network';
 
-export const liquidityPoolContract = {
+export const sportLiquidityPoolContract = {
     addresses: {
         [Network.Mainnet]: 'TBD',
         [Network.Ropsten]: 'TBD',
         [Network.Rinkeby]: 'TBD',
         [Network.Kovan]: 'TBD',
         [Network.Goerli]: 'TBD',
-        [Network['Mainnet-Ovm']]: '0xC10a0A6fF6496E0BD896F9f6da5a7B640b85ea40',
+        [Network['Mainnet-Ovm']]: '0x842e89b7a7eF8Ce099540b3613264C933cE0eBa5',
         [Network['Kovan-Ovm']]: 'TBD',
-        [Network['Goerli-Ovm']]: '0x7e98D27847e06261bE499E248060DCD6F7B82303',
+        [Network['Goerli-Ovm']]: '0xdd0879AB819287637f33A29d1ee91d5a76c890Af',
         [Network['POLYGON-MUMBAI']]: 'TBD',
         [Network['POLYGON-MAINNET']]: 'TBD',
         [Network.BSC]: 'TBD',
-        [Network.Arbitrum]: '0xea4c2343Fd3C239c23Dd37dd3ee51AEc84544735',
+        [Network.Arbitrum]: '0x8e9018b48456202aA9bb3E485192B8475822B874',
     },
     abi: [
         {
@@ -116,21 +116,6 @@ export const liquidityPoolContract = {
         },
         {
             anonymous: false,
-            inputs: [
-                { indexed: false, internalType: 'uint256', name: 'round', type: 'uint256' },
-                { indexed: false, internalType: 'uint256', name: 'batchSize', type: 'uint256' },
-            ],
-            name: 'RoundClosingBatchProcessed',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [{ indexed: false, internalType: 'uint256', name: 'round', type: 'uint256' }],
-            name: 'RoundClosingPrepared',
-            type: 'event',
-        },
-        {
-            anonymous: false,
             inputs: [{ indexed: false, internalType: 'uint256', name: 'roundLength', type: 'uint256' }],
             name: 'RoundLengthChanged',
             type: 'event',
@@ -146,8 +131,8 @@ export const liquidityPoolContract = {
         },
         {
             anonymous: false,
-            inputs: [{ indexed: false, internalType: 'bool', name: 'flagToSet', type: 'bool' }],
-            name: 'SetOnlyWhitelistedStakersAllowed',
+            inputs: [{ indexed: false, internalType: 'address', name: 'sportAMM', type: 'address' }],
+            name: 'SportAMMChanged',
             type: 'event',
         },
         {
@@ -160,12 +145,6 @@ export const liquidityPoolContract = {
             anonymous: false,
             inputs: [{ indexed: false, internalType: 'address', name: 'stakingThales', type: 'address' }],
             name: 'StakingThalesChanged',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [{ indexed: false, internalType: 'address', name: 'thalesAMM', type: 'address' }],
-            name: 'ThalesAMMChanged',
             type: 'event',
         },
         {
@@ -209,7 +188,7 @@ export const liquidityPoolContract = {
         {
             inputs: [
                 { internalType: 'address', name: 'market', type: 'address' },
-                { internalType: 'uint256', name: 'amountToMint', type: 'uint256' },
+                { internalType: 'uint256', name: 'sUSDAmount', type: 'uint256' },
             ],
             name: 'commitTrade',
             outputs: [],
@@ -250,13 +229,6 @@ export const liquidityPoolContract = {
         {
             inputs: [],
             name: 'exerciseMarketsReadyToExercised',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [{ internalType: 'uint256', name: 'batchSize', type: 'uint256' }],
-            name: 'exerciseMarketsReadyToExercisedBatch',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -304,7 +276,7 @@ export const liquidityPoolContract = {
             inputs: [
                 { internalType: 'address', name: 'market', type: 'address' },
                 { internalType: 'uint256', name: 'optionsAmount', type: 'uint256' },
-                { internalType: 'enum IThalesAMM.Position', name: 'position', type: 'uint8' },
+                { internalType: 'enum ISportsAMM.Position', name: 'position', type: 'uint8' },
             ],
             name: 'getOptionsForBuy',
             outputs: [],
@@ -330,14 +302,14 @@ export const liquidityPoolContract = {
             type: 'function',
         },
         {
-            inputs: [{ internalType: 'uint256', name: '_round', type: 'uint256' }],
+            inputs: [{ internalType: 'uint256', name: 'round', type: 'uint256' }],
             name: 'getRoundEndTime',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
             type: 'function',
         },
         {
-            inputs: [{ internalType: 'uint256', name: '_round', type: 'uint256' }],
+            inputs: [{ internalType: 'uint256', name: 'round', type: 'uint256' }],
             name: 'getRoundStartTime',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
@@ -356,15 +328,14 @@ export const liquidityPoolContract = {
                 {
                     components: [
                         { internalType: 'address', name: '_owner', type: 'address' },
-                        { internalType: 'contract IThalesAMM', name: '_thalesAMM', type: 'address' },
+                        { internalType: 'contract ISportsAMM', name: '_sportsAmm', type: 'address' },
                         { internalType: 'contract IERC20Upgradeable', name: '_sUSD', type: 'address' },
                         { internalType: 'uint256', name: '_roundLength', type: 'uint256' },
                         { internalType: 'uint256', name: '_maxAllowedDeposit', type: 'uint256' },
                         { internalType: 'uint256', name: '_minDepositAmount', type: 'uint256' },
                         { internalType: 'uint256', name: '_maxAllowedUsers', type: 'uint256' },
-                        { internalType: 'bool', name: '_needsTransformingCollateral', type: 'bool' },
                     ],
-                    internalType: 'struct ThalesAMMLiquidityPool.InitParams',
+                    internalType: 'struct SportAMMLiquidityPool.InitParams',
                     name: 'params',
                     type: 'tuple',
                 },
@@ -392,23 +363,6 @@ export const liquidityPoolContract = {
             type: 'function',
         },
         {
-            inputs: [
-                { internalType: 'uint256', name: '', type: 'uint256' },
-                { internalType: 'address', name: '', type: 'address' },
-            ],
-            name: 'marketAlreadyExercisedInRound',
-            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'marketsProcessedInRound',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
             inputs: [],
             name: 'maxAllowedDeposit',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -426,13 +380,6 @@ export const liquidityPoolContract = {
             inputs: [],
             name: 'minDepositAmount',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'needsTransformingCollateral',
-            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -465,13 +412,6 @@ export const liquidityPoolContract = {
             type: 'function',
         },
         {
-            inputs: [{ internalType: 'uint256', name: 'share', type: 'uint256' }],
-            name: 'partialWithdrawalRequest',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
             inputs: [],
             name: 'paused',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -485,14 +425,6 @@ export const liquidityPoolContract = {
             stateMutability: 'view',
             type: 'function',
         },
-        { inputs: [], name: 'prepareRoundClosing', outputs: [], stateMutability: 'nonpayable', type: 'function' },
-        {
-            inputs: [{ internalType: 'uint256', name: 'batchSize', type: 'uint256' }],
-            name: 'processRoundClosingBatch',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
         {
             inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             name: 'profitAndLossPerRound',
@@ -504,13 +436,6 @@ export const liquidityPoolContract = {
             inputs: [],
             name: 'round',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'roundClosingPrepared',
-            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -599,6 +524,13 @@ export const liquidityPoolContract = {
             type: 'function',
         },
         {
+            inputs: [{ internalType: 'contract ISportsAMM', name: '_sportAMM', type: 'address' }],
+            name: 'setSportAmm',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [{ internalType: 'uint256', name: '_stakedThalesMultiplier', type: 'uint256' }],
             name: 'setStakedThalesMultiplier',
             outputs: [],
@@ -608,13 +540,6 @@ export const liquidityPoolContract = {
         {
             inputs: [{ internalType: 'contract IStakingThales', name: '_stakingThales', type: 'address' }],
             name: 'setStakingThales',
-            outputs: [],
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            inputs: [{ internalType: 'contract IThalesAMM', name: '_thalesAMM', type: 'address' }],
-            name: 'setThalesAmm',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -641,6 +566,13 @@ export const liquidityPoolContract = {
         },
         {
             inputs: [],
+            name: 'sportsAMM',
+            outputs: [{ internalType: 'contract ISportsAMM', name: '', type: 'address' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
             name: 'stakedThalesMultiplier',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
@@ -658,13 +590,6 @@ export const liquidityPoolContract = {
             inputs: [],
             name: 'started',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            inputs: [],
-            name: 'thalesAMM',
-            outputs: [{ internalType: 'contract IThalesAMM', name: '', type: 'address' }],
             stateMutability: 'view',
             type: 'function',
         },
@@ -688,6 +613,31 @@ export const liquidityPoolContract = {
         {
             inputs: [{ internalType: 'address', name: 'proxyAddress', type: 'address' }],
             name: 'transferOwnershipAtInit',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'address[]', name: 'tokens', type: 'address[]' },
+                { internalType: 'address payable', name: 'account', type: 'address' },
+                { internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { internalType: 'bool', name: 'all', type: 'bool' },
+            ],
+            name: 'transferTokens',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                { internalType: 'address[]', name: 'tokens', type: 'address[]' },
+                { internalType: 'address payable', name: 'account', type: 'address' },
+                { internalType: 'uint256', name: 'amount', type: 'uint256' },
+                { internalType: 'bool', name: 'all', type: 'bool' },
+                { internalType: 'address', name: 'pool', type: 'address' },
+            ],
+            name: 'transferTokensFromLiquidityPool',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
@@ -720,13 +670,6 @@ export const liquidityPoolContract = {
             type: 'function',
         },
         {
-            inputs: [],
-            name: 'usersProcessedInRound',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
             inputs: [{ internalType: 'address', name: '', type: 'address' }],
             name: 'whitelistedDeposits',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
@@ -748,14 +691,7 @@ export const liquidityPoolContract = {
             stateMutability: 'view',
             type: 'function',
         },
-        {
-            inputs: [{ internalType: 'address', name: '', type: 'address' }],
-            name: 'withdrawalShare',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            stateMutability: 'view',
-            type: 'function',
-        },
     ],
 };
 
-export default liquidityPoolContract;
+export default sportLiquidityPoolContract;
