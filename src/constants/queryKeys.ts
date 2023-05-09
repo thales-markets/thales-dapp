@@ -106,6 +106,12 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        UserOpenPositions: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'userOpenPositions',
+            walletAddress,
+            networkId,
+        ],
         RangedPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'rangedPositions',
