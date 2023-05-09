@@ -285,7 +285,7 @@ export const InputWrapper = styled(InputContainer)`
     }
     .input-label {
         font-size: 13px;
-        padding: 6px 0 0 18px;
+        padding: 6px 0 0 17px;
     }
 `;
 
