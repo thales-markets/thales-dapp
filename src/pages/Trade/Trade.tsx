@@ -17,6 +17,7 @@ import { FlexDivRowCentered } from 'theme/common';
 import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
+import OpenPositions from './components/OpenPositions/OpenPositions';
 
 const TradePage: React.FC = () => {
     // selectors
@@ -130,6 +131,7 @@ const TradePage: React.FC = () => {
                     }
                 }
             />
+            <OpenPositions />
         </Wrapper>
     );
 };
