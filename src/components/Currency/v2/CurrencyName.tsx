@@ -37,7 +37,7 @@ export const CurrencyName: React.FC<CurrencyNameProps> = ({
                 alignItems: 'center',
                 fontSize: '15px',
                 textAlign: 'left',
-                fontFamily: ThemeMap[theme].fontFamily,
+                fontFamily: ThemeMap[theme].fontFamily.primary,
                 ...spanStyle,
             }}
         >

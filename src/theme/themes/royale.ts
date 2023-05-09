@@ -5,7 +5,7 @@ export default {
         primary: "'Sansation' !important",
     },
     background: {
-        primary: Colors.BLUE_DARK,
+        primary: Colors.BLUE_MIDNIGHT,
         secondary: '',
         tertiary: '',
         quaternary: '',
@@ -29,7 +29,7 @@ export default {
             tertiary: '',
         },
         textColor: {
-            primary: Colors.BLUE_DARK,
+            primary: Colors.BLUE_MIDNIGHT,
             secondary: '',
             tertiary: '',
             quaternary: '',
@@ -53,7 +53,7 @@ export default {
             quaternary: Colors.RED,
         },
         borderColor: {
-            primary: Colors.BLUE_DARK,
+            primary: Colors.BLUE_MIDNIGHT,
             secondary: '',
             focus: {
                 primary: '',
