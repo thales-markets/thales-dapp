@@ -121,7 +121,7 @@ const WalletIcon = styled.i`
 
 const WalletAddress = styled.p`
     color: var(--color-white);
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: normal;
     font-size: 12.5px;

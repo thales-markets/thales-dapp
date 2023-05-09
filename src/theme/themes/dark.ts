@@ -1,7 +1,9 @@
 import { Colors } from '../common';
 
 export default {
-    fontFamily: "'Titillium Regular' !important",
+    fontFamily: {
+        primary: "'Titillium Regular' !important",
+    },
     background: {
         primary: Colors.GRAY_DARK,
         secondary: Colors.GRAY,
@@ -27,7 +29,7 @@ export default {
             tertiary: '',
         },
         textColor: {
-            primary: Colors.GREEN_DARK,
+            primary: Colors.BLACK_LIGHT,
             secondary: '',
             tertiary: '',
             quaternary: Colors.ORANGE,
@@ -54,7 +56,7 @@ export default {
             primary: Colors.GRAY,
             secondary: '',
             focus: {
-                primary: Colors.GREEN_LIGHT,
+                primary: Colors.GREEN,
             },
             error: {
                 primary: Colors.RED,

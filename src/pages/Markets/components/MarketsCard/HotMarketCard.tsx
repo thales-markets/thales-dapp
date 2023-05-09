@@ -79,7 +79,7 @@ const HotMarketCard: React.FC<HotMarket> = ({
 };
 
 const CurrencyKey = styled.span<{ fontSize?: string }>`
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     display: block;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};

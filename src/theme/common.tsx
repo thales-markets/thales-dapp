@@ -413,7 +413,7 @@ export const GradientText = styled.span<{ gradient: string; fontSize: number; fo
 `;
 
 export const UserCardSectionHeader = styled.span`
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
@@ -466,8 +466,10 @@ export const Colors = {
     GRAY_DARK: '#181A20',
     WHITE: '#FFFFFF',
     GREEN: '#03DAC5',
-    GREEN_LIGHT: '#03DAC5B3',
-    GREEN_DARK: '#121212',
+    GREEN_LIGHT: '#8BCA89',
+    GREEN_DARK: '#01824C',
+    BLACK: '#000000',
+    BLACK_LIGHT: '#121212',
     BLUE: '',
     BLUE_DARK: '#050838',
     RED: '#DE496D',

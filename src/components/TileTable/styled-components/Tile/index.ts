@@ -132,7 +132,7 @@ const Cell: StyledComponent<'div', any> & Cell = styled.div<{ direction?: string
 `;
 
 const CellTitle = styled.div<{ fontSize?: number }>`
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-size: ${(props) => props.fontSize || '12'}px;
     text-transform: uppercase;

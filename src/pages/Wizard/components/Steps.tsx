@@ -439,7 +439,7 @@ const Nav = styled.div<{ justifyContent: string }>`
 
 const NavItem = styled.div<{ clickable: boolean }>`
     flex: 1;
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     line-height: 40px;
@@ -576,7 +576,7 @@ const Icon = styled.i<{ clickable: boolean }>`
 `;
 
 const IconText = styled.p`
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 600;
     font-size: 14px;

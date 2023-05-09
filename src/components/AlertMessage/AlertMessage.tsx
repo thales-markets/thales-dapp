@@ -178,7 +178,7 @@ const AlertMessageIcon = styled(Image)<{
 const AlertMessageTitle = styled.p<{
     isRoyale?: boolean;
 }>`
-    font-family: ${(props) => props.theme.fontFamily}};
+    font-family: ${(props) => props.theme.fontFamily.primary}};
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
@@ -190,7 +190,7 @@ const AlertMessageTitle = styled.p<{
 const AlertMessageText = styled.p<{
     isRoyale?: boolean;
 }>`
-    font-family: ${(props) => props.theme.fontFamily}};
+    font-family: ${(props) => props.theme.fontFamily.primary}};
     font-style: normal;
     font-weight: normal;
     font-size: 15px;

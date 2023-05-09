@@ -1,7 +1,9 @@
 import { Colors } from '../common';
 
 export default {
-    fontFamily: "'Sansation' !important",
+    fontFamily: {
+        primary: "'Sansation' !important",
+    },
     background: {
         primary: Colors.BLUE_DARK,
         secondary: '',

@@ -106,7 +106,7 @@ const Input: React.FC<InputProps> = ({
 const CustomTooltip = styled((props) => <Tooltip classes={{ popper: props.className }} {...props} />)`
     & .MuiTooltip-tooltip {
         margin: -12px 0 0 0;
-        font-family: ${(props) => props.theme.fontFamily};
+        font-family: ${(props) => props.theme.fontFamily.primary};
         font-weight: 600;
         font-size: 13px;
         line-height: 15px;

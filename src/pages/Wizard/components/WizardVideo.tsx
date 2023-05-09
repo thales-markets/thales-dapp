@@ -50,7 +50,7 @@ const WizardVideo: React.FC<{ header: boolean; videoLink: string; videoTitle: st
 };
 
 const VideoHeader = styled.p`
-    font-family: ${(props) => props.theme.fontFamily};
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     font-size: 22px;
