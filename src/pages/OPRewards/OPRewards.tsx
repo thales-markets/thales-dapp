@@ -31,8 +31,50 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import ElectionsBanner from 'components/ElectionsBanner';
 
-const THALES_REWARDS = 2000;
-const OP_REWARDS = 2000;
+const THALES_REWARDS = [
+    2000, // period 1
+    2000, // period 2
+    4000, // period 3
+    4000, // period 4
+    4000, // period 5
+    4000, // period 6
+    4000, // period 7
+    4000, // period 8
+    4000, // period 9
+    4000, // period 10
+    4000, // period 11
+    4000, // period 12
+    4000, // period 13
+    4000, // period 14
+    4000, // period 15
+    4000, // period 16
+    4000, // period 17
+    4000, // period 18
+    4000, // period 19
+    4000, // period 20
+];
+const OP_REWARDS = [
+    2000, // period 1
+    2000, // period 2
+    4000, // period 3
+    4000, // period 4
+    4000, // period 5
+    4000, // period 6
+    4000, // period 7
+    4000, // period 8
+    4000, // period 9
+    4000, // period 10
+    4000, // period 11
+    4000, // period 12
+    4000, // period 13
+    4000, // period 14
+    4000, // period 15
+    4000, // period 16
+    4000, // period 17
+    4000, // period 18
+    4000, // period 19
+    4000, // period 20
+];
 
 const OPRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -121,11 +163,11 @@ const OPRewards: React.FC = () => {
         const itmVolume = tableData.reduce((a, { itmInfo }) => a + itmInfo.volume, 0);
         const otmVolume = tableData.reduce((a, { otmInfo }) => a + otmInfo.volume, 0);
 
-        const itmOpRewardsPerVolume = (OP_REWARDS / itmVolume) * 1000;
-        const otmOpRewardsPerVolume = (OP_REWARDS / otmVolume) * 1000;
+        const itmOpRewardsPerVolume = (OP_REWARDS[period - 1] / itmVolume) * 1000;
+        const otmOpRewardsPerVolume = (OP_REWARDS[period - 1] / otmVolume) * 1000;
 
-        const itmThalesRewardsPerVolume = (THALES_REWARDS / itmVolume) * 1000;
-        const otmThalesRewardsPerVolume = (THALES_REWARDS / otmVolume) * 1000;
+        const itmThalesRewardsPerVolume = (THALES_REWARDS[period - 1] / itmVolume) * 1000;
+        const otmThalesRewardsPerVolume = (THALES_REWARDS[period - 1] / otmVolume) * 1000;
 
         return {
             itmVolume,
@@ -135,7 +177,7 @@ const OPRewards: React.FC = () => {
             itmThalesRewardsPerVolume,
             otmThalesRewardsPerVolume,
         };
-    }, [tableData]);
+    }, [tableData, period]);
 
     const isLoading = usersAmmBuyVolumeQuery.isLoading;
 
@@ -255,7 +297,17 @@ const OPRewards: React.FC = () => {
             <ElectionsBanner />
             <Description>
                 <Trans i18nKey={'op-rewards.description'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
-                <Trans i18nKey={'op-rewards.description-1'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
+                <Trans
+                    i18nKey={'op-rewards.description-1'}
+                    values={{
+                        thales: THALES_REWARDS[period - 1].toLocaleString(),
+                        op: OP_REWARDS[period - 1].toLocaleString(),
+                    }}
+                    components={{
+                        bold: <BoldText />,
+                        br: <br />,
+                    }}
+                ></Trans>
                 <Trans i18nKey={'op-rewards.description-itm'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
                 <Trans i18nKey={'op-rewards.description-otm'} components={{ bold: <BoldText />, br: <br /> }}></Trans>
                 <Trans i18nKey={'op-rewards.length-info'} components={{ bold: <BoldText />, br: <br /> }}></Trans>

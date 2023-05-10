@@ -1931,7 +1931,7 @@
         "title": "OP Rewards",
         "stay-tuned": "Stay tuned for new reward program soon!",
         "description": "Thales markets is now incentivized with extra OP and THALES rewards each week. <br/><br/> ",
-        "description-1": "The amount of rewards will be distributed pro-rata as follows: <br/><br/>      - 2,000 OP + 2,000 THALES for ITM (In the money) positions<br/> <br/>    - 2,000 OP + 2,000 THALES for OTM (Out of the money) positions <br/><br/>",
+        "description-1": "The amount of rewards will be distributed pro-rata as follows: <br/><br/>      - {{op}} OP + {{thales}} THALES for ITM (In the money) positions<br/> <br/>    - {{op}} OP + {{thales}} THALES for OTM (Out of the money) positions <br/><br/>",
         "description-itm": "ITM (In The Money) represents a position that would be successful if matured immediately. Example: BTC is at 30k and you buy an UP position with strike price 29k. <br/><br/>",
         "description-otm": "OTM (Out of The Money) positions would be resolved immediately as unsuccessful. Example: BTC is at 30k and you buy a DOWN position with strike price 29k.<br/><br/>",
         "description-4": "<br/><br/>You can find all the detailed infomation on how to participate in <guidelinesLink>.",
