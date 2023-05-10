@@ -20,8 +20,6 @@ const OpenPositions: React.FC = () => {
         return [];
     }, [networkId, positionsQuery]);
 
-    console.log(livePositions);
-
     return (
         <Wrapper>
             <Title>Your Open Positions</Title>
