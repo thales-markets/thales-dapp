@@ -70,7 +70,8 @@ import {
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
-import Input from '../Input';
+import Input from './components/Input';
+import TradingDetailsModal from './components/TradingDetailsModal';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -104,10 +105,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [liquidity, setLiquidity] = useState(0);
     const [isAmountValid, setIsAmountValid] = useState(true);
     const [errorMessageKey, setErrorMessageKey] = useState('');
+    const [openApprovalModal, setOpenApprovalModal] = useState(false);
+    const [openTradingDetailsModal, setOpenTradingDetailsModal] = useState(false);
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
     const isRangedAmm = [Positions.IN, Positions.OUT].includes(market.positionType);
@@ -813,6 +815,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         </Text>
                     </FlexDivCentered>
                 </ColumnSpaceBetween>
+                <DetailsIcon className="icon icon--gear" onClick={() => setOpenTradingDetailsModal(true)} />
             </TradingDetails>
             <FinalizeTrade>
                 <ColumnSpaceBetween>
@@ -847,6 +850,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     {getSubmitButton()}
                 </ColumnSpaceBetween>
             </FinalizeTrade>
+            {openTradingDetailsModal && <TradingDetailsModal onClose={() => setOpenTradingDetailsModal(false)} />}
             {openApprovalModal && (
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
@@ -875,6 +879,7 @@ const Container = styled(FlexDivRow)`
 `;
 
 const TradingDetails = styled(FlexDivRowCentered)`
+    position: relative;
     width: 600px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
@@ -885,6 +890,14 @@ const FinalizeTrade = styled(FlexDivCentered)`
     width: 350px;
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
+`;
+
+const DetailsIcon = styled.i`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 16px;
+    cursor: pointer;
 `;
 
 const InputActions = styled(FlexDivRow)`

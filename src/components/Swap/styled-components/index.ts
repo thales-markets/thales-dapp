@@ -1,11 +1,11 @@
 import { ReactSelect } from 'components/OldVersion/old-components';
 import NumericInput from 'components/NumericInput';
 import styled, { StyledComponent } from 'styled-components';
-import { FlexDivColumn, XButton } from 'theme/common';
+import { FlexDivColumn } from 'theme/common';
 
 type Children = {
     SectionWrapper: StyledComponent<'div', any, { royaleTheme?: boolean }>;
-    CloseButton: StyledComponent<'img', any, { royaleTheme?: boolean }>;
+    CloseIcon: StyledComponent<'i', any, { royaleTheme?: boolean }>;
     ErrorMessage: StyledComponent<
         'p',
         any,
@@ -54,16 +54,16 @@ const SwapDialog: StyledComponent<'div', any, { royaleTheme?: boolean; contentTy
     }
 `;
 
-const SwapCloseButton = styled(XButton)<{
+const SwapCloseIcon = styled.i<{
     royaleTheme?: boolean;
 }>`
     position: absolute;
     top: 20px;
     right: 20px;
-    filter: ${(props) =>
-        props.royaleTheme
-            ? 'invert(14%) sepia(42%) saturate(290%) hue-rotate(104deg) brightness(100%) contrast(94%)'
-            : 'invert(62%) sepia(22%) saturate(220%) hue-rotate(175deg) brightness(87%) contrast(87%)'};
+    font-size: 16px;
+    line-height: 16px;
+    cursor: pointer;
+    color: ${(props) => (props.royaleTheme ? '#a3f3d7' : props.theme.textColor.secondary)};
 `;
 
 const SwapErrorMessage = styled.p<{
@@ -285,7 +285,7 @@ const SwapConfirmButton: StyledComponent<'button', any, { royaleTheme?: boolean 
 `;
 
 SwapDialog.SectionWrapper = SwapSectionWrapper;
-SwapDialog.CloseButton = SwapCloseButton;
+SwapDialog.CloseIcon = SwapCloseIcon;
 SwapDialog.ErrorMessage = SwapErrorMessage;
 SwapDialog.Text = SwapText;
 SwapDialog.NumericText = SwapNumericText;

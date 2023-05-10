@@ -261,3 +261,7 @@
 .icon--right:before {
     content: '\007A';
 }
+
+.icon--gear:before {
+    content: '\0069';
+}
