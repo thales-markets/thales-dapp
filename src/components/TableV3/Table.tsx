@@ -152,7 +152,7 @@ const Table: React.FC<TableProps> = ({
                                     ? { cursor: 'pointer', ...tableHeadCellStyles }
                                     : { ...tableHeadCellStyles }
                             }
-                            width={column.width}
+                            width={column.headWidth || column.width}
                             id={column.id}
                         >
                             <HeaderTitle cssProp={column.headTitleStyle}>{column.render('Header')}</HeaderTitle>
@@ -359,13 +359,19 @@ const TableCell = styled(FlexDivCentered)<{ width?: number | string; id: string 
     align-items: center;
     justify-content: center;
     min-width: 0px;
-    max-width: ${(props) => (props.width ? props.width : 'initial')};
+    width: ${(props) => (props.width ? props.width : 'initial')};
 `;
 
-const TableCellHead = styled(TableCell)<{ cssProp?: CSSPropertiesWithMedia }>`
+const TableCellHead = styled(FlexDivCentered)<{
+    width?: string;
+    id: string;
+    cssProp?: CSSPropertiesWithMedia;
+}>`
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 0px;
+    width: ${(props) => (props.width ? props.width : 'initial')};
     font-weight: 600;
     font-size: 15px;
     letter-spacing: 0.5px;

@@ -54,6 +54,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
                         </TableText>
                     );
                 },
+                width: '180px',
             },
             {
                 Header: t(`options.home.markets-table.roi`),
@@ -62,6 +63,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
                         {row.price.toFixed(0)}%
                     </TableText>
                 ),
+                width: '60px',
             },
             {
                 id: 'discountedSide',
@@ -74,6 +76,8 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
                         </TableText>
                     );
                 },
+                width: '80px',
+                headWidth: '87px',
             },
         ];
     }, [t, position, rowIndex]);
