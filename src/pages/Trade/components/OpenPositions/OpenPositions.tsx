@@ -1,4 +1,5 @@
 import Button from 'components/ButtonV2/Button';
+import { USD_SIGN } from 'constants/currency';
 
 import useUserOpenPositions from 'queries/user/useUserOpenPositions';
 import React, { useMemo } from 'react';
@@ -7,7 +8,7 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
 import { formatShortDateFromTimestamp } from 'utils/formatters/date';
-import { formatNumberShort } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
 
 const OpenPositions: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -30,7 +31,7 @@ const OpenPositions: React.FC = () => {
                         <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
                         <AlignedFlex>
                             <FlexContainer>
-                                <Label>{`${position.currencyKey} ${position.side}`}</Label>
+                                <Label>{`${position.currencyKey}`}</Label>
                                 <Value>{position.strikePrice}</Value>
                             </FlexContainer>
                             <Separator />
@@ -41,16 +42,20 @@ const OpenPositions: React.FC = () => {
                             <Separator />
                             <FlexContainer>
                                 <Label>Size</Label>
-                                <Value>{formatNumberShort(position.amount)}</Value>
+                                <Value>{`${formatNumberShort(position.amount)}  ${position.side}`}</Value>
                             </FlexContainer>
-                            {/* <Separator />
+                            <Separator />
                             <FlexContainer>
                                 <Label>Paid</Label>
-                                <Value>{formatCurrencyWithSign(USD_SIGN, position.amount)}</Value>
-                            </FlexContainer> */}
+                                <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
+                            </FlexContainer>
                         </AlignedFlex>
-                        <Button {...defaultButtonProps} additionalStyles={additionalStyle}>
-                            Cash Out
+                        <Button
+                            {...defaultButtonProps}
+                            disabled={Number(position.value) === 0}
+                            additionalStyles={additionalStyle}
+                        >
+                            Cash Out {formatCurrencyWithSign(USD_SIGN, position.value, 2)}
                         </Button>
                     </Position>
                 );
@@ -64,6 +69,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     gap: 6px;
     margin-top: 20px;
+    padding-bottom: 20px;
 `;
 
 const Title = styled.span`
@@ -105,6 +111,7 @@ const Position = styled.div`
     align-items: center;
     justify-content: space-between;
     padding: 0 30px;
+    gap: 20px;
 `;
 
 const Icon = styled.i`
@@ -113,18 +120,21 @@ const Icon = styled.i`
 
 const AlignedFlex = styled.div`
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: 20px;
+    justify-content: flex-end;
+    width: 100%;
 `;
 
 const FlexContainer = styled(AlignedFlex)`
+    gap: 4px;
     flex: 1;
-    justify-content: flex-start;
+    justify-content: center;
 
-    /* &:first-child {
-        min-width: 220px;
-    } */
+    &:first-child {
+        min-width: 210px;
+        max-width: 210px;
+    }
 `;
 
 const Label = styled.span`
@@ -132,10 +142,7 @@ const Label = styled.span`
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
-    /* or 13px */
-
     text-transform: capitalize;
-
     color: ${(props) => props.theme.textColor.secondary};
     white-space: nowrap;
 `;
