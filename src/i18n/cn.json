@@ -1477,7 +1477,11 @@
             "between": "之间",
             "not-between": "不在之间",
             "above": "多于",
-            "and": "和"
+            "and": "和",
+            "direction": "方向",
+            "asset": "资产",
+            "strike-price": "行使价",
+            "end-date": "结束日期"
         },
         "swap": {
             "button-text": "获取 {{token}}",
@@ -1724,7 +1728,15 @@
                 "you-win": "你赢了",
                 "based-price": "基于价格",
                 "asset-price": "如果{{asset}}的价格是",
-                "pick-price": "选择一个价格"
+                "pick-price": "选择一个价格",
+                "details-modal": {
+                    "amount": "数量",
+                    "total-pay": "支付总额",
+                    "position-bonus": "每个位置的奖金",
+                    "potential-profit": "潜在利润",
+                    "confirm-order": "确认{{position}}订单",
+                    "position-price": "每个位置的价格"
+                }
             }
         }
     },

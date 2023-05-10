@@ -389,7 +389,15 @@
                 "based-price": "Based on price",
                 "you-win": "You win",
                 "enter-amount": "Enter amount",
-                "select-price": "Select price"
+                "select-price": "Select price",
+                "details-modal": {
+                    "confirm-order": "Confirm {{position}} order",
+                    "position-price": "Price per position",
+                    "position-bonus": "Bonus per position",
+                    "amount": "Amount",
+                    "total-pay": "Total to pay",
+                    "potential-profit": "Potential profit"
+                }
             }
         },
         "phases": {
@@ -1405,7 +1413,11 @@
             "below": "Below",
             "between": "Between",
             "not-between": "Not between",
-            "and": "And"
+            "and": "And",
+            "asset": "Asset",
+            "direction": "Direction",
+            "strike-price": "Strike price",
+            "end-date": "End date"
         },
         "swap": {
             "button-text": "Get {{token}}",

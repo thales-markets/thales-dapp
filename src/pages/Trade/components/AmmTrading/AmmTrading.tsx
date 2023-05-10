@@ -72,6 +72,7 @@ import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import Input from './components/Input';
 import TradingDetailsModal from './components/TradingDetailsModal';
+import { convertPriceImpactToBonus } from 'utils/options';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -101,7 +102,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [hasAllowance, setAllowance] = useState(false);
     const [isFetchingQuote, setIsFetchingQuote] = useState(false);
-    const [selectedStableIndex, setStableIndex] = useState(userSelectedCollateral);
+    const [selectedStableIndex, setSelectedStableIndex] = useState(userSelectedCollateral);
     const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -189,17 +190,17 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const collateral = useMemo(() => {
         let address = undefined;
-        let currencyOrSellPosition = '';
+        let currency = '';
         if (isNonDefaultStable) {
             address =
                 snxJSConnector.multipleCollateral && snxJSConnector.multipleCollateral[selectedStableIndex]?.address;
-            currencyOrSellPosition = COLLATERALS[selectedStableIndex];
+            currency = COLLATERALS[selectedStableIndex];
         } else {
             address = snxJSConnector.collateral?.address;
-            currencyOrSellPosition = getStableCoinForNetwork(networkId);
+            currency = getStableCoinForNetwork(networkId);
         }
 
-        return { address, currencyOrSellPosition };
+        return { address, currencyOrSellPosition: currency };
     }, [selectedStableIndex, networkId, isNonDefaultStable]);
 
     const referral =
@@ -524,7 +525,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             isMultiCollateralSupported
         ) {
             const defaultStableBalance = getDefaultStableIndexByBalance(multipleStableBalances?.data);
-            setStableIndex(defaultStableBalance);
+            setSelectedStableIndex(defaultStableBalance);
         }
     }, [
         multipleStableBalances?.isSuccess,
@@ -534,7 +535,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     ]);
 
     useEffect(() => {
-        setStableIndex(userSelectedCollateral);
+        setSelectedStableIndex(userSelectedCollateral);
     }, [userSelectedCollateral]);
 
     useEffect(() => {
@@ -815,7 +816,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         </Text>
                     </FlexDivCentered>
                 </ColumnSpaceBetween>
-                <DetailsIcon className="icon icon--gear" onClick={() => setOpenTradingDetailsModal(true)} />
+                <DetailsIcon
+                    className="icon icon--gear"
+                    disabled={!market.address}
+                    onClick={() => market.address && setOpenTradingDetailsModal(true)}
+                />
             </TradingDetails>
             <FinalizeTrade>
                 <ColumnSpaceBetween>
@@ -842,7 +847,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                             <CollateralSelector
                                 collateralArray={COLLATERALS}
                                 selectedItem={selectedStableIndex}
-                                onChangeCollateral={(index) => setStableIndex(index)}
+                                onChangeCollateral={(index) => setSelectedStableIndex(index)}
                                 disabled={isMaxButtonDisabled}
                             />
                         </InputActions>
@@ -850,7 +855,26 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     {getSubmitButton()}
                 </ColumnSpaceBetween>
             </FinalizeTrade>
-            {openTradingDetailsModal && <TradingDetailsModal onClose={() => setOpenTradingDetailsModal(false)} />}
+            {openTradingDetailsModal && (
+                <TradingDetailsModal
+                    currencyKey={currencyKey}
+                    maturityDate={maturityDate}
+                    strikePrice={(market as MarketInfo).strikePrice}
+                    leftStrikePrice={(market as RangedMarketPerPosition).leftPrice}
+                    rightStrikePrice={(market as RangedMarketPerPosition).rightPrice}
+                    position={market.positionType}
+                    positionPrice={Number(positionPrice) > 0 ? Number(positionPrice) : Number(basePrice)}
+                    positionBonus={convertPriceImpactToBonus(market.discount)}
+                    positionAmount={Number(positionAmount)}
+                    paidAmount={Number(paidAmount)}
+                    selectedStable={getStableCoinForNetwork(
+                        networkId,
+                        isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
+                    )}
+                    profit={Number(priceProfit) * Number(paidAmount)}
+                    onClose={() => setOpenTradingDetailsModal(false)}
+                />
+            )}
             {openApprovalModal && (
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
@@ -892,12 +916,14 @@ const FinalizeTrade = styled(FlexDivCentered)`
     font-size: 13px;
 `;
 
-const DetailsIcon = styled.i`
+const DetailsIcon = styled.i<{ disabled: boolean }>`
     position: absolute;
     top: 10px;
     right: 10px;
     font-size: 16px;
-    cursor: pointer;
+    color: ${(props) => props.theme.textColor.secondary};
+    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+    opacity: ${(props) => (props.disabled ? '0.6' : '1')};
 `;
 
 const InputActions = styled(FlexDivRow)`
@@ -927,7 +953,7 @@ const TextLabel = styled.span`
 const TextValue = styled.span<{ isProfit?: boolean; uppercase?: boolean }>`
     color: ${(props) => (props.isProfit ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
     padding-left: 5px;
-    ${(props) => (props.uppercase ? 'text-transform: uppercase;' : '')}
+    text-transform: ${(props) => (props.uppercase ? 'uppercase;' : 'initial')};
 `;
 const TextMax = styled(Text)`
     color: ${(props) => props.theme.button.textColor.quaternary};

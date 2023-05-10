@@ -1473,7 +1473,11 @@
             "below": "Ниже",
             "on": "На",
             "above": "Выше",
-            "and": "И"
+            "and": "И",
+            "direction": "Направление",
+            "end-date": "Дата окончания",
+            "asset": "Объект",
+            "strike-price": "Цена исполнения"
         },
         "swap": {
             "button-text": "Приобрести {{token}}",
@@ -1720,7 +1724,15 @@
                 "you-win": "Ты победил",
                 "asset-price": "Если цена {{актива}}",
                 "pick-price": "Выберите цену",
-                "based-price": "В зависимости от цены"
+                "based-price": "В зависимости от цены",
+                "details-modal": {
+                    "amount": "Количество",
+                    "total-pay": "Всего к оплате",
+                    "position-bonus": "Бонус за позицию",
+                    "potential-profit": "Потенциальная прибыль",
+                    "position-price": "Цена за позицию",
+                    "confirm-order": "Подтвердить {{position}} заказ"
+                }
             }
         }
     },
