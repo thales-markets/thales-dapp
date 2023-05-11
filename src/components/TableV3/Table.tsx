@@ -1,4 +1,4 @@
-import React, { useMemo, DependencyList, CSSProperties, useEffect, useState } from 'react';
+import React, { useMemo, DependencyList, CSSProperties, useEffect, useState, useRef } from 'react';
 import { useTable, useSortBy, Column, Row, usePagination } from 'react-table';
 import SimpleLoader from 'components/SimpleLoader';
 import styled from 'styled-components';
@@ -63,6 +63,22 @@ const Table: React.FC<TableProps> = ({
     selectedRowIndex,
 }) => {
     const [lastValidRates, setRates] = useState<Rates>();
+
+    const containerRef = useRef('');
+    const elementRef = useRef('');
+
+    useEffect(() => {
+        if (elementRef.current && containerRef.current) {
+            const container: any = containerRef.current;
+            const element: any = elementRef.current;
+
+            const containerRect = container.getBoundingClientRect();
+            const elementRect = element.getBoundingClientRect();
+
+            const offset = elementRect.top - containerRect.top;
+            container.scrollTop += offset;
+        }
+    }, [elementRef.current, containerRef.current]);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesQuery({ enabled: showCurrentPrice });
 
@@ -181,7 +197,7 @@ const Table: React.FC<TableProps> = ({
                 ) : noResultsMessage != null && !data?.length ? (
                     <NoResultContainer>{noResultsMessage}</NoResultContainer>
                 ) : (
-                    <TableBody {...getTableBodyProps()}>
+                    <TableBody ref={containerRef as any} {...getTableBodyProps()}>
                         {stickyRow ?? <></>}
                         {(currentPage !== undefined ? page : rows).map((row, rowIndex: any) => {
                             prepareRow(row);
@@ -221,7 +237,7 @@ const Table: React.FC<TableProps> = ({
                                                 })}
                                             </TableRow>
                                             {showCurrentPrice && indexForDrawingAndPrice?.index === rowIndex && (
-                                                <PriceWrapper>
+                                                <PriceWrapper ref={elementRef as any}>
                                                     <Price>
                                                         {formatCurrencyWithSign(
                                                             USD_SIGN,
