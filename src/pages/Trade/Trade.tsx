@@ -164,7 +164,7 @@ const ContentWrapper = styled.div`
     margin-top: 20px;
     margin-bottom: 35px;
     justify-content: space-between;
-    padding-top: 60px;
+    padding-top: 40px;
 `;
 
 const PositionedWrapper = styled.div`
