@@ -161,10 +161,9 @@ const ContentWrapper = styled.div`
     display: flex;
     gap: 30px;
     height: 400px;
-    margin-top: 20px;
+    margin-top: 70px;
     margin-bottom: 35px;
     justify-content: space-between;
-    padding-top: 40px;
 `;
 
 const PositionedWrapper = styled.div`
