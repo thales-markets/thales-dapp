@@ -46,11 +46,17 @@ const useUserOpenPositions = (
             ]);
 
             const livePositions = positionBalances.filter((positionBalance: any) => {
-                return Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000;
+                return (
+                    Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000 &&
+                    Number(ethers.utils.formatEther(positionBalance.amount)) > 0
+                );
             });
 
             const liveRangedPositions = rangedPositionBalances.filter((positionBalance: any) => {
-                return Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000;
+                return (
+                    Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000 &&
+                    Number(ethers.utils.formatEther(positionBalance.amount)) > 0
+                );
             });
 
             const [result, resultsRanged] = await Promise.all([

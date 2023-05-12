@@ -88,18 +88,26 @@ const TradePage: React.FC = () => {
             <ContentWrapper>
                 <LeftSide>
                     <FlexDivRowCentered style={{ gap: 15 }}>
-                        <div>
+                        <PositionedWrapper>
+                            <InfoWrapper>
+                                <Number>1</Number>
+                                <Info>Choose Asset</Info>
+                            </InfoWrapper>
                             {allAssets && (
                                 <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
                             )}
-                        </div>
-                        <div>
+                        </PositionedWrapper>
+                        <PositionedWrapper>
+                            <InfoWrapper>
+                                <Number>2</Number>
+                                <Info>Choose Date</Info>
+                            </InfoWrapper>
                             <DatesDropdown
                                 date={maturityDate}
                                 setDate={setMaturityDate}
                                 allDates={allDates}
                             ></DatesDropdown>
-                        </div>
+                        </PositionedWrapper>
                     </FlexDivRowCentered>
                     <PriceChart
                         position={positionType}
@@ -109,7 +117,14 @@ const TradePage: React.FC = () => {
                     ></PriceChart>
                 </LeftSide>
                 <RightSide>
-                    <RadioButtons onChange={setPositionType} selected={positionType} />
+                    <PositionedWrapper>
+                        <InfoWrapper marginLeft={45}>
+                            <Number>3</Number>
+                            <Info>Choose Direction</Info>
+                        </InfoWrapper>
+                        <RadioButtons onChange={setPositionType} selected={positionType} />
+                    </PositionedWrapper>
+
                     <AssetTable setMarket={setMarket} markets={allMarkets} position={positionType} />
                 </RightSide>
             </ContentWrapper>
@@ -146,10 +161,25 @@ const ContentWrapper = styled.div`
     display: flex;
     gap: 30px;
     height: 400px;
-    margin-top: 20px;
+    margin-top: 70px;
     margin-bottom: 35px;
     justify-content: space-between;
 `;
+
+const PositionedWrapper = styled.div`
+    position: relative;
+`;
+
+const InfoWrapper = styled.div<{ marginLeft?: number }>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -50px;
+    left: 10px;
+    margin-left: ${(props) => props.marginLeft}px;
+`;
+
 const LeftSide = styled.div`
     height: 100%;
     width: 100%;
@@ -159,7 +189,24 @@ const RightSide = styled.div`
     width: 100%;
     height: 100%;
     max-width: 350px;
-    gap: 20px;
+`;
+
+const Info = styled.span`
+    font-family: 'Titillium Web';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: ${(props) => props.theme.textColor.primary};
+`;
+
+const Number = styled(Info)`
+    border-radius: 50%;
+    border: 2px solid ${(props) => props.theme.textColor.primary};
+    padding: 3px 8px;
+    line-height: 22px;
+    margin-right: 20px;
 `;
 
 export default TradePage;

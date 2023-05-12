@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { getSynthAsset, getSynthName } from 'utils/currency';
 
@@ -15,28 +16,31 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
     // const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
     return (
-        <Wrapper onClick={setOpen.bind(this, !open)}>
-            <Asset asset={asset} setAsset={setAsset.bind(this, asset)} />
-            {open && (
-                <AssetContainer>
-                    {allAssets.map((_asset, index) => {
-                        if (_asset !== asset) {
-                            return <Asset key={index} asset={_asset} setAsset={setAsset.bind(this, _asset)} />;
-                        }
-                    })}
-                </AssetContainer>
-            )}
-        </Wrapper>
+        <OutsideClickHandler onOutsideClick={() => open && setOpen(false)}>
+            <Wrapper onClick={setOpen.bind(this, !open)}>
+                <Asset showDropDownIcon={!open} asset={asset} setAsset={setAsset.bind(this, asset)} />
+                {open && (
+                    <AssetContainer>
+                        {allAssets.map((_asset, index) => {
+                            if (_asset !== asset) {
+                                return <Asset key={index} asset={_asset} setAsset={setAsset.bind(this, _asset)} />;
+                            }
+                        })}
+                    </AssetContainer>
+                )}
+            </Wrapper>
+        </OutsideClickHandler>
     );
 };
 
 type AssetProps = {
     asset: string;
     setAsset: React.Dispatch<React.SetStateAction<string>>;
+    showDropDownIcon?: boolean;
     // exchangeRates: Rates | null;
 };
 
-const Asset: React.FC<AssetProps> = ({ asset, setAsset }) => {
+const Asset: React.FC<AssetProps> = ({ asset, setAsset, showDropDownIcon = false }) => {
     // const AssetIcon = getAssetIcon(asset);
 
     // const Icon = styled(AssetIcon)`
@@ -69,6 +73,7 @@ const Asset: React.FC<AssetProps> = ({ asset, setAsset }) => {
                 <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
                 <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
             </AssetWrapper>
+            {showDropDownIcon && <Icon className="icon icon--caret-down" />}
             {/* <PriceWrapper>
                 <Price>{formatCurrencyWithSign(USD_SIGN, exchangeRates?.[asset] || 0)}</Price>
                 <PriceChange uptrend={processedPriceData > 0}>
@@ -83,6 +88,11 @@ const Wrapper = styled.div`
     position: relative;
     z-index: 100;
     border-radius: 8px;
+`;
+
+const Icon = styled.i`
+    font-size: 12px;
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 const Container = styled.div`
@@ -105,7 +115,7 @@ const Container = styled.div`
         border-bottom-right-radius: 8px;
     }
 
-    background: var(--color-secondary);
+    background: ${(props) => props.theme.background.secondary};
 
     &:hover {
         background: var(--color-secondary-hover);
@@ -123,7 +133,7 @@ const CurrencyName = styled.p`
     font-size: 13px;
     line-height: 100%;
     text-transform: uppercase;
-    color: var(--color-text);
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 const CurrencyFullName = styled.p`
     font-family: 'Roboto';
@@ -132,13 +142,13 @@ const CurrencyFullName = styled.p`
     font-size: 13px;
     line-height: 100%;
     text-transform: uppercase;
-    color: var(--color-text);
+    color: ${(props) => props.theme.textColor.secondary};
     margin-left: 4px;
 `;
 const AssetContainer = styled.div`
     position: absolute;
     margin-top: 5px;
-    background: var(--color-secondary);
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 8px; ;
 `;
 // const PriceWrapper = styled.div`

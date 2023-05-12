@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { formatShortDateFromTimestamp } from 'utils/formatters/date';
 
@@ -18,23 +19,28 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
     }, [allDates]);
 
     return (
-        <Wrapper>
-            <Container onClick={setOpen.bind(this, !open)}>
-                {date && <Date onClick={setDate.bind(this, date)}>{formatShortDateFromTimestamp(date)}</Date>}
-            </Container>
-            {open && (
-                <Dropdown onClick={setOpen.bind(this, !open)}>
-                    {allDates.map((_date, index) => {
-                        if (date === _date) return;
-                        return (
-                            <DateContainer key={index}>
-                                <Date onClick={setDate.bind(this, _date)}>{formatShortDateFromTimestamp(_date)}</Date>
-                            </DateContainer>
-                        );
-                    })}
-                </Dropdown>
-            )}
-        </Wrapper>
+        <OutsideClickHandler onOutsideClick={() => open && setOpen(false)}>
+            <Wrapper>
+                <Container onClick={setOpen.bind(this, !open)}>
+                    {date && <Date onClick={setDate.bind(this, date)}>{formatShortDateFromTimestamp(date)}</Date>}
+                    {!open && <Icon className="icon icon--caret-down" />}
+                </Container>
+                {open && (
+                    <Dropdown onClick={setOpen.bind(this, !open)}>
+                        {allDates.map((_date, index) => {
+                            if (date === _date) return;
+                            return (
+                                <DateContainer key={index}>
+                                    <Date onClick={setDate.bind(this, _date)}>
+                                        {formatShortDateFromTimestamp(_date)}
+                                    </Date>
+                                </DateContainer>
+                            );
+                        })}
+                    </Dropdown>
+                )}
+            </Wrapper>
+        </OutsideClickHandler>
     );
 };
 
@@ -45,6 +51,11 @@ const Wrapper = styled.div`
     height: 23px;
 `;
 
+const Icon = styled.i`
+    font-size: 12px;
+    color: ${(props) => props.theme.textColor.secondary};
+`;
+
 const Container = styled.div`
     width: 267px;
     max-height: 23px;
@@ -52,7 +63,7 @@ const Container = styled.div`
     height: 23px;
 
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 
     border-radius: 8px;
