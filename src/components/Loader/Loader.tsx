@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import angry from 'assets/images/angry_thales.gif';
 import { ReactComponent as OpLogo } from 'assets/images/optimism-circle-logo.svg';
 import { ReactComponent as EthereumLogo } from 'assets/images/ethereum-circle-logo.svg';
 import { ReactComponent as PolygonLogo } from 'assets/images/polygon-circle-logo.svg';
 import { ReactComponent as ArbitrumLogo } from 'assets/images/arbitrum-circle-logo.svg';
 import { ReactComponent as BSCLogo } from 'assets/images/binance_chain.svg';
 import { CircularProgress } from '@material-ui/core';
-import { Image } from 'theme/common';
 import { history } from 'utils/routes';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -33,7 +31,6 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
         <Wrapper>
             {(networkId && !isNetworkSupported(networkId)) || hideMainnet ? (
                 <WrongNetworkWrapper>
-                    <Image style={{ width: 150, height: 150, margin: 'auto' }} src={angry} />
                     <WrongNetworkText className="pale-grey">{t(`common.unsupported-network.title`)}</WrongNetworkText>
 
                     <ExplanationText style={{ marginTop: 5 }} className="pale-grey text-s lh32 ls25">
@@ -144,7 +141,7 @@ const WrongNetworkWrapper = styled.div`
     display: flex;
     flex-direction: column;
     max-width: 600px;
-    padding: 0 100px;
+    padding: 50px 100px 0 100px;
     text-align: center;
     border: 2px solid var(--color-highlight);
     box-sizing: border-box;
