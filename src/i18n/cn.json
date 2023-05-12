@@ -1735,7 +1735,14 @@
                     "position-bonus": "每个位置的奖金",
                     "potential-profit": "潜在利润",
                     "confirm-order": "确认{{position}}订单",
-                    "position-price": "每个位置的价格"
+                    "position-price": "每个位置的价格",
+                    "confirm": "确认",
+                    "skew": "偏斜影响"
+                },
+                "slippage": {
+                    "label": "滑点公差",
+                    "enter-value": "输入值",
+                    "invalid-value": "无效值"
                 }
             }
         }

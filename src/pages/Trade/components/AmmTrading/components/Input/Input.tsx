@@ -14,6 +14,9 @@ type InputProps = {
     valueEditDisable?: boolean;
     valueColor?: string;
     valueFontSize?: string;
+    subValue?: any;
+    subValueColor?: string;
+    subValueFontSize?: string;
     disabled?: boolean;
     showError?: boolean;
     errorMessage?: string;
@@ -39,6 +42,9 @@ const Input: React.FC<InputProps> = ({
     valueEditDisable,
     valueColor,
     valueFontSize,
+    subValue,
+    subValueColor,
+    subValueFontSize,
     disabled,
     showError,
     errorMessage,
@@ -95,12 +101,47 @@ const Input: React.FC<InputProps> = ({
                             readOnly={typeof handleChange !== 'function' || disabled}
                         />
                     )}
+                    <SubValue color={subValueColor} fontSize={subValueFontSize}>
+                        {subValue}
+                    </SubValue>
                 </ValueContainer>
                 {children}
             </Container>
         </CustomTooltip>
     );
 };
+
+const Container = styled.div<{
+    disabled?: boolean;
+    width?: string;
+    height?: string;
+    margin?: string;
+    padding?: string;
+    zIndex?: number;
+    isFocused?: boolean;
+    isError?: boolean;
+}>`
+    width: ${(props) => (props.width ? props.width : '100%')};
+    margin: ${(props) => (props.margin ? props.margin : '0 0 8px 0')};
+    ${(props) => (props.height ? `height: ${props.height};` : '')}
+    display: flex;
+    flex-direction: column;
+    border: 1px solid
+        ${(props) =>
+            props.isError
+                ? props.theme.input.borderColor.error.primary
+                : props.isFocused
+                ? props.theme.input.borderColor.focus.primary
+                : props.theme.input.borderColor.primary};
+    border-radius: 10px;
+    justify-content: center;
+    padding: ${(props) => (props.padding ? props.padding : '5px 10px')};
+    box-sizing: border-box;
+    position: relative;
+    opacity: ${(props) => (props.disabled ? '0.5 !important' : '1')};
+    background: transparent;
+    ${(props) => (props?.zIndex ? `z-index: ${props.zIndex};` : '')}
+`;
 
 const Title = styled.div<{ color?: string; fontSize?: string }>`
     font-family: ${(props) => props.theme.fontFamily.primary};
@@ -121,8 +162,8 @@ const ValueContainer = styled.div`
 const Value = styled.input<{ color?: string; fontSize?: string; disabled: boolean }>`
     font-family: ${(props) => props.theme.fontFamily.primary};
     font-weight: 400;
-    color: ${(props) => (props?.color ? props.color : props.theme.input.textColor.primary)};
-    font-size: ${(props) => (props?.fontSize ? props.fontSize : '18px')};
+    color: ${(props) => (props.color ? props.color : props.theme.input.textColor.primary)};
+    font-size: ${(props) => (props.fontSize ? props.fontSize : '18px')};
     text-transform: capitalize;
     cursor: ${(props) => (props.disabled ? 'not-allowed' : 'initial')};
     background: transparent;
@@ -138,42 +179,17 @@ const Value = styled.input<{ color?: string; fontSize?: string; disabled: boolea
     }
 `;
 
-const Container = styled.div<{
-    disabled?: boolean;
-    width?: string;
-    height?: string;
-    margin?: string;
-    padding?: string;
-    zIndex?: number;
-    isFocused?: boolean;
-    isError?: boolean;
-}>`
-    width: ${(props) => (props?.width ? props.width : '100%')};
-    ${(props) => (props?.margin ? `margin: ${props.margin};` : '')}
-    ${(props) => (props?.height ? `height: ${props.height};` : '')}
-    display: flex;
-    flex-direction: column;
-    border: 1px solid
-        ${(props) =>
-            props.isError
-                ? props.theme.input.borderColor.error.primary
-                : props.isFocused
-                ? props.theme.input.borderColor.focus.primary
-                : props.theme.input.borderColor.primary};
-    border-radius: 10px;
-    justify-content: center;
-    padding: ${(props) => (props?.padding ? props.padding : '5px 10px')};
-    box-sizing: border-box;
-    margin-bottom: 8px;
-    position: relative;
-    opacity: ${(props) => (props?.disabled ? '0.5 !important' : '1')};
-    background: transparent;
-    ${(props) => (props?.zIndex ? `z-index: ${props.zIndex};` : '')}
+const SubValue = styled.span<{ color?: string; fontSize?: string }>`
+    font-family: ${(props) => props.theme.fontFamily.primary};
+    font-weight: 400;
+    color: ${(props) => (props.color ? props.color : props.theme.input.textColor.primary)};
+    font-size: ${(props) => (props.fontSize ? props.fontSize : '18px')};
 `;
 
 const CustomTooltip = styled((props) => <Tooltip classes={{ popper: props.className }} {...props} />)`
     & .MuiTooltip-tooltip {
-        margin: -12px 0 0 0;
+        margin: -10px 0 0 0;
+        padding: 2px 8px;
         font-family: ${(props) => props.theme.fontFamily.primary};
         font-weight: 600;
         font-size: 13px;

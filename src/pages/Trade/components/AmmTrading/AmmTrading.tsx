@@ -8,6 +8,7 @@ import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import {
     COLLATERALS,
     MINIMUM_AMM_LIQUIDITY,
+    MIN_SCEW_IMPACT,
     POSITIONS_TO_SIDE_MAP,
     Positions,
     RANGE_SIDE,
@@ -49,14 +50,14 @@ import {
     getSynthName,
 } from 'utils/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
-import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
+import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import {
     SHORT_CRYPTO_CURRENCY_DECIMALS,
     countDecimals,
     formatCurrencyWithKey,
     formatCurrencyWithSign,
     roundNumberToDecimals,
-    truncDecimals,
+    truncToDecimals,
 } from 'utils/formatters/number';
 import {
     checkAllowance,
@@ -98,6 +99,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [positionPrice, setPositionPrice] = useState<number | string>('');
     const [basePrice, setBasePrice] = useState<number | string>('');
     const [paidAmount, setPaidAmount] = useState<number | string>('');
+    const [priceImpact, setPriceImpact] = useState<number | string>('');
+    const [basePriceImpact, setBasePriceImpact] = useState<number | string>('');
+    const [slippagePerc, setSlippagePerc] = useState<number>(SLIPPAGE_PERCENTAGE[2]);
     const [priceProfit, setPriceProfit] = useState<number | string>('');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [hasAllowance, setAllowance] = useState(false);
@@ -212,6 +216,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         setPositionAmount('');
         setPositionPrice('');
         setPriceProfit('');
+        setPriceImpact('');
         setGasLimit(null);
     };
 
@@ -286,6 +291,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                               POSITIONS_TO_SIDE_MAP[market.positionType],
                               collateral.address
                           ),
+                          0, // No price impact for ranged markets
                       ]
                     : getQuoteFromAMM(
                           isNonDefaultStable,
@@ -297,7 +303,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                           collateral.address
                       );
 
-                const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
+                const [ammQuotes, ammPriceImpact]: Array<BigNumber> = await Promise.all(promises);
                 const ammQuote = isNonDefaultStable ? (ammQuotes as any)[0] : ammQuotes;
 
                 const ammPrice =
@@ -310,7 +316,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 let calcAmount = totalToPay / ammPrice;
                 if (isMax) {
                     if (calcAmount >= liquidity) {
-                        calcAmount = Number(truncDecimals(liquidity));
+                        calcAmount = Number(truncToDecimals(liquidity));
                         setPaidAmount(calcAmount * ammPrice);
                     } else {
                         setPaidAmount(totalToPay);
@@ -319,9 +325,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
                 setPositionAmount(calcAmount);
                 setPositionPrice(ammPrice);
+                setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - MIN_SCEW_IMPACT : 0);
                 setPriceProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
 
-                const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
+                const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
                 const isQuoteChanged =
                     ammPrice !== positionPrice ||
                     totalToPay !==
@@ -361,8 +368,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 }
                 // Between 2 calls ammPrice will be always different as it is based on position amount which is changed when price is changed
                 priceChanged =
-                    truncDecimals(ammPrice, SHORT_CRYPTO_CURRENCY_DECIMALS) !==
-                    truncDecimals(Number(positionPrice), SHORT_CRYPTO_CURRENCY_DECIMALS);
+                    truncToDecimals(ammPrice, SHORT_CRYPTO_CURRENCY_DECIMALS) !==
+                    truncToDecimals(Number(positionPrice), SHORT_CRYPTO_CURRENCY_DECIMALS);
             } catch (e) {
                 console.log(e);
                 resetData();
@@ -434,7 +441,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
             const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
             const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
-            const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
+            const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
             const gasPrice = await snxJSConnector.provider?.getGasPrice();
 
             const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
@@ -580,7 +587,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
         const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
-        const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
+        const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
         fetchGasLimit(
             market.address,
             POSITIONS_TO_SIDE_MAP[market.positionType],
@@ -598,11 +605,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         hasAllowance,
         positionAmount,
         market.address,
+        slippagePerc,
     ]);
 
     useEffect(() => {
         let max = 0;
         let base = 0;
+        let baseImpact = 0;
         if (isRangedAmm) {
             if (rangedAmmMaxLimits) {
                 if (isInPosition) {
@@ -617,13 +626,16 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             if (isLong) {
                 max = ammMaxLimits.maxBuyLong;
                 base = ammMaxLimits.buyLongPrice;
+                baseImpact = ammMaxLimits.buyLongPriceImpact;
             } else {
                 max = ammMaxLimits.maxBuyShort;
                 base = ammMaxLimits.buyShortPrice;
+                baseImpact = ammMaxLimits.buyShortPriceImpact;
             }
         }
         setLiquidity(max);
         setBasePrice(base);
+        setBasePriceImpact(baseImpact);
         if (market.address && (isRangedAmm ? rangedAmmMaxLimitsQuery.data : ammMaxLimitsQuery.data)) {
             setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
         }
@@ -676,7 +688,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
         if (isMaxButtonDisabled) return;
 
-        const maxPaidAmount = roundNumberToDecimals(Number(stableBalance) * (1 - SLIPPAGE_PERCENTAGE[2] / 100));
+        const maxPaidAmount = Number(truncToDecimals(Number(stableBalance) * (1 - slippagePerc / 100)));
         fetchAmmPriceData(maxPaidAmount, false, false, true);
     };
 
@@ -749,7 +761,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         ? '...'
         : `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), Number(priceProfit) * Number(paidAmount))}`;
 
-    const PositionTypeFormatted =
+    const positionTypeFormatted =
         market.positionType === Positions.UP
             ? t('options.common.above')
             : market.positionType === Positions.DOWN
@@ -758,19 +770,19 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             ? t('options.common.between')
             : t('options.common.not-between');
 
-    return (
-        <Container>
-            <TradingDetails>
-                <ColumnSpaceBetween>
-                    <FlexDivCentered>
-                        <Text>
-                            <TextLabel>
-                                {t('options.trade.amm-trading.asset-price', { asset: getSynthName(currencyKey) })}
-                            </TextLabel>
-                            {market.address ? (
-                                <>
-                                    <TextValue uppercase={true}>{PositionTypeFormatted}</TextValue>
-                                    {isRangedAmm ? (
+    const getTradingDetailsAsSentence = (breakFirstLine: boolean) => {
+        return (
+            <ColumnSpaceBetween>
+                <FlexDivCentered>
+                    <Text>
+                        <TextLabel>
+                            {t('options.trade.amm-trading.asset-price', { asset: getSynthName(currencyKey) })}
+                        </TextLabel>
+                        {market.address ? (
+                            <>
+                                <TextValue uppercase={true}>{positionTypeFormatted}</TextValue>
+                                {isRangedAmm ? (
+                                    !breakFirstLine && (
                                         <>
                                             <TextValue>
                                                 {formatCurrencyWithSign(
@@ -788,38 +800,61 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                                 )}
                                             </TextValue>
                                         </>
-                                    ) : (
-                                        <TextValue>
-                                            {formatCurrencyWithSign(USD_SIGN, (market as MarketInfo).strikePrice)}
-                                        </TextValue>
-                                    )}
-                                </>
-                            ) : (
-                                <TextValue>{'( ' + t('options.trade.amm-trading.pick-price') + ' )'}</TextValue>
-                            )}
-                        </Text>
-                    </FlexDivCentered>
+                                    )
+                                ) : (
+                                    <TextValue>
+                                        {formatCurrencyWithSign(USD_SIGN, (market as MarketInfo).strikePrice)}
+                                    </TextValue>
+                                )}
+                            </>
+                        ) : (
+                            <TextValue>{'( ' + t('options.trade.amm-trading.pick-price') + ' )'}</TextValue>
+                        )}
+                    </Text>
+                </FlexDivCentered>
+                {breakFirstLine && isRangedAmm && market.address && (
                     <FlexDivCentered>
                         <Text>
-                            <TextLabel>{t('options.common.on')}</TextLabel>
-                            <TextValue>{formatShortDateWithTime(maturityDate)}</TextValue>
-                        </Text>
-                    </FlexDivCentered>
-                    <FlexDivCentered>
-                        <Text>
-                            <TextLabel>{t('options.trade.amm-trading.you-win')}</TextLabel>
-                            <TextValue isProfit={true}>
-                                {Number(priceProfit) > 0 && Number(paidAmount) > 0
-                                    ? potentialProfitFormatted
-                                    : '( ' + t('options.trade.amm-trading.based-price') + ' )'}
+                            <TextValue>
+                                {formatCurrencyWithSign(USD_SIGN, (market as RangedMarketPerPosition).leftPrice)}
+                            </TextValue>
+                            <Text>
+                                <TextLabel>{' ' + t('options.common.and')}</TextLabel>
+                            </Text>
+                            <TextValue>
+                                {formatCurrencyWithSign(USD_SIGN, (market as RangedMarketPerPosition).rightPrice)}
                             </TextValue>
                         </Text>
                     </FlexDivCentered>
-                </ColumnSpaceBetween>
+                )}
+                <FlexDivCentered>
+                    <Text>
+                        <TextLabel>{t('options.common.on')}</TextLabel>
+                        <TextValue>{formatShortDateWithTime(maturityDate)}</TextValue>
+                    </Text>
+                </FlexDivCentered>
+                <FlexDivCentered>
+                    <Text>
+                        <TextLabel>{t('options.trade.amm-trading.you-win')}</TextLabel>
+                        <TextValue isProfit={true}>
+                            {Number(priceProfit) > 0 && Number(paidAmount) > 0
+                                ? potentialProfitFormatted
+                                : '( ' + t('options.trade.amm-trading.based-price') + ' )'}
+                        </TextValue>
+                    </Text>
+                </FlexDivCentered>
+            </ColumnSpaceBetween>
+        );
+    };
+
+    return (
+        <Container>
+            <TradingDetails>
+                {getTradingDetailsAsSentence(false)}
                 <DetailsIcon
                     className="icon icon--gear"
-                    disabled={!market.address}
-                    onClick={() => market.address && setOpenTradingDetailsModal(true)}
+                    disabled={isButtonDisabled}
+                    onClick={() => !isButtonDisabled && setOpenTradingDetailsModal(true)}
                 />
             </TradingDetails>
             <FinalizeTrade>
@@ -862,7 +897,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     strikePrice={(market as MarketInfo).strikePrice}
                     leftStrikePrice={(market as RangedMarketPerPosition).leftPrice}
                     rightStrikePrice={(market as RangedMarketPerPosition).rightPrice}
-                    position={market.positionType}
+                    positionType={market.positionType}
                     positionPrice={Number(positionPrice) > 0 ? Number(positionPrice) : Number(basePrice)}
                     positionBonus={convertPriceImpactToBonus(market.discount)}
                     positionAmount={Number(positionAmount)}
@@ -872,6 +907,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
                     )}
                     profit={Number(priceProfit) * Number(paidAmount)}
+                    skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}
+                    slippage={slippagePerc}
+                    setSlippage={setSlippagePerc}
+                    tradingDetailsSentence={getTradingDetailsAsSentence(true)}
                     onClose={() => setOpenTradingDetailsModal(false)}
                 />
             )}

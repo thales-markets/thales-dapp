@@ -19,7 +19,7 @@ export default {
     borderColor: {
         primary: Colors.GRAY_LIGHT,
         secondary: Colors.ORANGE,
-        tertiary: '',
+        tertiary: Colors.GRAY,
         quaternary: Colors.GREEN,
     },
     button: {

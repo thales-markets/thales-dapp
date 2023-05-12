@@ -1,7 +1,8 @@
 import { Modal } from '@material-ui/core';
+import Button from 'components/ButtonV2';
 import { USD_SIGN } from 'constants/currency';
-import { Positions } from 'constants/options';
-import React from 'react';
+import { Positions, SLIPPAGE_PERCENTAGE } from 'constants/options';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -10,8 +11,15 @@ import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import {
+    calculateAndFormatPercentage,
+    formatCurrencyWithKey,
+    formatCurrencyWithSign,
+    formatPercentage,
+} from 'utils/formatters/number';
 import { getFormattedBonus } from 'utils/options';
+import Slippage from '../Slippage';
+import { isSlippageValid } from '../Slippage/Slippage';
 
 type TradingDetailsModalProps = {
     currencyKey: string;
@@ -19,13 +27,17 @@ type TradingDetailsModalProps = {
     strikePrice: number;
     leftStrikePrice: number;
     rightStrikePrice: number;
-    position: Positions;
+    positionType: Positions;
     positionPrice: number;
     positionBonus: number;
     positionAmount: number;
     paidAmount: number;
     selectedStable: string;
     profit: number;
+    skew: number;
+    slippage: number;
+    setSlippage: (value: number) => void;
+    tradingDetailsSentence: JSX.Element;
     onClose: () => void;
 };
 
@@ -35,18 +47,34 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
     strikePrice,
     leftStrikePrice,
     rightStrikePrice,
-    position,
+    positionType,
     positionPrice,
     positionBonus,
     positionAmount,
     paidAmount,
     selectedStable,
     profit,
+    skew,
+    slippage,
+    setSlippage,
+    tradingDetailsSentence,
     onClose,
 }) => {
     const { t } = useTranslation();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+    const [slippageTolerance, setSlippageTolerance] = useState<number | string>(slippage);
+
+    const isButtonDisabled = !isSlippageValid(Number(slippageTolerance));
+
+    const onSubmitHandler = () => {
+        if (isButtonDisabled) {
+            return;
+        }
+        setSlippage(Number(slippageTolerance));
+        onClose();
+    };
 
     return (
         <Modal
@@ -58,7 +86,9 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
         >
             <Container>
                 <Header>
-                    <TextHeader>{t('options.trade.amm-trading.details-modal.confirm-order', { position })}</TextHeader>
+                    <TextHeader>
+                        {t('options.trade.amm-trading.details-modal.confirm-order', { positionType })}
+                    </TextHeader>
                     <CloseIcon className="icon icon--x-sign" onClick={onClose} />
                 </Header>
 
@@ -69,7 +99,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.common.direction')}</TextLabel>
-                        <TextValue>{position}</TextValue>
+                        <TextValue>{positionType}</TextValue>
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.common.strike-price')}</TextLabel>
@@ -99,22 +129,56 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.trade.amm-trading.details-modal.amount')}</TextLabel>
-                        <TextValue>{formatCurrencyWithKey(position, positionAmount)}</TextValue>
+                        <TextValue>
+                            {positionAmount ? formatCurrencyWithKey(positionType, positionAmount) : '-'}
+                        </TextValue>
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.trade.amm-trading.details-modal.total-pay')}</TextLabel>
-                        <TextValue>{formatCurrencyWithKey(selectedStable, paidAmount)}</TextValue>
+                        <TextValue>{paidAmount ? formatCurrencyWithKey(selectedStable, paidAmount) : '-'}</TextValue>
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.trade.amm-trading.details-modal.potential-profit')}</TextLabel>
                         <TextValue isProfit={true}>
-                            {formatCurrencyWithKey(getStableCoinForNetwork(networkId), profit)}
+                            {profit
+                                ? `${formatCurrencyWithKey(
+                                      getStableCoinForNetwork(networkId),
+                                      profit
+                                  )} (${formatPercentage(calculateAndFormatPercentage(paidAmount, positionAmount))})`
+                                : '-'}
                         </TextValue>
                     </DetailsRow>
                 </TradingDetails>
+
+                <DetailsRow padding="2px 11px">
+                    <TextLabel>{t('options.trade.amm-trading.details-modal.skew')}</TextLabel>
+                    <TextValue isProfit={true}>{formatPercentage(skew)}</TextValue>
+                </DetailsRow>
+                <DetailsRow padding="2px 11px" margin="0 0 15px 0">
+                    <Slippage
+                        fixed={SLIPPAGE_PERCENTAGE}
+                        defaultValue={slippage}
+                        onChangeHandler={(value) => setSlippageTolerance(value)}
+                    />
+                </DetailsRow>
+
+                <TradingDetailsSentence height={leftStrikePrice ? '66px' : '49px'}>
+                    {tradingDetailsSentence}
+                </TradingDetailsSentence>
+
+                <Button {...defaultButtonProps} disabled={isButtonDisabled} onClickHandler={() => onSubmitHandler()}>
+                    {t(`options.trade.amm-trading.details-modal.confirm`)}
+                </Button>
             </Container>
         </Modal>
     );
+};
+
+const defaultButtonProps = {
+    width: '100%',
+    height: '34px',
+    active: true,
+    margin: '0 0 5px 0',
 };
 
 const Container = styled(FlexDivColumnCentered)`
@@ -140,14 +204,20 @@ const MarketDetails = styled(FlexDivColumnCentered)`
     margin-bottom: 10px;
 `;
 
-const DetailsRow = styled(FlexDivRowCentered)`
-    padding: 2px 0;
+const DetailsRow = styled(FlexDivRowCentered)<{ margin?: string; padding?: string }>`
+    ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
+    padding: ${(props) => (props.padding ? props.padding : '2px 0')};
 `;
 
 const TradingDetails = styled(FlexDivColumnCentered)`
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 8px;
     padding: 10px;
+    margin-bottom: 15px;
+`;
+
+const TradingDetailsSentence = styled(FlexDivRowCentered)<{ height?: string }>`
+    height: ${(props) => (props.height ? props.height : '100%')};
     margin-bottom: 15px;
 `;
 

@@ -1731,7 +1731,14 @@
                     "position-bonus": "Бонус за позицию",
                     "potential-profit": "Потенциальная прибыль",
                     "position-price": "Цена за позицию",
-                    "confirm-order": "Подтвердить {{position}} заказ"
+                    "confirm-order": "Подтвердить {{position}} заказ",
+                    "confirm": "Подтверждать",
+                    "skew": "Косое воздействие"
+                },
+                "slippage": {
+                    "invalid-value": "Неверное значение",
+                    "label": "Допуск на проскальзывание",
+                    "enter-value": "Введите значение"
                 }
             }
         }

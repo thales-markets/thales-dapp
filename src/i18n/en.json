@@ -396,7 +396,14 @@
                     "position-bonus": "Bonus per position",
                     "amount": "Amount",
                     "total-pay": "Total to pay",
-                    "potential-profit": "Potential profit"
+                    "potential-profit": "Potential profit",
+                    "skew": "Skew impact",
+                    "confirm": "Confirm"
+                },
+                "slippage": {
+                    "label": "Slippage tolerance",
+                    "enter-value": "Enter value",
+                    "invalid-value": "Invalid value"
                 }
             }
         },
