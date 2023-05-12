@@ -189,7 +189,7 @@ export const UserSwap: React.FC = () => {
                     onClose={(_, reason) => {
                         if (reason !== 'backdropClick') setShowSwap(false);
                     }}
-                    style={{ backdropFilter: 'blur(10px)' }}
+                    style={{ backdropFilter: 'blur(10px)', zIndex: 2000 }}
                 >
                     <Suspense fallback={<></>}>
                         <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>

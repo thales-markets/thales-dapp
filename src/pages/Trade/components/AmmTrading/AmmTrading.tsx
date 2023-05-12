@@ -7,7 +7,6 @@ import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import {
     COLLATERALS,
-    MINIMUM_AMM_LIQUIDITY,
     MIN_SCEW_IMPACT,
     POSITIONS_TO_SIDE_MAP,
     Positions,
@@ -189,7 +188,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         !market.address ||
         isSubmitting ||
         (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
-        insufficientLiquidity ||
         isFetchingQuote;
 
     const collateral = useMemo(() => {
@@ -636,14 +634,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         setLiquidity(max);
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
-        if (market.address && (isRangedAmm ? rangedAmmMaxLimitsQuery.data : ammMaxLimitsQuery.data)) {
-            setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
-        }
     }, [
         ammMaxLimitsQuery.data,
         ammMaxLimits,
         isLong,
-        market.address,
         isRangedAmm,
         rangedAmmMaxLimitsQuery.data,
         rangedAmmMaxLimits,

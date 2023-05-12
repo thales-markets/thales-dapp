@@ -18,6 +18,7 @@ import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
 import OpenPositions from './components/OpenPositions/OpenPositions';
+import Loader from 'components/Loader';
 
 const TradePage: React.FC = () => {
     // selectors
@@ -84,69 +85,79 @@ const TradePage: React.FC = () => {
 
     return (
         <Wrapper>
-            <BannerCarousel />
-            <ContentWrapper>
-                <LeftSide>
-                    <FlexDivRowCentered style={{ gap: 15 }}>
-                        <PositionedWrapper>
-                            <InfoWrapper>
-                                <Number>1</Number>
-                                <Info>Choose Asset</Info>
-                            </InfoWrapper>
-                            {allAssets && (
-                                <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
-                            )}
-                        </PositionedWrapper>
-                        <PositionedWrapper>
-                            <InfoWrapper>
-                                <Number>2</Number>
-                                <Info>Choose Date</Info>
-                            </InfoWrapper>
-                            <DatesDropdown
-                                date={maturityDate}
-                                setDate={setMaturityDate}
-                                allDates={allDates}
-                            ></DatesDropdown>
-                        </PositionedWrapper>
-                    </FlexDivRowCentered>
-                    <PriceChart
-                        position={positionType}
-                        asset={currencyKey}
-                        selectedPrice={getSelectedPrice()}
-                        selectedRightPrice={getSelectedRightPrice()}
-                    ></PriceChart>
-                </LeftSide>
-                <RightSide>
-                    <PositionedWrapper>
-                        <InfoWrapper marginLeft={45}>
-                            <Number>3</Number>
-                            <Info>Choose Direction</Info>
-                        </InfoWrapper>
-                        <RadioButtons onChange={setPositionType} selected={positionType} />
-                    </PositionedWrapper>
+            {networkId === 1 ? (
+                <Loader hideMainnet={true} />
+            ) : (
+                <>
+                    <BannerCarousel />
+                    <ContentWrapper>
+                        <LeftSide>
+                            <FlexDivRowCentered style={{ gap: 15 }}>
+                                <PositionedWrapper>
+                                    <InfoWrapper>
+                                        <Number>1</Number>
+                                        <Info>Choose Asset</Info>
+                                    </InfoWrapper>
+                                    {allAssets && (
+                                        <AssetDropdown
+                                            asset={currencyKey}
+                                            setAsset={setCurrencyKey}
+                                            allAssets={allAssets}
+                                        />
+                                    )}
+                                </PositionedWrapper>
+                                <PositionedWrapper>
+                                    <InfoWrapper>
+                                        <Number>2</Number>
+                                        <Info>Choose Date</Info>
+                                    </InfoWrapper>
+                                    <DatesDropdown
+                                        date={maturityDate}
+                                        setDate={setMaturityDate}
+                                        allDates={allDates}
+                                    ></DatesDropdown>
+                                </PositionedWrapper>
+                            </FlexDivRowCentered>
+                            <PriceChart
+                                position={positionType}
+                                asset={currencyKey}
+                                selectedPrice={getSelectedPrice()}
+                                selectedRightPrice={getSelectedRightPrice()}
+                            ></PriceChart>
+                        </LeftSide>
+                        <RightSide>
+                            <PositionedWrapper>
+                                <InfoWrapper marginLeft={45}>
+                                    <Number>3</Number>
+                                    <Info>Choose Direction</Info>
+                                </InfoWrapper>
+                                <RadioButtons onChange={setPositionType} selected={positionType} />
+                            </PositionedWrapper>
 
-                    <AssetTable setMarket={setMarket} markets={allMarkets} position={positionType} />
-                </RightSide>
-            </ContentWrapper>
+                            <AssetTable setMarket={setMarket} markets={allMarkets} position={positionType} />
+                        </RightSide>
+                    </ContentWrapper>
 
-            <AmmTrading
-                currencyKey={currencyKey}
-                maturityDate={maturityDate || 0}
-                market={
-                    market || {
-                        currencyKey: '',
-                        address: '',
-                        liquidity: 0,
-                        price: 0,
-                        strikePrice: 0,
-                        leftPrice: 0,
-                        rightPrice: 0,
-                        discount: 0,
-                        positionType: Positions.UP,
-                    }
-                }
-            />
-            <OpenPositions />
+                    <AmmTrading
+                        currencyKey={currencyKey}
+                        maturityDate={maturityDate || 0}
+                        market={
+                            market || {
+                                currencyKey: '',
+                                address: '',
+                                liquidity: 0,
+                                price: 0,
+                                strikePrice: 0,
+                                leftPrice: 0,
+                                rightPrice: 0,
+                                discount: 0,
+                                positionType: Positions.UP,
+                            }
+                        }
+                    />
+                    <OpenPositions />
+                </>
+            )}
         </Wrapper>
     );
 };
