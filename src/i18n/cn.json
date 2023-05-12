@@ -1746,7 +1746,8 @@
                     "label": "滑点公差",
                     "enter-value": "输入值",
                     "invalid-value": "无效值"
-                }
+                },
+                "based-amount": "根据金额"
             },
             "steps": {
                 "choose-asset": "选择资产",

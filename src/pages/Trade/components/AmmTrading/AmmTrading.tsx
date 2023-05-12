@@ -833,7 +833,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         <TextValue isProfit={true}>
                             {Number(priceProfit) > 0 && Number(paidAmount) > 0
                                 ? potentialProfitFormatted
-                                : '( ' + t('options.trade.amm-trading.based-price') + ' )'}
+                                : '( ' + t('options.trade.amm-trading.based-amount') + ' )'}
                         </TextValue>
                     </Text>
                 </FlexDivCentered>
@@ -977,7 +977,6 @@ const Text = styled.span`
     font-weight: 700;
     font-size: 13px;
     line-height: 15px;
-    text-transform: capitalize;
 `;
 
 const TextLabel = styled.span`

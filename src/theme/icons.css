@@ -134,6 +134,14 @@
     content: '\0023';
 }
 
+.icon--radio-button-selected:before {
+    content: '\0024';
+}
+
+.icon--radio-button:before {
+    content: '\0025';
+}
+
 .icon--unverified:before {
     content: '\0030';
 }
@@ -263,5 +271,5 @@
 }
 
 .icon--gear:before {
-    content: '\2699';
+    content: '\008A';
 }

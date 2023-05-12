@@ -389,7 +389,7 @@
             "amm-trading": {
                 "asset-price": "If {{asset}} price is",
                 "pick-price": "Pick a price",
-                "based-price": "Based on price",
+                "based-amount": "Based on amount",
                 "you-win": "You win",
                 "enter-amount": "Enter amount",
                 "select-price": "Select price",
