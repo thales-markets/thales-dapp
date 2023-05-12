@@ -258,7 +258,8 @@
         "all": "全部",
         "none": "没有任何",
         "show-less": "显示较少",
-        "read-more": "阅读更多"
+        "read-more": "阅读更多",
+        "close": "关闭"
     },
     "modals": {
         "gwei": {

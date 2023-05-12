@@ -87,7 +87,7 @@ const Wrapper = styled.button<{
     font-family: ${(props) => props.theme.fontFamily.primary};
     font-weight: 700;
     font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
-    cursor: ${(props) => (props?.disabled ? 'not-allowed' : 'pointer')};
+    cursor: ${(props) => (props?.disabled ? 'default' : 'pointer')};
     color: ${(props) =>
         props?.active
             ? props.activeTextColor

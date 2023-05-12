@@ -143,7 +143,6 @@ const Label = styled.span`
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
-    text-transform: capitalize;
     color: ${(props) => props.theme.textColor.secondary};
     white-space: nowrap;
 `;

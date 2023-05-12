@@ -83,7 +83,7 @@ const Arrow = styled.i`
 `;
 
 const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`
-    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     &:hover ${TextCollateral} {
         ${(props) => (!props.disabled ? `color: ${props.theme.textColor.primary};` : '')}
     }

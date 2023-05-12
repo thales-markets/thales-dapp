@@ -955,7 +955,7 @@ const DetailsIcon = styled.i<{ disabled: boolean }>`
     right: 10px;
     font-size: 16px;
     color: ${(props) => props.theme.textColor.secondary};
-    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     opacity: ${(props) => (props.disabled ? '0.6' : '1')};
 `;
 
@@ -966,7 +966,7 @@ const InputActions = styled(FlexDivRow)`
 
 const MaxButton = styled(FlexDivCentered)<{ disabled?: boolean }>`
     ${(props) => (props.disabled ? `opacity: 0.6;` : '')}
-    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     margin: 0 7px;
     color: var(--color-white);
 `;

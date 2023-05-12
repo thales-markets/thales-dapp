@@ -313,7 +313,6 @@ const Price = styled.span`
     font-weight: 700;
     font-size: 22px;
     line-height: 100%;
-    text-transform: capitalize;
     color: ${(props) => props.theme.textColor.primary};
 `;
 
@@ -322,7 +321,6 @@ const PriceChange = styled.span<{ up: boolean }>`
     font-weight: 700;
     font-size: 22px;
     line-height: 100%;
-    text-transform: capitalize;
     color: ${(props) => (props.up ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
 `;
 

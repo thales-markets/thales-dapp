@@ -100,7 +100,6 @@ const Text = styled.span`
     font-weight: 600;
     font-size: 13px;
     line-height: 15px;
-    text-transform: capitalize;
     color: ${(props) => props.theme.textColor.secondary};
 `;
 

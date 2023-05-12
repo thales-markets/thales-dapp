@@ -164,8 +164,7 @@ const Value = styled.input<{ color?: string; fontSize?: string; disabled: boolea
     font-weight: 400;
     color: ${(props) => (props.color ? props.color : props.theme.input.textColor.primary)};
     font-size: ${(props) => (props.fontSize ? props.fontSize : '18px')};
-    text-transform: capitalize;
-    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'initial')};
+    cursor: ${(props) => (props.disabled ? 'default' : 'initial')};
     background: transparent;
     border: none;
     padding: 0;

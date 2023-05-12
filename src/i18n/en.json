@@ -239,6 +239,7 @@
         "show-less": "Show less",
         "max": "max",
         "save": "Save",
+        "close": "Close",
         "network-fee-gas": "Network fee (gas)",
         "gas-price-gwei": "Gas price (gwei)",
         "gas-fee-info": "Estimated gas fee based on the latest base fee and medium priority.",
@@ -400,8 +401,7 @@
                     "amount": "Amount",
                     "total-pay": "Total to pay",
                     "potential-profit": "Potential profit",
-                    "skew": "Skew impact",
-                    "confirm": "Confirm"
+                    "skew": "Skew impact"
                 },
                 "slippage": {
                     "label": "Slippage tolerance",

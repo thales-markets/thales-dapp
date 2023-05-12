@@ -87,7 +87,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
             <Container>
                 <Header>
                     <TextHeader>
-                        {t('options.trade.amm-trading.details-modal.confirm-order', { positionType })}
+                        {t('options.trade.amm-trading.details-modal.confirm-order', { position: positionType })}
                     </TextHeader>
                     <CloseIcon className="icon icon--x-sign" onClick={onClose} />
                 </Header>
@@ -167,7 +167,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
                 </TradingDetailsSentence>
 
                 <Button {...defaultButtonProps} disabled={isButtonDisabled} onClickHandler={() => onSubmitHandler()}>
-                    {t(`options.trade.amm-trading.details-modal.confirm`)}
+                    {slippage !== slippageTolerance ? t(`common.save`) : t('common.close')}
                 </Button>
             </Container>
         </Modal>
@@ -234,7 +234,6 @@ const Text = styled.span`
     font-weight: 700;
     font-size: 13px;
     line-height: 15px;
-    text-transform: capitalize;
 `;
 
 const TextHeader = styled(Text)`
