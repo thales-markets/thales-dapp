@@ -172,7 +172,9 @@
             "insufficient-staking-balance": "Недостаточный баланс ставок",
             "try-again": "Попробуйте еще раз. Данные АММ изменены.",
             "enter-address": "Введите адрес",
-            "invalid-address": "Неверный адрес"
+            "invalid-address": "Неверный адрес",
+            "enter-percentage": "Введите процент",
+            "invalid-percentage-range": "Процент должен быть между {{min}} и {{max}}."
         },
         "search": "поиск",
         "buy": "купить",
@@ -213,7 +215,8 @@
             "wizard": "Мастер адаптации",
             "op-rewards": "ОП Награды",
             "sport-markets-label": "Рынки сверхурочной работы",
-            "vaults-label": "Хранилища"
+            "vaults-label": "Хранилища",
+            "liquidity-pool-label": "Обеспечить ликвидность"
         },
         "coming-soon": "Скоро...",
         "of": "из",
@@ -2281,5 +2284,87 @@
             "loading": "Пожалуйста, подождите...",
             "successfully-minted": "Успешно отчеканено"
         }
+    },
+    "liquidity-pool": {
+        "tabs": {
+            "deposit": "Депозит",
+            "withdraw": "Отзывать"
+        },
+        "button": {
+            "stake-thales-label": "Ставка THALES",
+            "withdraw-label": "Отзывать",
+            "get-thales-label": "Получить THALES",
+            "close-round-confirmation-message": "Раунд успешно закрыт",
+            "close-round-progress-label": "Идет заключительный раунд...",
+            "deposit-progress-label": "Депозит в процессе...",
+            "close-round-label": "Закрыть раунд",
+            "withdraw-progress-label": "Вывод средств...",
+            "deposit-label": "Депозит",
+            "request-withdrawal-progress-label": "Запрос выполняется...",
+            "request-withdrawal-label": "Запросить вывод",
+            "deposit-confirmation-message": "Депозит успешно размещен",
+            "request-withdrawal-confirmation-message": "Запрос на вывод успешно отправлен",
+            "withdraw-confirmation-message": "Средства успешно выведены"
+        },
+        "pnl": {
+            "pnl-per-round": {
+                "title": "PnL за раунд"
+            },
+            "cumulative-pnl": {
+                "title": "ПнЛ с течением времени"
+            },
+            "lifetime-pnl": "Пожизненный PnL",
+            "no-data": "Нет данных PnL за предыдущие раунды.",
+            "ongoing-pnl": "Текущий PnL"
+        },
+        "user-transactions": {
+            "type": {
+                "withdrawalRequest": "Запрос на вывод средств",
+                "claim": "Заявление о снятии средств",
+                "deposit": "Депозит"
+            },
+            "no-transactions": "Нет пользовательских транзакций, связанных с этим пулом ликвидности в выбранном раунде.",
+            "your-transactions-title": "Ваши транзакции",
+            "title": "Пользовательские транзакции",
+            "round-label": "Круглый"
+        },
+        "full-withdrawal-label": "Полный вывод",
+        "first-deposit-withdrawal-message": "Вы внесли депозит для следующего раунда, и вы можете вывести эти средства в конце следующего раунда.",
+        "next-round-balance-label": "Баланс следующего раунда",
+        "users-in-liquidity-pool-label": "Пользователи в пуле ликвидности: {{number}} / {{max}}",
+        "deposit-staked-thales-error": "Сумма депозита превышает максимальную допустимую сумму, поставьте больше THALES для депозита",
+        "deposit-liquidity-pool-cap-error": "Сумма депозита превышает лимит пула ликвидности",
+        "deposit-amount-placeholder": "Введите сумму",
+        "your-info-label": "Информация о вашей пластинке",
+        "withdrawal-deposit-warning": "Вы не можете снять, так как вы уже внесли депозит для следующего раунда.",
+        "your-share-label": "Ваша доля: {{percentage}} LP",
+        "withdrawal-amount-label": "Сумма вывода: <bold>{{amount}}</bold>",
+        "liquidity-pool-not-started-message": "Пул ликвидности не запущен",
+        "withdrawal-requested-message": "Ваши средства будут отправлены вам автоматически в конце раунда, когда раунд закрывается.",
+        "withdrawal-message": "Вы можете запросить полный или частичный вывод средств, и ваши средства будут отправлены вам автоматически в конце раунда, когда раунд закрывается.",
+        "variables": "<h1>Переменные</h1><ul><li> Максимальный общий депозит: {{maxAllowedDeposit}}</li><li> Максимальное количество пользователей в пуле: {{maxAllowedUsers}}</li><li> Минимальный депозит: {{minDepositAmount}}</li><li> Продолжительность раунда: {{roundLength}} дней</li></ul>",
+        "description": "<h1>Описание</h1><p> Предоставление ликвидности включает в себя внесение пользователями залога в стейблкоинах в пул ликвидности на основе смарт-контрактов для торговли на рынках Thales. Внесенный залог используется для облегчения торговли на AMM Thales.</p><p> Чтобы иметь возможность обеспечивать ликвидность, вам необходимо делать ставки на THALES. Для каждого кошелька нет максимального предела, и вы можете внести максимум 1 {{currency}} за {{thalesStakedAmount}} THALES, поставленных до тех пор, пока пул ликвидности не будет заполнен.</p><p> В конце каждого раунда пропорциональная доля PnL этого раунда будет добавлена к вашему депонированному балансу.</p><p> Если вы хотите вывести средства, вы можете сообщить об этом в любое время в течение текущего раунда, и в конце раунда сумма, которую вы указали для снятия (включая PnL этого раунда), будет отправлена вам. Минимальная сумма для вывода установлена на уровне 10%.</p><p> Если вы решите отказаться от стейкинга THALES при предоставлении ликвидности, имейте в виду, что вам сначала нужно подать сигнал о выводе средств из пула ликвидности.</p><p> Предоставление ликвидности подвергает вас различным рискам, включая потенциальные убытки из-за выигрыша пользователей в торговле, а также риски безопасности смарт-контрактов. Перед внесением депозита убедитесь, что вы понимаете эти риски.</p><p><tipLink> ТИП-139</tipLink> содержит более подробную информацию о технической реализации предоставления ликвидности Thales AMM.</p>",
+        "current-balance-label": "Текущий баланс",
+        "title": "Обеспечить ликвидность",
+        "your-thales-staked-label": "Ваша ставка THALES",
+        "deposit-min-amount-error": "Минимальная сумма депозита: {{amount}}",
+        "round-end-label": "Раунд заканчивается через",
+        "round-ended-label": "Раунд завершен",
+        "total-info-label": "Общая информация о LP",
+        "available-to-withdraw-label": "Доступно для снятия: <bold>{{amount}}</bold>",
+        "full-withdrawal-requested-message": "Вы запросили вывод средств в размере <bold>{{amount}}</bold><tooltip />.",
+        "full-withdrawal-request-label": "Запрос на вывод средств: {{amount}}<tooltip />",
+        "max-allowance-label": "Максимальное пособие",
+        "deposit-withdrawal-warning": "Запрошен вывод средств, вы не можете внести депозит.",
+        "estimated-amount-tooltip": "Это ориентировочная сумма. Фактическая сумма будет рассчитана при закрытии текущего раунда на основе PnL раунда.",
+        "liquidity-pool-paused-message": "Пул ликвидности приостановлен",
+        "deposit-liquidity-pool-cap-reached-warning": "Достигнут предел ликвидности, вы не можете внести депозит.",
+        "deposit-max-amount-of-users-warning": "Достигнуто максимальное количество пользователей в пуле ликвидности, вы не можете внести депозит.",
+        "percentage-label": "Процент",
+        "partial-withdrawal-request-label": "Запрос на вывод средств: {{percentage}} от баланса ({{amount}}<tooltip />)",
+        "nothing-to-withdraw-label": "Нечего снимать.",
+        "allowance-multiplier-label": "Множитель надбавки",
+        "partial-withdrawal-label": "Частичный вывод",
+        "partial-withdrawal-requested-message": "Вы запросили вывод {{percentage}} остатка (<bold>{{amount}}</bold><tooltip />)."
     }
 }

@@ -172,7 +172,9 @@
             "insufficient-staking-balance": "质押余额不足",
             "try-again": "再试一次。 AMM 数据已更改。",
             "enter-address": "输入地址",
-            "invalid-address": "无效地址"
+            "invalid-address": "无效地址",
+            "invalid-percentage-range": "百分比必须介于 {{min}} 和 {{max}} 之间",
+            "enter-percentage": "输入百分比"
         },
         "search": "搜索",
         "buy": "买",
@@ -213,7 +215,8 @@
             "wizard": "入职向导",
             "op-rewards": "OP 奖励",
             "sport-markets-label": "加班市场",
-            "vaults-label": "金库"
+            "vaults-label": "金库",
+            "liquidity-pool-label": "提供流动性"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -2285,5 +2288,87 @@
             "loading": "请稍等...",
             "successfully-minted": "铸造成功"
         }
+    },
+    "liquidity-pool": {
+        "tabs": {
+            "withdraw": "提取",
+            "deposit": "订金"
+        },
+        "button": {
+            "close-round-progress-label": "收尾正在进行中...",
+            "withdraw-progress-label": "提现中...",
+            "deposit-label": "订金",
+            "request-withdrawal-progress-label": "请求进行中...",
+            "close-round-confirmation-message": "回合成功结束",
+            "deposit-confirmation-message": "入金成功",
+            "request-withdrawal-label": "请求撤回",
+            "stake-thales-label": "股份泰雷兹",
+            "request-withdrawal-confirmation-message": "取款请求已成功发送",
+            "withdraw-label": "提取",
+            "get-thales-label": "获得泰雷兹",
+            "withdraw-confirmation-message": "资金成功提取",
+            "close-round-label": "关闭回合",
+            "deposit-progress-label": "存款进行中..."
+        },
+        "pnl": {
+            "pnl-per-round": {
+                "title": "每轮盈亏"
+            },
+            "cumulative-pnl": {
+                "title": "随着时间的推移盈亏"
+            },
+            "lifetime-pnl": "终身盈亏",
+            "ongoing-pnl": "持续损益",
+            "no-data": "没有前几轮的 PnL 数据。"
+        },
+        "user-transactions": {
+            "type": {
+                "deposit": "订金",
+                "withdrawalRequest": "提款请求",
+                "claim": "提款申请"
+            },
+            "round-label": "圆形的",
+            "no-transactions": "在所选轮次中没有与此流动性池关联的用户交易。",
+            "your-transactions-title": "您的交易",
+            "title": "用户交易"
+        },
+        "your-thales-staked-label": "您的 THALES 质押",
+        "first-deposit-withdrawal-message": "您为下一轮存入资金，您可以在下一轮结束时提取这些资金。",
+        "allowance-multiplier-label": "津贴乘数",
+        "nothing-to-withdraw-label": "没什么可退的。",
+        "full-withdrawal-label": "全额提现",
+        "deposit-max-amount-of-users-warning": "已达到流动资金池最大用户数，无法充值。",
+        "round-ended-label": "回合结束",
+        "partial-withdrawal-label": "部分退出",
+        "round-end-label": "回合结束于",
+        "your-share-label": "您的份额：LP 的 {{percentage}}",
+        "partial-withdrawal-request-label": "提款请求：余额的 {{percentage}} ({{amount}}<tooltip />)",
+        "liquidity-pool-paused-message": "流动性池暂停",
+        "description": "<h1>描述</h1><p>流动性提供涉及用户将稳定币抵押品存入基于智能合约的流动性池中，用于 Thales 市场交易。存入的抵押品用于促进泰雷兹 AMM 的交易。</p><p>为了能够提供流动性，您需要抵押 THALES。每个钱包没有最高限额，您可以为每个 {{thalesStakedAmount}} THALES 存入最多 1 {{currency}}，直到流动资金池被填满。</p><p>在每一轮结束时，该轮 PnL 的比例份额将添加到您的存款余额中。</p><p>如果您想退出，您可以在正在进行的回合中随时发出信号，并且在该回合结束时，您发出退出信号的金额（包括该回合的 PnL）将发送给您。最低提取金额设置为 10%。</p><p>如果您决定在提供流动性的同时取消质押 THALES，请注意您需要先发出从流动性池中退出的信号。</p><p>提供流动性会使您面临各种风险，包括由于用户在交易中获胜而导致的潜在损失以及智能合约安全风险。请确保您在存款前了解这些风险。</p><p><tipLink>提示-139</tipLink>有更多有关 Thales AMM 流动性提供的技术实施的详细信息。</p>",
+        "liquidity-pool-not-started-message": "流动性池尚未启动",
+        "withdrawal-requested-message": "当回合结束时，您的资金将在回合结束时自动发送给您。",
+        "percentage-label": "百分比",
+        "next-round-balance-label": "下一轮余额",
+        "partial-withdrawal-requested-message": "您请求提取余额的 {{percentage}}（<bold>{{amount}}</bold><tooltip />）。",
+        "withdrawal-message": "您可以要求全额/部分提款，您的资金将在该轮结束时自动发送给您。",
+        "variables": "<h1>变量</h1><ul><li>最大总存款：{{maxAllowedDeposit}}</li><li>池中的最大用户数：{{maxAllowedUsers}}</li><li>最低存款：{{minDepositAmount}}</li><li>回合持续时间：{{roundLength}} 天</li></ul>",
+        "users-in-liquidity-pool-label": "流动性池中的用户：{{number}} / {{max}}",
+        "deposit-liquidity-pool-cap-error": "入金金额超过流动性池上限",
+        "deposit-min-amount-error": "存款的最低金额为 {{amount}}",
+        "current-balance-label": "当前余额",
+        "withdrawal-deposit-warning": "您不能退出，因为您已经为下一轮存款。",
+        "total-info-label": "总LP信息",
+        "full-withdrawal-request-label": "提款请求：{{amount}}<tooltip />",
+        "estimated-amount-tooltip": "这是一个估计数额。实际金额将在本轮结束时根据该轮PnL计算。",
+        "max-allowance-label": "最大津贴",
+        "deposit-amount-placeholder": "输入金额",
+        "full-withdrawal-requested-message": "您要求提取 <bold>{{amount}}</bold><tooltip /> 的全部余额。",
+        "your-info-label": "您的有限合伙人信息",
+        "title": "提供流动性",
+        "deposit-withdrawal-warning": "要求提款，您不能存款。",
+        "available-to-withdraw-label": "可提取：<bold>{{amount}}</bold>",
+        "withdrawal-amount-label": "提款金额：<bold>{{amount}}</bold>",
+        "deposit-staked-thales-error": "入金金额超过最大限额，质押更多THALES入金",
+        "deposit-liquidity-pool-cap-reached-warning": "已达到流动资金池上限，不能入金。"
     }
 }
