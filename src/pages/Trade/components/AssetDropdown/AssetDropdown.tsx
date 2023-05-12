@@ -92,7 +92,7 @@ const Wrapper = styled.div`
 
 const Icon = styled.i`
     font-size: 12px;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const Container = styled.div`
@@ -133,7 +133,7 @@ const CurrencyName = styled.p`
     font-size: 13px;
     line-height: 100%;
     text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 const CurrencyFullName = styled.p`
     font-family: 'Roboto';
@@ -142,7 +142,7 @@ const CurrencyFullName = styled.p`
     font-size: 13px;
     line-height: 100%;
     text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
     margin-left: 4px;
 `;
 const AssetContainer = styled.div`

@@ -53,7 +53,7 @@ const Wrapper = styled.div`
 
 const Icon = styled.i`
     font-size: 12px;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const Container = styled.div`
@@ -91,7 +91,7 @@ const Date = styled.p`
     font-size: 13px;
     line-height: 100%;
     text-transform: uppercase;
-    color: var(--color-text);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const DateContainer = styled.div`
