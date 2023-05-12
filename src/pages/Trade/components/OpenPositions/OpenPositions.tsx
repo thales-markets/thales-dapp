@@ -3,6 +3,7 @@ import { USD_SIGN } from 'constants/currency';
 
 import useUserOpenPositions from 'queries/user/useUserOpenPositions';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -13,6 +14,7 @@ import { formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/numb
 const OpenPositions: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const { t } = useTranslation();
 
     const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', { enabled: true });
     const livePositions = useMemo(() => {
@@ -22,7 +24,7 @@ const OpenPositions: React.FC = () => {
 
     return (
         <Wrapper>
-            <Title>Your Open Positions</Title>
+            <Title>{t('options.trade.user-positions.your-positions')}</Title>
             {livePositions.map((position, index) => {
                 return (
                     <Position key={index}>
@@ -34,17 +36,17 @@ const OpenPositions: React.FC = () => {
                             </FlexContainer>
                             <Separator />
                             <FlexContainer>
-                                <Label>End Date</Label>
+                                <Label>{t('options.trade.user-positions.end-date')}</Label>
                                 <Value>{formatShortDateFromTimestamp(position.maturityDate)}</Value>
                             </FlexContainer>
                             <Separator />
                             <FlexContainer>
-                                <Label>Size</Label>
+                                <Label>{t('options.trade.user-positions.size')}</Label>
                                 <Value>{`${formatNumberShort(position.amount)}  ${position.side}`}</Value>
                             </FlexContainer>
                             <Separator />
                             <FlexContainer>
-                                <Label>Paid</Label>
+                                <Label>{t('options.trade.user-positions.paid')}</Label>
                                 <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                             </FlexContainer>
                         </AlignedFlex>
@@ -53,7 +55,8 @@ const OpenPositions: React.FC = () => {
                             disabled={Number(position.value) === 0}
                             additionalStyles={additionalStyle}
                         >
-                            Cash Out {formatCurrencyWithSign(USD_SIGN, position.value, 2)}
+                            {t('options.trade.user-positions.cash-out')}
+                            {formatCurrencyWithSign(USD_SIGN, position.value, 2)}
                         </Button>
                     </Position>
                 );

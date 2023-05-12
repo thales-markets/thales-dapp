@@ -1744,6 +1744,18 @@
                     "enter-value": "输入值",
                     "invalid-value": "无效值"
                 }
+            },
+            "steps": {
+                "choose-asset": "选择资产",
+                "choose-direction": "选择方向",
+                "choose-date": "选择日期"
+            },
+            "user-positions": {
+                "end-date": "结束日期",
+                "size": "尺寸",
+                "paid": "有薪酬的",
+                "your-positions": "您的空缺职位",
+                "cash-out": "兑现"
             }
         }
     },
