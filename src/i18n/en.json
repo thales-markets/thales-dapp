@@ -405,6 +405,18 @@
                     "enter-value": "Enter value",
                     "invalid-value": "Invalid value"
                 }
+            },
+            "steps": {
+                "choose-asset": "Choose Asset",
+                "choose-date": "Choose Date",
+                "choose-direction": "Choose Direction"
+            },
+            "user-positions": {
+                "your-positions": "Your open positions",
+                "end-date": "End date",
+                "size": "size",
+                "paid": "Paid",
+                "cash-out": "Cash out"
             }
         },
         "phases": {

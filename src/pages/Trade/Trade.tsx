@@ -18,11 +18,13 @@ import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
 import OpenPositions from './components/OpenPositions/OpenPositions';
+import { useTranslation } from 'react-i18next';
 
 const TradePage: React.FC = () => {
     // selectors
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const { t } = useTranslation();
 
     // states
     const [currencyKey, setCurrencyKey] = useState('ETH');
@@ -91,7 +93,7 @@ const TradePage: React.FC = () => {
                         <PositionedWrapper>
                             <InfoWrapper>
                                 <Number>1</Number>
-                                <Info>Choose Asset</Info>
+                                <Info>{t('options.trade.steps.choose-asset')}</Info>
                             </InfoWrapper>
                             {allAssets && (
                                 <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
@@ -100,7 +102,7 @@ const TradePage: React.FC = () => {
                         <PositionedWrapper>
                             <InfoWrapper>
                                 <Number>2</Number>
-                                <Info>Choose Date</Info>
+                                <Info>{t('options.trade.steps.choose-date')}</Info>
                             </InfoWrapper>
                             <DatesDropdown
                                 date={maturityDate}
@@ -120,7 +122,7 @@ const TradePage: React.FC = () => {
                     <PositionedWrapper>
                         <InfoWrapper marginLeft={45}>
                             <Number>3</Number>
-                            <Info>Choose Direction</Info>
+                            <Info>{t('options.trade.steps.choose-direction')}</Info>
                         </InfoWrapper>
                         <RadioButtons onChange={setPositionType} selected={positionType} />
                     </PositionedWrapper>
