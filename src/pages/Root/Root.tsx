@@ -24,6 +24,7 @@ import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
+import { Network } from 'utils/network';
 dotenv.config();
 
 type RpcProvider = {
@@ -33,28 +34,28 @@ type RpcProvider = {
 };
 
 const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
-    1: {
+    [Network.Mainnet]: {
         ankr: '',
         chainnode: 'mainnet',
         blast: 'eth-mainnet',
     },
-    10: {
+    [Network['Mainnet-Ovm']]: {
         ankr: 'optimism',
         chainnode: 'optimism-mainnet',
         blast: 'optimism-mainnet',
     },
-    56: {
+    [Network.BSC]: {
         ankr: '',
         chainnode: '',
         blast: 'bsc-mainnet',
     },
-    137: {
+    [Network['POLYGON-MAINNET']]: {
         ankr: '',
         chainnode: 'polygon-mainnet',
         blast: 'polygon-mainnet',
     },
-    420: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
-    42161: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
+    [Network['Goerli-Ovm']]: { ankr: 'optimism_testnet', chainnode: 'optimism-goerli', blast: 'optimism-goerli' },
+    [Network.Arbitrum]: { ankr: 'arbitrum', chainnode: 'arbitrum-one', blast: 'arbitrum-one' },
 };
 
 const { chains, provider } = configureChains(
@@ -64,7 +65,7 @@ const { chains, provider } = configureChains(
             rpc: (chain) => {
                 let http = chain.rpcUrls.default.http[0];
 
-                if (chain.id === 42161) {
+                if (chain.id === Network.Arbitrum) {
                     // Use Infura always on Arbitrum as we have issue with Chainnode RPC
                     http = `https://arbitrum-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
                 } else if (CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode) {
