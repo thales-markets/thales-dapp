@@ -149,3 +149,7 @@
 .icon--vaults::before {
     content: '\007C';
 }
+
+.icon--liquidity-pool::before {
+    content: '\005B';
+}

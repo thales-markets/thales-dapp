@@ -21,6 +21,8 @@ type TableProps = {
     onTableRowClick?: (row: Row<any>) => void;
     isLoading?: boolean;
     noResultsMessage?: React.ReactNode;
+    tableRowHeadStyles?: CSSProperties;
+    tableRowStyles?: CSSProperties;
     tableHeadCellStyles?: CSSProperties;
     tableRowCellStyles?: CSSProperties;
 };
@@ -33,6 +35,8 @@ const Table: React.FC<TableProps> = ({
     noResultsMessage = null,
     onTableRowClick = undefined,
     isLoading = false,
+    tableRowHeadStyles = {},
+    tableRowStyles = {},
     tableHeadCellStyles = {},
     tableRowCellStyles = {},
 }) => {
@@ -51,7 +55,7 @@ const Table: React.FC<TableProps> = ({
     return (
         <>
             {headerGroups.map((headerGroup, headerGroupIndex: any) => (
-                <TableRowHead {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+                <TableRowHead style={tableRowHeadStyles} {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                     {headerGroup.headers.map((column: any, headerIndex: any) => (
                         <TableCellHead
                             {...column.getHeaderProps(column.sortable ? column.getSortByToggleProps() : undefined)}
@@ -95,6 +99,7 @@ const Table: React.FC<TableProps> = ({
                                     {...row.getRowProps()}
                                     onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
                                     key={rowIndex}
+                                    style={tableRowStyles}
                                 >
                                     {row.cells.map((cell, cellIndex: any) => (
                                         <TableCell style={tableRowCellStyles} {...cell.getCellProps()} key={cellIndex}>

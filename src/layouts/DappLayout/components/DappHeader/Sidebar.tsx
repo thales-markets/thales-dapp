@@ -33,6 +33,7 @@ const Sidebar: React.FC = () => {
     const showTokenPage = !isPolygon && !isBSC;
     const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
     const showVaultsPage = !isPolygon && !isBSC;
+    const showLP = !isPolygon && !isBSC;
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -92,6 +93,15 @@ const Sidebar: React.FC = () => {
                         href={buildHref(ROUTES.Options.Vaults)}
                         iconName="vaults"
                         label={t('common.sidebar.vaults-label')}
+                    />
+                )}
+
+                {showLP && (
+                    <DappHeaderItem
+                        className={`show ${location.pathname === ROUTES.Options.LiquidityPool ? 'selected' : ''}`}
+                        href={buildHref(ROUTES.Options.LiquidityPool)}
+                        iconName="liquidity-pool"
+                        label={t('common.sidebar.liquidity-pool-label')}
                     />
                 )}
 
