@@ -15,14 +15,12 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
     return (
         <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
             <Wrapper onClick={() => setOpen(!open)}>
-                <Asset showDropDownIcon={!open} asset={asset} setAsset={setAsset} />
+                <Asset open={open} asset={asset} setAsset={setAsset} showDropDownIcon={true} />
                 {open && (
                     <AssetContainer>
-                        {allAssets.map((_asset, index) => {
-                            if (_asset !== asset) {
-                                return <Asset key={index} asset={_asset} setAsset={setAsset} />;
-                            }
-                        })}
+                        {allAssets.map((_asset, index) => (
+                            <Asset key={index} asset={_asset} setAsset={setAsset} />
+                        ))}
                     </AssetContainer>
                 )}
             </Wrapper>
@@ -33,17 +31,18 @@ const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAsset
 type AssetProps = {
     asset: string;
     setAsset: React.Dispatch<React.SetStateAction<string>>;
+    open?: boolean;
     showDropDownIcon?: boolean;
 };
 
-const Asset: React.FC<AssetProps> = ({ asset, setAsset, showDropDownIcon = false }) => {
+const Asset: React.FC<AssetProps> = ({ asset, setAsset, open, showDropDownIcon = false }) => {
     return (
         <Container onClick={() => setAsset(asset)}>
             <AssetWrapper>
                 <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
                 <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
             </AssetWrapper>
-            {showDropDownIcon && <Icon className="icon icon--caret-down" />}
+            {showDropDownIcon && <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />}
         </Container>
     );
 };
@@ -63,7 +62,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 245px;
+    width: 100%;
     padding: 5px 15px;
     max-height: 23px;
 
@@ -85,9 +84,6 @@ const Container = styled.div`
         background: var(--color-secondary-hover);
     }
     cursor: pointer;
-    @media (max-width: 767px) {
-        width: 100%;
-    }
 `;
 const AssetWrapper = styled.div`
     display: flex;
@@ -117,9 +113,7 @@ const AssetContainer = styled.div`
     margin-top: 5px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
-    @media (max-width: 767px) {
-        width: 100%;
-    }
+    width: 100%;
 `;
 // const PriceWrapper = styled.div`
 //     flex: 1;

@@ -19,24 +19,19 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
     }, [allDates]);
 
     return (
-        <OutsideClickHandler onOutsideClick={() => open && setOpen(false)}>
+        <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
             <Wrapper>
-                <Container onClick={setOpen.bind(this, !open)}>
-                    {date && <Date onClick={setDate.bind(this, date)}>{formatShortDateFromTimestamp(date)}</Date>}
-                    {!open && <Icon className="icon icon--caret-down" />}
+                <Container onClick={() => setOpen(!open)}>
+                    {date && <Date onClick={() => setDate(date)}>{formatShortDateFromTimestamp(date)}</Date>}
+                    <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
                 </Container>
                 {open && (
-                    <Dropdown onClick={setOpen.bind(this, !open)}>
-                        {allDates.map((_date, index) => {
-                            if (date === _date) return;
-                            return (
-                                <DateContainer key={index}>
-                                    <Date onClick={setDate.bind(this, _date)}>
-                                        {formatShortDateFromTimestamp(_date)}
-                                    </Date>
-                                </DateContainer>
-                            );
-                        })}
+                    <Dropdown onClick={() => setOpen(!open)}>
+                        {allDates.map((_date, index) => (
+                            <DateContainer key={index}>
+                                <Date onClick={() => setDate(_date)}>{formatShortDateFromTimestamp(_date)}</Date>
+                            </DateContainer>
+                        ))}
                     </Dropdown>
                 )}
             </Wrapper>
@@ -57,26 +52,21 @@ const Icon = styled.i`
 `;
 
 const Container = styled.div`
-    width: 267px;
+    width: 100%;
     max-height: 23px;
     padding: 5px 15px;
     height: 23px;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     border-radius: 8px;
     background: var(--color-secondary);
     cursor: pointer;
-    @media (max-width: 767px) {
-        width: 100%;
-    }
 `;
 
 const Dropdown = styled.div`
     margin-top: 5px;
-    width: 267px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -85,9 +75,7 @@ const Dropdown = styled.div`
     background: var(--color-secondary);
     cursor: pointer;
     z-index: 100;
-    @media (max-width: 767px) {
-        width: 100%;
-    }
+    text-align: start;
 `;
 
 const Date = styled.p`

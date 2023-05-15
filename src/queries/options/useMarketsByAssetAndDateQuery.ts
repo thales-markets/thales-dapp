@@ -5,9 +5,9 @@ import { ethers } from 'ethers';
 import { Positions } from 'constants/options';
 import { uniq } from 'lodash';
 import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options';
-import { getDefaultDecimalsForNetwork, NetworkId } from 'utils/network';
+import { NetworkId } from 'utils/network';
 import thalesData from 'thales-data';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { stableCoinFormatter } from 'utils/formatters/ethers';
 
 const useMarketsByAssetAndDateQuery = (
     asset: string,
@@ -19,7 +19,6 @@ const useMarketsByAssetAndDateQuery = (
     return useQuery<MarketInfo[] | RangedMarketPerPosition[]>(
         QUERY_KEYS.BinaryOptions.MarketsByAssetAndDate(asset, date, position, networkId),
         async () => {
-            const decimals = getDefaultDecimalsForNetwork(networkId);
             if (position === Positions.UP || position === Positions.DOWN) {
                 const result = await (snxJSConnector as any).binaryOptionsMarketDataContract.getMarketsForAssetAndStrikeDate(
                     ethers.utils.formatBytes32String(asset),
@@ -42,7 +41,7 @@ const useMarketsByAssetAndDateQuery = (
                             currencyKey: asset,
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
-                            price: calculatePotentialProfit(bigNumberFormatter(market.price, decimals)),
+                            price: calculatePotentialProfit(stableCoinFormatter(market.price, networkId)),
                             strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
                             discount: discount < 0 ? discount : 0,
                         };
@@ -73,7 +72,7 @@ const useMarketsByAssetAndDateQuery = (
                 const finalResult = rangedMarketsInfo.filter(
                     (marketInfo: any) =>
                         Number(ethers.utils.formatEther(marketInfo.liquidity)) !== 0 &&
-                        bigNumberFormatter(marketInfo.price, decimals) !== 0
+                        stableCoinFormatter(marketInfo.price, networkId) !== 0
                 );
 
                 return finalResult
@@ -84,7 +83,7 @@ const useMarketsByAssetAndDateQuery = (
                             currencyKey: asset,
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
-                            price: calculatePotentialProfit(bigNumberFormatter(market.price, decimals)),
+                            price: calculatePotentialProfit(stableCoinFormatter(market.price, networkId)),
                             leftPrice: Number(ethers.utils.formatEther(market.leftPrice)),
                             rightPrice: Number(ethers.utils.formatEther(market.rightPrice)),
                             discount: discount < 0 ? discount : 0,
