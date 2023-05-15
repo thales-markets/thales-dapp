@@ -872,13 +872,16 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                 <TextMax>{t('common.max')}</TextMax>
                             </MaxButton>
                             <VerticalLine />
-                            <CollateralSelector
-                                collateralArray={COLLATERALS}
-                                selectedItem={selectedStableIndex}
-                                onChangeCollateral={(index) => setSelectedStableIndex(index)}
-                                disabled={isMaxButtonDisabled}
-                                isMultiCollateralSupported={isMultiCollateralSupported}
-                            />
+                            {isMultiCollateralSupported ? (
+                                <CollateralSelector
+                                    collateralArray={COLLATERALS}
+                                    selectedItem={selectedStableIndex}
+                                    onChangeCollateral={(index) => setSelectedStableIndex(index)}
+                                    disabled={isMaxButtonDisabled}
+                                />
+                            ) : (
+                                <TextCurrency>{getStableCoinForNetwork(networkId)}</TextCurrency>
+                            )}
                         </InputActions>
                     </Input>
                     {getSubmitButton()}
@@ -999,6 +1002,12 @@ const TextValue = styled.span<{ isProfit?: boolean; uppercase?: boolean }>`
 const TextMax = styled(Text)`
     color: ${(props) => props.theme.button.textColor.quaternary};
     text-transform: uppercase;
+`;
+
+const TextCurrency = styled(Text)`
+    text-align: center;
+    line-height: 25px;
+    min-width: 50px;
 `;
 
 const VerticalLine = styled.div`

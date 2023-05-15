@@ -10,11 +10,11 @@
     content: '\0042';
 }
 
-.currency-icon--binance:before {
+.currency-icon--bnb:before {
     content: '\004C';
 }
 
-.currency-icon--polygon:before {
+.currency-icon--matic:before {
     content: '\004D';
 }
 
@@ -46,6 +46,6 @@
     content: '\0063';
 }
 
-.currency-icon--arbitrum::before {
+.currency-icon--arb::before {
     content: '\0065';
 }

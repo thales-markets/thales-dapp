@@ -10,7 +10,6 @@ type CollateralSelectorProps = {
     selectedItem: number;
     onChangeCollateral: (index: number) => void;
     disabled?: boolean;
-    isMultiCollateralSupported: boolean;
 };
 
 const CollateralSelector: React.FC<CollateralSelectorProps> = ({
@@ -18,7 +17,6 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     selectedItem,
     onChangeCollateral,
     disabled,
-    isMultiCollateralSupported,
 }) => {
     const dispatch = useDispatch();
 
@@ -26,18 +24,12 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
 
     return (
         <Container>
-            <OutsideClickHandler onOutsideClick={() => open && setOpen(false)}>
-                <SelectedCollateral
-                    disabled={!!disabled}
-                    onClick={() => !disabled && isMultiCollateralSupported && setOpen(!open)}
-                    isMultiCollateralSupported={isMultiCollateralSupported}
-                >
+            <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
+                <SelectedCollateral disabled={!!disabled} onClick={() => !disabled && setOpen(!open)}>
                     <TextCollateralWrapper>
                         <TextCollateral>{collateralArray[selectedItem]}</TextCollateral>
                     </TextCollateralWrapper>
-                    {isMultiCollateralSupported && (
-                        <Arrow className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
-                    )}
+                    <Arrow className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
                 </SelectedCollateral>
                 {open && (
                     <Dropdown onClick={() => setOpen(!open)}>
@@ -95,8 +87,8 @@ const Arrow = styled.i`
     color: ${(props) => props.theme.textColor.primary};
 `;
 
-const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean; isMultiCollateralSupported: boolean }>`
-    cursor: ${(props) => (props.disabled || !props.isMultiCollateralSupported ? 'default' : 'pointer')};
+const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 `;
 
 const Dropdown = styled(FlexDivColumnCentered)`
