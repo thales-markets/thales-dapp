@@ -123,7 +123,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
     });
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && getIsMultiCollateralSupported(networkId),
+        enabled: isAppReady && isWalletConnected && isMultiCollateralSupported,
     });
 
     const ammMaxLimits = useMemo(() => {
@@ -874,6 +874,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                 selectedItem={selectedStableIndex}
                                 onChangeCollateral={(index) => setSelectedStableIndex(index)}
                                 disabled={isMaxButtonDisabled}
+                                isMultiCollateralSupported={isMultiCollateralSupported}
                             />
                         </InputActions>
                     </Input>

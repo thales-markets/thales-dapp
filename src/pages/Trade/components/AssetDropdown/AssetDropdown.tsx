@@ -88,6 +88,11 @@ const Container = styled.div`
 const AssetWrapper = styled.div`
     display: flex;
     flex: 2;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 `;
 const CurrencyName = styled.p`
     font-family: 'Roboto';

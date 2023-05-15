@@ -10,6 +10,7 @@ type CollateralSelectorProps = {
     selectedItem: number;
     onChangeCollateral: (index: number) => void;
     disabled?: boolean;
+    isMultiCollateralSupported: boolean;
 };
 
 const CollateralSelector: React.FC<CollateralSelectorProps> = ({
@@ -17,6 +18,7 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     selectedItem,
     onChangeCollateral,
     disabled,
+    isMultiCollateralSupported,
 }) => {
     const dispatch = useDispatch();
 
@@ -25,11 +27,17 @@ const CollateralSelector: React.FC<CollateralSelectorProps> = ({
     return (
         <Container>
             <OutsideClickHandler onOutsideClick={() => open && setOpen(false)}>
-                <SelectedCollateral disabled={!!disabled} onClick={() => !disabled && setOpen(!open)}>
+                <SelectedCollateral
+                    disabled={!!disabled}
+                    onClick={() => !disabled && isMultiCollateralSupported && setOpen(!open)}
+                    isMultiCollateralSupported={isMultiCollateralSupported}
+                >
                     <TextCollateralWrapper>
                         <TextCollateral>{collateralArray[selectedItem]}</TextCollateral>
                     </TextCollateralWrapper>
-                    <Arrow className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                    {isMultiCollateralSupported && (
+                        <Arrow className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
+                    )}
                 </SelectedCollateral>
                 {open && (
                     <Dropdown onClick={() => setOpen(!open)}>
@@ -69,7 +77,12 @@ const Text = styled.span`
 `;
 
 const TextCollateral = styled(Text)`
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 `;
 
 const TextCollateralWrapper = styled.div`
@@ -79,11 +92,11 @@ const TextCollateralWrapper = styled.div`
 const Arrow = styled.i`
     font-size: 10px;
     text-transform: none;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
-const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean }>`
-    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean; isMultiCollateralSupported: boolean }>`
+    cursor: ${(props) => (props.disabled || !props.isMultiCollateralSupported ? 'default' : 'pointer')};
     &:hover ${TextCollateral} {
         ${(props) => (!props.disabled ? `color: ${props.theme.textColor.primary};` : '')}
     }

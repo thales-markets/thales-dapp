@@ -86,6 +86,11 @@ const Date = styled.p`
     line-height: 100%;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 `;
 
 const DateContainer = styled.div`
