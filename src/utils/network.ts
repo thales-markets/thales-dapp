@@ -218,6 +218,6 @@ export const getFeeCollateral = (networkId: NetworkId) => {
 };
 
 export const getDefaultDecimalsForNetwork = (networkId: NetworkId) => {
-    if (networkId == Network.Arbitrum) return 6;
+    if (networkId == Network.Arbitrum || networkId == Network['POLYGON-MAINNET']) return 6;
     return 18;
 };
