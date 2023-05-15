@@ -97,12 +97,6 @@ const Arrow = styled.i`
 
 const SelectedCollateral = styled(FlexDivRowCentered)<{ disabled: boolean; isMultiCollateralSupported: boolean }>`
     cursor: ${(props) => (props.disabled || !props.isMultiCollateralSupported ? 'default' : 'pointer')};
-    &:hover ${TextCollateral} {
-        ${(props) => (!props.disabled ? `color: ${props.theme.textColor.primary};` : '')}
-    }
-    &:hover ${Arrow} {
-        ${(props) => (!props.disabled ? `color: ${props.theme.textColor.primary};` : '')}
-    }
 `;
 
 const Dropdown = styled(FlexDivColumnCentered)`
@@ -116,7 +110,7 @@ const Dropdown = styled(FlexDivColumnCentered)`
 `;
 
 const CollateralOption = styled.div`
-    padding: 2px 8px;
+    padding: 2px 10px;
     cursor: pointer;
     &:first-child {
         padding-top: 0;
@@ -124,8 +118,8 @@ const CollateralOption = styled.div`
     &:last-child {
         padding-bottom: 0;
     }
-    &:hover ${TextCollateral} {
-        color: ${(props) => props.theme.textColor.primary};
+    &:hover {
+        background: ${(props) => props.theme.background.primary};
     }
 `;
 

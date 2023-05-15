@@ -43,13 +43,13 @@ export default {
         background: {
             primary: '',
             selection: {
-                primary: '',
+                primary: Colors.WHITE,
             },
         },
         textColor: {
             primary: Colors.WHITE,
             secondary: Colors.GRAY_LIGHT,
-            tertiary: '',
+            tertiary: Colors.GRAY,
             quaternary: Colors.RED,
         },
         borderColor: {

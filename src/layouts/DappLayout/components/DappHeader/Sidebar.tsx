@@ -80,13 +80,6 @@ const Sidebar: React.FC = () => {
                     label={t('common.sidebar.markets')}
                 />
 
-                <DappHeaderItem
-                    className={`show ${location.pathname === ROUTES.Options.RangeMarkets ? 'selected' : ''}`}
-                    href={buildHref(ROUTES.Options.RangeMarkets)}
-                    iconName="ranged-markets"
-                    label={t('common.sidebar.ranged-markets')}
-                />
-
                 {showVaultsPage && (
                     <DappHeaderItem
                         className={`show ${location.pathname === ROUTES.Options.Vaults ? 'selected' : ''}`}
@@ -247,7 +240,7 @@ const SidebarHtml = styled.nav`
     width: 72px;
     height: 100vh;
     z-index: 101;
-    background: linear-gradient(190.01deg, var(--color-highlight) -17.89%, var(--color-tertiary) 90.41%);
+    background: ${(props) => props.theme.background.secondary};
     padding: 35px 0;
     transition: width 0.3s ease;
     overflow: hidden;
@@ -276,7 +269,7 @@ const SidebarHtml = styled.nav`
 
     @media (max-width: 1024px) {
         padding: 0;
-        background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+        background: ${(props) => props.theme.background.secondary};
         box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.25);
         border-radius: 30px;
         width: calc(100% - 40px);

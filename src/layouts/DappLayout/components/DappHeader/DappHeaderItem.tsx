@@ -48,40 +48,41 @@ const DappHeaderItem: React.FC<DappHeaderItemProps> = ({
     }
     return (
         <SPAAnchor href={href || ''} onClick={onClick} simpleOnClick={simpleOnClick}>
-            <MenuItem className={className}>
+            <MenuItem className={className} margin={iconName === 'wizard' ? '0 0 0 -5px' : ''}>
                 <i
                     className={`sidebar-icon icon--${iconName}`}
                     style={iconName == 'optimism' ? { color: 'white' } : {}}
                 />
-                <Text>{label}</Text>
+                <Text marginLeft={iconName === 'wizard' ? '25px' : ''}>{label}</Text>
             </MenuItem>
         </SPAAnchor>
     );
 };
 
-const MenuItem = styled.li`
+const MenuItem = styled.li<{ margin?: string }>`
     display: flex;
     align-items: center;
     cursor: pointer;
+    ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
     padding: 20px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     transition: background 300ms;
     &.selected {
-        color: var(--color-primary);
+        color: ${(props) => props.theme.background.tertiary};
         .sidebar-icon {
-            color: var(--color-primary);
+            color: ${(props) => props.theme.background.tertiary};
         }
     }
     .parent-hovered {
-        color: #f6f6fe;
-        background: #141c7f;
+        color: ${(props) => props.theme.textColor.primary};
+        background: ${(props) => props.theme.background.primary};
     }
     &:hover {
-        color: #f6f6fe;
+        color: ${(props) => props.theme.textColor.primary};
         .sidebar-icon {
-            color: #f6f6fe;
+            color: ${(props) => props.theme.textColor.primary};
         }
-        background: #141c7f;
+        background: ${(props) => props.theme.background.primary};
     }
 
     @media (max-width: 1024px) {
@@ -97,7 +98,7 @@ const MenuItem = styled.li`
     }
 `;
 
-const Text = styled.span`
+const Text = styled.span<{ marginLeft?: string }>`
     z-index: 0;
     position: relative;
     font-style: normal;
@@ -107,7 +108,7 @@ const Text = styled.span`
     letter-spacing: 0.35px;
     white-space: nowrap;
     display: none;
-    margin-left: 20px;
+    margin-left: ${(props) => (props.marginLeft ? props.marginLeft : '20px')};
     text-transform: uppercase;
     @media (max-width: 1024px) {
         display: none;

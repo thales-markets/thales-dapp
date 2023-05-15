@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow, FlexDivCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { StatusEnum } from 'constants/governance';
-import { DefaultSubmitButton } from 'components/OldVersion/old-components';
+import { SubmitButton } from 'components/OldVersion/old-components';
 
 export const SidebarTitle = styled(FlexDivCentered)`
     font-weight: 500;
@@ -192,7 +192,7 @@ export const VoteContainer = styled(FlexDivColumnCentered)`
     margin-top: 15px;
 `;
 
-export const VoteButton = styled(DefaultSubmitButton)`
+export const VoteButton = styled(SubmitButton)`
     margin-top: 20px;
     margin-bottom: 20px;
     width: 264px;

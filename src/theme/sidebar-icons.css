@@ -121,9 +121,6 @@
 .icon--wizard {
     width: 32px;
     font-size: 44px;
-    position: relative;
-    left: -4px;
-    top: -6px;
 }
 
 .icon--discount-vault::before {

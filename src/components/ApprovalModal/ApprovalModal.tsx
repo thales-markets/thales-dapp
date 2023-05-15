@@ -3,12 +3,7 @@ import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
 import Checkbox from 'components/Checkbox';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { BigNumber, ethers } from 'ethers';
-import {
-    CurrencyLabel,
-    DefaultSubmitButton,
-    InputContainer,
-    SubmitButtonContainer,
-} from 'components/OldVersion/old-components';
+import { CurrencyLabel, InputContainer, SubmitButtonContainer } from 'components/OldVersion/old-components';
 import { ModalContainer, ModalHeader, ModalTitle, StyledModal } from 'components/OldVersion/old-components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +15,7 @@ import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import NumericInput from 'components/NumericInput';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/ButtonV2';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
@@ -53,24 +49,24 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <ApprovalSubmitButton isRoyale={isRoyale} onClick={openConnectModal}>
-                    {t('common.wallet.connect-your-wallet')}
-                </ApprovalSubmitButton>
+                <Button {...defaultButtonProps} onClickHandler={openConnectModal}>
+                    {t(`common.wallet.connect-your-wallet`)}
+                </Button>
             );
         }
         if (!approveAll && !isAmountEntered) {
             return (
-                <ApprovalSubmitButton isRoyale={isRoyale} disabled={true}>
+                <Button {...defaultButtonProps} disabled={true}>
                     {t(`common.errors.enter-amount`)}
-                </ApprovalSubmitButton>
+                </Button>
             );
         }
 
         return (
-            <ApprovalSubmitButton
-                isRoyale={isRoyale}
+            <Button
+                {...defaultButtonProps}
                 disabled={isButtonDisabled}
-                onClick={() =>
+                onClickHandler={() =>
                     onSubmit(
                         approveAll
                             ? ethers.constants.MaxUint256
@@ -88,7 +84,7 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
                     : t('common.enable-wallet-access.approve-progress-label', {
                           currencyKey: tokenSymbol,
                       })}
-            </ApprovalSubmitButton>
+            </Button>
         );
     };
 
@@ -166,6 +162,12 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
     );
 };
 
+const defaultButtonProps = {
+    width: '289px',
+    height: '34px',
+    active: true,
+};
+
 const StyledRoyaleModal = withStyles(() => ({
     paper: {
         borderRadius: '5px',
@@ -220,17 +222,6 @@ const ApprovalCurrencyLabel = styled(CurrencyLabel)<{ isRoyale?: boolean }>`
     font-size: ${(props) => (props.isRoyale ? '20px' : '15px')};
     line-height: ${(props) => (props.isRoyale ? '22px' : '')};
     font-style: ${(props) => (props.isRoyale ? 'normal' : 'bold')};
-`;
-
-const ApprovalSubmitButton = styled(DefaultSubmitButton)<{ isRoyale?: boolean }>`
-    width: 289px;
-    color: ${(props) => (props.isRoyale ? 'var(--color-white) !important' : '')};
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    background: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
-    border-radius: ${(props) => (props.isRoyale ? '20px' : '')};
-    &:hover:not(:disabled) {
-        background: ${(props) => (props.isRoyale ? 'var(--color-secondary)' : '')};
-    }
 `;
 
 const CheckboxContainer = styled(FlexDivCentered)<{ isRoyale?: boolean }>`

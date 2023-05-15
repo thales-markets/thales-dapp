@@ -138,7 +138,7 @@ const Container = styled.div<{
     padding: ${(props) => (props.padding ? props.padding : '5px 10px')};
     box-sizing: border-box;
     position: relative;
-    opacity: ${(props) => (props.disabled ? '0.5 !important' : '1')};
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
     background: transparent;
     ${(props) => (props?.zIndex ? `z-index: ${props.zIndex};` : '')}
 `;
