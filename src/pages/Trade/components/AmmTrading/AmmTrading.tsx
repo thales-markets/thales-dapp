@@ -139,11 +139,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     }, [stableBalanceQuery]);
 
     const stableBalance = useMemo(() => {
-        return multipleStableBalances.isSuccess
-            ? isMultiCollateralSupported
+        return isMultiCollateralSupported
+            ? multipleStableBalances.isSuccess
                 ? getStableCoinBalance(multipleStableBalances?.data, COLLATERALS[selectedStableIndex] as StableCoins)
-                : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId) as StableCoins)
-            : null;
+                : null
+            : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId) as StableCoins);
     }, [networkId, multipleStableBalances, walletBalancesMap, selectedStableIndex, isMultiCollateralSupported]);
 
     const isOVM = getIsOVM(networkId);
