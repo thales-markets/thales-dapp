@@ -260,7 +260,7 @@
 
 .icon--dead-avatar:before {
     content: '\0078';
-}   
+}
 
 .icon--double-right:before {
     content: '\0079';
@@ -271,5 +271,5 @@
 }
 
 .icon--gear:before {
-    content: '\008A';
+    content: '\0033';
 }

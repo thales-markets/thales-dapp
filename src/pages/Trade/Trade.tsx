@@ -158,6 +158,7 @@ const TradePage: React.FC = () => {
 const Wrapper = styled.div`
     width: 100%;
     max-width: 1000px;
+    margin-bottom: 30px;
 `;
 
 const ContentWrapper = styled.div`
@@ -170,6 +171,7 @@ const ContentWrapper = styled.div`
     height: 400px;
     @media (max-width: 767px) {
         flex-direction: column;
+        gap: 10px;
     }
 `;
 
@@ -187,6 +189,7 @@ const LeftSide = styled.div`
     max-width: 600px;
     @media (max-width: 767px) {
         max-width: initial;
+        height: 60px;
     }
 `;
 const RightSide = styled.div`
@@ -214,6 +217,7 @@ const DropdownsWrapper = styled(FlexDivRowCentered)`
     gap: 15px;
     @media (max-width: 767px) {
         flex-direction: column;
+        gap: 10px;
     }
 `;
 

@@ -42,12 +42,7 @@ import {
 } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import {
-    getDefaultStableIndexByBalance,
-    getStableCoinBalance,
-    getStableCoinForNetwork,
-    getSynthName,
-} from 'utils/currency';
+import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import {
@@ -769,9 +764,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             <ColumnSpaceBetween>
                 <FlexDivCentered>
                     <Text>
-                        <TextLabel>
-                            {t('options.trade.amm-trading.asset-price', { asset: getSynthName(currencyKey) })}
-                        </TextLabel>
+                        <TextLabel>{t('options.trade.amm-trading.asset-price', { asset: currencyKey })}</TextLabel>
                         {market.address ? (
                             <>
                                 <TextValue uppercase={true}>{positionTypeFormatted}</TextValue>
@@ -922,7 +915,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     );
 };
 
-const inputFieldProps = { width: '350px', height: '40px' };
+const inputFieldProps = { width: '350px', height: '34px' };
 
 const defaultButtonProps = {
     width: '100%',
@@ -932,7 +925,7 @@ const defaultButtonProps = {
 
 const Container = styled(FlexDivRow)`
     min-width: 980px;
-    height: 85px;
+    height: 72px;
     @media (max-width: 767px) {
         min-width: initial;
         height: 100%;
@@ -965,7 +958,7 @@ const DetailsIcon = styled.i<{ disabled: boolean }>`
     font-size: 16px;
     color: ${(props) => props.theme.textColor.secondary};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
-    opacity: ${(props) => (props.disabled ? '0.6' : '1')};
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
 `;
 
 const InputActions = styled(FlexDivRow)`
@@ -974,7 +967,7 @@ const InputActions = styled(FlexDivRow)`
 `;
 
 const MaxButton = styled(FlexDivCentered)<{ disabled?: boolean }>`
-    ${(props) => (props.disabled ? `opacity: 0.6;` : '')}
+    ${(props) => (props.disabled ? `opacity: 0.5;` : '')}
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     margin: 0 7px;
     color: var(--color-white);
@@ -998,6 +991,7 @@ const TextValue = styled.span<{ isProfit?: boolean; uppercase?: boolean }>`
 `;
 const TextMax = styled(Text)`
     color: ${(props) => props.theme.button.textColor.quaternary};
+    text-transform: uppercase;
 `;
 
 const VerticalLine = styled.div`

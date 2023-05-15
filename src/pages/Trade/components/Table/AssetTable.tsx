@@ -115,6 +115,7 @@ const Wrapper = styled(FlexDivColumn)`
     max-width: 344px;
     @media (max-width: 767px) {
         max-width: initial;
+        height: calc(100% - 80px);
     }
 `;
 
