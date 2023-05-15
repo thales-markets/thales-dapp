@@ -928,7 +928,7 @@ const defaultButtonProps = {
 
 const Container = styled(FlexDivRow)`
     min-width: 980px;
-    height: 72px;
+    height: 78px;
     @media (max-width: 767px) {
         min-width: initial;
         height: 100%;

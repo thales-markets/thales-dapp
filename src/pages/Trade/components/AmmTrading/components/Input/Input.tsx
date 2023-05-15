@@ -122,7 +122,7 @@ const Container = styled.div<{
     isError?: boolean;
 }>`
     width: ${(props) => (props.width ? props.width : '100%')};
-    margin: ${(props) => (props.margin ? props.margin : '0 0 5px 0')};
+    margin: ${(props) => (props.margin ? props.margin : '0 0 10px 0')};
     ${(props) => (props.height ? `height: ${props.height};` : '')}
     display: flex;
     flex-direction: column;
