@@ -294,7 +294,6 @@ const SidebarHtml = styled.nav`
         height: 100vh;
         width: 275px;
         left: 0;
-        // top: unset;
         bottom: 0;
         padding-left: 20px;
         ${ItemsContainer} {
