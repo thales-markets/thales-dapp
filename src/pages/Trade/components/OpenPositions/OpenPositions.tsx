@@ -1,26 +1,231 @@
+import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Button from 'components/ButtonV2/Button';
 import { USD_SIGN } from 'constants/currency';
+import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
+import { POSITIONS_TO_SIDE_MAP, Positions, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
+import { getErrorToastOptions, getInfoToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { BigNumber, ethers } from 'ethers';
 
-import useUserOpenPositions from 'queries/user/useUserOpenPositions';
-import React, { useMemo } from 'react';
+import useUserOpenPositions, { UserLivePositions } from 'queries/user/useUserOpenPositions';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
+import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { formatShortDateFromTimestamp } from 'utils/formatters/date';
+import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
+import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
+import { refetchAmmData, refetchBalances, refetchRangedAmmData, refetchUserOpenPositions } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const OpenPositions: React.FC = () => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const { t } = useTranslation();
+    const { trackEvent } = useMatomo();
+
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+
+    const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', { enabled: true });
     const livePositions = useMemo(() => {
         if (positionsQuery.isSuccess) return positionsQuery.data;
         return [];
     }, [networkId, positionsQuery]);
+
+    const isOVM = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
+    const isBSC = getIsBSC(networkId);
+    const isArbitrum = getIsArbitrum(networkId);
+
+    const handleSubmit = async (position: UserLivePositions) => {
+        const isRangedAmm = [Positions.IN, Positions.OUT].includes(position.side);
+
+        const fetchGasLimit = async (
+            marketAddress: string,
+            side: any,
+            parsedAmount: any,
+            parsedTotal: any,
+            parsedSlippage: any
+        ) => {
+            try {
+                const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
+                const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+
+                if (isOVM) {
+                    const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
+                    setGasLimit(maxGasLimitForNetwork);
+
+                    return maxGasLimitForNetwork;
+                } else if (isBSC || isPolygon || isArbitrum) {
+                    const gasLimit = await getEstimatedGasFees(
+                        false,
+                        false,
+                        ammContractWithSigner,
+                        marketAddress,
+                        side,
+                        parsedAmount,
+                        parsedTotal,
+                        parsedSlippage,
+                        undefined,
+                        ''
+                    );
+
+                    const safeGasLimit = Math.round(Number(+gasLimit + 0.1 * +gasLimit));
+                    setGasLimit(safeGasLimit);
+
+                    return safeGasLimit;
+                } else {
+                    const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
+                    setGasLimit(maxGasLimitForNetwork);
+
+                    return maxGasLimitForNetwork;
+                }
+            } catch (e) {
+                console.log(e);
+                setGasLimit(null);
+                return null;
+            }
+        };
+
+        const fetchAmmPriceData = async (totalToPay: number) => {
+            let priceChanged = false;
+            let latestGasLimit = null;
+
+            if (position.market && totalToPay > 0) {
+                try {
+                    const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
+                    const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+
+                    const parsedAmount = ethers.utils.parseEther(position.amount.toString());
+                    const promises = isRangedAmm
+                        ? [
+                              getQuoteFromRangedAMM(
+                                  false,
+                                  false,
+                                  ammContractWithSigner,
+                                  parsedAmount,
+                                  position.market,
+                                  POSITIONS_TO_SIDE_MAP[position.side]
+                              ),
+                              0, // No price impact for ranged markets
+                          ]
+                        : getQuoteFromAMM(
+                              false,
+                              false,
+                              ammContractWithSigner,
+                              parsedAmount,
+                              position.market,
+                              POSITIONS_TO_SIDE_MAP[position.side]
+                          );
+
+                    const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
+
+                    const ammPrice = stableCoinFormatter(ammQuotes, networkId, undefined) / position.amount;
+                    const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
+
+                    latestGasLimit = await fetchGasLimit(
+                        position.market,
+                        POSITIONS_TO_SIDE_MAP[position.side],
+                        parsedAmount,
+                        ammQuotes,
+                        parsedSlippage
+                    );
+
+                    priceChanged = ammPrice !== position.value / position.amount;
+                } catch (e) {
+                    console.log(e);
+                    setGasLimit(null);
+                    priceChanged = true;
+                }
+            } else {
+                setGasLimit(null);
+            }
+
+            return { priceChanged, latestGasLimit };
+        };
+
+        setIsSubmitting(true);
+        const id = toast.loading(t('amm.progress'), getInfoToastOptions(t('amm.progress')));
+
+        const { priceChanged, latestGasLimit } = await fetchAmmPriceData(position.paid);
+        if (priceChanged) {
+            toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
+            setIsSubmitting(false);
+            return;
+        }
+        try {
+            const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
+            const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+
+            const parsedAmount = ethers.utils.parseEther(position.amount.toString());
+            const parsedTotal = stableCoinParser(position.value.toString(), networkId);
+            const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
+            const gasPrice = await snxJSConnector.provider?.getGasPrice();
+
+            const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
+
+            const providerOptions = isPolygon
+                ? {
+                      gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
+                      gasPrice: ethers.utils.parseUnits(
+                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
+                          'gwei'
+                      ),
+                  }
+                : {
+                      gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
+                  };
+
+            const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
+                false,
+                false,
+                ammContractWithSigner,
+                position.market,
+                POSITIONS_TO_SIDE_MAP[position.side],
+                parsedAmount,
+                parsedTotal,
+                parsedSlippage,
+                undefined,
+                '',
+                providerOptions
+            );
+
+            const txResult = await tx.wait();
+
+            if (txResult && txResult.transactionHash) {
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t(`options.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`)
+                    )
+                );
+
+                refetchBalances(walletAddress, networkId);
+                isRangedAmm
+                    ? refetchRangedAmmData(walletAddress, position.market, networkId)
+                    : refetchAmmData(walletAddress, position.market);
+                refetchUserOpenPositions(walletAddress, networkId);
+
+                setIsSubmitting(false);
+                setGasLimit(null);
+
+                trackEvent({
+                    category: isRangedAmm ? 'RangeAMM' : 'AMM',
+                    action: 'sell-to-amm',
+                });
+            }
+        } catch (e) {
+            console.log(e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <Wrapper>
@@ -54,9 +259,12 @@ const OpenPositions: React.FC = () => {
                             {...defaultButtonProps}
                             disabled={Number(position.value) === 0}
                             additionalStyles={additionalStyle}
+                            onClickHandler={() => handleSubmit(position)}
                         >
-                            {t('options.trade.user-positions.cash-out')}
-                            {formatCurrencyWithSign(USD_SIGN, position.value, 2)}
+                            {isSubmitting
+                                ? t(`options.trade.user-positions.cash-out-progress`)
+                                : t('options.trade.user-positions.cash-out')}
+                            {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
                         </Button>
                     </Position>
                 );

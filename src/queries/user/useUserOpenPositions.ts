@@ -10,7 +10,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { POSITIONS_TO_SIDE_MAP } from 'constants/options';
 import { ethers } from 'ethers';
 
-type UserLivePositions = {
+export type UserLivePositions = {
     currencyKey: string;
     strikePrice: string;
     amount: number;

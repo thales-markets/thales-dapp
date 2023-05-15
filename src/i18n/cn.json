@@ -1760,7 +1760,8 @@
                 "size": "尺寸",
                 "paid": "有薪酬的",
                 "your-positions": "您的空缺职位",
-                "cash-out": "兑现"
+                "cash-out": "兑现",
+                "cash-out-progress": "兑现..."
             }
         }
     },

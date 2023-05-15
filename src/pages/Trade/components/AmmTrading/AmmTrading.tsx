@@ -744,16 +744,19 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         return (
             <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleSubmit}>
-                {!isSubmitting
-                    ? t(`options.market.trade-options.place-order.swap-confirm-button.buy.label`)
-                    : t(`options.market.trade-options.place-order.swap-confirm-button.buy.progress-label`)}
+                {isSubmitting
+                    ? t(`options.market.trade-options.place-order.swap-confirm-button.buy.progress-label`)
+                    : t(`options.market.trade-options.place-order.swap-confirm-button.buy.label`)}
             </Button>
         );
     };
 
-    const potentialProfitFormatted = isFetchingQuote
+    const potentialWinFormatted = isFetchingQuote
         ? '...'
-        : `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), Number(priceProfit) * Number(paidAmount))}`;
+        : `${formatCurrencyWithKey(
+              getStableCoinForNetwork(networkId),
+              Number(priceProfit) * Number(paidAmount) + Number(paidAmount)
+          )}`;
 
     const positionTypeFormatted =
         market.positionType === Positions.UP
@@ -832,7 +835,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         <TextLabel>{t('options.trade.amm-trading.you-win')}</TextLabel>
                         <TextValue isProfit={true}>
                             {Number(priceProfit) > 0 && Number(paidAmount) > 0
-                                ? potentialProfitFormatted
+                                ? potentialWinFormatted
                                 : '( ' + t('options.trade.amm-trading.based-amount') + ' )'}
                         </TextValue>
                     </Text>
@@ -998,6 +1001,7 @@ const TextValue = styled.span<{ isProfit?: boolean; uppercase?: boolean }>`
 `;
 const TextMax = styled(Text)`
     color: ${(props) => props.theme.button.textColor.quaternary};
+    text-transform: uppercase;
 `;
 
 const VerticalLine = styled.div`

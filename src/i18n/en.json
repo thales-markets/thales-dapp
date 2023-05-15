@@ -419,7 +419,8 @@
                 "end-date": "End date",
                 "size": "size",
                 "paid": "Paid",
-                "cash-out": "Cash out"
+                "cash-out": "Cash out",
+                "cash-out-progress": "Cashing out..."
             }
         },
         "phases": {
