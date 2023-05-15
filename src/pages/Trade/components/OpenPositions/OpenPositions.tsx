@@ -30,7 +30,7 @@ const OpenPositions: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submittingAddress, setSubmittingAddress] = useState('');
 
     const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', { enabled: true });
     const livePositions = useMemo(() => {
@@ -150,13 +150,14 @@ const OpenPositions: React.FC = () => {
             return { priceChanged, latestGasLimit };
         };
 
-        setIsSubmitting(true);
+        setSubmittingAddress(position.market);
         const id = toast.loading(t('amm.progress'), getInfoToastOptions(t('amm.progress')));
 
         const { priceChanged, latestGasLimit } = await fetchAmmPriceData(position.paid);
         if (priceChanged) {
             toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
-            setIsSubmitting(false);
+            setSubmittingAddress('');
+            refetchUserOpenPositions(walletAddress, networkId);
             return;
         }
         try {
@@ -212,7 +213,7 @@ const OpenPositions: React.FC = () => {
                     : refetchAmmData(walletAddress, position.market);
                 refetchUserOpenPositions(walletAddress, networkId);
 
-                setIsSubmitting(false);
+                setSubmittingAddress('');
                 setGasLimit(null);
 
                 trackEvent({
@@ -223,7 +224,7 @@ const OpenPositions: React.FC = () => {
         } catch (e) {
             console.log(e);
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
-            setIsSubmitting(false);
+            setSubmittingAddress('');
         }
     };
 
@@ -261,7 +262,7 @@ const OpenPositions: React.FC = () => {
                             additionalStyles={additionalStyle}
                             onClickHandler={() => handleSubmit(position)}
                         >
-                            {isSubmitting
+                            {submittingAddress === position.market
                                 ? t(`options.trade.user-positions.cash-out-progress`)
                                 : t('options.trade.user-positions.cash-out')}
                             {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}

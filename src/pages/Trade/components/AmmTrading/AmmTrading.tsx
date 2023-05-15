@@ -15,7 +15,7 @@ import {
     SLIPPAGE_PERCENTAGE,
     getMaxGasLimitForNetwork,
 } from 'constants/options';
-import { getErrorToastOptions, getInfoToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
@@ -392,7 +392,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         const gasPrice = await snxJSConnector.provider?.getGasPrice();
         const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
 
-        const id = toast.loading(t('amm.progress'), getInfoToastOptions(t('amm.progress')));
+        const id = toast.loading(t('amm.progress'));
         try {
             setIsAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, amountToApprove);
@@ -420,7 +420,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const handleSubmit = async () => {
         setIsSubmitting(true);
 
-        const id = toast.loading(t('amm.progress'), getInfoToastOptions(t('amm.progress')));
+        const id = toast.loading(t('amm.progress'));
 
         const { priceChanged, latestGasLimit } = await fetchAmmPriceData(Number(paidAmount), true, true);
         if (priceChanged) {
