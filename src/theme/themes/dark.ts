@@ -29,7 +29,7 @@ export default {
             tertiary: '',
         },
         textColor: {
-            primary: Colors.BLACK_LIGHT,
+            primary: Colors.GRAY_DARK,
             secondary: '',
             tertiary: '',
             quaternary: Colors.ORANGE,

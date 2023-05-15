@@ -291,9 +291,12 @@ const SidebarHtml = styled.nav`
 
     &.collapse {
         transition: all 0.5s ease;
-        background: transparent !important;
         height: 100vh;
-        width: 100vw;
+        width: 275px;
+        left: 0;
+        // top: unset;
+        bottom: 0;
+        padding-left: 20px;
         ${ItemsContainer} {
             transition: all 0.5s ease;
             flex-direction: column;

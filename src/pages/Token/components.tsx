@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
-import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { ReactComponent as InfoIconGreen } from 'assets/images/info-circle-green.svg';
@@ -117,28 +116,29 @@ export const FullRow = styled(FlexDiv)`
     margin-bottom: 10px;
 `;
 
-export const StyledMaterialTooltip = withStyles(() => ({
-    arrow: {
-        '&:before': {
-            border: '1px solid var(--color-highlight)',
-        },
-        color: '#0d1069',
-        marginLeft: '0px!important',
-    },
-    tooltip: {
-        background:
-            'linear-gradient( var(--color-primary) 0%,  var(--color-primary) 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
-        border: '1px solid transparent',
-        borderRadius: '5px',
-        padding: '10px 15px',
-        fontWeight: 400,
-        fontSize: '16px',
-        lineHeight: '20px',
-        letterSpacing: '0.4px',
-        color: 'var(--color-white)',
-        maxWidth: window.innerWidth < 768 ? 350 : 400,
-    },
-}))(MaterialTooltip);
+export const StyledMaterialTooltip = styled((props) => (
+    <MaterialTooltip classes={{ popper: props.className }} {...props} />
+))`
+    & .MuiTooltip-arrow {
+        &:before {
+            border: 1px solid ${(props) => props.theme.borderColor.primary};
+        }
+        color: ${(props) => props.theme.background.primary};
+        margin-left: 0px !important;
+    }
+    & .MuiTooltip-tooltip {
+        background-color: ${(props) => props.theme.background.primary};
+        border: 1px solid ${(props) => props.theme.borderColor.primary};
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: 0.4px;
+        color: ${(props) => props.theme.textColor.primary};
+        max-width: ${window.innerWidth < 768 ? '350px' : '400px'};
+    }
+`;
 
 export const TooltipLink = styled.a`
     color: #00f9ff;

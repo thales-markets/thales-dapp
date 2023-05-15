@@ -28,6 +28,7 @@ import ThemeProvider from 'layouts/Theme';
 import { Theme } from 'constants/ui';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import localStore from 'utils/localStore';
+import { createGlobalStyle } from 'styled-components';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -351,8 +352,15 @@ const App = () => {
                     </Snackbar>
                 </Suspense>
             </QueryClientProvider>
+            <GlobalStyle />
         </ThemeProvider>
     );
 };
+
+const GlobalStyle = createGlobalStyle`
+  body #root {
+    background: ${(props) => props.theme.background.primary};
+  }
+`;
 
 export default App;
