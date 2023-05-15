@@ -121,6 +121,9 @@ const Container = styled.div`
         background: var(--color-secondary-hover);
     }
     cursor: pointer;
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 const AssetWrapper = styled.div`
     display: flex;
@@ -149,7 +152,10 @@ const AssetContainer = styled.div`
     position: absolute;
     margin-top: 5px;
     background: ${(props) => props.theme.background.secondary};
-    border-radius: 8px; ;
+    border-radius: 8px;
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 // const PriceWrapper = styled.div`
 //     flex: 1;

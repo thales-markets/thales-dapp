@@ -13,7 +13,7 @@ import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import AssetTable from './components/Table/AssetTable';
 import AssetDropdown from './components/AssetDropdown';
 import DatesDropdown from './components/MaturityDateDropdown';
-import { FlexDivRowCentered } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
@@ -94,12 +94,9 @@ const TradePage: React.FC = () => {
                     <BannerCarousel />
                     <ContentWrapper>
                         <LeftSide>
-                            <FlexDivRowCentered style={{ gap: 15 }}>
+                            <DropdownsWrapper>
                                 <PositionedWrapper>
-                                    <InfoWrapper>
-                                        <Number>1</Number>
-                                        <Info>{t('options.trade.steps.choose-asset')}</Info>
-                                    </InfoWrapper>
+                                    <Info>{t('options.trade.steps.choose-asset')}</Info>
                                     {allAssets && (
                                         <AssetDropdown
                                             asset={currencyKey}
@@ -109,17 +106,14 @@ const TradePage: React.FC = () => {
                                     )}
                                 </PositionedWrapper>
                                 <PositionedWrapper>
-                                    <InfoWrapper>
-                                        <Number>2</Number>
-                                        <Info>{t('options.trade.steps.choose-date')}</Info>
-                                    </InfoWrapper>
+                                    <Info>{t('options.trade.steps.choose-date')}</Info>
                                     <DatesDropdown
                                         date={maturityDate}
                                         setDate={setMaturityDate}
                                         allDates={allDates}
                                     ></DatesDropdown>
                                 </PositionedWrapper>
-                            </FlexDivRowCentered>
+                            </DropdownsWrapper>
                             <PriceChart
                                 position={positionType}
                                 asset={currencyKey}
@@ -129,10 +123,7 @@ const TradePage: React.FC = () => {
                         </LeftSide>
                         <RightSide>
                             <PositionedWrapper>
-                                <InfoWrapper marginLeft={45}>
-                                    <Number>3</Number>
-                                    <Info>{t('options.trade.steps.choose-direction')}</Info>
-                                </InfoWrapper>
+                                <Info>{t('options.trade.steps.choose-direction')}</Info>
                                 <RadioButtons onChange={setPositionType} selected={positionType} />
                             </PositionedWrapper>
 
@@ -173,53 +164,57 @@ const ContentWrapper = styled.div`
     width: 100%;
     display: flex;
     gap: 30px;
-    height: 400px;
-    margin-top: 70px;
-    margin-bottom: 35px;
+    margin-top: 20px;
+    margin-bottom: 30px;
     justify-content: space-between;
+    height: 400px;
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
 `;
 
-const PositionedWrapper = styled.div`
+const PositionedWrapper = styled(FlexDivColumnCentered)`
     position: relative;
-`;
-
-const InfoWrapper = styled.div<{ marginLeft?: number }>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: -50px;
-    left: 10px;
-    margin-left: ${(props) => props.marginLeft}px;
+    text-align: center;
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 
 const LeftSide = styled.div`
     height: 100%;
     width: 100%;
     max-width: 600px;
+    @media (max-width: 767px) {
+        max-width: initial;
+    }
 `;
 const RightSide = styled.div`
     width: 100%;
     height: 100%;
     max-width: 350px;
+    @media (max-width: 767px) {
+        max-width: initial;
+    }
 `;
 
-const Info = styled.span`
-    font-family: 'Titillium Web';
-    font-style: normal;
+const Info = styled(FlexDivColumnCentered)`
     font-weight: 700;
-    font-size: 22px;
+    font-size: 18px;
     line-height: 100%;
     text-transform: uppercase;
+    margin-bottom: 5px;
     color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: 767px) {
+        display: none;
+    }
 `;
 
-const Number = styled(Info)`
-    border-radius: 50%;
-    border: 2px solid ${(props) => props.theme.textColor.primary};
-    padding: 3px 8px;
-    line-height: 22px;
-    margin-right: 20px;
+const DropdownsWrapper = styled(FlexDivRowCentered)`
+    gap: 15px;
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
 `;
 
 export default TradePage;

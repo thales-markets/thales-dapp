@@ -46,7 +46,7 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
 
 const Wrapper = styled.div`
     position: relative;
-    z-index: 100;
+    z-index: 1;
     max-height: 23px;
     height: 23px;
 `;
@@ -69,6 +69,9 @@ const Container = styled.div`
     border-radius: 8px;
     background: var(--color-secondary);
     cursor: pointer;
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 
 const Dropdown = styled.div`
@@ -78,10 +81,13 @@ const Dropdown = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-
     border-radius: 8px;
     background: var(--color-secondary);
     cursor: pointer;
+    z-index: 100;
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 
 const Date = styled.p`

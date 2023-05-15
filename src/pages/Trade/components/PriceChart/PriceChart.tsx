@@ -295,6 +295,9 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-height: 300px;
+    @media (max-width: 767px) {
+        display: none;
+    }
 `;
 
 const IconPriceWrapper = styled.div`

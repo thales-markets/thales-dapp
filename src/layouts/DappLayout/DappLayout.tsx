@@ -147,7 +147,7 @@ const NewWrapper = styled.div`
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding: 40px 20px 0px 92px;
+    padding: 20px 20px 0px 92px;
     @media (max-width: 1024px) {
         padding: 0 20px;
         padding-bottom: 90px !important;

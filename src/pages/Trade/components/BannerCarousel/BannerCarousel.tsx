@@ -51,7 +51,7 @@ const Container = styled.div`
     border: 1.4px solid #5f6180;
     border-radius: 11px;
     overflow: hidden;
-    margin: 30px 0;
+    margin: 0 0 30px 0;
     max-width: 100%;
     @media (max-width: 768px) {
         display: none;
