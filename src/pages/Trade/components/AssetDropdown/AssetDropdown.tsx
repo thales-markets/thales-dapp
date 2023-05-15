@@ -12,18 +12,15 @@ type AssetDropdownProps = {
 const AssetDropdown: React.FC<AssetDropdownProps> = ({ asset, setAsset, allAssets }) => {
     const [open, setOpen] = useState(false);
 
-    // const exchangeRatesMarketDataQuery = useExchangeRatesQuery();
-    // const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
-
     return (
-        <OutsideClickHandler onOutsideClick={() => open && setOpen(false)}>
-            <Wrapper onClick={setOpen.bind(this, !open)}>
-                <Asset showDropDownIcon={!open} asset={asset} setAsset={setAsset.bind(this, asset)} />
+        <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
+            <Wrapper onClick={() => setOpen(!open)}>
+                <Asset showDropDownIcon={!open} asset={asset} setAsset={setAsset} />
                 {open && (
                     <AssetContainer>
                         {allAssets.map((_asset, index) => {
                             if (_asset !== asset) {
-                                return <Asset key={index} asset={_asset} setAsset={setAsset.bind(this, _asset)} />;
+                                return <Asset key={index} asset={_asset} setAsset={setAsset} />;
                             }
                         })}
                     </AssetContainer>
@@ -37,49 +34,16 @@ type AssetProps = {
     asset: string;
     setAsset: React.Dispatch<React.SetStateAction<string>>;
     showDropDownIcon?: boolean;
-    // exchangeRates: Rates | null;
 };
 
 const Asset: React.FC<AssetProps> = ({ asset, setAsset, showDropDownIcon = false }) => {
-    // const AssetIcon = getAssetIcon(asset);
-
-    // const Icon = styled(AssetIcon)`
-    //     width: 32px;
-    //     height: 32px;
-    //     margin-right: 8px;
-    // `;
-
-    // const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
-
-    // const processedPriceData = useMemo(() => {
-    //     if (priceData.isSuccess && priceData.data && priceData?.data?.prices) {
-    //         if (priceData?.data?.prices?.length) {
-    //             const processedPriceData = priceData.data.prices;
-    //             return calculatePercentageChange(
-    //                 processedPriceData[processedPriceData.length - 1][1],
-    //                 processedPriceData[0][1]
-    //             );
-    //         }
-    //     }
-
-    //     return 0;
-    // }, [priceData]);
-
     return (
-        <Container onClick={setAsset.bind(this, asset)}>
+        <Container onClick={() => setAsset(asset)}>
             <AssetWrapper>
-                {/* <Icon /> */}
-
                 <CurrencyName>{getSynthAsset(asset)}</CurrencyName>
                 <CurrencyFullName>{getSynthName(asset)}</CurrencyFullName>
             </AssetWrapper>
             {showDropDownIcon && <Icon className="icon icon--caret-down" />}
-            {/* <PriceWrapper>
-                <Price>{formatCurrencyWithSign(USD_SIGN, exchangeRates?.[asset] || 0)}</Price>
-                <PriceChange uptrend={processedPriceData > 0}>
-                    {formatPricePercentageGrowth(processedPriceData)}
-                </PriceChange>
-            </PriceWrapper> */}
         </Container>
     );
 };

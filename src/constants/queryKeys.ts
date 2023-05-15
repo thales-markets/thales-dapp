@@ -87,15 +87,20 @@ export const QUERY_KEYS = {
         AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
         RangedAmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'rangedAmm', marketAddress],
         DiscountMap: (networkId: NetworkId) => ['binaryOptions', 'discountMap', networkId],
-        AvailableAssets: () => ['binaryOptions', 'availableAssets'],
-        MaturityDatesByAsset: (asset: string) => ['binaryOptions', 'maturityDatesByAsset', asset],
-        MarketsByAssetAndDate: (networkId: NetworkId, asset: string, date: number, position: Positions) => [
+        AvailableAssets: (networkId: NetworkId) => ['binaryOptions', 'availableAssets', networkId],
+        MaturityDatesByAsset: (asset: string, networkId: NetworkId) => [
+            'binaryOptions',
+            'maturityDatesByAsset',
+            asset,
+            networkId,
+        ],
+        MarketsByAssetAndDate: (asset: string, date: number, position: Positions, networkId: NetworkId) => [
             'binaryOptions',
             'marketsByAssetAndDate',
-            networkId,
             asset,
             date,
             position,
+            networkId,
         ],
     },
     User: {

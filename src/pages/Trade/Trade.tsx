@@ -34,37 +34,45 @@ const TradePage: React.FC = () => {
     const [market, setMarket] = useState<MarketInfo | RangedMarketPerPosition | undefined>(undefined);
 
     // queries
-    const assetsQuery = useAvailableAssetsQuery({
+    const assetsQuery = useAvailableAssetsQuery(networkId, {
         enabled: isAppReady,
     });
-    const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, {
+    const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, {
         enabled: isAppReady,
     });
-    const marketsQuery = useMarketsByAssetAndDateQuery(networkId, currencyKey, maturityDate as number, positionType, {
-        enabled: maturityDate !== undefined,
+    const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, Number(maturityDate), positionType, networkId, {
+        enabled: !!maturityDate,
     });
 
     // hooks
     const allAssets = useMemo(() => {
-        if (assetsQuery.isSuccess) return assetsQuery.data;
+        if (assetsQuery.isSuccess && assetsQuery.data) {
+            return assetsQuery.data;
+        }
         return [];
-    }, [assetsQuery, networkId]);
+    }, [assetsQuery.isSuccess, assetsQuery.data]);
 
     const allDates = useMemo(() => {
-        if (maturityQuery.isSuccess) return maturityQuery.data;
+        if (maturityQuery.isSuccess && maturityQuery.data) {
+            return maturityQuery.data;
+        }
         return [];
-    }, [networkId, maturityQuery]);
+    }, [maturityQuery.isSuccess, maturityQuery.data]);
 
     const allMarkets = useMemo(() => {
-        if (marketsQuery.isSuccess) return marketsQuery.data;
+        if (marketsQuery.isSuccess && marketsQuery.data) {
+            return marketsQuery.data;
+        }
         return [];
-    }, [networkId, marketsQuery]);
+    }, [marketsQuery.isSuccess, marketsQuery.data]);
 
     useEffect(() => {
         if (allDates.length) {
             setMaturityDate(allDates[0]);
         }
     }, [allDates]);
+
+    useEffect(() => setCurrencyKey('ETH'), [networkId]);
 
     const getSelectedPrice = () => {
         if (market) {
