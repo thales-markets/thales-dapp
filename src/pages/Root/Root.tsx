@@ -62,20 +62,13 @@ const { chains, provider } = configureChains(
     [mainnet, optimism, optimismGoerli, polygon, arbitrum, bsc],
     [
         jsonRpcProvider({
-            rpc: (chain) => {
-                let http = chain.rpcUrls.default.http[0];
-
-                if (chain.id === Network.Arbitrum) {
-                    // Use Infura always on Arbitrum as we have issue with Chainnode RPC
-                    http = `https://arbitrum-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
-                } else if (CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode) {
-                    http = `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].chainnode}.chainnodes.org/${
-                        process.env.REACT_APP_CHAINNODE_PROJECT_ID
-                    }`;
-                }
-
-                return { http };
-            },
+            rpc: (chain) => ({
+                http: !CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id]?.chainnode
+                    ? chain.rpcUrls.default.http[0]
+                    : `https://${CHAIN_TO_RPC_PROVIDER_NETWORK_NAME[chain.id].chainnode}.chainnodes.org/${
+                          process.env.REACT_APP_CHAINNODE_PROJECT_ID
+                      }`,
+            }),
             stallTimeout: 2000,
         }),
         infuraProvider({ apiKey: process.env.REACT_APP_INFURA_PROJECT_ID || '', stallTimeout: 2000 }),
