@@ -26,6 +26,7 @@ import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'w
 import snxJSConnector from 'utils/snxJSConnector';
 import ThemeProvider from 'layouts/Theme';
 import { Theme } from 'constants/ui';
+import { setTheme } from 'redux/modules/ui';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import localStore from 'utils/localStore';
 import { createGlobalStyle } from 'styled-components';
@@ -58,6 +59,8 @@ const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referr
 const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
 
+const THEME = Theme.DARK;
+
 const App = () => {
     const dispatch = useDispatch();
     const walletAddress = useSelector((state) => getWalletAddress(state));
@@ -77,6 +80,10 @@ const App = () => {
     const { trackPageView } = useMatomo();
 
     queryConnector.setQueryClient();
+
+    useEffect(() => {
+        dispatch(setTheme(THEME));
+    }, []);
 
     useEffect(() => {
         const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);

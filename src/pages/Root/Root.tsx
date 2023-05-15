@@ -24,6 +24,9 @@ import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
+import { Theme, ThemeMap } from 'constants/ui';
+import localStore from 'utils/localStore';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 dotenv.config();
 
 type RpcProvider = {
@@ -98,8 +101,6 @@ const wagmiClient = createClient({
     provider,
 });
 
-const customTheme = merge(darkTheme(), { colors: { modalBackground: '#0e1069' } });
-
 const instance = createInstance({
     urlBase: 'https://data.thalesmarket.io',
     siteId: process.env.REACT_APP_SITE_ID ? Number(process.env.REACT_APP_SITE_ID) : 1,
@@ -125,7 +126,12 @@ interface RootProps {
     store: Store;
 }
 
+const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
+const theme = lsTheme !== undefined ? (lsTheme as Theme) : Theme.DARK;
+
 const Root: React.FC<RootProps> = ({ store }) => {
+    const customTheme = merge(darkTheme(), { colors: { modalBackground: ThemeMap[theme].background.primary } });
+
     return (
         <Provider store={store}>
             <MatomoProvider value={instance}>
