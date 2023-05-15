@@ -122,7 +122,7 @@ const Container = styled.div<{
     isError?: boolean;
 }>`
     width: ${(props) => (props.width ? props.width : '100%')};
-    margin: ${(props) => (props.margin ? props.margin : '0 0 8px 0')};
+    margin: ${(props) => (props.margin ? props.margin : '0 0 5px 0')};
     ${(props) => (props.height ? `height: ${props.height};` : '')}
     display: flex;
     flex-direction: column;
@@ -163,7 +163,7 @@ const Value = styled.input<{ color?: string; fontSize?: string; disabled: boolea
     font-family: ${(props) => props.theme.fontFamily.primary};
     font-weight: 400;
     color: ${(props) => (props.color ? props.color : props.theme.input.textColor.primary)};
-    font-size: ${(props) => (props.fontSize ? props.fontSize : '18px')};
+    font-size: ${(props) => (props.fontSize ? props.fontSize : '15px')};
     cursor: ${(props) => (props.disabled ? 'default' : 'initial')};
     background: transparent;
     border: none;

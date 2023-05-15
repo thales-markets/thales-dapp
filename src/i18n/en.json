@@ -389,9 +389,9 @@
         "trade": {
             "amm-trading": {
                 "asset-price": "If {{asset}} price is",
-                "pick-price": "Pick a price",
-                "based-amount": "Based on amount",
-                "you-win": "You win",
+                "pick-price": "pick a price",
+                "based-amount": "based on amount",
+                "you-win": "you win",
                 "enter-amount": "Enter amount",
                 "select-price": "Select price",
                 "details-modal": {
@@ -1431,12 +1431,12 @@
                 "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing, and selecting this option can resolve the issue."
             },
             "ratio": "Ratio",
-            "on": "On",
+            "on": "on",
             "above": "Above",
             "below": "Below",
             "between": "Between",
             "not-between": "Not between",
-            "and": "And",
+            "and": "and",
             "asset": "Asset",
             "direction": "Direction",
             "strike-price": "Strike price",
