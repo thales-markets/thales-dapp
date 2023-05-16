@@ -14,10 +14,10 @@ export const useBannersQuery = (networkId: NetworkId, options?: UseQueryOptions<
         QUERY_KEYS.Banners(networkId),
         async () => {
             try {
-                const response = await axios.get(`${generalConfig.API_URL}/banners/${networkId}`);
+                const response = await axios.get(`${generalConfig.API_URL}/thales-banners/${networkId}`);
                 const mappedData = response.data.map((banner: Banner) => ({
                     url: banner.url,
-                    image: `${generalConfig.API_URL}/banners/image/${banner.image}`,
+                    image: `${generalConfig.API_URL}/thales-banners/image/${banner.image}`,
                 }));
 
                 return mappedData;

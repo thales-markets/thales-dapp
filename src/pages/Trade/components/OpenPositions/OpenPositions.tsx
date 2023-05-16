@@ -328,7 +328,7 @@ const Position = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 30px;
+    padding: 0 17px;
     gap: 20px;
     @media (max-width: 767px) {
         display: flex;
