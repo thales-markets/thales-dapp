@@ -165,7 +165,7 @@ const TradePage: React.FC = () => {
 
 const Wrapper = styled.div`
     width: 100%;
-    max-width: 1000px;
+    max-width: 974px;
     margin-bottom: 30px;
 `;
 
