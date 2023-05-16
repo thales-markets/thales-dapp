@@ -30,13 +30,13 @@ export default {
         },
         textColor: {
             primary: Colors.GRAY_DARK,
-            secondary: '',
+            secondary: Colors.GRAY,
             tertiary: '',
             quaternary: Colors.ORANGE,
         },
         borderColor: {
             primary: Colors.GREEN,
-            secondary: '',
+            secondary: Colors.GRAY,
         },
     },
     input: {

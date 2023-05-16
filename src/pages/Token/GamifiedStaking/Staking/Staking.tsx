@@ -340,11 +340,11 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
     background: ${(props) => {
         switch (props.backgroundType) {
             case BackgroundType.INFO:
-                return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
+                return props.theme.background.secondary;
             case BackgroundType.STAKE:
-                return 'var(--color-highlight)';
+                return props.theme.background.secondary;
             default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+                return props.theme.background.secondary;
         }
     }};
     padding: 2px;

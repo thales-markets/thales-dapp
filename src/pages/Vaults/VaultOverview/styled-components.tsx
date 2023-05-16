@@ -4,7 +4,6 @@ import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 export const SpaContainer = styled(FlexDivColumn)`
     background: linear-gradient(201.59deg, var(--color-primary) 37.82%, var(--color-secondary) 107.42%);
     border: 2px solid var(--color-highlight);
-    box-shadow: 0px 0px 30px 20px rgba(4, 4, 90, 0.7);
     border-radius: 15px;
     transition: 0.2s all;
     &:hover {

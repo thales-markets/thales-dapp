@@ -446,12 +446,11 @@ const SectionWrapper = styled.section<{
                 return 'none';
             case BackgroundType.INFO:
             case BackgroundType.CLAIM_INFO:
-                return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.STAKE:
             case BackgroundType.CLAIM:
-                return 'var(--color-highlight)';
+                return props.theme.background.secondary;
             default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+                return props.theme.background.secondary;
         }
     }};
     ${(props) => (props.noPadding ? '' : 'padding: 2px;')}
@@ -646,13 +645,13 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
                 return `
                     font-weight: 700;
                     font-size: 25px;
-                    color: var(--color-highlight);
+                    color: ${props.theme.textColor.quaternary};
                 `;
             case SectionType.CLAIM_INFO:
                 return `
                     font-weight: 700;
                     font-size: 25px;
-                    color: var(--color-highlight);
+                    color: ${props.theme.textColor.primary};
                 `;
             default:
                 return '';

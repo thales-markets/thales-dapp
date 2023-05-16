@@ -7,7 +7,7 @@ export const ROUTES = {
     },
     Options: {
         Home: '/markets',
-        RangeMarkets: '/ranged-markets',
+        RangeMarkets: '/markets',
         HotMarkets: '/markets?anchor=hot-markets',
         CustomMarkets: '/markets?userFilter2=custom',
         CompetitionMarkets: '/markets?userFilter2=competition',

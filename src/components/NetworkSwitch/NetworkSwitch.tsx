@@ -174,20 +174,15 @@ const OptimismButton = styled.button`
     width: 170px;
     height: 40px;
     border: none;
-    background: linear-gradient(150.74deg, #ca91dc -7.89%, #6ac1d5 107.94%);
+    background: ${(props) => props.theme.button.background.primary};
     padding: 1px;
     border-radius: 23px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.button.textColor.primary};
     path {
-        fill: #f6f6fe;
+        fill: ${(props) => props.theme.button.textColor.primary};
     }
     &:hover {
         cursor: pointer;
-        background: #00f9ff;
-        color: #00f9ff;
-        path {
-            fill: #00f9ff;
-        }
     }
     @media (max-width: 767px) {
         width: 100%;
@@ -195,7 +190,7 @@ const OptimismButton = styled.button`
 `;
 
 const InnerButton = styled(FlexDivRowCentered)<{ isL2: boolean }>`
-    background: #0e116a;
+    background: ${(props) => props.theme.button.background.primary};
     border-radius: 23px;
     font-weight: bold;
     font-size: 16px;

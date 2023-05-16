@@ -169,7 +169,7 @@ const WarningIcon = styled.i`
     margin-right: 4px;
     line-height: 18px;
     padding-top: 5px;
-    color: #e53720;
+    color: ${(props) => props.theme.textColor.tertiary};
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;
@@ -183,7 +183,7 @@ const SectionWarning = styled.p`
     font-size: 16px;
     line-height: 20px;
     padding-top: 5px;
-    color: #e53720;
+    color: ${(props) => props.theme.textColor.tertiary};
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;

@@ -108,11 +108,15 @@ const Loader: React.FC<LoaderProps> = ({ hideMainnet = false }) => {
                     </ButtonWrapper>
                 </WrongNetworkWrapper>
             ) : (
-                <CircularProgress />
+                <CustomCircularProgress />
             )}
         </Wrapper>
     );
 };
+
+const CustomCircularProgress = styled(CircularProgress)`
+    color: ${(props) => props.theme.background.tertiary};
+`;
 
 const Wrapper = styled.div`
     position: absolute;
@@ -125,7 +129,7 @@ const Wrapper = styled.div`
     justify-content: center;
     z-index: 99;
     backdrop-filter: blur(4px);
-    background: var(--color-primary); ;
+    background: ${(props) => props.theme.background.primary};
 `;
 
 const ButtonWrapper = styled.div`
@@ -137,7 +141,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const WrongNetworkWrapper = styled.div`
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     display: flex;
     flex-direction: column;
     max-width: 600px;
@@ -154,7 +158,7 @@ const WrongNetworkWrapper = styled.div`
 `;
 
 const WrongNetworkText = styled.p`
-    font-family: 'Sansation' !important;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
@@ -163,7 +167,7 @@ const WrongNetworkText = styled.p`
 `;
 
 const ExplanationText = styled.p`
-    font-family: 'Sansation' !important;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -173,8 +177,8 @@ const ExplanationText = styled.p`
 
 const NetworkButton = styled.button<{ margin: string }>`
     display: flex;
-    font-family: 'Sansation' !important;
-    background: var(--color-primary);
+    font-family: ${(props) => props.theme.fontFamily.primary};
+    background: ${(props) => props.theme.background.primary};
     border: 1px solid rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
     border-radius: 30px;
@@ -184,7 +188,7 @@ const NetworkButton = styled.button<{ margin: string }>`
     padding: 6px;
     margin: ${(props) => props.margin};
     & > span {
-        font-family: 'Sansation' !important;
+        font-family: ${(props) => props.theme.fontFamily.primary};
         margin-left: 6px;
     }
     &:hover {

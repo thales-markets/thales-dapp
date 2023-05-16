@@ -837,15 +837,16 @@ const SectionWrapper = styled.section<{
             case BackgroundType.AMM:
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.RANGED:
-            case BackgroundType.LP_STAKING:
                 return 'linear-gradient(-20deg, #801BF2 0%, #464DCF 100%)';
+            case BackgroundType.LP_STAKING:
+                return props.theme.background.secondary;
             case BackgroundType.SPORTS:
                 return '#303656';
             case BackgroundType.CLAIM:
             case BackgroundType.CLAIM_ON_BEHALF:
                 return 'var(--color-highlight)';
             default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+                return props.theme.background.secondary;
         }
     }};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
@@ -1013,11 +1014,20 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                 `;
             case SectionType.REWARD:
             case SectionType.CLAIM:
+                return `
+                    font-weight: 700;
+                    font-size: 23px;
+                    color: ${props.isOp ? props.theme.textColor.primary : props.theme.textColor.quaternary};
+                    text-transform: uppercase;
+                    @media (max-width: 768px) {
+                        font-size: 20px;
+                    }
+                `;
             case SectionType.LP_STAKING:
                 return `
                     font-weight: 700;
                     font-size: 23px;
-                    color: ${props.isOp ? 'var(--color-white)' : 'var(--color-highlight)'};
+                    color: ${props.theme.textColor.primary};
                     text-transform: uppercase;
                     @media (max-width: 768px) {
                         font-size: 20px;

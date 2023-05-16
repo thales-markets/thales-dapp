@@ -9,7 +9,7 @@ export const NetworkLabel = styled(InputLabel)`
 `;
 
 export const ResultContainer = styled(InputContainer)`
-    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 10px;
     padding: 1px;
 `;
@@ -51,7 +51,8 @@ export const ThalesWalletAmountLabel = styled(InputLabel)`
 `;
 
 export const MaxButton = styled(DefaultSubmitButton)`
-    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    background: transparent;
+    border: 1px solid ${(props) => props.theme.button.borderColor.secondary};
     border-radius: 15px;
     width: 53px;
     min-height: 17px;
@@ -62,7 +63,7 @@ export const MaxButton = styled(DefaultSubmitButton)`
     letter-spacing: 1px;
     text-align: center;
     padding: 0 12px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.button.textColor.quaternary};
     margin-left: 4px;
     pointer-events: auto;
 `;

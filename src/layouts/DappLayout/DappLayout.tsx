@@ -15,6 +15,7 @@ import axios from 'axios';
 import { generalConfig } from 'config/general';
 import { isAndroid, isMetamask, isMobile } from 'utils/device';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
+import { getTheme } from 'redux/modules/ui';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -23,6 +24,7 @@ type DappLayoutProps = {
 };
 
 const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
+    const theme = useSelector((state: RootState) => getTheme(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const rawParams = useLocation();
@@ -80,7 +82,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
         checkMetamaskBrowser();
     }, []);
 
-    useWidgetBotScript(preventDiscordWidgetLoad);
+    useWidgetBotScript(preventDiscordWidgetLoad, theme);
 
     return (
         <Background id="main-content">

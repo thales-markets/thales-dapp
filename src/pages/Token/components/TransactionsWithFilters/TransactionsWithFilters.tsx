@@ -178,7 +178,7 @@ const FilterContainer = styled.div`
 const DropDownWrapper = styled.div`
     position: relative;
     top: 5px;
-    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+    background: ${(props) => props.theme.background.secondary};
     width: 220px;
     right: 64px;
     padding: 2px;

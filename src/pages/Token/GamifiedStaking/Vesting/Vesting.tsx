@@ -303,7 +303,7 @@ const SectionValueContent = styled(SectionContent)`
     text-transform: uppercase;
     font-weight: 700;
     font-size: 30px;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.textColor.quaternary};
     @media (max-width: 768px) {
         font-size: 20px;
     }

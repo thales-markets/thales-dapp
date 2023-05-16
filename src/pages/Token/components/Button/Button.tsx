@@ -1,4 +1,8 @@
+import { ThemeMap } from 'constants/ui';
 import React, { CSSProperties } from 'react';
+import { useSelector } from 'react-redux';
+import { getTheme } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 
 export enum ButtonType {
@@ -42,7 +46,6 @@ const Button: React.FC<ButtonProps> = ({
     inactiveTextColor,
     inactiveBgColor,
     hoverBorderEffect,
-    hoverShadow,
     margin,
     onClickHandler,
     onMouseOverHandler,
@@ -53,6 +56,9 @@ const Button: React.FC<ButtonProps> = ({
     children,
     type = ButtonType.default,
 }) => {
+    const themeName = useSelector((state: RootState) => getTheme(state));
+    const theme = ThemeMap[themeName];
+
     let typedWidth: string;
     let typedHeight: string;
     let typedPadding: string;
@@ -65,7 +71,6 @@ const Button: React.FC<ButtonProps> = ({
     let typedActiveTextColor: string;
     let typedInactiveBgColor: string;
     let typedInactiveTextColor: string;
-    let typedHowerShadow: string;
 
     switch (type) {
         case ButtonType.default:
@@ -81,7 +86,6 @@ const Button: React.FC<ButtonProps> = ({
             typedActiveTextColor = ' var(--color-primary)';
             typedInactiveBgColor = '#00000000';
             typedInactiveTextColor = 'var(--color-highlight)';
-            typedHowerShadow = '0px 1px 30pxrgba(100,217,254,0.7)';
             break;
         case ButtonType.submit:
             typedWidth = '100%';
@@ -91,12 +95,11 @@ const Button: React.FC<ButtonProps> = ({
             typedFontSize = '20px';
             typedFontWeight = '700';
             typedMinHeight = '36px';
-            typedActiveBg = '';
-            typedActiveBgColor = 'var(--color-highlight)';
-            typedActiveTextColor = ' var(--color-primary)';
-            typedInactiveBgColor = '#00000000';
-            typedInactiveTextColor = 'var(--color-highlight)';
-            typedHowerShadow = '0px 1px 30px rgba(100,217,254,0.7)';
+            typedActiveBg = theme.button.background.primary;
+            typedActiveBgColor = theme.button.background.primary;
+            typedActiveTextColor = theme.button.textColor.primary;
+            typedInactiveBgColor = theme.button.background.primary;
+            typedInactiveTextColor = theme.button.textColor.primary;
             break;
         case ButtonType.label:
             typedWidth = '';
@@ -111,7 +114,6 @@ const Button: React.FC<ButtonProps> = ({
             typedActiveTextColor = 'var(--color-white)';
             typedInactiveBgColor = '';
             typedInactiveTextColor = '#f6f6fe';
-            typedHowerShadow = '';
             break;
         case ButtonType.popup:
             typedWidth = '100%';
@@ -121,12 +123,11 @@ const Button: React.FC<ButtonProps> = ({
             typedFontSize = '14px';
             typedFontWeight = '700';
             typedMinHeight = '36px';
-            typedActiveBg = 'linear-gradient(270deg, #516aff 0%, #8208fc 100%)';
+            typedActiveBg = theme.button.background.primary;
             typedActiveBgColor = '';
-            typedActiveTextColor = 'var(--color-white)';
-            typedInactiveBgColor = 'linear-gradient(270deg, #516aff 0%, #8208fc 100%)';
+            typedActiveTextColor = theme.button.textColor.primary;
+            typedInactiveBgColor = theme.button.background.primary;
             typedInactiveTextColor = '';
-            typedHowerShadow = '';
             break;
         default:
             typedWidth = '';
@@ -137,11 +138,10 @@ const Button: React.FC<ButtonProps> = ({
             typedFontWeight = '700';
             typedMinHeight = '';
             typedActiveBg = '';
-            typedActiveBgColor = 'var(--color-highlight)';
-            typedActiveTextColor = ' var(--color-primary)';
-            typedInactiveBgColor = '#00000000';
-            typedInactiveTextColor = 'var(--color-highlight)';
-            typedHowerShadow = '';
+            typedActiveBgColor = theme.button.background.primary;
+            typedActiveTextColor = theme.button.textColor.primary;
+            typedInactiveBgColor = theme.button.background.primary;
+            typedInactiveTextColor = theme.button.textColor.primary;
     }
 
     return (
@@ -155,7 +155,6 @@ const Button: React.FC<ButtonProps> = ({
             activeBgColor={activeBgColor ? activeBgColor : typedActiveBgColor}
             inactiveTextColor={inactiveTextColor ? inactiveTextColor : typedInactiveTextColor}
             inactiveBgColor={inactiveBgColor ? inactiveBgColor : typedInactiveBgColor}
-            hoverShadow={hoverShadow ? hoverShadow : typedHowerShadow}
             hoverBorderEffect={hoverBorderEffect}
             margin={margin ? margin : typedMargin}
             onClick={() => (onClickHandler ? onClickHandler() : '')}
@@ -208,11 +207,6 @@ const Wrapper = styled.button<{
     ${(props) => (props.activeBg ? `background: ${props.activeBg}` : '')};
     ${(props) => (props?.margin ? `margin: ${props.margin}` : '')};
     ${(props) => (props?.padding ? `padding: ${props.padding}` : '')};
-    &:hover {
-        ${(props) => (props?.hoverShadow && !props?.disabled ? `box-shadow: ${props.hoverShadow}` : '')}
-        ${(props) => (props?.hoverBorderEffect && !props?.disabled ? `border: #f7f7f7` : '')}
-        ${(props) => (props?.active && props.activeBg ? `background: #7119e1` : '')};
-    }
     &:disabled {
         opacity: 0.6;
     }

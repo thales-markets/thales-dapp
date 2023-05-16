@@ -980,7 +980,6 @@ const MaxButton = styled(FlexDivCentered)<{ disabled?: boolean }>`
     ${(props) => (props.disabled ? `opacity: 0.5;` : '')}
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     margin: 0 7px;
-    color: var(--color-white);
 `;
 
 const Text = styled.span`

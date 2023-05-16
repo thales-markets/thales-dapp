@@ -255,23 +255,19 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     font-size: 16px;
     line-height: 24px;
     text-align: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.button.textColor.primary};
     padding: 8px 38px;
     &:disabled {
         opacity: 0.4;
         cursor: default;
     }
-    &.selected,
-    &:hover:not(:disabled) {
-        background: ${(prop) => (prop.isBuy ? '#00E4B8' : '#e53720')};
-    }
 `;
 
 export const DefaultSubmitButton = styled(SubmitButton)`
-    background: #3936c7;
+    background: ${(props) => props.theme.button.background.primary};
     &.selected,
     &:hover:not(:disabled) {
-        background: #7119e1;
+        background: ${(props) => props.theme.button.borderColor.secondary};
     }
 `;
 

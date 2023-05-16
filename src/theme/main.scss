@@ -154,11 +154,11 @@ table {
 }
 *::-webkit-scrollbar-track {
     border-radius: 8px;
-    background: var(--color-wrapper, #2b3139);
+    background: var(--color-wrapper, #2B3139);
 }
 *::-webkit-scrollbar-thumb {
     border-radius: 8px;
-    background: var(--color, #03dac6);
+    background: var(--color, #848E9C);
 }
 
 input::-webkit-outer-spin-button,
@@ -182,7 +182,7 @@ input[type='number'] {
     --color-secondary: #2b3139;
     --color-secondary-hover: #2a2e33;
     --color-tertiary: #1b1c33;
-    --color-highlight: #79b1ff;
+    --color-highlight: #848E9C;
     --color-highlight-2: rgba(121, 177, 255, 0.6);
     --color-white: #f4f4f4;
 
@@ -197,6 +197,10 @@ input[type='number'] {
     &.collapse {
         overflow: hidden;
     }
+}
+
+body {
+    background: #052040;
 }
 
 a {
