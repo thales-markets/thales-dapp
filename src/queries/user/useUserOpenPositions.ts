@@ -9,6 +9,7 @@ import { USD_SIGN } from 'constants/currency';
 import snxJSConnector from 'utils/snxJSConnector';
 import { POSITIONS_TO_SIDE_MAP } from 'constants/options';
 import { ethers } from 'ethers';
+import { stableCoinFormatter } from 'utils/formatters/ethers';
 
 export type UserLivePositions = {
     currencyKey: string;
@@ -72,7 +73,7 @@ const useUserOpenPositions = (
                             positionBalance.amount
                         );
 
-                        return { ...positionBalance, value: ethers.utils.formatEther(ammQuote) };
+                        return { ...positionBalance, value: stableCoinFormatter(ammQuote, networkId) };
                     }),
                 ]),
                 Promise.all([
@@ -87,7 +88,7 @@ const useUserOpenPositions = (
                             positionBalance.amount
                         );
 
-                        return { ...positionBalance, value: ethers.utils.formatEther(ammQuote) };
+                        return { ...positionBalance, value: stableCoinFormatter(ammQuote, networkId) };
                     }),
                 ]),
             ]);
@@ -98,7 +99,7 @@ const useUserOpenPositions = (
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
-                        paid: Number(ethers.utils.formatEther(positionBalance.paid)),
+                        paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatCurrencyWithSign(
                             USD_SIGN,
@@ -113,7 +114,7 @@ const useUserOpenPositions = (
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
-                        paid: Number(ethers.utils.formatEther(positionBalance.paid)),
+                        paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice:
                             formatCurrencyWithSign(
