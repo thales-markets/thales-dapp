@@ -959,6 +959,9 @@ const FinalizeTrade = styled(FlexDivCentered)`
     width: 350px;
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 
 const DetailsIcon = styled.i<{ disabled: boolean }>`

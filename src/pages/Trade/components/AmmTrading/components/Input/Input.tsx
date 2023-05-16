@@ -141,6 +141,9 @@ const Container = styled.div<{
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
     background: transparent;
     ${(props) => (props?.zIndex ? `z-index: ${props.zIndex};` : '')}
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 
 const Title = styled.div<{ color?: string; fontSize?: string }>`
