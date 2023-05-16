@@ -21,8 +21,6 @@ const useRangedMarketsQuery = (networkId: NetworkId, options?: UseQueryOptions<R
                 minMaturity: tomorrow,
             });
 
-            console.log(rangedMarkets);
-
             return rangedMarkets;
         },
         options

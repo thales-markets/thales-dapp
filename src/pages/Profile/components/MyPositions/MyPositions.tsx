@@ -517,7 +517,7 @@ const Icon = styled.i`
 `;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
+    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
 `;
 
 const getColor = (data: any) => {

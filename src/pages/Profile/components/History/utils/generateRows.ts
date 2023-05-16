@@ -4,7 +4,7 @@ import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { TFunction } from 'i18next';
 
 const WIN_COLOR = '#50CE99';
-const LOSE_COLOR = '#C3244A';
+const LOSE_COLOR = '#DE496D';
 
 const formatAMPM = (date: Date) => {
     let hours = date.getHours();

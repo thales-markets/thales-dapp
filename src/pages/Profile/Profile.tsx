@@ -213,13 +213,13 @@ const Profile: React.FC = () => {
                     <Wrapper>
                         <Wrapper.Row>
                             <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
-                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
+                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#DE496D'}>
                                 {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.profit, 2)}
                             </Wrapper.Value>
                         </Wrapper.Row>
                         <Wrapper.Row>
                             <Wrapper.Label>{t('options.leaderboard.table.gain-col')}: </Wrapper.Label>
-                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
+                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#DE496D'}>
                                 {formatCurrencyWithSign('', DataForUi?.userData.gain * 100, 2)}%
                             </Wrapper.Value>
                         </Wrapper.Row>

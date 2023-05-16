@@ -191,7 +191,7 @@ const StrongHeaderText = styled(LightHeaderText)<{ color?: string }>`
 `;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: number }>`
-    ${(_props) => (_props.priceDiff > 0 ? 'color: #50CE99' : 'color: #C3244A')};
+    ${(_props) => (_props.priceDiff > 0 ? 'color: #50CE99' : 'color: #DE496D')};
     margin-left: 5px;
     font-size: 15px;
     font-family: Roboto !important;

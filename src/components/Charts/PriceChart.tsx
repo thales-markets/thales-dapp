@@ -102,7 +102,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                     <stop offset="99.68%" stopColor="#C4C4C4" stopOpacity={0} />
                                 </linearGradient>
                                 <linearGradient id="colorPriceBear" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="70%" stopColor="#c04119" stopOpacity={0.5} />
+                                    <stop offset="70%" stopColor="#DE496D" stopOpacity={0.5} />
                                     <stop offset="99.68%" stopColor="#C4C4C4" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
@@ -130,7 +130,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                 type="monotone"
                                 dataKey="price"
                                 strokeWidth={1.5}
-                                stroke={`${percentagePriceChange > 0 ? '#50CE99' : '#C04119'}`}
+                                stroke={`${percentagePriceChange > 0 ? '#50CE99' : '#DE496D'}`}
                                 fill={`url(#${percentagePriceChange > 0 ? 'colorPriceBull' : 'colorPriceBear'})`}
                                 isAnimationActive={isAnimationActive}
                             />
@@ -236,7 +236,7 @@ const TimerangeChange = styled(FooterInfo)<{ fontSize?: string }>`
 `;
 
 const PriceChange = styled(FooterInfo)<{ uptrend?: boolean; fontSize?: string }>`
-    color: ${(props: any) => (props.uptrend ? '#50CE99' : '#C04119')};
+    color: ${(props: any) => (props.uptrend ? '#50CE99' : '#DE496D')};
     font-weight: bold;
     text-align: right;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
@@ -244,7 +244,7 @@ const PriceChange = styled(FooterInfo)<{ uptrend?: boolean; fontSize?: string }>
 
 const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
     font-family: Roboto !important;
-    color: ${(props: any) => (props.uptrend ? '#50CE99' : '#C04119')};
+    color: ${(props: any) => (props.uptrend ? '#50CE99' : '#DE496D')};
     font-weight: bold;
     font-size: 15px;
     margin-left: 30px;

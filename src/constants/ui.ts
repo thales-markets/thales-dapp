@@ -46,12 +46,12 @@ export enum COLORS {
 
 export enum COLORS_NEW {
     LONG = '#50CE99',
-    SHORT = '#C3244A',
+    SHORT = '#DE496D',
 }
 
 export enum UI_COLORS {
-    RED = '#F47B11',
-    GREEN = '#6BD6D6',
+    RED = '#DE496D',
+    GREEN = '#03DAC5',
     YELLOW = '#F7B91B',
     IN_COLOR = '#B0FFE7',
     OUT_COLOR = '#BF7EFF',
