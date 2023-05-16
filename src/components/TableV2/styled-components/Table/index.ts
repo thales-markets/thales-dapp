@@ -42,7 +42,6 @@ const Cell = styled.div<CellProps>`
     flex: 1 !important;
     display: flex;
     flex-direction: row;
-    color: var(--color-white);
 `;
 
 const RowMobile = styled.div`
@@ -85,10 +84,11 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
     ${(_props) =>
         _props?.isUser
             ? `
+                background-color: ${_props.theme.button.background.primary};
                 margin-top: 14px;
-                box-shadow: var(--shadow);
                 border-radius: 15px;
-                border: 2px solid var(--input-border-color) !important;
+                border: 2px solid ${_props.theme.button.background.primary} !important;
+                color: ${_props.theme.button.textColor.primary};
                 `
             : ''};
     ${(_props) =>

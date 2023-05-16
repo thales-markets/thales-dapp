@@ -27,6 +27,7 @@ const DappHeader: React.FC = () => {
 const getTitle = (t: any) => {
     const splittedPathname = location.pathname.split('/');
 
+    if (location.pathname === ROUTES.Options.Home) return t('common.sidebar.markets');
     if (location.pathname.includes(ROUTES.Governance.Home)) return t('common.sidebar.governance-label');
     if (location.pathname === ROUTES.Options.Token) return t('common.sidebar.earn-label');
     if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');

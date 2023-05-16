@@ -192,6 +192,7 @@ const OPRewards: React.FC = () => {
                             href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
                             target="_blank"
                             rel="noreferrer"
+                            isHighlighted={walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()}
                         >
                             {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
                                 ? t('op-rewards.table.my-rewards')

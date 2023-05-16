@@ -3,7 +3,7 @@ import Button from 'components/ButtonV2/Button';
 import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import { POSITIONS_TO_SIDE_MAP, Positions, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
-import { getErrorToastOptions, getInfoToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { BigNumber, ethers } from 'ethers';
 
 import useUserOpenPositions, { UserLivePositions } from 'queries/user/useUserOpenPositions';
@@ -151,7 +151,7 @@ const OpenPositions: React.FC = () => {
         };
 
         setSubmittingAddress(position.market);
-        const id = toast.loading(t('amm.progress'), getInfoToastOptions(t('amm.progress')));
+        const id = toast.loading(t('amm.progress'));
 
         const { priceChanged, latestGasLimit } = await fetchAmmPriceData(position.paid);
         if (priceChanged) {
