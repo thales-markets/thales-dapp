@@ -727,7 +727,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             );
         }
         return (
-            <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleSubmit}>
+            <Button {...defaultButtonProps} disabled={isButtonDisabled} onClickHandler={handleSubmit}>
                 {isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.buy.progress-label`)
                     : t(`options.market.trade-options.place-order.swap-confirm-button.buy.label`)}
