@@ -532,7 +532,7 @@ export const CloseIconContainer = styled(CloseIcon)`
     }
 `;
 
-export const StyledModal = styled((props) => <Dialog classes={{ popper: props.className }} {...props} />)`
+export const StyledModal = styled((props) => <Dialog {...props} />)`
     & .MuiDialog-paper {
         border-radius: 23px;
         width: 500px;

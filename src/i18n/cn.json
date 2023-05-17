@@ -375,7 +375,8 @@
                 "price-in-out-col": "价格进/出",
                 "iv-tooltip": "目前为该资产设置的隐含波动率为 xx%",
                 "discount-col": "折扣",
-                "roi": "投资回报率"
+                "roi": "投资回报率",
+                "no-markets": "所选参数没有市场"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",

@@ -33,20 +33,13 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow, FlexDivRowCentered } from 'theme/common';
 import { MarketInfo, RangedMarketPerPosition, StableCoins } from 'types/options';
-import {
-    getAmountToApprove,
-    getEstimatedGasFees,
-    getQuoteFromAMM,
-    getQuoteFromRangedAMM,
-    prepareTransactionForAMM,
-} from 'utils/amm';
+import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import {
-    SHORT_CRYPTO_CURRENCY_DECIMALS,
     countDecimals,
     formatCurrencyWithKey,
     formatCurrencyWithSign,
@@ -381,13 +374,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         const erc20Instance = new ethers.Contract(collateral.address as any, erc20Contract.abi, snxJSConnector.signer);
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
-        const amountToApprove = getAmountToApprove(
-            approveAmount,
-            isNonDefaultStable,
-            true,
-            selectedStableIndex,
-            networkId
-        );
 
         const gasPrice = await snxJSConnector.provider?.getGasPrice();
         const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
@@ -395,12 +381,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         const id = toast.loading(t('amm.progress'));
         try {
             setIsAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, amountToApprove);
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
             const providerOptions = getProvider(gasEstimate, gasInGwei, networkId);
 
             const tx = (await erc20Instance.approve(
                 addressToApprove,
-                amountToApprove,
+                approveAmount,
                 providerOptions
             )) as ethers.ContractTransaction;
             setOpenApprovalModal(false);
