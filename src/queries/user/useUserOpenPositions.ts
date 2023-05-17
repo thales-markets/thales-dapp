@@ -75,7 +75,7 @@ const useUserOpenPositions = (
                         const marketContract = new ethers.Contract(
                             positionBalance.position.market.id,
                             binaryOptionMarketContract.abi,
-                            snxJSConnector.signer
+                            snxJSConnector.provider
                         );
                         const balances = await marketContract.balancesOf(walletAddress);
                         const contractPositionBalance = balances[positionBalance.position.side];
@@ -99,7 +99,7 @@ const useUserOpenPositions = (
                         const marketContract = new ethers.Contract(
                             positionBalance.position.market.id,
                             binaryOptionMarketContract.abi,
-                            snxJSConnector.signer
+                            snxJSConnector.provider
                         );
                         const balances = await marketContract.balancesOf(walletAddress);
                         const contractPositionBalance = balances[positionBalance.position.side];

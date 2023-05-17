@@ -528,7 +528,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         if (!collateral.address) {
             return;
         }
-        const erc20Instance = new ethers.Contract(collateral.address as any, erc20Contract.abi, snxJSConnector.signer);
+        const erc20Instance = new ethers.Contract(
+            collateral.address as any,
+            erc20Contract.abi,
+            snxJSConnector.provider
+        );
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
@@ -547,7 +551,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 console.log(e);
             }
         };
-        if (isWalletConnected && erc20Instance.signer) {
+        if (isWalletConnected && erc20Instance.provider) {
             getAllowance();
         }
     }, [
