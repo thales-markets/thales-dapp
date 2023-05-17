@@ -40,7 +40,6 @@ import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForN
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import {
-    SHORT_CRYPTO_CURRENCY_DECIMALS,
     countDecimals,
     formatCurrencyWithKey,
     formatCurrencyWithSign,
