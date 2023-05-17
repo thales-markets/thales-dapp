@@ -10,6 +10,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { POSITIONS_TO_SIDE_MAP } from 'constants/options';
 import { ethers } from 'ethers';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
+import { orderBy } from 'lodash';
 
 export type UserLivePositions = {
     currencyKey: string;
@@ -131,7 +132,7 @@ const useUserOpenPositions = (
                     };
                 }),
             ];
-            return modifiedLivePositions;
+            return orderBy(modifiedLivePositions, ['maturityDate', 'currencyKey'], ['asc', 'asc']);
         },
         options
     );
