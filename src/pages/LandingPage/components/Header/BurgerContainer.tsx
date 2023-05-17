@@ -91,7 +91,7 @@ const Logo = styled.i`
     grid-row-end: 4;
     font-size: 8.3em;
     line-height: 34px;
-    color: var(--color);
+    color: var(--color-white);
     z-index: 2;
     flex: 1;
 `;
@@ -125,7 +125,7 @@ const DropDownContainer = styled.div`
         line-height: 1.6em;
         text-align: left;
         text-transform: uppercase;
-        color: var(--color);
+        color: var(--color-white);
         padding: 10px;
         border-radius: 7px;
         &:hover {
@@ -145,7 +145,7 @@ const Link = styled.a`
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
-    color: var(--color);
+    color: var(--color-white);
     @media (max-width: 1024px) {
         margin-bottom: 60px;
     }
@@ -158,8 +158,8 @@ const Link = styled.a`
             right: -32px;
             width: 10px;
             height: 10px;
-            border-top: 2px solid var(--color);
-            border-right: 2px solid var(--color);
+            border-top: 2px solid var(--color-white);
+            border-right: 2px solid var(--color-white);
             transform: rotate(135deg);
         }
         &.open:after {
@@ -172,7 +172,7 @@ const Link = styled.a`
 const Xicon = styled.i`
     font-size: 20px;
     font-weight: 100;
-    color: var(--color);
+    color: var(--color-white);
     position: absolute;
     top: 37px;
     right: 25px;
@@ -220,7 +220,7 @@ const LanguageContainerInBurger = styled.div`
 const HorizontalLine = styled.div`
     width: 100%;
     height: 2px;
-    background: var(--color);
+    background: var(--color-white);
     position: relative;
     top: -30px;
 `;
@@ -235,7 +235,7 @@ const Text = styled.p`
     z-index: 2;
     text-align: left;
     text-transform: uppercase;
-    color: var(--color);
+    color: var(--color-white);
 `;
 
 export default BurgerContainer;

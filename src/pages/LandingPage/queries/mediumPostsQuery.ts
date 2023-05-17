@@ -24,7 +24,7 @@ type postsParserType = {
     items?: Blog[];
 };
 
-const mediumPostsQuery = (options?: UseQueryOptions<Blog[]>) => {
+const useMediumPostsQuery = (options?: UseQueryOptions<Blog[]>) => {
     return useQuery<Blog[]>(
         QUERY_KEYS.Medium.Posts,
         async () => {
@@ -38,4 +38,4 @@ const mediumPostsQuery = (options?: UseQueryOptions<Blog[]>) => {
     );
 };
 
-export default mediumPostsQuery;
+export default useMediumPostsQuery;

@@ -27,13 +27,7 @@ import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLim
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import {
-    refetchAmmData,
-    refetchTrades,
-    refetchUserTrades,
-    refetchBalances,
-    refetchWalletBalances,
-} from 'utils/queryConnector';
+import { refetchAmmData, refetchTrades, refetchUserTrades, refetchBalances } from 'utils/queryConnector';
 import {
     calculateAndFormatPercentage,
     formatCurrency,
@@ -174,7 +168,7 @@ const AMM: React.FC = () => {
     });
 
     useEffect(() => {
-        refetchWalletBalances(walletAddress, networkId);
+        refetchBalances(walletAddress, networkId);
     }, [walletAddress]);
 
     // If sUSD balance is zero, select first stable with nonzero value as default
@@ -1037,7 +1031,6 @@ const Wrapper = styled.div`
     border-radius: 15px;
     padding: 30px;
     margin-right: 27px;
-    min-width: 300px;
     width: 40%;
     @media (max-width: 1024px) {
         width: 100%;
@@ -1059,7 +1052,7 @@ export const MaxButton = styled.button`
     padding: 1px 8px;
     font-weight: 700;
     font-size: 10px;
-    color: var(--primary-color);
+    color: var(--color-white);
     background-color: rgba(100, 217, 254, 0.5);
     border-radius: 10px;
     line-height: 15.21px;

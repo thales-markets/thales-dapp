@@ -173,7 +173,7 @@ const StepNavContainer = styled.div`
 
 const StepNav = styled.div<{ selected: boolean }>`
     border-radius: 50%;
-    background: #64d9fe;
+    background: var(--color-highlight);
     width: 14px;
     height: 14px;
     margin: 0 5px;

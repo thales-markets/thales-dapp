@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers';
 import { NetworkId } from 'utils/network';
 import { SpaceKey } from './governance';
+import { Positions } from './options';
 
 export const QUERY_KEYS = {
     WalletBalances: {
@@ -84,13 +85,35 @@ export const QUERY_KEYS = {
         OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
         RangedLiquidity: (networkId: NetworkId) => ['binaryOptions', 'rangedLiquidity', networkId],
         AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
+        RangedAmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'rangedAmm', marketAddress],
         DiscountMap: (networkId: NetworkId) => ['binaryOptions', 'discountMap', networkId],
+        AvailableAssets: (networkId: NetworkId) => ['binaryOptions', 'availableAssets', networkId],
+        MaturityDatesByAsset: (asset: string, networkId: NetworkId) => [
+            'binaryOptions',
+            'maturityDatesByAsset',
+            asset,
+            networkId,
+        ],
+        MarketsByAssetAndDate: (asset: string, date: number, position: Positions, networkId: NetworkId) => [
+            'binaryOptions',
+            'marketsByAssetAndDate',
+            asset,
+            date,
+            position,
+            networkId,
+        ],
     },
     User: {
         Data: (walletAddress: string, networkId: NetworkId) => ['user', 'transactions', walletAddress, networkId],
         AllPositions: (walletAddress: string, networkId: NetworkId) => [
             'user',
             'allPositions',
+            walletAddress,
+            networkId,
+        ],
+        UserOpenPositions: (walletAddress: string, networkId: NetworkId) => [
+            'user',
+            'userOpenPositions',
             walletAddress,
             networkId,
         ],
@@ -286,6 +309,7 @@ export const QUERY_KEYS = {
         PnL: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'pnl', networkId],
         UserTransactions: (vaultAddress: string, networkId: NetworkId) => [vaultAddress, 'userTransactions', networkId],
     },
+    Banners: (networkId: NetworkId) => ['banners', networkId],
     LiquidityPool: {
         Data: (networkId: NetworkId) => ['liquidityPool', 'data', networkId],
         UserData: (walletAddress: string, networkId: NetworkId) => ['liquidityPool', 'data', walletAddress, networkId],

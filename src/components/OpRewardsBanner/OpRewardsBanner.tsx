@@ -51,13 +51,13 @@ const BannerContainer = styled(FlexDiv)<{ width?: number }>`
         font-weight: bold;
         cursor: pointer;
         margin-left: 0.2em;
-        color: var(--input-border-color);
+        color: ${(props) => props.theme.button.textColor.primary};
     }
     a {
         display: contents;
         font-weight: bold;
         cursor: pointer;
-        color: var(--input-border-color);
+        color: ${(props) => props.theme.button.textColor.primary};
     }
     @media (max-width: 1192px) {
         padding-bottom: 20px;
@@ -66,7 +66,7 @@ const BannerContainer = styled(FlexDiv)<{ width?: number }>`
 
 const Info = styled.div`
     width: 100%;
-    color: var(--color);
+    color: var(--color-white);
     text-align: center;
     padding: 10px;
     font-size: 16px;

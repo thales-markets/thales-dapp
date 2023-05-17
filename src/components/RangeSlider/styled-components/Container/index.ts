@@ -36,14 +36,14 @@ const Slider = styled.input`
         appearance: none;
         width: 21px;
         height: 21px;
-        background: var(--primary-color);
+        background: var(--color-white);
         border-radius: 50%;
         cursor: pointer;
     }
     &::-moz-range-thumb {
         width: 21px;
         height: 21px;
-        background: var(--primary-color);
+        background: var(--color-white);
         border-radius: 50%;
         cursor: pointer;
     }

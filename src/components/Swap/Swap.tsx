@@ -292,14 +292,22 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {unsupportedNetwork ? (
                 <SwapDialog royaleTheme={royaleTheme} contentType="unsupported">
-                    <SwapDialog.CloseButton royaleTheme={royaleTheme} onClick={handleClose.bind(this, false)} />{' '}
+                    <SwapDialog.CloseIcon
+                        className="icon icon--x-sign"
+                        royaleTheme={royaleTheme}
+                        onClick={handleClose.bind(this, false)}
+                    />{' '}
                     <SwapDialog.ErrorMessage royaleTheme={royaleTheme}>
                         {t('options.swap.not-supported')}
                     </SwapDialog.ErrorMessage>
                 </SwapDialog>
             ) : (
                 <SwapDialog royaleTheme={royaleTheme} contentType={` ${isLoading ? 'loading' : ''}`}>
-                    <SwapDialog.CloseButton royaleTheme={royaleTheme} onClick={handleClose.bind(this, false)} />
+                    <SwapDialog.CloseIcon
+                        className="icon icon--x-sign"
+                        royaleTheme={royaleTheme}
+                        onClick={handleClose.bind(this, false)}
+                    />
                     <SwapDialog.SectionWrapper royaleTheme={royaleTheme}>
                         <FlexDivRowCentered>
                             <SwapDialog.Text royaleTheme={royaleTheme}>{t('options.swap.from')}:</SwapDialog.Text>

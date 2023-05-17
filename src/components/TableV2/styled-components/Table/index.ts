@@ -29,7 +29,7 @@ const Table: StyledComponent<'div', any> & Children = styled.div`
     font-family: Roboto !important;
     font-style: normal;
     width: 100%;
-    color: var(--primary-color);
+    color: var(--color-white);
     max-width: 1200px;
 `;
 
@@ -42,7 +42,6 @@ const Cell = styled.div<CellProps>`
     flex: 1 !important;
     display: flex;
     flex-direction: row;
-    color: var(--primary-color);
 `;
 
 const RowMobile = styled.div`
@@ -50,7 +49,7 @@ const RowMobile = styled.div`
     display: flex;
     flex-direction: row;
     :not(:last-child) {
-        border-bottom: 1px solid var(--table-border-color);
+        border-bottom: 1px solid ${(props) => props.theme.background.secondary};
     }
 `;
 
@@ -68,7 +67,7 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
     height: 43px;
     width: 100%;
     align-items: center;
-    border-bottom: 1px solid var(--table-border-color);
+    border-bottom: 1px solid ${(props) => props.theme.background.secondary};
     ${(_props) => (_props?.leaderboardRank == 1 ? 'height: 130px !important;' : '')};
     ${(_props) => (_props?.leaderboardRank == 2 ? 'height: 66px !important;' : '')};
     ${(_props) => (_props?.leaderboardRank == 3 ? 'height: 66px !important;' : '')};
@@ -85,11 +84,11 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
     ${(_props) =>
         _props?.isUser
             ? `
-                background-color: #3498db;
+                background-color: ${_props.theme.button.background.primary};
                 margin-top: 14px;
-                box-shadow: var(--shadow);
                 border-radius: 15px;
-                border: 2px solid var(--input-border-color) !important;
+                border: 2px solid ${_props.theme.button.background.primary} !important;
+                color: ${_props.theme.button.textColor.primary};
                 `
             : ''};
     ${(_props) =>
@@ -97,7 +96,7 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
             ? `
                 margin: 10px 0px;
                 border-radius: 15px;
-                border: 1px solid var(--table-border-color) !important;
+                border: 1px solid ${_props.theme.background.secondary} !important;
             `
             : ''};
     ${(_props) => (_props?.isClaimed ? 'opacity: 0.5' : '')};
@@ -149,7 +148,7 @@ export const NoDataContainer = styled.div`
 `;
 
 export const NoDataText = styled.div`
-    color: var(--primary-color);
+    color: var(--color-white);
     font-size: 24px;
 `;
 

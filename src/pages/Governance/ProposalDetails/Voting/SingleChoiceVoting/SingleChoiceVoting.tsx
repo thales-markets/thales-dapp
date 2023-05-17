@@ -112,17 +112,17 @@ const SingleChoice = styled(FlexDivColumnCentered)`
     &.selected {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid #64d9fe;
+        border: 2px solid var(--color-highlight);
         color: #f6f6fe;
-        background: #03044e;
+        background: #1b1c33;
     }
     &:hover {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid #64d9fe;
+        border: 2px solid var(--color-highlight);
         color: #f6f6fe;
         cursor: pointer;
-        background: #03044e;
+        background: #1b1c33;
     }
     @media (max-width: 767px) {
         height: 46px;

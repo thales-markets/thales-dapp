@@ -100,7 +100,7 @@ const BalanceInfoContainer = styled.div`
     right: 0;
     margin: auto;
     position: absolute;
-    color: var(--icon-color);
+    color: var(--color-white);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -117,7 +117,7 @@ const Header = styled.p`
     line-height: 32px;
     text-align: center;
     letter-spacing: 0.035em;
-    color: var(--primary-color);
+    color: var(--color-white);
     @media (max-width: 768px) {
         font-size: 10px;
         line-height: 12px;

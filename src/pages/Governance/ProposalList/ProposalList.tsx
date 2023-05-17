@@ -75,7 +75,7 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
 const NoProposals = styled(FlexDivColumn)`
     margin-top: 30px;
     min-height: 400px;
-    background: #04045a;
+    background: var(--color-primary);
     justify-content: space-evenly;
     align-items: center;
     align-self: center;

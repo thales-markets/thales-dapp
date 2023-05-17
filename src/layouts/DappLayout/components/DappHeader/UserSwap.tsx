@@ -189,7 +189,7 @@ export const UserSwap: React.FC = () => {
                     onClose={(_, reason) => {
                         if (reason !== 'backdropClick') setShowSwap(false);
                     }}
-                    style={{ backdropFilter: 'blur(10px)' }}
+                    style={{ backdropFilter: 'blur(10px)', zIndex: 2000 }}
                 >
                     <Suspense fallback={<></>}>
                         <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>
@@ -218,13 +218,12 @@ const SwapWrapper = styled.div`
 
 const SwapButton = styled.div<{ clickable: boolean }>`
     display: -webkit-flex;
-    background-color: var(--input-border-color);
-    font-family: Sansation !important;
-    color: var(--background);
-    border-radius: 15px;
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border-radius: 8px;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
-    padding: 6px 7px;
+    padding: 5px 7px;
     text-align: center;
 `;
 
@@ -234,7 +233,7 @@ const SwapButtonTextWrap = styled.div`
 `;
 
 const SwapButtonText = styled.p`
-    color: var(--background);
+    color: ${(props) => props.theme.textColor.primary};
     font-style: normal;
     font-weight: normal;
     font-size: 12.5px;
@@ -246,8 +245,8 @@ const SwapButtonText = styled.p`
 const BalanceContainer = styled.div`
     position: relative;
     top: 6px;
-    background-color: var(--input-border-color);
-    border-radius: 15px;
+    background-color: ${(props) => props.theme.background.secondary};
+    border-radius: 8px;
     padding: 5px 0;
     text-align: center;
     z-index: 1;
@@ -270,7 +269,7 @@ const BalanceTextWrap = styled.div`
 
 const BalanceText = styled.span`
     font-size: 13px;
-    color: var(--background);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const AssetIconStyle = { width: '20px', height: '20px' };

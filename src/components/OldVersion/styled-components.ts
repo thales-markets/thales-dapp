@@ -30,7 +30,7 @@ export const PaginationWrapper = styled(TablePagination)`
 
 export const StyledTableRow = withStyles(() => ({
     root: {
-        background: '#04045a',
+        background: ' var(--color-primary)',
         '&:last-child': {
             borderBottomLeftRadius: '23px',
             borderBottomRightRadius: '23px',
@@ -63,7 +63,7 @@ export const CustomIcon = styled(Image)`
 
 export const Row = styled.tr`
     height: 1px;
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
 `;
 
 export const PhaseLabel = styled(Button)`

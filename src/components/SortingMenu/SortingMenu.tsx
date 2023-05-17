@@ -77,7 +77,7 @@ const Title = styled.p`
     font-size: 12px;
     line-height: 100%;
     text-transform: uppercase;
-    color: #64d9fe;
+    color: var(--color-highlight);
     @media (min-width: 769px) {
         display: none;
     }
@@ -127,14 +127,14 @@ const Item = styled.div`
 
     @media (min-width: 769px) {
         margin: 0px 20px;
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
     @media (max-width: 768px) {
         font-weight: bold;
         font-size: 12px;
         line-height: 162.5%;
         text-transform: uppercase;
-        color: #ffffff;
+        color: var(--color-white);
     }
 `;
 
@@ -143,10 +143,10 @@ const Arrow = styled.i`
     font-size: 15px;
     text-transform: none;
     @media (min-width: 769px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
     @media (max-width: 768px) {
-        color: #ffffff;
+        color: var(--color-white);
     }
 `;
 

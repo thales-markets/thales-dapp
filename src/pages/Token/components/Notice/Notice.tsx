@@ -22,7 +22,7 @@ const Wrapper = styled(FlexDivColumnCentered)`
 `;
 
 const Container = styled(FlexDivCentered)`
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 10px;
     padding: 18px 20px;
     @media (max-width: 767px) {
@@ -34,7 +34,7 @@ const Text = styled(FlexDiv)`
     font-weight: normal;
     font-size: 16px;
     line-height: 30px;
-    color: #ffffff;
+    color: var(--color-white);
     align-items: center;
     @media (max-width: 767px) {
         margin-bottom: 20px;

@@ -94,7 +94,7 @@ const FlagIcon = styled.i`
     @media (max-width: 1024px) {
         font-size: 2.1em;
     }
-    color: var(--color);
+    color: var(--color-white);
 `;
 
 const DropDown = styled(FlexDivColumn)`
@@ -133,7 +133,7 @@ const LanguageName = styled.div`
     font-size: 1em;
     line-height: 24px;
     letter-spacing: 0.25px;
-    color: var(--color);
+    color: var(--color-white);
     margin-left: 10px;
     display: block;
     text-transform: uppercase;

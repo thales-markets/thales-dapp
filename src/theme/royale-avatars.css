@@ -3,7 +3,7 @@
     font-family: RoyaleAvatars !important;
     vertical-align: middle;
     font-size: 44px;
-    color: var(--color);
+    color: var(--color-white);
 }
 
 .royale-avatar--0:before {

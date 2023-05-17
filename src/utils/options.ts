@@ -7,6 +7,12 @@ import { ethers } from 'ethers';
 import { NetworkId } from './network';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 
+export enum SortDirection {
+    NONE,
+    ASC,
+    DESC,
+}
+
 export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
         markets.map((optionsMarket) => {
@@ -112,3 +118,7 @@ export const getSellTokenCurrency = (
         return OPTIONS_CURRENCY_MAP[positionSide];
     }
 };
+
+export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100);
+
+export const getFormattedBonus = (bonus: number | undefined) => `+${Math.ceil(Number(bonus))}%`;

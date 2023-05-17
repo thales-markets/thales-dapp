@@ -3,7 +3,7 @@
     font-family: Icons !important;
     vertical-align: middle;
     font-size: 20px;
-    color: var(--color);
+    color: var(--color-white);
 }
 
 .icon-home {
@@ -11,8 +11,10 @@
     font-family: Homepage Icons !important;
     vertical-align: middle;
     font-size: 20px;
-    color: var(--color);
+    color: var(--color-white);
 }
+
+/* homepage.ttf */
 
 .icon-home--toggle-dark:before {
     content: '\0041';
@@ -98,11 +100,61 @@
     content: '\0055';
 }
 
-.icon--triangle:before {
-    content: '\0034';
+.logo--bankless:before {
+    content: '\0056';
 }
 
-.icon--alive:before {
+.logo--benzinga:before {
+    content: '\0057';
+}
+
+.logo--bloomberg:before {
+    content: '\0058';
+}
+
+.logo--nasdaq:before {
+    content: '\0059';
+}
+
+.logo--yahoo:before {
+    content: '\005A';
+}
+
+/* icons.ttf */
+
+.icon--caret-down:before {
+    content: '\0021';
+}
+
+.icon--caret-up:before {
+    content: '\0022';
+}
+
+.icon--caret-up-down:before {
+    content: '\0023';
+}
+
+.icon--radio-button-selected:before {
+    content: '\0024';
+}
+
+.icon--radio-button:before {
+    content: '\0025';
+}
+
+.icon--unverified:before {
+    content: '\0030';
+}
+
+.icon--unsigned:before {
+    content: '\0031';
+}
+
+.icon--royale-logo:before {
+    content: '\0032';
+}
+
+.icon--triangle:before {
     content: '\0034';
 }
 
@@ -118,6 +170,10 @@
     content: '\0037';
 }
 
+.icon--stats:before {
+    content: '\0041';
+}
+
 .icon--thales-logo:before {
     content: '\0044';
 }
@@ -126,8 +182,56 @@
     content: '\005A';
 }
 
-.icon--royale-logo:before {
-    content: '\0032';
+.icon--clock:before {
+    content: '\0062';
+}
+
+.icon--copy:before {
+    content: '\0064';
+}
+
+.icon--wallet:before {
+    content: '\0066';
+}
+
+.icon--discord:before {
+    content: '\0067';
+}
+
+.icon--arrow-up:before {
+    content: '\0068';
+}
+
+.icon--user-avatar:before {
+    content: '\0069';
+}
+
+.icon--double-arrow:before {
+    content: '\006A';
+}
+
+.icon--arrow-down:before {
+    content: '\006B';
+}
+
+.icon--cn:before {
+    content: '\006C';
+}
+
+.icon--en:before {
+    content: '\006D';
+}
+
+.icon--ru:before {
+    content: '\006E';
+}
+
+.icon--g-theme:before {
+    content: '\006F';
+}
+
+.icon--b-theme:before {
+    content: '\0070';
 }
 
 .icon--ex-mark:before {
@@ -150,14 +254,6 @@
     content: '\0076';
 }
 
-.icon--double-right:before {
-    content: '\0079';
-}
-
-.icon--right:before {
-    content: '\007A';
-}
-
 .icon--dead:before {
     content: '\0077';
 }
@@ -166,85 +262,14 @@
     content: '\0078';
 }
 
-.icon--unverified:before {
-    content: '\0030';
+.icon--double-right:before {
+    content: '\0079';
 }
 
-.icon--unsigned:before {
-    content: '\0031';
+.icon--right:before {
+    content: '\007A';
 }
 
-.icon--arrow-down:before {
-    content: '\006B';
-}
-
-.icon--arrow-up:before {
-    content: '\0068';
-}
-
-.icon--double-arrow:before {
-    content: '\006A';
-}
-
-.icon--g-theme:before {
-    content: '\006F';
-}
-
-.icon--b-theme:before {
-    content: '\0070';
-}
-
-.icon--user-avatar:before {
-    content: '\0069';
-}
-
-.icon--discord:before {
-    content: '\0067';
-}
-
-.icon--wallet:before {
-    content: '\0066';
-}
-
-.icon--cn:before {
-    content: '\006C';
-}
-.icon--en:before {
-    content: '\006D';
-}
-
-.icon--ru:before {
-    content: '\006E';
-}
-
-.icon--clock:before {
-    content: '\0062';
-}
-
-.icon--stats:before {
-    content: '\0041';
-}
-
-.icon--copy:before {
-    content: '\0064';
-}
-
-.logo--bankless:before {
-    content: '\0056';
-}
-
-.logo--benzinga:before {
-    content: '\0057';
-}
-
-.logo--bloomberg:before {
-    content: '\0058';
-}
-
-.logo--nasdaq:before {
-    content: '\0059';
-}
-
-.logo--yahoo:before {
-    content: '\005A';
+.icon--gear:before {
+    content: '\0033';
 }

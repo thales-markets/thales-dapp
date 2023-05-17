@@ -48,8 +48,8 @@ const Tile: StyledComponent<
         height: 15px;
         border-radius: 50%;
         border: 4px solid var(--background);
-        background: ${(props) => props.dotColor || '#64d9fe'} !important;
-        box-shadow: 0 0 0 3px ${(props) => props.dotColor || '#64d9fe'} !important;
+        background: ${(props) => props.dotColor || 'var(--color-highlight)'} !important;
+        box-shadow: 0 0 0 3px ${(props) => props.dotColor || 'var(--color-highlight)'} !important;
         opacity: ${(props) => (props.dotColor || props.disabled ? '1' : '0.5')} !important;
     }
     &:after {
@@ -60,7 +60,7 @@ const Tile: StyledComponent<
         top: -31px;
         width: 2px;
         height: 43px;
-        background: #64d9fe;
+        background: var(--color-highlight);
         opacity: ${(props) => (props.disabled ? '1' : '0.5')} !important;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: 767px) {
@@ -77,7 +77,7 @@ const Tile: StyledComponent<
 const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(FlexDiv)<{
     lineHidden?: boolean;
 }>`
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     font-family: Roboto !important;
     font-weight: bold;
     height: 50px;
@@ -98,8 +98,8 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
         height: 15px;
         border-radius: 50%;
         border: 4px solid var(--background);
-        background: #64d9fe !important;
-        box-shadow: 0 0 0 3px #64d9fe !important;
+        background: var(--color-highlight) !important;
+        box-shadow: 0 0 0 3px var(--color-highlight) !important;
         opacity: 0.5 !important;
     }
     &:after {
@@ -110,7 +110,7 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
         top: -31px;
         width: 2px;
         height: 43px;
-        background: #64d9fe;
+        background: var(--color-highlight);
         opacity: 0.5;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: 767px) {
@@ -127,12 +127,12 @@ const Cell: StyledComponent<'div', any> & Cell = styled.div<{ direction?: string
     align-items: center;
     flex-direction: ${(props) => props.direction || 'column'};
     gap: ${(props) => (props.direction ? '3px' : '0')};
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     justify-content: center;
 `;
 
 const CellTitle = styled.div<{ fontSize?: number }>`
-    font-family: Titillium Light !important;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-size: ${(props) => props.fontSize || '12'}px;
     text-transform: uppercase;

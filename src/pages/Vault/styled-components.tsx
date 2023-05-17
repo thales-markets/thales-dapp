@@ -5,7 +5,7 @@ import { FlexDivCentered, FlexDivColumn, FlexDivStart, FlexDivRow, FlexDiv } fro
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;
     align-items: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const Container = styled(FlexDivRow)`
@@ -45,7 +45,7 @@ export const LeftContainer = styled(ContentContainer)`
 `;
 
 export const RightContainer = styled(ContentContainer)`
-    border: 2px solid #64d9fe;
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 15px;
     width: 40%;
     padding: 30px 40px 20px 40px;
@@ -70,7 +70,7 @@ export const RoundEndContainer = styled(FlexDivColumn)`
     span {
         font-size: 30px;
         font-weight: 600;
-        color: #64d9fe;
+        color: ${(props) => props.theme.textColor.quaternary};
     }
     margin-bottom: 15px;
 `;
@@ -82,7 +82,7 @@ export const RoundEndLabel = styled.p`
 export const RoundEnd = styled.p`
     font-weight: 600;
     font-size: 25px;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const RoundAllocationWrapper = styled(FlexDivCentered)`
@@ -96,7 +96,7 @@ export const RoundAllocationContainer = styled(FlexDivColumn)`
     max-width: 200px;
     padding: 5px 0;
     :not(:last-child) {
-        border-right: 2px solid rgba(100, 217, 254, 0.4);
+        border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
     }
     @media (max-width: 767px) {
         :not(:last-child) {
@@ -112,7 +112,7 @@ export const RoundAllocationLabel = styled.p`
 export const RoundAllocation = styled.p`
     font-size: 25px;
     font-weight: 600;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const RoundInfoContainer = styled(FlexDivColumn)`
@@ -124,7 +124,7 @@ export const RoundInfoLabel = styled.p``;
 export const RoundInfo = styled.p`
     font-size: 20px;
     font-weight: 600;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const Description = styled.div`
@@ -141,7 +141,7 @@ export const Description = styled.div`
 `;
 
 export const Info = styled(Description)`
-    border-bottom: 3px solid rgba(100, 217, 254, 0.4);
+    border-bottom: 3px solid ${(props) => props.theme.borderColor.tertiary};
     padding-bottom: 10px;
     padding-top: 0px;
 `;
@@ -163,7 +163,7 @@ export const VariablesTitle = styled.span`
     font-size: 20px;
     line-height: 100%;
     margin-top: 10px;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const Variables = styled(Description)`
@@ -227,7 +227,7 @@ export const VaultFilledGraphicContainer = styled(FlexDivStart)`
     position: relative;
     width: 100%;
     height: 14px;
-    background: #3b4472;
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 15px;
     margin-bottom: 10px;
 `;
@@ -239,18 +239,18 @@ export const VaultFilledGraphicPercentage = styled(FlexDivStart)<{ width: number
     height: 10px;
     left: 2px;
     top: 2px;
-    background: linear-gradient(269.97deg, #64d9fe 16.18%, #3f75ff 77.77%);
+    background: linear-gradient(269.97deg, var(--color-highlight) 16.18%, #3f75ff 77.77%);
     border-radius: 15px;
 `;
 
 export const SubmitButton = styled.button`
-    background: linear-gradient(88.84deg, #2fc9dd 19.98%, #1ca6b9 117.56%);
+    background: ${(props) => props.theme.button.background.primary};
     border-radius: 30px;
     margin: 20px 20px;
     font-size: 20px;
     font-weight: 700;
     line-height: 23px;
-    color: #04045a;
+    color: ${(props) => props.theme.button.textColor.primary};
     width: 252px;
     border: none;
     padding: 7px;
@@ -315,12 +315,12 @@ export const ToggleContainer = styled(FlexDiv)`
     margin-bottom: 20px;
     width: 100%;
     text-transform: uppercase;
-    border-bottom: 2px solid rgba(100, 217, 254, 0.4);
+    border-bottom: 2px solid ${(props) => props.theme.borderColor.tertiary};
     padding-bottom: 20px;
 `;
 
 export const Link = styled.a`
-    color: #64d9fe;
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
         text-decoration: underline;
     }

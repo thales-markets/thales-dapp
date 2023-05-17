@@ -234,7 +234,7 @@ const SectionWrapper = styled.section<{
     ${(props) => (props.rows ? 'display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; grid-gap: 24px;' : '')}
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
     padding: 2px;
-    background: ${(props) => (props.background ?? true ? '#64d9fe80' : 'none')};
+    background: ${(props) => (props.background ?? true ? 'var(--color-highlight)' : 'none')};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
 
     @media (max-width: 768px) {
@@ -244,7 +244,7 @@ const SectionWrapper = styled.section<{
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
     position: relative;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;
@@ -258,7 +258,7 @@ const SectionContent = styled.span`
     font-family: 'Roboto';
     font-style: normal;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const ScheduleLabel = styled.div`
@@ -303,7 +303,7 @@ const SectionValueContent = styled(SectionContent)`
     text-transform: uppercase;
     font-weight: 700;
     font-size: 30px;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
     @media (max-width: 768px) {
         font-size: 20px;
     }

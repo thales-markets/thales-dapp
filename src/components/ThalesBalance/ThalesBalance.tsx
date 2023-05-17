@@ -84,7 +84,7 @@ const Title = styled.p`
     line-height: 15px;
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    color: #64d9fe;
+    color: var(--color-highlight);
     margin-bottom: 10px;
     @media (max-width: 768px) {
         font-size: 12px;
@@ -114,7 +114,7 @@ const Label = styled.p`
     line-height: 21px;
     letter-spacing: 0.035em;
     text-transform: capitalize;
-    color: #ffffff;
+    color: var(--color-white);
     font-size: 12px;
     @media (max-width: 1024px) {
         font-size: 10px;
@@ -142,7 +142,7 @@ const Amount = styled.p`
     }
     letter-spacing: 0.035em;
     text-transform: capitalize;
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const calculateWidth = (inWallet: number, staked: number, escrowedBalance: number) => {

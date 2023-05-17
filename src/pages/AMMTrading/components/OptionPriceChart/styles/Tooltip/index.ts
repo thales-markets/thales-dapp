@@ -8,7 +8,7 @@ export const tooltipItemStyle = {
     fontWeight: 600,
     fontSize: 12,
     letterSpacing: 0.4,
-    fill: '#04045A',
+    fill: ' var(--color-primary)',
 };
 
 export const tooltipLabelStyle = {
@@ -16,5 +16,5 @@ export const tooltipLabelStyle = {
     fontSize: 12,
     lineHeight: 1.8,
     letterSpacing: 1,
-    color: 'var(--primary-color)',
+    color: 'var(--color-white)',
 };

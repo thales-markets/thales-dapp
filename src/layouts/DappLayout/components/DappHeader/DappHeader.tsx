@@ -28,7 +28,6 @@ const getTitle = (t: any) => {
     const splittedPathname = location.pathname.split('/');
 
     if (location.pathname === ROUTES.Options.Home) return t('common.sidebar.markets');
-    if (location.pathname === ROUTES.Options.RangeMarkets) return t('common.sidebar.ranged-markets');
     if (location.pathname.includes(ROUTES.Governance.Home)) return t('common.sidebar.governance-label');
     if (location.pathname === ROUTES.Options.Token) return t('common.sidebar.earn-label');
     if (location.pathname === ROUTES.Options.Profile) return t('options.trading-profile.title');
@@ -73,7 +72,7 @@ const PageTitle = styled.p`
     font-style: normal;
     font-weight: 600;
     font-size: 35px;
-    color: var(--primary-color);
+    color: var(--color-white);
 
     @media (max-width: 1024px) {
         margin-top: 20px;

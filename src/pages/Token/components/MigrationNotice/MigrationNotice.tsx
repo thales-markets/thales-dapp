@@ -30,7 +30,10 @@ export const MigrateText = styled.span`
 `;
 
 export const MigrateButton = styled(DefaultSubmitButton)`
-    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    background: ${(props) => props.theme.button.background.primary};
+    &:hover:not(:disabled) {
+        background: ${(props) => props.theme.button.background.primary};
+    }
     white-space: nowrap;
 `;
 

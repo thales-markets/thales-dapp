@@ -120,7 +120,7 @@ const RowCard: React.FC = () => {
                                             message={t('options.home.markets-table.twap-tooltip')}
                                             link={currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.link}
                                             type={'info'}
-                                            iconColor={'var(--primary-color)'}
+                                            iconColor={'var(--color-white)'}
                                             container={{ width: '15px' }}
                                             interactive={true}
                                         />
@@ -133,7 +133,7 @@ const RowCard: React.FC = () => {
                                             percentage: marketInfo.IV,
                                         })}
                                         type={'info'}
-                                        iconColor={'var(--primary-color)'}
+                                        iconColor={'var(--color-white)'}
                                         container={{ width: '15px', display: 'inline', position: 'absolute' }}
                                     />
                                 </Container.IV>

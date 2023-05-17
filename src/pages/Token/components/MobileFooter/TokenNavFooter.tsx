@@ -185,7 +185,7 @@ const NavFooter = styled.div`
     align-items: center;
     position: fixed;
     bottom: 85px;
-    right: 0;
+    left: 0;
     width: 100px;
     padding: 0 10px;
     z-index: 999;
@@ -198,7 +198,7 @@ const Container = styled.div`
     align-items: center;
     position: fixed;
     bottom: 145px;
-    right: 0;
+    left: 0;
     width: 100px;
 `;
 
@@ -206,7 +206,7 @@ const Icon = styled(Image)`
     width: 42px;
     height: 42px;
     padding: 4px;
-    background: #8208fc;
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 26.1818px;
     margin-top: 4px;
 `;
@@ -218,15 +218,14 @@ const BurgerWrapper = styled.div`
     align-items: center;
     width: 48px;
     height: 48px;
-    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
-    box-shadow: 0px 0px 26.1818px 8.72727px rgba(0, 0, 0, 0.25);
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 26.1818px;
 `;
 
 const BurgerLine = styled.div`
     width: 27px;
     height: 4px;
-    background: #ffffff;
+    background: ${(props) => props.theme.textColor.primary};
     border-radius: 5px;
     &:nth-child(2) {
         margin-top: 4px;

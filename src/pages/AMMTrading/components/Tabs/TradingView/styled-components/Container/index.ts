@@ -12,7 +12,7 @@ export const CopyrightLabel = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
+    color: var(--color-white);
     margin-top: 20px;
 `;
 

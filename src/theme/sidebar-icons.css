@@ -3,7 +3,7 @@
     font-family: SidebarIcons !important;
     vertical-align: middle;
     font-size: 32px;
-    color: var(--color);
+    color: var(--color-white);
 }
 
 .icon--token:before {
@@ -121,9 +121,6 @@
 .icon--wizard {
     width: 32px;
     font-size: 44px;
-    position: relative;
-    left: -4px;
-    top: -6px;
 }
 
 .icon--discount-vault::before {

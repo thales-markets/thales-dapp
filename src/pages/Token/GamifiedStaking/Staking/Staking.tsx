@@ -340,24 +340,25 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
     background: ${(props) => {
         switch (props.backgroundType) {
             case BackgroundType.INFO:
-                return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
+                return props.theme.background.secondary;
             case BackgroundType.STAKE:
-                return '#64d9fe80';
+                return props.theme.background.secondary;
             default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+                return props.theme.background.secondary;
         }
     }};
     padding: 2px;
     @media (max-width: 768px) {
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
-        ${(props) => (props.backgroundType === BackgroundType.STAKE ? '' : 'background: #464dcf')};
+        ${(props) =>
+            props.backgroundType === BackgroundType.STAKE ? '' : `background: ${props.theme.background.secondary}`};
     }
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?: BackgroundType }>`
     display: grid;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
     border-radius: 15px;
     align-items: center;
     @media (max-width: 768px) {
@@ -383,10 +384,10 @@ const SectionValue = styled.div`
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     text-transform: uppercase;
-    color: #ffffff;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabelContent = styled(SectionContent)`
@@ -407,7 +408,6 @@ const SectionValueContent = styled(SectionContent)`
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;
-        color: #64d9fe;
     }
 `;
 
@@ -427,7 +427,7 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: #ffffff;
+    color: var(--color-white);
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -440,7 +440,7 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boo
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => (props.unavailable ? '#ffcc00' : '#ffffff')};
+    color: ${(props) => (props.unavailable ? '#ffcc00' : 'var(--color-white)')};
     @media (max-width: 768px) {
         font-size: 14px;
     }

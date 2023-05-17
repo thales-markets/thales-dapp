@@ -479,7 +479,7 @@ const SectionWrapper = styled.section`
     box-sizing: border-box;
     border-radius: 15px;
     grid-column: 1 / span 4;
-    background: #64d9fe80;
+    background: ${(props) => props.theme.background.secondary};
     padding: 2px;
     @media (max-width: 767px) {
         grid-column: span 12;
@@ -518,7 +518,7 @@ const SectionDescriptionParagraph = styled(FlexDivRow)`
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
     border-radius: 15px;
     padding: 20px;
     height: 100%;
@@ -575,7 +575,7 @@ const InputLabel = styled.label`
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
-    color: #64d9fe;
+    color: var(--color-highlight);
     padding-left: 8px;
     pointer-events: none;
     z-index: 3;
@@ -633,21 +633,21 @@ const StyledLink = styled.a`
         fill: #f6f6fe;
     }
     &:hover {
-        color: #64d9fe;
+        color: var(--color-highlight);
         & path {
-            fill: #64d9fe;
+            fill: var(--color-highlight);
         }
     }
     @media (max-width: 767px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
     @media (max-width: 767px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
         & path {
-            fill: #64d9fe;
+            fill: var(--color-highlight);
         }
     }
 `;

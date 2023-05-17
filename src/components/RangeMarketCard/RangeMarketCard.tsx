@@ -41,7 +41,7 @@ const RangeMarketCard: React.FC<RangeMarketCardProps> = ({ data, exchangeRates, 
                                     message={t('options.home.markets-table.twap-tooltip')}
                                     link={currencyKeyToDataFeedSourceMap[data.currencyKey]?.link}
                                     type={'info'}
-                                    iconColor={'var(--primary-color)'}
+                                    iconColor={'var(--color-white)'}
                                     container={{ width: '15px' }}
                                     interactive={true}
                                 />
@@ -90,7 +90,7 @@ const AssetNameContainer = styled.div`
     flex-direction: column;
     text-align: left;
     font-size: 15px;
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
 `;
 
 const CurrencyKey = styled.span<{ alignSelf?: string }>`
@@ -115,7 +115,7 @@ const MarketStatus = styled.span`
 const LightHeaderText = styled.span`
     display: flex;
     flex-direction: row;
-    color: var(--primary-color);
+    color: var(--color-white);
     font-family: Roboto !important;
     font-style: normal;
     line-height: 110%;

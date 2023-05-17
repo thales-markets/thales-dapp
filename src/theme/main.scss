@@ -153,11 +153,12 @@ table {
     width: var(--scrollbar-width, 10px);
 }
 *::-webkit-scrollbar-track {
-    background: var(--color-wrapper, #4673bd);
+    border-radius: 8px;
+    background: var(--color-wrapper, #2b3139);
 }
 *::-webkit-scrollbar-thumb {
     border-radius: 8px;
-    background: var(--color, #f7f7f7);
+    background: var(--color, #848e9c);
 }
 
 input::-webkit-outer-spin-button,
@@ -171,12 +172,28 @@ input[type='number'] {
 }
 
 #root {
-    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
     height: 100vh;
     --sat: env(safe-area-inset-top);
     --sar: env(safe-area-inset-right);
     --sab: env(safe-area-inset-bottom);
     --sal: env(safe-area-inset-left);
+
+    --color-primary: #181a20;
+    --color-secondary: #2b3139;
+    --color-secondary-hover: #2a2e33;
+    --color-tertiary: #1b1c33;
+    --color-highlight: #848e9c;
+    --color-highlight-2: rgba(121, 177, 255, 0.6);
+    --color-white: #f4f4f4;
+
+    --color-text: #808997;
+
+    // --color-primary: #1e1e1e;
+    // --color-secondary: #2b3139;
+    // --color-tertiary: #848e9c;
+    // --color-highlight: #03dac6;
+    // --color-white: #ffffff;
+
     &.collapse {
         overflow: hidden;
     }
@@ -184,29 +201,6 @@ input[type='number'] {
 
 body {
     background: #052040;
-    scrollbar-color: #f7f7f7 #1b314f;
-    --color-wrapper: #1b314f;
-    --color: #f7f7f7;
-    --color-scrollbar-hover: #f7f7f7;
-
-    &.light-theme {
-        --scrollbar-width: 6px;
-        --color-low: #141874;
-        --color-high: #04045a;
-        --color-background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-        --color-wrapper: #04045a;
-        --color: #64d9fe;
-        --color-scrollbar-hover: #3995b3;
-    }
-    &.dark-theme {
-        --scrollbar-width: 6px;
-        --color-low: #07150f;
-        --color-high: #1e4c39;
-        --color-background: linear-gradient(180deg, #1e4c39 0%, #07150f 117.72%);
-        --color-wrapper: #133326;
-        --color: #a1e1b4;
-        --color-scrollbar-hover: #6e967a;
-    }
 }
 
 a {

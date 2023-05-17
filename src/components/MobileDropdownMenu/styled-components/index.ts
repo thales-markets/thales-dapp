@@ -23,7 +23,7 @@ export const FiltersButton = styled.div<{ visible?: boolean }>`
     font-size: 12px;
     line-height: 11px;
     text-transform: uppercase;
-    color: #64d9fe;
+    color: var(--color-highlight);
     align-self: center;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -61,7 +61,7 @@ export const Item = styled.div<{ active: boolean }>`
     cursor: pointer;
     font-family: Roboto !important;
     font-style: normal;
-    color: ${(_props) => (_props?.active ? '#64d9fe' : '#ffffff')};
+    color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -79,6 +79,6 @@ export const Title = styled.p`
     font-size: 12px;
     line-height: 100%;
     text-transform: uppercase;
-    color: #64d9fe;
+    color: var(--color-highlight);
     margin-bottom: 10px;
 `;

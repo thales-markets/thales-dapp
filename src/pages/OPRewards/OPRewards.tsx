@@ -35,7 +35,7 @@ const THALES_REWARDS = [
     2000, // period 1
     2000, // period 2
     4000, // period 3
-    4000, // period 4
+    10000, // period 4
     4000, // period 5
     4000, // period 6
     4000, // period 7
@@ -57,7 +57,7 @@ const OP_REWARDS = [
     2000, // period 1
     2000, // period 2
     4000, // period 3
-    4000, // period 4
+    10000, // period 4
     4000, // period 5
     4000, // period 6
     4000, // period 7
@@ -192,6 +192,7 @@ const OPRewards: React.FC = () => {
                             href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
                             target="_blank"
                             rel="noreferrer"
+                            isHighlighted={walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()}
                         >
                             {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
                                 ? t('op-rewards.table.my-rewards')

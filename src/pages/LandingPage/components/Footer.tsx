@@ -91,7 +91,7 @@ const FlexDiv = styled.div`
     width: 100%;
     justify-content: space-evenly;
     align-items: center;
-    color: var(--color);
+    color: var(--color-white);
     flex-wrap: wrap;
 `;
 
@@ -133,7 +133,7 @@ const FooterHtml = styled.div`
             z-index: 3;
             background: var(--main-background);
             & > a > i {
-                color: var(--color) !important;
+                color: var(--color-white) !important;
             }
             & > i {
                 display: inline-block;
@@ -229,7 +229,7 @@ const FooterIcon = styled.i`
         pointer-events: none;
     }
     font-size: 3em;
-    color: var(--color);
+    color: var(--color-white);
 `;
 
 const FooterLink = styled.a`
@@ -238,9 +238,9 @@ const FooterLink = styled.a`
     font-weight: 300;
     font-size: 15px;
     line-height: 36px;
-    color: var(--color);
+    color: var(--color-white);
     &:visited {
-        color: var(--color);
+        color: var(--color-white);
     }
 `;
 
@@ -272,12 +272,12 @@ const FooterIconLogo = styled.i`
     font-size: 12em;
     margin-top: -50px;
     margin-bottom: -40px;
-    color: var(--color);
+    color: var(--color-white);
     text-align: center;
 `;
 
 const ButtonContainer = styled.div`
-    border: 3px solid var(--color);
+    border: 3px solid var(--color-white);
     box-sizing: border-box;
     border-radius: 21px;
     width: 9em;
@@ -293,15 +293,15 @@ const DAPPLink = styled.a`
     line-height: 36px;
     width: 100%;
     text-align: center;
-    color: var(--color);
+    color: var(--color-white);
     cursor: pointer;
     &:visited {
-        color: var(--color);
+        color: var(--color-white);
     }
     & > i {
         font-size: 4em;
         line-height: 26px;
-        color: var(--color);
+        color: var(--color-white);
     }
 `;
 

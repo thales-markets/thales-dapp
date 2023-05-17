@@ -86,7 +86,7 @@ const StatusButton = styled.button<{ isActive: boolean }>`
 `;
 
 const InnerButton = styled(FlexDivRowCentered)`
-    background: #09095b;
+    background: var(--color-tertiary);
     border-radius: 23px;
     font-weight: 500;
     font-size: 16px;
@@ -104,7 +104,7 @@ const DropdownContainer = styled.div`
 `;
 
 const DropDown = styled(FlexDivColumn)`
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
     border: 1px solid #4f759b;
     border-radius: 20px;
     position: absolute;

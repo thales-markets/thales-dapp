@@ -226,7 +226,7 @@ const Title = styled.p`
     font-weight: 600;
     font-size: 25px;
     line-height: 38px;
-    color: #64d9fe;
+    color: var(--color-white);
     border-bottom: 4px solid rgba(100, 217, 254, 0.5);
     padding: 4px 20px;
     text-transform: capitalize;

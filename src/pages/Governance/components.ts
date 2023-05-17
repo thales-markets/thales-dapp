@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow, FlexDivCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { StatusEnum } from 'constants/governance';
-import { DefaultSubmitButton } from 'components/OldVersion/old-components';
+import { SubmitButton } from 'components/OldVersion/old-components';
 
 export const SidebarTitle = styled(FlexDivCentered)`
     font-weight: 500;
@@ -27,7 +27,7 @@ export const SidebarContent = styled(FlexDivColumn)<{ type?: string; isCouncilVo
             : props.isCouncilVoting && props.type === 'results'
             ? '0 0 10px 0'
             : '0'};
-    background-color: #04045a;
+    background-color: var(--color-primary);
     border-radius: 0 0 5px 5px;
 `;
 
@@ -39,7 +39,7 @@ export const ResultRow = styled(FlexDivColumnCentered)<{
     paddingTop?: number;
 }>`
     padding: 10px 20px;
-    background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : '#04045a')};
+    background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : ' var(--color-primary)')};
     opacity: ${(props) => (props.opacity ? props.opacity : 1)};
     border-bottom: ${(props) => (props.borderColor ? `1px solid ${props.borderColor}` : 'none')};
     padding-bottom: ${(props) => (props.paddingBottom ? props.paddingBottom : '10')}px;
@@ -101,7 +101,7 @@ export const Votes = styled.div``;
 
 export const LoaderContainer = styled(FlexDivColumn)<{ height?: number }>`
     min-height: ${(props) => (props.height ? props.height : 400)}px;
-    background: #04045a;
+    background: var(--color-primary);
     justify-content: space-evenly;
     position: relative;
     border-radius: 5px;
@@ -111,7 +111,7 @@ export const LoaderContainer = styled(FlexDivColumn)<{ height?: number }>`
 
 export const NoVotes = styled(FlexDivColumn)`
     min-height: 200px;
-    background: #04045a;
+    background: var(--color-primary);
     justify-content: space-evenly;
     align-items: center;
     font-weight: 500;
@@ -162,7 +162,7 @@ export const getColor = (status: string) => {
         case StatusEnum.Closed:
             return '#8208FC';
         default:
-            return '#64D9FE';
+            return 'var(--color-highlight)';
     }
 };
 
@@ -171,7 +171,7 @@ export const DetailsTitle = styled(FlexDivRow)`
     font-size: 20px;
     line-height: 24px;
     text-align: center;
-    color: #ffffff;
+    color: var(--color-white);
     margin-bottom: 5px;
     margin-top: 40px;
 `;
@@ -192,7 +192,7 @@ export const VoteContainer = styled(FlexDivColumnCentered)`
     margin-top: 15px;
 `;
 
-export const VoteButton = styled(DefaultSubmitButton)`
+export const VoteButton = styled(SubmitButton)`
     margin-top: 20px;
     margin-bottom: 20px;
     width: 264px;

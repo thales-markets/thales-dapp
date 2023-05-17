@@ -196,7 +196,7 @@ const H1 = styled.h1`
     line-height: 91.91%;
     text-align: justify;
     text-transform: uppercase;
-    color: var(--color);
+    color: var(--color-white);
     margin-top: 0.2em;
     margin-bottom: 0.6em;
 `;
@@ -208,7 +208,7 @@ const H2 = styled.h2`
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
-    color: var(--color);
+    color: var(--color-white);
     margin-top: 2em;
     margin-bottom: 1em;
 `;
@@ -220,7 +220,7 @@ const H3 = styled.h3`
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
-    color: var(--color);
+    color: var(--color-white);
     margin-top: 2em;
     margin-bottom: 1em;
 `;
@@ -231,7 +231,7 @@ const Paragraph = styled.p`
     margin-bottom: 1em;
     &,
     & * {
-        color: var(--color);
+        color: var(--color-white);
         font-family: NunitoExtraLight !important;
         font-style: normal;
         font-weight: 300;
@@ -246,20 +246,20 @@ const Paragraph = styled.p`
 
 const Date = styled.h1`
     font-family: NunitoExtraLight !important;
-    color: var(--color);
+    color: var(--color-white);
     font-size: 1.2em;
 `;
 
 const List = styled.ul`
     list-style: disc;
-    color: var(--color);
+    color: var(--color-white);
     list-style-position: inside;
 `;
 
 const ListItem = styled.li<{ bold?: boolean }>`
     font-family: ${(props) => (props.bold ? 'NunitoSemiBold !important' : 'NunitoExtraLight !important')};
     margin-bottom: 0.5em;
-    color: var(--color);
+    color: var(--color-white);
     font-size: 1.3em;
 `;
 
@@ -274,7 +274,7 @@ const ChartLabel = styled.span`
     bottom: -1.55em;
     left: 0;
     right: 0;
-    color: var(--color);
+    color: var(--color-white);
     text-align: center;
 `;
 

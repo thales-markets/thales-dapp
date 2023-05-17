@@ -18,8 +18,8 @@ export const GridContainer = styled(GridDivCol)`
 `;
 
 export const Input = styled.input`
-    background: #04045a;
-    border: 1px solid #64d9fe;
+    background: var(--color-primary);
+    border: 1px solid ${(props) => props.theme.input.borderColor.primary};
     box-sizing: border-box;
     mix-blend-mode: normal;
     border-radius: 12px;
@@ -30,13 +30,13 @@ export const Input = styled.input`
     font-size: 20px;
     line-height: 18px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.input.textColor.primary};
     &::selection {
-        color: #04045a;
-        background: #f6f6fe;
+        color: ${(props) => props.theme.input.textColor.tertiary};
+        background: ${(props) => props.theme.input.background.selection.primary};
     }
     &:focus {
-        border: 2px solid #00f9ff;
+        border: 2px solid ${(props) => props.theme.input.borderColor.focus.primary};
         box-sizing: border-box;
     }
     &:disabled {
@@ -57,7 +57,7 @@ export const InputLabel = styled.label`
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
-    color: #64d9fe;
+    color: ${(props) => props.theme.input.textColor.primary};
     padding: 8px 0 0 15px;
     pointer-events: none;
     z-index: 3;
@@ -81,7 +81,7 @@ export const CurrencyLabel = styled.label`
     font-size: 20px;
     line-height: 18px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.input.textColor.primary};
     padding: 36px 16px 17px 0;
     pointer-events: none;
     position: absolute;
@@ -255,23 +255,19 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     font-size: 16px;
     line-height: 24px;
     text-align: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.button.textColor.primary};
     padding: 8px 38px;
     &:disabled {
         opacity: 0.4;
         cursor: default;
     }
-    &.selected,
-    &:hover:not(:disabled) {
-        background: ${(prop) => (prop.isBuy ? '#00E4B8' : '#e53720')};
-    }
 `;
 
 export const DefaultSubmitButton = styled(SubmitButton)`
-    background: #3936c7;
+    background: ${(props) => props.theme.button.background.primary};
     &.selected,
     &:hover:not(:disabled) {
-        background: #7119e1;
+        background: ${(props) => props.theme.button.borderColor.secondary};
     }
 `;
 
@@ -400,25 +396,25 @@ type TooltipIconProps = {
 
 const StyledRoyaleTooltip = withStyles(() => ({
     arrow: {
-        color: 'var(--color-wrapper)',
+        color: 'var(--color-secondary)',
         width: '20px !important',
         height: '16px !important',
         marginTop: '-16px !important',
         marginLeft: '0 !important',
         marginBottom: '-14px !important',
         '&::before': {
-            border: '2px solid var(--color)',
+            border: '2px solid var(--color-white)',
         },
     },
     tooltip: {
-        background: 'var(--color-wrapper)',
+        background: 'var(--color-secondary)',
         borderRadius: '10px',
-        border: '2px solid var(--color)',
+        border: '2px solid var(--color-white)',
         padding: '10px',
         fontSize: '12px',
         lineHeight: '16px',
         letterSpacing: '0.4px',
-        color: 'var(--color)',
+        color: 'var(--color-white)',
     },
 }))(MaterialTooltip);
 

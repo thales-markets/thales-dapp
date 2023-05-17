@@ -208,9 +208,9 @@ const Container = styled(FlexDivColumnCentered)`
     line-height: 24px;
     border-radius: 15px;
     min-width: 70px;
-    background: #04045a;
-    border: 2px solid #64d9fe;
-    box-shadow: 0px 0px 90px 10px #64d9fe;
+    background: var(--color-primary);
+    border: 2px solid var(--color-highlight);
+    box-shadow: 0px 0px 90px 10px var(--color-highlight);
     margin: auto;
     position: relative;
     top: calc(50% - 200px);

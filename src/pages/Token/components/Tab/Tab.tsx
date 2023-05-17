@@ -134,7 +134,7 @@ const SectionHeader = styled.p`
     font-weight: 600;
     font-size: 32px;
     line-height: 35px;
-    color: #ffffff;
+    color: var(--color-white);
     @media (max-width: 1192px) {
         height: 40px;
         font-size: 25px;
@@ -155,7 +155,7 @@ const SectionDescription = styled.p`
     font-size: 16px;
     line-height: 20px;
     padding-top: 5px;
-    color: #ffffff;
+    color: var(--color-white);
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;
@@ -169,7 +169,7 @@ const WarningIcon = styled.i`
     margin-right: 4px;
     line-height: 18px;
     padding-top: 5px;
-    color: #e53720;
+    color: ${(props) => props.theme.textColor.tertiary};
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;
@@ -183,7 +183,7 @@ const SectionWarning = styled.p`
     font-size: 16px;
     line-height: 20px;
     padding-top: 5px;
-    color: #e53720;
+    color: ${(props) => props.theme.textColor.tertiary};
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;
@@ -215,10 +215,10 @@ const SectionContent = styled.div`
     grid-gap: ${GRID_GAP}px;
     padding: 10px 0;
     border-radius: 10px;
-    background: #04045a;
+    background: var(--color-primary);
     z-index: 0;
     width: 100%;
-    color: #ffffff;
+    color: var(--color-white);
     @media (max-width: 767px) {
         background: transparent;
         border: none;

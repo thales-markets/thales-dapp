@@ -125,18 +125,18 @@ export const Background = styled.section`
             }
         }
     }
-    background-color: #04045a;
-    --background: #04045a;
+    background-color: #111221;
+    --background: #111221;
     --icon-color: #f7f7f7;
-    --shadow: 0px 0px 40px #64d9fe;
+    --shadow: 0px 0px 40px var(--color-highlight);
     --primary-color: #f7f7f7;
-    --input-border-color: #64d9fe;
+    --input-border-color: var(--color-highlight);
     --table-border-color: rgba(100, 217, 254, 0.5);
-    --table-header-text-color: #64d9fe;
+    --table-header-text-color: var(--color-highlight);
     --disabled-item: #8181ac;
     --enabled-item: #f7f7f7;
-    --primary-filter-menu-active: #64d9fe;
-    --hotmarket-arrow-enabled: #64d9fe;
+    --primary-filter-menu-active: var(--color-highlight);
+    --hotmarket-arrow-enabled: var(--color-highlight);
     --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
 `;
 
@@ -243,7 +243,7 @@ export const Button = styled.button`
         background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
         &:hover {
             background: #00f9ff;
-            color: #04045a;
+            color: var(--color-primary);
         }
         &:active {
             background: #00ced3;
@@ -413,12 +413,12 @@ export const GradientText = styled.span<{ gradient: string; fontSize: number; fo
 `;
 
 export const UserCardSectionHeader = styled.span`
-    font-family: Sansation !important;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
     line-height: 20px;
-    color: #64d9fe;
+    color: var(--color-highlight);
     text-transform: uppercase;
 `;
 
@@ -442,7 +442,7 @@ export const InputContainer = styled.div`
 `;
 
 export const NoDataText = styled.span`
-    color: var(--primary-color);
+    color: var(--color-white);
     font-size: 24px;
     @media (max-width: 768px) {
         font-size: 15px;
@@ -458,3 +458,30 @@ export const NoDataContainer = styled.div`
         margin-top: 10px;
     }
 `;
+
+// TODO: Update color names
+export const Colors = {
+    GRAY: '#2B3139',
+    GRAY_LIGHT: '#848E9C',
+    GRAY_DARK: '#181A20',
+
+    WHITE: '#FFFFFF',
+
+    GREEN: '#03DAC5',
+    GREEN_LIGHT: '#93F9B9',
+    GREEN_DARK: '#1D976C',
+
+    BLACK: '#000000',
+    BLACK_LIGHT: '#121212',
+
+    BLUE: '#1043B4',
+    BLUE_LIGHT: '#36D1DC',
+    BLUE_DARK: '#5B86E5',
+    BLUE_MIDNIGHT: '#050838',
+
+    RED: '#DE496D',
+    RED_LIGHT: '#E29587',
+    RED_DARK: '#D66D75',
+
+    ORANGE: '#F7B91A',
+};

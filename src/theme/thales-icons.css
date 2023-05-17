@@ -3,7 +3,7 @@
     font-family: ThalesIcons !important;
     vertical-align: middle;
     font-size: 24px;
-    color: var(--color);
+    color: var(--color-white);
 }
 
 .v2-icon--dollar:before {

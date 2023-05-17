@@ -2,9 +2,8 @@ import React from 'react';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import { Container, Icon, Text, IconContainer, LinkInTooltip } from './styled-components/components';
-import { UI_COLORS } from 'constants/ui';
-import { withStyles } from '@material-ui/styles';
 import Fade from '@material-ui/core/Fade';
+import styled from 'styled-components';
 
 type Tooltips = 'info' | 'warning' | 'success' | 'moneyBag';
 
@@ -48,37 +47,37 @@ type PlacementType =
 const icons = {
     info: {
         className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
+        color: 'var(--color-white)',
     },
     warning: {
         className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
+        color: 'var(--color-white)',
     },
     success: {
         className: 'v2-icon v2-icon--info',
-        color: 'var(--primary-color)',
+        color: 'var(--color-white)',
     },
     moneyBag: {
         className: 'v2-icon v2-icon--dollar',
-        color: 'var(--primary-color)',
+        color: 'var(--color-white)',
     },
 };
 
-const ModifiedTooltip = withStyles(() => ({
-    arrow: {
-        color: '#04045a',
-        fontSize: 10,
-        '&:before': {
-            border: `1px solid ${UI_COLORS.GREEN}`,
-        },
-    },
-    tooltip: {
-        backgroundColor: '#04045a',
-        maxWidth: 220,
-        border: `1px solid ${UI_COLORS.GREEN}`,
-        borderRadius: '5px',
-    },
-}))(Tooltip);
+export const ModifiedTooltip = styled((props) => <Tooltip classes={{ popper: props.className }} {...props} />)`
+    & .MuiTooltip-arrow {
+        &:before {
+            border: 1px solid ${(props) => props.theme.borderColor.primary};
+        }
+        color: ${(props) => props.theme.background.primary};
+        font-size: 10px;
+    }
+    & .MuiTooltip-tooltip {
+        background-color: ${(props) => props.theme.background.primary};
+        border: 1px solid ${(props) => props.theme.borderColor.primary};
+        border-radius: 5px;
+        max-width: 220px;
+    }
+`;
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({
     message,

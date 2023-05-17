@@ -6,7 +6,7 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 export type DiscountMap = Record<string, { longPriceImpact: number; shortPriceImpact: number }> | undefined;
 
-export const fetchDiscounts = (network: NetworkId, options?: UseQueryOptions<DiscountMap>) => {
+export const useDiscountMarkets = (network: NetworkId, options?: UseQueryOptions<DiscountMap>) => {
     return useQuery<DiscountMap>(
         QUERY_KEYS.BinaryOptions.DiscountMap(network),
         async () => {

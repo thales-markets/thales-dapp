@@ -47,14 +47,14 @@ const MenuCard = styled.div<{ isVisible: boolean }>`
     max-height: 95vh;
     overflow-y: auto;
     top: 40px;
-    border: 1px solid #64d9fe;
+    border: 1px solid var(--color-highlight);
     box-sizing: border-box;
     border-radius: 15px;
     z-index: 1000;
-    background-color: #04045a;
-    --background: #04045a;
+    background-color: var(--color-primary);
+    --background: var(--color-primary);
     --icon-color: #f7f7f7;
-    --shadow-color: '#64D9FE';
+    --shadow-color: 'var(--color-highlight)';
     @media (max-width: 1024px) {
         width: 100%;
         max-width: 100%;
@@ -100,7 +100,7 @@ const CloseIcon = styled.i`
     padding: 4px;
     box-sizing: content-box;
     cursor: pointer;
-    color: var(--icon-color);
+    color: var(--color-white);
 `;
 
 const LogoContainer = styled.div`
@@ -114,7 +114,7 @@ const LogoContainer = styled.div`
 `;
 
 const ThalesLogo = styled.i`
-    color: var(--icon-color);
+    color: var(--color-white);
     font-size: 140px;
 `;
 

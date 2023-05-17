@@ -137,7 +137,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                     component={Paper}
                 >
                     <Table aria-label="customized table">
-                        <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                        <TableHead style={{ textTransform: 'uppercase', background: ' var(--color-primary)' }}>
                             <TableRow>
                                 {headCells.map((cell: HeadCell, index) => {
                                     return (

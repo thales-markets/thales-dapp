@@ -244,7 +244,7 @@ const Status = styled(FlexDivColumnCentered)<{ status: string }>`
     text-align: center;
     letter-spacing: 2px;
     color: ${(props) => getColor(props.status)};
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 10px;
     text-transform: uppercase;
     width: 198px;

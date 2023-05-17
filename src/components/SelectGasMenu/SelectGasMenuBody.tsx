@@ -136,7 +136,7 @@ const Input = styled.input`
     width: 100%;
     color: #f6f6fe;
     &::selection {
-        color: #04045a;
+        color: var(--color-primary);
         background: #f6f6fe;
     }
     &:focus {

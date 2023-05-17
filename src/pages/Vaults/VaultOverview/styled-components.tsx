@@ -2,9 +2,8 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 
 export const SpaContainer = styled(FlexDivColumn)`
-    background: linear-gradient(201.59deg, #04045a 37.82%, #2f2f99 107.42%);
-    border: 2px solid #64d9fe;
-    box-shadow: 0px 0px 30px 20px rgba(4, 4, 90, 0.7);
+    background: linear-gradient(201.59deg, var(--color-primary) 37.82%, var(--color-secondary) 107.42%);
+    border: 2px solid var(--color-highlight);
     border-radius: 15px;
     transition: 0.2s all;
     &:hover {
@@ -57,7 +56,7 @@ export const VaultTitle = styled.span`
     padding-bottom: 20px;
     border-bottom: 2px solid rgba(100, 217, 254, 0.4);
     text-align: center;
-    color: #64d9fe;
+    color: var(--color-highlight);
 `;
 
 export const VaultSectionTitle = styled.span`
@@ -86,7 +85,7 @@ export const VaultInfoContainer = styled(FlexDivColumn)`
     span {
         font-size: 20px;
         font-weight: 600;
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
     margin-top: 10px;
 `;
@@ -106,7 +105,7 @@ export const TitleVaultIcon = styled.i`
     margin-right: 8px;
     top: -2px;
     position: relative;
-    color: #64d9fe;
+    color: var(--color-highlight);
 `;
 
 export const VaultSectionIcon = styled.i`

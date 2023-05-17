@@ -88,7 +88,7 @@ const Wrapper = styled(FlexDivColumnCentered)`
 `;
 
 const Container = styled(FlexDivColumn)`
-    background: #04045a;
+    background: var(--color-primary);
     box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
     border-radius: 15px;
     padding: 30px 60px 40px 60px;

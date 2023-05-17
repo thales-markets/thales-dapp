@@ -1,5 +1,15 @@
 import { Layout } from 'react-grid-layout';
 import { ToastPosition, TypeOptions } from 'react-toastify';
+import darkTheme from 'theme/themes/dark';
+import { ThemeInterface } from 'types/ui';
+
+export enum Theme {
+    DARK,
+}
+
+export const ThemeMap: Record<Theme, ThemeInterface> = {
+    [Theme.DARK]: darkTheme,
+};
 
 export enum MarketWidgetKey {
     MATURITY_PHASE = 'maturity-phase-widget',
@@ -33,12 +43,12 @@ export enum COLORS {
 
 export enum COLORS_NEW {
     LONG = '#50CE99',
-    SHORT = '##C3244A',
+    SHORT = '#DE496D',
 }
 
 export enum UI_COLORS {
-    RED = '#C3244A',
-    GREEN = '#50CE99',
+    RED = '#DE496D',
+    GREEN = '#03DAC5',
     YELLOW = '#F7B91B',
     IN_COLOR = '#B0FFE7',
     OUT_COLOR = '#BF7EFF',
