@@ -48,7 +48,6 @@ const Container = styled.div`
     z-index: 0;
     width: 974px;
     height: 120px;
-    border: 1.4px solid #5f6180;
     border-radius: 11px;
     overflow: hidden;
     margin: 0 0 30px 0;
