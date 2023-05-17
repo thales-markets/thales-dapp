@@ -10,7 +10,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { orderBy } from 'lodash';
-import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
+// import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
 
 export type UserLivePositions = {
     currencyKey: string;
@@ -72,48 +72,46 @@ const useUserOpenPositions = (
                                 sum on graph: 13.518487483102007
                             sum on contract: 13.5184874831020065
                         */
-                        const marketContract = new ethers.Contract(
-                            positionBalance.position.market.id,
-                            binaryOptionMarketContract.abi,
-                            snxJSConnector.provider
-                        );
-                        const balances = await marketContract.balancesOf(walletAddress);
-                        const contractPositionBalance = balances[positionBalance.position.side];
+                        // const marketContract = new ethers.Contract(
+                        //     positionBalance.position.market.id,
+                        //     binaryOptionMarketContract.abi,
+                        //     snxJSConnector.provider
+                        // );
+                        // const balances = await marketContract.balancesOf(walletAddress);
+                        // const contractPositionBalance = balances[positionBalance.position.side];
 
                         const { ammContract } = snxJSConnector as any;
                         const ammQuote = await ammContract.sellToAmmQuote(
                             positionBalance.position.market.id,
                             SIDE[positionBalance.position.side],
-                            contractPositionBalance
+                            positionBalance.amount
                         );
 
                         return {
                             ...positionBalance,
-                            amount: contractPositionBalance,
                             value: stableCoinFormatter(ammQuote, networkId),
                         };
                     }),
                 ]),
                 Promise.all([
                     ...liveRangedPositions.map(async (positionBalance: any) => {
-                        const marketContract = new ethers.Contract(
-                            positionBalance.position.market.id,
-                            binaryOptionMarketContract.abi,
-                            snxJSConnector.provider
-                        );
-                        const balances = await marketContract.balancesOf(walletAddress);
-                        const contractPositionBalance = balances[positionBalance.position.side];
+                        // const marketContract = new ethers.Contract(
+                        //     positionBalance.position.market.id,
+                        //     binaryOptionMarketContract.abi,
+                        //     snxJSConnector.provider
+                        // );
+                        // const balances = await marketContract.balancesOf(walletAddress);
+                        // const contractPositionBalance = balances[positionBalance.position.side];
 
                         const { rangedMarketAMMContract } = snxJSConnector as any;
                         const ammQuote = await rangedMarketAMMContract.sellToAmmQuote(
                             positionBalance.position.market.id,
                             RANGE_SIDE[positionBalance.position.side],
-                            contractPositionBalance
+                            positionBalance.amount
                         );
 
                         return {
                             ...positionBalance,
-                            amount: contractPositionBalance,
                             value: stableCoinFormatter(ammQuote, networkId),
                         };
                     }),
