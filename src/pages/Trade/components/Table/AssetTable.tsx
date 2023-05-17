@@ -1,3 +1,4 @@
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import TableV3 from 'components/TableV3';
 
 import { USD_SIGN } from 'constants/currency';
@@ -13,10 +14,11 @@ type TableProps = {
     markets: MarketInfo[] | RangedMarketPerPosition[];
     setMarket: React.Dispatch<React.SetStateAction<MarketInfo | RangedMarketPerPosition | undefined>>;
     position: Positions;
+    isLoading: boolean;
     // highlightMarkets: Set<string>;
 };
 
-const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
+const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoading }) => {
     // selectors
     const { t } = useTranslation();
 
@@ -35,6 +37,8 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
         }
         setFirstMarketAddress(marketAddress);
     }, [markets, setMarket, firstMarketAddress]);
+
+    const noMarkets = markets.length === 0;
 
     const columns: Array<any> = useMemo(() => {
         return [
@@ -84,18 +88,24 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position }) => {
 
     return (
         <Wrapper>
-            <TableV3
-                hover="#1B1C33"
-                onTableRowClick={(row) => {
-                    setRowIndex(row.index);
-                    setMarket({ ...row.original, positionType: position });
-                }}
-                tableHeadCellStyles={TableHeaderStyle}
-                data={markets}
-                columns={columns}
-                selectedRowIndex={rowIndex}
-                showCurrentPrice={position === Positions.UP || position === Positions.DOWN}
-            />
+            {isLoading ? (
+                <SimpleLoader />
+            ) : noMarkets ? (
+                <NoMarketsText>{t(`options.home.markets-table.no-markets`)}</NoMarketsText>
+            ) : (
+                <TableV3
+                    hover="#1B1C33"
+                    onTableRowClick={(row) => {
+                        setRowIndex(row.index);
+                        setMarket({ ...row.original, positionType: position });
+                    }}
+                    tableHeadCellStyles={TableHeaderStyle}
+                    data={markets}
+                    columns={columns}
+                    selectedRowIndex={rowIndex}
+                    showCurrentPrice={position === Positions.UP || position === Positions.DOWN}
+                />
+            )}
         </Wrapper>
     );
 };
@@ -117,9 +127,10 @@ const Wrapper = styled(FlexDivColumn)`
         max-width: initial;
         height: calc(100% - 80px);
     }
+    position: relative;
 `;
 
-const TableText = styled.span<{ price: boolean; selected: boolean }>`
+const TableText = styled.span<{ price?: boolean; selected?: boolean }>`
     font-family: 'Titillium Web !important';
     font-style: normal;
     font-weight: ${(props) => (props.selected ? 700 : 500)};
@@ -136,6 +147,10 @@ const TableText = styled.span<{ price: boolean; selected: boolean }>`
             : props.price
             ? props.theme.textColor.quaternary
             : props.theme.textColor.primary};
+`;
+
+const NoMarketsText = styled(TableText)`
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 export default AssetTable;

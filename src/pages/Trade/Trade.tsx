@@ -135,7 +135,12 @@ const TradePage: React.FC = () => {
                                 <RadioButtons onChange={setPositionType} selected={positionType} />
                             </PositionedWrapper>
 
-                            <AssetTable setMarket={setMarket} markets={allMarkets} position={positionType} />
+                            <AssetTable
+                                setMarket={setMarket}
+                                markets={allMarkets}
+                                position={positionType}
+                                isLoading={marketsQuery.isLoading}
+                            />
                         </RightSide>
                     </ContentWrapper>
 

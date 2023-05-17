@@ -542,7 +542,8 @@
                     "table": "Table",
                     "only-liquid": "Liquid",
                     "all": "All"
-                }
+                },
+                "no-markets": "No markets for selected parameters"
             }
         },
         "earn": {

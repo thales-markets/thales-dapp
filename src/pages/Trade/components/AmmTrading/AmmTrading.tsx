@@ -355,8 +355,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 }
                 // Between 2 calls ammPrice will be always different as it is based on position amount which is changed when price is changed
                 priceChanged =
-                    truncToDecimals(ammPrice, SHORT_CRYPTO_CURRENCY_DECIMALS) !==
-                    truncToDecimals(Number(positionPrice), SHORT_CRYPTO_CURRENCY_DECIMALS);
+                    ammPrice < Number(positionPrice) * (1 - slippagePerc / 100) ||
+                    ammPrice > Number(positionPrice) * (1 + slippagePerc / 100);
             } catch (e) {
                 console.log(e);
                 resetData();
