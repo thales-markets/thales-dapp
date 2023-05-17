@@ -80,9 +80,8 @@ const useUserOpenPositions = (
                         const balances = await marketContract.balancesOf(walletAddress);
                         const contractPositionBalance = balances[positionBalance.position.side];
 
-                        const { ammContract, signer } = snxJSConnector as any;
-                        const ammContractWithSigner = ammContract.connect(signer);
-                        const ammQuote = await ammContractWithSigner.sellToAmmQuote(
+                        const { ammContract } = snxJSConnector as any;
+                        const ammQuote = await ammContract.sellToAmmQuote(
                             positionBalance.position.market.id,
                             SIDE[positionBalance.position.side],
                             contractPositionBalance
@@ -105,9 +104,8 @@ const useUserOpenPositions = (
                         const balances = await marketContract.balancesOf(walletAddress);
                         const contractPositionBalance = balances[positionBalance.position.side];
 
-                        const { rangedMarketAMMContract, signer } = snxJSConnector as any;
-                        const rangedMarketAMMContractWithSigner = rangedMarketAMMContract.connect(signer);
-                        const ammQuote = await rangedMarketAMMContractWithSigner.sellToAmmQuote(
+                        const { rangedMarketAMMContract } = snxJSConnector as any;
+                        const ammQuote = await rangedMarketAMMContract.sellToAmmQuote(
                             positionBalance.position.market.id,
                             RANGE_SIDE[positionBalance.position.side],
                             contractPositionBalance

@@ -209,8 +209,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const fetchGasLimit = useCallback(
         async (marketAddress: string, side: any, parsedAmount: any, parsedTotal: any, parsedSlippage: any) => {
             try {
-                const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
-                const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+                const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
+                const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
 
                 if (isOVM) {
                     const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
@@ -221,7 +221,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     const gasLimit = await getEstimatedGasFees(
                         isNonDefaultStable,
                         true,
-                        ammContractWithSigner,
+                        contract,
                         marketAddress,
                         side,
                         parsedAmount,
@@ -262,8 +262,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             const suggestedAmount = totalToPay / calcPrice;
 
             try {
-                const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
-                const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+                const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
+                const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
 
                 const parsedAmount = ethers.utils.parseEther(suggestedAmount.toString());
                 const promises = isRangedAmm
@@ -271,7 +271,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                           getQuoteFromRangedAMM(
                               isNonDefaultStable,
                               true,
-                              ammContractWithSigner,
+                              contract,
                               parsedAmount,
                               market.address,
                               POSITIONS_TO_SIDE_MAP[market.positionType],
@@ -282,7 +282,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     : getQuoteFromAMM(
                           isNonDefaultStable,
                           true,
-                          ammContractWithSigner,
+                          contract,
                           parsedAmount,
                           market.address,
                           POSITIONS_TO_SIDE_MAP[market.positionType],
