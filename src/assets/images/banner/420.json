@@ -4,11 +4,19 @@
         "url": ""
     },
     {
+        "image": "leverage.png",
+        "url": ""
+    },
+    {
         "image": "out-markets.png",
         "url": ""
     },
     {
         "image": "in-markets.png",
         "url": ""
+    },
+    {
+        "image": "refer.png",
+        "url": "https://thalesmarket.io/referral"
     }
 ]
