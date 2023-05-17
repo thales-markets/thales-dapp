@@ -87,7 +87,8 @@ const App = () => {
 
     useEffect(() => {
         const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
-        const theme = lsTheme !== undefined ? lsTheme : Theme.DARK;
+        const theme =
+            lsTheme !== undefined ? (Object.values(Theme).includes(lsTheme) ? lsTheme : Theme.DARK) : Theme.DARK;
 
         trackPageView({
             customDimensions: [

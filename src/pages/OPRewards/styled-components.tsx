@@ -89,7 +89,8 @@ export const TooltipLink = styled.a`
 export const AddressLink = styled.a<{ isHighlighted?: boolean }>`
     color: ${(props) => (props.isHighlighted ? props.theme.button.textColor.primary : props.theme.textColor.primary)};
     &:hover {
-        color: #00f9ff;
+        color: ${(props) =>
+            props.isHighlighted ? props.theme.button.textColor.primary : props.theme.button.background.primary};
     }
 `;
 

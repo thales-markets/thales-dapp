@@ -17,7 +17,7 @@ import styled, { CSSProperties } from 'styled-components';
 import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { formatShortDateFromTimestamp } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import { formatCurrencyWithSign, formatNumberShort } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatNumberShort, roundNumberToDecimals } from 'utils/formatters/number';
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData, refetchUserOpenPositions } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -94,7 +94,7 @@ const OpenPositions: React.FC = () => {
         };
 
         const fetchAmmPriceData = async (totalToPay: number) => {
-            let priceChanged = false;
+            let totalValueChanged = false;
             let latestGasLimit = null;
 
             if (position.market && totalToPay > 0) {
@@ -137,24 +137,27 @@ const OpenPositions: React.FC = () => {
                         parsedSlippage
                     );
 
-                    priceChanged = ammPrice !== position.value / position.amount;
+                    // changes in cash out value less than 0.01 sUSD are not relevant
+                    totalValueChanged =
+                        roundNumberToDecimals(position.value, 3) !==
+                        roundNumberToDecimals(ammPrice * position.amount, 3);
                 } catch (e) {
                     console.log(e);
                     setGasLimit(null);
-                    priceChanged = true;
+                    totalValueChanged = true;
                 }
             } else {
                 setGasLimit(null);
             }
 
-            return { priceChanged, latestGasLimit };
+            return { totalValueChanged, latestGasLimit };
         };
 
         setSubmittingAddress(position.market);
         const id = toast.loading(t('amm.progress'));
 
-        const { priceChanged, latestGasLimit } = await fetchAmmPriceData(position.paid);
-        if (priceChanged) {
+        const { totalValueChanged, latestGasLimit } = await fetchAmmPriceData(position.paid);
+        if (totalValueChanged) {
             toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
             setSubmittingAddress('');
             refetchUserOpenPositions(walletAddress, networkId);

@@ -14,7 +14,11 @@ export enum UISize {
 
 const getDefaultTheme = (): Theme => {
     const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
-    return (lsTheme !== undefined ? lsTheme : Theme.DARK) as Theme;
+    return lsTheme !== undefined
+        ? Object.values(Theme).includes(lsTheme as number)
+            ? (lsTheme as Theme)
+            : Theme.DARK
+        : Theme.DARK;
 };
 
 type UISliceState = {

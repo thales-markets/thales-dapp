@@ -128,7 +128,12 @@ interface RootProps {
 }
 
 const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
-const theme = lsTheme !== undefined ? (lsTheme as Theme) : Theme.DARK;
+const theme =
+    lsTheme !== undefined
+        ? Object.values(Theme).includes(lsTheme as number)
+            ? (lsTheme as Theme)
+            : Theme.DARK
+        : Theme.DARK;
 
 const Root: React.FC<RootProps> = ({ store }) => {
     const customTheme = merge(darkTheme(), { colors: { modalBackground: ThemeMap[theme].background.primary } });

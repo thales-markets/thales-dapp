@@ -49,7 +49,7 @@ const RowMobile = styled.div`
     display: flex;
     flex-direction: row;
     :not(:last-child) {
-        border-bottom: 1px solid var(--table-border-color);
+        border-bottom: 1px solid ${(props) => props.theme.background.secondary};
     }
 `;
 
@@ -67,7 +67,7 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
     height: 43px;
     width: 100%;
     align-items: center;
-    border-bottom: 1px solid var(--table-border-color);
+    border-bottom: 1px solid ${(props) => props.theme.background.secondary};
     ${(_props) => (_props?.leaderboardRank == 1 ? 'height: 130px !important;' : '')};
     ${(_props) => (_props?.leaderboardRank == 2 ? 'height: 66px !important;' : '')};
     ${(_props) => (_props?.leaderboardRank == 3 ? 'height: 66px !important;' : '')};
@@ -96,7 +96,7 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
             ? `
                 margin: 10px 0px;
                 border-radius: 15px;
-                border: 1px solid var(--table-border-color) !important;
+                border: 1px solid ${_props.theme.background.secondary} !important;
             `
             : ''};
     ${(_props) => (_props?.isClaimed ? 'opacity: 0.5' : '')};
