@@ -2,15 +2,15 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { NetworkId } from 'utils/network';
-import { Positions } from 'constants/options';
+import { Positions, RANGE_SIDE, SIDE } from 'constants/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import snxJSConnector from 'utils/snxJSConnector';
-import { POSITIONS_TO_SIDE_MAP } from 'constants/options';
 import { ethers } from 'ethers';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { orderBy } from 'lodash';
+import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
 
 export type UserLivePositions = {
     currencyKey: string;
@@ -64,32 +64,58 @@ const useUserOpenPositions = (
             const [result, resultsRanged] = await Promise.all([
                 Promise.all([
                     ...livePositions.map(async (positionBalance: any) => {
-                        const { ammContract, signer } = snxJSConnector as any;
-                        const ammContractWithSigner = ammContract.connect(signer);
-                        const ammQuote = await ammContractWithSigner.sellToAmmQuote(
+                        /*
+                            On subgraph there is an issue with plus function, so when user buy the same position several times, 
+                            it sums up to value which is higher than it has on contract. Read position balance from contract!
+                            example: 1st buy: 12.288200907691198
+                                    2nd buy:  1.2302865754108085
+                                sum on graph: 13.518487483102007
+                            sum on contract: 13.5184874831020065
+                        */
+                        const marketContract = new ethers.Contract(
                             positionBalance.position.market.id,
-                            POSITIONS_TO_SIDE_MAP[
-                                positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN
-                            ],
-                            positionBalance.amount
+                            binaryOptionMarketContract.abi,
+                            snxJSConnector.provider
+                        );
+                        const balances = await marketContract.balancesOf(walletAddress);
+                        const contractPositionBalance = balances[positionBalance.position.side];
+
+                        const { ammContract } = snxJSConnector as any;
+                        const ammQuote = await ammContract.sellToAmmQuote(
+                            positionBalance.position.market.id,
+                            SIDE[positionBalance.position.side],
+                            contractPositionBalance
                         );
 
-                        return { ...positionBalance, value: stableCoinFormatter(ammQuote, networkId) };
+                        return {
+                            ...positionBalance,
+                            amount: contractPositionBalance,
+                            value: stableCoinFormatter(ammQuote, networkId),
+                        };
                     }),
                 ]),
                 Promise.all([
                     ...liveRangedPositions.map(async (positionBalance: any) => {
-                        const { rangedMarketAMMContract, signer } = snxJSConnector as any;
-                        const rangedMarketAMMContractWithSigner = rangedMarketAMMContract.connect(signer);
-                        const ammQuote = await rangedMarketAMMContractWithSigner.sellToAmmQuote(
+                        const marketContract = new ethers.Contract(
                             positionBalance.position.market.id,
-                            POSITIONS_TO_SIDE_MAP[
-                                positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT
-                            ],
-                            positionBalance.amount
+                            binaryOptionMarketContract.abi,
+                            snxJSConnector.provider
+                        );
+                        const balances = await marketContract.balancesOf(walletAddress);
+                        const contractPositionBalance = balances[positionBalance.position.side];
+
+                        const { rangedMarketAMMContract } = snxJSConnector as any;
+                        const ammQuote = await rangedMarketAMMContract.sellToAmmQuote(
+                            positionBalance.position.market.id,
+                            RANGE_SIDE[positionBalance.position.side],
+                            contractPositionBalance
                         );
 
-                        return { ...positionBalance, value: stableCoinFormatter(ammQuote, networkId) };
+                        return {
+                            ...positionBalance,
+                            amount: contractPositionBalance,
+                            value: stableCoinFormatter(ammQuote, networkId),
+                        };
                     }),
                 ]),
             ]);

@@ -54,8 +54,8 @@ const OpenPositions: React.FC = () => {
             parsedSlippage: any
         ) => {
             try {
-                const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
-                const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+                const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
+                const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
 
                 if (isOVM) {
                     const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
@@ -66,7 +66,7 @@ const OpenPositions: React.FC = () => {
                     const gasLimit = await getEstimatedGasFees(
                         false,
                         false,
-                        ammContractWithSigner,
+                        contract,
                         marketAddress,
                         side,
                         parsedAmount,
@@ -99,8 +99,8 @@ const OpenPositions: React.FC = () => {
 
             if (position.market && totalToPay > 0) {
                 try {
-                    const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
-                    const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
+                    const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
+                    const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
 
                     const parsedAmount = ethers.utils.parseEther(position.amount.toString());
                     const promises = isRangedAmm
@@ -108,7 +108,7 @@ const OpenPositions: React.FC = () => {
                               getQuoteFromRangedAMM(
                                   false,
                                   false,
-                                  ammContractWithSigner,
+                                  contract,
                                   parsedAmount,
                                   position.market,
                                   POSITIONS_TO_SIDE_MAP[position.side]
@@ -118,7 +118,7 @@ const OpenPositions: React.FC = () => {
                         : getQuoteFromAMM(
                               false,
                               false,
-                              ammContractWithSigner,
+                              contract,
                               parsedAmount,
                               position.market,
                               POSITIONS_TO_SIDE_MAP[position.side]
