@@ -154,7 +154,12 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
                     {getModalContent()}
                 </StyledRoyaleModal>
             ) : (
-                <StyledModal open disableBackdropClick onClose={onClose}>
+                <StyledModal
+                    open
+                    onClose={(_event: any, reason: string) => {
+                        if (reason !== 'backdropClick') onClose;
+                    }}
+                >
                     {getModalContent()}
                 </StyledModal>
             )}
