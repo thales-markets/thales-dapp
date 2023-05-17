@@ -22,7 +22,7 @@ const Container = styled.div`
     grid-gap: 20px;
     padding: 20px;
     border-radius: 10px;
-    background: #04045a;
+    background: var(--color-primary);
     z-index: 0;
     width: 100%;
     @media (max-width: 767px) {

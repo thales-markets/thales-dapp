@@ -184,7 +184,7 @@ const Links = styled.div`
         left: 102vw;
         width: 300px;
         min-height: 100vh;
-        background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+        background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
         justify-content: flex-start;
         z-index: 2;
         .burger-logo {
@@ -290,7 +290,7 @@ const StyledPlayIcon = styled(PlayIcon)`
             fill: #00f9ff;
         }
         & path:nth-of-type(2) {
-            fill: #04045a;
+            fill: var(--color-primary);
         }
     }
 `;
@@ -305,10 +305,10 @@ const StyledPauseIcon = styled(PauseIcon)`
             fill: #00f9ff;
         }
         & path:nth-of-type(2) {
-            fill: #04045a;
+            fill: var(--color-primary);
         }
         & path:nth-of-type(3) {
-            fill: #04045a;
+            fill: var(--color-primary);
         }
     }
 `;

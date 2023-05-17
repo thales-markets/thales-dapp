@@ -284,7 +284,7 @@ export const currencyKeyToAssetIconMap = {
 
 export const currencyKeyToNameMap = {
     [SYNTHS_MAP.sBTC]: 'Bitcoin',
-    [SYNTHS_MAP.sETH]: 'Ether',
+    [SYNTHS_MAP.sETH]: 'Ethereum',
     [SYNTHS_MAP.sEUR]: 'Euros',
     [SYNTHS_MAP.sDEFI]: 'DeFi Index',
     [SYNTHS_MAP.sAAPL]: 'Apple',
@@ -345,7 +345,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.ARB]: 'Arbitrum',
     [CRYPTO_CURRENCY_MAP.CVX]: 'Convex Finance',
     [CRYPTO_CURRENCY_MAP.OHM]: 'Olympus',
-    [CRYPTO_CURRENCY_MAP.OHM]: 'Optimism',
+    [CRYPTO_CURRENCY_MAP.OP]: 'Optimism',
     [CRYPTO_CURRENCY_MAP.LOOKS]: 'LooksRare',
     [CRYPTO_CURRENCY_MAP.DYDX]: 'dYdX',
     [CRYPTO_CURRENCY_MAP.ETC]: 'Ethereum Classic',

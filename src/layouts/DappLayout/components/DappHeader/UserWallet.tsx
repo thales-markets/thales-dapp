@@ -126,8 +126,8 @@ const WrapperContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid rgba(100, 217, 254, 0.5);
-    border-radius: 15px;
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border-radius: 8px;
     @media (max-width: 500px) {
         height: 32px;
     }
@@ -142,9 +142,9 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     align-items: center;
     max-width: 130px;
     cursor: pointer;
-    border-right: 2px solid rgba(100, 217, 254, 0.5);
-    color: var(--icon-color);
-    font-family: Sansation !important;
+    border-right: 2px solid ${(props) => props.theme.borderColor.primary};
+    color: ${(props) => props.theme.textColor.primary};
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: normal;
     font-size: 12.5px;
@@ -187,7 +187,7 @@ const SelectedNetworkContainer = styled.div<{ cursor: string }>`
     justify-content: center;
     max-width: 130px;
     width: 130px;
-    color: var(--icon-color);
+    color: var(--color-white);
     cursor: ${(props) => props.cursor};
     flex-direction: column;
     z-index: 1;

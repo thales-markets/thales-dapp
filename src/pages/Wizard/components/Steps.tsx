@@ -75,7 +75,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         } else if (typeof window.ethereum !== 'undefined') {
             setCurrentStep(WizardSteps.CONNECT_METAMASK);
         }
-    }, [isWalletConnected]);
+    }, [isWalletConnected, setCurrentStep]);
 
     // After click on install check every 1s if user installed Metamask
     useInterval(
@@ -439,7 +439,7 @@ const Nav = styled.div<{ justifyContent: string }>`
 
 const NavItem = styled.div<{ clickable: boolean }>`
     flex: 1;
-    font-family: 'Titillium Web';
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     line-height: 40px;
@@ -447,7 +447,7 @@ const NavItem = styled.div<{ clickable: boolean }>`
     letter-spacing: 0.035em;
     text-align: center;
     text-transform: uppercase;
-    color: var(--primary-color);
+    color: var(--color-white);
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
     &.active {
@@ -576,12 +576,12 @@ const Icon = styled.i<{ clickable: boolean }>`
 `;
 
 const IconText = styled.p`
-    font-family: 'Titillium Web';
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
     line-height: 21px;
-    color: #64d9fe;
+    color: var(--color-highlight);
     padding-top: 5px;
 `;
 
@@ -612,7 +612,7 @@ const ArrowImg = styled.img<{ clickable: boolean }>`
 `;
 
 const SeparatorImg = styled.img`
-    background: #64d9fe;
+    background: var(--color-highlight);
     width: 4px;
     height: 72px;
     margin-top: 5px;
@@ -623,7 +623,7 @@ const Text = styled.p`
     font-weight: 400;
     font-size: 15px;
     line-height: 23px;
-    color: var(--color);
+    color: var(--color-white);
     a {
         font-weight: 700;
         text-decoration: underline;
@@ -638,9 +638,9 @@ const BuyWrapper = styled.div`
     margin: auto;
     position: relative;
     top: 100px;
-    background: #04045a;
-    border: 2px solid #64d9fe;
-    box-shadow: 0px 0px 90px 10px #64d9fe;
+    background: var(--color-primary);
+    border: 2px solid var(--color-highlight);
+    box-shadow: 0px 0px 90px 10px var(--color-highlight);
     border-radius: 15px;
     outline: none;
 `;
@@ -667,7 +667,7 @@ const BuyTitle = styled.div`
     line-height: 24px;
     position: relative;
     text-align: center;
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const ButtonLogoGroup = styled.div`
@@ -689,7 +689,7 @@ const Button = styled.div`
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    border: 1px solid #64d9fe;
+    border: 1px solid var(--color-highlight);
     border-radius: 30px;
     font-family: 'Sansation';
     font-style: normal;
@@ -697,7 +697,7 @@ const Button = styled.div`
     font-size: 12.5px;
     line-height: 14px;
     cursor: pointer;
-    color: #ffffff;
+    color: var(--color-white);
     background-color: transparent;
     padding: 5px 0px;
     margin-left: 30px;

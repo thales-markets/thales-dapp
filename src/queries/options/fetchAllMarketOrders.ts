@@ -18,7 +18,7 @@ export type OpenOrdersMap =
       >
     | undefined;
 
-export const fetchAllMarketOrders = (network: NetworkId, options?: UseQueryOptions<OpenOrdersMap>) => {
+export const useFetchAllMarketOrders = (network: NetworkId, options?: UseQueryOptions<OpenOrdersMap>) => {
     return useQuery<OpenOrdersMap>(
         QUERY_KEYS.BinaryOptions.OrdersCount(network),
         async () => {

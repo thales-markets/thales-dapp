@@ -174,20 +174,15 @@ const OptimismButton = styled.button`
     width: 170px;
     height: 40px;
     border: none;
-    background: linear-gradient(150.74deg, #ca91dc -7.89%, #6ac1d5 107.94%);
+    background: ${(props) => props.theme.button.background.primary};
     padding: 1px;
     border-radius: 23px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.button.textColor.primary};
     path {
-        fill: #f6f6fe;
+        fill: ${(props) => props.theme.button.textColor.primary};
     }
     &:hover {
         cursor: pointer;
-        background: #00f9ff;
-        color: #00f9ff;
-        path {
-            fill: #00f9ff;
-        }
     }
     @media (max-width: 767px) {
         width: 100%;
@@ -195,7 +190,7 @@ const OptimismButton = styled.button`
 `;
 
 const InnerButton = styled(FlexDivRowCentered)<{ isL2: boolean }>`
-    background: #0e116a;
+    background: ${(props) => props.theme.button.background.primary};
     border-radius: 23px;
     font-weight: bold;
     font-size: 16px;
@@ -213,7 +208,7 @@ const DropdownContainer = styled.div`
 `;
 
 const DropDown = styled(FlexDivColumn)`
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
     border: 1px solid #4f759b;
     border-radius: 20px;
     position: absolute;
@@ -276,7 +271,7 @@ const StyledMaterialTooltip = withStyles(() => ({
     },
     tooltip: {
         background:
-            'linear-gradient(#04045a 0%, #04045a 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
+            'linear-gradient( var(--color-primary) 0%,  var(--color-primary) 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
         border: '1px solid transparent',
         borderRadius: '5px',
         padding: '10px 15px',
@@ -284,7 +279,7 @@ const StyledMaterialTooltip = withStyles(() => ({
         fontSize: '16px',
         lineHeight: '20px',
         letterSpacing: '0.4px',
-        color: '#ffffff',
+        color: 'var(--color-white)',
     },
 }))(MaterialTooltip);
 

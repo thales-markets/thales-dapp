@@ -102,7 +102,7 @@ const Wrapper = styled.div<{ margin?: string; disabled?: boolean; spanColumns?: 
 
 const Label = styled.span<{ fontSize?: string }>`
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '12px')};
-    color: var(--primary-color);
+    color: var(--color-white);
     margin-left: 5px;
     margin-right: 5px;
 `;

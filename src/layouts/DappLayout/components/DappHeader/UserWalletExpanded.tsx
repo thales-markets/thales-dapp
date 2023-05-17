@@ -100,7 +100,7 @@ const WalletContainer = styled.div<{ isClickable: boolean }>`
     width: 100%;
     margin: 9px auto;
     padding: 4px 12px;
-    border: 2px solid var(--icon-color);
+    border: 2px solid var(--color-white);
     border-radius: 20px;
     cursor: ${(props) => (props.isClickable ? 'pointer' : 'default')};
     @media (max-width: 1024px) {
@@ -113,15 +113,15 @@ const WalletContainer = styled.div<{ isClickable: boolean }>`
 `;
 
 const WalletIcon = styled.i`
-    color: var(--icon-color);
+    color: var(--color-white);
     font-size: 20px;
     padding-right: 5px;
     display: inline;
 `;
 
 const WalletAddress = styled.p`
-    color: var(--icon-color);
-    font-family: Sansation !important;
+    color: var(--color-white);
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: normal;
     font-size: 12.5px;

@@ -68,14 +68,14 @@ const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
     ${(_props) => (_props?.displayInRow ? 'align-items: baseline;' : '')}
     text-align: left;
     font-size: 15px;
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     @media screen and (max-width: 767px) {
         text-align: center;
     }
 `;
 
 const AssetName = styled.span<{ fontSize?: string }>`
-    font-family: Titillium Regular !important;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     display: block;
     font-weight: 300;
@@ -89,7 +89,7 @@ const AssetName = styled.span<{ fontSize?: string }>`
 `;
 
 const CurrencyKey = styled.span<{ fontSize?: string }>`
-    font-family: Titillium Regular !important;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     display: block;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};

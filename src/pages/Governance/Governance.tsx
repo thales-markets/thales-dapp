@@ -272,9 +272,9 @@ const MainContentContainer = styled.div<{ isOverviewPage: boolean }>`
 const MainContentWrapper = styled.div<{ isOverviewPage: boolean }>`
     border-radius: 5px;
     padding: 25px 0px 30px 0px;
-    background: #04045a;
+    background: var(--color-primary);
     @media (max-width: 767px) {
-        background: ${(props) => (props.isOverviewPage ? 'transparent' : '#04045a')};
+        background: ${(props) => (props.isOverviewPage ? 'transparent' : ' var(--color-primary)')};
         padding: ${(props) => (props.isOverviewPage ? '0px 0px 10px 0px' : '25px 0px 30px 0px')};
     }
 `;
@@ -301,7 +301,7 @@ const SidebarWrapper = styled.div`
 `;
 
 const Sidebar = styled.div`
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 5px;
     padding: 15px 0px 0px 0px;
 `;
@@ -325,13 +325,13 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     line-height: 48px;
     color: #748bc6;
     user-select: none;
-    border-bottom: 5px solid #04045a;
+    border-bottom: 5px solid var(--color-primary);
     margin-left: 25px;
     margin-right: 25px;
     &.selected {
         transition: 0.2s;
         color: #f6f6fe;
-        border-bottom: 5px solid #64d9fe;
+        border-bottom: 5px solid var(--color-highlight);
     }
     &:hover:not(.selected) {
         cursor: pointer;

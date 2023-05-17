@@ -15,6 +15,7 @@ import axios from 'axios';
 import { generalConfig } from 'config/general';
 import { isAndroid, isMetamask, isMobile } from 'utils/device';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
+import { getTheme } from 'redux/modules/ui';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -23,6 +24,7 @@ type DappLayoutProps = {
 };
 
 const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
+    const theme = useSelector((state: RootState) => getTheme(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const rawParams = useLocation();
@@ -80,7 +82,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
         checkMetamaskBrowser();
     }, []);
 
-    useWidgetBotScript(preventDiscordWidgetLoad);
+    useWidgetBotScript(preventDiscordWidgetLoad, theme);
 
     return (
         <Background id="main-content">
@@ -107,30 +109,26 @@ const Background = styled.section`
         left: 275px;
         overflow: hidden;
     }
-    background-color: #04045a;
-    --background: #04045a;
-    --icon-color: #f7f7f7;
-    --shadow: 0px 0px 40px #64d9fe;
+    background-color: ${(props) => props.theme.background.primary};
+    --background: var(--color-primary);
+    --shadow: 0px 0px 40px var(--color-highlight);
     --button-shadow: 0px 1px 30px rgba(100, 217, 254, 0.7);
-    --primary-color: #f7f7f7;
-    --input-border-color: #64d9fe;
+    --input-border-color: var(--color-highlight);
     --table-border-color: rgba(100, 217, 254, 0.5);
     --table-border-hover-color: rgba(100, 217, 254, 1);
-    --table-header-text-color: #64d9fe;
+    --table-header-text-color: var(--color-highlight);
     --disabled-item: #8181ac;
     --enabled-item: #f7f7f7;
-    --primary-filter-menu-active: #64d9fe;
-    --hotmarket-arrow-enabled: #64d9fe;
+    --primary-filter-menu-active: var(--color-highlight);
+    --hotmarket-arrow-enabled: var(--color-highlight);
     --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
-    --color: #f7f7f7;
-    --color-wrapper: #4673bd;
-    --scrollbar-width: 12px;
+    --scrollbar-width: 10px;
     --color-scrollbar-hover: #f7f7f7;
-    --button-bg-active: #64d9fe;
-    --button-text-active: #04045a;
+    --button-bg-active: var(--color-highlight);
+    --button-text-active: var(--color-primary);
     --button-bg-inactive: transparent;
-    --button-text-inactive: #64d9fe;
-    --notice-text: #64d9fe;
+    --button-text-inactive: var(--color-highlight);
+    --notice-text: var(--color-highlight);
     --amm-switch-circle: #f7f7f7;
     --card-border-color: rgba(100, 217, 254, 0.3);
 `;
@@ -143,7 +141,7 @@ const NewWrapper = styled.div`
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding: 40px 20px 0px 92px;
+    padding: 20px 20px 0px 92px;
     @media (max-width: 1024px) {
         padding: 0 20px;
         padding-bottom: 90px !important;
@@ -152,7 +150,6 @@ const NewWrapper = styled.div`
         padding: 0 10px;
     }
     max-width: 1440px;
-    min-height: 100vh;
 `;
 
 export default DappLayout;

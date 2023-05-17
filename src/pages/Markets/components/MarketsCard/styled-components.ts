@@ -47,7 +47,7 @@ const AssetInfo = styled.div`
 const CardText = styled.span`
     display: block;
     font-family: Roboto !important;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 const Header = styled(CardText)`
@@ -73,7 +73,7 @@ const AssetNameContainer = styled.div`
     flex-direction: column;
     text-align: left;
     font-size: 15px;
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     /* word-spacing: 50px; */
 `;
 
@@ -91,7 +91,7 @@ const Discount = styled.span`
     font-size: 40px;
     line-height: 100%;
     text-transform: capitalize;
-    color: #04045a;
+    color: var(--color-primary); ;
 `;
 
 const DiscountText = styled.span`
@@ -100,7 +100,7 @@ const DiscountText = styled.span`
     font-size: 15px;
     line-height: 100%;
     text-transform: capitalize;
-    color: #04045a;
+    color: var(--color-primary); ;
 `;
 
 const StyledComponents = {

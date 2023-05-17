@@ -9,7 +9,7 @@ import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;
     align-items: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const Container = styled(FlexDivRow)`
@@ -49,7 +49,7 @@ export const ContentContainer = styled(FlexDivColumn)`
 
 export const MainContainer = styled(Container)`
     width: 100%;
-    border: 2px solid #64d9fe;
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 10px;
     padding: 0 10px;
 `;
@@ -62,7 +62,7 @@ export const RoundEndContainer = styled(FlexDivColumn)`
     span {
         font-size: 30px;
         font-weight: 600;
-        color: #64d9fe;
+        color: ${(props) => props.theme.textColor.quaternary};
         line-height: 34px;
     }
     @media (max-width: 1199px) {
@@ -80,7 +80,7 @@ export const RoundEndLabel = styled.p``;
 export const RoundEnd = styled.p`
     font-weight: 600;
     font-size: 25px;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
     line-height: 25px;
 `;
 
@@ -94,7 +94,7 @@ export const RoundInfoLabel = styled.p``;
 export const RoundInfo = styled.p`
     font-size: 20px;
     font-weight: 600;
-    color: #64d9fe;
+    color: ${(props) => props.theme.textColor.quaternary};
     line-height: 20px;
 `;
 
@@ -189,7 +189,7 @@ export const LiquidityPoolFilledGraphicContainer = styled(FlexDivStart)`
     position: relative;
     width: 100%;
     height: 14px;
-    background: #3b4472;
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 9px;
     margin-top: 10px;
 `;
@@ -207,12 +207,12 @@ export const LiquidityPoolFilledGraphicPercentage = styled(FlexDivStart)<{ width
 `;
 
 export const SubmitButton = styled.button`
-    background: linear-gradient(88.84deg, #2fc9dd 19.98%, #1ca6b9 117.56%);
+    background: ${(props) => props.theme.button.background.primary};
     border-radius: 30px;
     font-size: 16px;
     font-weight: 700;
     line-height: 20px;
-    color: #1a1c2b;
+    color: ${(props) => props.theme.button.textColor.primary};
     width: 100%;
     border: none;
     padding: 5px;
@@ -225,13 +225,13 @@ export const SubmitButton = styled.button`
 `;
 
 export const ExternalButton = styled.a`
-    background: #64d9fe;
+    background: ${(props) => props.theme.button.background.primary};
     margin-top: 5px;
     border-radius: 5px;
     font-size: 16px;
     font-weight: 700;
     line-height: 20px;
-    color: #1a1c2b;
+    color: ${(props) => props.theme.button.textColor.primary};
     width: 100%;
     border: none;
     padding: 3px;
@@ -253,7 +253,9 @@ export const CloseRoundButton = styled(SubmitButton)`
 
 export const MaxButton = styled(SubmitButton)`
     position: absolute;
-    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    background: transparent;
+    color: ${(props) => props.theme.button.textColor.quaternary};
+    border: 1px solid ${(props) => props.theme.button.borderColor.secondary};
     border-radius: 15px;
     width: 48px;
     font-size: 10px;
@@ -261,9 +263,12 @@ export const MaxButton = styled(SubmitButton)`
     letter-spacing: 1px;
     text-align: center;
     padding: 0px 8px;
-    color: #f6f6fe;
     right: 15px;
     top: 8px;
+    &.selected,
+    &:hover:not(:disabled) {
+        background: ${(props) => props.theme.button.background.secondary};
+    }
 `;
 
 export const ButtonContainer = styled(FlexDivColumnCentered)`
@@ -274,7 +279,7 @@ export const InputWrapper = styled(InputContainer)`
     width: 100%;
     margin-bottom: 5px;
     input {
-        border: 2px solid rgba(100, 217, 254, 0.5);
+        border: 2px solid ${(props) => props.theme.input.borderColor.primary};
         font-size: 14px;
         height: 48px;
         padding: 18px 68px 0 15px;
@@ -365,7 +370,7 @@ export const GetStakeThalesIcon = styled.i`
 `;
 
 export const TextLink = styled.a`
-    color: #64d9fe;
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
         text-decoration: underline;
     }
@@ -382,14 +387,13 @@ export const TipLink: React.FC<{ href: string }> = ({ children, href }) => {
 export const StyledMaterialTooltip = withStyles(() => ({
     arrow: {
         '&:before': {
-            border: '1px solid #64D9FE',
+            border: '1px solid #2B3139',
         },
-        color: '#0d1069',
+        color: '#2B3139',
         marginLeft: '0px!important',
     },
     tooltip: {
-        background:
-            'linear-gradient(#04045a 0%, #04045a 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
+        background: '#2B3139',
         border: '1px solid transparent',
         borderRadius: '5px',
         padding: '10px 15px',
@@ -397,7 +401,7 @@ export const StyledMaterialTooltip = withStyles(() => ({
         fontSize: '16px',
         lineHeight: '20px',
         letterSpacing: '0.4px',
-        color: '#ffffff',
+        color: '#FFFFFF',
         maxWidth: 500,
     },
 }))(MaterialTooltip);
@@ -426,9 +430,9 @@ export const SliderContainer = styled.div`
 
 export const StyledSlider = withStyles({
     root: {
-        color: '#04C19D',
+        color: '#36D1DC',
         '&$disabled': {
-            color: '#04C19D',
+            color: '#36D1DC',
             opacity: 0.5,
         },
         padding: '6px 0 10px 0',
@@ -466,7 +470,7 @@ export const SliderRange = styled.div`
     font-size: 13px;
     line-height: 13px;
     letter-spacing: 0.4px;
-    color: #04c19d;
+    color: #36d1dc;
     &.disabled {
         opacity: 0.4;
         cursor: default;

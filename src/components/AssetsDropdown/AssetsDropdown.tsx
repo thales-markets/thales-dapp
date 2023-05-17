@@ -95,13 +95,13 @@ export const AssetsDropdown: React.FC<AssetsDropdownProps> = ({
 
 const Container = styled.div`
     position: absolute;
-    background: #04045a;
-    border: 2px solid #64d9fe;
+    background: var(--color-primary);
+    border: 2px solid var(--color-highlight);
     box-shadow: 0px 25px 30px 20px rgba(0, 0, 0, 0.25);
     border-radius: 15px;
     z-index: 2;
     padding: 20px;
-    color: var(--primary-color) !important;
+    color: var(--color-white) !important;
     width: 200px;
     @media (max-width: 768px) {
         top: 0;
@@ -124,7 +124,7 @@ const SelectAllRow = styled.span`
 `;
 
 const Selection = styled.span`
-    color: #64d9fe;
+    color: var(--color-highlight);
     cursor: pointer;
 `;
 

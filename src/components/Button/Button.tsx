@@ -108,7 +108,7 @@ const Wrapper = styled.button<{
     ${(_props) => (_props?.padding ? `padding: ${_props.padding}` : '')};
     &:hover {
         ${(_props) => (_props?.hoverShadow && !_props?.disabled ? `box-shadow:${_props.hoverShadow}` : '')}
-        ${(_props) => (_props?.hoverBorderEffect && !_props?.disabled ? `border:var(--primary-color)` : '')}
+        ${(_props) => (_props?.hoverBorderEffect && !_props?.disabled ? `border:var(--color-white)` : '')}
     }
     &:disabled {
         opacity: 0.6;

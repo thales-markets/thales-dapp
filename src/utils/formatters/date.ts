@@ -8,7 +8,7 @@ export const formatShortDateFromTimestamp = (timestamp: number) => format(timest
 export const toJSTimestamp = (timestamp: number) => timestamp * 1000;
 
 export const formatShortDate = (date: Date | number) => format(date, 'MMM d, yyyy');
-export const formatShortDateWithTime = (date: Date | number) => format(date, 'MMM d, yyyy | HH:mm');
+export const formatShortDateWithTime = (date: Date | number) => format(date, 'MMM d, yyyy HH:mm');
 
 export const secondsToTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);

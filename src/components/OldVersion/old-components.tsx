@@ -1,6 +1,5 @@
 import React from 'react';
 import Select from 'components/Select';
-import { COLORS } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol, FlexDivColumnCentered, FlexDiv } from 'theme/common';
 import { withStyles } from '@material-ui/core';
@@ -19,8 +18,8 @@ export const GridContainer = styled(GridDivCol)`
 `;
 
 export const Input = styled.input`
-    background: #0a2e66;
-    border: 2px solid #0a2e66;
+    background: transparent;
+    border: 2px solid ${(props) => props.theme.input.borderColor.primary};
     box-sizing: border-box;
     mix-blend-mode: normal;
     border-radius: 12px;
@@ -32,13 +31,13 @@ export const Input = styled.input`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.input.textColor.primary};
     &::selection {
-        color: #04045a;
-        background: #f6f6fe;
+        color: ${(props) => props.theme.input.textColor.tertiary};
+        background: ${(props) => props.theme.input.background.selection.primary};
     }
     &:focus {
-        border: 2px solid #00f9ff;
+        border: 2px solid ${(props) => props.theme.input.borderColor.focus.primary};
         box-sizing: border-box;
     }
     &:disabled {
@@ -46,7 +45,7 @@ export const Input = styled.input`
         cursor: default;
     }
     &.error {
-        border: 2px solid #e53720;
+        border: 2px solid ${(props) => props.theme.input.borderColor.error.primary};
     }
 `;
 
@@ -223,8 +222,8 @@ export const SubmitButtonContainer = styled(FlexDivColumnCentered)`
     align-items: center;
 `;
 
-export const SubmitButton = styled.button<{ isBuy?: boolean }>`
-    background: ${(prop) => (prop.isBuy ? COLORS.BUY : COLORS.SELL)};
+export const SubmitButton = styled.button`
+    background: ${(props) => props.theme.button.background.primary};
     border-radius: 23px;
     border: none;
     min-height: 40px;
@@ -239,18 +238,6 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     &:disabled {
         opacity: 0.4;
         cursor: default;
-    }
-    &.selected,
-    &:hover:not(:disabled) {
-        background: ${(prop) => (prop.isBuy ? '#00E4B8' : '#e53720')};
-    }
-`;
-
-export const DefaultSubmitButton = styled(SubmitButton)`
-    background: #3936c7;
-    &.selected,
-    &:hover:not(:disabled) {
-        background: #7119e1;
     }
 `;
 
@@ -376,25 +363,25 @@ type TooltipIconProps = {
 
 const StyledRoyaleTooltip = withStyles(() => ({
     arrow: {
-        color: 'var(--color-wrapper)',
+        color: 'var(--color-secondary)',
         width: '20px !important',
         height: '16px !important',
         marginTop: '-16px !important',
         marginLeft: '0 !important',
         marginBottom: '-14px !important',
         '&::before': {
-            border: '2px solid var(--color)',
+            border: '2px solid var(--color-white)',
         },
     },
     tooltip: {
-        background: 'var(--color-wrapper)',
+        background: 'var(--color-secondary)',
         borderRadius: '10px',
-        border: '2px solid var(--color)',
+        border: '2px solid var(--color-white)',
         padding: '10px',
         fontSize: '12px',
         lineHeight: '16px',
         letterSpacing: '0.4px',
-        color: 'var(--color)',
+        color: 'var(--color-white)',
     },
 }))(MaterialTooltip);
 
@@ -545,18 +532,18 @@ export const CloseIconContainer = styled(CloseIcon)`
     }
 `;
 
-export const StyledModal = withStyles(() => ({
-    paper: {
-        borderRadius: '23px',
-        width: '500px',
-        background: 'linear-gradient(150.74deg, rgba(202, 145, 220, 0.6) -7.89%, rgba(106, 193, 213, 0.6) 107.94%);',
-        padding: '1px',
-        overflow: 'hidden',
-    },
-}))(Dialog);
+export const StyledModal = styled((props) => <Dialog {...props} />)`
+    & .MuiDialog-paper {
+        border-radius: 23px;
+        width: 500px;
+        background: ${(props) => props.theme.borderColor.primary};
+        padding: 1px;
+        overflow: hidden;
+    }
+`;
 
 export const ModalContainer = styled.div`
-    background: #04045a;
+    background: ${(props) => props.theme.background.primary};
     padding: 20px 30px 35px 30px;
     overflow: auto;
     border-radius: 23px;

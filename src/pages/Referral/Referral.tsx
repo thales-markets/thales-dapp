@@ -503,7 +503,7 @@ const Referral: React.FC = () => {
                 <Tooltip
                     message={t('referral-page.disclaimer')}
                     type={'info'}
-                    iconColor={'var(--primary-color)'}
+                    iconColor={'var(--color-white)'}
                     container={{ width: '15px' }}
                     interactive={true}
                 />
@@ -512,7 +512,7 @@ const Referral: React.FC = () => {
                     target="_blank"
                     rel="noreferrer"
                     href={termsOfUse}
-                    style={{ color: 'var(--primary-color)', marginLeft: '5px', textDecoration: 'underline' }}
+                    style={{ color: 'var(--color-white)', marginLeft: '5px', textDecoration: 'underline' }}
                 >
                     {' '}
                     {t('referral-page.footer.terms')}
@@ -532,7 +532,7 @@ const ReferralFooter = styled.div`
     flex-direction: row;
     position: relative;
     font-size: 16px;
-    color: var(--primary-color);
+    color: var(--color-white);
     @media screen and (max-width: 520px) {
         margin-top: 50px;
         margin-bottom: 10px;
@@ -568,7 +568,7 @@ const ViewButton = styled.div`
         font-weight: bold;
         font-size: 12px;
         text-transform: uppercase;
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
 `;
 
@@ -608,7 +608,7 @@ const ViewTitle = styled.p`
     font-size: 12px;
     line-height: 100%;
     text-transform: uppercase;
-    color: #64d9fe;
+    color: var(--color-highlight);
     @media (min-width: 769px) {
         display: none;
     }
@@ -624,7 +624,7 @@ const ViewItem = styled.div<{ active: boolean }>`
         cursor: pointer;
         font-family: Roboto !important;
         font-style: normal;
-        color: ${(_props) => (_props?.active ? '#64d9fe' : '#ffffff')};
+        color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
     }
 `;
 

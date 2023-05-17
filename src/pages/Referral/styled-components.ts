@@ -12,7 +12,7 @@ export const FormWrapper = styled.div`
 export const Label = styled.span`
     font-size: 18px;
     line-height: 18px;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 export const StatisticsWrapper = styled.div`
@@ -34,12 +34,12 @@ export const KeyValue = styled.span`
 export const StatLabel = styled.span<{ color?: string }>`
     font-size: 21px;
     line-height: 26.53px;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
 `;
 
 export const StatValue = styled(StatLabel)<{ customColor?: string }>`
     font-weight: 700;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     padding-left: 100px;
     text-align: right;
     @media screen and (max-width: 520px) {
@@ -62,7 +62,7 @@ export const HeaderContainer = styled.div`
 `;
 
 export const DescriptionContainer = styled.div`
-    color: var(--primary-color);
+    color: var(--color-white);
     display: block;
     width: 40%;
     @media screen and (max-width: 520px) {
@@ -72,7 +72,7 @@ export const DescriptionContainer = styled.div`
 `;
 
 export const Text = styled.p<{ height?: string }>`
-    color: var(--primary-color);
+    color: var(--color-white);
     font-size: 16px;
     font-weight: 100 !important;
     line-height: 150%;

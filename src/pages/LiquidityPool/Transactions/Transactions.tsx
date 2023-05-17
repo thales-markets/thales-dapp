@@ -191,14 +191,14 @@ const Tab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
     user-select: none;
     margin-left: 0px;
     margin-right: 40px;
-    color: #748bc6;
+    color: ${(props) => props.theme.textColor.secondary};
     &.selected {
         transition: 0.2s;
-        color: #f6f6fe;
+        color: ${(props) => props.theme.textColor.quaternary};
     }
     &:hover:not(.selected) {
         cursor: pointer;
-        color: #00f9ff;
+        color: ${(props) => props.theme.textColor.primary};
     }
     @media (max-width: 767px) {
         margin-bottom: 10px;
@@ -213,18 +213,17 @@ const TableContainer = styled(FlexDivColumn)`
         width: 5px;
     }
     ::-webkit-scrollbar-track {
-        background: #04045a;
-        border-radius: 8px;
+        background: ${(props) => props.theme.background.secondary};
     }
     ::-webkit-scrollbar-thumb {
         border-radius: 15px;
-        background: #355dff;
+        background: ${(props) => props.theme.background.tertiary};
     }
     ::-webkit-scrollbar-thumb:active {
-        background: #44e1e2;
+        background: ${(props) => props.theme.background.tertiary};
     }
     ::-webkit-scrollbar-thumb:hover {
-        background: rgb(67, 116, 255);
+        background: ${(props) => props.theme.background.tertiary};
     }
     @media (max-width: 767px) {
         width: 700px;

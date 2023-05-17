@@ -9,7 +9,7 @@ export const Container = styled.div`
 
 export const Icon = styled.i<{ color?: string; fontSize?: string; margin?: string; top?: string }>`
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
     top: ${(_props) => (_props?.top ? _props.top : '')};
     position: relative;
@@ -18,7 +18,7 @@ export const Icon = styled.i<{ color?: string; fontSize?: string; margin?: strin
 export const Text = styled.span<{ margin?: string }>`
     line-height: 110%;
     font-size: 12px;
-    color: var(--primary-color);
+    color: var(--color-white);
     margin: ${(_props) => (_props?.margin ? _props.margin : '')};
 `;
 
@@ -32,5 +32,5 @@ export const IconContainer = styled.div<{ alignItems?: string; width?: string; d
 `;
 
 export const LinkInTooltip = styled.a`
-    color: var(--primary-color);
+    color: var(--color-white);
 `;

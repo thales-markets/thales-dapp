@@ -19,12 +19,17 @@ import { getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'util
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import Cookies from 'universal-cookie';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
+import ThemeProvider from 'layouts/Theme';
+import { Theme } from 'constants/ui';
+import { setTheme } from 'redux/modules/ui';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import localStore from 'utils/localStore';
+import { createGlobalStyle } from 'styled-components';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -38,7 +43,7 @@ const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/
 const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
 const Leaderboard = lazy(() => import(/* webpackChunkName: "Leaderboard" */ '../Leaderboard'));
 
-const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Markets'));
+const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
 const RangeMarkets = lazy(() => import(/* webpackChunkName: "RangeMarkets" */ '../RangeMarkets'));
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
@@ -49,11 +54,12 @@ const Vault = lazy(() => import(/* webpackChunkName: "Vault" */ '../Vault'));
 const TokenPage = lazy(() => import(/* webpackChunkName: "Token" */ '../Token/Token'));
 const TaleOfThales = lazy(() => import(/* webpackChunkName: "TaleOfThales" */ '../TaleOfThales/TaleOfThales'));
 const Profile = lazy(() => import(/* webpackChunkName: "Profile" */ '../Profile/Profile'));
-const ThalesRoyal = lazy(() => import(/* webpackChunkName: "ThalesRoyal" */ '../Royale/ThalesRoyal'));
 
 const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referral'));
 const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
+
+const THEME = Theme.DARK;
 
 const App = () => {
     const dispatch = useDispatch();
@@ -76,11 +82,19 @@ const App = () => {
     queryConnector.setQueryClient();
 
     useEffect(() => {
+        dispatch(setTheme(THEME));
+    }, []);
+
+    useEffect(() => {
+        const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
+        const theme =
+            lsTheme !== undefined ? (Object.values(Theme).includes(lsTheme) ? lsTheme : Theme.DARK) : Theme.DARK;
+
         trackPageView({
             customDimensions: [
                 {
                     id: 3,
-                    value: Number(cookies.get('home-theme')) == 0 ? 0 : 1,
+                    value: theme,
                 },
                 {
                     id: 4,
@@ -88,9 +102,7 @@ const App = () => {
                 },
             ],
         });
-    }, [walletAddress]);
-
-    const cookies = new Cookies();
+    }, [walletAddress, trackPageView]);
 
     useEffect(() => {
         const init = async () => {
@@ -144,7 +156,7 @@ const App = () => {
         return () => {
             document.removeEventListener('market-notification', handler);
         };
-    }, [dispatch, provider, signer, switchedToNetworkId, address]);
+    }, [dispatch, provider, signer, switchedToNetworkId, address, isLedgerLive]);
 
     useEffect(() => {
         dispatch(updateWallet({ walletAddress: address }));
@@ -177,185 +189,186 @@ const App = () => {
     };
 
     return (
-        <QueryClientProvider client={queryConnector.queryClient}>
-            <Suspense fallback={<Loader />}>
-                <Router history={history}>
-                    <Switch>
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.Royal}>
-                                <MainLayout>
-                                    <ThalesRoyal />
-                                </MainLayout>
-                            </Route>
-                        )}
-
-                        <Route exact path={ROUTES.Options.CreateMarket}>
-                            <DappLayout>
-                                <CreateMarket />
-                            </DappLayout>
-                        </Route>
-
-                        <Route
-                            exact
-                            path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
-                            render={(routeProps) => (
+        <ThemeProvider>
+            <QueryClientProvider client={queryConnector.queryClient}>
+                <Suspense fallback={<Loader />}>
+                    <Router history={history}>
+                        <Switch>
+                            <Route exact path={ROUTES.Options.CreateMarket}>
                                 <DappLayout>
-                                    <GovernancePage {...routeProps} />
-                                </DappLayout>
-                            )}
-                        />
-                        <Route exact path={ROUTES.Options.Game}>
-                            <DappLayout>
-                                <TaleOfThales />
-                            </DappLayout>
-                        </Route>
-                        <Route exact path={ROUTES.Options.Profile}>
-                            <DappLayout>
-                                <Profile />
-                            </DappLayout>
-                        </Route>
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.Token}>
-                                <DappLayout>
-                                    <TokenPage />
+                                    <CreateMarket />
                                 </DappLayout>
                             </Route>
-                        )}
 
-                        <Route exact path={ROUTES.Options.Referral}>
-                            <DappLayout>
-                                <Referral />
-                            </DappLayout>
-                        </Route>
-
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.Vaults}>
-                                <DappLayout>
-                                    <Vaults />
-                                </DappLayout>
-                            </Route>
-                        )}
-
-                        {!isPolygon && (
                             <Route
                                 exact
-                                path={ROUTES.Options.Vault}
+                                path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
                                 render={(routeProps) => (
                                     <DappLayout>
-                                        <Vault {...routeProps} />
+                                        <GovernancePage {...routeProps} />
                                     </DappLayout>
                                 )}
                             />
-                        )}
-
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.LiquidityPool}>
+                            <Route exact path={ROUTES.Options.Game}>
                                 <DappLayout>
-                                    <LiquidityPool />
+                                    <TaleOfThales />
                                 </DappLayout>
                             </Route>
-                        )}
-
-                        {!isPolygon && (
-                            <Route exact path={ROUTES.Options.OPRewards}>
+                            <Route exact path={ROUTES.Options.Profile}>
                                 <DappLayout>
-                                    <OPRewards />
+                                    <Profile />
                                 </DappLayout>
                             </Route>
-                        )}
-
-                        {isPolygon && (
-                            <Route exact path={ROUTES.Options.Leaderboard}>
-                                <DappLayout>
-                                    <Leaderboard />
-                                </DappLayout>
-                            </Route>
-                        )}
-
-                        <Route
-                            exact
-                            path={ROUTES.Options.MarketMatch}
-                            render={(routeProps) => (
-                                <DappLayout>
-                                    <AMMTrading {...routeProps} />
-                                </DappLayout>
+                            {!isPolygon && (
+                                <Route exact path={ROUTES.Options.Token}>
+                                    <DappLayout>
+                                        <TokenPage />
+                                    </DappLayout>
+                                </Route>
                             )}
-                        />
 
-                        <Route
-                            exact
-                            path={ROUTES.Options.RangeMarketMatch}
-                            render={(routeProps) => (
+                            <Route exact path={ROUTES.Options.Referral}>
                                 <DappLayout>
-                                    <AMMTrading {...routeProps} />
+                                    <Referral />
                                 </DappLayout>
+                            </Route>
+
+                            {!isPolygon && (
+                                <Route exact path={ROUTES.Options.Vaults}>
+                                    <DappLayout>
+                                        <Vaults />
+                                    </DappLayout>
+                                </Route>
                             )}
-                        />
 
-                        <Route exact path={ROUTES.Options.Home}>
-                            <DappLayout>
-                                <Markets />
-                            </DappLayout>
-                        </Route>
+                            {!isPolygon && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.Vault}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <Vault {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
 
-                        <Route exact path={ROUTES.Options.RangeMarkets}>
-                            <DappLayout>
-                                <RangeMarkets />
-                            </DappLayout>
-                        </Route>
+                            {!isPolygon && (
+                                <Route exact path={ROUTES.Options.LiquidityPool}>
+                                    <DappLayout>
+                                        <LiquidityPool />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        <Route exact path={ROUTES.Options.Wizard}>
-                            <DappLayout>
-                                <Wizard />
-                            </DappLayout>
-                        </Route>
+                            {!isPolygon && (
+                                <Route exact path={ROUTES.Options.OPRewards}>
+                                    <DappLayout>
+                                        <OPRewards />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        <Route exact path={ROUTES.Home}>
-                            <MainLayout>
-                                <Home />
-                            </MainLayout>
-                        </Route>
+                            {isPolygon && (
+                                <Route exact path={ROUTES.Options.Leaderboard}>
+                                    <DappLayout>
+                                        <Leaderboard />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                        <Route exact path={ROUTES.Article.Token}>
-                            <MainLayout>
-                                <Token />
-                            </MainLayout>
-                        </Route>
-                        <Route exact path={ROUTES.Article.Governance}>
-                            <MainLayout>
-                                <Governance />
-                            </MainLayout>
-                        </Route>
-                        <Route exact path={ROUTES.Article.Whitepaper}>
-                            <MainLayout>
-                                <Whitepaper />
-                            </MainLayout>
-                        </Route>
-                        <Route>
-                            <Redirect to={ROUTES.Options.Home} />
-                            <DappLayout>
-                                <Markets />
-                            </DappLayout>
-                        </Route>
-                    </Switch>
-                </Router>
-                <ReactQueryDevtools initialIsOpen={false} />
-                <Snackbar
-                    open={snackbarDetails.isOpen}
-                    onClose={onSnackbarClosed}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                    autoHideDuration={5000}
-                >
-                    <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
-                        {snackbarDetails.message}
-                    </Alert>
-                </Snackbar>
-            </Suspense>
-        </QueryClientProvider>
+                            <Route
+                                exact
+                                path={ROUTES.Options.MarketMatch}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <AMMTrading {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
+
+                            <Route
+                                exact
+                                path={ROUTES.Options.RangeMarketMatch}
+                                render={(routeProps) => (
+                                    <DappLayout>
+                                        <AMMTrading {...routeProps} />
+                                    </DappLayout>
+                                )}
+                            />
+
+                            <Route exact path={ROUTES.Options.Home}>
+                                <DappLayout>
+                                    <Markets />
+                                </DappLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Options.RangeMarkets}>
+                                <DappLayout>
+                                    <RangeMarkets />
+                                </DappLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Options.Wizard}>
+                                <DappLayout>
+                                    <Wizard />
+                                </DappLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Home}>
+                                <MainLayout>
+                                    <Home />
+                                </MainLayout>
+                            </Route>
+
+                            <Route exact path={ROUTES.Article.Token}>
+                                <MainLayout>
+                                    <Token />
+                                </MainLayout>
+                            </Route>
+                            <Route exact path={ROUTES.Article.Governance}>
+                                <MainLayout>
+                                    <Governance />
+                                </MainLayout>
+                            </Route>
+                            <Route exact path={ROUTES.Article.Whitepaper}>
+                                <MainLayout>
+                                    <Whitepaper />
+                                </MainLayout>
+                            </Route>
+                            <Route>
+                                <Redirect to={ROUTES.Options.Home} />
+                                <DappLayout>
+                                    <Markets />
+                                </DappLayout>
+                            </Route>
+                        </Switch>
+                    </Router>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                    <Snackbar
+                        open={snackbarDetails.isOpen}
+                        onClose={onSnackbarClosed}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                        autoHideDuration={5000}
+                    >
+                        <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
+                            {snackbarDetails.message}
+                        </Alert>
+                    </Snackbar>
+                </Suspense>
+            </QueryClientProvider>
+            <GlobalStyle />
+        </ThemeProvider>
     );
 };
+
+const GlobalStyle = createGlobalStyle`
+  body #root {
+    background: ${(props) => props.theme.background.primary};
+  }
+`;
 
 export default App;

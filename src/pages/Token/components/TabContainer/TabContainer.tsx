@@ -114,7 +114,7 @@ const MenuItem = styled.div<{
     ${(props) => (!props?.noStrech ? 'flex: 1' : 'width: 25%')};
     font-family: Roboto !important;
     font-style: normal;
-    color: ${(props) => (props?.customActiveLabelColor ? props?.customActiveLabelColor : 'var(--primary-color)')};
+    color: ${(props) => (props?.customActiveLabelColor ? props?.customActiveLabelColor : 'var(--color-white)')};
     box-shadow: ${(props) =>
         props?.active
             ? props?.customActiveColor

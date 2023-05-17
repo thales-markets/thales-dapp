@@ -34,6 +34,8 @@ type WalletBalancePropsType = {
 const WalletBalance: React.FC<WalletBalancePropsType> = ({ type, stableIndex }) => {
     const marketType: MarketType =
         type == 'long' || type == 'short' ? (MARKET_TYPE[0] as MarketType) : (MARKET_TYPE[1] as MarketType);
+    // TODO: fix this warning
+    // eslint-disable-next-line
     const optionsMarket = marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
 
     let optBalances = marketType == MARKET_TYPE[0] ? { short: 0, long: 0 } : { in: 0, out: 0 };
@@ -168,13 +170,13 @@ const BalanceContainer = styled.div`
 
 const Balance = styled.span`
     font-size: 13px;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 const TokenIcon = styled.i<{ color?: string }>`
     font-size: 20px;
     margin-left: 8px;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
 `;
 
 export default WalletBalance;

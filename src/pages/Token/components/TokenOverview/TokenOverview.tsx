@@ -164,7 +164,7 @@ const ItemContainer: React.FC<{ className?: string }> = (props) => (
 );
 
 const Container = styled(FlexDiv)`
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 16px;
     border: 2px solid rgba(100, 217, 254, 0.5);
     margin-bottom: 10px;
@@ -288,21 +288,21 @@ const StyledLink = styled.a`
         fill: #f6f6fe;
     }
     &:hover {
-        color: #64d9fe;
+        color: var(--color-highlight);
         & path {
-            fill: #64d9fe;
+            fill: var(--color-highlight);
         }
     }
     @media (max-width: 767px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
     }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
     @media (max-width: 767px) {
-        color: #64d9fe;
+        color: var(--color-highlight);
         & path {
-            fill: #64d9fe;
+            fill: var(--color-highlight);
         }
     }
 `;

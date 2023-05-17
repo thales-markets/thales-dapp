@@ -837,15 +837,16 @@ const SectionWrapper = styled.section<{
             case BackgroundType.AMM:
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.RANGED:
-            case BackgroundType.LP_STAKING:
                 return 'linear-gradient(-20deg, #801BF2 0%, #464DCF 100%)';
+            case BackgroundType.LP_STAKING:
+                return props.theme.background.secondary;
             case BackgroundType.SPORTS:
                 return '#303656';
             case BackgroundType.CLAIM:
             case BackgroundType.CLAIM_ON_BEHALF:
-                return '#64d9fe80';
+                return 'var(--color-highlight)';
             default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+                return props.theme.background.secondary;
         }
     }};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
@@ -890,7 +891,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
     ${(props) => (props.noGrid ? '' : 'display: grid;')}
     position: relative;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;
@@ -902,7 +903,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
 
 const SectionContent = styled.span`
     font-family: 'Roboto';
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefault?: boolean }>`
@@ -1013,11 +1014,20 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                 `;
             case SectionType.REWARD:
             case SectionType.CLAIM:
+                return `
+                    font-weight: 700;
+                    font-size: 23px;
+                    color: ${props.isOp ? props.theme.textColor.primary : props.theme.textColor.quaternary};
+                    text-transform: uppercase;
+                    @media (max-width: 768px) {
+                        font-size: 20px;
+                    }
+                `;
             case SectionType.LP_STAKING:
                 return `
                     font-weight: 700;
                     font-size: 23px;
-                    color: ${props.isOp ? '#ffffff' : '#64D9FE'};
+                    color: ${props.theme.textColor.primary};
                     text-transform: uppercase;
                     @media (max-width: 768px) {
                         font-size: 20px;
@@ -1068,7 +1078,7 @@ const SectionDetailsLabel = styled.span<{ color?: string }>`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: ${(props) => props.color ?? '#ffffff'};
+    color: ${(props) => props.color ?? 'var(--color-white)'};
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -1080,7 +1090,7 @@ const SectionDetailsValue = styled.span<{ color?: string }>`
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => props.color ?? '#ffffff'};
+    color: ${(props) => props.color ?? 'var(--color-white)'};
 `;
 
 const ButtonWrapperTooltip = styled.div`
@@ -1101,7 +1111,7 @@ const PeriodLabel = styled(SectionContent)`
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
-    color: #64d9fe;
+    color: var(--color-highlight);
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -1123,7 +1133,7 @@ const LpStakingLink = styled.span`
 const PlusSectionConnect = styled.div`
     text-align: center;
     grid-column: span 12;
-    color: #64d9fe;
+    color: var(--color-highlight);
     font-weight: 700;
     font-size: 30px;
 `;

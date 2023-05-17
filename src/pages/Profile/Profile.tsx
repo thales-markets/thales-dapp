@@ -213,13 +213,13 @@ const Profile: React.FC = () => {
                     <Wrapper>
                         <Wrapper.Row>
                             <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
-                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
+                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#DE496D'}>
                                 {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.profit, 2)}
                             </Wrapper.Value>
                         </Wrapper.Row>
                         <Wrapper.Row>
                             <Wrapper.Label>{t('options.leaderboard.table.gain-col')}: </Wrapper.Label>
-                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#c3244a'}>
+                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#DE496D'}>
                                 {formatCurrencyWithSign('', DataForUi?.userData.gain * 100, 2)}%
                             </Wrapper.Value>
                         </Wrapper.Row>
@@ -277,7 +277,7 @@ const NavItem = styled.p`
     line-height: 40px;
     font-size: 15px;
     text-transform: uppercase;
-    color: var(--primary-color);
+    color: var(--color-white);
     cursor: pointer;
     padding: 0 50px;
     white-space: pre;

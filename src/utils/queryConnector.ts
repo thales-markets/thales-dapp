@@ -54,6 +54,10 @@ export const refetchUserTrades = (marketAddress: string, walletAddress: string) 
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress));
 };
 
+export const refetchUserOpenPositions = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.UserOpenPositions(walletAddress, networkId));
+};
+
 export const refetchAmmData = (walletAddress: string, marketAddress: string) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.BinaryOptions.AccountMarketInfo(marketAddress, walletAddress)
@@ -113,16 +117,6 @@ export const refetchVaultData = (vaultAddress: string, walletAddress: string, ne
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.PnL(vaultAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.Trades(vaultAddress, networkId));
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Vault.UserTransactions(vaultAddress, networkId));
-};
-
-export const refetchWalletBalances = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(
-        QUERY_KEYS.WalletBalances.MultipleCollateral(walletAddress, networkId),
-        {
-            refetchActive: true,
-            refetchInactive: true,
-        }
-    );
 };
 
 export const refetchLiquidityPoolData = (walletAddress: string, networkId: NetworkId) => {

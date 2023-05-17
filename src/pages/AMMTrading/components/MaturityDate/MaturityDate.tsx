@@ -112,7 +112,7 @@ const Display = styled.span<{ fontSize?: string; color?: string }>`
     font-style: normal;
     font-weight: 700;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '25px')};
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     width: 140px;
     display: block;
     @media (max-width: 1024px) {

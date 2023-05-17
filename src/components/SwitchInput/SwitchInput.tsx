@@ -22,7 +22,7 @@ const SwitchContainer = styled.div`
     width: 48px;
     height: 22px;
     position: relative;
-    background: linear-gradient(256.68deg, #8208fc 6.58%, #64d9fe 102.94%);
+    background: linear-gradient(256.68deg, #8208fc 6.58%, var(--color-highlight) 102.94%);
     box-sizing: border-box;
     border-radius: 30px;
     cursor: pointer;
@@ -37,7 +37,7 @@ const Slider = styled.span<{ switchValue: boolean }>`
     right: ${(props) => (props.switchValue ? '3px' : '')};
     width: 14px;
     height: 14px;
-    background-color: var(--icon-color);
+    background-color: var(--color-white);
 `;
 
 export default SwitchInput;

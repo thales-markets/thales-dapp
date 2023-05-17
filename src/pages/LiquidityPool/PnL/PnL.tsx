@@ -19,7 +19,7 @@ import {
     LineChart,
     Line,
 } from 'recharts';
-import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { Colors, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { formatPercentageWithSign } from 'utils/formatters/number';
 import { LiquidityPoolPnlType } from 'constants/liquidityPool';
 import { UI_COLORS } from 'constants/ui';
@@ -109,12 +109,12 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                 <ChartContainer>
                     <ResponsiveContainer width="100%" height="100%">
                         <Chart data={liquidityPoolPnls}>
-                            <CartesianGrid strokeDasharray="2 2" strokeWidth={0.5} stroke="#5F6180" />
+                            <CartesianGrid strokeDasharray="2 2" strokeWidth={0.5} stroke={Colors.GRAY_LIGHT} />
                             <XAxis
                                 dataKey="round"
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{ fill: '#5F6180' }}
+                                tick={{ fill: Colors.GRAY_LIGHT }}
                                 style={{
                                     fontSize: '13px',
                                 }}
@@ -125,7 +125,7 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                                 }}
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{ fill: '#5F6180' }}
+                                tick={{ fill: Colors.GRAY_LIGHT }}
                                 style={{
                                     fontSize: '13px',
                                 }}
@@ -133,7 +133,7 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                             />
                             <Tooltip
                                 content={<CustomTooltip />}
-                                cursor={{ fill: '#5F6180', fillOpacity: '0.3' }}
+                                cursor={{ fill: Colors.GRAY_LIGHT, fillOpacity: '0.2' }}
                                 wrapperStyle={{ outline: 'none' }}
                             />
                             {type === LiquidityPoolPnlType.PNL_PER_ROUND ? (
@@ -180,8 +180,8 @@ const TooltipContainer = styled(FlexDivColumnCentered)`
     border-radius: 3px;
     z-index: 999;
     padding: 2px 10px;
-    background: #f6f6fe;
-    color: #303656;
+    background: ${(props) => props.theme.background.tertiary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const TooltipAmount = styled(FlexDivColumn)`
@@ -195,7 +195,7 @@ const Header = styled(FlexDivRow)<{ noData?: boolean }>`
 `;
 
 const Title = styled.span`
-    color: #5f6180;
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 const LifetimePnlContainer = styled(FlexDivRow)`
@@ -211,10 +211,10 @@ const LifetimePnl = styled.span<{ color: string }>`
 `;
 
 const NoData = styled(FlexDivCentered)`
-    border: 2px dotted #5f6180;
+    border: 2px dotted ${(props) => props.theme.borderColor.primary};
     margin-bottom: 10px;
     height: 200px;
-    color: #5f6180;
+    color: ${(props) => props.theme.textColor.secondary};
     padding: 10px;
     text-align: center;
 `;

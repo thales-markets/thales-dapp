@@ -77,12 +77,12 @@ export const Value = styled.span`
     font-size: 20px;
     font-weight: 600;
     line-height: 31px;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 export const Arrow = styled.i<{ color?: string }>`
     content: url(${dropDown});
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     font-size: 18px;
     cursor: pointer;
 `;

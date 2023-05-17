@@ -41,7 +41,7 @@
 }
 
 .maturity-date::selection {
-    color: #04045a;
+    color: var(--color-primary);
     background: #f6f6fe;
 }
 .maturity-date:focus {
@@ -89,7 +89,7 @@
 }
 
 .MuiMenu-paper {
-    background: #141874 !important;
+    background: var(--color-tertiary) !important;
     border: 1px solid #0c1c68 !important;
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15) !important;
     border-radius: 20px !important;

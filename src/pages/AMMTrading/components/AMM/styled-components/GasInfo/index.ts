@@ -21,7 +21,7 @@ const Label = styled.span`
     font-family: Roboto !important;
     font-size: 14px;
     font-weight: 400;
-    color: var(--primary-color);
+    color: var(--color-white);
     text-transform: uppercase;
 `;
 
@@ -29,7 +29,7 @@ const Value = styled.span`
     font-family: Roboto !important;
     font-size: 14px;
     font-weight: 400;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 Row.Label = Label;

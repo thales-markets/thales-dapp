@@ -20,7 +20,7 @@ const Container = styled(FlexDivCentered)`
     margin-bottom: 20px;
     grid-column: span 10;
     @media (max-width: 767px) {
-        background: #04045a;
+        background: var(--color-primary);
         border-radius: 15px;
     }
 `;

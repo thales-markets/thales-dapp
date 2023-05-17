@@ -3,17 +3,65 @@
     font-family: Currencies !important;
     vertical-align: middle;
     font-size: 24px;
-    color: var(--color);
+    color: var(--color-white);
 }
 
-.icon--polygon:before {
-    content: '\004D';
+.currency-icon--link::before {
+    content: '\0042';
 }
 
-.icon--binance:before {
+.currency-icon--bnb:before {
     content: '\004C';
 }
 
-.icon--arbitrum::before {
+.currency-icon--matic:before {
+    content: '\004D';
+}
+
+.currency-icon--snx::before {
+    content: '\004e';
+}
+
+.currency-icon--btc::before {
+    content: '\0050';
+}
+
+.currency-icon--op::before {
+    content: '\0053';
+}
+
+.currency-icon--eth::before {
+    content: '\0055';
+}
+
+.currency-icon--s::before {
+    content: '\005A';
+}
+
+.currency-icon--xau::before {
+    content: '\0062';
+}
+
+.currency-icon--xag::before {
+    content: '\0063';
+}
+
+.currency-icon--arb::before {
     content: '\0065';
+}
+
+.currency-icon--cake::before {
+    content: '\0066';
+}
+
+.currency-icon--dpx::before {
+    content: '\0067';
+}
+
+.currency-icon--gmx::before {
+    content: '\0068';
+}
+
+.currency-icon--magic::before {
+    content: '\0069';
 }

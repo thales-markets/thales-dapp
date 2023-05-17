@@ -27,7 +27,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         proposalResults.results.resultsByVoteBalance &&
         proposalResults.results.resultsByVoteBalance[0] >= proposalApprovalVotes;
 
-    const chartColor = isPassed ? '#8208FC' : closed ? 'rgba(130, 8, 252, 0.6)' : '#64D9FE';
+    const chartColor = isPassed ? '#8208FC' : closed ? 'rgba(130, 8, 252, 0.6)' : 'var(--color-highlight)';
 
     const pieData = useMemo(() => {
         const data = [];

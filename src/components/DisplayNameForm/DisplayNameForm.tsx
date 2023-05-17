@@ -101,8 +101,8 @@ const UserAvatar = styled.img`
 
 const DisplayNameInput = styled.input`
     margin: 7px 0px;
-    border: 2px solid var(--icon-color);
-    color: var(--icon-color);
+    border: 2px solid var(--color-white);
+    color: var(--color-white);
     background: rgba(0, 0, 0, 0);
     border-radius: 20px;
     text-align: center;
@@ -112,7 +112,7 @@ const DisplayNameInput = styled.input`
     padding: 0px 5px;
     height: 28px;
     &:focus {
-        border: 2px solid var(--icon-color);
+        border: 2px solid var(--color-white);
         font-size: 12.5px;
         line-height: 14px;
     }

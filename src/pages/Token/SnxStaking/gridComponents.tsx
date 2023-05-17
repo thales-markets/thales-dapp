@@ -20,7 +20,7 @@ export const StakeInfoItem = styled(FlexDivColumnCentered)`
     text-align: center;
     padding: 10px;
     grid-column: span 6;
-    background: #04045a;
+    background: var(--color-primary); ;
 `;
 
 export const StakingRewardsItem = styled(StakeInfoItem)<{
@@ -38,7 +38,7 @@ export const StakingRewardsLabel = styled.span<{ color: string }>`
     font-weight: 600;
     font-size: 14px;
     line-height: 24px;
-    color: #04045a;
+    color: var(--color-primary);
     background: ${(props) => props.color};
     border-radius: 5px;
     width: fit-content;
@@ -57,7 +57,7 @@ export const StakingRewardsContent = styled.span`
 
 export const GridAction = styled(FlexDivColumnCentered)`
     grid-column: span 12;
-    background: #04045a;
+    background: var(--color-primary);
     padding: 20px 100px;
     @media (max-width: 767px) {
         padding: 20px 20px;

@@ -1,6 +1,7 @@
+import { Theme, ThemeMap } from 'constants/ui';
 import { useEffect } from 'react';
 
-const useWidgetBotScript = (preventWidgetLoad: boolean) => {
+const useWidgetBotScript = (preventWidgetLoad: boolean, theme: Theme) => {
     useEffect(() => {
         if (preventWidgetLoad) {
             return;
@@ -16,13 +17,17 @@ const useWidgetBotScript = (preventWidgetLoad: boolean) => {
                 server: '906484044915687464',
                 channel: '907009541965742080',
                 css: `
-                @media (max-width: 950px) {
-                    &:not(.open) .button {
-                        margin-bottom: 80px;
-                        width: 45px;
-                        height: 45px;
+                    .button {
+                        background-color: ${ThemeMap[theme].background.secondary};
+                        box-shadow: none;
                     }
-                }
+                    @media (max-width: 950px) {
+                        &:not(.open) .button {
+                            margin-bottom: 80px;
+                            width: 45px;
+                            height: 45px;
+                        }
+                    }
               `,
             });
         };

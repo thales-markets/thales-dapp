@@ -12,7 +12,7 @@ import Hammer, { DIRECTION_HORIZONTAL } from 'hammerjs';
 import { PHASE } from 'constants/options';
 import { USD_SIGN } from 'constants/currency';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
-import { DiscountMap, fetchDiscounts } from 'queries/options/useDiscountMarkets';
+import { DiscountMap, useDiscountMarkets } from 'queries/options/useDiscountMarkets';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -46,7 +46,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     const { trackEvent } = useMatomo();
 
-    const discountQuery = fetchDiscounts(networkId, { enabled: isAppReady });
+    const discountQuery = useDiscountMarkets(networkId, { enabled: isAppReady });
 
     useEffect(() => {
         if (discountQuery.isSuccess && discountQuery.data) {
@@ -269,7 +269,7 @@ const DiscountTitle = styled.span`
     font-weight: 700;
     font-size: 20px;
     line-height: 30px;
-    color: #ffffff;
+    color: var(--color-white);
     margin-right: 6px;
 `;
 
@@ -278,7 +278,7 @@ const DiscountSubTitle = styled.span`
     font-weight: 400;
     font-size: 20px;
     line-height: 30px;
-    color: #ffffff;
+    color: var(--color-white);
 `;
 
 const Arrow = styled.i<{ disabled?: boolean }>`

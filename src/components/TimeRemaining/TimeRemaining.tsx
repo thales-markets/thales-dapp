@@ -99,7 +99,7 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
 
 const getColor = (duration: Duration) => {
     if (duration.years || duration.months || duration.days) {
-        return `var(--primary-color)`;
+        return `var(--color-white)`;
     }
     if (duration.hours) {
         return `#FFCC00`;

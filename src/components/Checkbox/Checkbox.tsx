@@ -47,14 +47,11 @@ const CheckboxContainer = styled.label`
     font-size: 13px;
     line-height: 24px;
     letter-spacing: 0.4px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    input:checked ~ .checkmark {
-        background-color: #f6f6fe;
-    }
     input:checked ~ .checkmark:after {
         display: block;
     }
@@ -70,7 +67,7 @@ const Checkmark = styled.span`
     left: 0;
     height: 15px;
     width: 15px;
-    border: 1px solid #f6f6fe;
+    border: 1px solid ${(props) => props.theme.textColor.primary};
     background-color: transparent;
     border-radius: 2px;
     margin-top: 4px;
@@ -82,7 +79,7 @@ const Checkmark = styled.span`
         top: -2px;
         width: 5px;
         height: 10px;
-        border: solid #04045a;
+        border: solid ${(props) => props.theme.textColor.primary};
         border-width: 0 2px 2px 0;
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);

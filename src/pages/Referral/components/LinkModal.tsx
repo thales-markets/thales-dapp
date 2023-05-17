@@ -14,14 +14,14 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: 'center',
         },
         paper: {
-            backgroundColor: '#64d9fe',
+            backgroundColor: 'var(--color-highlight)',
             border: '2px solid #000',
             borderRadius: '10px',
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#04045a',
+            color: ' var(--color-primary)',
             boxShadow: theme.shadows[5],
             padding: '5px',
             [theme.breakpoints.between(200, 520)]: {
@@ -79,8 +79,8 @@ const LinkModal: React.FC<{ showModal: boolean; onClose: () => void; link: strin
                         </p>
                         <br />
                         <Button
-                            inactiveBgColor={'#04045a'}
-                            inactiveTextColor={'#64d9fe'}
+                            inactiveBgColor={' var(--color-primary)'}
+                            inactiveTextColor={'var(--color-highlight)'}
                             padding={'5px 10px'}
                             margin={'10px 10px'}
                             onClickHandler={() => copyButtonHandler()}

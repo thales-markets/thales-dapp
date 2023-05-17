@@ -5,7 +5,7 @@ import { Phase } from 'types/options';
 
 const MarketPhase = {
     trading: '#50CE99',
-    paused: '#C3244A',
+    paused: '#DE496D',
     maturity: '#F7B91A',
 };
 

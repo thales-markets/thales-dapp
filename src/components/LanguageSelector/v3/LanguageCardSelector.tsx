@@ -42,7 +42,7 @@ const LanguageContainer = styled.div<{ selected?: boolean }>`
     cursor: pointer;
     text-align: center;
     margin-top: 10px;
-    color: ${(props: any) => (props.selected ? 'var(--icon-color)' : '#8181ac')};
+    color: ${(props: any) => (props.selected ? 'var(--color-white)' : '#8181ac')};
 `;
 
 const FlagIcon = styled.i`
@@ -50,7 +50,7 @@ const FlagIcon = styled.i`
 `;
 
 const LanguageName = styled.p`
-    font-family: Sansation !important;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: bold;
     font-size: 12px;

@@ -121,7 +121,7 @@ const SectionContainer = styled.section<{
     display: flex;
     flex-direction: column;
     position: relative;
-    background: #04045a;
+    background: var(--color-primary);
     border-radius: 15px;
     color: white;
     grid-column: span 10;
@@ -181,7 +181,7 @@ const DropDownWrapper = styled.div`
     border-radius: 15px;
 `;
 const DropDown = styled.div`
-    background: #04045a;
+    background: var(--color-primary);
     width: 100%;
     height: 100%;
     border-radius: 15px;

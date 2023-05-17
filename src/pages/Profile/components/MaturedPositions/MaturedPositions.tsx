@@ -353,7 +353,7 @@ const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction) => {
         return (
             <span>
                 {t('options.home.market-card.rip')}
-                <Icon style={{ color: '#C3244A' }} className="v2-icon v2-icon--rip"></Icon>
+                <Icon style={{ color: '#DE496D' }} className="v2-icon v2-icon--rip"></Icon>
             </span>
         );
     }
@@ -385,7 +385,7 @@ const TableText = styled.span`
     line-height: 285%;
     text-align: right;
     text-transform: uppercase;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 const Icon = styled.i`
@@ -397,7 +397,7 @@ const Icon = styled.i`
 `;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #C3244A')};
+    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
 `;
 
 const getColor = (data: any) => {

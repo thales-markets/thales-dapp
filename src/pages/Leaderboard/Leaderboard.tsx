@@ -294,7 +294,7 @@ const Leaderboard: React.FC = () => {
                                             target="_blank"
                                             rel="noreferrer"
                                         >
-                                            <p style={{ color: 'var(--color)' }}>{cellProps.cell.value}</p>
+                                            <p style={{ color: 'var(--color-white)' }}>{cellProps.cell.value}</p>
                                         </a>
                                     );
                                 },
@@ -307,7 +307,7 @@ const Leaderboard: React.FC = () => {
                                             <Tooltip
                                                 message={t('options.leaderboard.table.netprofit-col-tooltip')}
                                                 type={'info'}
-                                                iconColor={'var(--primary-color)'}
+                                                iconColor={'var(--color-white)'}
                                                 container={{ width: '15px' }}
                                                 interactive={true}
                                             />
@@ -458,7 +458,13 @@ const getRewardsTooltipMessage = (position: number, competitionType: Competition
 const TooltipAssetIcon: React.FC<any> = ({ title, styleProps }) => (
     <LightTooltip title={<span className="text-xxxs">{title}</span>}>
         <AssetIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', cursor: 'pointer', padding: 1, ...styleProps }}
+            style={{
+                border: '1px solid  var(--color-primary)',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                padding: 1,
+                ...styleProps,
+            }}
             width="12"
             height="12"
             className="tooltip-icon"

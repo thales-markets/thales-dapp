@@ -114,7 +114,7 @@ const Header = styled.span`
     flex-direction: row;
     font-family: Roboto !important;
     font-style: normal;
-    color: var(--primary-color);
+    color: var(--color-white);
     font-weight: 400;
     font-size: 15px;
     margin-bottom: 8px;
@@ -137,7 +137,7 @@ const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?
     font-weight: 700;
     font-size: 25px;
     white-space: pre;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--primary-color)')};
+    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
     @media (max-width: 1024px) {
         font-size: 21px;
     }
@@ -164,7 +164,7 @@ const IV = styled.span`
     font-weight: 400;
     font-size: 14px;
     white-space: pre;
-    color: var(--primary-color);
+    color: var(--color-white);
 `;
 
 Value.Liquidity = Liquidity;

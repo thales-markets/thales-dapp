@@ -446,12 +446,11 @@ const SectionWrapper = styled.section<{
                 return 'none';
             case BackgroundType.INFO:
             case BackgroundType.CLAIM_INFO:
-                return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.STAKE:
             case BackgroundType.CLAIM:
-                return '#64d9fe80';
+                return props.theme.background.secondary;
             default:
-                return 'linear-gradient(160deg, #801bf2 0%, #1BAB9C 100%)';
+                return props.theme.background.secondary;
         }
     }};
     ${(props) => (props.noPadding ? '' : 'padding: 2px;')}
@@ -468,9 +467,9 @@ const SectionWrapper = styled.section<{
                 case BackgroundType.CLAIM_CONTAINER:
                     return 'background: none';
                 case BackgroundType.INFO:
-                    return 'background: #464dcf';
+                    return `background: ${props.theme.background.secondary}`;
                 default:
-                    return 'background: #464dcf';
+                    return `background: ${props.theme.background.secondary}`;
             }
         }}
     }
@@ -494,7 +493,7 @@ const SectionContentWrapper = styled.div<{
             : ''}
     ${(props) => (props.columnsSpan ? `grid-column: span ${props.columnsSpan};` : '')}
     height: 100%;
-    background: ${(props) => (props.background ?? true ? '#04045a' : 'none')};
+    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
     border-radius: 15px;
     align-items: center;
     ${(props) => {
@@ -532,8 +531,8 @@ const SectionContentWrapper = styled.div<{
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
-    color: #ffffff;
+    font-family: ${(props) => props.theme.fontFamily.primary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string }>`
@@ -646,13 +645,13 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
                 return `
                     font-weight: 700;
                     font-size: 25px;
-                    color: #64D9FE;
+                    color: ${props.theme.textColor.quaternary};
                 `;
             case SectionType.CLAIM_INFO:
                 return `
                     font-weight: 700;
                     font-size: 25px;
-                    color: #64D9FE;
+                    color: ${props.theme.textColor.primary};
                 `;
             default:
                 return '';
@@ -662,7 +661,6 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
         font-size: ${(props) =>
             props.type === SectionType.CLAIM || props.type === SectionType.CLAIM_INFO ? 18 : 15}px;
         line-height: 20px;
-        color: #64d9fe;
     }
 `;
 
@@ -677,7 +675,7 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 17px;
     letter-spacing: 0.035em;
-    color: #ffffff;
+    color: var(--color-white);
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -709,7 +707,7 @@ const VerticalLineWrapper = styled.div`
 `;
 
 const VerticalLineCenter = styled.hr`
-    border: 1px solid #64d9fe80;
+    border: 1px solid var(--color-highlight) 80;
     position: absolute;
     top: -18px;
     left: 0;

@@ -37,7 +37,7 @@ const Wrapper = styled.div`
         top: 50%;
         z-index: 0;
         left: 0;
-        border-top: 1px solid var(--color-wrapper);
+        border-top: 1px solid var(--color-secondary);
         background: black;
         width: 100%;
         transform: translateY(-50%);

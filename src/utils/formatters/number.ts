@@ -5,7 +5,7 @@ import numbro from 'numbro';
 
 type NumericValue = string | number;
 
-const DEFAULT_CURRENCY_DECIMALS = 2;
+export const DEFAULT_CURRENCY_DECIMALS = 2;
 export const SHORT_CRYPTO_CURRENCY_DECIMALS = 4;
 export const LONG_CRYPTO_CURRENCY_DECIMALS = 8;
 
@@ -91,9 +91,10 @@ export const truncToDecimals = (value: NumericValue, decimals = DEFAULT_CURRENCY
     return matchedValue !== null ? matchedValue[0] : '0';
 };
 
+// TODO: test it more as truncToDecimals has bug for 0.0000001
 export const truncDecimals = (value: number, decimals = DEFAULT_CURRENCY_DECIMALS): string => {
     const matchedValue = value
-        .toFixed(decimals) // when number has more than 6 decimals with preceding zeros (e.g. 0.0000001), toString() returns string in exponential notation (e.g. 1e-7)
+        .toFixed(decimals + 1) // when number has more than 6 decimals with preceding zeros (e.g. 0.0000001), toString() returns string in exponential notation (e.g. 1e-7)
         .replace(/(?<=[1-9])0+/, '') // remove trailing zeros added by toFixed (excluding 0.00)
         .match(`^-?\\\d+(?:\\\.\\\d{0,${decimals}})?`);
     return matchedValue !== null ? matchedValue[0] : '0';
@@ -128,4 +129,20 @@ export const calculateAndFormatPercentage = (first: number, second: number) => {
     const greater = first > second ? first : second;
     const smaller = first > second ? second : first;
     return (greater - smaller) / smaller;
+};
+
+export const roundNumberToDecimals = (value: number, decimals = DEFAULT_CURRENCY_DECIMALS) => {
+    return +(Math.round(Number(value + 'e+' + decimals)) + 'e-' + decimals);
+};
+
+export const countDecimals = (value: number): number => {
+    if (Math.floor(value) === value) return 0;
+
+    const str = value.toString();
+    if (str.indexOf('.') !== -1 && str.indexOf('-') !== -1) {
+        return Number(str.split('-')[1]) || 0;
+    } else if (str.indexOf('.') !== -1) {
+        return str.split('.')[1].length || 0;
+    }
+    return Number(str.split('-')[1]) || 0;
 };

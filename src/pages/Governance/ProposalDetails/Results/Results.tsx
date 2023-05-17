@@ -92,8 +92,8 @@ const Results: React.FC<ResultsProps> = ({
                                 key={label}
                                 backgroundColor={
                                     (isCouncilVoting || isCouncilResults) && index < numberOfCouncilMemebers
-                                        ? '#03044e'
-                                        : '#04045a'
+                                        ? '#1B1C33'
+                                        : ' var(--color-primary)'
                                 }
                                 opacity={isCouncilResults && index >= numberOfCouncilMemebers ? 0.5 : 1}
                                 borderColor={
