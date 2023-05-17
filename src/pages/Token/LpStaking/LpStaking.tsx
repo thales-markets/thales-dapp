@@ -467,9 +467,9 @@ const SectionWrapper = styled.section<{
                 case BackgroundType.CLAIM_CONTAINER:
                     return 'background: none';
                 case BackgroundType.INFO:
-                    return 'background: #464dcf';
+                    return `background: ${props.theme.background.secondary}`;
                 default:
-                    return 'background: #464dcf';
+                    return `background: ${props.theme.background.secondary}`;
             }
         }}
     }
@@ -531,8 +531,8 @@ const SectionContentWrapper = styled.div<{
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
-    color: var(--color-white);
+    font-family: ${(props) => props.theme.fontFamily.primary};
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string }>`
@@ -661,7 +661,6 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
         font-size: ${(props) =>
             props.type === SectionType.CLAIM || props.type === SectionType.CLAIM_INFO ? 18 : 15}px;
         line-height: 20px;
-        color: var(--color-highlight);
     }
 `;
 

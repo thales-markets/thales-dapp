@@ -479,7 +479,7 @@ const SectionWrapper = styled.section`
     box-sizing: border-box;
     border-radius: 15px;
     grid-column: 1 / span 4;
-    background: var(--color-highlight) 80;
+    background: ${(props) => props.theme.background.secondary};
     padding: 2px;
     @media (max-width: 767px) {
         grid-column: span 12;

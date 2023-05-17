@@ -99,7 +99,7 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
                     {t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })}
                 </ApprovalModalTitle>
                 <FlexDivRow>
-                    <ApprovalModalCloseIconContainer isRoyale={isRoyale} onClick={onClose} />
+                    <ApprovalModalCloseIconContainer $isRoyale={isRoyale} onClick={onClose} />
                 </FlexDivRow>
             </ModalHeader>
             <FlexDivColumnCentered>
@@ -281,9 +281,11 @@ const FlexContainer = styled(FlexDivCentered)`
     margin: 7px 0;
 `;
 
-const ApprovalModalCloseIconContainer = styled(CloseIcon)<{ isRoyale?: boolean }>`
+const ApprovalModalCloseIconContainer = styled(CloseIcon)<{ $isRoyale?: boolean }>`
     filter: ${(props) =>
-        props.isRoyale ? 'invert(14%) sepia(42%) saturate(588%) hue-rotate(104deg) brightness(25%) contrast(94%)' : ''};
+        props.$isRoyale
+            ? 'invert(14%) sepia(42%) saturate(588%) hue-rotate(104deg) brightness(25%) contrast(94%)'
+            : ''};
     :hover {
         cursor: pointer;
     }

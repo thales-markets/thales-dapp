@@ -350,7 +350,8 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
     padding: 2px;
     @media (max-width: 768px) {
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
-        ${(props) => (props.backgroundType === BackgroundType.STAKE ? '' : 'background: #464dcf')};
+        ${(props) =>
+            props.backgroundType === BackgroundType.STAKE ? '' : `background: ${props.theme.background.secondary}`};
     }
 `;
 
@@ -383,10 +384,10 @@ const SectionValue = styled.div`
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     text-transform: uppercase;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabelContent = styled(SectionContent)`
@@ -407,7 +408,6 @@ const SectionValueContent = styled(SectionContent)`
     @media (max-width: 768px) {
         font-size: 15px;
         line-height: 20px;
-        color: var(--color-highlight);
     }
 `;
 
