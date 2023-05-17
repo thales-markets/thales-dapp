@@ -210,7 +210,7 @@ const TableCellHead = styled(TableCell)`
             padding-right: 0;
         }
     }
-    color: #4564ae;
+    color: ${(props) => props.theme.textColor.secondary};
     user-select: none;
 `;
 

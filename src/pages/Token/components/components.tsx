@@ -19,7 +19,7 @@ export const GridContainer = styled(GridDivCol)`
 
 export const Input = styled.input`
     background: var(--color-primary);
-    border: 1px solid var(--color-highlight);
+    border: 1px solid ${(props) => props.theme.input.borderColor.primary};
     box-sizing: border-box;
     mix-blend-mode: normal;
     border-radius: 12px;
@@ -30,13 +30,13 @@ export const Input = styled.input`
     font-size: 20px;
     line-height: 18px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.input.textColor.primary};
     &::selection {
-        color: var(--color-primary);
-        background: #f6f6fe;
+        color: ${(props) => props.theme.input.textColor.tertiary};
+        background: ${(props) => props.theme.input.background.selection.primary};
     }
     &:focus {
-        border: 2px solid #00f9ff;
+        border: 2px solid ${(props) => props.theme.input.borderColor.focus.primary};
         box-sizing: border-box;
     }
     &:disabled {
@@ -57,7 +57,7 @@ export const InputLabel = styled.label`
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.input.textColor.primary};
     padding: 8px 0 0 15px;
     pointer-events: none;
     z-index: 3;
@@ -81,7 +81,7 @@ export const CurrencyLabel = styled.label`
     font-size: 20px;
     line-height: 18px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.input.textColor.primary};
     padding: 36px 16px 17px 0;
     pointer-events: none;
     position: absolute;

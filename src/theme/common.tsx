@@ -475,8 +475,8 @@ export const Colors = {
     BLACK_LIGHT: '#121212',
 
     BLUE: '#1043B4',
-    BLUE_LIGHT: '#5B86E5',
-    BLUE_DARK: '#36D1DC',
+    BLUE_LIGHT: '#36D1DC',
+    BLUE_DARK: '#5B86E5',
     BLUE_MIDNIGHT: '#050838',
 
     RED: '#DE496D',

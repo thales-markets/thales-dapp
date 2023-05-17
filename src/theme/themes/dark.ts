@@ -25,7 +25,7 @@ export default {
     button: {
         background: {
             primary: Colors.GREEN,
-            secondary: '',
+            secondary: Colors.GRAY,
             tertiary: '',
         },
         textColor: {
@@ -61,6 +61,11 @@ export default {
             error: {
                 primary: Colors.RED,
             },
+        },
+    },
+    link: {
+        textColor: {
+            primary: Colors.BLUE_LIGHT,
         },
     },
 };
