@@ -133,17 +133,17 @@ const TableBody = styled.div`
         width: 5px;
     }
     ::-webkit-scrollbar-track {
-        background: #4673bd;
+        background: ${(props) => props.theme.background.secondary};
     }
     ::-webkit-scrollbar-thumb {
         border-radius: 15px;
-        background: var(--color-white);
+        background: ${(props) => props.theme.background.tertiary};
     }
     ::-webkit-scrollbar-thumb:active {
-        background: #44e1e2;
+        background: ${(props) => props.theme.background.tertiary};
     }
     ::-webkit-scrollbar-thumb:hover {
-        background: rgb(67, 116, 255);
+        background: ${(props) => props.theme.background.tertiary};
     }
 `;
 
@@ -170,13 +170,13 @@ const TableRow = styled(FlexDiv)`
     }
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
-    border-bottom: 1px solid rgba(228, 228, 228, 0.1);
+    color: ${(props) => props.theme.textColor.primary};
+    border-bottom: 1px solid ${(props) => props.theme.borderColor.tertiary};
 `;
 
 const TableRowHead = styled(TableRow)`
-    border-top: 1px solid rgba(228, 228, 228, 0.1);
-    border-bottom: 1px solid rgba(228, 228, 228, 0.1);
+    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 1px solid ${(props) => props.theme.borderColor.tertiary};
 `;
 
 const TableCell = styled(FlexDivCentered)`
@@ -218,6 +218,11 @@ const SortIconContainer = styled.span`
     display: flex;
     align-items: center;
     margin-left: 5px;
+    svg {
+        path {
+            fill: ${(props) => props.theme.textColor.secondary};
+        }
+    }
 `;
 
 const NoResultContainer = styled(TableRow)`

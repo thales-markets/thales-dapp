@@ -62,5 +62,10 @@ export default {
                 primary: '',
             },
         },
+        link: {
+            textColor: {
+                primary: '',
+            },
+        },
     },
 };
