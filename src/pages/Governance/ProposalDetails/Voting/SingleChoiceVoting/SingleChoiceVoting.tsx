@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import { VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/components';
+import { VoteContainer, VoteConfirmation } from 'pages/Governance/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
@@ -15,6 +15,7 @@ import voting from 'utils/voting';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 import { Web3Provider } from '@ethersproject/providers';
+import Button from 'components/ButtonV2/Button';
 
 type SingleChoiceVotingProps = {
     proposal: Proposal;
@@ -83,11 +84,15 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
                 )}
             </VoteContainer>
             <FlexDivCentered>
-                <VoteButton disabled={!selectedChoices || isVoting || !hasVotingRights} onClick={handleVote}>
+                <Button
+                    disabled={!selectedChoices || isVoting || !hasVotingRights}
+                    onClick={handleVote}
+                    margin="20px 0"
+                >
                     {!isVoting
                         ? t(`governance.proposal.submit-vote-label`)
                         : t(`governance.proposal.vote-progress-label`)}
-                </VoteButton>
+                </Button>
             </FlexDivCentered>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}
@@ -101,10 +106,10 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
 const SingleChoice = styled(FlexDivColumnCentered)`
     box-sizing: content-box;
     height: 48px;
-    border: 1px solid #748bc6;
+    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 5px;
     margin-bottom: 20px;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.textColor.primary};
     font-weight: bold;
     font-size: 20px;
     line-height: 48px;
@@ -112,17 +117,13 @@ const SingleChoice = styled(FlexDivColumnCentered)`
     &.selected {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid var(--color-highlight);
-        color: #f6f6fe;
-        background: #1b1c33;
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
     &:hover {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid var(--color-highlight);
-        color: #f6f6fe;
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
         cursor: pointer;
-        background: #1b1c33;
     }
     @media (max-width: 767px) {
         height: 46px;

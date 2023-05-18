@@ -5,15 +5,12 @@ type ButtonProps = {
     width?: string;
     height?: string;
     padding?: string;
-    active?: boolean;
-    activeTextColor?: string;
-    activeBgColor?: string;
-    inactiveTextColor?: string;
-    inactiveBgColor?: string;
-    hoverShadow?: string;
-    hoverBorderEffect?: boolean;
     margin?: string;
-    onClickHandler?: () => void;
+    textColor?: string;
+    backgroundColor?: string;
+    hoverShadow?: boolean;
+    hoverBorder?: boolean;
+    onClick?: () => void;
     fontSize?: string;
     disabled?: boolean;
     additionalStyles?: CSSProperties;
@@ -24,15 +21,12 @@ const Button: React.FC<ButtonProps> = ({
     width,
     height,
     padding,
-    active,
-    activeTextColor,
-    activeBgColor,
-    inactiveTextColor,
-    inactiveBgColor,
+    textColor,
+    backgroundColor,
     hoverShadow,
-    hoverBorderEffect,
+    hoverBorder,
     margin,
-    onClickHandler,
+    onClick,
     disabled,
     additionalStyles,
     fontSize,
@@ -43,15 +37,12 @@ const Button: React.FC<ButtonProps> = ({
             width={width}
             height={height}
             padding={padding}
-            active={active}
-            activeTextColor={activeTextColor}
-            activeBgColor={activeBgColor}
-            inactiveTextColor={inactiveTextColor}
-            inactiveBgColor={inactiveBgColor}
-            hoverShadow={hoverShadow}
-            hoverBorderEffect={hoverBorderEffect}
             margin={margin}
-            onClick={() => (onClickHandler ? onClickHandler() : '')}
+            textColor={textColor}
+            backgroundColor={backgroundColor}
+            hoverShadow={hoverShadow}
+            hoverBorder={hoverBorder}
+            onClick={onClick}
             disabled={disabled}
             fontSize={fontSize}
             style={additionalStyles}
@@ -65,14 +56,11 @@ const Wrapper = styled.button<{
     width?: string;
     height?: string;
     padding?: string;
-    active?: boolean;
-    activeTextColor?: string;
-    activeBgColor?: string;
-    inactiveTextColor?: string;
-    inactiveBgColor?: string;
-    hoverShadow?: string;
-    hoverBorderEffect?: boolean;
     margin?: string;
+    textColor?: string;
+    backgroundColor?: string;
+    hoverShadow?: boolean;
+    hoverBorder?: boolean;
     disabled?: boolean;
     fontSize?: string;
 }>`
@@ -80,37 +68,23 @@ const Wrapper = styled.button<{
     text-transform: uppercase;
     align-items: center;
     justify-content: center;
-    ${(props) => (props?.width ? `width: ${props.width}` : '')};
-    ${(props) => (props?.height ? `height: ${props.height}` : '')};
+    width: ${(props) => props.width || ''};
+    height: ${(props) => props.height || ''};
     border: 1px solid ${(props) => props.theme.button.background.primary};
     border-radius: 30px;
     font-family: ${(props) => props.theme.fontFamily.primary};
     font-weight: 700;
-    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
-    cursor: ${(props) => (props?.disabled ? 'default' : 'pointer')};
-    color: ${(props) =>
-        props?.active
-            ? props.activeTextColor
-                ? props.activeTextColor
-                : props.theme.button.textColor.primary
-            : props.inactiveTextColor
-            ? props.inactiveTextColor
-            : props.theme.button.textColor.secondary};
-    background-color: ${(props) =>
-        props?.active
-            ? props.activeBgColor
-                ? props.activeBgColor
-                : props.theme.button.background.primary
-            : props.inactiveBgColor
-            ? props.inactiveBgColor
-            : props.theme.button.background.secondary};
-    ${(props) => (props?.margin ? `margin: ${props.margin}` : '')};
-    ${(props) => (props?.padding ? `padding: ${props.padding}` : '')};
+    font-size: ${(props) => props.fontSize || '20px'};
+    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    color: ${(props) => props.textColor || props.theme.button.textColor.primary};
+    background-color: ${(props) => props.backgroundColor || props.theme.button.background.primary};
+    margin: ${(props) => (props.margin ? props.margin : '')};
+    padding: ${(props) => (props.padding ? props.padding : '0 20px')};
     &:hover {
         ${(props) =>
-            props?.hoverShadow && !props?.disabled ? `box-shadow:${props.theme.button.borderColor.primary}` : ''}
+            props.hoverShadow && !props.disabled ? `box-shadow: ${props.theme.button.borderColor.primary}` : ''}
         ${(props) =>
-            props?.hoverBorderEffect && !props?.disabled ? `border: ${props.theme.button.borderColor.secondary}` : ''}
+            props.hoverBorder && !props.disabled ? `border: ${props.theme.button.borderColor.secondary}` : ''}
     }
     &:disabled {
         opacity: 0.5;

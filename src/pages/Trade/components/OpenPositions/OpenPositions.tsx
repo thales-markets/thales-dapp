@@ -260,7 +260,7 @@ const OpenPositions: React.FC = () => {
                     {...defaultButtonProps}
                     disabled={Number(position.value) === 0}
                     additionalStyles={additionalStyle}
-                    onClickHandler={() => handleSubmit(position)}
+                    onClick={() => handleSubmit(position)}
                 >
                     {submittingAddress === position.market
                         ? t(`options.trade.user-positions.cash-out-progress`)
@@ -345,7 +345,6 @@ const Title = styled.span`
 const defaultButtonProps = {
     width: '100%',
     height: '27px',
-    active: true,
 };
 
 const additionalStyle: CSSProperties = {

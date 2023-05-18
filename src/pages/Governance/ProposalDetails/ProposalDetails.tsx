@@ -230,7 +230,7 @@ const Text = styled.span`
 
 const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
     padding: 1px;
-    border-radius: 4px;
+    border-radius: 8px;
     width: 200px;
     background: ${(props) => getColor(props.status)};
 `;
@@ -244,7 +244,7 @@ const Status = styled(FlexDivColumnCentered)<{ status: string }>`
     letter-spacing: 2px;
     color: ${(props) => getColor(props.status)};
     background: ${(props) => props.theme.background.primary};
-    border-radius: 4px;
+    border-radius: 8px;
     text-transform: uppercase;
     width: 198px;
 `;
@@ -259,9 +259,9 @@ const Body = styled(FlexDivColumn)`
         margin-bottom: 15px;
     }
     a {
-        color: #b8c6e5;
+        color: ${(props) => props.theme.link.textColor.primary};
         &:hover {
-            color: #00f9ff;
+            text-decoration: underline;
         }
     }
     table {
@@ -295,7 +295,7 @@ const VoteNote = styled(FlexDivRow)`
     font-size: 14px;
     line-height: 24px;
     text-align: center;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.textColor.quaternary};
     text-transform: uppercase;
     margin-top: 42px;
     margin-left: 5px;

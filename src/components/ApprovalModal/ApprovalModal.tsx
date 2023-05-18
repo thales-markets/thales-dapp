@@ -52,26 +52,22 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <ModalButton onClickHandler={() => openConnectModal?.()}>
-                    {t('common.wallet.connect-your-wallet')}
-                </ModalButton>
-            );
+            return <Button onClick={() => openConnectModal?.()}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (!approveAll && !isAmountEntered) {
-            return <ModalButton disabled={true}>{t(`common.errors.enter-amount`)}</ModalButton>;
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
         return (
-            <ModalButton
+            <Button
                 disabled={isButtonDisabled}
-                onClickHandler={() => onSubmit(approveAll ? ethers.constants.MaxUint256 : amountConverted)}
+                onClick={() => onSubmit(approveAll ? ethers.constants.MaxUint256 : amountConverted)}
             >
                 {!isAllowing
                     ? t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })
                     : t('common.enable-wallet-access.approve-progress-label', {
                           currencyKey: tokenSymbol,
                       })}
-            </ModalButton>
+            </Button>
         );
     };
 
@@ -96,12 +92,12 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                         label={t('common.enable-wallet-access.approve-all-label')}
                     />
                 </CheckboxContainer>
-                <OrText>{t('common.or')}</OrText>
+                <Text>{t('common.or')}</Text>
+                <Text>{t('common.enable-wallet-access.custom-amount-label')}</Text>
                 <Input
                     value={amount}
                     valueChange={setAmount}
                     disabled={approveAll || isAllowing}
-                    title={t('common.enable-wallet-access.custom-amount-label')}
                     subValue={tokenSymbol}
                     showValidation={!approveAll && !isAmountValid}
                     validationMessage={t('common.errors.invalid-amount-max', { max: maxApproveAmount })}
@@ -122,8 +118,6 @@ const Container = styled(FlexDivColumnCentered)`
 const ButtonContainer = styled(FlexDivCentered)`
     margin: 30px 0 10px 0;
 `;
-
-const ModalButton = styled(Button)``;
 
 const CheckboxContainer = styled(FlexDivCentered)`
     margin: 40px 0 5px 0;
@@ -149,7 +143,7 @@ const CheckboxContainer = styled(FlexDivCentered)`
     }
 `;
 
-const OrText = styled(FlexDivCentered)`
+const Text = styled(FlexDivCentered)`
     font-style: normal;
     font-weight: bold;
     font-size: 20px;

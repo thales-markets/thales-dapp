@@ -254,7 +254,7 @@ const Container = styled(FlexDivRow)`
 `;
 
 const MainContentContainer = styled.div<{ isOverviewPage: boolean }>`
-    background: ${(props) => props.theme.background.secondary};
+    background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.secondary)};
     width: 66%;
     padding: 2px;
     border-radius: 15px;
@@ -270,7 +270,7 @@ const MainContentContainer = styled.div<{ isOverviewPage: boolean }>`
 
 const MainContentWrapper = styled.div<{ isOverviewPage: boolean }>`
     border-radius: 15px;
-    padding: 25px 0px 30px 0px;
+    padding: ${(props) => (props.isOverviewPage ? '0px' : '25px 0px 30px 0px')};
     background: ${(props) => props.theme.background.primary};
     @media (max-width: 767px) {
         background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.primary)};

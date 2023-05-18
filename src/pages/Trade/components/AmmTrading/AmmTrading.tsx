@@ -691,7 +691,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         if (!isWalletConnected) {
             return (
-                <Button {...defaultButtonProps} onClickHandler={openConnectModal}>
+                <Button {...defaultButtonProps} onClick={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
@@ -719,7 +719,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         if (!hasAllowance) {
             return (
-                <Button {...defaultButtonProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
+                <Button {...defaultButtonProps} disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', {
                               currencyKey: collateral.currencyOrSellPosition,
@@ -731,7 +731,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             );
         }
         return (
-            <Button {...defaultButtonProps} disabled={isButtonDisabled} onClickHandler={handleSubmit}>
+            <Button {...defaultButtonProps} disabled={isButtonDisabled} onClick={handleSubmit}>
                 {isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.buy.progress-label`)
                     : t(`options.market.trade-options.place-order.swap-confirm-button.buy.label`)}
@@ -920,7 +920,6 @@ const inputFieldProps = { width: '350px', height: '34px' };
 const defaultButtonProps = {
     width: '100%',
     height: '34px',
-    active: true,
 };
 
 const Container = styled(FlexDivRow)`
