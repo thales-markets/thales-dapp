@@ -17,7 +17,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { formatHoursAndMinutesFromTimestamp, formatShortDateFromTimestamp } from 'utils/formatters/date';
+import { formatHoursAndMinutesFromTimestamp, formatShortDateWithTime } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsOVM, getL1FeeInWei, formatGasLimit } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
@@ -209,7 +209,7 @@ const SchedulerFirstColumn: React.FC<{ value: TileRow | string }> = ({ value }) 
         return (
             <DateTimeContainer>
                 <DateTimeContainer.Date>
-                    {formatShortDateFromTimestamp(Number(value?.cells[0]?.value))}
+                    {formatShortDateWithTime(Number(value?.cells[0]?.value))}
                 </DateTimeContainer.Date>
                 <DateTimeContainer.Time>
                     {formatHoursAndMinutesFromTimestamp(Number(value?.cells[0]?.value))}

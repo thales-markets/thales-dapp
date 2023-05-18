@@ -15,7 +15,7 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
 import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
-import { formatShortDateFromTimestamp } from 'utils/formatters/date';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, formatNumberShort, roundNumberToDecimals } from 'utils/formatters/number';
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
@@ -243,7 +243,7 @@ const OpenPositions: React.FC = () => {
                     <Separator />
                     <FlexContainer>
                         <Label>{t('options.trade.user-positions.end-date')}</Label>
-                        <Value>{formatShortDateFromTimestamp(position.maturityDate)}</Value>
+                        <Value>{formatShortDateWithTime(position.maturityDate)}</Value>
                     </FlexContainer>
                     <Separator />
                     <FlexContainer>
@@ -321,6 +321,8 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 6px;
+    overflow-y: auto;
+    max-height: 560px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
     @media (max-width: 767px) {
         flex-direction: row;
@@ -358,7 +360,7 @@ const Position = styled.div`
     background: ${(props) => props.theme.background.primary};
     border: 2px solid ${(props) => props.theme.background.secondary};
     border-radius: 8px;
-    height: 50px;
+    min-height: 50px;
     width: 100%;
     display: flex;
     align-items: center;
