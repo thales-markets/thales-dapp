@@ -42,7 +42,7 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
                     )}
                 </FlexDivRowCentered>
                 <Title status={proposal.state}>{proposal.title}</Title>
-                <Body status={proposal.state}>{truncateText(proposal.body, 200)}</Body>
+                <Body status={proposal.state}>{truncateText(proposal.body, 250)}</Body>
             </Card>
         </CardContainer>
     );
@@ -62,8 +62,7 @@ export const CardContainer = styled(FlexDivColumnCentered)`
     color: ${(props) => props.theme.textColor.primary};
     cursor: pointer;
     &:hover {
-        background: ${(props) => props.theme.background.secondary};
-        box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
+        background: ${(props) => props.theme.background.tertiary};
     }
 `;
 
@@ -83,7 +82,7 @@ const Status = styled(FlexDivCentered)<{ status: string }>`
     line-height: 24px;
     letter-spacing: 0.5px;
     border: 2px solid ${(props) => getColor(props.status)};
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 0px 20px;
     height: 36px;
     text-align: center;

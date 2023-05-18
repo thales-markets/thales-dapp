@@ -170,7 +170,7 @@ const ChartInnerText = styled(FlexDivColumnCentered)<{ isInProgress: boolean }>`
     font-weight: ${(props) => (props.isInProgress ? 300 : 500)};
     font-size: 14px;
     line-height: ${(props) => (props.isInProgress ? 30 : 34)}px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
     text-align: center;
     width: 95px;

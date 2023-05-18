@@ -166,7 +166,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
                     {tradingDetailsSentence}
                 </TradingDetailsSentence>
 
-                <Button {...defaultButtonProps} disabled={isButtonDisabled} onClickHandler={() => onSubmitHandler()}>
+                <Button {...defaultButtonProps} disabled={isButtonDisabled} onClick={onSubmitHandler}>
                     {slippage !== slippageTolerance ? t(`common.save`) : t('common.close')}
                 </Button>
             </Container>
@@ -177,7 +177,6 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
 const defaultButtonProps = {
     width: '100%',
     height: '34px',
-    active: true,
     margin: '0 0 5px 0',
 };
 

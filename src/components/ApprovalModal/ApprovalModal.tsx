@@ -49,7 +49,7 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <Button {...defaultButtonProps} onClickHandler={openConnectModal}>
+                <Button {...defaultButtonProps} onClick={openConnectModal}>
                     {t(`common.wallet.connect-your-wallet`)}
                 </Button>
             );
@@ -66,7 +66,7 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
             <Button
                 {...defaultButtonProps}
                 disabled={isButtonDisabled}
-                onClickHandler={() =>
+                onClick={() =>
                     onSubmit(
                         approveAll
                             ? ethers.constants.MaxUint256
@@ -170,7 +170,6 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({
 const defaultButtonProps = {
     width: '289px',
     height: '34px',
-    active: true,
 };
 
 const StyledRoyaleModal = withStyles(() => ({

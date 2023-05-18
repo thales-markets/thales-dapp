@@ -1,6 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered, FlexDiv, FlexDivSpaceBetween } from 'theme/common';
+import {
+    FlexDivColumnCentered,
+    FlexDivCentered,
+    FlexDivRowCentered,
+    FlexDiv,
+    FlexDivSpaceBetween,
+    Colors,
+} from 'theme/common';
 import { Proposal } from 'types/governance';
 import { useTranslation } from 'react-i18next';
 import { VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/components';
@@ -222,13 +229,13 @@ const Weighted = styled(FlexDivSpaceBetween)`
     flex: 1;
     box-sizing: content-box;
     height: 50px;
-    border: 1px solid #748bc6;
+    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 5px;
     margin-bottom: 20px;
     font-weight: bold;
     font-size: 20px;
     line-height: 50px;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.textColor.primary};
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -236,22 +243,12 @@ const Weighted = styled(FlexDivSpaceBetween)`
     &.selected {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid var(--color-highlight);
-        color: #f6f6fe;
-        background: #1b1c33;
-        input {
-            color: #f6f6fe;
-        }
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
     &:hover {
         margin: -1px;
         margin-bottom: 19px;
-        border: 2px solid var(--color-highlight);
-        color: #f6f6fe;
-        background: #1b1c33;
-        input {
-            color: #f6f6fe;
-        }
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
     @media (max-width: 767px) {
         height: 46px;
@@ -281,11 +278,11 @@ const PlusMinus = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 45px;
     min-width: 45px;
-    border-left: 2px solid #748bc6;
-    border-right: 2px solid #748bc6;
+    border-left: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
     &:hover {
-        border-left: 2px solid var(--color-highlight);
-        border-right: 2px solid var(--color-highlight);
+        border-left: 2px solid ${(props) => props.theme.borderColor.quaternary};
+        border-right: 2px solid ${(props) => props.theme.borderColor.quaternary};
         cursor: pointer;
     }
     @media (max-width: 767px) {
@@ -314,7 +311,7 @@ const Input = styled.input`
     min-width: 60px;
     font-weight: bold;
     font-size: 20px;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.textColor.primary};
     text-align: center;
     overfloe: hidden;
     text-overflow: ellipsis;
@@ -338,7 +335,7 @@ const SeePitchButton = styled.button`
     font-size: 16px;
     line-height: 36px;
     border-radius: 23px;
-    border: 2px solid #516aff;
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
     cursor: pointer;
     color: white;
     background: transparent;
@@ -347,7 +344,10 @@ const SeePitchButton = styled.button`
     font-size: 15px;
     &:disabled {
         opacity: 0.4;
-        cursor: not-allowed;
+        cursor: default;
+    }
+    &:hover:not(:disabled) {
+        border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
     @media (max-width: 767px) {
         margin-left: 0;
@@ -360,10 +360,10 @@ const PitchModal = withStyles(() => ({
         borderRadius: '15px',
         width: '900px',
         maxWidth: '900px',
-        background: ' var(--color-primary)',
+        background: Colors.GRAY_DARK,
         overflow: 'auto',
-        border: '2px solid var(--color-highlight)',
-        color: '#F6F6FE',
+        border: `2px solid ${Colors.GRAY}`,
+        color: Colors.WHITE,
     },
 }))(Dialog);
 
