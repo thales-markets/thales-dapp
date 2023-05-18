@@ -64,8 +64,8 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
                     subValue={'%'}
                     subValueFontSize={'13px'}
                     container={inputFieldProps}
-                    showError={slippage !== '' && !isSlippageValid(Number(slippage))}
-                    errorMessage={t('options.trade.amm-trading.slippage.invalid-value')}
+                    showValidation={slippage !== '' && !isSlippageValid(Number(slippage))}
+                    validationMessage={t('options.trade.amm-trading.slippage.invalid-value')}
                 />
             </Row>
         </Container>

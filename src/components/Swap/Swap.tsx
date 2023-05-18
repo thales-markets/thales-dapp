@@ -455,7 +455,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                             isAllowing={isAllowing}
                             onSubmit={approve}
                             onClose={() => setOpenApprovalModal(false)}
-                            isRoyale={royaleTheme}
                         />
                     )}
                 </SwapDialog>

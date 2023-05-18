@@ -18,8 +18,8 @@ type InputProps = {
     subValueColor?: string;
     subValueFontSize?: string;
     disabled?: boolean;
-    showError?: boolean;
-    errorMessage?: string;
+    showValidation?: boolean;
+    validationMessage?: string;
     container?: {
         width?: string;
         height?: string;
@@ -46,8 +46,8 @@ const Input: React.FC<InputProps> = ({
     subValueColor,
     subValueFontSize,
     disabled,
-    showError,
-    errorMessage,
+    showValidation,
+    validationMessage,
     container,
     children,
 }) => {
@@ -68,7 +68,7 @@ const Input: React.FC<InputProps> = ({
     };
 
     return (
-        <CustomTooltip open={showError} title={errorMessage ? errorMessage : ''} placement="bottom">
+        <CustomTooltip open={showValidation} title={validationMessage ? validationMessage : ''} placement="bottom">
             <Container
                 disabled={disabled}
                 width={container?.width}
@@ -76,7 +76,7 @@ const Input: React.FC<InputProps> = ({
                 margin={container?.margin}
                 padding={container?.padding}
                 isFocused={focus}
-                isError={showError}
+                isError={showValidation}
                 zIndex={container?.zIndex}
             >
                 {title && (

@@ -849,8 +849,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         placeholder={t('options.trade.amm-trading.enter-amount')}
                         valueChange={(value) => onTotalPriceValueChange(value)}
                         container={inputFieldProps}
-                        showError={!isAmountValid}
-                        errorMessage={t(errorMessageKey, {
+                        showValidation={!isAmountValid}
+                        validationMessage={t(errorMessageKey, {
                             currencyKey: getStableCoinForNetwork(
                                 networkId,
                                 isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
