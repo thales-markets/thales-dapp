@@ -10,7 +10,6 @@ import useVaultPnlsQuery from 'queries/vault/useVaultPnlsQuery';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Colors, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { formatPercentageWithSign } from 'utils/formatters/number';
-import { UI_COLORS } from 'constants/ui';
 
 type PnlProps = {
     vaultAddress: string;
@@ -54,9 +53,7 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                 <Title>{t(`vault.pnl.title`)}</Title>
                 <LifetimePnlContainer>
                     <LifetimePnlLabel>{t('vault.pnl.lifetime-pnl')}:</LifetimePnlLabel>
-                    <LifetimePnl
-                        color={lifetimePnl === 0 ? UI_COLORS.WHITE : lifetimePnl > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}
-                    >
+                    <LifetimePnl color={lifetimePnl === 0 ? Colors.WHITE : lifetimePnl > 0 ? Colors.GREEN : Colors.RED}>
                         {formatPercentageWithSign(lifetimePnl)}
                     </LifetimePnl>
                 </LifetimePnlContainer>
@@ -89,15 +86,12 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                             />
                             <Tooltip
                                 content={<CustomTooltip />}
-                                cursor={{ fill: Colors.GRAY_LIGHT, fillOpacity: '0.3' }}
+                                cursor={{ fill: Colors.GRAY_LIGHT, fillOpacity: '0.2' }}
                                 wrapperStyle={{ outline: 'none' }}
                             />
                             <Bar dataKey="pnl" radius={[4, 4, 0, 0]} maxBarSize={60}>
                                 {vaultPnls.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={entry.pnl > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}
-                                    />
+                                    <Cell key={`cell-${index}`} fill={entry.pnl > 0 ? Colors.GREEN : Colors.RED} />
                                 ))}
                             </Bar>
                         </BarChart>

@@ -78,7 +78,7 @@ import Footer from 'components/Footer';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-import { FlexDivRow } from 'theme/common';
+import { Colors, FlexDivRow } from 'theme/common';
 import RadioButton from 'components/RadioButton/RadioButton';
 
 const LiquidityPool: React.FC = () => {
@@ -489,7 +489,7 @@ const LiquidityPool: React.FC = () => {
                                         secondLabel: t(`liquidity-pool.tabs.${LiquidityPoolTab.WITHDRAW}`),
                                         fontSize: '18px',
                                     }}
-                                    dotBackground={'var(--amm-switch-circle)'}
+                                    dotBackground={Colors.WHITE}
                                     handleClick={() => {
                                         setSelectedTab(
                                             selectedTab === LiquidityPoolTab.DEPOSIT
