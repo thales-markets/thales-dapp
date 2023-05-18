@@ -231,65 +231,97 @@ const OpenPositions: React.FC = () => {
         }
     };
 
+    const getPositionsList = (position: UserLivePositions, index: number) => {
+        return (
+            <Position key={index}>
+                <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
+                <AlignedFlex>
+                    <FlexContainer>
+                        <Label>{`${position.currencyKey}`}</Label>
+                        <Value>{position.strikePrice}</Value>
+                    </FlexContainer>
+                    <Separator />
+                    <FlexContainer>
+                        <Label>{t('options.trade.user-positions.end-date')}</Label>
+                        <Value>{formatShortDateFromTimestamp(position.maturityDate)}</Value>
+                    </FlexContainer>
+                    <Separator />
+                    <FlexContainer>
+                        <Label>{t('options.trade.user-positions.size')}</Label>
+                        <Value>{`${formatNumberShort(position.amount)}  ${position.side}`}</Value>
+                    </FlexContainer>
+                    <Separator />
+                    <FlexContainer>
+                        <Label>{t('options.trade.user-positions.paid')}</Label>
+                        <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
+                    </FlexContainer>
+                </AlignedFlex>
+                <Button
+                    {...defaultButtonProps}
+                    disabled={Number(position.value) === 0}
+                    additionalStyles={additionalStyle}
+                    onClickHandler={() => handleSubmit(position)}
+                >
+                    {submittingAddress === position.market
+                        ? t(`options.trade.user-positions.cash-out-progress`)
+                        : t('options.trade.user-positions.cash-out')}
+                    {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
+                </Button>
+            </Position>
+        );
+    };
+
     return (
         <Wrapper>
             <Title>{t('options.trade.user-positions.your-positions')}</Title>
-            <PositionsWrapper>
-                {livePositions.map((position, index) => {
-                    return (
-                        <Position key={index}>
-                            <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
-                            <AlignedFlex>
-                                <FlexContainer>
-                                    <Label>{`${position.currencyKey}`}</Label>
-                                    <Value>{position.strikePrice}</Value>
-                                </FlexContainer>
-                                <Separator />
-                                <FlexContainer>
-                                    <Label>{t('options.trade.user-positions.end-date')}</Label>
-                                    <Value>{formatShortDateFromTimestamp(position.maturityDate)}</Value>
-                                </FlexContainer>
-                                <Separator />
-                                <FlexContainer>
-                                    <Label>{t('options.trade.user-positions.size')}</Label>
-                                    <Value>{`${formatNumberShort(position.amount)}  ${position.side}`}</Value>
-                                </FlexContainer>
-                                <Separator />
-                                <FlexContainer>
-                                    <Label>{t('options.trade.user-positions.paid')}</Label>
-                                    <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
-                                </FlexContainer>
-                            </AlignedFlex>
-                            <Button
-                                {...defaultButtonProps}
-                                disabled={Number(position.value) === 0}
-                                additionalStyles={additionalStyle}
-                                onClickHandler={() => handleSubmit(position)}
-                            >
-                                {submittingAddress === position.market
-                                    ? t(`options.trade.user-positions.cash-out-progress`)
-                                    : t('options.trade.user-positions.cash-out')}
-                                {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
-                            </Button>
-                        </Position>
-                    );
-                })}
+            <PositionsWrapper noPositions={!livePositions.length}>
+                {!!livePositions.length
+                    ? livePositions.map((position, index) => getPositionsList(position, index))
+                    : dummyPositions.map((position, index) => getPositionsList(position, index))}
             </PositionsWrapper>
+            {!livePositions.length && (
+                <NoPositionsText>{t('options.trade.user-positions.no-positions')}</NoPositionsText>
+            )}
         </Wrapper>
     );
 };
 
+const dummyPositions: UserLivePositions[] = [
+    {
+        market: '0x1',
+        currencyKey: 'BTC',
+        amount: 15,
+        paid: 100,
+        maturityDate: 1684483200000,
+        strikePrice: '$ 25,000.00',
+        side: Positions.UP,
+        value: 0,
+    },
+    {
+        market: '0x2',
+        currencyKey: 'BTC',
+        amount: 10,
+        paid: 200,
+        maturityDate: 1684483200000,
+        strikePrice: '$ 35,000.00',
+        side: Positions.DOWN,
+        value: 0,
+    },
+];
+
 const Wrapper = styled.div`
+    position: relative;
     display: flex;
     flex-direction: column;
     margin-top: 20px;
     padding-bottom: 20px;
 `;
 
-const PositionsWrapper = styled.div`
+const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 6px;
+    ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
     @media (max-width: 767px) {
         flex-direction: row;
         overflow: auto;
@@ -297,7 +329,7 @@ const PositionsWrapper = styled.div`
 `;
 
 const Title = styled.span`
-    font-family: 'Titillium Web';
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     font-size: 13px;
@@ -384,6 +416,20 @@ const Label = styled.span`
 const Value = styled(Label)`
     color: ${(props) => props.theme.textColor.primary};
     white-space: nowrap;
+`;
+
+const NoPositionsText = styled.span`
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: ${(props) => props.theme.fontFamily.primary};
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 100%;
+    color: ${(props) => props.theme.textColor.primary};
+    min-width: max-content;
 `;
 
 const Separator = styled.div`

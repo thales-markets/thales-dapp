@@ -416,6 +416,7 @@
             },
             "user-positions": {
                 "your-positions": "Your open positions",
+                "no-positions": "Your open positions will be visible here",
                 "end-date": "End date",
                 "size": "Size",
                 "paid": "Paid",

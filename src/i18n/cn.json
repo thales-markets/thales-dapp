@@ -1762,7 +1762,8 @@
                 "paid": "有薪酬的",
                 "your-positions": "您的空缺职位",
                 "cash-out": "兑现",
-                "cash-out-progress": "兑现..."
+                "cash-out-progress": "兑现...",
+                "no-positions": "您的未平仓头寸将在此处可见"
             }
         }
     },
