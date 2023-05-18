@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivRowCentered, FlexDivColumn, FlexDivColumnCentered, Text, Button } from 'theme/common';
+import { FlexDivRowCentered, FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
@@ -14,6 +14,7 @@ import ThalesStakersTable from './ThalesStakersTable';
 import SearchStakers from '../components/SearchStakers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'utils/network';
+import Button from 'components/ButtonV2/Button';
 
 enum OrderDirection {
     NONE,
@@ -110,9 +111,7 @@ const ThalesStakers: React.FC = () => {
                 <NoStakers>
                     <>
                         <Text className="text-l bold pale-grey">{t('governance.stakers.no-stakers-found')}</Text>
-                        <Button className="primary" onClick={resetFilters}>
-                            {t('governance.stakers.view-all-stakers')}
-                        </Button>
+                        <Button onClick={resetFilters}>{t('governance.stakers.view-all-stakers')}</Button>
                     </>
                 </NoStakers>
             </ThalesStakersTable>
@@ -146,7 +145,7 @@ const HeaderContainer = styled(FlexDivRowCentered)`
 
 const NoStakers = styled(FlexDivColumn)`
     min-height: 300px;
-    background: var(--color-primary);
+    color: ${(props) => props.theme.background.primary};
     justify-content: space-evenly;
     align-items: center;
     align-self: center;
@@ -158,7 +157,7 @@ const Info = styled.div`
     font-weight: bold;
     font-size: 18px;
     line-height: 24px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     margin-left: 30px;
     @media (max-width: 767px) {
         margin-left: 0;
