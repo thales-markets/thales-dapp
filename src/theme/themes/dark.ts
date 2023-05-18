@@ -66,6 +66,7 @@ export default {
     link: {
         textColor: {
             primary: Colors.BLUE_LIGHT,
+            secondary: Colors.WHITE,
         },
     },
 };

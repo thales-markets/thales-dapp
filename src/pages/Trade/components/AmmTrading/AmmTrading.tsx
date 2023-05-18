@@ -58,7 +58,7 @@ import {
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
-import Input from './components/Input';
+import Input from '../../../../components/Input';
 import TradingDetailsModal from './components/TradingDetailsModal';
 import { convertPriceImpactToBonus } from 'utils/options';
 
