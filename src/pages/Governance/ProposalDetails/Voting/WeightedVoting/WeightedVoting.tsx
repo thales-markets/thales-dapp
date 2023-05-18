@@ -10,7 +10,7 @@ import {
 } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import { VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/components';
+import { VoteContainer, VoteConfirmation } from 'pages/Governance/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
@@ -27,6 +27,7 @@ import { CloseIconContainer } from 'components/OldVersion/old-components';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 import { Web3Provider } from '@ethersproject/providers';
+import Button from 'components/ButtonV2/Button';
 
 type WeightedVotingProps = {
     proposal: Proposal;
@@ -194,11 +195,15 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                 )}
             </VoteContainer>
             <FlexDivCentered>
-                <VoteButton disabled={!isOptionSelected || isVoting || !hasVotingRights} onClick={handleVote}>
+                <Button
+                    disabled={!isOptionSelected || isVoting || !hasVotingRights}
+                    onClick={handleVote}
+                    margin="20px 0"
+                >
                     {!isVoting
                         ? t(`governance.proposal.submit-vote-label`)
                         : t(`governance.proposal.vote-progress-label`)}
-                </VoteButton>
+                </Button>
             </FlexDivCentered>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}

@@ -230,7 +230,7 @@ const Text = styled.span`
 
 const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
     padding: 1px;
-    border-radius: 4px;
+    border-radius: 8px;
     width: 200px;
     background: ${(props) => getColor(props.status)};
 `;
@@ -244,7 +244,7 @@ const Status = styled(FlexDivColumnCentered)<{ status: string }>`
     letter-spacing: 2px;
     color: ${(props) => getColor(props.status)};
     background: ${(props) => props.theme.background.primary};
-    border-radius: 4px;
+    border-radius: 8px;
     text-transform: uppercase;
     width: 198px;
 `;

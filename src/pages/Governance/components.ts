@@ -194,13 +194,6 @@ export const VoteContainer = styled(FlexDivColumnCentered)`
     margin-top: 15px;
 `;
 
-export const VoteButton = styled(SubmitButton)`
-    margin-top: 20px;
-    margin-bottom: 20px;
-    width: 264px;
-    height: 48px;
-`;
-
 export const VoteConfirmation = styled(FlexDiv)`
     font-weight: bold;
     font-size: 16px;
