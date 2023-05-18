@@ -41,10 +41,8 @@ const Whitepaper = lazy(() => import(/* webpackChunkName: "Whitepaper" */ '../La
 const Token = lazy(() => import(/* webpackChunkName: "Token" */ '../LandingPage/articles/Token'));
 
 const GovernancePage = lazy(() => import(/* webpackChunkName: "Governance" */ '../Governance'));
-const Leaderboard = lazy(() => import(/* webpackChunkName: "Leaderboard" */ '../Leaderboard'));
 
 const Markets = lazy(() => import(/* webpackChunkName: "Markets" */ '../Trade'));
-const RangeMarkets = lazy(() => import(/* webpackChunkName: "RangeMarkets" */ '../RangeMarkets'));
 const AMMTrading = lazy(() => import(/* webpackChunkName: "AMMTrading" */ '../AMMTrading'));
 const Wizard = lazy(() => import(/* webpackChunkName: "Wizard" */ '../Wizard'));
 
@@ -269,14 +267,6 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {isPolygon && (
-                                <Route exact path={ROUTES.Options.Leaderboard}>
-                                    <DappLayout>
-                                        <Leaderboard />
-                                    </DappLayout>
-                                </Route>
-                            )}
-
                             <Route
                                 exact
                                 path={ROUTES.Options.MarketMatch}
@@ -300,12 +290,6 @@ const App = () => {
                             <Route exact path={ROUTES.Options.Home}>
                                 <DappLayout>
                                     <Markets />
-                                </DappLayout>
-                            </Route>
-
-                            <Route exact path={ROUTES.Options.RangeMarkets}>
-                                <DappLayout>
-                                    <RangeMarkets />
                                 </DappLayout>
                             </Route>
 
