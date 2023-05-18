@@ -1,4 +1,4 @@
-import { FlexDivCentered, Image } from 'theme/common';
+import { Colors, FlexDivCentered, Image } from 'theme/common';
 import backArrow from 'assets/images/arrow-previous.svg';
 import nextArrow from 'assets/images/arrow-next.svg';
 import React from 'react';
@@ -47,7 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                             fontSize: '13px',
                             fontWeight: 'bold',
                             letterSpacing: '0.4px',
-                            color: '#F6F6FE',
+                            color: Colors.WHITE,
                             margin: 0,
                         }}
                     >
@@ -66,7 +66,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                         fontSize: '13px',
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        color: '#F6F6FE',
+                        color: Colors.WHITE,
                         whiteSpace: 'pre',
                     }}
                 >
@@ -78,11 +78,12 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
 };
 
 const PageSelector = styled(FlexDivCentered)`
-    border: 1px solid #0a2e66;
-    border-radius: 32px;
+    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    background: ${(props) => props.theme.background.primary};
+    border-radius: 20px;
     width: 110px;
     justify-content: space-around;
-    height: 40px;
+    height: 34px;
     @media (max-width: 767px) {
         height: 30px;
         width: 80px;
@@ -95,7 +96,7 @@ const PageLabel = styled.p`
     font-size: 13px;
     font-weight: bold;
     text-align: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     margin-right: 4px;
     @media (max-width: 767px) {
         width: 44px;

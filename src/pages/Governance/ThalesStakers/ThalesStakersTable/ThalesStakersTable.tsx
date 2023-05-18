@@ -67,7 +67,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
         setPage(newPage);
     };
 
-    const [rowsPerPage, setRowsPerPage] = useState(15);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
     const numberOfPages = Math.ceil(stakers.length / rowsPerPage) || 1;
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +137,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                     component={Paper}
                 >
                     <Table aria-label="customized table">
-                        <TableHead style={{ textTransform: 'uppercase', background: ' var(--color-primary)' }}>
+                        <TableHead style={{ textTransform: 'uppercase' }}>
                             <TableRow>
                                 {headCells.map((cell: HeadCell, index) => {
                                     return (
