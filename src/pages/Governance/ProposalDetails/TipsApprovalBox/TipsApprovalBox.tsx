@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { Colors, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { LoaderContainer } from 'pages/Governance/components';
 import styled from 'styled-components';
 import { StatusEnum } from 'constants/governance';
@@ -27,7 +27,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         proposalResults.results.resultsByVoteBalance &&
         proposalResults.results.resultsByVoteBalance[0] >= proposalApprovalVotes;
 
-    const chartColor = isPassed ? '#8208FC' : closed ? 'rgba(130, 8, 252, 0.6)' : 'var(--color-highlight)';
+    const chartColor = isPassed ? Colors.GREEN : closed ? Colors.RED : Colors.ORANGE;
 
     const pieData = useMemo(() => {
         const data = [];
@@ -40,7 +40,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
             const piece = {
                 name: 'vote',
                 value: 1,
-                color: index < numberOfVotes ? chartColor : '#0C1C68',
+                color: index < numberOfVotes ? chartColor : Colors.GRAY,
             };
             data.push(piece);
         }
@@ -134,7 +134,7 @@ const VotedInLabel = styled.span`
     font-weight: 500;
     font-size: 25px;
     line-height: 30px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     text-align: center;
     margin-top: 5px;
 `;
@@ -144,7 +144,7 @@ const VoteNote = styled.span`
     font-size: 12px;
     line-height: 24px;
     text-align: center;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.textColor.quaternary};
     text-transform: uppercase;
 `;
 
@@ -153,7 +153,7 @@ const Votes = styled.span`
     font-size: 20px;
     line-height: 48px;
     text-align: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const StyledPieChartContainer = styled(PieChartContainer)`

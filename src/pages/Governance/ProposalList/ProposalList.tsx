@@ -75,7 +75,7 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
 const NoProposals = styled(FlexDivColumn)`
     margin-top: 30px;
     min-height: 400px;
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     justify-content: space-evenly;
     align-items: center;
     align-self: center;
@@ -84,7 +84,7 @@ const NoProposals = styled(FlexDivColumn)`
 
 const Wrapper = styled.div`
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     grid-gap: 20px;
     margin-top: 25px;
     padding: 0 30px;

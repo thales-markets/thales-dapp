@@ -30,7 +30,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
             ...provided,
             color: Colors.WHITE,
             backgroundColor: state?.isFocused || state.isSelected ? Colors.GRAY : 'transparent',
-            opacity: state.isSelected && !state?.isFocused ? 0.8 : 1,
+            opacity: state.isSelected && !state?.isFocused ? 0.7 : 1,
             cursor: 'pointer',
         }),
         control: (provided: any, state: any) => ({

@@ -187,7 +187,7 @@ const Title = styled(FlexDivColumnCentered)`
     font-size: 20px;
     line-height: 24px;
     text-align: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 40px;
 `;
 
@@ -199,10 +199,9 @@ const DetailsWrapper = styled(FlexDivRow)`
 
 const DetailsContainer = styled(FlexDivColumnCentered)`
     padding: 15px;
-    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
     border-radius: 5px;
-    border: 2px solid #242371;
-    color: #f6f6fe;
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    color: ${(props) => props.theme.textColor.primary};
     &:first-child {
         margin-right: 40px;
         @media (max-width: 767px) {
@@ -218,7 +217,7 @@ const Label = styled.span`
     font-size: 16px;
     line-height: 24px;
     text-align: center;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.textColor.secondary};
     margin-bottom: 5px;
 `;
 
@@ -231,7 +230,7 @@ const Text = styled.span`
 
 const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
     padding: 1px;
-    border-radius: 10px;
+    border-radius: 4px;
     width: 200px;
     background: ${(props) => getColor(props.status)};
 `;
@@ -244,8 +243,8 @@ const Status = styled(FlexDivColumnCentered)<{ status: string }>`
     text-align: center;
     letter-spacing: 2px;
     color: ${(props) => getColor(props.status)};
-    background: var(--color-primary);
-    border-radius: 10px;
+    background: ${(props) => props.theme.background.primary};
+    border-radius: 4px;
     text-transform: uppercase;
     width: 198px;
 `;
@@ -255,7 +254,7 @@ const Body = styled(FlexDivColumn)`
     font-weight: 300;
     font-size: 16px;
     line-height: 24px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     p {
         margin-bottom: 15px;
     }
@@ -270,7 +269,7 @@ const Body = styled(FlexDivColumn)`
         display: block;
         th,
         td {
-            border: 1px solid rgba(202, 145, 220, 0.2);
+            border: 1px solid ${(props) => props.theme.borderColor.tertiary};
             padding: 6px 13px;
         }
     }
@@ -278,7 +277,7 @@ const Body = styled(FlexDivColumn)`
         font-weight: 500;
         font-size: 18px;
         line-height: 24px;
-        color: #f6f6fe;
+        color: ${(props) => props.theme.textColor.primary};
         margin-top: 24px;
         margin-bottom: 16px;
     }
