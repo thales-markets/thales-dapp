@@ -8,9 +8,10 @@ type SelectInputProps = {
     handleChange: (value: number | undefined | null) => void;
     defaultValue?: number;
     width?: number;
+    isDisabled?: boolean;
 };
 
-const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaultValue, width }) => {
+const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaultValue, width, isDisabled }) => {
     const defaultOption = options[defaultValue ? defaultValue : 0];
 
     const customStyled = {
@@ -18,55 +19,63 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
             ...provided,
             width: '100%',
             color: state.selectProps.menuColor,
-            backgroundColor: ' var(--color-primary)',
-            border: '1px solid var(--color-highlight)',
+            backgroundColor: '#181A20',
+            border: '1px solid #848e9c',
+            marginTop: 5,
+            borderRadius: 15,
+            overflow: 'auto',
         }),
         option: (provided: any, state: any) => ({
             ...provided,
-            color: state?.isFocused || state.isSelected ? ' var(--color-primary)' : 'var(--color-highlight)',
-            backgroundColor: state?.isFocused || state.isSelected ? 'var(--color-highlight)' : ' var(--color-primary)',
-            opacity: state.isSelected ? 0.7 : 1,
+            color: '#FFFFFF',
+            backgroundColor: state?.isFocused || state.isSelected ? '#2B3139' : 'transparent',
+            opacity: state.isSelected && !state?.isFocused ? 0.8 : 1,
             cursor: 'pointer',
         }),
-        control: (provided: any) => ({
+        control: (provided: any, state: any) => ({
             ...provided,
-            backgroundColor: ' var(--color-primary)',
-            borderColor: 'var(--color-highlight)',
-            color: 'var(--color-highlight)',
+            backgroundColor: '#181A20',
+            borderColor: '#848e9c',
+            color: '#848e9c',
             borderRadius: '15px',
-            ':hover': {
-                ...provided[':hover'],
-                boxShadow: '0px 1px 15px rgba(100, 217, 254, 0.7)',
-            },
             width: width,
             cursor: 'pointer',
+            boxShadow: 'none',
+            '&:hover': {
+                border: '1px solid #03DAC5',
+                boxShadow: 'none',
+            },
+            opacity: state.isDisabled ? 0.4 : 1,
         }),
         placeholder: (provided: any) => ({
             ...provided,
-            color: 'var(--color-highlight)',
+            color: '#FFFFFF',
         }),
         singleValue: (provided: any) => ({
             ...provided,
-            color: 'var(--color-highlight)',
+            color: '#FFFFFF',
         }),
         dropdownIndicator: (provided: any) => ({
             ...provided,
-            color: 'var(--color-highlight)',
+            color: '#FFFFFF',
             [':hover']: {
                 ...provided[':hover'],
-                color: 'var(--color-highlight)',
+                color: '#FFFFFF',
             },
         }),
     };
 
     return (
         <Select
+            value={defaultOption}
             options={options}
             styles={customStyled}
-            onChange={(_props) => {
-                handleChange(Number(_props?.value));
+            onChange={(props) => {
+                handleChange(Number(props?.value));
             }}
             defaultValue={defaultOption}
+            isSearchable={false}
+            isDisabled={isDisabled}
         />
     );
 };
