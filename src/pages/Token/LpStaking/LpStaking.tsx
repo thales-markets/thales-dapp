@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { ButtonContainer, Line, StyledInfoIcon, StyledMaterialTooltip } from '../components';
+import { ButtonContainer, Line } from '../components';
 import Instructions from './Instructions';
 import YourTransactions from './Transactions';
 import { useSelector } from 'react-redux';
@@ -27,6 +27,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
 import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Tooltip from 'components/TooltipV2/Tooltip';
 
 enum SectionType {
     INFO,
@@ -103,13 +104,7 @@ const LpStaking: React.FC = () => {
                         <SectionLabelContent type={SectionType.INFO}>
                             {t('options.earn.lp-staking.apr.total')}
                         </SectionLabelContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.apr.total-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('options.earn.lp-staking.apr.total-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO} colored={true}>
@@ -122,25 +117,13 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper columnsSpan={2} backgroundType={BackgroundType.INFO}>
                     <SectionDetails positionUp={true}>
                         <SectionDetailsLabel>{t('options.earn.lp-staking.apr.thales')}</SectionDetailsLabel>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.apr.thales-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('options.earn.lp-staking.apr.thales-tooltip')} />
                         <SectionDetailsValue>{gelatoQuery.isLoading ? '0%' : gelatoData?.apr}</SectionDetailsValue>
                     </SectionDetails>
                     <Line margin={'0 15px'} />
                     <SectionDetails positionUp={false}>
                         <SectionDetailsLabel>{t('options.earn.lp-staking.apr.op')}</SectionDetailsLabel>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.apr.op-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('options.earn.lp-staking.apr.op-tooltip')} />
                         <SectionDetailsValue>
                             {gelatoQuery.isLoading ? '0%' : gelatoData?.secondApr}
                         </SectionDetailsValue>
@@ -291,13 +274,7 @@ const LpStaking: React.FC = () => {
                         <SectionLabelContent type={SectionType.INFO}>
                             {t('options.earn.lp-staking.info.staked-balance')}
                         </SectionLabelContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.info.staked-balance-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('options.earn.lp-staking.info.staked-balance-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>
@@ -330,13 +307,7 @@ const LpStaking: React.FC = () => {
                                 components={[isMobile() ? '' : ' (tvl)']}
                             />
                         </SectionLabelContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.info.tvl-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('options.earn.lp-staking.info.tvl-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>
@@ -351,13 +322,7 @@ const LpStaking: React.FC = () => {
                         <SectionLabelContent type={SectionType.INFO}>
                             {t('options.earn.lp-staking.info.share')}
                         </SectionLabelContent>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={<Trans i18nKey={'options.earn.lp-staking.info.share-tooltip'} />}
-                            interactive
-                        >
-                            <StyledInfoIcon />
-                        </StyledMaterialTooltip>
+                        <Tooltip overlay={t('options.earn.lp-staking.info.share-tooltip')} />
                     </SectionLabel>
                     <SectionValue type={SectionType.INFO}>
                         <SectionValueContent type={SectionType.INFO}>

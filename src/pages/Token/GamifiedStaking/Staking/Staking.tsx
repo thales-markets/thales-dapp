@@ -1,12 +1,6 @@
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import { THALES_CURRENCY } from 'constants/currency';
-import {
-    StyledInfoIcon,
-    StyledInfoIconGreen,
-    StyledMaterialTooltip,
-    Tip125Link,
-    Tip17Link,
-} from 'pages/Token/components';
+import { Tip125Link, Tip17Link } from 'pages/Token/components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -25,6 +19,8 @@ import { getIsOVM } from 'utils/network';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import { StakingData, UserStakingData } from 'types/token';
+import Tooltip from 'components/TooltipV2/Tooltip';
+import { Colors } from 'theme/common';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -138,15 +134,7 @@ const Staking: React.FC = () => {
         return (
             <SectionLabel>
                 <SectionLabelContent>{t(labelTransKey, defaultValue)}</SectionLabelContent>
-                {!noIcon && (
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={<Trans i18nKey={labelTransKey + '-tooltip'} />}
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
-                )}
+                {!noIcon && <Tooltip overlay={t(labelTransKey + '-tooltip')} />}
             </SectionLabel>
         );
     };
@@ -169,9 +157,8 @@ const Staking: React.FC = () => {
                             {formattedAPY}%
                             <BonusInfo>
                                 {' + ' + formattedBonusAPY}%
-                                <StyledMaterialTooltip
-                                    arrow={true}
-                                    title={
+                                <Tooltip
+                                    overlay={
                                         <Trans
                                             i18nKey={
                                                 isL2
@@ -185,10 +172,10 @@ const Staking: React.FC = () => {
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
-                                    interactive
-                                >
-                                    <StyledInfoIconGreen />
-                                </StyledMaterialTooltip>
+                                    iconColor={Colors.GREEN}
+                                    iconFontSize={20}
+                                    top={-2}
+                                />
                             </BonusInfo>
                         </SectionValueContent>
                     </SectionValue>
@@ -265,9 +252,8 @@ const Staking: React.FC = () => {
                             {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
                             <BonusInfo>
                                 {' + ' + formatCurrency(bonusEstimatedRewards)}
-                                <StyledMaterialTooltip
-                                    arrow={true}
-                                    title={
+                                <Tooltip
+                                    overlay={
                                         <Trans
                                             i18nKey="options.earn.gamified-staking.staking.bonus-estimated-rewards-tooltip"
                                             components={[
@@ -277,10 +263,10 @@ const Staking: React.FC = () => {
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
-                                    interactive
-                                >
-                                    <StyledInfoIconGreen />
-                                </StyledMaterialTooltip>
+                                    iconColor={Colors.GREEN}
+                                    iconFontSize={20}
+                                    top={-2}
+                                />
                             </BonusInfo>
                         </SectionValueContent>
                     </SectionValue>
@@ -447,7 +433,7 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boo
 `;
 
 const BonusInfo = styled.span`
-    color: #50ce99;
+    color: #03dac5;
 `;
 
 const StakedBalanceInfo = styled.div`
