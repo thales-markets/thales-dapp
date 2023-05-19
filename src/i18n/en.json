@@ -303,6 +303,8 @@
         "select": "select",
         "or": "or",
         "enable-wallet-access": {
+            "approve": "Approve",
+            "approve-progress": "Approving",
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}...",
             "approve-all-label": "Approve all",
@@ -370,7 +372,8 @@
         },
         "no-data-available": "No data available",
         "all": "All",
-        "none": "none"
+        "none": "none",
+        "enter-amount": "Enter amount"
     },
     "modals": {
         "gwei": {

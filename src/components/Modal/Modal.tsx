@@ -61,7 +61,7 @@ export const Modal: React.FC<ModalProps> = ({
             <Container mobileStyle={mobileStyle?.container}>
                 <Header mobileStyle={mobileStyle?.header}>
                     <Title>{title}</Title>
-                    <FlexDivRow>{<CloseIcon onClick={onClose} />}</FlexDivRow>
+                    <FlexDivRow>{<CloseIcon className="icon icon--x-sign" onClick={onClose} />}</FlexDivRow>
                 </Header>
                 {children}
             </Container>
@@ -72,7 +72,7 @@ export const Modal: React.FC<ModalProps> = ({
 const Container = styled.div<{ mobileStyle?: CSSProperties }>`
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     background: ${(props) => props.theme.background.primary};
-    padding: 25px 30px 35px 30px;
+    padding: 20px;
     border-radius: 23px;
     @media (max-width: 575px) {
         ${(props) =>
@@ -90,23 +90,21 @@ const Header = styled(FlexDivRow)<{ mobileStyle?: CSSProperties }>`
 `;
 
 const Title = styled(FlexDiv)`
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 100%;
+    font-size: 18px;
+    line-height: 110%;
+    color: ${(props) => props.theme.textColor.secondary};
     text-align: center;
-    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const CloseIcon = styled.i`
+    font-family: Icons !important;
     font-size: 16px;
-    margin-top: 1px;
+    line-height: 16px;
     cursor: pointer;
-    &:before {
-        font-family: ExoticIcons !important;
-        content: '\\004F';
-        color: ${(props) => props.theme.textColor.primary};
-    }
+    color: ${(props) => props.theme.textColor.secondary};
 `;
 
 export default Modal;

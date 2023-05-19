@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { BigNumber, ethers } from 'ethers';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
-import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
-import Checkbox from 'components/Checkbox';
-import Button from 'components/ButtonV2';
-import Modal from 'components/Modal';
-import { getAmountForApproval } from 'utils/amm';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/ButtonV2';
+import Checkbox from 'components/Checkbox';
 import Input from 'components/Input';
+import Modal from 'components/Modal';
+import { BigNumber, ethers } from 'ethers';
+import React, { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { getAmountForApproval } from 'utils/amm';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 type ApprovalModalProps = {
     defaultAmount: number | string;
@@ -61,12 +61,11 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
             <Button
                 disabled={isButtonDisabled}
                 onClick={() => onSubmit(approveAll ? ethers.constants.MaxUint256 : amountConverted)}
+                additionalStyles={{ textTransform: 'none' }}
             >
                 {!isAllowing
-                    ? t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })
-                    : t('common.enable-wallet-access.approve-progress-label', {
-                          currencyKey: tokenSymbol,
-                      })}
+                    ? t('common.enable-wallet-access.approve').toUpperCase() + ' ' + tokenSymbol
+                    : t('common.enable-wallet-access.approve-progress').toUpperCase() + ' ' + tokenSymbol + '...'}
             </Button>
         );
     };
@@ -77,7 +76,7 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
 
     return (
         <Modal
-            title={t('common.enable-wallet-access.approve-label', { currencyKey: tokenSymbol })}
+            title={t('common.enable-wallet-access.approve', { currencyKey: tokenSymbol })}
             onClose={onClose}
             shouldCloseOnOverlayClick={false}
             customStyle={{ overlay: { zIndex: 201 } }}
@@ -92,13 +91,18 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                         label={t('common.enable-wallet-access.approve-all-label')}
                     />
                 </CheckboxContainer>
-                <Text>{t('common.or')}</Text>
-                <Text>{t('common.enable-wallet-access.custom-amount-label')}</Text>
+                <TextContainer>
+                    <Text>{t('common.or')}</Text>
+                </TextContainer>
+                <InputLabel>
+                    <Text>{t('common.enable-wallet-access.custom-amount-label')}</Text>
+                </InputLabel>
                 <Input
                     value={amount}
                     valueChange={setAmount}
                     disabled={approveAll || isAllowing}
                     subValue={tokenSymbol}
+                    placeholder={t('common.enter-amount')}
                     showValidation={!approveAll && !isAmountValid}
                     validationMessage={t('common.errors.invalid-amount-max', { max: maxApproveAmount })}
                 />
@@ -109,48 +113,35 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
 };
 
 const Container = styled(FlexDivColumnCentered)`
-    width: 450px;
+    width: 306px;
     @media (max-width: 575px) {
         width: auto;
     }
 `;
 
-const ButtonContainer = styled(FlexDivCentered)`
-    margin: 30px 0 10px 0;
+const CheckboxContainer = styled(FlexDivRow)`
+    margin: 20px 0;
 `;
 
-const CheckboxContainer = styled(FlexDivCentered)`
-    margin: 40px 0 5px 0;
-    label {
-        font-size: 25px;
-        line-height: 52px;
-        padding-left: 32px;
-        font-weight: bold;
-    }
-    span {
-        :after {
-            height: 14px;
-            width: 5px;
-            left: 5px;
-            top: -1px;
-            border-width: 0 3px 3px 0;
-        }
-        height: 25px;
-        width: 25px;
-        border-radius: 5px;
-        margin-top: 12px;
-        border: 3px solid ${(props) => props.theme.borderColor.secondary};
-    }
+const TextContainer = styled(FlexDivCentered)`
+    margin-bottom: 20px;
 `;
 
-const Text = styled(FlexDivCentered)`
+const InputLabel = styled(FlexDivRow)`
+    margin-bottom: 10px;
+`;
+
+const Text = styled.span`
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 100%;
-    text-align: center;
     color: ${(props) => props.theme.textColor.primary};
-    margin-bottom: 20px;
+`;
+
+const ButtonContainer = styled(FlexDivCentered)`
+    margin: 10px 0;
 `;
 
 export default ApprovalModal;

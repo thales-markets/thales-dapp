@@ -37,15 +37,15 @@ const CheckboxInput = styled.input`
 `;
 
 const CheckboxContainer = styled.label`
+    width: 100%;
     display: block;
     position: relative;
-    padding-left: 25px;
-    margin-bottom: 10px;
     cursor: pointer;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: bold;
-    font-size: 13px;
-    line-height: 24px;
+    font-size: 18px;
+    line-height: 120%;
     letter-spacing: 0.4px;
     color: ${(props) => props.theme.textColor.primary};
     -webkit-user-select: none;
@@ -64,21 +64,21 @@ const CheckboxContainer = styled.label`
 const Checkmark = styled.span`
     position: absolute;
     top: 0;
-    left: 0;
-    height: 15px;
-    width: 15px;
-    border: 1px solid ${(props) => props.theme.textColor.primary};
+    right: 0;
+    height: 22px;
+    width: 22px;
+    border-radius: 5px;
+    border: 2px solid ${(props) => props.theme.textColor.primary};
     background-color: transparent;
-    border-radius: 2px;
-    margin-top: 4px;
+
     :after {
         content: '';
         position: absolute;
         display: none;
-        left: 3px;
-        top: -2px;
+        left: 5px;
+        top: -1px;
         width: 5px;
-        height: 10px;
+        height: 14px;
         border: solid ${(props) => props.theme.textColor.primary};
         border-width: 0 2px 2px 0;
         -webkit-transform: rotate(45deg);

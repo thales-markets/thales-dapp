@@ -190,7 +190,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             currency = getStableCoinForNetwork(networkId);
         }
 
-        return { address, currencyOrSellPosition: currency };
+        return { address, currency };
     }, [selectedStableIndex, networkId, isNonDefaultStable]);
 
     const referral =
@@ -719,14 +719,18 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         if (!hasAllowance) {
             return (
-                <Button {...defaultButtonProps} disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
+                <Button
+                    {...defaultButtonProps}
+                    additionalStyles={{ textTransform: 'none' }}
+                    disabled={isAllowing}
+                    onClick={() => setOpenApprovalModal(true)}
+                >
                     {!isAllowing
-                        ? t('common.enable-wallet-access.approve-label', {
-                              currencyKey: collateral.currencyOrSellPosition,
-                          })
-                        : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: collateral.currencyOrSellPosition,
-                          })}
+                        ? t('common.enable-wallet-access.approve').toUpperCase() + ' ' + collateral.currency
+                        : t('common.enable-wallet-access.approve-progress').toUpperCase() +
+                          ' ' +
+                          collateral.currency +
+                          '...'}
                 </Button>
             );
         }
@@ -905,7 +909,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 <ApprovalModal
                     // add three percent to approval amount to take into account price changes
                     defaultAmount={roundNumberToDecimals(ONE_HUNDRED_AND_THREE_PERCENT * Number(paidAmount))}
-                    tokenSymbol={collateral.currencyOrSellPosition}
+                    tokenSymbol={collateral.currency}
                     isAllowing={isAllowing}
                     onSubmit={handleAllowance}
                     onClose={() => setOpenApprovalModal(false)}
