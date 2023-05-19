@@ -98,7 +98,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [liquidity, setLiquidity] = useState(0);
-    const [isAmountValid, setIsAmountValid] = useState(true);
     const [errorMessageKey, setErrorMessageKey] = useState('');
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [openTradingDetailsModal, setOpenTradingDetailsModal] = useState(false);
@@ -204,6 +203,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         setPriceProfit('');
         setPriceImpact('');
         setGasLimit(null);
+        setErrorMessageKey('');
     };
 
     const fetchGasLimit = useCallback(
@@ -495,6 +495,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     useEffect(() => {
         if (!market.address) {
             setPaidAmount('');
+            setErrorMessageKey('');
         }
     }, [market.address]);
 
@@ -633,20 +634,18 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     ]);
 
     useEffect(() => {
-        let isValid = true;
+        let messageKey = '';
 
         if (insufficientLiquidity) {
-            isValid = false;
-            setErrorMessageKey('common.errors.max-limit-exceeded');
+            messageKey = 'common.errors.max-limit-exceeded';
         } else if (
             isWalletConnected &&
             ((Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) || stableBalance === 0)
         ) {
-            isValid = false;
-            setErrorMessageKey('common.errors.insufficient-balance-wallet');
+            messageKey = 'common.errors.insufficient-balance-wallet';
         }
 
-        setIsAmountValid(isValid);
+        setErrorMessageKey(messageKey);
     }, [paidAmount, stableBalance, insufficientLiquidity, t, isWalletConnected]);
 
     useEffect(() => {
@@ -853,7 +852,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         placeholder={t('options.trade.amm-trading.enter-amount')}
                         valueChange={(value) => onTotalPriceValueChange(value)}
                         container={inputFieldProps}
-                        showValidation={!isAmountValid}
+                        showValidation={!!errorMessageKey}
                         validationMessage={t(errorMessageKey, {
                             currencyKey: getStableCoinForNetwork(
                                 networkId,
