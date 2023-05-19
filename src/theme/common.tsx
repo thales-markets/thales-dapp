@@ -484,4 +484,6 @@ export const Colors = {
     RED_DARK: '#D66D75',
 
     ORANGE: '#F7B91A',
+
+    YELLOW: '#FFCC00',
 };

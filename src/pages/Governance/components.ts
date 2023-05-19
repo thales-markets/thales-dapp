@@ -1,22 +1,21 @@
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow, FlexDivCentered } from 'theme/common';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow, FlexDivCentered, Colors } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { StatusEnum } from 'constants/governance';
-import { SubmitButton } from 'components/OldVersion/old-components';
 
 export const SidebarTitle = styled(FlexDivCentered)`
     font-weight: 500;
     font-size: 25px;
     line-height: 48px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 15px;
     text-align: center;
 `;
 
 export const SidebarContentWrapper = styled(FlexDivColumn)`
-    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+    background: ${(props) => props.theme.background.secondary};
     padding: 1px 0 0 0;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 15px 15px;
     height: 100%;
 `;
 
@@ -27,8 +26,8 @@ export const SidebarContent = styled(FlexDivColumn)<{ type?: string; isCouncilVo
             : props.isCouncilVoting && props.type === 'results'
             ? '0 0 10px 0'
             : '0'};
-    background-color: var(--color-primary);
-    border-radius: 0 0 5px 5px;
+    background: ${(props) => props.theme.background.primary};
+    border-radius: 0 0 15px 15px;
 `;
 
 export const ResultRow = styled(FlexDivColumnCentered)<{
@@ -39,23 +38,25 @@ export const ResultRow = styled(FlexDivColumnCentered)<{
     paddingTop?: number;
 }>`
     padding: 10px 20px;
-    background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : ' var(--color-primary)')};
+    background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : props.theme.background.primary)};
     opacity: ${(props) => (props.opacity ? props.opacity : 1)};
     border-bottom: ${(props) => (props.borderColor ? `1px solid ${props.borderColor}` : 'none')};
     padding-bottom: ${(props) => (props.paddingBottom ? props.paddingBottom : '10')}px;
-    border-radius: ${(props) => (props.borderColor ? 0 : 5)}px;
+    border-radius: ${(props) => (props.borderColor ? 0 : 15)}px;
 `;
 
 export const VoteRow = styled(FlexDivColumnCentered)`
     padding: 10px;
-    border-bottom: 1px solid #2d3079;
+    :not(:last-child) {
+        border-bottom: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    }
 `;
 
 export const SidebarRowData = styled(FlexDivRow)<{ fontWeight?: number }>`
     font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 600)};
     font-size: 16px;
     line-height: 36px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 575px) {
         font-size: 14px;
     }
@@ -67,14 +68,14 @@ export const Percentage = styled(FlexDiv)`
 
 export const RowPercentage = styled.div`
     height: 3px;
-    border: 1px solid #4564ae;
+    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 10px;
-    background-color: #4564ae;
+    background-color: ${(props) => props.theme.background.secondary};
 `;
 
 export const RowPercentageIndicator = styled(FlexDiv)<{ width: number }>`
     height: 5px;
-    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+    background: linear-gradient(90deg, #36d1dc -1.48%, #5b86e5 102.44%);
     width: ${(props) => `${props.width}%`};
     position: absolute;
     border-radius: 10px;
@@ -101,25 +102,25 @@ export const Votes = styled.div``;
 
 export const LoaderContainer = styled(FlexDivColumn)<{ height?: number }>`
     min-height: ${(props) => (props.height ? props.height : 400)}px;
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     justify-content: space-evenly;
     position: relative;
-    border-radius: 5px;
+    border-radius: 15px;
     margin-top: 10px;
     margin-bottom: 10px;
 `;
 
 export const NoVotes = styled(FlexDivColumn)`
     min-height: 200px;
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     justify-content: space-evenly;
     align-items: center;
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
     text-align: center;
-    color: #f6f6fe;
-    border-radius: 5px;
+    color: ${(props) => props.theme.textColor.primary};
+    border-radius: 15px;
 `;
 
 export const Blockie = styled.img`
@@ -130,14 +131,14 @@ export const Blockie = styled.img`
 `;
 
 export const StyledLink = styled.a`
-    color: #f6f6fe;
+    color: ${(props) => props.theme.link.textColor.secondary};
     &path {
-        fill: #f6f6fe;
+        fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
-        color: #00f9ff;
+        color: ${(props) => props.theme.link.textColor.primary};
         & path {
-            fill: #00f9ff;
+            fill: ${(props) => props.theme.link.textColor.primary};
         }
     }
 `;
@@ -158,11 +159,11 @@ export const ArrowIconMedium = styled(ArrowHyperlinkIcon)`
 export const getColor = (status: string) => {
     switch (status) {
         case StatusEnum.Pending:
-            return '#748BC6';
+            return Colors.GRAY;
         case StatusEnum.Closed:
-            return '#8208FC';
+            return Colors.GREEN;
         default:
-            return 'var(--color-highlight)';
+            return Colors.ORANGE;
     }
 };
 
@@ -171,7 +172,7 @@ export const DetailsTitle = styled(FlexDivRow)`
     font-size: 20px;
     line-height: 24px;
     text-align: center;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 5px;
     margin-top: 40px;
 `;
@@ -185,25 +186,18 @@ export const VotingPowerTitle = styled(DetailsTitle)`
 export const Divider = styled.hr`
     width: 100%;
     border: none;
-    border-top: 1px solid #748bc6;
+    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
 `;
 
 export const VoteContainer = styled(FlexDivColumnCentered)`
     margin-top: 15px;
 `;
 
-export const VoteButton = styled(SubmitButton)`
-    margin-top: 20px;
-    margin-bottom: 20px;
-    width: 264px;
-    height: 48px;
-`;
-
 export const VoteConfirmation = styled(FlexDiv)`
     font-weight: bold;
     font-size: 16px;
     line-height: 34px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     padding: 0 10px;
     justify-content: center;
 `;
@@ -214,10 +208,10 @@ export const ViewMore = styled(FlexDivCentered)<{ padding?: string }>`
     font-weight: normal;
     font-size: 16px;
     line-height: 36px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.link.textColor.secondary};
     &:hover {
         cursor: pointer;
-        color: #00f9ff;
+        color: ${(props) => props.theme.link.textColor.primary};
     }
 `;
 
@@ -225,10 +219,10 @@ export const VotesCount = styled(FlexDivColumnCentered)`
     font-weight: 500;
     font-size: 20px;
     line-height: 48px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.button.textColor.primary};
     margin-bottom: 12px;
     text-align: center;
-    background: #4564ae;
+    background: ${(props) => props.theme.button.background.primary};
     border-radius: 9999px;
     height: 30px;
     min-width: 30px;

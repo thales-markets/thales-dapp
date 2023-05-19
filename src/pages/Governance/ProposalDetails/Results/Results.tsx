@@ -13,7 +13,7 @@ import {
     ViewMore,
 } from 'pages/Governance/components';
 import { truncateText } from 'utils/formatters/string';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import {
     FIRST_COUNCIL_ELECTIONS_ID,
     NUMBER_OF_COUNCIL_MEMBERS,
@@ -24,6 +24,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import { ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
 import { LightMediumTooltip } from 'components/OldVersion/old-components';
+import { ThemeInterface } from 'types/ui';
 
 type ResultsProps = {
     proposalResults?: ProposalResults;
@@ -43,6 +44,7 @@ const Results: React.FC<ResultsProps> = ({
     showAll,
 }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const [viewCount, setViewCount] = useState<number>(showAll ? 1000 : 10);
     const spaceSymbol =
         proposalId.toLowerCase() === FIRST_COUNCIL_ELECTIONS_ID.toLowerCase() || !proposalResults
@@ -90,15 +92,10 @@ const Results: React.FC<ResultsProps> = ({
                         return (
                             <ResultRow
                                 key={label}
-                                backgroundColor={
-                                    (isCouncilVoting || isCouncilResults) && index < numberOfCouncilMemebers
-                                        ? '#1B1C33'
-                                        : ' var(--color-primary)'
-                                }
                                 opacity={isCouncilResults && index >= numberOfCouncilMemebers ? 0.5 : 1}
                                 borderColor={
                                     (isCouncilVoting || isCouncilResults) && index === numberOfCouncilMemebers - 1
-                                        ? '#3f1fb4'
+                                        ? theme.borderColor.tertiary
                                         : undefined
                                 }
                                 paddingBottom={

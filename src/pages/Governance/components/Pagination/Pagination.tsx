@@ -1,4 +1,4 @@
-import { FlexDivCentered, Image } from 'theme/common';
+import { Colors, FlexDivCentered, Image } from 'theme/common';
 import backArrow from 'assets/images/arrow-previous.svg';
 import nextArrow from 'assets/images/arrow-next.svg';
 import React from 'react';
@@ -10,19 +10,6 @@ type PaginationProps = {
     numberOfPages: number;
     setPage: (params: number) => void;
 };
-
-const Arrow = styled(Image)`
-    color: #748bc6;
-    width: 6px;
-    height: 10px;
-    box-sizing: content-box;
-    cursor: pointer;
-    padding: 10px;
-    &.disabled {
-        opacity: 0.2;
-        cursor: default;
-    }
-`;
 
 const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage }) => {
     const { t } = useTranslation();
@@ -44,10 +31,9 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                     <Arrow src={backArrow} className={page === 0 ? 'disabled' : ''} onClick={PreviousPage} />
                     <p
                         style={{
-                            fontSize: '13px',
-                            fontWeight: 'bold',
+                            fontSize: '14px',
                             letterSpacing: '0.4px',
-                            color: '#F6F6FE',
+                            color: Colors.WHITE,
                             margin: 0,
                         }}
                     >
@@ -63,10 +49,9 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                     style={{
                         margin: 0,
                         width: '64px',
-                        fontSize: '13px',
-                        fontWeight: 'bold',
+                        fontSize: '14px',
                         textAlign: 'center',
-                        color: '#F6F6FE',
+                        color: Colors.WHITE,
                         whiteSpace: 'pre',
                     }}
                 >
@@ -78,11 +63,12 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
 };
 
 const PageSelector = styled(FlexDivCentered)`
-    border: 1px solid #0a2e66;
-    border-radius: 32px;
+    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    background: ${(props) => props.theme.background.primary};
+    border-radius: 20px;
     width: 110px;
     justify-content: space-around;
-    height: 40px;
+    height: 34px;
     @media (max-width: 767px) {
         height: 30px;
         width: 80px;
@@ -92,13 +78,25 @@ const PageSelector = styled(FlexDivCentered)`
 const PageLabel = styled.p`
     margin: 0;
     width: 64px;
-    font-size: 13px;
-    font-weight: bold;
+    font-size: 14px;
     text-align: center;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     margin-right: 4px;
     @media (max-width: 767px) {
         width: 44px;
+    }
+`;
+
+const Arrow = styled(Image)`
+    color: ${(props) => props.theme.textColor.primary};
+    width: 6px;
+    height: 10px;
+    box-sizing: content-box;
+    cursor: pointer;
+    padding: 10px;
+    &.disabled {
+        opacity: 0.2;
+        cursor: default;
     }
 `;
 

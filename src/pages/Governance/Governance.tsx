@@ -254,27 +254,26 @@ const Container = styled(FlexDivRow)`
 `;
 
 const MainContentContainer = styled.div<{ isOverviewPage: boolean }>`
-    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.secondary)};
     width: 66%;
-    padding: 1px;
-    border-radius: 5px;
+    padding: 2px;
+    border-radius: 15px;
     height: 100%;
     @media (max-width: 1200px) {
         width: 100%;
     }
     @media (max-width: 767px) {
         border: none;
-        background: ${(props) =>
-            props.isOverviewPage ? 'transparent' : 'linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);'};
+        background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.secondary)};
     }
 `;
 
 const MainContentWrapper = styled.div<{ isOverviewPage: boolean }>`
-    border-radius: 5px;
-    padding: 25px 0px 30px 0px;
-    background: var(--color-primary);
+    border-radius: 15px;
+    padding: ${(props) => (props.isOverviewPage ? '0px' : '25px 0px 30px 0px')};
+    background: ${(props) => props.theme.background.primary};
     @media (max-width: 767px) {
-        background: ${(props) => (props.isOverviewPage ? 'transparent' : ' var(--color-primary)')};
+        background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.primary)};
         padding: ${(props) => (props.isOverviewPage ? '0px 0px 10px 0px' : '25px 0px 30px 0px')};
     }
 `;
@@ -289,9 +288,9 @@ const SidebarContainer = styled(FlexDivColumn)`
 `;
 
 const SidebarWrapper = styled.div`
-    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
-    border-radius: 5px;
-    padding: 1px;
+    background: ${(props) => props.theme.background.secondary};
+    border-radius: 15px;
+    padding: 2px;
     margin-bottom: 20px;
     &:first-child {
         @media (max-width: 1200px) {
@@ -301,8 +300,8 @@ const SidebarWrapper = styled.div`
 `;
 
 const Sidebar = styled.div`
-    background: var(--color-primary);
-    border-radius: 5px;
+    background: ${(props) => props.theme.background.primary};
+    border-radius: 15px;
     padding: 15px 0px 0px 0px;
 `;
 
@@ -323,19 +322,19 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     font-weight: 500;
     font-size: 20px;
     line-height: 48px;
-    color: #748bc6;
+    color: ${(props) => props.theme.textColor.primary};
     user-select: none;
-    border-bottom: 5px solid var(--color-primary);
+    border-bottom: 5px solid ${(props) => props.theme.background.primary};
     margin-left: 25px;
     margin-right: 25px;
     &.selected {
         transition: 0.2s;
-        color: #f6f6fe;
-        border-bottom: 5px solid var(--color-highlight);
+        color: ${(props) => props.theme.textColor.primary};
+        border-bottom: 5px solid ${(props) => props.theme.borderColor.quaternary};
     }
     &:hover:not(.selected) {
         cursor: pointer;
-        color: #00f9ff;
+        color: ${(props) => props.theme.textColor.quaternary};
     }
 `;
 
@@ -352,15 +351,15 @@ const BackLink = styled(FlexDivCentered)`
     font-weight: normal;
     font-size: 16px;
     line-height: 20px;
-    color: #b8c6e5;
+    color: ${(props) => props.theme.link.textColor.secondary};
     &path {
-        fill: #b8c6e5;
+        fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
         cursor: pointer;
-        color: #00f9ff;
+        color: ${(props) => props.theme.link.textColor.primary};
         & path {
-            fill: #00f9ff;
+            fill: ${(props) => props.theme.link.textColor.primary};
         }
     }
 `;

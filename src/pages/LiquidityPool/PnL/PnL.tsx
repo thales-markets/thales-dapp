@@ -22,7 +22,6 @@ import {
 import { Colors, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { formatPercentageWithSign } from 'utils/formatters/number';
 import { LiquidityPoolPnlType } from 'constants/liquidityPool';
-import { UI_COLORS } from 'constants/ui';
 
 type PnlProps = {
     lifetimePnl: number;
@@ -78,7 +77,7 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                     cx={cx}
                     cy={cy}
                     r="4"
-                    fill={value === 0 ? '#8884d8' : value > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}
+                    fill={value === 0 ? Colors.BLUE_DARK : value > 0 ? Colors.GREEN : Colors.RED}
                 />
             </svg>
         );
@@ -96,9 +95,7 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                     <LifetimePnlContainer>
                         <LifetimePnlLabel>{t('liquidity-pool.pnl.lifetime-pnl')}:</LifetimePnlLabel>
                         <LifetimePnl
-                            color={
-                                lifetimePnl === 0 ? UI_COLORS.WHITE : lifetimePnl > 0 ? UI_COLORS.GREEN : UI_COLORS.RED
-                            }
+                            color={lifetimePnl === 0 ? Colors.WHITE : lifetimePnl > 0 ? Colors.GREEN : Colors.RED}
                         >
                             {formatPercentageWithSign(lifetimePnl)}
                         </LifetimePnl>
@@ -141,7 +138,7 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                                     {liquidityPoolPnls.map((entry, index) => (
                                         <Cell
                                             key={`cell-${index}`}
-                                            fill={entry.pnlPerRound > 0 ? UI_COLORS.GREEN : UI_COLORS.RED}
+                                            fill={entry.pnlPerRound > 0 ? Colors.GREEN : Colors.RED}
                                         />
                                     ))}
                                 </Bar>
@@ -149,7 +146,7 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                                 <Line
                                     type="monotone"
                                     dataKey="cumulativePnl"
-                                    stroke="#8884d8"
+                                    stroke={Colors.BLUE_DARK}
                                     strokeWidth={2}
                                     dot={<CustomizedDot />}
                                 />

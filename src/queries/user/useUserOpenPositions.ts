@@ -10,7 +10,8 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { orderBy } from 'lodash';
-// import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
+import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
+import { binaryOptionPositionContract } from 'utils/contracts/binaryOptionsPositionContract';
 
 export type UserLivePositions = {
     currencyKey: string;
@@ -68,50 +69,50 @@ const useUserOpenPositions = (
                             On subgraph there is an issue with plus function, so when user buy the same position several times, 
                             it sums up to value which is higher than it has on contract. Read position balance from contract!
                             example: 1st buy: 12.288200907691198
-                                    2nd buy:  1.2302865754108085
+                                     2nd buy:  1.2302865754108085
                                 sum on graph: 13.518487483102007
-                            sum on contract: 13.5184874831020065
+                             sum on contract: 13.5184874831020065
                         */
-                        // const marketContract = new ethers.Contract(
-                        //     positionBalance.position.market.id,
-                        //     binaryOptionMarketContract.abi,
-                        //     snxJSConnector.provider
-                        // );
-                        // const balances = await marketContract.balancesOf(walletAddress);
-                        // const contractPositionBalance = balances[positionBalance.position.side];
+                        const positionContract = new ethers.Contract(
+                            positionBalance.position.id,
+                            binaryOptionPositionContract.abi,
+                            snxJSConnector.provider
+                        );
+                        const contractPositionBalance = await positionContract.balanceOf(walletAddress);
 
                         const { ammContract } = snxJSConnector as any;
                         const ammQuote = await ammContract.sellToAmmQuote(
                             positionBalance.position.market.id,
                             SIDE[positionBalance.position.side],
-                            positionBalance.amount
+                            contractPositionBalance
                         );
 
                         return {
                             ...positionBalance,
+                            amount: contractPositionBalance,
                             value: stableCoinFormatter(ammQuote, networkId),
                         };
                     }),
                 ]),
                 Promise.all([
                     ...liveRangedPositions.map(async (positionBalance: any) => {
-                        // const marketContract = new ethers.Contract(
-                        //     positionBalance.position.market.id,
-                        //     binaryOptionMarketContract.abi,
-                        //     snxJSConnector.provider
-                        // );
-                        // const balances = await marketContract.balancesOf(walletAddress);
-                        // const contractPositionBalance = balances[positionBalance.position.side];
+                        const positionContract = new ethers.Contract(
+                            positionBalance.position.id,
+                            rangedPositionContract.abi,
+                            snxJSConnector.provider
+                        );
+                        const contractPositionBalance = await positionContract.balanceOf(walletAddress);
 
                         const { rangedMarketAMMContract } = snxJSConnector as any;
                         const ammQuote = await rangedMarketAMMContract.sellToAmmQuote(
                             positionBalance.position.market.id,
                             RANGE_SIDE[positionBalance.position.side],
-                            positionBalance.amount
+                            contractPositionBalance
                         );
 
                         return {
                             ...positionBalance,
+                            amount: contractPositionBalance,
                             value: stableCoinFormatter(ammQuote, networkId),
                         };
                     }),
@@ -161,28 +162,5 @@ const useUserOpenPositions = (
         options
     );
 };
-
-// const hexToAscii = (str: any) => {
-//     const hex = str.toString();
-//     let out = '';
-//     for (let n = 2; n < hex.length; n += 2) {
-//         const nextPair = hex.substr(n, 2);
-//         if (nextPair !== '00') {
-//             out += String.fromCharCode(parseInt(nextPair, 16));
-//         }
-//     }
-//     return out;
-// };
-
-// const isOptionClaimable = (balance: any) => {
-//     if (balance.position.side === 'long' && balance.position.market.result === 0) {
-//         return true;
-//     }
-//     if (balance.position.side === 'short' && balance.position.market.result === 1) {
-//         return true;
-//     }
-
-//     return false;
-// };
 
 export default useUserOpenPositions;

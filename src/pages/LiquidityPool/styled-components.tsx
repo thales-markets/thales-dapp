@@ -2,7 +2,15 @@ import { Slider, Tooltip, withStyles } from '@material-ui/core';
 import { InputContainer } from 'pages/Token/components/components';
 import React from 'react';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivStart, FlexDivRow, FlexDiv } from 'theme/common';
+import {
+    FlexDivCentered,
+    FlexDivColumn,
+    FlexDivColumnCentered,
+    FlexDivStart,
+    FlexDivRow,
+    FlexDiv,
+    Colors,
+} from 'theme/common';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
@@ -387,13 +395,13 @@ export const TipLink: React.FC<{ href: string }> = ({ children, href }) => {
 export const StyledMaterialTooltip = withStyles(() => ({
     arrow: {
         '&:before': {
-            border: '1px solid #2B3139',
+            border: `1px solid ${Colors.GRAY}`,
         },
-        color: '#2B3139',
+        color: Colors.GRAY,
         marginLeft: '0px!important',
     },
     tooltip: {
-        background: '#2B3139',
+        background: Colors.GRAY,
         border: '1px solid transparent',
         borderRadius: '5px',
         padding: '10px 15px',
@@ -401,7 +409,7 @@ export const StyledMaterialTooltip = withStyles(() => ({
         fontSize: '16px',
         lineHeight: '20px',
         letterSpacing: '0.4px',
-        color: '#FFFFFF',
+        color: Colors.WHITE,
         maxWidth: 500,
     },
 }))(MaterialTooltip);
@@ -430,9 +438,9 @@ export const SliderContainer = styled.div`
 
 export const StyledSlider = withStyles({
     root: {
-        color: '#36D1DC',
+        color: Colors.BLUE_LIGHT,
         '&$disabled': {
-            color: '#36D1DC',
+            color: Colors.BLUE_LIGHT,
             opacity: 0.5,
         },
         padding: '6px 0 10px 0',
@@ -441,7 +449,7 @@ export const StyledSlider = withStyles({
         width: 14,
         height: 14,
         marginTop: '-2px',
-        background: '#FFFFFF',
+        background: Colors.WHITE,
         boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
         '&:focus, &:hover': {
             boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
@@ -470,7 +478,7 @@ export const SliderRange = styled.div`
     font-size: 13px;
     line-height: 13px;
     letter-spacing: 0.4px;
-    color: #36d1dc;
+    color: ${(props) => props.theme.link.textColor.primary};
     &.disabled {
         opacity: 0.4;
         cursor: default;

@@ -2,16 +2,16 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 
 export const SpaContainer = styled(FlexDivColumn)`
-    background: linear-gradient(201.59deg, var(--color-primary) 37.82%, var(--color-secondary) 107.42%);
-    border: 2px solid var(--color-highlight);
+    background: linear-gradient(0deg, rgba(3, 218, 198, 0.2) 0%, rgba(3, 218, 198, 0) 90.62%);
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 15px;
     transition: 0.2s all;
     &:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
     }
     cursor: pointer;
     :not(:last-child) {
-        margin-right: 25px;
+        margin-right: 20px;
     }
     @media (max-width: 767px) {
         width: 100%;
@@ -54,9 +54,9 @@ export const VaultTitle = styled.span`
     margin-bottom: 10px;
     width: 100%;
     padding-bottom: 20px;
-    border-bottom: 2px solid rgba(100, 217, 254, 0.4);
+    border-bottom: 2px solid ${(props) => props.theme.borderColor.tertiary};
     text-align: center;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const VaultSectionTitle = styled.span`
@@ -85,7 +85,7 @@ export const VaultInfoContainer = styled(FlexDivColumn)`
     span {
         font-size: 20px;
         font-weight: 600;
-        color: var(--color-highlight);
+        color: ${(props) => props.theme.textColor.quaternary};
     }
     margin-top: 10px;
 `;
@@ -105,7 +105,7 @@ export const TitleVaultIcon = styled.i`
     margin-right: 8px;
     top: -2px;
     position: relative;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 export const VaultSectionIcon = styled.i`

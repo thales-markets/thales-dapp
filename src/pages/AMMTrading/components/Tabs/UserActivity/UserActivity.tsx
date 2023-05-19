@@ -18,7 +18,7 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { orderBy } from 'lodash';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
-import { formatHoursAndMinutesFromTimestamp, formatShortDateFromTimestamp } from 'utils/formatters/date';
+import { formatHoursAndMinutesFromTimestamp, formatShortDateWithTime } from 'utils/formatters/date';
 
 import { MarketType, OptionsMarketInfo, RangedMarketData } from 'types/options';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
@@ -198,7 +198,7 @@ const FirstColumn: React.FC<{ value: TileRow | string }> = ({ value }) => {
         return (
             <DateTimeContainer>
                 <DateTimeContainer.Date>
-                    {formatShortDateFromTimestamp(Number(value?.cells[0]?.value))}
+                    {formatShortDateWithTime(Number(value?.cells[0]?.value))}
                 </DateTimeContainer.Date>
                 <DateTimeContainer.Time>
                     {formatHoursAndMinutesFromTimestamp(Number(value?.cells[0]?.value))}

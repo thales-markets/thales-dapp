@@ -75,6 +75,7 @@ import ElectionsBanner from 'components/ElectionsBanner';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { refetchVaultData } from 'utils/queryConnector';
+import { Colors } from 'theme/common';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -620,7 +621,7 @@ const Vault: React.FC<VaultProps> = (props) => {
                                             secondLabel: t(`vault.tabs.${VaultTab.WITHDRAW}`),
                                             fontSize: '20px',
                                         }}
-                                        dotBackground={'var(--amm-switch-circle)'}
+                                        dotBackground={Colors.WHITE}
                                         handleClick={() => {
                                             setSelectedTab(
                                                 selectedTab === VaultTab.DEPOSIT ? VaultTab.WITHDRAW : VaultTab.DEPOSIT

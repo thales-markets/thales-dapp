@@ -46,7 +46,7 @@ const OpRewardsBanner: React.FC<OpRewardsBannerProps> = ({ isLandingPage, width 
 
 const BannerContainer = styled(FlexDiv)<{ width?: number }>`
     width: ${(props) => props.width || 100}%;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     strong {
         font-weight: bold;
         cursor: pointer;

@@ -239,7 +239,7 @@ export const VaultFilledGraphicPercentage = styled(FlexDivStart)<{ width: number
     height: 10px;
     left: 2px;
     top: 2px;
-    background: linear-gradient(269.97deg, var(--color-highlight) 16.18%, #3f75ff 77.77%);
+    background: linear-gradient(90deg, #36d1dc -1.48%, #5b86e5 102.44%);
     border-radius: 15px;
 `;
 

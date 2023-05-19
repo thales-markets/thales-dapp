@@ -18,7 +18,7 @@ import {
     isNetworkSupported,
 } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
-import DatePicker from 'components/Input/DatePicker';
+import DatePicker from 'components/DatePicker';
 import NetworkFees from './NetworkFees';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';

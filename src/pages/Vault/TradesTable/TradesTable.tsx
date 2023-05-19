@@ -154,7 +154,6 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                 data={transactions}
                 isLoading={isLoading}
                 noResultsMessage={noResultsMessage}
-                tableHeadCellStyles={{ color: 'var(--color-highlight)' }}
                 tableRowCellStyles={{ fontSize: `${isMobile() ? '10px' : '14px'}` }}
             />
         </>

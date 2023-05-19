@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
-import { formatShortDateFromTimestamp } from 'utils/formatters/date';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 
 type AssetDropdownProps = {
     date: number | undefined;
@@ -22,14 +22,14 @@ const DatesDropdown: React.FC<AssetDropdownProps> = ({ date, setDate, allDates }
         <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
             <Wrapper>
                 <Container onClick={() => setOpen(!open)}>
-                    {date && <Date onClick={() => setDate(date)}>{formatShortDateFromTimestamp(date)}</Date>}
+                    {date && <Date onClick={() => setDate(date)}>{formatShortDateWithTime(date)}</Date>}
                     <Icon className={open ? `icon icon--caret-up` : `icon icon--caret-down`} />
                 </Container>
                 {open && (
                     <Dropdown onClick={() => setOpen(!open)}>
                         {allDates.map((_date, index) => (
                             <DateContainer key={index}>
-                                <Date onClick={() => setDate(_date)}>{formatShortDateFromTimestamp(_date)}</Date>
+                                <Date onClick={() => setDate(_date)}>{formatShortDateWithTime(_date)}</Date>
                             </DateContainer>
                         ))}
                     </Dropdown>

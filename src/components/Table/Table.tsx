@@ -1,5 +1,5 @@
-import React, { useMemo, DependencyList, CSSProperties } from 'react';
-import { useTable, useSortBy, Column, Row, SortByFn, DefaultSortTypes } from 'react-table';
+import React, { useMemo, DependencyList, CSSProperties, useEffect } from 'react';
+import { useTable, useSortBy, Column, Row, SortByFn, DefaultSortTypes, usePagination, Cell } from 'react-table';
 import { ReactComponent as SortDownIcon } from 'assets/images/sort-down.svg';
 import { ReactComponent as SortUpIcon } from 'assets/images/sort-up.svg';
 import { ReactComponent as SortIcon } from 'assets/images/sort.svg';
@@ -19,12 +19,19 @@ type TableProps = {
     columnsDeps?: DependencyList;
     options?: any;
     onTableRowClick?: (row: Row<any>) => void;
+    onTableCellClick?: (row: Row<any>, cell: Cell<any>) => void;
     isLoading?: boolean;
     noResultsMessage?: React.ReactNode;
     tableRowHeadStyles?: CSSProperties;
     tableRowStyles?: CSSProperties;
     tableHeadCellStyles?: CSSProperties;
     tableRowCellStyles?: CSSProperties;
+    initialState?: any;
+    onSortByChanged?: any;
+    currentPage?: number;
+    rowsPerPage?: number;
+    // expandedRow?: (row: Row<any>) => JSX.Element;
+    // stickyRow?: JSX.Element;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -34,23 +41,59 @@ const Table: React.FC<TableProps> = ({
     options = {},
     noResultsMessage = null,
     onTableRowClick = undefined,
+    onTableCellClick = undefined,
     isLoading = false,
     tableRowHeadStyles = {},
     tableRowStyles = {},
     tableHeadCellStyles = {},
     tableRowCellStyles = {},
+    initialState = {},
+    onSortByChanged = undefined,
+    currentPage,
+    rowsPerPage,
+    // expandedRow,
+    // stickyRow,
 }) => {
     const { t } = useTranslation();
+
     const memoizedColumns = useMemo(() => columns, [...columnsDeps, t]);
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state,
+        gotoPage,
+        setPageSize,
+        page,
+    } = useTable(
         {
             columns: memoizedColumns,
             data,
             ...options,
+            initialState,
             autoResetSortBy: false,
         },
-        useSortBy
+        useSortBy,
+        usePagination
     );
+
+    useEffect(() => {
+        onSortByChanged && onSortByChanged();
+    }, [state.sortBy]);
+
+    useEffect(() => {
+        if (currentPage !== undefined) {
+            gotoPage(currentPage);
+        }
+    }, [currentPage, gotoPage]);
+
+    useEffect(() => {
+        if (rowsPerPage !== undefined) {
+            setPageSize(rowsPerPage || 0);
+        }
+    }, [rowsPerPage, setPageSize]);
 
     return (
         <>
@@ -86,12 +129,14 @@ const Table: React.FC<TableProps> = ({
             ))}
             <ReactTable {...getTableProps()}>
                 {isLoading ? (
-                    <SimpleLoader />
-                ) : noResultsMessage != null ? (
+                    <LoaderContainer>
+                        <SimpleLoader />
+                    </LoaderContainer>
+                ) : noResultsMessage != null && data.length === 0 ? (
                     <NoResultContainer>{noResultsMessage}</NoResultContainer>
                 ) : (
                     <TableBody {...getTableBodyProps()}>
-                        {rows.map((row, rowIndex: any) => {
+                        {(currentPage !== undefined ? page : rows).map((row, rowIndex: any) => {
                             prepareRow(row);
 
                             return (
@@ -102,7 +147,12 @@ const Table: React.FC<TableProps> = ({
                                     style={tableRowStyles}
                                 >
                                     {row.cells.map((cell, cellIndex: any) => (
-                                        <TableCell style={tableRowCellStyles} {...cell.getCellProps()} key={cellIndex}>
+                                        <TableCell
+                                            style={tableRowCellStyles}
+                                            {...cell.getCellProps()}
+                                            key={cellIndex}
+                                            onClick={onTableCellClick ? () => onTableCellClick(row, cell) : undefined}
+                                        >
                                             {cell.render('Cell')}
                                         </TableCell>
                                     ))}
@@ -152,13 +202,14 @@ const TableRow = styled(FlexDiv)`
     font-weight: 600;
     font-size: 12px;
     @media (max-width: 512px) {
-        min-height: 50px;
+        min-height: 30px;
         font-size: 10px;
         & > div {
             justify-content: center;
             text-align: center;
             img {
-                width: 40px;
+                width: 20px;
+                height: 20px;
             }
         }
         & > div:last-child {
@@ -231,6 +282,12 @@ const NoResultContainer = styled(TableRow)`
     padding-left: 18px;
     font-size: 14px;
     border: none;
+`;
+
+const LoaderContainer = styled(FlexDivCentered)`
+    position: relative;
+    min-height: 220px;
+    width: 100%;
 `;
 
 export default Table;

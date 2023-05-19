@@ -28,8 +28,7 @@ import { VaultData } from 'types/vault';
 import { formatPercentage, formatPercentageWithSign } from 'utils/formatters/number';
 import SimpleLoader from 'components/SimpleLoader';
 import TimeRemaining from 'components/TimeRemaining';
-import { FlexDivColumn } from 'theme/common';
-import { UI_COLORS } from 'constants/ui';
+import { Colors, FlexDivColumn } from 'theme/common';
 
 type VaultOverviewProps = {
     vaultId: string;
@@ -119,10 +118,10 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                                         <VaultInfo
                                             color={
                                                 vaultData.lifetimePnl === 0
-                                                    ? UI_COLORS.WHITE
+                                                    ? Colors.WHITE
                                                     : vaultData.lifetimePnl > 0
-                                                    ? UI_COLORS.GREEN
-                                                    : UI_COLORS.RED
+                                                    ? Colors.GREEN
+                                                    : Colors.RED
                                             }
                                         >
                                             {formatPercentageWithSign(vaultData.lifetimePnl)}
