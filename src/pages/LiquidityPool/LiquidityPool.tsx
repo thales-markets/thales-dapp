@@ -625,6 +625,7 @@ const LiquidityPool: React.FC = () => {
                                                                             )}
                                                                             iconFontSize={14}
                                                                             marginLeft={2}
+                                                                            top={-1}
                                                                         />
                                                                     </ContentInfo>
                                                                     <ContentInfo>
@@ -743,6 +744,7 @@ const LiquidityPool: React.FC = () => {
                                                                             )}
                                                                             iconFontSize={14}
                                                                             marginLeft={2}
+                                                                            top={-1}
                                                                         />
                                                                     </ContentInfo>
                                                                 </>
@@ -774,6 +776,7 @@ const LiquidityPool: React.FC = () => {
                                                                     )}
                                                                     iconFontSize={14}
                                                                     marginLeft={2}
+                                                                    top={-1}
                                                                 />
                                                             ),
                                                         }}
@@ -954,6 +957,7 @@ const LiquidityPool: React.FC = () => {
                                                         overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
                                                         iconFontSize={14}
                                                         marginLeft={2}
+                                                        top={-1}
                                                     />
                                                 )}
                                         </LiquidityPoolInfo>
@@ -987,6 +991,7 @@ const LiquidityPool: React.FC = () => {
                                                 overlayClassName="lp-max-allowance"
                                                 iconFontSize={14}
                                                 marginLeft={2}
+                                                top={-1}
                                             />
                                         </LiquidityPoolInfo>
                                     </LiquidityPoolInfoContainer>
@@ -1004,6 +1009,7 @@ const LiquidityPool: React.FC = () => {
                                                             overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
                                                             iconFontSize={14}
                                                             marginLeft={2}
+                                                            top={-1}
                                                         />
                                                     ),
                                                 }}

@@ -49,12 +49,12 @@ const Tooltip: React.FC<TooltipProps> = ({
 };
 
 const InfoIcon = styled.i<{ iconFontSize?: number; marginLeft?: number; top?: number; color?: string }>`
-    font-size: ${(props) => props.iconFontSize || 17}px;
+    font-size: ${(props) => props.iconFontSize || 15}px;
     font-weight: normal;
     cursor: pointer;
     position: relative;
-    margin-left: ${(props) => props.marginLeft || 0}px;
-    top: ${(props) => props.top || -1}px;
+    margin-left: ${(props) => props.marginLeft || 4}px;
+    top: ${(props) => props.top || 0}px;
     color: ${(props) => props.color || 'white'};
     &:before {
         font-family: ThalesIcons !important;
