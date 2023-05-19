@@ -159,11 +159,11 @@ export const ArrowIconMedium = styled(ArrowHyperlinkIcon)`
 export const getColor = (status: string) => {
     switch (status) {
         case StatusEnum.Pending:
-            return Colors.GRAY;
+            return Colors.GRAY_LIGHT;
         case StatusEnum.Closed:
-            return Colors.GREEN;
+            return Colors.BLUE;
         default:
-            return Colors.ORANGE;
+            return Colors.GREEN;
     }
 };
 

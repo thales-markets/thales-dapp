@@ -27,7 +27,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         proposalResults.results.resultsByVoteBalance &&
         proposalResults.results.resultsByVoteBalance[0] >= proposalApprovalVotes;
 
-    const chartColor = isPassed ? Colors.GREEN : closed ? Colors.RED : Colors.ORANGE;
+    const chartColor = isPassed ? Colors.GREEN : closed ? Colors.RED : Colors.GREEN;
 
     const pieData = useMemo(() => {
         const data = [];
