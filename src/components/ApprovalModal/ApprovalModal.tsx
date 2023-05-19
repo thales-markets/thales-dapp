@@ -5,7 +5,7 @@ import Input from 'components/Input';
 import Modal from 'components/Modal';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
