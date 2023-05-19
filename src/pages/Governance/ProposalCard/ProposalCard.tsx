@@ -62,7 +62,7 @@ export const CardContainer = styled(FlexDivColumnCentered)`
     color: ${(props) => props.theme.textColor.primary};
     cursor: pointer;
     &:hover {
-        background: ${(props) => props.theme.background.tertiary};
+        background: ${(props) => props.theme.background.quaternary};
     }
 `;
 
