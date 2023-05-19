@@ -129,8 +129,10 @@ const Table: React.FC<TableProps> = ({
             ))}
             <ReactTable {...getTableProps()}>
                 {isLoading ? (
-                    <SimpleLoader />
-                ) : noResultsMessage != null ? (
+                    <LoaderContainer>
+                        <SimpleLoader />
+                    </LoaderContainer>
+                ) : noResultsMessage != null && data.length === 0 ? (
                     <NoResultContainer>{noResultsMessage}</NoResultContainer>
                 ) : (
                     <TableBody {...getTableBodyProps()}>
@@ -200,13 +202,14 @@ const TableRow = styled(FlexDiv)`
     font-weight: 600;
     font-size: 12px;
     @media (max-width: 512px) {
-        min-height: 50px;
+        min-height: 30px;
         font-size: 10px;
         & > div {
             justify-content: center;
             text-align: center;
             img {
-                width: 40px;
+                width: 20px;
+                height: 20px;
             }
         }
         & > div:last-child {
@@ -279,6 +282,12 @@ const NoResultContainer = styled(TableRow)`
     padding-left: 18px;
     font-size: 14px;
     border: none;
+`;
+
+const LoaderContainer = styled(FlexDivCentered)`
+    position: relative;
+    min-height: 220px;
+    width: 100%;
 `;
 
 export default Table;

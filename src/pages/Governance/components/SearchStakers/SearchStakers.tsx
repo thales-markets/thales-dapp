@@ -34,12 +34,15 @@ const SearchWrapper = styled(FlexDiv)`
     position: relative;
     background: ${(props) => props.theme.background.tertiary};
     border-radius: 23px;
-    margin: 22px;
+    margin: 22px 30px;
     &:before {
         content: url(${searchIcon});
         position: absolute;
         right: 16px;
         transform: scale(0.9);
+    }
+    @media (max-width: 767px) {
+        margin: 20px 0px;
     }
 `;
 

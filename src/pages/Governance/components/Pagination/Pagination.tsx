@@ -11,19 +11,6 @@ type PaginationProps = {
     setPage: (params: number) => void;
 };
 
-const Arrow = styled(Image)`
-    color: #748bc6;
-    width: 6px;
-    height: 10px;
-    box-sizing: content-box;
-    cursor: pointer;
-    padding: 10px;
-    &.disabled {
-        opacity: 0.2;
-        cursor: default;
-    }
-`;
-
 const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage }) => {
     const { t } = useTranslation();
 
@@ -44,8 +31,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                     <Arrow src={backArrow} className={page === 0 ? 'disabled' : ''} onClick={PreviousPage} />
                     <p
                         style={{
-                            fontSize: '13px',
-                            fontWeight: 'bold',
+                            fontSize: '14px',
                             letterSpacing: '0.4px',
                             color: Colors.WHITE,
                             margin: 0,
@@ -63,8 +49,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                     style={{
                         margin: 0,
                         width: '64px',
-                        fontSize: '13px',
-                        fontWeight: 'bold',
+                        fontSize: '14px',
                         textAlign: 'center',
                         color: Colors.WHITE,
                         whiteSpace: 'pre',
@@ -93,13 +78,25 @@ const PageSelector = styled(FlexDivCentered)`
 const PageLabel = styled.p`
     margin: 0;
     width: 64px;
-    font-size: 13px;
-    font-weight: bold;
+    font-size: 14px;
     text-align: center;
     color: ${(props) => props.theme.textColor.primary};
     margin-right: 4px;
     @media (max-width: 767px) {
         width: 44px;
+    }
+`;
+
+const Arrow = styled(Image)`
+    color: ${(props) => props.theme.textColor.primary};
+    width: 6px;
+    height: 10px;
+    box-sizing: content-box;
+    cursor: pointer;
+    padding: 10px;
+    &.disabled {
+        opacity: 0.2;
+        cursor: default;
     }
 `;
 

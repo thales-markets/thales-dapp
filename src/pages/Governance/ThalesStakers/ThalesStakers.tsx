@@ -1,35 +1,35 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivRowCentered, FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
+import { FlexDivRowCentered, FlexDivColumn, FlexDivColumnCentered, FlexDiv } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
 import { EnsNames, Staker, Stakers } from 'types/governance';
-import ThalesStakersTable from './ThalesStakersTable';
 import SearchStakers from '../components/SearchStakers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'utils/network';
-import Button from 'components/ButtonV2/Button';
-
-enum OrderDirection {
-    NONE,
-    ASC,
-    DESC,
-}
-
-const DEFAULT_ORDER_BY = 2;
+import { ArrowIconMedium, Blockie, StyledLink } from '../components';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { LightMediumTooltip } from 'components/OldVersion/old-components';
+import { PaginationWrapper } from 'components/OldVersion/styled-components';
+import Pagination from '../components/Pagination/Pagination';
+import Table from 'components/Table/Table';
+import { THALES_CURRENCY } from 'constants/currency';
+import { truncateAddress } from 'utils/formatters/string';
+import { CellProps } from 'react-table';
+import makeBlockie from 'ethereum-blockies-base64';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
+    const [isMobile, setIsMobile] = useState(false);
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
-    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const [addressSearch, setAddressSearch] = useState<string>('');
     const [ensNames, setEnsNames] = useState<EnsNames | undefined>(undefined);
 
@@ -55,19 +55,6 @@ const ThalesStakers: React.FC = () => {
         }
     }, [stakers]);
 
-    const filteredStakers = useMemo(() => {
-        return stakers.sort((a, b) => {
-            switch (orderBy) {
-                case 1:
-                    return sortByField(a, b, orderDirection, 'id');
-                case 2:
-                    return sortByField(a, b, orderDirection, 'totalStakedAmount');
-                default:
-                    return 0;
-            }
-        });
-    }, [stakers, orderBy, orderDirection]);
-
     const findByEnsName = (address: string) => {
         if (ensNames && ensNames[address]) {
             const ensName = ensNames[address];
@@ -79,18 +66,51 @@ const ThalesStakers: React.FC = () => {
     const searchFilteredStakers = useDebouncedMemo(
         () => {
             return addressSearch
-                ? filteredStakers.filter((staker: Staker) => {
+                ? stakers.filter((staker: Staker) => {
                       return staker.id.toLowerCase().includes(addressSearch.toLowerCase()) || findByEnsName(staker.id);
                   })
-                : filteredStakers;
+                : stakers;
         },
-        [filteredStakers, addressSearch, orderBy, orderDirection],
+        [stakers, addressSearch],
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const resetFilters = () => {
-        setAddressSearch('');
+    const [page, setPage] = useState(0);
+    const handleChangePage = (_event: unknown, newPage: number) => {
+        setPage(newPage);
     };
+
+    const [rowsPerPage, setRowsPerPage] = useState(20);
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(Number(event.target.value));
+        setPage(0);
+    };
+
+    const numberOfPages = Math.ceil(searchFilteredStakers.length / rowsPerPage) || 1;
+    const memoizedPage = useMemo(() => {
+        if (page > numberOfPages - 1) {
+            return numberOfPages - 1;
+        }
+        return page;
+    }, [page, numberOfPages]);
+
+    const handleResize = () => {
+        if (window.innerWidth <= 767) {
+            setIsMobile(true);
+        } else {
+            setIsMobile(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    useEffect(() => setPage(0), [addressSearch]);
 
     return (
         <Container>
@@ -100,34 +120,106 @@ const ThalesStakers: React.FC = () => {
                 </Info>
                 <SearchStakers assetSearch={addressSearch} setAssetSearch={setAddressSearch} />
             </HeaderContainer>
-            <ThalesStakersTable
-                stakers={addressSearch ? searchFilteredStakers : filteredStakers}
-                isLoading={stakersQuery.isLoading}
-                orderBy={orderBy}
-                orderDirection={orderDirection}
-                setOrderBy={setOrderBy}
-                setOrderDirection={setOrderDirection}
-            >
-                <NoStakers>
-                    <>
-                        <Text className="text-l bold pale-grey">{t('governance.stakers.no-stakers-found')}</Text>
-                        <Button onClick={resetFilters}>{t('governance.stakers.view-all-stakers')}</Button>
-                    </>
-                </NoStakers>
-            </ThalesStakersTable>
+            <TabelContainer>
+                <Table
+                    columns={[
+                        {
+                            Header: <>{t('governance.stakers.staker-col')}</>,
+                            accessor: 'id',
+                            Cell: (cellProps: CellProps<Staker, Staker['id']>) => (
+                                <StyledLink
+                                    href={getEtherscanAddressLink(Network.Mainnet, cellProps.cell.value)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <FlexDiv style={{ textAlign: 'left' }}>
+                                        <Blockie src={makeBlockie(cellProps.cell.value)} style={{ marginBottom: 2 }} />
+                                        <StakerCell staker={cellProps.cell.row.original} />
+                                        <ArrowIconMedium />
+                                    </FlexDiv>
+                                </StyledLink>
+                            ),
+                            width: 150,
+                            sortable: true,
+                        },
+                        {
+                            Header: <>{t('governance.stakers.total-staked-col')}</>,
+                            accessor: 'totalStakedAmount',
+                            Cell: (cellProps: CellProps<Staker, Staker['totalStakedAmount']>) => {
+                                const amountTooltip = `${formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    cellProps.cell.row.original.stakedAmount
+                                )} (${t('governance.stakers.tooltip-staked-directly')}) + ${formatCurrencyWithKey(
+                                    THALES_CURRENCY,
+                                    cellProps.cell.row.original.escrowedAmount
+                                )} (${t('governance.stakers.tooltip-escrowed-amount')})`;
+
+                                return (
+                                    <LightMediumTooltip title={amountTooltip}>
+                                        <Amount>{formatCurrencyWithKey(THALES_CURRENCY, cellProps.cell.value)}</Amount>
+                                    </LightMediumTooltip>
+                                );
+                            },
+                            width: 150,
+                            sortable: true,
+                        },
+                    ]}
+                    data={addressSearch ? searchFilteredStakers : stakers}
+                    isLoading={stakersQuery.isLoading}
+                    noResultsMessage={t('governance.stakers.no-stakers-found')}
+                    tableRowHeadStyles={{ width: '100%' }}
+                    onSortByChanged={() => setPage(0)}
+                    currentPage={page}
+                    rowsPerPage={rowsPerPage}
+                    initialState={{
+                        sortBy: [
+                            {
+                                id: 'totalStakedAmount',
+                                desc: true,
+                            },
+                        ],
+                    }}
+                />
+
+                {stakers.length !== 0 && (
+                    <PaginationWrapper
+                        rowsPerPageOptions={[10, 20, 30, 50]}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        labelRowsPerPage={t(`common.pagination.rows-per-page`)}
+                        count={stakers.length ? stakers.length : 0}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        ActionsComponent={() => (
+                            <Pagination page={memoizedPage} numberOfPages={numberOfPages} setPage={setPage} />
+                        )}
+                        style={isMobile ? { padding: '0 5px 0 10px' } : { padding: '0 20px 0 30px' }}
+                    />
+                )}
+            </TabelContainer>
         </Container>
     );
 };
 
-const sortByField = (a: Staker, b: Staker, direction: OrderDirection, field: keyof Staker) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
-    }
+type StakerCellProps = {
+    staker: Staker;
+};
 
-    return 0;
+const StakerCell: React.FC<StakerCellProps> = ({ staker }) => {
+    const [stakerEns, setStakerEns] = useState<string | null>(null);
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+    useEffect(() => {
+        const fetchStakerEns = async () => {
+            const stakerEns = await (snxJSConnector as any).provider.lookupAddress(staker.id);
+            setStakerEns(stakerEns);
+        };
+        if (networkId === Network.Mainnet) {
+            fetchStakerEns();
+        }
+    }, [staker]);
+
+    return <Address>{stakerEns != null ? stakerEns : truncateAddress(staker.id)}</Address>;
 };
 
 const Container = styled(FlexDivColumnCentered)`
@@ -143,14 +235,14 @@ const HeaderContainer = styled(FlexDivRowCentered)`
     }
 `;
 
-const NoStakers = styled(FlexDivColumn)`
-    min-height: 300px;
-    color: ${(props) => props.theme.background.primary};
-    justify-content: space-evenly;
+const TabelContainer = styled(FlexDivColumn)`
+    position: relative;
     align-items: center;
-    align-self: center;
-    border-radius: 0 0 23px 23px;
+    padding: 0 30px;
     width: 100%;
+    @media (max-width: 767px) {
+        padding: 0;
+    }
 `;
 
 const Info = styled.div`
@@ -161,6 +253,24 @@ const Info = styled.div`
     margin-left: 30px;
     @media (max-width: 767px) {
         margin-left: 0;
+    }
+`;
+const Address = styled.span`
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 22px;
+    @media (max-width: 767px) {
+        font-size: 12px;
+    }
+`;
+
+const Amount = styled.span`
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: 767px) {
+        font-size: 12px;
     }
 `;
 

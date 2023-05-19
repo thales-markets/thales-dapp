@@ -1,5 +1,6 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Button from 'components/ButtonV2/Button';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import { POSITIONS_TO_SIDE_MAP, Positions, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
@@ -14,6 +15,7 @@ import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled, { CSSProperties } from 'styled-components';
+import { FlexDivCentered } from 'theme/common';
 import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
@@ -274,13 +276,21 @@ const OpenPositions: React.FC = () => {
     return (
         <Wrapper>
             <Title>{t('options.trade.user-positions.your-positions')}</Title>
-            <PositionsWrapper noPositions={!livePositions.length}>
-                {!!livePositions.length
-                    ? livePositions.map((position, index) => getPositionsList(position, index))
-                    : dummyPositions.map((position, index) => getPositionsList(position, index))}
-            </PositionsWrapper>
-            {!livePositions.length && (
-                <NoPositionsText>{t('options.trade.user-positions.no-positions')}</NoPositionsText>
+            {positionsQuery.isLoading ? (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            ) : (
+                <>
+                    <PositionsWrapper noPositions={!livePositions.length}>
+                        {!!livePositions.length
+                            ? livePositions.map((position, index) => getPositionsList(position, index))
+                            : dummyPositions.map((position, index) => getPositionsList(position, index))}
+                    </PositionsWrapper>
+                    {!livePositions.length && (
+                        <NoPositionsText>{t('options.trade.user-positions.no-positions')}</NoPositionsText>
+                    )}
+                </>
             )}
         </Wrapper>
     );
@@ -427,9 +437,9 @@ const NoPositionsText = styled.span`
     font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 100%;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.textColor.secondary};
     min-width: max-content;
 `;
 
@@ -441,6 +451,12 @@ const Separator = styled.div`
     @media (max-width: 767px) {
         display: none;
     }
+`;
+
+const LoaderContainer = styled(FlexDivCentered)`
+    position: relative;
+    min-height: 200px;
+    width: 100%;
 `;
 
 export default OpenPositions;
