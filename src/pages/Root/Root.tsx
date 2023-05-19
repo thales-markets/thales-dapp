@@ -49,7 +49,7 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
     },
     [Network.BSC]: {
         ankr: '',
-        chainnode: '',
+        chainnode: 'bsc-mainnet',
         blast: 'bsc-mainnet',
     },
     [Network['POLYGON-MAINNET']]: {
