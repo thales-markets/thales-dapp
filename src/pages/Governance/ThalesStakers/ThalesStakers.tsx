@@ -15,7 +15,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'utils/network';
 import { ArrowIconMedium, Blockie, StyledLink } from '../components';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { LightMediumTooltip } from 'components/OldVersion/old-components';
 import { PaginationWrapper } from 'components/OldVersion/styled-components';
 import Pagination from '../components/Pagination/Pagination';
 import Table from 'components/Table/Table';
@@ -24,6 +23,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import { CellProps } from 'react-table';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import Tooltip from 'components/TooltipV2/Tooltip';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
@@ -155,9 +155,9 @@ const ThalesStakers: React.FC = () => {
                                 )} (${t('governance.stakers.tooltip-escrowed-amount')})`;
 
                                 return (
-                                    <LightMediumTooltip title={amountTooltip}>
+                                    <Tooltip overlay={amountTooltip}>
                                         <Amount>{formatCurrencyWithKey(THALES_CURRENCY, cellProps.cell.value)}</Amount>
-                                    </LightMediumTooltip>
+                                    </Tooltip>
                                 );
                             },
                             width: 150,

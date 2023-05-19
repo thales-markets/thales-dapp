@@ -35,8 +35,6 @@ import {
     TipLink,
     InputWrapper,
     MaxButton,
-    StyledMaterialTooltip,
-    StyledInfoIcon,
     SliderContainer,
     SliderRange,
     StyledSlider,
@@ -63,7 +61,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import Transactions from './Transactions';
 import PnL from './PnL';
 import Switch from 'components/SwitchInput/SwitchInputNew';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
 import { LINKS } from 'constants/links';
@@ -622,13 +620,11 @@ const LiquidityPool: React.FC = () => {
                                                                             }}
                                                                         />
                                                                         <Tooltip
-                                                                            message={t(
+                                                                            overlay={t(
                                                                                 `liquidity-pool.estimated-amount-tooltip`
                                                                             )}
-                                                                            type={'info'}
-                                                                            container={{ display: 'inline' }}
                                                                             iconFontSize={14}
-                                                                            iconTop={-2}
+                                                                            marginLeft={2}
                                                                         />
                                                                     </ContentInfo>
                                                                     <ContentInfo>
@@ -742,13 +738,11 @@ const LiquidityPool: React.FC = () => {
                                                                             }}
                                                                         />
                                                                         <Tooltip
-                                                                            message={t(
+                                                                            overlay={t(
                                                                                 `liquidity-pool.estimated-amount-tooltip`
                                                                             )}
-                                                                            type={'info'}
-                                                                            container={{ display: 'inline' }}
                                                                             iconFontSize={14}
-                                                                            iconTop={-2}
+                                                                            marginLeft={2}
                                                                         />
                                                                     </ContentInfo>
                                                                 </>
@@ -775,13 +769,11 @@ const LiquidityPool: React.FC = () => {
                                                             bold: <BoldContent />,
                                                             tooltip: (
                                                                 <Tooltip
-                                                                    message={t(
+                                                                    overlay={t(
                                                                         `liquidity-pool.estimated-amount-tooltip`
                                                                     )}
-                                                                    type={'info'}
-                                                                    container={{ display: 'inline' }}
                                                                     iconFontSize={14}
-                                                                    iconTop={-2}
+                                                                    marginLeft={2}
                                                                 />
                                                             ),
                                                         }}
@@ -959,11 +951,9 @@ const LiquidityPool: React.FC = () => {
                                                 userLiquidityPoolData.balanceCurrentRound > 0 &&
                                                 userLiquidityPoolData.balanceTotal > 0 && (
                                                     <Tooltip
-                                                        message={t(`liquidity-pool.estimated-amount-tooltip`)}
-                                                        type={'info'}
-                                                        container={{ display: 'inline' }}
+                                                        overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
                                                         iconFontSize={14}
-                                                        iconTop={-2}
+                                                        marginLeft={2}
                                                     />
                                                 )}
                                         </LiquidityPoolInfo>
@@ -981,10 +971,8 @@ const LiquidityPool: React.FC = () => {
                                                 USD_SIGN,
                                                 userLiquidityPoolData ? userLiquidityPoolData.maxDeposit : 0
                                             )}
-                                            <StyledMaterialTooltip
-                                                arrow
-                                                interactive
-                                                title={
+                                            <Tooltip
+                                                overlay={
                                                     <MaxAllowanceTooltip
                                                         stakedThales={
                                                             userLiquidityPoolData
@@ -996,9 +984,10 @@ const LiquidityPool: React.FC = () => {
                                                         }
                                                     />
                                                 }
-                                            >
-                                                <StyledInfoIcon />
-                                            </StyledMaterialTooltip>
+                                                overlayClassName="lp-max-allowance"
+                                                iconFontSize={14}
+                                                marginLeft={2}
+                                            />
                                         </LiquidityPoolInfo>
                                     </LiquidityPoolInfoContainer>
                                     {isWithdrawalRequested && (
@@ -1012,11 +1001,9 @@ const LiquidityPool: React.FC = () => {
                                                 components={{
                                                     tooltip: (
                                                         <Tooltip
-                                                            message={t(`liquidity-pool.estimated-amount-tooltip`)}
-                                                            type={'info'}
-                                                            container={{ display: 'inline' }}
+                                                            overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
                                                             iconFontSize={14}
-                                                            iconTop={-2}
+                                                            marginLeft={2}
                                                         />
                                                     ),
                                                 }}

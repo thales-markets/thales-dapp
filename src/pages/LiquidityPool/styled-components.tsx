@@ -11,8 +11,6 @@ import {
     FlexDiv,
     Colors,
 } from 'theme/common';
-import MaterialTooltip from '@material-ui/core/Tooltip';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;
@@ -391,36 +389,6 @@ export const TipLink: React.FC<{ href: string }> = ({ children, href }) => {
         </TextLink>
     );
 };
-
-export const StyledMaterialTooltip = withStyles(() => ({
-    arrow: {
-        '&:before': {
-            border: `1px solid ${Colors.GRAY}`,
-        },
-        color: Colors.GRAY,
-        marginLeft: '0px!important',
-    },
-    tooltip: {
-        background: Colors.GRAY,
-        border: '1px solid transparent',
-        borderRadius: '5px',
-        padding: '10px 15px',
-        fontWeight: 400,
-        fontSize: '16px',
-        lineHeight: '20px',
-        letterSpacing: '0.4px',
-        color: Colors.WHITE,
-        maxWidth: 500,
-    },
-}))(MaterialTooltip);
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    top: 2px;
-    margin-left: 5px;
-    width: 15px;
-    height: 15px;
-    position: relative;
-`;
 
 export const RadioButtonContainer = styled(FlexDivColumnCentered)`
     align-items: center;
