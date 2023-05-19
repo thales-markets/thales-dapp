@@ -7,7 +7,6 @@ import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark-circle.svg';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
-import { Dialog } from '@material-ui/core';
 
 export const Container = styled(FlexDivColumn)`
     padding: 15px;
@@ -529,16 +528,6 @@ export const CloseIconContainer = styled(CloseIcon)`
         margin-top: 4px;
         height: 12px;
         width: 12px;
-    }
-`;
-
-export const StyledModal = styled((props) => <Dialog {...props} />)`
-    & .MuiDialog-paper {
-        border-radius: 23px;
-        width: 500px;
-        background: ${(props) => props.theme.borderColor.primary};
-        padding: 1px;
-        overflow: hidden;
     }
 `;
 
