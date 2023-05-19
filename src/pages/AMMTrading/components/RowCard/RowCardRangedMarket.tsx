@@ -21,10 +21,10 @@ import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
 import { Trans, useTranslation } from 'react-i18next';
 import { UI_COLORS } from 'constants/ui';
 import { getIsBuyState } from 'redux/modules/marketWidgets';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
-import { StyledMaterialTooltip, UsingAmmLink } from 'pages/Profile/components/MyPositions/MyPositions';
+import { UsingAmmLink } from 'pages/Profile/components/MyPositions/MyPositions';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import styled from 'styled-components';
 
@@ -123,14 +123,7 @@ const RowCardRangedMarket: React.FC = () => {
                                 <Container.SubContainer.Value>
                                     {marketInfo.currencyKey}
                                     {currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.source == 'TWAP' && (
-                                        <Tooltip
-                                            message={t('options.home.markets-table.twap-tooltip')}
-                                            link={currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.link}
-                                            type={'info'}
-                                            iconColor={'var(--color-white)'}
-                                            container={{ width: '15px' }}
-                                            interactive={true}
-                                        />
+                                        <Tooltip overlay={t('options.home.markets-table.twap-tooltip')} />
                                     )}
                                 </Container.SubContainer.Value>
                             </Container.SubContainer>
@@ -220,10 +213,8 @@ const RowCardRangedMarket: React.FC = () => {
                                 <Container.SubContainer.Header>
                                     {t('options.market.overview.amm-liquidity')}
                                     <Tooltip
-                                        message={t('options.market.overview.range-amm-liquidity-tooltip')}
-                                        type={'info'}
-                                        placement={'right'}
-                                        container={{ alignItems: 'center' }}
+                                        overlay={t('options.market.overview.amm-liquidity-tooltip')}
+                                        iconFontSize={14}
                                     />
                                 </Container.SubContainer.Header>
                                 <Container.SubContainer.Value>
@@ -322,9 +313,8 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
             {(isInOutOfLiqudity || areBothOutOfLiqudity) && (
                 <>
                     N/A
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={
+                    <Tooltip
+                        overlay={
                             <Trans
                                 i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
                                 components={[
@@ -334,10 +324,9 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
                                 ]}
                             />
                         }
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                        iconFontSize={20}
+                        top={2}
+                    />
                 </>
             )}
 
@@ -349,9 +338,8 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
             {isOutOutOfLiqudity && !areBothOutOfLiqudity && (
                 <>
                     N/A
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={
+                    <Tooltip
+                        overlay={
                             <Trans
                                 i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
                                 components={[
@@ -361,10 +349,9 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
                                 ]}
                             />
                         }
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                        iconFontSize={20}
+                        top={2}
+                    />
                 </>
             )}
 

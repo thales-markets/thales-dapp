@@ -17,8 +17,6 @@ import {
     DashedLine,
     DashedLineVertical,
     Line,
-    StyledInfoIcon,
-    StyledMaterialTooltip,
     Tip125Link,
     Tip48Link,
 } from 'pages/Token/components';
@@ -43,6 +41,7 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import Tooltip from 'components/TooltipV2/Tooltip';
 
 enum SectionType {
     INFO,
@@ -75,9 +74,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const [isClaiming, setIsClaiming] = useState(false);
     const [isClosingPeriod, setIsClosingPeriod] = useState(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
-
     const { stakingThalesContract } = snxJSConnector as any;
 
     const stakingDataQuery = useStakingDataQuery(networkId, {
@@ -340,7 +337,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     };
 
     const handleClaimStakingRewards = async () => {
-        setShowTooltip(false);
         if (isClaimAvailable) {
             try {
                 setTxErrorMessage(null);
@@ -398,22 +394,12 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         }
 
         return (
-            <StyledMaterialTooltip
-                arrow
-                title={t('options.earn.gamified-staking.rewards.claim.button-tooltip') as string}
-                open={showTooltip}
-            >
+            <Tooltip overlay={t('options.earn.gamified-staking.rewards.claim.button-tooltip')}>
                 <ButtonWrapperTooltip>
                     <Button
                         type={ButtonType.submit}
                         active={isClaimAvailable}
                         disabled={!isClaimAvailable}
-                        onMouseOverHandler={() => {
-                            setShowTooltip(true);
-                        }}
-                        onMouseOutHandler={() => {
-                            setShowTooltip(false);
-                        }}
                         onClickHandler={handleClaimStakingRewards}
                     >
                         {isClaiming
@@ -421,7 +407,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                             : t('options.earn.gamified-staking.rewards.claim.claim')}
                     </Button>
                 </ButtonWrapperTooltip>
-            </StyledMaterialTooltip>
+            </Tooltip>
         );
     };
 
@@ -511,9 +497,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionLabelContent type={SectionType.LP_STAKING}>
                         {t('options.earn.gamified-staking.rewards.lp-staking.label-1')}
                     </SectionLabelContent>
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={
+                    <Tooltip
+                        overlay={
                             <Trans
                                 i18nKey="options.earn.gamified-staking.rewards.lp-staking.tooltip"
                                 components={[
@@ -521,10 +506,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                                 ]}
                             />
                         }
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                    />
                 </SectionLabel>
                 <SectionLabel type={SectionType.LP_STAKING}>
                     <SectionLabelContent type={SectionType.LP_STAKING}>

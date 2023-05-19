@@ -19,11 +19,10 @@ import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import RangeIllustration from 'components/RangeIllustration';
 import TimeRemaining from 'components/TimeRemaining';
-import { withStyles } from '@material-ui/core';
-import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { LINKS } from 'constants/links';
 import { isMobile } from 'utils/device';
+import Tooltip from 'components/TooltipV2/Tooltip';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -236,9 +235,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     {data.balances.value === 0 ? (
                                                         <>
                                                             N/A
-                                                            <StyledMaterialTooltip
-                                                                arrow={true}
-                                                                title={
+                                                            <Tooltip
+                                                                overlay={
                                                                     <Trans
                                                                         i18nKey={t(
                                                                             'options.home.market-card.no-liquidity-tooltip'
@@ -250,10 +248,9 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                                         ]}
                                                                     />
                                                                 }
-                                                                interactive
-                                                            >
-                                                                <StyledInfoIcon />
-                                                            </StyledMaterialTooltip>
+                                                                iconFontSize={20}
+                                                                top={-2}
+                                                            />
                                                         </>
                                                     ) : (
                                                         formatCurrencyWithSign(USD_SIGN, data.balances.value)
@@ -437,9 +434,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                         {row?.balances?.value === 0 ? (
                                             <>
                                                 N/A
-                                                <StyledMaterialTooltip
-                                                    arrow={true}
-                                                    title={
+                                                <Tooltip
+                                                    overlay={
                                                         <Trans
                                                             i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
                                                             components={[
@@ -449,10 +445,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                             ]}
                                                         />
                                                     }
-                                                    interactive
-                                                >
-                                                    <StyledInfoIcon />
-                                                </StyledMaterialTooltip>
+                                                    iconFontSize={16}
+                                                />
                                             </>
                                         ) : (
                                             formatCurrencyWithSign(USD_SIGN, row?.balances?.value)
@@ -556,27 +550,5 @@ export const UsingAmmLink: React.FC = () => {
         </TooltipLink>
     );
 };
-
-export const StyledMaterialTooltip = withStyles(() => ({
-    arrow: {
-        '&:before': {
-            border: '1px solid #58519b',
-        },
-        color: '#0C1C68',
-        marginLeft: '0px!important',
-    },
-    tooltip: {
-        background:
-            'linear-gradient( var(--color-primary) 0%,  var(--color-primary) 100%) padding-box, linear-gradient(-20deg, #801bf2 0%, #1BAB9C 100%) border-box',
-        border: '1px solid transparent',
-        borderRadius: '5px',
-        padding: '10px 15px',
-        fontWeight: 400,
-        fontSize: '16px',
-        lineHeight: '20px',
-        letterSpacing: '0.4px',
-        color: 'var(--color-white)',
-    },
-}))(MaterialTooltip);
 
 export default MyPositions;

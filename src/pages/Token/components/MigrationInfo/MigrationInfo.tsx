@@ -27,7 +27,7 @@ const MigrationInfo: React.FC<MigrationInfoProps> = ({ messageKey, tipNumber }) 
                 />
             </Message>
             <FlexDivCentered>
-                <NetworkSwitch hideL2DropDown />
+                <NetworkSwitch />
             </FlexDivCentered>
         </Conatiner>
     );

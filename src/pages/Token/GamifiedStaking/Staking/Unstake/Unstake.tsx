@@ -1,13 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-    ClaimMessage,
-    EarnSection,
-    FullRow,
-    SectionContentContainer,
-    StyledMaterialTooltip,
-    Line,
-    BalanceIcon,
-} from '../../../components';
+import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line, BalanceIcon } from '../../../components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +32,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import Tooltip from 'components/TooltipV2/Tooltip';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -62,7 +55,6 @@ const Unstake: React.FC = () => {
     const [unstakingEnded, setUnstakingEnded] = useState<boolean>(false);
     const [amountToUnstake, setAmountToUnstake] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-    const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | GasLimit[] | null>(null);
     const [l1Fee, setL1Fee] = useState<number | number[] | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -226,7 +218,6 @@ const Unstake: React.FC = () => {
 
     const handleStartUnstakingThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
-        setShowTooltip(false);
 
         try {
             setTxErrorMessage(null);
@@ -370,24 +361,11 @@ const Unstake: React.FC = () => {
         }
 
         return (
-            <StyledMaterialTooltip
-                arrow={true}
-                open={showTooltip}
-                disableHoverListener={isStartUnstakeButtonDisabled}
-                disableTouchListener={isStartUnstakeButtonDisabled}
-                title={t('options.earn.gamified-staking.staking.unstake.start-unstaking-tooltip') as string}
-                placement="top"
-            >
+            <Tooltip overlay={t('options.earn.gamified-staking.staking.unstake.start-unstaking-tooltip')}>
                 <ButtonWrapperTooltip>
                     <Button
                         active={!isStartUnstakeButtonDisabled}
                         disabled={isStartUnstakeButtonDisabled}
-                        onMouseOverHandler={() => {
-                            setShowTooltip(true);
-                        }}
-                        onMouseOutHandler={() => {
-                            setShowTooltip(false);
-                        }}
                         onClickHandler={handleStartUnstakingThales}
                         type={ButtonType.submit}
                     >
@@ -401,7 +379,7 @@ const Unstake: React.FC = () => {
                               )}...`}
                     </Button>
                 </ButtonWrapperTooltip>
-            </StyledMaterialTooltip>
+            </Tooltip>
         );
     };
 

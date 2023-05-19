@@ -104,9 +104,6 @@ const Tab: React.FC<{
                     </SectionContent>
                 </>
             )}
-            {!isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
-                <MigrationInfo messageKey="lp-staking" tipNumber={23} />
-            )}
             {selectedTab === TokenTabEnum.MIGRATION && <Migration />}
             {selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && <SnxStaking />}
         </Container>

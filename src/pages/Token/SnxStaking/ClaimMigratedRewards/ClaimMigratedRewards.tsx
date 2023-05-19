@@ -11,8 +11,8 @@ import { MigratedRetroReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchMigratedInvestorsRetroRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
-import { StyledInfoIcon, ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../componentsOld';
-import { StyledMaterialTooltip, Tip37Link } from '../../components';
+import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../componentsOld';
+import { Tip37Link } from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
@@ -26,6 +26,7 @@ import {
 import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInvestorsRetroRewardsQuery';
 import { DefaultSubmitButton } from 'pages/Token/components/components';
 import styled from 'styled-components';
+import Tooltip from 'components/TooltipV2/Tooltip';
 
 const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -154,18 +155,16 @@ const ClaimMigratedRewards: React.FC = () => {
             <SectionHeader>
                 <div>
                     {t('options.earn.thales-staking.staking-rewards.unclaimed-rewards.title')}
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={
+                    <Tooltip
+                        overlay={
                             <Trans
                                 i18nKey="options.earn.thales-staking.staking-rewards.unclaimed-rewards.info-tooltip"
                                 components={[<span key="1" />, <Tip37Link key="2" />]}
                             />
                         }
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                        iconFontSize={18}
+                        top={-1}
+                    />
                 </div>
             </SectionHeader>
             <GridContainer style={{ height: '100%' }}>
