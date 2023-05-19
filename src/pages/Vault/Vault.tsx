@@ -64,7 +64,7 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import Switch from 'components/SwitchInput/SwitchInputNew';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'pages/Token/components/NumericInput';
 import { CurrencyLabel, InputLabel, InputContainer } from 'pages/Token/components/components';
@@ -576,11 +576,10 @@ const Vault: React.FC<VaultProps> = (props) => {
                                             />
                                             {userVaultData.balanceCurrentRound > 0 && !isWithdrawalRequested && (
                                                 <Tooltip
-                                                    message={t('vault.estimated-amount-tooltip')}
-                                                    type={'info'}
-                                                    container={{ display: 'inline' }}
+                                                    overlay={t(`vault.estimated-amount-tooltip`)}
                                                     iconFontSize={16}
-                                                    iconTop={-2}
+                                                    marginLeft={2}
+                                                    top={-2}
                                                 />
                                             )}
                                         </ContentInfo>
@@ -599,12 +598,10 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                     }}
                                                 />
                                                 <Tooltip
-                                                    message={t('vault.estimated-amount-tooltip')}
-                                                    type={'info'}
-                                                    container={{ display: 'inline' }}
+                                                    overlay={t(`vault.estimated-amount-tooltip`)}
                                                     iconFontSize={16}
-                                                    iconTop={-2}
-                                                    iconColor="#ffcc00"
+                                                    marginLeft={2}
+                                                    top={-2}
                                                 />
                                             </WarningContentInfo>
                                         )}
@@ -778,13 +775,12 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                                                 }}
                                                                             />
                                                                             <Tooltip
-                                                                                message={t(
-                                                                                    'vault.estimated-amount-tooltip'
+                                                                                overlay={t(
+                                                                                    `vault.estimated-amount-tooltip`
                                                                                 )}
-                                                                                type={'info'}
-                                                                                container={{ display: 'inline' }}
                                                                                 iconFontSize={16}
-                                                                                iconTop={-2}
+                                                                                marginLeft={2}
+                                                                                top={-2}
                                                                             />
                                                                         </ContentInfo>
                                                                         <ContentInfo>
@@ -824,11 +820,10 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                             bold: <BoldContent />,
                                                             tooltip: (
                                                                 <Tooltip
-                                                                    message={t('vault.estimated-amount-tooltip')}
-                                                                    type={'info'}
-                                                                    container={{ display: 'inline' }}
+                                                                    overlay={t(`vault.estimated-amount-tooltip`)}
                                                                     iconFontSize={16}
-                                                                    iconTop={-2}
+                                                                    marginLeft={2}
+                                                                    top={-2}
                                                                 />
                                                             ),
                                                         }}
