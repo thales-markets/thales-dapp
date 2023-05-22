@@ -1,4 +1,4 @@
-import { Slider, Tooltip, withStyles } from '@material-ui/core';
+import { Slider, withStyles } from '@material-ui/core';
 import React from 'react';
 import styled from 'styled-components';
 import {

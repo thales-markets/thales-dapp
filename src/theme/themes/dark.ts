@@ -31,7 +31,7 @@ export default {
         textColor: {
             primary: Colors.GRAY_DARK,
             secondary: Colors.WHITE,
-            tertiary: '',
+            tertiary: Colors.GRAY,
             quaternary: Colors.ORANGE,
         },
         borderColor: {
