@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-
 import { ReactComponent as Arrow } from 'assets/images/arrow-link.svg';
 import metamask from 'assets/images/metamask.svg';
 import { ReactComponent as InsertCard } from 'assets/images/wizard/insert-card.svg';
@@ -14,10 +13,8 @@ import banxa from 'assets/images/wizard/logo-banxa.svg';
 import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 import mtPelerin from 'assets/images/wizard/logo-mt-pelerin.svg';
-
 import { POLYGON_ID } from 'constants/network';
 import ROUTES from 'constants/routes';
-
 import SimpleLoader from 'components/SimpleLoader';
 import SPAAnchor from 'components/SPAAnchor';
 import { XButton } from 'theme/common';
@@ -160,7 +157,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             <CardWrapper ref={ref}>
                 <Card clickable={isStep1} active={isStep1} onClick={step1ClickHandler}>
                     <IconWrapper clickable={isStep1} active={isStep1}>
-                        <Image src={metamask} clickable={isStep1} />
+                        <Image src={metamask} $clickable={isStep1} />
                     </IconWrapper>
                     <CardNameWrapper>
                         <Text>
@@ -175,7 +172,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                 <Trans i18nKey="wizard-page.step1-name" />
                             )}
                         </Text>
-                        {isStep1 && <ArrowImg clickable={isStep1} />}
+                        {isStep1 && <ArrowImg $clickable={isStep1} />}
                     </CardNameWrapper>
                 </Card>
                 <Card
@@ -187,14 +184,14 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         clickable={isWalletConnected && step === WizardSteps.BUY}
                         active={step === WizardSteps.BUY}
                     >
-                        <StyledInsertCard clickable={isWalletConnected && step === WizardSteps.BUY} />
+                        <StyledInsertCard $clickable={isWalletConnected && step === WizardSteps.BUY} />
                     </IconWrapper>
                     <CardNameWrapper>
                         <Text>
                             <Trans i18nKey="wizard-page.step2-name" />
                         </Text>
                         {step === WizardSteps.BUY && (
-                            <ArrowImg clickable={isWalletConnected && step === WizardSteps.BUY} />
+                            <ArrowImg $clickable={isWalletConnected && step === WizardSteps.BUY} />
                         )}
                     </CardNameWrapper>
                 </Card>
@@ -218,7 +215,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                             <Trans i18nKey="wizard-page.step3-name" />
                         </Text>
                         {step === WizardSteps.EXCHANGE && (
-                            <ArrowImg clickable={isWalletConnected && step === WizardSteps.EXCHANGE} />
+                            <ArrowImg $clickable={isWalletConnected && step === WizardSteps.EXCHANGE} />
                         )}
                     </CardNameWrapper>
                 </Card>
@@ -537,19 +534,19 @@ const IconWrapper = styled.div<{ clickable: boolean; active: boolean; pulseDelay
         }
     }
 `;
-const StyledInsertCard = styled(InsertCard)<{ clickable: boolean }>`
+const StyledInsertCard = styled(InsertCard)<{ $clickable: boolean }>`
     width: 84px;
     height: 84px;
-    cursor: ${(props) => (props.clickable ? 'pointer' : '')};
+    cursor: ${(props) => (props.$clickable ? 'pointer' : '')};
     path {
         fill: ${(props) => props.theme.textColor.quaternary};
     }
 `;
 
-const Image = styled.img<{ clickable: boolean }>`
+const Image = styled.img<{ $clickable: boolean }>`
     width: 84px;
     height: 84px;
-    cursor: ${(props) => (props.clickable ? 'pointer' : '')};
+    cursor: ${(props) => (props.$clickable ? 'pointer' : '')};
 `;
 
 const Icon = styled.i<{ clickable: boolean }>`
@@ -559,12 +556,12 @@ const Icon = styled.i<{ clickable: boolean }>`
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
 `;
 
-const ArrowImg = styled(Arrow)<{ clickable: boolean }>`
+const ArrowImg = styled(Arrow)<{ $clickable: boolean }>`
     height: 14px;
     float: right;
     margin-right: 8px;
     margin-top: -18px;
-    cursor: ${(props) => (props.clickable ? 'pointer' : '')};
+    cursor: ${(props) => (props.$clickable ? 'pointer' : '')};
     path {
         fill: ${(props) => props.theme.textColor.quaternary};
     }

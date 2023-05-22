@@ -262,7 +262,8 @@
         "show-less": "Показывай меньше",
         "read-more": "Читать далее",
         "close": "Закрывать",
-        "enter-amount": "Введите сумму"
+        "enter-amount": "Введите сумму",
+        "enter-percentage": "Введите процент"
     },
     "modals": {
         "gwei": {

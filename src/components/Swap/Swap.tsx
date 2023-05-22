@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import {
@@ -44,8 +44,9 @@ import { toast } from 'react-toastify';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { OneInchLiquidityProtocol } from 'constants/network';
 import snxJSConnector from 'utils/snxJSConnector';
+import Button from 'components/ButtonV2';
 
-const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
+const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -70,7 +71,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
     const [isLoading, setLoading] = useState(false);
-    const [showSceleton, setShowSceleton] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
 
@@ -116,17 +116,14 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
 
     useEffect(() => {
         if (fromToken && Number(amount) > 0) {
-            setShowSceleton(true);
             quoteQuery.refetch().then((resp) => {
                 if (resp.data) {
                     setPreviewData(resp.data as any);
-                    setShowSceleton(false);
                 }
             });
         } else if (fromToken) {
             Number(amount) !== 0 ? setAmount('') : '';
             setPreviewData(undefined);
-            setShowSceleton(false);
         }
     }, [fromToken, toToken, amount]);
 
@@ -245,38 +242,22 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
         }
     };
 
-    const getButton = (royaleTheme: boolean) => {
-        if (!fromToken)
-            return (
-                <SwapDialog.ConfirmButton royaleTheme={royaleTheme} disabled={true} className="disabled primary">
-                    {t('options.swap.select-token')}
-                </SwapDialog.ConfirmButton>
-            );
+    const getButton = () => {
+        if (!fromToken) return <Button disabled={true}>{t('options.swap.select-token')}</Button>;
 
         if (fromToken && !allowance)
             return (
-                <SwapDialog.ConfirmButton
-                    royaleTheme={royaleTheme}
-                    disabled={!fromToken || isAllowing}
-                    className={!fromToken || isAllowing ? 'disabled primary' : 'primary'}
-                    onClick={() => setOpenApprovalModal(true)}
-                >
+                <Button disabled={!fromToken || isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {t('options.swap.approve', { currency: (fromToken as any).symbol })}
-                </SwapDialog.ConfirmButton>
+                </Button>
             );
 
         if (fromToken && allowance && Number(amount) <= 0)
-            return (
-                <SwapDialog.ConfirmButton royaleTheme={royaleTheme} className="disabled primary" disabled={true}>
-                    {t('options.swap.enter-amount')}
-                </SwapDialog.ConfirmButton>
-            );
+            return <Button disabled={true}>{t('options.swap.enter-amount')}</Button>;
 
         if (fromToken && allowance && Number(amount) > 0)
             return (
-                <SwapDialog.ConfirmButton
-                    royaleTheme={royaleTheme}
-                    className={Number(amount) > Number(balance) ? 'disabled primary' : 'primary'}
+                <Button
                     onClick={async () => {
                         await swapTx();
                         handleClose(false);
@@ -284,36 +265,23 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                     disabled={Number(amount) > Number(balance)}
                 >
                     {Number(amount) > Number(balance) ? t('options.swap.insufficient-balance') : t('options.swap.swap')}
-                </SwapDialog.ConfirmButton>
+                </Button>
             );
     };
 
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {unsupportedNetwork ? (
-                <SwapDialog royaleTheme={royaleTheme} contentType="unsupported">
-                    <SwapDialog.CloseIcon
-                        className="icon icon--x-sign"
-                        royaleTheme={royaleTheme}
-                        onClick={handleClose.bind(this, false)}
-                    />{' '}
-                    <SwapDialog.ErrorMessage royaleTheme={royaleTheme}>
-                        {t('options.swap.not-supported')}
-                    </SwapDialog.ErrorMessage>
+                <SwapDialog contentType="unsupported">
+                    <SwapDialog.ErrorMessage>{t('options.swap.not-supported')}</SwapDialog.ErrorMessage>
                 </SwapDialog>
             ) : (
-                <SwapDialog royaleTheme={royaleTheme} contentType={` ${isLoading ? 'loading' : ''}`}>
-                    <SwapDialog.CloseIcon
-                        className="icon icon--x-sign"
-                        royaleTheme={royaleTheme}
-                        onClick={handleClose.bind(this, false)}
-                    />
-                    <SwapDialog.SectionWrapper royaleTheme={royaleTheme}>
+                <SwapDialog contentType={` ${isLoading ? 'loading' : ''}`}>
+                    <SwapDialog.SectionWrapper>
                         <FlexDivRowCentered>
-                            <SwapDialog.Text royaleTheme={royaleTheme}>{t('options.swap.from')}:</SwapDialog.Text>
+                            <SwapDialog.Text>{t('options.swap.from')}:</SwapDialog.Text>
                             <FlexDivRow>
                                 <SwapDialog.Text
-                                    royaleTheme={royaleTheme}
                                     style={{ alignSelf: 'center', marginRight: 5, cursor: 'pointer' }}
                                     onClick={() => {
                                         setAmount(Number(balance).toFixed(5));
@@ -322,7 +290,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                                     {t('options.swap.balance')}: {Number(balance).toFixed(4)}
                                 </SwapDialog.Text>
                                 <SwapDialog.MaxButton
-                                    royaleTheme={royaleTheme}
                                     onClick={() => {
                                         setAmount(Number(balance).toFixed(5));
                                     }}
@@ -333,16 +300,13 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                         </FlexDivRowCentered>
                         <FlexDivRowCentered>
                             <SwapDialog.TokenSelect
-                                royaleTheme={royaleTheme}
                                 options={preLoadTokens}
                                 formatOptionLabel={(option: any) => {
                                     return (
                                         <FlexDivRowCentered>
                                             <SwapDialog.TokenLogo src={option.logoURI}></SwapDialog.TokenLogo>
                                             <FlexDivColumnCentered>
-                                                <SwapDialog.Text royaleTheme={royaleTheme} contentSize="large">
-                                                    {option.symbol}
-                                                </SwapDialog.Text>
+                                                <SwapDialog.Text contentSize="large">{option.symbol}</SwapDialog.Text>
                                             </FlexDivColumnCentered>
                                         </FlexDivRowCentered>
                                     );
@@ -355,7 +319,6 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                             ></SwapDialog.TokenSelect>
 
                             <SwapDialog.NumInput
-                                royaleTheme={royaleTheme}
                                 screenWidth={window.innerWidth}
                                 placeholder="0"
                                 value={amount !== '' ? Number(amount) : ''}
@@ -365,23 +328,11 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                             ></SwapDialog.NumInput>
                         </FlexDivRowCentered>
                     </SwapDialog.SectionWrapper>
-                    <SwapDialog.SceletonWrapper royaleTheme={royaleTheme} className={showSceleton ? 'visible' : ''}>
+
+                    <SwapDialog.SectionWrapper>
                         <FlexDivRowCentered>
-                            <SwapDialog.TextSceleton royaleTheme={royaleTheme} contentType="small" />
-                            <SwapDialog.TextSceleton royaleTheme={royaleTheme} contentType="large" />
-                        </FlexDivRowCentered>
-                        <FlexDivRowCentered>
-                            <FlexDivCentered>
-                                <SwapDialog.ImageSceleton royaleTheme={royaleTheme} />
-                                <SwapDialog.TextSceleton royaleTheme={royaleTheme} contentType="medium" />
-                            </FlexDivCentered>
-                            <SwapDialog.TextSceleton royaleTheme={royaleTheme} contentType="medium" />
-                        </FlexDivRowCentered>
-                    </SwapDialog.SceletonWrapper>
-                    <SwapDialog.SectionWrapper royaleTheme={royaleTheme} className={showSceleton ? 'hide' : ''}>
-                        <FlexDivRowCentered>
-                            <SwapDialog.Text royaleTheme={royaleTheme}>{t('options.swap.to')}:</SwapDialog.Text>
-                            <SwapDialog.Text royaleTheme={royaleTheme}>
+                            <SwapDialog.Text>{t('options.swap.to')}:</SwapDialog.Text>
+                            <SwapDialog.Text>
                                 {t('options.swap.estimated-gas')}:{' '}
                                 {previewData
                                     ? formatCurrencyWithSign(
@@ -397,16 +348,13 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                         </FlexDivRowCentered>
                         <FlexDivRowCentered>
                             <SwapDialog.TokenSelect
-                                royaleTheme={royaleTheme}
                                 options={preLoadTokens}
                                 formatOptionLabel={(option: any) => {
                                     return (
                                         <FlexDivRowCentered>
                                             <SwapDialog.TokenLogo src={option.logoURI}></SwapDialog.TokenLogo>
                                             <FlexDivColumnCentered>
-                                                <SwapDialog.Text royaleTheme={royaleTheme} contentSize="large">
-                                                    {option.symbol}
-                                                </SwapDialog.Text>
+                                                <SwapDialog.Text contentSize="large">{option.symbol}</SwapDialog.Text>
                                             </FlexDivColumnCentered>
                                         </FlexDivRowCentered>
                                     );
@@ -429,7 +377,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                                     setToToken(option);
                                 }}
                             ></SwapDialog.TokenSelect>
-                            <SwapDialog.NumericText royaleTheme={royaleTheme}>
+                            <SwapDialog.NumericText>
                                 {previewData
                                     ? Number(
                                           ethers.utils.formatUnits(
@@ -441,7 +389,7 @@ const Swap: React.FC<any> = ({ handleClose, royaleTheme, initialToToken }) => {
                             </SwapDialog.NumericText>
                         </FlexDivRowCentered>
                     </SwapDialog.SectionWrapper>
-                    {getButton(royaleTheme)}
+                    {getButton()}
                     {isLoading && (
                         <LoaderContainer>
                             <SimpleLoader />

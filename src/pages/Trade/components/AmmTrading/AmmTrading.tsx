@@ -640,6 +640,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             messageKey = 'common.errors.max-limit-exceeded';
         } else if (
             isWalletConnected &&
+            market.address &&
             ((Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) || stableBalance === 0)
         ) {
             messageKey = 'common.errors.insufficient-balance-wallet';

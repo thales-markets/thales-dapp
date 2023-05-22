@@ -33,6 +33,7 @@ const defaultCustomStyles = {
     overlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         zIndex: 2,
+        backdropFilter: 'blur(10px)',
     },
 };
 
@@ -73,7 +74,7 @@ const Container = styled.div<{ mobileStyle?: CSSProperties }>`
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     background: ${(props) => props.theme.background.primary};
     padding: 20px;
-    border-radius: 23px;
+    border-radius: 8px;
     @media (max-width: 575px) {
         ${(props) => (props.mobileStyle ? convertCssToStyledProperties(props.mobileStyle) : '')}
     }
