@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line, BalanceIcon } from '../../../components';
+import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
