@@ -373,7 +373,8 @@
         "no-data-available": "No data available",
         "all": "All",
         "none": "none",
-        "enter-amount": "Enter amount"
+        "enter-amount": "Enter amount",
+        "enter-percentage": "Enter percentage"
     },
     "modals": {
         "gwei": {

@@ -66,8 +66,7 @@ import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery'
 import Switch from 'components/SwitchInput/SwitchInputNew';
 import Tooltip from 'components/TooltipV2';
 import OpRewardsBanner from 'components/OpRewardsBanner';
-import NumericInput from 'pages/Token/components/NumericInput';
-import { CurrencyLabel, InputLabel, InputContainer } from 'pages/Token/components/components';
+import NumericInput from 'components/fields/NumericInput';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Footer from 'components/Footer';
 import { LINKS } from 'constants/links';
@@ -645,44 +644,33 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                 <Trans i18nKey="vault.deposit-max-amount-of-users-warning" />
                                             </WarningContentInfo>
                                         )}
-                                        <InputContainer marginTop={20} style={{ width: '100%' }}>
-                                            <NumericInput
-                                                value={amount}
-                                                disabled={isDepositAmountInputDisabled}
-                                                onChange={(_, value) => setAmount(value)}
-                                                className={
-                                                    insufficientBalance || !!exceededVaultCap || !!invalidAmount
-                                                        ? 'error'
-                                                        : ''
-                                                }
-                                            />
-                                            <InputLabel>{t('vault.deposit-amount-label')}</InputLabel>
-                                            <CurrencyLabel className={isDepositAmountInputDisabled ? 'disabled' : ''}>
-                                                {getDefaultCollateral(networkId)}
-                                            </CurrencyLabel>
-                                            <FieldValidationMessage
-                                                showValidation={
-                                                    insufficientBalance || !!exceededVaultCap || !!invalidAmount
-                                                }
-                                                message={
-                                                    t(
-                                                        `${
-                                                            insufficientBalance
-                                                                ? 'common.errors.insufficient-balance'
-                                                                : exceededVaultCap
-                                                                ? 'vault.deposit-vault-cap-error'
-                                                                : 'vault.deposit-min-amount-error'
-                                                        }`,
-                                                        {
-                                                            amount: formatCurrencyWithSign(
-                                                                USD_SIGN,
-                                                                vaultData.minDepositAmount
-                                                            ),
-                                                        }
-                                                    ) as string
-                                                }
-                                            />
-                                        </InputContainer>
+                                        <NumericInput
+                                            value={amount}
+                                            disabled={isDepositAmountInputDisabled}
+                                            onChange={(_, value) => setAmount(value)}
+                                            currencyLabel={getDefaultCollateral(networkId)}
+                                            placeholder={t('common.enter-amount')}
+                                            showValidation={
+                                                insufficientBalance || !!exceededVaultCap || !!invalidAmount
+                                            }
+                                            validationMessage={
+                                                t(
+                                                    `${
+                                                        insufficientBalance
+                                                            ? 'common.errors.insufficient-balance'
+                                                            : exceededVaultCap
+                                                            ? 'vault.deposit-vault-cap-error'
+                                                            : 'vault.deposit-min-amount-error'
+                                                    }`,
+                                                    {
+                                                        amount: formatCurrencyWithSign(
+                                                            USD_SIGN,
+                                                            vaultData.minDepositAmount
+                                                        ),
+                                                    }
+                                                ) as string
+                                            }
+                                        />
                                         {vaultData && (
                                             <>
                                                 {!vaultData.isRoundEnded && (

@@ -3,11 +3,10 @@ import { indexOf, max } from 'lodash';
 import TimeRemaining from 'components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, FlexDivCentered, Colors } from 'theme/common';
+import { FlexDivRowCentered, Colors } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { truncateText } from 'utils/formatters/string';
-import { getColor } from '../components';
+import { Body, Card, CardContainer, Result, ResultContainer, RightSection, Status, Title } from './styled-components';
 
 type ProposalCardProps = {
     proposal: Proposal;
@@ -47,78 +46,5 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
         </CardContainer>
     );
 };
-
-export const CardContainer = styled(FlexDivColumnCentered)`
-    width: 100%;
-    position: relative;
-    background: ${(props) => props.theme.background.secondary};
-    min-height: 200px;
-    padding: 2px;
-    border-radius: 15px;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    align-items: center;
-    color: ${(props) => props.theme.textColor.primary};
-    cursor: pointer;
-    &:hover {
-        background: ${(props) => props.theme.background.quaternary};
-    }
-`;
-
-const Card = styled.div`
-    border-radius: 15px;
-    background: ${(props) => props.theme.background.primary};
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-`;
-
-const Status = styled(FlexDivCentered)<{ status: string }>`
-    font-weight: bold;
-    color: ${(props) => getColor(props.status)};
-    text-transform: uppercase;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 0.5px;
-    border: 2px solid ${(props) => getColor(props.status)};
-    border-radius: 8px;
-    padding: 0px 20px;
-    height: 36px;
-    text-align: center;
-    margin-right: 20px;
-`;
-
-const Title = styled(FlexDivRow)<{ status: string }>`
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    color: ${(props) =>
-        props.status === StatusEnum.Closed ? props.theme.textColor.secondary : props.theme.textColor.primary};
-    margin-top: 25px;
-    margin-bottom: 25px;
-`;
-
-const Body = styled(FlexDivRow)<{ status: string }>`
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 24px;
-    color: ${(props) =>
-        props.status === StatusEnum.Closed ? props.theme.textColor.secondary : props.theme.textColor.primary};
-`;
-
-const ResultContainer = styled.div`
-    color: ${(props) => props.theme.textColor.secondary};
-    text-align: right;
-`;
-
-const Result = styled.span<{ color: string }>`
-    color: ${(props) => props.color};
-`;
-
-const RightSection = styled.div`
-    text-align: right;
-`;
 
 export default ProposalCard;

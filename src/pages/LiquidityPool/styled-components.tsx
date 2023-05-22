@@ -281,25 +281,6 @@ export const ButtonContainer = styled(FlexDivColumnCentered)`
     width: 100%;
 `;
 
-export const InputWrapper = styled(InputContainer)`
-    width: 100%;
-    margin-bottom: 5px;
-    input {
-        border: 2px solid ${(props) => props.theme.input.borderColor.primary};
-        font-size: 14px;
-        height: 48px;
-        padding: 18px 68px 0 15px;
-    }
-    .currency-label {
-        font-size: 14px;
-        padding: 24px 16px 20px 0;
-    }
-    .input-label {
-        font-size: 13px;
-        padding: 6px 0 0 17px;
-    }
-`;
-
 export const ValidationTooltip = withStyles(() => ({
     tooltip: {
         minWidth: '100%',

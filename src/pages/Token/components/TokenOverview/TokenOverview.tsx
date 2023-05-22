@@ -11,7 +11,6 @@ import { TokenInfo } from 'types/token';
 import { getIsAppReady } from 'redux/modules/app';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
-import { LightTooltip } from '../components';
 import { getNetworkId } from 'redux/modules/wallet';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
@@ -19,6 +18,7 @@ import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.s
 import { getIsOVM, Network, NetworkId } from 'utils/network';
 import Lottie from 'lottie-react';
 import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
+import Tooltip from 'components/TooltipV2/Tooltip';
 
 export const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -42,7 +42,7 @@ export const TokentOverview: React.FC = () => {
             <ItemContainer>
                 <FlexDivCentered>
                     <CustomIcon className={`sidebar-icon icon--token`} />
-                    <LightTooltip title={t('options.earn.overview.token-tooltip')}>
+                    <Tooltip overlay={t('options.earn.overview.token-tooltip')}>
                         <StyledLink
                             href={getEtherscanTokenLink(networkId, thalesContract.addresses[networkId])}
                             target="_blank"
@@ -51,19 +51,19 @@ export const TokentOverview: React.FC = () => {
                             <CryptoName>{THALES_CURRENCY}</CryptoName>
                             <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                         </StyledLink>
-                    </LightTooltip>
+                    </Tooltip>
                 </FlexDivCentered>
             </ItemContainer>
             <ItemContainer>
                 <Title>{t('options.earn.overview.price-label')}</Title>
                 <Content>
                     {tokenInfo && tokenInfo.price ? (
-                        <LightTooltip title={t(getTitleForPrice(networkId))}>
+                        <Tooltip overlay={t(getTitleForPrice(networkId))}>
                             <StyledLink href={getUrlForSwap(networkId)} target="_blank" rel="noreferrer">
                                 {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
                                 <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                             </StyledLink>
-                        </LightTooltip>
+                        </Tooltip>
                     ) : (
                         <>{EMPTY_VALUE}</>
                     )}
@@ -113,7 +113,7 @@ export const TokentOverview: React.FC = () => {
             </ItemContainer>
             <ItemContainer>
                 <FlexDivCentered>
-                    <LightTooltip title={t('options.earn.overview.celer-bridge-tooltip')}>
+                    <Tooltip overlay={t('options.earn.overview.celer-bridge-tooltip')}>
                         <StyledLink
                             href={
                                 isL2
@@ -126,7 +126,7 @@ export const TokentOverview: React.FC = () => {
                             <CryptoName>{t('options.earn.overview.celer-bridge')}</CryptoName>
                             <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
                         </StyledLink>
-                    </LightTooltip>
+                    </Tooltip>
                 </FlexDivCentered>
             </ItemContainer>
         </Container>

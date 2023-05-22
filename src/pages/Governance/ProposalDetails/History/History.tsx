@@ -6,16 +6,13 @@ import voting from 'utils/voting';
 import { truncateAddress, truncateText } from 'utils/formatters/string';
 import {
     Blockie,
-    VoteLabel,
     Percentage,
-    VoteRow,
     SidebarRowData,
     Votes,
     StyledLink,
-    NoVotes,
     LoaderContainer,
     ViewMore,
-} from 'pages/Governance/components';
+} from 'pages/Governance/styled-components';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { Network } from 'utils/network';
@@ -27,6 +24,7 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import { VoteRow, VoteLabel, NoVotes } from './styled-components';
 
 type HistoryProps = {
     proposal: Proposal;

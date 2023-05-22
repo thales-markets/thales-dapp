@@ -394,53 +394,6 @@ type TooltipIconProps = {
     children: any;
 };
 
-const StyledRoyaleTooltip = withStyles(() => ({
-    arrow: {
-        color: 'var(--color-secondary)',
-        width: '20px !important',
-        height: '16px !important',
-        marginTop: '-16px !important',
-        marginLeft: '0 !important',
-        marginBottom: '-14px !important',
-        '&::before': {
-            border: '2px solid var(--color-white)',
-        },
-    },
-    tooltip: {
-        background: 'var(--color-secondary)',
-        borderRadius: '10px',
-        border: '2px solid var(--color-white)',
-        padding: '10px',
-        fontSize: '12px',
-        lineHeight: '16px',
-        letterSpacing: '0.4px',
-        color: 'var(--color-white)',
-    },
-}))(MaterialTooltip);
-
-const StyledLightTooltip = withStyles(() => ({
-    arrow: {
-        color: '#6A7FB6',
-    },
-    tooltip: {
-        background: '#6A7FB6',
-        borderRadius: '6px',
-        padding: '4px 10px',
-        fontSize: '10px',
-        fontWeight: 600,
-        lineHeight: '16px',
-        letterSpacing: '0.4px',
-        color: '#F6F6FE',
-    },
-}))(MaterialTooltip);
-
-const StyledLightMediumTooltip = withStyles(() => ({
-    tooltip: {
-        padding: '8px 12px',
-        fontSize: '12px',
-    },
-}))(StyledLightTooltip);
-
 const StyledLandingPageTooltip = withStyles(() => ({
     arrow: {
         color: '#052040',
@@ -457,34 +410,6 @@ const StyledLandingPageTooltip = withStyles(() => ({
         backgroundColor: '#052040',
     },
 }))(MaterialTooltip);
-
-export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
-    <StyledLightTooltip
-        disableHoverListener={disableHoverListener}
-        title={<span>{title}</span>}
-        placement="top"
-        arrow={true}
-    >
-        {children}
-    </StyledLightTooltip>
-);
-
-export const RoyaleTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
-    <StyledRoyaleTooltip title={<span>{title}</span>} placement="top" arrow={true}>
-        {children}
-    </StyledRoyaleTooltip>
-);
-
-export const LightMediumTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
-    <StyledLightMediumTooltip
-        disableHoverListener={disableHoverListener}
-        title={<span>{title}</span>}
-        placement="top"
-        arrow={true}
-    >
-        {children}
-    </StyledLightMediumTooltip>
-);
 
 export const LandingPageTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
     <StyledLandingPageTooltip

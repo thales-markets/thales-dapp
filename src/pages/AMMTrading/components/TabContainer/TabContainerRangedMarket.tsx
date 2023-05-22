@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
 import OptionPriceTab from '../Tabs/OptionPriceTab';
 import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
 import MarketActivity from '../Tabs/MarketActivity';
-import SimilarMarkets from '../Tabs/SimilarMarkets';
 import Container from './styled-components/Container';
 import RowCardRangedMarket from '../RowCard/RowCardRangedMarket';
-
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-
 import { MarketType } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -61,14 +57,6 @@ const TabContainer: React.FC = () => {
             title: t('options.market.widgets.recent-transactions-widget'),
             index: 4,
         },
-        ...(!inMaturity
-            ? [
-                  {
-                      title: t('options.market.overview.similar-markets'),
-                      index: 5,
-                  },
-              ]
-            : []),
     ];
 
     return (
@@ -134,7 +122,6 @@ const TabContainer: React.FC = () => {
                     {currentTab == 2 && <OptionPriceTab marketType={MARKET_TYPE[1] as MarketType} />}
                     {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[1] as MarketType} />}
                     {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[1] as MarketType} />}
-                    {currentTab == 5 && <SimilarMarkets marketType={MARKET_TYPE[1] as MarketType} />}
                 </Container.Tab>
             </Container>
         </>

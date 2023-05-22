@@ -63,7 +63,7 @@ import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, U
 import { toast } from 'react-toastify';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
@@ -918,7 +918,7 @@ const AMM: React.FC = () => {
                     >
                         {t('common.max')}
                     </MaxButton>
-                    <Tooltip message={t('amm.max-button-tooltip')} type={'info'} />
+                    <Tooltip overlay={t('amm.max-button-tooltip')} />
                 </MaxButtonContainer>
             </Input>
             <RangeSlider

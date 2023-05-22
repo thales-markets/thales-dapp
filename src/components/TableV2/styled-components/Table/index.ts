@@ -100,6 +100,10 @@ const Row = styled.div<{ leaderboardRank?: number; isUser?: boolean; isMobile?: 
             `
             : ''};
     ${(_props) => (_props?.isClaimed ? 'opacity: 0.5' : '')};
+    i {
+        color: ${(_props) =>
+            _props?.isUser ? _props.theme.background.primary : _props.theme.textColor.primary} !important;
+    }
 `;
 
 const Body = styled.div<{ leaderboardView?: boolean; isMobile?: boolean }>`
@@ -117,6 +121,7 @@ const Body = styled.div<{ leaderboardView?: boolean; isMobile?: boolean }>`
         ${(_props) => (_props?.isMobile ? 'margin: 10px 0px;' : '')};
         ${(_props) => (_props?.isMobile ? 'width: 100% !important;' : '')};
     }
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const Header = styled(FlexDiv)`

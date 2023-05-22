@@ -33,8 +33,6 @@ import {
     Description,
     GetStakeThalesIcon,
     TipLink,
-    InputWrapper,
-    MaxButton,
     SliderContainer,
     SliderRange,
     StyledSlider,
@@ -44,7 +42,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { LiquidityPoolPnlType, LiquidityPoolTab } from 'constants/liquidityPool';
-import NumericInput from 'pages/Token/components/NumericInput';
+import NumericInput from 'components/fields/NumericInput';
 import { getIsAppReady } from 'redux/modules/app';
 import { UserLiquidityPoolData, LiquidityPoolData } from 'types/liquidityPool';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
@@ -68,8 +66,6 @@ import { LINKS } from 'constants/links';
 import MaxAllowanceTooltip from './components/MaxAllowanceTooltip';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
 import { getMaxGasLimitForNetwork } from 'constants/options';
-import { CurrencyLabel, InputLabel } from 'pages/Token/components/components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
@@ -77,7 +73,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { Colors, FlexDivRow } from 'theme/common';
-import RadioButton from 'components/RadioButton/RadioButton';
+import RadioButton from 'components/fields/RadioButton';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -515,67 +511,39 @@ const LiquidityPool: React.FC = () => {
                                             <Trans i18nKey="liquidity-pool.deposit-max-amount-of-users-warning" />
                                         </WarningContentInfo>
                                     )}
-                                    <InputWrapper>
-                                        <NumericInput
-                                            value={amount}
-                                            disabled={isDepositAmountInputDisabled}
-                                            onChange={(_, value) => setAmount(value)}
-                                            className={
-                                                insufficientBalance ||
-                                                !!exceededLiquidityPoolCap ||
-                                                !!exceededMaxAllowance ||
-                                                !!invalidAmount
-                                                    ? 'error'
-                                                    : ''
-                                            }
-                                        />
-                                        <InputLabel
-                                            className={
-                                                isDepositAmountInputDisabled ? 'input-label disabled' : 'input-label'
-                                            }
-                                        >
-                                            {t('vault.deposit-amount-label')}
-                                        </InputLabel>
-                                        <CurrencyLabel
-                                            className={
-                                                isDepositAmountInputDisabled
-                                                    ? 'currency-label disabled'
-                                                    : 'currency-label'
-                                            }
-                                        >
-                                            {collateral}
-                                        </CurrencyLabel>
-                                        <MaxButton disabled={isDepositAmountInputDisabled} onClick={setMaxAmount}>
-                                            {t('common.max')}
-                                        </MaxButton>
-                                        <FieldValidationMessage
-                                            showValidation={
-                                                insufficientBalance ||
-                                                !!exceededLiquidityPoolCap ||
-                                                !!exceededMaxAllowance ||
-                                                !!invalidAmount
-                                            }
-                                            message={
-                                                t(
-                                                    `${
-                                                        insufficientBalance
-                                                            ? 'common.errors.insufficient-balance'
-                                                            : exceededLiquidityPoolCap
-                                                            ? 'liquidity-pool.deposit-liquidity-pool-cap-error'
-                                                            : exceededMaxAllowance
-                                                            ? 'liquidity-pool.deposit-staked-thales-error'
-                                                            : 'liquidity-pool.deposit-min-amount-error'
-                                                    }`,
-                                                    {
-                                                        amount: formatCurrencyWithSign(
-                                                            USD_SIGN,
-                                                            liquidityPoolData.minDepositAmount
-                                                        ),
-                                                    }
-                                                ) as string
-                                            }
-                                        />
-                                    </InputWrapper>
+                                    <NumericInput
+                                        value={amount}
+                                        disabled={isDepositAmountInputDisabled}
+                                        onChange={(_, value) => setAmount(value)}
+                                        currencyLabel={collateral}
+                                        onMaxButton={setMaxAmount}
+                                        placeholder={t('common.enter-amount')}
+                                        showValidation={
+                                            insufficientBalance ||
+                                            !!exceededLiquidityPoolCap ||
+                                            !!exceededMaxAllowance ||
+                                            !!invalidAmount
+                                        }
+                                        validationMessage={
+                                            t(
+                                                `${
+                                                    insufficientBalance
+                                                        ? 'common.errors.insufficient-balance'
+                                                        : exceededLiquidityPoolCap
+                                                        ? 'liquidity-pool.deposit-liquidity-pool-cap-error'
+                                                        : exceededMaxAllowance
+                                                        ? 'liquidity-pool.deposit-staked-thales-error'
+                                                        : 'liquidity-pool.deposit-min-amount-error'
+                                                }`,
+                                                {
+                                                    amount: formatCurrencyWithSign(
+                                                        USD_SIGN,
+                                                        liquidityPoolData.minDepositAmount
+                                                    ),
+                                                }
+                                            ) as string
+                                        }
+                                    />
                                     {getDepositSubmitButton()}
                                 </>
                             )}
@@ -649,50 +617,23 @@ const LiquidityPool: React.FC = () => {
                                                                             )}
                                                                         />
                                                                     </RadioButtonContainer>
-                                                                    <InputWrapper>
-                                                                        <NumericInput
-                                                                            value={withdrawalPercentage}
-                                                                            onChange={(_, value) =>
-                                                                                setWithdrawalPercentage(value)
-                                                                            }
-                                                                            disabled={isPartialWithdrawalDisabled}
-                                                                            className={
-                                                                                isWithdrawalPercentageValid
-                                                                                    ? ''
-                                                                                    : 'error'
-                                                                            }
-                                                                            step="1"
-                                                                        />
-                                                                        <InputLabel
-                                                                            className={`input-label ${
-                                                                                isPartialWithdrawalDisabled
-                                                                                    ? 'disabled'
-                                                                                    : ''
-                                                                            }`}
-                                                                        >
-                                                                            {t(`liquidity-pool.percentage-label`)}
-                                                                        </InputLabel>
-                                                                        <CurrencyLabel
-                                                                            className={`currency-label ${
-                                                                                isPartialWithdrawalDisabled
-                                                                                    ? 'disabled'
-                                                                                    : ''
-                                                                            }`}
-                                                                        >
-                                                                            %
-                                                                        </CurrencyLabel>
-                                                                        <FieldValidationMessage
-                                                                            showValidation={
-                                                                                !isWithdrawalPercentageValid
-                                                                            }
-                                                                            message={t(
-                                                                                Number(withdrawalPercentage) == 0
-                                                                                    ? 'common.errors.enter-percentage'
-                                                                                    : 'common.errors.invalid-percentage-range',
-                                                                                { min: 10, max: 90 }
-                                                                            )}
-                                                                        />
-                                                                    </InputWrapper>
+                                                                    <NumericInput
+                                                                        value={withdrawalPercentage}
+                                                                        onChange={(_, value) =>
+                                                                            setWithdrawalPercentage(value)
+                                                                        }
+                                                                        disabled={isPartialWithdrawalDisabled}
+                                                                        step="1"
+                                                                        currencyLabel="%"
+                                                                        placeholder={t('common.enter-percentage')}
+                                                                        showValidation={!isWithdrawalPercentageValid}
+                                                                        validationMessage={t(
+                                                                            Number(withdrawalPercentage) == 0
+                                                                                ? 'common.errors.enter-percentage'
+                                                                                : 'common.errors.invalid-percentage-range',
+                                                                            { min: 10, max: 90 }
+                                                                        )}
+                                                                    />
                                                                     <SliderContainer>
                                                                         <StyledSlider
                                                                             value={Number(withdrawalPercentage)}

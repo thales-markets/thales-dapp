@@ -39,7 +39,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { UI_COLORS } from 'constants/ui';
 import ReadMoreButton from 'components/ReadMoreButton';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
@@ -500,13 +500,8 @@ const Referral: React.FC = () => {
             </Container.Tab>
             <ReferralFooter>
                 {t('referral-page.footer.sharing')}
-                <Tooltip
-                    message={t('referral-page.disclaimer')}
-                    type={'info'}
-                    iconColor={'var(--color-white)'}
-                    container={{ width: '15px' }}
-                    interactive={true}
-                />
+                <Tooltip overlay={t('referral-page.disclaimer')} iconFontSize={12} />
+                &nbsp;
                 {t('referral-page.footer.and')}{' '}
                 <a
                     target="_blank"

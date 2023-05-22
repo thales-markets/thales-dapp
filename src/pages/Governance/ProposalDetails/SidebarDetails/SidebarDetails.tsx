@@ -5,7 +5,7 @@ import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { Proposal } from 'types/governance';
 import useProposalQuery from 'queries/governance/useProposalQuery';
-import { SidebarContent, SidebarTitle, SidebarContentWrapper, VotesCount } from 'pages/Governance/components';
+import { SidebarContent, SidebarTitle, SidebarContentWrapper, VotesCount } from 'pages/Governance/styled-components';
 import Results from '../Results';
 import History from '../History';
 import { useTranslation } from 'react-i18next';

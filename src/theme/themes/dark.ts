@@ -41,7 +41,7 @@ export default {
     },
     input: {
         background: {
-            primary: '',
+            primary: Colors.GRAY_DARK,
             selection: {
                 primary: Colors.WHITE,
             },

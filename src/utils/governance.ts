@@ -1,5 +1,5 @@
 import snapshot from '@snapshot-labs/snapshot.js';
-import { SpaceKey } from 'constants/governance';
+import { SpaceKey, StatusEnum } from 'constants/governance';
 // import { getCurrentTimestampSeconds } from 'utils/formatters/date';
 import { ethers } from 'ethers';
 import { truncateAddress, truncateText } from './formatters/string';
@@ -10,6 +10,7 @@ import {
     PROPOSAL_APPROVAL_VOTES,
     PROPOSAL_APPROVAL_VOTES_OLD,
 } from 'constants/governance';
+import { Colors } from 'theme/common';
 
 export function getENSForAddresses(addresses: any[]) {
     return new Promise((resolve, reject) => {
@@ -92,4 +93,15 @@ export const getProposalApprovalData = (proposalStartDate: number) => {
             ? PROPOSAL_APPROVAL_VOTES_OLD
             : PROPOSAL_APPROVAL_VOTES;
     return { numberOfCouncilMembers, proposalApprovalVotes };
+};
+
+export const getStatusColor = (status: string) => {
+    switch (status) {
+        case StatusEnum.Pending:
+            return Colors.GRAY_LIGHT;
+        case StatusEnum.Closed:
+            return Colors.BLUE;
+        default:
+            return Colors.GREEN;
+    }
 };

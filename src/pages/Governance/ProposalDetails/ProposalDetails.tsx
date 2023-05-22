@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { FlexDivRow, FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDivRow, FlexDivRowCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
@@ -9,7 +8,7 @@ import { formatShortDateWithTime } from 'utils/formatters/date';
 import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
-import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie, VotingPowerTitle } from '../components';
+import { StyledLink, Blockie } from '../styled-components';
 import { Network } from 'utils/network';
 import { ProposalTypeEnum, SpaceKey, StatusEnum } from 'constants/governance';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
@@ -22,6 +21,24 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import useVotingPowerQuery from 'queries/governance/useVotingPowerQuery';
+import {
+    DetailsTitle,
+    Divider,
+    VotingPowerTitle,
+    ArrowIcon,
+    Container,
+    Title,
+    StatusContainer,
+    Label,
+    StatusWrapper,
+    Status,
+    DetailsWrapper,
+    DetailsContainer,
+    Text,
+    VoteHeader,
+    VoteNote,
+    Body,
+} from './styled-components';
 
 type ProposalDetailsProps = {
     proposal: Proposal;
@@ -168,137 +185,5 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
         </Container>
     );
 };
-
-const Container = styled(FlexDivColumnCentered)`
-    padding: 10px 40px;
-    @media (max-width: 767px) {
-        padding: 10px 20px;
-    }
-`;
-
-const StatusContainer = styled(FlexDivColumnCentered)`
-    margin-bottom: 30px;
-    align-items: center;
-`;
-
-const Title = styled(FlexDivColumnCentered)`
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 24px;
-    text-align: center;
-    color: ${(props) => props.theme.textColor.primary};
-    margin-bottom: 40px;
-`;
-
-const DetailsWrapper = styled(FlexDivRow)`
-    @media (max-width: 767px) {
-        flex-direction: column;
-    }
-`;
-
-const DetailsContainer = styled(FlexDivColumnCentered)`
-    padding: 15px;
-    border-radius: 5px;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
-    color: ${(props) => props.theme.textColor.primary};
-    &:first-child {
-        margin-right: 40px;
-        @media (max-width: 767px) {
-            flex-direction: column;
-            margin-right: 0px;
-            margin-bottom: 10px;
-        }
-    }
-`;
-
-const Label = styled.span`
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    color: ${(props) => props.theme.textColor.secondary};
-    margin-bottom: 5px;
-`;
-
-const Text = styled.span`
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
-`;
-
-const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
-    padding: 1px;
-    border-radius: 8px;
-    width: 200px;
-    background: ${(props) => getColor(props.status)};
-`;
-
-const Status = styled(FlexDivColumnCentered)<{ status: string }>`
-    height: 48px;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 24px;
-    text-align: center;
-    letter-spacing: 2px;
-    color: ${(props) => getColor(props.status)};
-    background: ${(props) => props.theme.background.primary};
-    border-radius: 8px;
-    text-transform: uppercase;
-    width: 198px;
-`;
-
-const Body = styled(FlexDivColumn)`
-    margin-top: 15px;
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 24px;
-    color: ${(props) => props.theme.textColor.primary};
-    p {
-        margin-bottom: 15px;
-    }
-    a {
-        color: ${(props) => props.theme.link.textColor.primary};
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-    table {
-        overflow-y: auto;
-        display: block;
-        th,
-        td {
-            border: 1px solid ${(props) => props.theme.borderColor.tertiary};
-            padding: 6px 13px;
-        }
-    }
-    h2 {
-        font-weight: 500;
-        font-size: 18px;
-        line-height: 24px;
-        color: ${(props) => props.theme.textColor.primary};
-        margin-top: 24px;
-        margin-bottom: 16px;
-    }
-`;
-
-const VoteHeader = styled(FlexDivRowCentered)`
-    @media (max-width: 767px) {
-        flex-direction: column;
-        align-items: start;
-    }
-`;
-
-const VoteNote = styled(FlexDivRow)`
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 24px;
-    text-align: center;
-    color: ${(props) => props.theme.textColor.quaternary};
-    text-transform: uppercase;
-    margin-top: 42px;
-    margin-left: 5px;
-`;
 
 export default ProposalDetails;

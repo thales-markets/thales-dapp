@@ -10,7 +10,7 @@ import {
 } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import { VoteContainer, VoteConfirmation } from 'pages/Governance/components';
+import { VoteContainer, VoteConfirmation } from 'pages/Governance/styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';

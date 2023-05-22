@@ -1,8 +1,6 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 import { navigateToGovernance } from 'utils/routes';
-import { FlexDivCentered, FlexDivColumn, FlexDiv, FlexDivRow } from 'theme/common';
 import { SNAPSHOT_GRAPHQL_URL, SpaceKey, StatusEnum } from 'constants/governance';
 import ProposalList from './ProposalList';
 import ProposalDetails from './ProposalDetails';
@@ -10,7 +8,6 @@ import { Proposal } from 'types/governance';
 import CouncilMembers from './CouncilMembers';
 import { RouteComponentProps } from 'react-router-dom';
 import request, { gql } from 'graphql-request';
-import { ReactComponent as ArrowBackIcon } from 'assets/images/arrow-back.svg';
 import StatusDropdown from './components/StatusDropdown';
 import SidebarDetails from './ProposalDetails/SidebarDetails';
 import ThalesStakers from './ThalesStakers';
@@ -22,6 +19,20 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
+import {
+    ArrowIcon,
+    BackLink,
+    BackLinkWrapper,
+    Container,
+    MainContentContainer,
+    MainContentWrapper,
+    OptionsTab,
+    OptionsTabContainer,
+    OptionsTabWrapper,
+    Sidebar,
+    SidebarContainer,
+    SidebarWrapper,
+} from './styled-components';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -245,130 +256,5 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
         </>
     );
 };
-
-const Container = styled(FlexDivRow)`
-    width: 100%;
-    @media (max-width: 1200px) {
-        flex-direction: column;
-    }
-`;
-
-const MainContentContainer = styled.div<{ isOverviewPage: boolean }>`
-    background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.secondary)};
-    width: 66%;
-    padding: 2px;
-    border-radius: 15px;
-    height: 100%;
-    @media (max-width: 1200px) {
-        width: 100%;
-    }
-    @media (max-width: 767px) {
-        border: none;
-        background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.secondary)};
-    }
-`;
-
-const MainContentWrapper = styled.div<{ isOverviewPage: boolean }>`
-    border-radius: 15px;
-    padding: ${(props) => (props.isOverviewPage ? '0px' : '25px 0px 30px 0px')};
-    background: ${(props) => props.theme.background.primary};
-    @media (max-width: 767px) {
-        background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.primary)};
-        padding: ${(props) => (props.isOverviewPage ? '0px 0px 10px 0px' : '25px 0px 30px 0px')};
-    }
-`;
-
-const SidebarContainer = styled(FlexDivColumn)`
-    width: 33%;
-    margin-left: 10px;
-    @media (max-width: 1200px) {
-        width: 100%;
-        margin-left: 0;
-    }
-`;
-
-const SidebarWrapper = styled.div`
-    background: ${(props) => props.theme.background.secondary};
-    border-radius: 15px;
-    padding: 2px;
-    margin-bottom: 20px;
-    &:first-child {
-        @media (max-width: 1200px) {
-            margin-top: 20px;
-        }
-    }
-`;
-
-const Sidebar = styled.div`
-    background: ${(props) => props.theme.background.primary};
-    border-radius: 15px;
-    padding: 15px 0px 0px 0px;
-`;
-
-const OptionsTabWrapper = styled(FlexDivRow)`
-    padding: 0 30px;
-    @media (max-width: 767px) {
-        flex-direction: column;
-        padding: 0;
-    }
-`;
-
-const OptionsTabContainer = styled(FlexDiv)`
-    height: 40px;
-`;
-
-const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 48px;
-    color: ${(props) => props.theme.textColor.primary};
-    user-select: none;
-    border-bottom: 5px solid ${(props) => props.theme.background.primary};
-    margin-left: 25px;
-    margin-right: 25px;
-    &.selected {
-        transition: 0.2s;
-        color: ${(props) => props.theme.textColor.primary};
-        border-bottom: 5px solid ${(props) => props.theme.borderColor.quaternary};
-    }
-    &:hover:not(.selected) {
-        cursor: pointer;
-        color: ${(props) => props.theme.textColor.quaternary};
-    }
-`;
-
-const BackLinkWrapper = styled(FlexDiv)<{ isOverviewPage: boolean }>`
-    height: 20px;
-    align-self: start;
-    margin-bottom: 10px;
-    @media (max-width: 767px) {
-        height: ${(props) => (props.isOverviewPage ? '0' : '20px')};
-    }
-`;
-
-const BackLink = styled(FlexDivCentered)`
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 20px;
-    color: ${(props) => props.theme.link.textColor.secondary};
-    &path {
-        fill: ${(props) => props.theme.link.textColor.secondary};
-    }
-    &:hover {
-        cursor: pointer;
-        color: ${(props) => props.theme.link.textColor.primary};
-        & path {
-            fill: ${(props) => props.theme.link.textColor.primary};
-        }
-    }
-`;
-
-const ArrowIcon = styled(ArrowBackIcon)`
-    height: 16px;
-    width: 18px;
-    margin-right: 4px;
-    margin-left: 4px;
-`;
 
 export default GovernancePage;

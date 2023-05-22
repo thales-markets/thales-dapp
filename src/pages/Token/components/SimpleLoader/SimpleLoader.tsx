@@ -6,13 +6,14 @@ import { FlexDivCentered } from 'theme/common';
 const SimpleLoader: React.FC = () => {
     return (
         <LoaderContainer>
-            <CircularProgress thickness={6} size={12} disableShrink color="inherit" />
+            <CircularProgress thickness={7} size={15} disableShrink color="inherit" />
         </LoaderContainer>
     );
 };
 
 const LoaderContainer = styled(FlexDivCentered)`
-    color: #748bc6;
+    color: ${(props) => props.theme.background.tertiary};
+    margin-bottom: 2px;
 `;
 
 export default SimpleLoader;

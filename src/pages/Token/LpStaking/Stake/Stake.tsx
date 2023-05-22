@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { BalanceIcon, ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
+import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import NumericInput from 'pages/Token/components/NumericInput';
-import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
+import NumericInput from 'components/fields/NumericInput';
+import { InputContainer } from 'pages/Token/components/components';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -16,9 +16,6 @@ import { checkAllowance, formatGasLimit, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
-import SimpleLoader from '../../components/SimpleLoader';
-import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
 import { FlexDivColumnCentered } from 'theme/common';
 import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
 import { LP_TOKEN } from 'constants/currency';
@@ -251,30 +248,20 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         value={amountToStake}
                         onChange={(_, value) => setAmountToStake(value)}
                         disabled={isStaking}
-                        className={isAmountValid ? '' : 'error'}
-                    />
-                    <InputLabel>{t('options.earn.gamified-staking.staking.stake.amount-to-stake')}</InputLabel>
-                    <CurrencyLabel className={isStaking ? 'disabled' : ''}>{LP_TOKEN}</CurrencyLabel>
-                    <ThalesWalletAmountLabel>
-                        {!isMobile() && <BalanceIcon />}
-                        {isWalletConnected ? (
-                            lpTokensBalanceQuery.isLoading ? (
-                                <SimpleLoader />
-                            ) : (
-                                t('options.earn.gamified-staking.staking.stake.balance') +
-                                ' ' +
-                                formatCurrency(lpTokensBalance)
-                            )
-                        ) : (
-                            '-'
-                        )}
-                        <MaxButton disabled={isStaking || !isWalletConnected} onClick={onMaxClick}>
-                            {t('common.max')}
-                        </MaxButton>
-                    </ThalesWalletAmountLabel>
-                    <FieldValidationMessage
+                        currencyLabel={LP_TOKEN}
+                        placeholder={t('common.enter-amount')}
+                        label={t('options.earn.gamified-staking.staking.stake.amount-to-stake')}
+                        onMaxButton={onMaxClick}
                         showValidation={!isAmountValid}
-                        message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LP_TOKEN })}
+                        validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LP_TOKEN })}
+                        balance={
+                            isWalletConnected
+                                ? `${t('options.earn.gamified-staking.staking.stake.balance')} ${formatCurrency(
+                                      lpTokensBalance
+                                  )}`
+                                : undefined
+                        }
+                        isBalanceLoading={lpTokensBalanceQuery.isLoading}
                     />
                 </InputContainer>
                 <Line margin={'0 0 10px 0'} />

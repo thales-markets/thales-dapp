@@ -1,6 +1,6 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/ButtonV2';
-import Checkbox from 'components/Checkbox';
+import Checkbox from 'components/fields/Checkbox';
 import Input from 'components/Input';
 import Modal from 'components/Modal';
 import { BigNumber, ethers } from 'ethers';
