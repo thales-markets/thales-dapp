@@ -114,17 +114,16 @@ export const FullRow = styled(FlexDiv)`
 `;
 
 export const TooltipLink = styled.a`
-    color: #00f9ff;
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
-        color: rgb(116, 139, 198);
+        text-decoration: underline;
     }
 `;
 
 export const DescriptionLink = styled.a`
-    color: var(--color-highlight);
-    text-decoration: underline;
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
-        color: rgb(116, 139, 198);
+        text-decoration: underline;
     }
 `;
 

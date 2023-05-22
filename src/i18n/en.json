@@ -374,7 +374,8 @@
         "all": "All",
         "none": "none",
         "enter-amount": "Enter amount",
-        "enter-percentage": "Enter percentage"
+        "enter-percentage": "Enter percentage",
+        "enter-address": "Enter address"
     },
     "modals": {
         "gwei": {

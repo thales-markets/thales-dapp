@@ -3,9 +3,7 @@ import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
 import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, XButton } from 'theme/common';
 import { Modal } from '@material-ui/core';
-import TextInput from 'pages/Token/components/TextInput';
-import { InputContainer, InputLabel } from '../components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
+import { InputContainer } from '../components';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -19,6 +17,7 @@ import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQ
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/ButtonV2/Button';
+import TextInput from 'components/fields/TextInput';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -145,13 +144,10 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
                         value={account}
                         onChange={(e: any) => setAccount(e.target.value)}
                         disabled={isSubmitting || !isWalletConnected}
-                        className={isAccountValid ? '' : 'error'}
-                        autoFocus={true}
-                    />
-                    <InputLabel>{t('options.earn.claim-on-behalf.account-label')}:</InputLabel>
-                    <FieldValidationMessage
+                        label={t('options.earn.claim-on-behalf.account-label')}
+                        placeholder={t('common.enter-address')}
                         showValidation={!isAccountValid}
-                        message={t(`common.errors.invalid-address`)}
+                        validationMessage={t(`common.errors.invalid-address`)}
                     />
                 </InputContainer>
                 <ButtonContainer>
