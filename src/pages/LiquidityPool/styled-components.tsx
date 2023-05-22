@@ -211,29 +211,11 @@ export const LiquidityPoolFilledGraphicPercentage = styled(FlexDivStart)<{ width
     border-radius: 9px;
 `;
 
-export const SubmitButton = styled.button`
-    background: ${(props) => props.theme.button.background.primary};
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 20px;
-    color: ${(props) => props.theme.button.textColor.primary};
-    width: 100%;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-    text-transform: uppercase;
-    &:disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-`;
-
 export const ExternalButton = styled.a`
     background: ${(props) => props.theme.button.background.primary};
     margin-top: 5px;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 30px;
+    font-size: 18px;
     font-weight: 700;
     line-height: 20px;
     color: ${(props) => props.theme.button.textColor.primary};
@@ -244,16 +226,6 @@ export const ExternalButton = styled.a`
     text-align: center;
     text-transform: uppercase;
     height: 26px;
-`;
-
-export const CloseRoundButton = styled(SubmitButton)`
-    margin: 0;
-    width: auto;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 14px;
-    top: -2px;
-    position: relative;
 `;
 
 export const ButtonContainer = styled(FlexDivColumnCentered)`
@@ -401,3 +373,9 @@ export const SliderRange = styled.div`
         cursor: default;
     }
 `;
+
+export const defaultButtonProps = {
+    width: '100%',
+    fontSize: '15px',
+    height: '30px;',
+};

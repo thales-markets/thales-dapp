@@ -21,14 +21,13 @@ import { formattedDuration } from 'utils/formatters/date';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
 import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2/Button';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -296,22 +295,13 @@ const Unstake: React.FC = () => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button active={true} onClickHandler={openConnectModal} type={ButtonType.submit}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (isUnstakingInContract) {
             return (
                 <>
                     {unstakingEnded && (
-                        <Button
-                            active={!isUnstakeButtonDisabled}
-                            disabled={isUnstakeButtonDisabled}
-                            onClickHandler={handleUnstakeThales}
-                            type={ButtonType.submit}
-                        >
+                        <Button disabled={isUnstakeButtonDisabled} onClick={handleUnstakeThales}>
                             {!isUnstaking
                                 ? `${t('options.earn.gamified-staking.staking.unstake.name')} ${formatCurrencyWithKey(
                                       THALES_CURRENCY,
@@ -322,12 +312,7 @@ const Unstake: React.FC = () => {
                                   )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}...`}
                         </Button>
                     )}
-                    <Button
-                        active={!isCancelUnstakeButtonDisabled}
-                        disabled={isCancelUnstakeButtonDisabled}
-                        onClickHandler={handleCancelUnstakingThales}
-                        type={ButtonType.submit}
-                    >
+                    <Button disabled={isCancelUnstakeButtonDisabled} onClick={handleCancelUnstakingThales}>
                         {!isCanceling
                             ? `${t('options.earn.gamified-staking.staking.unstake.cancel')} ${formatCurrencyWithKey(
                                   THALES_CURRENCY,
@@ -342,29 +327,16 @@ const Unstake: React.FC = () => {
             );
         }
         if (insufficientBalance) {
-            return (
-                <Button disabled={true} type={ButtonType.submit}>
-                    {t(`common.errors.insufficient-staking-balance`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.insufficient-staking-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return (
-                <Button disabled={true} type={ButtonType.submit}>
-                    {t(`common.errors.enter-amount`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
 
         return (
             <Tooltip overlay={t('options.earn.gamified-staking.staking.unstake.start-unstaking-tooltip')}>
                 <ButtonWrapperTooltip>
-                    <Button
-                        active={!isStartUnstakeButtonDisabled}
-                        disabled={isStartUnstakeButtonDisabled}
-                        onClickHandler={handleStartUnstakingThales}
-                        type={ButtonType.submit}
-                    >
+                    <Button disabled={isStartUnstakeButtonDisabled} onClick={handleStartUnstakingThales}>
                         {!isUnstaking
                             ? `${t(
                                   'options.earn.gamified-staking.staking.unstake.start-unstaking'

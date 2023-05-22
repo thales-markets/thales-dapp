@@ -15,11 +15,11 @@ const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange }) => {
                     <React.Fragment key={index}>
                         <RadioWrapper onClick={onChange.bind(this, position)} key={index}>
                             {selected === position ? (
-                                <RadioIcon className="icon icon--radio-button-selected" />
+                                <RadioIcon selected={true} className="icon icon--radio-button-selected" />
                             ) : (
-                                <RadioIcon className="icon icon--radio-button" />
+                                <RadioIcon selected={false} className="icon icon--radio-button" />
                             )}
-                            <Label> {position}</Label>
+                            <Label selected={selected === position}> {position}</Label>
                         </RadioWrapper>
                         {index === 1 && <Separator />}
                     </React.Fragment>
@@ -44,14 +44,14 @@ const RadioWrapper = styled.div`
     cursor: pointer;
 `;
 
-const Label = styled.span`
+const Label = styled.span<{ selected: boolean }>`
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
     line-height: 20px;
     text-transform: uppercase;
 
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => (props.selected ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
 `;
 
 const Separator = styled.div`
@@ -61,10 +61,10 @@ const Separator = styled.div`
     height: 15px;
 `;
 
-const RadioIcon = styled.i`
+const RadioIcon = styled.i<{ selected: boolean }>`
     font-size: 16px;
     line-height: 20px;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => (props.selected ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
 `;
 
 export default RadioButtons;

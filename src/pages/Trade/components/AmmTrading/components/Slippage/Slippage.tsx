@@ -92,7 +92,6 @@ const Value = styled(FlexDivColumnCentered)<{ isSelected: boolean }>`
 `;
 
 const Text = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
