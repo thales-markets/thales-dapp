@@ -67,6 +67,7 @@ export default {
         textColor: {
             primary: Colors.BLUE_LIGHT,
             secondary: Colors.WHITE,
+            tertiary: Colors.GREEN,
         },
     },
 };

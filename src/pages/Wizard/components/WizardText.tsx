@@ -71,7 +71,7 @@ export const Text = styled.p`
     font-size: 16px;
     line-height: 24px;
     text-align: justify;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 14px;
     strong {
         font-weight: 800;

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import arrowDown from 'assets/images/wizard/arrow-down.svg';
-import arrowUp from 'assets/images/wizard/arrow-up.svg';
+import { ReactComponent as ArrowDown } from 'assets/images/wizard/arrow-down.svg';
+import { ReactComponent as ArrowUp } from 'assets/images/wizard/arrow-up.svg';
 import SPAAnchor from 'components/SPAAnchor';
 
 const WizardFaq: React.FC = () => {
+    const { t } = useTranslation();
     const [questionOpenedIndex, setQuestionOpenedIndex] = useState(-1);
 
     const data = [
@@ -100,11 +101,7 @@ const WizardFaq: React.FC = () => {
                                     }}
                                 />
                                 {!!qa.linkUrl && (
-                                    <SPAAnchor href={qa.linkUrl}>
-                                        {' ('}
-                                        <Trans i18nKey={qa.linkText} />
-                                        {')'}
-                                    </SPAAnchor>
+                                    <SPAAnchor href={qa.linkUrl}>{`(${t(qa.linkText) as string})`}</SPAAnchor>
                                 )}
                             </Question>
 
@@ -118,9 +115,12 @@ const WizardFaq: React.FC = () => {
                                     />
                                 </Answer>
                             )}
-                            <ToggleQuestion key={'tq' + index} questionOpened={questionOpenedIndex === index} />
+                            {questionOpenedIndex === index ? (
+                                <StyledArrowUp key={'tq' + index} />
+                            ) : (
+                                <StyledArrowDown key={'tq' + index} />
+                            )}
                         </QuestionGroup>
-                        <LineUnderQuestion key={'luq' + index} />
                     </React.Fragment>
                 );
             })}
@@ -129,12 +129,11 @@ const WizardFaq: React.FC = () => {
 };
 
 const FaqHeader = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     font-size: 22px;
     line-height: 33px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     margin-top: 30px;
     margin-bottom: 20px;
 `;
@@ -144,46 +143,77 @@ const QuestionGroup = styled.div<{ questionOpened: boolean }>`
     display: ${(props) => (props.questionOpened ? '' : 'flex')};
     justify-content: space-between;
     cursor: pointer;
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-radius: 15px;
+    position: relative;
+    margin-bottom: 10px;
 `;
 
 const Question = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
-    line-height: 54px;
-    color: var(--color-white);
-    padding-left: 30px;
+    line-height: 16px;
+    color: ${(props) => props.theme.textColor.quaternary};
+    padding: 20px 60px 20px 30px;
     span {
         text-transform: lowercase;
     }
+    @media (max-width: 767px) {
+        padding: 15px 60px 15px 15px;
+        font-size: 16px;
+        line-height: 22px;
+    }
+    a {
+        margin-left: 6px;
+        display: initial;
+        color: ${(props) => props.theme.link.textColor.secondary};
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 `;
 
-const ToggleQuestion = styled.div<{ questionOpened: boolean }>`
-    content: url(${(props) => (props.questionOpened ? arrowUp : arrowDown)});
-    padding-right: 20px;
-    padding-bottom: ${(props) => (props.questionOpened ? '20px' : '')};
-    padding-top: ${(props) => (props.questionOpened ? '10px' : '')};
-    margin-left: ${(props) => (props.questionOpened ? 'auto' : '')};
-    margin-right: ${(props) => (props.questionOpened ? '0' : '')};
+const StyledArrowUp = styled(ArrowUp)`
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    path {
+        fill: ${(props) => props.theme.textColor.quaternary};
+        fill-opacity: 1;
+    }
+    @media (max-width: 767px) {
+        right: 15px;
+        height: 12px;
+    }
+`;
+
+const StyledArrowDown = styled(ArrowDown)`
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    path {
+        fill: ${(props) => props.theme.textColor.quaternary};
+        fill-opacity: 1;
+    }
+    @media (max-width: 767px) {
+        right: 15px;
+        height: 12px;
+    }
 `;
 
 const Answer = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
     line-height: 19px;
     text-align: justify;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     cursor: text;
-`;
-
-const LineUnderQuestion = styled.div`
-    height: 4px;
-    border-radius: 3px;
-    background: rgba(100, 217, 254, 0.5);
-    width: 100%;
+    padding: 0 30px 20px 30px;
+    @media (max-width: 767px) {
+        padding: 0px 15px 15px 15px;
+    }
 `;
 
 export default WizardFaq;

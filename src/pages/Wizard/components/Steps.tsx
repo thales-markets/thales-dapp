@@ -7,14 +7,13 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 
-import arrow from 'assets/images/arrow-link.svg';
+import { ReactComponent as Arrow } from 'assets/images/arrow-link.svg';
 import metamask from 'assets/images/metamask.svg';
-import insertCard from 'assets/images/wizard/insert-card.svg';
+import { ReactComponent as InsertCard } from 'assets/images/wizard/insert-card.svg';
 import banxa from 'assets/images/wizard/logo-banxa.svg';
 import bungee from 'assets/images/wizard/logo-bungee.svg';
 import layerSwap from 'assets/images/wizard/logo-layerswap.svg';
 import mtPelerin from 'assets/images/wizard/logo-mt-pelerin.svg';
-import separator from 'assets/images/wizard/vertical-line.svg';
 
 import { POLYGON_ID } from 'constants/network';
 import ROUTES from 'constants/routes';
@@ -176,7 +175,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                 <Trans i18nKey="wizard-page.step1-name" />
                             )}
                         </Text>
-                        {isStep1 && <ArrowImg clickable={isStep1} src={arrow} />}
+                        {isStep1 && <ArrowImg clickable={isStep1} />}
                     </CardNameWrapper>
                 </Card>
                 <Card
@@ -188,14 +187,14 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         clickable={isWalletConnected && step === WizardSteps.BUY}
                         active={step === WizardSteps.BUY}
                     >
-                        <Image src={insertCard} clickable={isWalletConnected && step === WizardSteps.BUY} />
+                        <StyledInsertCard clickable={isWalletConnected && step === WizardSteps.BUY} />
                     </IconWrapper>
                     <CardNameWrapper>
                         <Text>
                             <Trans i18nKey="wizard-page.step2-name" />
                         </Text>
                         {step === WizardSteps.BUY && (
-                            <ArrowImg clickable={isWalletConnected && step === WizardSteps.BUY} src={arrow} />
+                            <ArrowImg clickable={isWalletConnected && step === WizardSteps.BUY} />
                         )}
                     </CardNameWrapper>
                 </Card>
@@ -219,7 +218,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                             <Trans i18nKey="wizard-page.step3-name" />
                         </Text>
                         {step === WizardSteps.EXCHANGE && (
-                            <ArrowImg clickable={isWalletConnected && step === WizardSteps.EXCHANGE} src={arrow} />
+                            <ArrowImg clickable={isWalletConnected && step === WizardSteps.EXCHANGE} />
                         )}
                     </CardNameWrapper>
                 </Card>
@@ -242,28 +241,6 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                 clickable={isWalletConnected && step === WizardSteps.TRADE}
                                 className={`sidebar-icon icon--markets`}
                             />
-                            <IconText>
-                                <Trans i18nKey="wizard-page.step4-directional" />
-                            </IconText>
-                        </IconWrapper>
-                        <SeparatorImg src={separator} />
-                        <IconWrapper
-                            clickable={isWalletConnected && step === WizardSteps.TRADE}
-                            active={step === WizardSteps.TRADE}
-                            onClick={() => {
-                                if (step === WizardSteps.TRADE) {
-                                    window.open(ROUTES.Options.RangeMarkets, '_blank');
-                                }
-                            }}
-                            pulseDelay="0.5s"
-                        >
-                            <Icon
-                                clickable={isWalletConnected && step === WizardSteps.TRADE}
-                                className={`sidebar-icon icon--ranged-markets`}
-                            />
-                            <IconText>
-                                <Trans i18nKey="wizard-page.step4-ranged" />
-                            </IconText>
                         </IconWrapper>
                     </IconsWrapper>
                     <CardNameWrapper>
@@ -439,7 +416,6 @@ const Nav = styled.div<{ justifyContent: string }>`
 
 const NavItem = styled.div<{ clickable: boolean }>`
     flex: 1;
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     line-height: 40px;
@@ -447,11 +423,11 @@ const NavItem = styled.div<{ clickable: boolean }>`
     letter-spacing: 0.035em;
     text-align: center;
     text-transform: uppercase;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
     &.active {
-        box-shadow: 0px 4px var(--primary-filter-menu-active);
+        box-shadow: 0px 4px ${(props) => props.theme.borderColor.quaternary};
     }
     @media (max-width: 768px) {
         font-size: 14px;
@@ -466,7 +442,7 @@ const NavItem = styled.div<{ clickable: boolean }>`
 const LineUnderNav = styled.div`
     height: 4px;
     border-radius: 3px;
-    background: rgba(100, 217, 254, 0.5);
+    background: ${(props) => props.theme.background.secondary};
     width: 100%;
 `;
 
@@ -483,16 +459,16 @@ const CardWrapper = styled.div<{ justifyContent?: boolean }>`
 const Card = styled.div<{ clickable: boolean; active?: boolean }>`
     width: 195px;
     height: 189px;
-    border: 2px solid var(--input-border-color);
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 15px;
     text-align: center;
     padding: 40px 0;
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
     opacity: ${(props) => (props.active ? '1' : '0.3')};
     &:hover {
-        ${(props) => (props.clickable || props.active ? 'box-shadow: var(--shadow);' : '')};
         ${(props) => (props.clickable || props.active ? 'transform: scale(1.02);' : '')};
-        ${(props) => (props.clickable || props.active ? 'border: 2px solid rgb(100, 217, 254, 1);' : '')};
+        ${(props) =>
+            props.clickable || props.active ? `border: 2px solid ${props.theme.borderColor.quaternary}` : ''};
         ${(props) => (props.clickable || props.active ? 'opacity: 1;' : '')};
     }
 `;
@@ -500,10 +476,10 @@ const Step = styled.div<{ active?: boolean; clickable: boolean }>`
     position: relative;
     width: 79px;
     height: 79px;
-    background: var(--background);
+    background: ${(props) => props.theme.background.primary};
     border-radius: 50%;
-    border: 4px solid var(--input-border-color);
-    color: var(--input-border-color);
+    border: 4px solid ${(props) => props.theme.borderColor.quaternary};
+    color: ${(props) => props.theme.textColor.quaternary};
     text-align: center;
     font-style: normal;
     font-weight: 700;
@@ -520,7 +496,7 @@ const Step = styled.div<{ active?: boolean; clickable: boolean }>`
         top: 36px;
         left: -157px;
         width: 155px;
-        border-top: 3px dashed var(--input-border-color);
+        border-top: 3px dashed ${(props) => props.theme.borderColor.quaternary};
         opacity: 0.5;
         cursor: default;
     }
@@ -561,6 +537,14 @@ const IconWrapper = styled.div<{ clickable: boolean; active: boolean; pulseDelay
         }
     }
 `;
+const StyledInsertCard = styled(InsertCard)<{ clickable: boolean }>`
+    width: 84px;
+    height: 84px;
+    cursor: ${(props) => (props.clickable ? 'pointer' : '')};
+    path {
+        fill: ${(props) => props.theme.textColor.quaternary};
+    }
+`;
 
 const Image = styled.img<{ clickable: boolean }>`
     width: 84px;
@@ -571,26 +555,19 @@ const Image = styled.img<{ clickable: boolean }>`
 const Icon = styled.i<{ clickable: boolean }>`
     font-size: 57px;
     padding-top: 16px;
-    color: var(--input-border-color);
+    color: ${(props) => props.theme.textColor.quaternary};
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
 `;
 
-const IconText = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 21px;
-    color: var(--color-highlight);
-    padding-top: 5px;
-`;
-
-const ArrowImg = styled.img<{ clickable: boolean }>`
+const ArrowImg = styled(Arrow)<{ clickable: boolean }>`
     height: 14px;
     float: right;
     margin-right: 8px;
     margin-top: -18px;
     cursor: ${(props) => (props.clickable ? 'pointer' : '')};
+    path {
+        fill: ${(props) => props.theme.textColor.quaternary};
+    }
 
     animation: pulse 1s ease-in;
     animation-iteration-count: infinite;
@@ -611,23 +588,18 @@ const ArrowImg = styled.img<{ clickable: boolean }>`
     }
 `;
 
-const SeparatorImg = styled.img`
-    background: var(--color-highlight);
-    width: 4px;
-    height: 72px;
-    margin-top: 5px;
-`;
-
 const Text = styled.p`
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
     line-height: 23px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     a {
         font-weight: 700;
-        text-decoration: underline;
-        color: var(--input-border-color);
+        color: ${(props) => props.theme.link.textColor.tertiary};
+        &:hover {
+            text-decoration: underline;
+        }
     }
 `;
 
@@ -638,9 +610,9 @@ const BuyWrapper = styled.div`
     margin: auto;
     position: relative;
     top: 100px;
-    background: var(--color-primary);
-    border: 2px solid var(--color-highlight);
-    box-shadow: 0px 0px 90px 10px var(--color-highlight);
+    background: ${(props) => props.theme.background.primary};
+    color: ${(props) => props.theme.textColor.primary};
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 15px;
     outline: none;
 `;
@@ -660,14 +632,13 @@ const IframeXButton = styled(XButton)`
 const BuyTitle = styled.div`
     margin-bottom: 10px;
     margin-top: 35px;
-    font-family: 'Sansation';
     font-style: normal;
     font-weight: 400;
     font-size: 21px;
     line-height: 24px;
     position: relative;
     text-align: center;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const ButtonLogoGroup = styled.div`
@@ -689,18 +660,20 @@ const Button = styled.div`
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    border: 1px solid var(--color-highlight);
+    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
     border-radius: 30px;
-    font-family: 'Sansation';
     font-style: normal;
     font-weight: 400;
     font-size: 12.5px;
     line-height: 14px;
     cursor: pointer;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     background-color: transparent;
     padding: 5px 0px;
     margin-left: 30px;
+    :hover {
+        border: 1px solid ${(props) => props.theme.borderColor.quaternary};
+    }
 `;
 
 const handleLogoType = (logoType: Provider) => {
