@@ -1,4 +1,3 @@
-import { Tooltip, withStyles } from '@material-ui/core';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivStart, FlexDivRow, FlexDiv } from 'theme/common';
 
