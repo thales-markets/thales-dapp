@@ -1,5 +1,4 @@
 import { Slider, Tooltip, withStyles } from '@material-ui/core';
-import { InputContainer } from 'pages/Token/components/components';
 import React from 'react';
 import styled from 'styled-components';
 import {
