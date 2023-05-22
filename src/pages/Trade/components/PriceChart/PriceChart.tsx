@@ -27,6 +27,7 @@ import { getTheme } from 'redux/modules/ui';
 import { RootState } from 'redux/rootReducer';
 import { ThemeMap } from 'constants/ui';
 import { Positions } from 'constants/options';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 
 type PriceChartProps = {
     asset: string;
@@ -58,6 +59,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 
     const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
 
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery();
+
+    const currentPrice = useMemo(() => {
+        if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
+            return exchangeRatesMarketDataQuery.data[asset];
+        }
+    }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset]);
+
     const processedPriceData = useMemo(() => {
         if (priceData.isSuccess && priceData.data && priceData?.data?.prices) {
             if (priceData?.data?.prices?.length) {
@@ -79,26 +88,30 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const result = await coinGeckoClient.coinIdMarketChart({
-                    id: currencyKeyToCoinGeckoIndexMap[asset],
-                    vs_currency: 'usd',
-                    days: dateRange,
-                });
-                const priceData = result.prices.map((price) => ({
-                    date: format(new Date(price[0]), 'MM/dd'),
-                    price: Number(price[1].toFixed(2)),
-                }));
+            if (currentPrice) {
+                try {
+                    const result = await coinGeckoClient.coinIdMarketChart({
+                        id: currencyKeyToCoinGeckoIndexMap[asset],
+                        vs_currency: 'usd',
+                        days: dateRange,
+                    });
+                    const priceData = result.prices.map((price) => ({
+                        date: format(new Date(price[0]), 'MM/dd'),
+                        price: Number(price[1].toFixed(2)),
+                    }));
 
-                setData(priceData);
+                    priceData.push({ date: format(new Date(), 'MM/dd'), price: currentPrice });
 
-                setTicks(getTicks(priceData[priceData.length - 1].price));
-            } catch (e) {
-                console.log('COINGECKO error: ', e);
+                    setData(priceData);
+
+                    setTicks(getTicks(priceData[priceData.length - 1].price));
+                } catch (e) {
+                    console.log('COINGECKO error: ', e);
+                }
             }
         };
         fetchData();
-    }, [asset, dateRange]);
+    }, [asset, dateRange, currentPrice]);
 
     const getReferenceArea = () => {
         if (position === Positions.UP || position === Positions.DOWN) {
@@ -154,7 +167,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
             <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
                 <IconPriceWrapper>
                     <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
-                    <Price>{data ? formatCurrencyWithSign(USD_SIGN, data[data?.length - 1].price) : 'N/A'}</Price>
+                    <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
                 </IconPriceWrapper>
                 <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
             </FlexDivSpaceBetween>
