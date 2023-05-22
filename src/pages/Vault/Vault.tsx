@@ -67,7 +67,6 @@ import Switch from 'components/SwitchInput/SwitchInputNew';
 import Tooltip from 'components/TooltipV2';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'components/fields/NumericInput';
-import FieldValidationMessage from 'components/FieldValidationMessage';
 import Footer from 'components/Footer';
 import { LINKS } from 'constants/links';
 import ElectionsBanner from 'components/ElectionsBanner';
