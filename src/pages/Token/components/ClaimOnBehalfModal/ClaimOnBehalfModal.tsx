@@ -16,10 +16,9 @@ import { dispatchMarketNotification } from 'utils/options';
 import { getIsAppReady } from 'redux/modules/app';
 import { ClaimOnBehalfGuideLink, Tip66Link } from 'pages/Token/components';
 import useStakingClaimOnBehalfQuery from 'queries/token/useStakingClaimOnBehalfQuery';
-import Button from '../Button';
-import { ButtonType } from '../Button/Button';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/ButtonV2/Button';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -95,34 +94,16 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button type={ButtonType.submit} width={'50%'} active={true} onClickHandler={openConnectModal}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (!isAccountValid) {
-            return (
-                <Button type={ButtonType.submit} width={'50%'} disabled={true}>
-                    {t(`common.errors.invalid-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
         }
         if (!isAccountEntered) {
-            return (
-                <Button type={ButtonType.submit} width={'50%'} disabled={true}>
-                    {t(`common.errors.enter-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-address`)}</Button>;
         }
         return (
-            <Button
-                type={ButtonType.submit}
-                width={'50%'}
-                active={!isButtonDisabled}
-                disabled={isButtonDisabled}
-                onClickHandler={handleSubmit}
-            >
+            <Button disabled={isButtonDisabled} onClick={handleSubmit}>
                 {!canClaimOnBehalf
                     ? !isSubmitting
                         ? t('options.earn.claim-on-behalf.enable-button.label')
@@ -208,8 +189,8 @@ const Container = styled(FlexDivColumnCentered)`
     line-height: 24px;
     border-radius: 15px;
     min-width: 70px;
-    background: var(--color-primary);
-    border: 2px solid var(--color-highlight);
+    background: ${(props) => props.theme.background.primary};
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
     box-shadow: 0px 0px 90px 10px var(--color-highlight);
     margin: auto;
     position: relative;
@@ -223,7 +204,7 @@ const Header = styled(FlexDivRowCentered)`
     font-weight: 600;
     font-size: 20px;
     letter-spacing: 0.15px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     padding: 0px 2px 50px 2px;
 `;
 
@@ -237,7 +218,7 @@ const Message = styled.div`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: #ffcc00;
+    color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 10px;
 `;
 
@@ -247,7 +228,7 @@ const Description = styled(FlexDivCentered)`
     padding: 0 2px 20px 2px;
     text-align: start;
     display: inline;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const Label = styled(Description)`
@@ -258,12 +239,12 @@ const EnabledAddressesTitle = styled(Label)`
     font-weight: bold;
     padding: 30px 2px 4px 2px;
     font-size: 14px;
-    border-bottom: 1px solid #f6f6fe;
+    border-bottom: 1px solid ${(props) => props.theme.borderColor.primary};
 `;
 
 const EnabledAddressesItem = styled(Label)`
     padding: 5px 2px 4px 2px;
-    border-bottom: 1px dotted #f6f6fe;
+    border-bottom: 1px dotted ${(props) => props.theme.borderColor.primary};
     :last-child {
         margin-bottom: 10px;
     }

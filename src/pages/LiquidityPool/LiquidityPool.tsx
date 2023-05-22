@@ -35,6 +35,7 @@ import {
     SliderRange,
     StyledSlider,
     RadioButtonContainer,
+    defaultButtonProps,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -330,17 +331,29 @@ const LiquidityPool: React.FC = () => {
 
     const getDepositSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button onClick={openConnectModal} {...defaultButtonProps}>
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (insufficientBalance) {
-            return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
+            return (
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t(`common.errors.insufficient-balance`)}
+                </Button>
+            );
         }
         if (!isAmountEntered) {
-            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
+            return (
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t(`common.errors.enter-amount`)}
+                </Button>
+            );
         }
         if (!hasAllowance) {
             return (
-                <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
+                <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)} {...defaultButtonProps}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: collateral })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -350,7 +363,7 @@ const LiquidityPool: React.FC = () => {
             );
         }
         return (
-            <Button disabled={isDepositButtonDisabled} onClick={handleDeposit}>
+            <Button disabled={isDepositButtonDisabled} onClick={handleDeposit} {...defaultButtonProps}>
                 {!isSubmitting
                     ? t('liquidity-pool.button.deposit-label')
                     : t('liquidity-pool.button.deposit-progress-label')}
@@ -360,12 +373,17 @@ const LiquidityPool: React.FC = () => {
 
     const getWithdrawSubmitButton = () => {
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button onClick={openConnectModal} {...defaultButtonProps}>
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         return (
             <Button
                 disabled={isRequestWithdrawalButtonDisabled || !isWithdrawalPercentageValid}
                 onClick={handleWithdrawalRequest}
+                {...defaultButtonProps}
             >
                 {t('liquidity-pool.button.request-withdrawal-label')}
             </Button>

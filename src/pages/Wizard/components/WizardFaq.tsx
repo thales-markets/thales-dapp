@@ -129,6 +129,7 @@ const WizardFaq: React.FC = () => {
 };
 
 const FaqHeader = styled.p`
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     font-size: 22px;
@@ -150,9 +151,10 @@ const QuestionGroup = styled.div<{ questionOpened: boolean }>`
 `;
 
 const Question = styled.p`
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 16px;
     color: ${(props) => props.theme.textColor.quaternary};
     padding: 20px 60px 20px 30px;
@@ -161,7 +163,7 @@ const Question = styled.p`
     }
     @media (max-width: 767px) {
         padding: 15px 60px 15px 15px;
-        font-size: 16px;
+        font-size: 13px;
         line-height: 22px;
     }
     a {
@@ -203,10 +205,11 @@ const StyledArrowDown = styled(ArrowDown)`
 `;
 
 const Answer = styled.p`
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 19px;
+    font-size: 18px;
+    line-height: 22px;
     text-align: justify;
     color: ${(props) => props.theme.textColor.primary};
     cursor: text;

@@ -231,7 +231,7 @@
         "buy-title": "Buy, Bridge & Send",
         "buy-button1": "Buy with card",
         "buy-button2": "Buy with card",
-        "buy-button3": "Bridge to optimism",
+        "buy-button3": "Bridge to {{network}}",
         "buy-button4": "Send from Exchange"
     },
     "common": {

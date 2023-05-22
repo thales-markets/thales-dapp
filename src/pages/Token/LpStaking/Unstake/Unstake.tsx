@@ -19,10 +19,8 @@ import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { LP_TOKEN } from 'constants/currency';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
-import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/ButtonV2/Button';
 
 type Properties = {
     staked: number;
@@ -111,40 +109,17 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    active={true}
-                    onClickHandler={openConnectModal}
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '60%'}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (insufficientBalance) {
-            return (
-                <Button disabled={true} type={ButtonType.submit} width={isMobile() ? '100%' : '60%'}>
-                    {t(`common.errors.insufficient-staking-balance`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.insufficient-staking-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return (
-                <Button disabled={true} type={ButtonType.submit} width={isMobile() ? '100%' : '60%'}>
-                    {t(`common.errors.enter-amount`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
 
         return (
-            <Button
-                active={!isUnstakeButtonDisabled}
-                disabled={isUnstakeButtonDisabled}
-                onClickHandler={handleUnstakeThales}
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '60%'}
-            >
+            <Button disabled={isUnstakeButtonDisabled} onClick={handleUnstakeThales}>
                 {!isUnstaking
                     ? `${t('options.earn.gamified-staking.staking.unstake.name')} ${formatCurrencyWithKey(
                           LP_TOKEN,

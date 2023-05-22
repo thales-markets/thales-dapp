@@ -29,7 +29,6 @@ const Sidebar: React.FC = () => {
 
     const [isMobileState, setIsMobileState] = useState(isMobile());
 
-    const showWizardPage = !isPolygon && !isMobileState && !isBSC && !isArbitrum;
     const showTokenPage = !isPolygon && !isBSC;
     const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
     const showVaultsPage = !isPolygon && !isBSC;
@@ -109,7 +108,7 @@ const Sidebar: React.FC = () => {
                     />
                 )} */}
 
-                {showWizardPage && (
+                {!isMobileState && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Wizard ? 'selected' : ''

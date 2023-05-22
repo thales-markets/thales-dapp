@@ -4,8 +4,6 @@ import ValidationMessage from 'components/ValidationMessage';
 import { THALES_CURRENCY } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { ButtonContainer, Line } from 'pages/Token/components';
 import YourTransactions from './Transactions';
@@ -26,6 +24,7 @@ import DateTimeContainer from './styled-components/TimeDateContainer';
 import { isMobile } from 'utils/device';
 import { UserVestingData } from 'types/token';
 import { refetchTokenQueries } from 'utils/queryConnector';
+import Button from 'components/ButtonV2/Button';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
@@ -136,13 +135,7 @@ const Vesting: React.FC = () => {
     const getVestButton = () => {
         const disabled = isClaiming || !+claimable;
         return (
-            <Button
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '50%'}
-                onClickHandler={handleVest}
-                active={!disabled}
-                disabled={disabled}
-            >
+            <Button onClick={handleVest} disabled={disabled} width="auto">
                 {!isClaiming
                     ? t('options.earn.gamified-staking.vesting.vest.vest') +
                       ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}`

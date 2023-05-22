@@ -17,8 +17,6 @@ import Stake from './Stake';
 import Unstake from './Unstake';
 import NetworkFees from '../components/NetworkFees';
 import ValidationMessage from 'components/ValidationMessage';
-import Button from '../components/Button';
-import { ButtonType } from '../components/Button/Button';
 import snxJSConnector from 'utils/snxJSConnector';
 import { formatGasLimit } from 'utils/network';
 import { getMaxGasLimitForNetwork } from 'constants/options';
@@ -28,6 +26,7 @@ import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnect
 import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2/Button';
 
 enum SectionType {
     INFO,
@@ -162,28 +161,13 @@ const LpStaking: React.FC = () => {
 
     const getClaimButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    width={isMobile() ? '100%' : '50%'}
-                    type={ButtonType.submit}
-                    active={true}
-                    onClickHandler={openConnectModal}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
 
         const buttonDisabled = isClaiming || (!rewards && !secondRewards);
 
         return (
-            <Button
-                type={ButtonType.submit}
-                onClickHandler={handleClaimStakingRewards}
-                active={!buttonDisabled}
-                disabled={buttonDisabled}
-                width={isMobile() ? '100%' : '50%'}
-            >
+            <Button onClick={handleClaimStakingRewards} disabled={buttonDisabled}>
                 {isClaiming
                     ? t('options.earn.lp-staking.claim.claiming-rewards') + ` ...`
                     : t('options.earn.lp-staking.claim.claim-rewards')}

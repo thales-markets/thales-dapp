@@ -21,12 +21,11 @@ import { dispatchMarketNotification } from 'utils/options';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { FlexDivColumnCentered } from 'theme/common';
 import ApprovalModal from 'components/ApprovalModal';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
 import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import Button from 'components/ButtonV2/Button';
 
 const Stake: React.FC = () => {
     const { t } = useTranslation();
@@ -193,34 +192,17 @@ const Stake: React.FC = () => {
 
     const getStakeButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button active={true} onClickHandler={openConnectModal} type={ButtonType.submit}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (insufficientBalance) {
-            return (
-                <Button disabled={true} type={ButtonType.submit}>
-                    {t(`common.errors.insufficient-balance`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return (
-                <Button disabled={true} type={ButtonType.submit}>
-                    {t(`common.errors.enter-amount`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
         if (!hasStakeAllowance) {
             return (
-                <Button
-                    active={!isAllowingStake}
-                    disabled={isAllowingStake}
-                    onClickHandler={() => setOpenApprovalModal(true)}
-                    type={ButtonType.submit}
-                >
+                <Button disabled={isAllowingStake} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowingStake
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: THALES_CURRENCY })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -231,12 +213,7 @@ const Stake: React.FC = () => {
         }
 
         return (
-            <Button
-                active={!isButtonDisabled}
-                disabled={isButtonDisabled}
-                onClickHandler={handleStakeThales}
-                type={ButtonType.submit}
-            >
+            <Button disabled={isButtonDisabled} onClick={handleStakeThales}>
                 {!isStaking
                     ? `${t('options.earn.gamified-staking.staking.stake.name')} ${formatCurrencyWithKey(
                           THALES_CURRENCY,

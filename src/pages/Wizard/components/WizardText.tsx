@@ -66,9 +66,10 @@ const Wrapper = styled.div`
 `;
 
 export const Text = styled.p`
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 24px;
     text-align: justify;
     color: ${(props) => props.theme.textColor.primary};
