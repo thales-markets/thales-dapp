@@ -183,12 +183,12 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 <stop
                                     offset="0%"
                                     stopColor={`${ThemeMap[theme].textColor.quaternary}`}
-                                    stopOpacity={0}
+                                    stopOpacity={position === Positions.UP ? 0 : 0.8}
                                 />
                                 <stop
                                     offset="90.62%"
                                     stopColor={`${ThemeMap[theme].textColor.quaternary}`}
-                                    stopOpacity={0.8}
+                                    stopOpacity={position === Positions.UP ? 0.8 : 0}
                                 />
                             </linearGradient>
                         </defs>
@@ -257,7 +257,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             <ReferenceLine
                                 y={selectedRightPrice}
                                 stroke="#03DAC6"
-                                strokeDasharray="3 3"
                                 label={<CustomLabel2 price={selectedRightPrice} />}
                             />
                         )}
