@@ -50,24 +50,6 @@ export const ThalesWalletAmountLabel = styled(InputLabel)`
     }
 `;
 
-export const MaxButton = styled(DefaultSubmitButton)`
-    background: transparent;
-    border: 1px solid ${(props) => props.theme.button.borderColor.secondary};
-    border-radius: 15px;
-    width: 53px;
-    min-height: 17px;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 10px;
-    line-height: 15px;
-    letter-spacing: 1px;
-    text-align: center;
-    padding: 0 12px;
-    color: ${(props) => props.theme.button.textColor.quaternary};
-    margin-left: 4px;
-    pointer-events: auto;
-`;
-
 export const InfoSection = styled.span`
     color: white;
     margin: 30px 0;

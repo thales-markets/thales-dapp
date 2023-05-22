@@ -25,18 +25,18 @@ export default {
     button: {
         background: {
             primary: Colors.GREEN,
-            secondary: Colors.GRAY,
+            secondary: Colors.GRAY_DARK,
             tertiary: '',
         },
         textColor: {
             primary: Colors.GRAY_DARK,
-            secondary: Colors.GRAY,
+            secondary: Colors.WHITE,
             tertiary: '',
             quaternary: Colors.ORANGE,
         },
         borderColor: {
             primary: Colors.GREEN,
-            secondary: Colors.GRAY,
+            secondary: Colors.GRAY_LIGHT,
         },
     },
     input: {
