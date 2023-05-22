@@ -1,7 +1,7 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/ButtonV2';
 import Checkbox from 'components/fields/Checkbox';
-import Input from 'components/Input';
+import NumericInput from 'components/fields/NumericInput/NumericInput';
 import Modal from 'components/Modal';
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
@@ -94,14 +94,12 @@ export const ApprovalModal: React.FC<ApprovalModalProps> = ({
                 <TextContainer>
                     <Text>{t('common.or')}</Text>
                 </TextContainer>
-                <InputLabel>
-                    <Text>{t('common.enable-wallet-access.custom-amount-label')}</Text>
-                </InputLabel>
-                <Input
+                <NumericInput
                     value={amount}
-                    valueChange={setAmount}
+                    onChange={(_, value) => setAmount(value)}
                     disabled={approveAll || isAllowing}
-                    subValue={tokenSymbol}
+                    label={t('common.enable-wallet-access.custom-amount-label')}
+                    currencyLabel={tokenSymbol}
                     placeholder={t('common.enter-amount')}
                     showValidation={!approveAll && !isAmountValid}
                     validationMessage={t('common.errors.invalid-amount-max', { max: maxApproveAmount })}
@@ -127,16 +125,11 @@ const TextContainer = styled(FlexDivCentered)`
     margin-bottom: 20px;
 `;
 
-const InputLabel = styled(FlexDivRow)`
-    margin-bottom: 10px;
-`;
-
 const Text = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 100%;
+    font-size: 15px;
+    line-height: 18px;
+    text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
 `;
 

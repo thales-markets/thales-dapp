@@ -242,35 +242,6 @@ export const VaultFilledGraphicPercentage = styled(FlexDivStart)<{ width: number
     border-radius: 15px;
 `;
 
-export const SubmitButton = styled.button`
-    background: ${(props) => props.theme.button.background.primary};
-    border-radius: 30px;
-    margin: 20px 20px;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 23px;
-    color: ${(props) => props.theme.button.textColor.primary};
-    width: 252px;
-    border: none;
-    padding: 7px;
-    cursor: pointer;
-    text-transform: uppercase;
-    &:disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-`;
-
-export const CloseRoundButton = styled(SubmitButton)`
-    margin: 0;
-    width: auto;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 14px;
-    top: -2px;
-    position: relative;
-`;
-
 export const ButtonContainer = styled(FlexDivCentered)<{ mobileDirection?: string }>`
     @media (max-width: 675px) {
         flex-direction: ${(props) => props.mobileDirection || 'column'};

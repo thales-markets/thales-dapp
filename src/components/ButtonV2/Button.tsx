@@ -68,18 +68,17 @@ const Wrapper = styled.button<{
     text-transform: uppercase;
     align-items: center;
     justify-content: center;
-    width: ${(props) => props.width || ''};
-    height: ${(props) => props.height || ''};
+    width: ${(props) => props.width || '100%'};
+    height: ${(props) => props.height || '34px'};
     border: 1px solid ${(props) => props.theme.button.background.primary};
     border-radius: 30px;
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-weight: 700;
-    font-size: ${(props) => props.fontSize || '20px'};
+    font-size: ${(props) => props.fontSize || '18px'};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
     color: ${(props) => props.textColor || props.theme.button.textColor.primary};
     background-color: ${(props) => props.backgroundColor || props.theme.button.background.primary};
     margin: ${(props) => (props.margin ? props.margin : '')};
-    padding: ${(props) => (props.padding ? props.padding : '0 20px')};
+    padding: ${(props) => (props.padding ? props.padding : '0 30px')};
     &:hover {
         ${(props) => (props.hoverShadow && !props.disabled ? `box-shadow: ${props.hoverShadow};` : '')}
         ${(props) =>

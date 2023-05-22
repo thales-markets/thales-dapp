@@ -58,9 +58,9 @@ import {
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
-import Input from '../../../../components/Input';
 import TradingDetailsModal from './components/TradingDetailsModal';
 import { convertPriceImpactToBonus } from 'utils/options';
+import NumericInput from 'components/fields/NumericInput/NumericInput';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -171,7 +171,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
         !hasAllowance;
 
-    const isMaxButtonDisabled =
+    const isInputDisabled =
         !market.address ||
         isSubmitting ||
         (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
@@ -668,7 +668,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             action: 'click-on-max-button',
         });
 
-        if (isMaxButtonDisabled) return;
+        if (isInputDisabled) return;
 
         const maxPaidAmount = Number(truncToDecimals(Number(stableBalance) * (1 - slippagePerc / 100)));
         fetchAmmPriceData(maxPaidAmount, false, false, true);
@@ -676,51 +676,26 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const getSubmitButton = () => {
         if (!market.address) {
-            return (
-                <Button disabled={true} {...defaultButtonProps}>
-                    {t('options.trade.amm-trading.select-price')}
-                </Button>
-            );
+            return <Button disabled={true}>{t('options.trade.amm-trading.select-price')}</Button>;
         }
         if (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) {
-            return (
-                <Button disabled={true} {...defaultButtonProps}>
-                    {t('amm.amm-disabled')}
-                </Button>
-            );
+            return <Button disabled={true}>{t('amm.amm-disabled')}</Button>;
         }
         if (!isWalletConnected) {
-            return (
-                <Button {...defaultButtonProps} onClick={openConnectModal}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (insufficientLiquidity) {
-            return (
-                <Button {...defaultButtonProps} disabled={true}>
-                    {t(`common.errors.insufficient-liquidity`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.insufficient-liquidity`)}</Button>;
         }
         if (insufficientBalance) {
-            return (
-                <Button {...defaultButtonProps} disabled={true}>
-                    {t(`common.errors.insufficient-balance`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
         }
         if (!isPaidAmountEntered) {
-            return (
-                <Button {...defaultButtonProps} disabled={true}>
-                    {t(`common.errors.enter-amount`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
         if (!hasAllowance) {
             return (
                 <Button
-                    {...defaultButtonProps}
                     additionalStyles={{ textTransform: 'none' }}
                     disabled={isAllowing}
                     onClick={() => setOpenApprovalModal(true)}
@@ -735,7 +710,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             );
         }
         return (
-            <Button {...defaultButtonProps} disabled={isButtonDisabled} onClick={handleSubmit}>
+            <Button disabled={isButtonDisabled} onClick={handleSubmit}>
                 {isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.buy.progress-label`)
                     : t(`options.market.trade-options.place-order.swap-confirm-button.buy.label`)}
@@ -846,13 +821,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             </TradingDetails>
             <FinalizeTrade>
                 <ColumnSpaceBetween>
-                    <Input
+                    <NumericInput
                         value={paidAmount}
-                        valueType={'number'}
-                        disabled={!market.address}
+                        disabled={isInputDisabled}
                         placeholder={t('options.trade.amm-trading.enter-amount')}
-                        valueChange={(value) => onTotalPriceValueChange(value)}
-                        container={inputFieldProps}
+                        onChange={(_, value) => onTotalPriceValueChange(value)}
+                        onMaxButton={onMaxClick}
                         showValidation={!!errorMessageKey}
                         validationMessage={t(errorMessageKey, {
                             currencyKey: getStableCoinForNetwork(
@@ -860,24 +834,18 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                 isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
                             ),
                         })}
-                    >
-                        <InputActions>
-                            <MaxButton onClick={() => onMaxClick()} disabled={isMaxButtonDisabled}>
-                                <TextMax>{t('common.max')}</TextMax>
-                            </MaxButton>
-                            <VerticalLine />
-                            {isMultiCollateralSupported ? (
+                        currencyComponent={
+                            isMultiCollateralSupported ? (
                                 <CollateralSelector
                                     collateralArray={COLLATERALS}
                                     selectedItem={selectedStableIndex}
                                     onChangeCollateral={(index) => setSelectedStableIndex(index)}
-                                    disabled={isMaxButtonDisabled}
+                                    disabled={isInputDisabled}
                                 />
-                            ) : (
-                                <TextCurrency>{getStableCoinForNetwork(networkId)}</TextCurrency>
-                            )}
-                        </InputActions>
-                    </Input>
+                            ) : undefined
+                        }
+                        currencyLabel={!isMultiCollateralSupported ? getStableCoinForNetwork(networkId) : undefined}
+                    />
                     {getSubmitButton()}
                 </ColumnSpaceBetween>
             </FinalizeTrade>
@@ -917,13 +885,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             )}
         </Container>
     );
-};
-
-const inputFieldProps = { width: '350px', height: '34px' };
-
-const defaultButtonProps = {
-    width: '100%',
-    height: '34px',
 };
 
 const Container = styled(FlexDivRow)`
@@ -967,19 +928,7 @@ const DetailsIcon = styled.i<{ disabled: boolean }>`
     opacity: ${(props) => (props.disabled ? '0.5' : '1')};
 `;
 
-const InputActions = styled(FlexDivRow)`
-    position: absolute;
-    right: 10px;
-`;
-
-const MaxButton = styled(FlexDivCentered)<{ disabled?: boolean }>`
-    ${(props) => (props.disabled ? `opacity: 0.5;` : '')}
-    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
-    margin: 0 7px;
-`;
-
 const Text = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     font-size: 13px;
@@ -989,27 +938,11 @@ const Text = styled.span`
 const TextLabel = styled.span`
     color: ${(props) => props.theme.textColor.secondary};
 `;
+
 const TextValue = styled.span<{ isProfit?: boolean; uppercase?: boolean }>`
     color: ${(props) => (props.isProfit ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
     padding-left: 5px;
     text-transform: ${(props) => (props.uppercase ? 'uppercase;' : 'initial')};
-`;
-const TextMax = styled(Text)`
-    color: ${(props) => props.theme.button.textColor.quaternary};
-    text-transform: uppercase;
-`;
-
-const TextCurrency = styled(Text)`
-    text-align: center;
-    line-height: 25px;
-    min-width: 50px;
-`;
-
-const VerticalLine = styled.div`
-    width: 1px;
-    height: 25px;
-    background: ${(props) => props.theme.background.tertiary};
-    border-radius: 6px;
 `;
 
 const ColumnSpaceBetween = styled.div`

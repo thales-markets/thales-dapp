@@ -3,7 +3,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
     Container,
     Title,
-    SubmitButton,
     ButtonContainer,
     Wrapper,
     ToggleContainer,
@@ -15,7 +14,6 @@ import {
     ContentInfo,
     BoldContent,
     WarningContentInfo,
-    CloseRoundButton,
     LoaderContainer,
     RoundEndContainer,
     RoundEndLabel,
@@ -74,6 +72,7 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { Colors, FlexDivRow } from 'theme/common';
 import RadioButton from 'components/fields/RadioButton';
+import Button from 'components/ButtonV2/Button';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -329,76 +328,47 @@ const LiquidityPool: React.FC = () => {
         }
     };
 
-    const closeRound = async () => {
-        const { signer, liquidityPoolContract } = snxJSConnector;
-        if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
-            setIsSubmitting(true);
-            try {
-                const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
-
-                const tx = await liquidityPoolContractWithSigner.closeRound({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
-                const txResult = await tx.wait();
-
-                if (txResult && txResult.events) {
-                    toast.update(
-                        id,
-                        getSuccessToastOptions(t('liquidity-pool.button.close-round-confirmation-message'))
-                    );
-                    setIsSubmitting(false);
-                    refetchLiquidityPoolData(walletAddress, networkId);
-                }
-            } catch (e) {
-                console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
-                setIsSubmitting(false);
-            }
-        }
-    };
-
     const getDepositSubmitButton = () => {
         if (!isWalletConnected) {
-            return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (insufficientBalance) {
-            return <SubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</SubmitButton>;
+            return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return <SubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</SubmitButton>;
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
         if (!hasAllowance) {
             return (
-                <SubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
+                <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: collateral })
                         : t('common.enable-wallet-access.approve-progress-label', {
                               currencyKey: collateral,
                           })}
-                </SubmitButton>
+                </Button>
             );
         }
         return (
-            <SubmitButton disabled={isDepositButtonDisabled} onClick={handleDeposit}>
+            <Button disabled={isDepositButtonDisabled} onClick={handleDeposit}>
                 {!isSubmitting
                     ? t('liquidity-pool.button.deposit-label')
                     : t('liquidity-pool.button.deposit-progress-label')}
-            </SubmitButton>
+            </Button>
         );
     };
 
     const getWithdrawSubmitButton = () => {
         if (!isWalletConnected) {
-            return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         return (
-            <SubmitButton
+            <Button
                 disabled={isRequestWithdrawalButtonDisabled || !isWithdrawalPercentageValid}
                 onClick={handleWithdrawalRequest}
             >
                 {t('liquidity-pool.button.request-withdrawal-label')}
-            </SubmitButton>
+            </Button>
         );
     };
 
@@ -456,11 +426,6 @@ const LiquidityPool: React.FC = () => {
                                                     fontSize={20}
                                                     showFullCounter
                                                 />
-                                            )}{' '}
-                                            {liquidityPoolData.canCloseCurrentRound && (
-                                                <CloseRoundButton disabled={isSubmitting} onClick={closeRound}>
-                                                    {t('liquidity-pool.button.close-round-label')}
-                                                </CloseRoundButton>
                                             )}
                                         </RoundEnd>
                                     </RoundEndContainer>
