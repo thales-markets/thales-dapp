@@ -8,7 +8,7 @@ type ButtonProps = {
     margin?: string;
     textColor?: string;
     backgroundColor?: string;
-    hoverShadow?: boolean;
+    hoverShadow?: string;
     hoverBorder?: boolean;
     onClick?: () => void;
     fontSize?: string;
@@ -59,7 +59,7 @@ const Wrapper = styled.button<{
     margin?: string;
     textColor?: string;
     backgroundColor?: string;
-    hoverShadow?: boolean;
+    hoverShadow?: string;
     hoverBorder?: boolean;
     disabled?: boolean;
     fontSize?: string;
@@ -81,10 +81,11 @@ const Wrapper = styled.button<{
     margin: ${(props) => (props.margin ? props.margin : '')};
     padding: ${(props) => (props.padding ? props.padding : '0 20px')};
     &:hover {
+        ${(props) => (props.hoverShadow && !props.disabled ? `box-shadow: ${props.hoverShadow};` : '')}
         ${(props) =>
-            props.hoverShadow && !props.disabled ? `box-shadow: ${props.theme.button.borderColor.primary}` : ''}
-        ${(props) =>
-            props.hoverBorder && !props.disabled ? `border: ${props.theme.button.borderColor.secondary}` : ''}
+            props.hoverBorder && !props.disabled
+                ? `border: 1px solid ${props.theme.button.borderColor.secondary};`
+                : ''}
     }
     &:disabled {
         opacity: 0.5;

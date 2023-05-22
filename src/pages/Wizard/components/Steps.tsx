@@ -657,19 +657,19 @@ const Button = styled.div`
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.button.borderColor.secondary};
     border-radius: 30px;
     font-style: normal;
     font-weight: 400;
     font-size: 12.5px;
     line-height: 14px;
     cursor: pointer;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => props.theme.button.textColor.secondary};
     background-color: transparent;
     padding: 5px 0px;
     margin-left: 30px;
     :hover {
-        border: 1px solid ${(props) => props.theme.borderColor.quaternary};
+        border: 1px solid ${(props) => props.theme.button.borderColor.primary};
     }
 `;
 

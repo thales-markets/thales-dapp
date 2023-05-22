@@ -256,40 +256,9 @@ export const CloseRoundButton = styled(SubmitButton)`
     position: relative;
 `;
 
-export const MaxButton = styled(SubmitButton)`
-    position: absolute;
-    background: transparent;
-    color: ${(props) => props.theme.button.textColor.quaternary};
-    border: 1px solid ${(props) => props.theme.button.borderColor.secondary};
-    border-radius: 15px;
-    width: 48px;
-    font-size: 10px;
-    line-height: 13px;
-    letter-spacing: 1px;
-    text-align: center;
-    padding: 0px 8px;
-    right: 15px;
-    top: 8px;
-    &.selected,
-    &:hover:not(:disabled) {
-        background: ${(props) => props.theme.button.background.secondary};
-    }
-`;
-
 export const ButtonContainer = styled(FlexDivColumnCentered)`
     width: 100%;
 `;
-
-export const ValidationTooltip = withStyles(() => ({
-    tooltip: {
-        minWidth: '100%',
-        width: '100%',
-        margin: '1px',
-        backgroundColor: '#FDB7B7',
-        color: '#F30101',
-        fontSize: '12px',
-    },
-}))(Tooltip);
 
 export const LoaderContainer = styled(FlexDivCentered)`
     position: relative;
