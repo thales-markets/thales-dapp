@@ -121,7 +121,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         y1={selectedPrice}
                         y2={ticks ? (position === Positions.UP ? ticks[ticks.length - 1] : ticks[0]) : 0}
                         stroke={ThemeMap[theme].textColor.quaternary}
-                        fill={ThemeMap[theme].textColor.quaternary}
+                        fill="url(#referenceGradient)"
                         fillOpacity={0.2}
                     />
                 );
@@ -134,7 +134,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             y1={selectedPrice}
                             y2={selectedRightPrice}
                             stroke={ThemeMap[theme].textColor.quaternary}
-                            fill={ThemeMap[theme].textColor.quaternary}
+                            fill="url(#referenceGradient)"
                             fillOpacity={0.2}
                         />
                     );
@@ -145,14 +145,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 y1={selectedPrice}
                                 y2={ticks ? ticks[0] : 0}
                                 stroke={ThemeMap[theme].textColor.quaternary}
-                                fill={ThemeMap[theme].textColor.quaternary}
+                                fill="url(#referenceGradient)"
                                 fillOpacity={0.2}
                             />
                             <ReferenceArea
                                 y1={selectedRightPrice}
                                 y2={ticks ? ticks[ticks.length - 1] : 0}
                                 stroke={ThemeMap[theme].textColor.quaternary}
-                                fill={ThemeMap[theme].textColor.quaternary}
+                                fill="url(#referenceGradient)"
                                 fillOpacity={0.2}
                             />
                         </>
@@ -174,6 +174,20 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
             {data && (
                 <ResponsiveContainer width="100%" height={266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
+                        <defs>
+                            <linearGradient id="referenceGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop
+                                    offset="0%"
+                                    stopColor={`${ThemeMap[theme].textColor.quaternary}`}
+                                    stopOpacity={0.8}
+                                />
+                                <stop
+                                    offset="90.62%"
+                                    stopColor={`${ThemeMap[theme].textColor.quaternary}`}
+                                    stopOpacity={0}
+                                />
+                            </linearGradient>
+                        </defs>
                         <CartesianGrid stroke="#2B3139" strokeDasharray="1" />
                         <XAxis
                             tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
