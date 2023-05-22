@@ -3,7 +3,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
     Container,
     Title,
-    SubmitButton,
     ButtonContainer,
     Wrapper,
     ToggleContainer,
@@ -20,7 +19,6 @@ import {
     ContentInfo,
     BoldContent,
     WarningContentInfo,
-    CloseRoundButton,
     LeftLoaderContainer,
     RightLoaderContainer,
     RoundEndContainer,
@@ -74,6 +72,7 @@ import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { refetchVaultData } from 'utils/queryConnector';
 import { Colors } from 'theme/common';
+import Button from 'components/ButtonV2/Button';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -303,45 +302,19 @@ const Vault: React.FC<VaultProps> = (props) => {
         }
     };
 
-    const closeRound = async () => {
-        const { signer } = snxJSConnector;
-        if (signer) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
-            setIsSubmitting(true);
-            try {
-                const ammVaultContractWithSigner = new ethers.Contract(vaultAddress, vaultContract.abi, signer);
-
-                const tx = await ammVaultContractWithSigner.closeRound({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
-                const txResult = await tx.wait();
-
-                if (txResult && txResult.events) {
-                    toast.update(id, getSuccessToastOptions(t('vault.button.close-round-confirmation-message')));
-                    setIsSubmitting(false);
-                    refetchVaultData(vaultAddress, walletAddress, networkId);
-                }
-            } catch (e) {
-                console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
-                setIsSubmitting(false);
-            }
-        }
-    };
-
     const getDepositSubmitButton = () => {
         if (!isWalletConnected) {
-            return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (insufficientBalance) {
-            return <SubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</SubmitButton>;
+            return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return <SubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</SubmitButton>;
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
         if (!hasAllowance) {
             return (
-                <SubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
+                <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', {
                               currencyKey: getDefaultCollateral(networkId),
@@ -349,24 +322,24 @@ const Vault: React.FC<VaultProps> = (props) => {
                         : t('common.enable-wallet-access.approve-progress-label', {
                               currencyKey: getDefaultCollateral(networkId),
                           })}
-                </SubmitButton>
+                </Button>
             );
         }
         return (
-            <SubmitButton disabled={isDepositButtonDisabled} onClick={handleDeposit}>
+            <Button disabled={isDepositButtonDisabled} onClick={handleDeposit}>
                 {!isSubmitting ? t('vault.button.deposit-label') : t('vault.button.deposit-progress-label')}
-            </SubmitButton>
+            </Button>
         );
     };
 
     const getWithdrawSubmitButton = () => {
         if (!isWalletConnected) {
-            return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         return (
-            <SubmitButton disabled={isRequestWithdrawalButtonDisabled} onClick={handleWithdrawalRequest}>
+            <Button disabled={isRequestWithdrawalButtonDisabled} onClick={handleWithdrawalRequest}>
                 {t('vault.button.request-withdrawal-label')}
-            </SubmitButton>
+            </Button>
         );
     };
 
@@ -396,11 +369,6 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                     fontSize={20}
                                                     showFullCounter
                                                 />
-                                            )}{' '}
-                                            {vaultData.canCloseCurrentRound && (
-                                                <CloseRoundButton disabled={isSubmitting} onClick={closeRound}>
-                                                    {t('vault.button.close-round-label')}
-                                                </CloseRoundButton>
                                             )}
                                         </RoundEnd>
                                     </RoundEndContainer>

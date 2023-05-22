@@ -19,6 +19,7 @@ type NumericInputProps = {
     onChange: (e: ChangeEvent<HTMLInputElement>, value: string) => void;
     showValidation?: boolean;
     validationMessage?: string;
+    currencyComponent?: any;
     currencyLabel?: string;
     tooltip?: string;
     onMaxButton?: any;
@@ -42,6 +43,7 @@ const NumericInput: React.FC<NumericInputProps> = ({
     onChange,
     showValidation,
     validationMessage,
+    currencyComponent,
     currencyLabel,
     tooltip,
     onMaxButton,
@@ -113,6 +115,11 @@ const NumericInput: React.FC<NumericInputProps> = ({
                         <CurrencyLabel className={disabled ? 'currency-label disabled' : 'currency-label'}>
                             {currencyLabel}
                         </CurrencyLabel>
+                    )}
+                    {currencyComponent && (
+                        <CurrencyComponentContainer className={disabled ? 'disabled' : ''}>
+                            {currencyComponent}
+                        </CurrencyComponentContainer>
                     )}
                 </RightContainer>
             </FieldContainer>
@@ -187,6 +194,16 @@ const BalanceContainer = styled(FlexDivCentered)`
 const BalanceIcon = styled(balanceIcon)`
     height: 15px;
     margin: 0 4px 2px 0;
+`;
+
+const CurrencyComponentContainer = styled(FlexDivCentered)`
+    border-left: 2px solid ${(props) => props.theme.input.borderColor.primary};
+    line-height: 20px;
+    padding-right: 2px;
+    &.disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
 `;
 
 export default NumericInput;
