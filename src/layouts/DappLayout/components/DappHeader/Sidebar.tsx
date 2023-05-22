@@ -5,12 +5,12 @@ import logoIcon from 'assets/images/logo-light.svg';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
-import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsMainnet, getIsPolygon } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { isMobile } from 'utils/device';
@@ -18,21 +18,24 @@ import debounce from 'lodash/debounce';
 
 const Sidebar: React.FC = () => {
     const location = useLocation();
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
+    const isMainnet = getIsMainnet(networkId);
 
     const { t } = useTranslation();
     const [collapse, setCollapse] = useState(false);
 
     const [isMobileState, setIsMobileState] = useState(isMobile());
 
+    const showMarketsPage = !isMainnet;
     const showTokenPage = !isPolygon && !isBSC;
     const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
     const showVaultsPage = !isPolygon && !isBSC;
     const showLP = !isPolygon && !isBSC;
+    const showProfilePage = !isMainnet && isWalletConnected;
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -72,12 +75,14 @@ const Sidebar: React.FC = () => {
                     <LogoIcon height="42" src={logoIcon} />
                 </SPAAnchor>
 
-                <DappHeaderItem
-                    className={`show ${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
-                    href={buildHref(ROUTES.Options.Home)}
-                    iconName="markets"
-                    label={t('common.sidebar.markets')}
-                />
+                {showMarketsPage && (
+                    <DappHeaderItem
+                        className={`show ${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
+                        href={buildHref(ROUTES.Options.Home)}
+                        iconName="markets"
+                        label={t('common.sidebar.markets')}
+                    />
+                )}
 
                 {showVaultsPage && (
                     <DappHeaderItem
@@ -165,7 +170,7 @@ const Sidebar: React.FC = () => {
                     label={t('common.sidebar.game-label')}
                 />
 
-                {walletAddress && (
+                {showProfilePage && (
                     <DappHeaderItem
                         className={`show ${location.pathname === ROUTES.Options.Profile ? 'selected' : ''}`}
                         href={buildHref(ROUTES.Options.Profile)}

@@ -25,7 +25,6 @@ import styled from 'styled-components';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import localStore from 'utils/localStore';
 import { history } from 'utils/routes';
-import Loader from '../../components/Loader';
 import { getIsOVM, getIsPolygon } from '../../utils/network';
 import History from './components/History/History';
 import MaturedPositions from './components/MaturedPositions/MaturedPositions';
@@ -248,7 +247,6 @@ const Profile: React.FC = () => {
                 </Container.Right>
             </Container>
             <Footer />
-            {networkId === 1 && <Loader hideMainnet={true} />}
         </>
     );
 };

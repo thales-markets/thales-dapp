@@ -5,7 +5,7 @@ import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesB
 import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import useMarketsByAssetAndDateQuery from 'queries/options/useMarketsByAssetAndDateQuery';
 import styled from 'styled-components';
@@ -18,14 +18,15 @@ import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
 import OpenPositions from './components/OpenPositions/OpenPositions';
-import Loader from 'components/Loader';
 import { useTranslation } from 'react-i18next';
 
 const TradePage: React.FC = () => {
+    const { t } = useTranslation();
+
     // selectors
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const { t } = useTranslation();
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     // states
     const [currencyKey, setCurrencyKey] = useState('ETH');
@@ -95,75 +96,65 @@ const TradePage: React.FC = () => {
 
     return (
         <Wrapper>
-            {networkId === 1 ? (
-                <Loader hideMainnet={true} />
-            ) : (
-                <>
-                    <BannerCarousel />
-                    <ContentWrapper>
-                        <LeftSide>
-                            <DropdownsWrapper>
-                                <PositionedWrapper>
-                                    <Info>{t('options.trade.steps.choose-asset')}</Info>
-                                    {allAssets && (
-                                        <AssetDropdown
-                                            asset={currencyKey}
-                                            setAsset={setCurrencyKey}
-                                            allAssets={allAssets}
-                                        />
-                                    )}
-                                </PositionedWrapper>
-                                <PositionedWrapper>
-                                    <Info>{t('options.trade.steps.choose-date')}</Info>
-                                    <DatesDropdown
-                                        date={maturityDate}
-                                        setDate={setMaturityDate}
-                                        allDates={allDates}
-                                    ></DatesDropdown>
-                                </PositionedWrapper>
-                            </DropdownsWrapper>
-                            <PriceChart
-                                position={positionType}
-                                asset={currencyKey}
-                                selectedPrice={getSelectedPrice()}
-                                selectedRightPrice={getSelectedRightPrice()}
-                            ></PriceChart>
-                        </LeftSide>
-                        <RightSide>
-                            <PositionedWrapper>
-                                <Info>{t('options.trade.steps.choose-direction')}</Info>
-                                <RadioButtons onChange={setPositionType} selected={positionType} />
-                            </PositionedWrapper>
+            <BannerCarousel />
+            <ContentWrapper>
+                <LeftSide>
+                    <DropdownsWrapper>
+                        <PositionedWrapper>
+                            <Info>{t('options.trade.steps.choose-asset')}</Info>
+                            {allAssets && (
+                                <AssetDropdown asset={currencyKey} setAsset={setCurrencyKey} allAssets={allAssets} />
+                            )}
+                        </PositionedWrapper>
+                        <PositionedWrapper>
+                            <Info>{t('options.trade.steps.choose-date')}</Info>
+                            <DatesDropdown
+                                date={maturityDate}
+                                setDate={setMaturityDate}
+                                allDates={allDates}
+                            ></DatesDropdown>
+                        </PositionedWrapper>
+                    </DropdownsWrapper>
+                    <PriceChart
+                        position={positionType}
+                        asset={currencyKey}
+                        selectedPrice={getSelectedPrice()}
+                        selectedRightPrice={getSelectedRightPrice()}
+                    ></PriceChart>
+                </LeftSide>
+                <RightSide>
+                    <PositionedWrapper>
+                        <Info>{t('options.trade.steps.choose-direction')}</Info>
+                        <RadioButtons onChange={setPositionType} selected={positionType} />
+                    </PositionedWrapper>
 
-                            <AssetTable
-                                setMarket={setMarket}
-                                markets={allMarkets}
-                                position={positionType}
-                                isLoading={marketsQuery.isLoading}
-                            />
-                        </RightSide>
-                    </ContentWrapper>
-
-                    <AmmTrading
-                        currencyKey={currencyKey}
-                        maturityDate={maturityDate || 0}
-                        market={
-                            market || {
-                                currencyKey: '',
-                                address: '',
-                                liquidity: 0,
-                                price: 0,
-                                strikePrice: 0,
-                                leftPrice: 0,
-                                rightPrice: 0,
-                                discount: 0,
-                                positionType: Positions.UP,
-                            }
-                        }
+                    <AssetTable
+                        setMarket={setMarket}
+                        markets={allMarkets}
+                        position={positionType}
+                        isLoading={marketsQuery.isLoading}
                     />
-                    <OpenPositions />
-                </>
-            )}
+                </RightSide>
+            </ContentWrapper>
+
+            <AmmTrading
+                currencyKey={currencyKey}
+                maturityDate={maturityDate || 0}
+                market={
+                    market || {
+                        currencyKey: '',
+                        address: '',
+                        liquidity: 0,
+                        price: 0,
+                        strikePrice: 0,
+                        leftPrice: 0,
+                        rightPrice: 0,
+                        discount: 0,
+                        positionType: Positions.UP,
+                    }
+                }
+            />
+            {isWalletConnected && <OpenPositions />}
         </Wrapper>
     );
 };

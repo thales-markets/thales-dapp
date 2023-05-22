@@ -62,7 +62,7 @@ const CHAIN_TO_RPC_PROVIDER_NETWORK_NAME: Record<number, RpcProvider> = {
 };
 
 const { chains, provider } = configureChains(
-    [mainnet, optimism, optimismGoerli, polygon, arbitrum, bsc],
+    [optimism, optimismGoerli, mainnet, polygon, arbitrum, bsc],
     [
         jsonRpcProvider({
             rpc: (chain) => ({

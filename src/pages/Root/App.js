@@ -15,7 +15,7 @@ import {
     switchToNetworkId,
     updateWallet,
 } from 'redux/modules/wallet';
-import { getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsMainnet, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -65,7 +65,9 @@ const App = () => {
     const networkId = useSelector((state) => getNetworkId(state));
     const switchedToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
 
+    const isMainnet = getIsMainnet(networkId);
     const isPolygon = getIsPolygon(networkId);
+
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
 
@@ -212,11 +214,13 @@ const App = () => {
                                     <TaleOfThales />
                                 </DappLayout>
                             </Route>
-                            <Route exact path={ROUTES.Options.Profile}>
-                                <DappLayout>
-                                    <Profile />
-                                </DappLayout>
-                            </Route>
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Profile}>
+                                    <DappLayout>
+                                        <Profile />
+                                    </DappLayout>
+                                </Route>
+                            )}
                             {!isPolygon && (
                                 <Route exact path={ROUTES.Options.Token}>
                                     <DappLayout>
@@ -287,11 +291,13 @@ const App = () => {
                                 )}
                             />
 
-                            <Route exact path={ROUTES.Options.Home}>
-                                <DappLayout>
-                                    <Markets />
-                                </DappLayout>
-                            </Route>
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Home}>
+                                    <DappLayout>
+                                        <Markets />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
                             <Route exact path={ROUTES.Options.Wizard}>
                                 <DappLayout>
@@ -320,8 +326,9 @@ const App = () => {
                                     <Whitepaper />
                                 </MainLayout>
                             </Route>
+
                             <Route>
-                                <Redirect to={ROUTES.Options.Home} />
+                                <Redirect to={ROUTES.Options.Wizard} />
                                 <DappLayout>
                                     <Markets />
                                 </DappLayout>
