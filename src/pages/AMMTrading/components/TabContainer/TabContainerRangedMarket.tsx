@@ -142,8 +142,6 @@ const FiltersButton = styled.div`
     box-sizing: border-box;
     border-radius: 30px;
     background: transparent;
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 11px;
@@ -182,9 +180,7 @@ const Wrapper = styled.div`
 const Item = styled.div<{ active: boolean }>`
     text-transform: uppercase;
     cursor: pointer;
-    font-family: Roboto !important;
-    font-style: normal;
-    color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
+    color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : _props.theme.textColor.primary)};
 
     @media (max-width: 768px) {
         font-weight: bold;
@@ -194,8 +190,6 @@ const Item = styled.div<{ active: boolean }>`
 `;
 
 const Title = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 100%;

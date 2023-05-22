@@ -480,7 +480,6 @@ const SectionContentWrapper = styled.div<{
 `;
 
 const SectionContent = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     color: ${(props) => props.theme.textColor.primary};
 `;
 

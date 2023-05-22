@@ -64,7 +64,6 @@ const Wrapper = styled.div`
 `;
 
 const TextHeader = styled(Text)`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-weight: 700;
     font-size: 22px;
     line-height: 33px;

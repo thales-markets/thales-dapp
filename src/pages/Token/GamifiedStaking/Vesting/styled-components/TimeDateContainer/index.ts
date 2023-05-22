@@ -17,7 +17,6 @@ const Container: StyledComponent<'div', any> & ContainerChildren = styled.div`
 
 const Date = styled.span`
     display: block;
-    font-family: Roboto !important;
     font-weight: 700;
     font-size: 15px;
     white-space: nowrap;
@@ -28,7 +27,6 @@ const Date = styled.span`
 
 const Time = styled.span`
     display: block;
-    font-family: Roboto !important;
     font-weight: 300;
     font-size: 15px;
     @media (max-width: 768px) {

@@ -202,8 +202,6 @@ const TradingDetailsSentence = styled(FlexDivRowCentered)<{ height?: string }>`
 `;
 
 const Text = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 700;
     font-size: 13px;
     line-height: 15px;

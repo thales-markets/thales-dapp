@@ -26,10 +26,8 @@ type Children = {
 
 // @ts-ignore
 const Table: StyledComponent<'div', any> & Children = styled.div`
-    font-family: Roboto !important;
-    font-style: normal;
     width: 100%;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     max-width: 1200px;
 `;
 
@@ -153,7 +151,7 @@ export const NoDataContainer = styled.div`
 `;
 
 export const NoDataText = styled.div`
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 24px;
 `;
 

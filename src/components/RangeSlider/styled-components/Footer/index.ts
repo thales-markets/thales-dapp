@@ -7,7 +7,6 @@ const Footer = styled.div<{ justifyContent?: string }>`
     ${(_props) => (_props?.justifyContent ? `display: flex;` : '')}
     color: var(--notice-text);
     font-size: 14px;
-    font-family: Roboto !important;
     margin-top: 3px;
     padding: 0px 5px;
 `;

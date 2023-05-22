@@ -45,7 +45,6 @@ const SwapErrorMessage = styled.p`
     align-items: center;
     font-weight: bold;
     color: ${(props) => props.theme.textColor.primary};
-    font-family: ${(props) => props.theme.fontFamily.primary};
 `;
 
 const SwapSectionWrapper = styled(FlexDivColumn)`
@@ -73,15 +72,12 @@ const SwapText = styled.p<{ contentSize?: string; screenWidth?: number }>`
     font-weight: ${(props) => (props.contentSize === 'large' ? '300' : '600')};
     line-height: ${(props) => (props.contentSize === 'large' ? '91.6%' : '12px')};
     color: ${(props) => props.theme.textColor.primary};
-    font-family: ${(props) => props.theme.fontFamily.primary};
     text-overflow: ellipsis;
     width: ${(props) => (props.contentSize && props.screenWidth && props.screenWidth <= 500 ? '90px' : '')};
     overflow: hidden;
 `;
 
 const SwapNumericText = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 400;
     font-size: 25px;
     text-transform: uppercase;
@@ -94,7 +90,6 @@ const SwapMaxButton = styled.button`
     color: ${(props) => props.theme.button.textColor.primary};
     border: transparent;
     border-radius: 20px;
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-size: 12px;
     line-height: 12px;
     letter-spacing: 0.4px;
@@ -112,7 +107,6 @@ const SwapSelect = styled(ReactSelect)`
         }
     }
     & > div {
-        font-family: ${(props) => props.theme.fontFamily.primary};
         background: ${(props) => props.theme.background.primary} !important;
         border: none !important;
     }
@@ -124,7 +118,6 @@ const SwapSelect = styled(ReactSelect)`
         border: none !important;
     }
     .react-select__option {
-        font-family: ${(props) => props.theme.fontFamily.primary};
         color: ${(props) => props.theme.textColor.primary};
         background: ${(props) => props.theme.background.secondary};
         border: none !important;
@@ -157,7 +150,6 @@ const SwapNumericInput = styled(NumericInput)<{ screenWidth: number }>`
     background: ${(props) => props.theme.background.primary};
     border: ${(props) => props.theme.input.borderColor.primary};
     color: ${(props) => props.theme.input.textColor.primary};
-    font-family: ${(props) => props.theme.fontFamily.primary};
     &:focus {
         border: none !important;
     }

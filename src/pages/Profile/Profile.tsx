@@ -271,13 +271,11 @@ const Nav = styled.div<{ justifyContent: string }>`
 `;
 
 const NavItem = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     line-height: 40px;
     font-size: 15px;
     text-transform: uppercase;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     cursor: pointer;
     padding: 0 50px;
     white-space: pre;

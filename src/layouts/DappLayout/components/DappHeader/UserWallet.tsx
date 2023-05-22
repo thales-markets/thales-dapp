@@ -144,8 +144,6 @@ const WalletContainer = styled.div<{ connected: boolean }>`
     cursor: pointer;
     border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     color: ${(props) => props.theme.textColor.primary};
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: normal;
     font-size: 12.5px;
     text-align: center;
@@ -187,14 +185,13 @@ const SelectedNetworkContainer = styled.div<{ cursor: string }>`
     justify-content: center;
     max-width: 130px;
     width: 130px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     cursor: ${(props) => props.cursor};
     flex-direction: column;
     z-index: 1;
 `;
 
 const NetworkItem = styled.div<{ selectedItem?: boolean }>`
-    font-family: 'Sansation' !important;
     display: flex;
     align-items: center;
     width: 100%;

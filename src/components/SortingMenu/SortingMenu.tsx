@@ -71,8 +71,6 @@ const Container = styled.div`
 `;
 
 const Title = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 100%;
@@ -95,7 +93,6 @@ const Wrapper = styled.div`
         height: 47px;
         border-bottom: 5px solid var(--table-border-color);
         border-top: 5px solid var(--table-border-color);
-        font-family: Roboto !important;
         font-size: 12px;
         vertical-align: middle;
         font-weight: bold;
@@ -122,8 +119,6 @@ const Wrapper = styled.div`
 const Item = styled.div`
     text-transform: uppercase;
     cursor: pointer;
-    font-family: Roboto !important;
-    font-style: normal;
 
     @media (min-width: 769px) {
         margin: 0px 20px;
@@ -134,7 +129,7 @@ const Item = styled.div`
         font-size: 12px;
         line-height: 162.5%;
         text-transform: uppercase;
-        color: var(--color-white);
+        color: ${(props) => props.theme.textColor.primary};
     }
 `;
 
@@ -146,7 +141,7 @@ const Arrow = styled.i`
         color: var(--color-highlight);
     }
     @media (max-width: 768px) {
-        color: var(--color-white);
+        color: ${(props) => props.theme.textColor.primary};
     }
 `;
 

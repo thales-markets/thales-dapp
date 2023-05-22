@@ -397,8 +397,6 @@ const Nav = styled.div<{ justifyContent: string }>`
 
 const NavItem = styled.div<{ clickable: boolean }>`
     flex: 1;
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 700;
     line-height: 40px;
     font-size: 15px;
@@ -571,8 +569,6 @@ const ArrowImg = styled(Arrow)<{ $clickable: boolean }>`
 `;
 
 const Text = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 400;
     font-size: 15px;
     line-height: 23px;
@@ -617,8 +613,6 @@ const Button = styled.div`
     justify-content: center;
     border: 1px solid ${(props) => props.theme.button.borderColor.secondary};
     border-radius: 30px;
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 400;
     font-size: 12.5px;
     line-height: 14px;

@@ -370,8 +370,6 @@ const SectionValue = styled.div`
 `;
 
 const SectionContent = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
 `;

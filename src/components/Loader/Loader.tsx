@@ -158,8 +158,6 @@ const WrongNetworkWrapper = styled.div`
 `;
 
 const WrongNetworkText = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 700;
     font-size: 20px;
     line-height: 22px;
@@ -167,8 +165,6 @@ const WrongNetworkText = styled.p`
 `;
 
 const ExplanationText = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 400;
     font-size: 12px;
     line-height: 13px;
@@ -177,7 +173,6 @@ const ExplanationText = styled.p`
 
 const NetworkButton = styled.button<{ margin: string }>`
     display: flex;
-    font-family: ${(props) => props.theme.fontFamily.primary};
     background: ${(props) => props.theme.background.primary};
     border: 1px solid rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
@@ -188,7 +183,6 @@ const NetworkButton = styled.button<{ margin: string }>`
     padding: 6px;
     margin: ${(props) => props.margin};
     & > span {
-        font-family: ${(props) => props.theme.fontFamily.primary};
         margin-left: 6px;
     }
     &:hover {

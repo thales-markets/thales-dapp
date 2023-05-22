@@ -79,8 +79,6 @@ const Dropdown = styled.div`
 `;
 
 const Date = styled.p`
-    font-family: 'Roboto';
-    font-style: normal;
     font-weight: 600;
     font-size: 13px;
     line-height: 100%;

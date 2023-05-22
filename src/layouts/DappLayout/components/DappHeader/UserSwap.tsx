@@ -216,7 +216,6 @@ const SwapButton = styled.div<{ clickable: boolean }>`
     display: -webkit-flex;
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
-    font-family: ${(props) => props.theme.fontFamily.primary};
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
     padding: 5px 7px;

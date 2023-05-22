@@ -558,8 +558,6 @@ const ViewButton = styled.div`
         box-sizing: border-box;
         border-radius: 30px;
         background: transparent;
-        font-family: Roboto !important;
-        font-style: normal;
         font-weight: bold;
         font-size: 12px;
         text-transform: uppercase;
@@ -597,8 +595,6 @@ const ViewsDropDown = styled.div`
 `;
 
 const ViewTitle = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 100%;
@@ -617,8 +613,6 @@ const ViewItem = styled.div<{ active: boolean }>`
         line-height: 162.5%;
         text-transform: uppercase;
         cursor: pointer;
-        font-family: Roboto !important;
-        font-style: normal;
         color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
     }
 `;

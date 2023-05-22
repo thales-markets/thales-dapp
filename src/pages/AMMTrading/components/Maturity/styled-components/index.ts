@@ -19,12 +19,11 @@ export const Header = styled.span`
     font-size: 20px;
     line-height: 150%;
     margin-bottom: 60px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const Label = styled.span`
-    font-family: Roboto !important;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 15px;
     font-weight: 600;
     margin-bottom: 28px;

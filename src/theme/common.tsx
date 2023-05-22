@@ -413,8 +413,6 @@ export const GradientText = styled.span<{ gradient: string; fontSize: number; fo
 `;
 
 export const UserCardSectionHeader = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: bold;
     font-size: 15px;
     line-height: 20px;

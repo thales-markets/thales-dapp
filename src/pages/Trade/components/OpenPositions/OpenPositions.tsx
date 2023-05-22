@@ -341,8 +341,6 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
 `;
 
 const Title = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
@@ -434,8 +432,6 @@ const NoPositionsText = styled.span`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 600;
     font-size: 16px;
     line-height: 100%;

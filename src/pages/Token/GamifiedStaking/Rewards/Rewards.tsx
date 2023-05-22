@@ -864,8 +864,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefault?: boolean }>`
@@ -1040,7 +1039,7 @@ const SectionDetailsLabel = styled.span<{ color?: string }>`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: ${(props) => props.color ?? 'var(--color-white)'};
+    color: ${(props) => props.color ?? props.theme.textColor.primary};
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -1052,7 +1051,7 @@ const SectionDetailsValue = styled.span<{ color?: string }>`
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => props.color ?? 'var(--color-white)'};
+    color: ${(props) => props.color ?? props.theme.textColor.primary};
 `;
 
 const ButtonWrapperTooltip = styled.div`

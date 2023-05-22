@@ -194,7 +194,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         </defs>
                         <CartesianGrid stroke="#2B3139" strokeDasharray="1" />
                         <XAxis
-                            tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
+                            tick={{ fontSize: '10px', fill: ThemeMap[theme].textColor.secondary }}
                             tickLine={false}
                             axisLine={false}
                             dataKey="date"
@@ -206,7 +206,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             ticks={ticks}
                             tick={{
                                 fontSize: '10px',
-                                fontFamily: 'Inter',
                                 fill: ThemeMap[theme].textColor.secondary,
                                 width: 100,
                             }}
@@ -221,7 +220,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 backgroundColor: 'var(--color-tertiary)',
                                 color: 'var(--color-white)',
                                 border: 'none',
-                                fontFamily: 'Roboto',
                                 fontSize: 14,
                             }}
                         />
@@ -296,7 +294,6 @@ const Rectangle = styled.rect`
 const Text = styled.text`
     fill: ${(props) => props.theme.borderColor.secondary};
     font-size: 10px;
-    font-family: Inter !important;
 `;
 
 const CustomLabel2 = (props: any) => {
@@ -321,7 +318,6 @@ const Rectangle2 = styled.rect`
 const Text2 = styled.text`
     fill: ${(props) => props.theme.textColor.quaternary};
     font-size: 10px;
-    font-family: Inter !important;
 `;
 
 const Wrapper = styled.div`

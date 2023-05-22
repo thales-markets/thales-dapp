@@ -90,8 +90,6 @@ const Header = styled(FlexDivRow)<{ mobileStyle?: CSSProperties }>`
 `;
 
 const Title = styled(FlexDiv)`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: bold;
     font-size: 18px;
     line-height: 110%;

@@ -75,8 +75,6 @@ const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
 `;
 
 const AssetName = styled.span<{ fontSize?: string }>`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     display: block;
     font-weight: 300;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
@@ -89,8 +87,6 @@ const AssetName = styled.span<{ fontSize?: string }>`
 `;
 
 const CurrencyKey = styled.span<{ fontSize?: string }>`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     display: block;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
     text-transform: uppercase;

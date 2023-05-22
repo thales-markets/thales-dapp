@@ -248,10 +248,8 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
-    font-style: normal;
     text-transform: uppercase;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const ScheduleLabel = styled.div`

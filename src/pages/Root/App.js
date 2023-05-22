@@ -350,9 +350,13 @@ const App = () => {
 };
 
 const GlobalStyle = createGlobalStyle`
-  body #root {
-    background: ${(props) => props.theme.background.primary};
-  }
+    * {
+        font-family: ${(props) => props.theme.fontFamily.primary};
+        font-style: normal;
+    }
+    body #root {
+        background: ${(props) => props.theme.background.primary};
+    }
 `;
 
 export default App;

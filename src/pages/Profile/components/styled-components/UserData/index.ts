@@ -46,8 +46,7 @@ const Row = styled.div`
 
 const Text = styled.span`
     display: block;
-    font-family: Roboto !important;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 18px;
     line-height: 24px;
 `;

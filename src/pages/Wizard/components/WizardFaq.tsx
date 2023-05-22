@@ -129,8 +129,6 @@ const WizardFaq: React.FC = () => {
 };
 
 const FaqHeader = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 700;
     font-size: 22px;
     line-height: 33px;
@@ -151,8 +149,6 @@ const QuestionGroup = styled.div<{ questionOpened: boolean }>`
 `;
 
 const Question = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 700;
     font-size: 18px;
     line-height: 16px;
@@ -205,8 +201,6 @@ const StyledArrowDown = styled(ArrowDown)`
 `;
 
 const Answer = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 400;
     font-size: 18px;
     line-height: 22px;

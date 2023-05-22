@@ -113,7 +113,7 @@ const Select: React.FC<SelectPropsType> = ({ title, value, tooltip, container, o
                                 />
                                 <CustomInputLabel>
                                     {options?.customValue
-                                        ? options.customValue > 1
+                                        ? Number(options.customValue) > 1
                                             ? t('options.common.time-remaining.hours')
                                             : t('options.common.time-remaining.hour')
                                         : t('options.common.time-remaining.hour')}
@@ -185,7 +185,6 @@ const ItemContainer = styled.div`
 const Item = styled.span<{ active?: boolean }>`
     cursor: pointer;
     padding: 6px 22px;
-    font-family: Roboto !important;
     font-weight: 500;
     font-size: 12px;
     border-radius: 30px;
@@ -210,9 +209,8 @@ const CustomInputContainer = styled.div`
 `;
 
 const CustomInput = styled.input`
-    font-family: Roboto !important;
     font-weight: 600;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 15px;
     background: transparent;
     border: none;
@@ -223,28 +221,26 @@ const CustomInput = styled.input`
         outline: none;
     }
     &:-webkit-input-placeholder {
-        color: var(--color-white);
+        color: ${(props) => props.theme.textColor.primary};
         opacity: 0.7;
     }
     &:-ms-input-placeholder {
-        color: var(--color-white);
+        color: ${(props) => props.theme.textColor.primary};
         opacity: 0.7;
     }
     &::placeholder {
-        color: var(--color-white);
+        color: ${(props) => props.theme.textColor.primary};
         opacity: 0.7;
     }
 `;
 
 const CustomInputLabel = styled.span`
-    font-family: Roboto !important;
     font-weight: 600;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 15px;
 `;
 
 const Title = styled.div<{ color?: string; fontSize?: string }>`
-    font-family: Roboto !important;
     font-weight: 400;
     margin-bottom: 5px;
     text-transform: uppercase;
@@ -260,9 +256,8 @@ const ValueContainer = styled.div`
 `;
 
 const Value = styled.input<{ color?: string; fontSize?: string }>`
-    font-family: Roboto !important;
     font-weight: 600;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
+    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
     background: transparent;
     border: none;
@@ -276,7 +271,7 @@ const Value = styled.input<{ color?: string; fontSize?: string }>`
 
 const Arrow = styled.i<{ color?: string }>`
     content: url(${dropDown});
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
+    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
     font-size: 18px;
 `;
 

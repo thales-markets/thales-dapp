@@ -55,7 +55,6 @@ const ThalesLogoContainer = styled.div`
 `;
 
 const ThalesLogo = styled.i`
-    color: var(--color-white);
     font-size: 88px;
     height: 83px;
     @media (max-width: 768px) {
@@ -67,12 +66,10 @@ const ThalesLogoText = styled.p`
     width: 84px;
     height: 16px;
     font-size: 8px;
-    font-family: 'Inter' !important;
-    font-style: normal;
     font-weight: 400;
     line-height: 8px;
     text-align: center;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 768px) {
         height: 24px;
     }
@@ -82,7 +79,7 @@ const FlexDiv = styled.div`
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     flex-wrap: wrap;
 `;
 
@@ -117,12 +114,10 @@ const FooterIconsWrapper = styled(FlexDiv)`
 const IconLink = styled.a``;
 
 const TextLink = styled.a`
-    font-family: 'Inter' !important;
-    font-style: normal;
     font-weight: 700;
     font-size: 14px;
     line-height: 17px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.link.textColor.secondary};
 `;
 
 const FooterIcon = styled.i`
@@ -134,7 +129,7 @@ const FooterIcon = styled.i`
         pointer-events: none;
     }
     font-size: 3em;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default Footer;

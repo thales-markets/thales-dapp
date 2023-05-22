@@ -66,8 +66,6 @@ const Wrapper = styled.div`
 `;
 
 export const Text = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 400;
     font-size: 18px;
     line-height: 24px;
