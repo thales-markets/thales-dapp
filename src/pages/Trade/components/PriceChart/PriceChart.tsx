@@ -118,11 +118,12 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
             if (selectedPrice) {
                 return (
                     <ReferenceArea
+                        xHeight={1}
                         y1={selectedPrice}
                         y2={ticks ? (position === Positions.UP ? ticks[ticks.length - 1] : ticks[0]) : 0}
-                        stroke={ThemeMap[theme].textColor.quaternary}
                         fill="url(#referenceGradient)"
                         fillOpacity={0.2}
+                        isFront={false}
                     />
                 );
             }
@@ -131,29 +132,32 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                 if (position === Positions.IN) {
                     return (
                         <ReferenceArea
+                            xHeight={1}
                             y1={selectedPrice}
                             y2={selectedRightPrice}
-                            stroke={ThemeMap[theme].textColor.quaternary}
                             fill="url(#referenceGradient)"
                             fillOpacity={0.2}
+                            isFront={false}
                         />
                     );
                 } else {
                     return (
                         <>
                             <ReferenceArea
+                                xHeight={1}
                                 y1={selectedPrice}
                                 y2={ticks ? ticks[0] : 0}
-                                stroke={ThemeMap[theme].textColor.quaternary}
                                 fill="url(#referenceGradient)"
                                 fillOpacity={0.2}
+                                isFront={false}
                             />
                             <ReferenceArea
+                                xHeight={1}
                                 y1={selectedRightPrice}
                                 y2={ticks ? ticks[ticks.length - 1] : 0}
-                                stroke={ThemeMap[theme].textColor.quaternary}
                                 fill="url(#referenceGradient)"
                                 fillOpacity={0.2}
+                                isFront={false}
                             />
                         </>
                     );
@@ -179,12 +183,12 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 <stop
                                     offset="0%"
                                     stopColor={`${ThemeMap[theme].textColor.quaternary}`}
-                                    stopOpacity={0.8}
+                                    stopOpacity={0}
                                 />
                                 <stop
                                     offset="90.62%"
                                     stopColor={`${ThemeMap[theme].textColor.quaternary}`}
-                                    stopOpacity={0}
+                                    stopOpacity={0.8}
                                 />
                             </linearGradient>
                         </defs>
@@ -227,6 +231,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             stroke="#F7B91A"
                             strokeWidth={2}
                             fill="var(--color-primary)"
+                            animationEasing="ease-in"
+                            animationDuration={400}
+                            xHeight={2}
                         />
 
                         <ReferenceLine
@@ -240,7 +247,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             <ReferenceLine
                                 y={selectedPrice}
                                 stroke="#03DAC6"
-                                strokeDasharray="3 3"
                                 label={<CustomLabel2 price={selectedPrice} />}
                             />
                         )}
