@@ -68,8 +68,8 @@ const Wrapper = styled.button<{
     text-transform: uppercase;
     align-items: center;
     justify-content: center;
-    width: ${(props) => props.width || '100%'};
-    height: ${(props) => props.height || '34px'};
+    width: ${(props) => props.width || 'auto'};
+    min-height: ${(props) => props.height || '34px'};
     border: 1px solid ${(props) => props.theme.button.background.primary};
     border-radius: 30px;
     font-weight: 700;

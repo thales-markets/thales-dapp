@@ -6,8 +6,6 @@ import { LINKS } from 'constants/links';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import TimeRemaining from 'pages/Token/components/TimeRemaining';
@@ -42,6 +40,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2/Button';
 
 enum SectionType {
     INFO,
@@ -386,22 +385,13 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     const getClaimButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button type={ButtonType.submit} active={true} onClickHandler={openConnectModal}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
 
         return (
             <Tooltip overlay={t('options.earn.gamified-staking.rewards.claim.button-tooltip')}>
                 <ButtonWrapperTooltip>
-                    <Button
-                        type={ButtonType.submit}
-                        active={isClaimAvailable}
-                        disabled={!isClaimAvailable}
-                        onClickHandler={handleClaimStakingRewards}
-                    >
+                    <Button disabled={!isClaimAvailable} onClick={handleClaimStakingRewards}>
                         {isClaiming
                             ? t('options.earn.gamified-staking.rewards.claim.claiming')
                             : t('options.earn.gamified-staking.rewards.claim.claim')}
@@ -422,12 +412,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         '-'
                     )}
                     {canClosePeriod && (
-                        <Button
-                            type={ButtonType.label}
-                            onClickHandler={handleClosePeriod}
-                            active={isClosingPeriodAvailable}
-                            disabled={!isClosingPeriodAvailable}
-                        >
+                        <Button onClick={handleClosePeriod} disabled={!isClosingPeriodAvailable}>
                             {isClosingPeriod
                                 ? t('options.earn.gamified-staking.rewards.claim.close-period.progress-label')
                                 : t('options.earn.gamified-staking.rewards.claim.close-period.label')}
@@ -478,12 +463,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-2')}
                     </SectionLabelContent>
                 </SectionLabel>
-                <Button
-                    type={ButtonType.popup}
-                    active={true}
-                    margin={'30px 0 5px auto'}
-                    onClickHandler={() => setShowClaimOnBehalfModal(true)}
-                >
+                <Button onClick={() => setShowClaimOnBehalfModal(true)} fontSize="15px">
                     {t('options.earn.gamified-staking.rewards.claim-on-behalf.enable')}
                 </Button>
             </SectionContentWrapper>

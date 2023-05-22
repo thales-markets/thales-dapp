@@ -14,9 +14,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { getIsAppReady } from 'redux/modules/app';
 import { ArrowContainer } from 'pages/Token/Migration/components';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
-import { isMobile } from 'utils/device';
 import YourTransactions from './Transactions';
-import Button, { ButtonType } from 'pages/Token/components/Button/Button';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { formatGasLimit, getL1FeeInWei, getIsOVM } from 'utils/network';
 import { ZERO_ADDRESS } from 'constants/network';
@@ -28,6 +26,7 @@ import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import Button from 'components/ButtonV2/Button';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -231,39 +230,16 @@ const MergeAccount: React.FC = () => {
 
     const getMergeButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '50%'}
-                    active={true}
-                    onClickHandler={openConnectModal}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClic={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (!isDestAddressValid && isAccountMergingEnabled && !isMergeBlocked) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.invalid-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
         }
         if (!isDestAddressEntered && isAccountMergingEnabled && !isMergeBlocked) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.enter-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-address`)}</Button>;
         }
         return (
-            <Button
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '50%'}
-                active={!isButtonDisabled}
-                disabled={isButtonDisabled}
-                onClickHandler={handleMerge}
-            >
+            <Button disabled={isButtonDisabled} onClick={handleMerge}>
                 {!isMerging
                     ? t('options.earn.gamified-staking.merge-account.merge-button.label')
                     : t('options.earn.gamified-staking.merge-account.merge-button.progress-label')}
@@ -273,49 +249,26 @@ const MergeAccount: React.FC = () => {
 
     const getDelegateButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '50%'}
-                    active={true}
-                    onClickHandler={openConnectModal}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
 
         if (delegatedVolumeAddress !== ZERO_ADDRESS) {
             return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} onClickHandler={handleDelegate}>
+                <Button onClick={handleDelegate}>
                     {t(`options.earn.gamified-staking.merge-account.delegate-button.remove-delegation`)}
                 </Button>
             );
         }
 
         if (!isDelegateDestAddressValid) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.invalid-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
         }
         if (!isDelegateDestAddressEntered) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.enter-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-address`)}</Button>;
         }
 
         return (
-            <Button
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '50%'}
-                active={!isDelegateButtonDisabled}
-                disabled={isDelegateButtonDisabled}
-                onClickHandler={handleDelegate}
-            >
+            <Button disabled={isDelegateButtonDisabled} onClick={handleDelegate}>
                 {!isDelegating
                     ? t('options.earn.gamified-staking.merge-account.delegate-button.label')
                     : t('options.earn.gamified-staking.merge-account.delegate-button.progress-label')}

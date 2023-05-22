@@ -373,3 +373,9 @@ export const SliderRange = styled.div`
         cursor: default;
     }
 `;
+
+export const defaultButtonProps = {
+    width: '100%',
+    fontSize: '15px',
+    height: '30px;',
+};
