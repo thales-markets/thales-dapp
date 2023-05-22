@@ -260,17 +260,6 @@ export const ButtonContainer = styled(FlexDivColumnCentered)`
     width: 100%;
 `;
 
-export const ValidationTooltip = withStyles(() => ({
-    tooltip: {
-        minWidth: '100%',
-        width: '100%',
-        margin: '1px',
-        backgroundColor: '#FDB7B7',
-        color: '#F30101',
-        fontSize: '12px',
-    },
-}))(Tooltip);
-
 export const LoaderContainer = styled(FlexDivCentered)`
     position: relative;
     min-height: 240px;

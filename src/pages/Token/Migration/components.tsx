@@ -1,4 +1,4 @@
-import { DefaultSubmitButton, InputContainer, InputLabel } from 'pages/Token/components/components';
+import { InputContainer, InputLabel } from 'pages/Token/components/components';
 import styled from 'styled-components';
 import { FlexDivCentered } from 'theme/common';
 
