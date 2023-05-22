@@ -230,7 +230,7 @@ const MergeAccount: React.FC = () => {
 
     const getMergeButton = () => {
         if (!isWalletConnected) {
-            return <Button onClic={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (!isDestAddressValid && isAccountMergingEnabled && !isMergeBlocked) {
             return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
