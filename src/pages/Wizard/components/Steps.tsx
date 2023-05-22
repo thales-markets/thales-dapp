@@ -1,7 +1,6 @@
-import { Modal } from '@material-ui/core';
 import useInterval from 'hooks/useInterval';
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { Trans } from 'react-i18next';
+import React, { lazy, useEffect, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -17,10 +16,11 @@ import { POLYGON_ID } from 'constants/network';
 import ROUTES from 'constants/routes';
 import SimpleLoader from 'components/SimpleLoader';
 import SPAAnchor from 'components/SPAAnchor';
-import { XButton } from 'theme/common';
 import { WizardSteps } from '../Wizard';
 import BungeePlugin from 'components/BungeePlugin';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Modal from 'components/Modal';
+import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -41,6 +41,7 @@ const MMURL = 'https://metamask.io/download/';
 const Swap = lazy(() => import(/* webpackChunkName: "Swap" */ 'components/Swap'));
 
 const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurrentStep }) => {
+    const { t } = useTranslation();
     const { openConnectModal } = useConnectModal();
 
     const [installMetamask, setInstallMetamask] = useState(false);
@@ -298,17 +299,11 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
             <LineUnderNav />
             {showBuyModal && (
                 <Modal
-                    open={showBuyModal}
-                    onClose={() => {
-                        setShowBuyModal(false);
-                    }}
-                    style={modalStyle}
+                    title={t('wizard-page.buy-title')}
+                    onClose={() => setShowBuyModal(false)}
+                    shouldCloseOnOverlayClick={true}
                 >
                     <BuyWrapper>
-                        <BuyXButton onClick={() => setShowBuyModal(false)} />
-                        <BuyTitle>
-                            <Trans i18nKey="wizard-page.buy-title" />
-                        </BuyTitle>
                         <ButtonLogoGroup>
                             <ButtonWrapper>
                                 <Button
@@ -340,7 +335,9 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                                         buyBridgeButtonHandler(Provider.BUNGEE);
                                     }}
                                 >
-                                    <Trans i18nKey="wizard-page.buy-button3" />
+                                    {t('wizard-page.buy-button3', {
+                                        network: SUPPORTED_NETWORKS_NAMES[networkId].split(' ')[0].toLowerCase(),
+                                    })}
                                 </Button>
                             </ButtonWrapper>
                             <Logo logoType={Provider.BUNGEE} />
@@ -358,41 +355,28 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                     </BuyWrapper>
                 </Modal>
             )}
-            <Modal
-                open={iframe.length > 0}
-                onClose={() => {
-                    setIframe('');
-                }}
-            >
-                <IFrameWrapper>
-                    <IframeXButton onClick={() => setIframe('')} />
-                    {iframeLoader && <SimpleLoader />}
-                    <IFrame src={iframe} onLoad={() => setLoader(false)} />
-                </IFrameWrapper>
-            </Modal>
+            {iframe.length > 0 && (
+                <Modal title="" onClose={() => setIframe('')} shouldCloseOnOverlayClick={true}>
+                    <IFrameWrapper>
+                        {iframeLoader && <SimpleLoader />}
+                        <IFrame src={iframe} onLoad={() => setLoader(false)} />
+                    </IFrameWrapper>
+                </Modal>
+            )}
             {showBungeePlugin && (
                 <Modal
-                    open={showBungeePlugin}
-                    onClose={() => {
-                        setShowBungeePlugin(false);
-                    }}
+                    title={t('wizard-page.buy-button3', {
+                        network: SUPPORTED_NETWORKS_NAMES[networkId].split(' ')[0].toLowerCase(),
+                    })}
+                    onClose={() => setShowBungeePlugin(false)}
+                    shouldCloseOnOverlayClick={true}
                 >
-                    <Suspense fallback={<></>}>
-                        <BungeePlugin />
-                    </Suspense>
+                    <BungeePlugin />
                 </Modal>
             )}
             {showSwap && (
-                <Modal
-                    open={showSwap}
-                    onClose={(_, reason) => {
-                        if (reason !== 'backdropClick') setShowSwap(false);
-                    }}
-                    style={modalStyle}
-                >
-                    <Suspense fallback={<></>}>
-                        <Swap handleClose={setShowSwap} />
-                    </Suspense>
+                <Modal title="" onClose={() => setShowSwap(false)} shouldCloseOnOverlayClick={true}>
+                    <Swap handleClose={setShowSwap} />
                 </Modal>
             )}
         </>
@@ -413,6 +397,7 @@ const Nav = styled.div<{ justifyContent: string }>`
 
 const NavItem = styled.div<{ clickable: boolean }>`
     flex: 1;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 700;
     line-height: 40px;
@@ -586,6 +571,7 @@ const ArrowImg = styled(Arrow)<{ $clickable: boolean }>`
 `;
 
 const Text = styled.p`
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -602,39 +588,11 @@ const Text = styled.p`
 
 const BuyWrapper = styled.div`
     box-sizing: border-box;
-    width: 390px;
-    height: 441px;
+    width: 348px;
+    height: 360px;
     margin: auto;
     position: relative;
-    top: 100px;
     background: ${(props) => props.theme.background.primary};
-    color: ${(props) => props.theme.textColor.primary};
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
-    border-radius: 15px;
-    outline: none;
-`;
-
-const BuyXButton = styled(XButton)`
-    position: absolute;
-    top: 20px;
-    right: 20px;
-`;
-
-const IframeXButton = styled(XButton)`
-    position: relative;
-    top: -20px;
-    left: 530px;
-`;
-
-const BuyTitle = styled.div`
-    margin-bottom: 10px;
-    margin-top: 35px;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 21px;
-    line-height: 24px;
-    position: relative;
-    text-align: center;
     color: ${(props) => props.theme.textColor.primary};
 `;
 
@@ -659,6 +617,7 @@ const Button = styled.div`
     justify-content: center;
     border: 1px solid ${(props) => props.theme.button.borderColor.secondary};
     border-radius: 30px;
+    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 400;
     font-size: 12.5px;
@@ -667,7 +626,7 @@ const Button = styled.div`
     color: ${(props) => props.theme.button.textColor.secondary};
     background-color: transparent;
     padding: 5px 0px;
-    margin-left: 30px;
+    margin-left: 10px;
     :hover {
         border: 1px solid ${(props) => props.theme.button.borderColor.primary};
     }
@@ -698,7 +657,6 @@ const IFrameWrapper = styled.div`
     height: 635px;
     margin: auto;
     background: white;
-    margin-top: 50px;
     border-radius: 15px;
     outline: none;
 `;
@@ -707,10 +665,6 @@ const IFrame = styled.iframe`
     width: 100%;
     height: 100%;
 `;
-
-const modalStyle = {
-    backdropFilter: 'blur(10px)',
-};
 
 const iconStyle = {
     fontSize: 74,
