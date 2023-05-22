@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { FieldContainer, FieldLabel, Input } from '../common';
 import MuiTooltip from '@material-ui/core/Tooltip';
 import { FlexDivCentered } from 'theme/common';
-import { ReactComponent as balanceIcon } from 'assets/images/token/balance-icon.svg';
+import { ReactComponent as BalanceIcon } from 'assets/images/token/balance-icon.svg';
 import SimpleLoader from 'pages/Token/components/SimpleLoader/SimpleLoader';
 
 type NumericInputProps = {
@@ -81,7 +81,7 @@ const NumericInput: React.FC<NumericInputProps> = ({
                 )}
                 {balance && (
                     <BalanceContainer>
-                        <BalanceIcon />
+                        <StyledBalanceIcon />
                         {isBalanceLoading ? <SimpleLoader /> : balance}
                     </BalanceContainer>
                 )}
@@ -188,12 +188,15 @@ const BalanceContainer = styled(FlexDivCentered)`
     font-size: 15px;
     line-height: 18px;
     text-transform: uppercase;
-    color: ${(props) => props.theme.input.textColor.primary};
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
-const BalanceIcon = styled(balanceIcon)`
-    height: 15px;
-    margin: 0 4px 2px 0;
+const StyledBalanceIcon = styled(BalanceIcon)`
+    height: 14px;
+    margin: 0 4px 1px 0;
+    path {
+        fill: ${(props) => props.theme.textColor.quaternary};
+    }
 `;
 
 const CurrencyComponentContainer = styled(FlexDivCentered)`
