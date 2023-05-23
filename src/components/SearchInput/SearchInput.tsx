@@ -25,6 +25,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ placeholder, text, handleChan
                 width={width}
                 height={height}
                 margin={'0px'}
+                inputPadding={'5px 30px 5px 10px;'}
             />
             <Icon className="icon icon--search" iconTop={iconTop} />
         </Wrapper>

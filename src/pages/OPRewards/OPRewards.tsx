@@ -163,24 +163,34 @@ const OPRewards: React.FC = () => {
     }, [usersAmmBuyVolumeQuery.data, usersAmmBuyVolumeQuery.isSuccess, walletAddress, isWalletConnected]);
 
     const summaryData = useMemo(() => {
-        const itmVolume = tableData.reduce((a, { itmInfo }) => a + itmInfo.volume, 0);
-        const otmVolume = tableData.reduce((a, { otmInfo }) => a + otmInfo.volume, 0);
+        if (usersAmmBuyVolumeQuery.data && usersAmmBuyVolumeQuery.isSuccess) {
+            const itmVolume = usersAmmBuyVolumeQuery.data.rewards.reduce((a, { itmInfo }) => a + itmInfo.volume, 0);
+            const otmVolume = usersAmmBuyVolumeQuery.data.rewards.reduce((a, { otmInfo }) => a + otmInfo.volume, 0);
 
-        const itmOpRewardsPerVolume = (OP_REWARDS[period - 1] / itmVolume) * 1000;
-        const otmOpRewardsPerVolume = (OP_REWARDS[period - 1] / otmVolume) * 1000;
+            const itmOpRewardsPerVolume = (OP_REWARDS[period - 1] / itmVolume) * 1000;
+            const otmOpRewardsPerVolume = (OP_REWARDS[period - 1] / otmVolume) * 1000;
 
-        const itmThalesRewardsPerVolume = (THALES_REWARDS[period - 1] / itmVolume) * 1000;
-        const otmThalesRewardsPerVolume = (THALES_REWARDS[period - 1] / otmVolume) * 1000;
+            const itmThalesRewardsPerVolume = (THALES_REWARDS[period - 1] / itmVolume) * 1000;
+            const otmThalesRewardsPerVolume = (THALES_REWARDS[period - 1] / otmVolume) * 1000;
 
+            return {
+                itmVolume,
+                otmVolume,
+                itmOpRewardsPerVolume,
+                otmOpRewardsPerVolume,
+                itmThalesRewardsPerVolume,
+                otmThalesRewardsPerVolume,
+            };
+        }
         return {
-            itmVolume,
-            otmVolume,
-            itmOpRewardsPerVolume,
-            otmOpRewardsPerVolume,
-            itmThalesRewardsPerVolume,
-            otmThalesRewardsPerVolume,
+            itmVolume: 0,
+            otmVolume: 0,
+            itmOpRewardsPerVolume: 0,
+            otmOpRewardsPerVolume: 0,
+            itmThalesRewardsPerVolume: 0,
+            otmThalesRewardsPerVolume: 0,
         };
-    }, [tableData, period]);
+    }, [usersAmmBuyVolumeQuery.data, usersAmmBuyVolumeQuery.isSuccess]);
 
     const isLoading = usersAmmBuyVolumeQuery.isLoading;
 
