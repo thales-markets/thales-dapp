@@ -161,9 +161,9 @@ export const ContentInfo = styled.p`
 `;
 
 export const WarningContentInfo = styled(ContentInfo)`
-    color: #ffcc00;
+    color: ${(props) => props.theme.warning.textColor.primary};
     i {
-        color: #ffcc00;
+        color: ${(props) => props.theme.warning.textColor.primary};
     }
 `;
 

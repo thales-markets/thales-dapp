@@ -26,16 +26,16 @@ export const InfoMessage: React.FC<InfoMessageProps> = ({ message, hideIcon, fon
 
 const Container = styled.div`
     background: #79a8d0;
-    border: 1px solid var(--color-highlight);
+    border: 1px solid #64d9fe;
     border-radius: 5px;
     padding: 4px 10px;
 `;
 
 const Message = styled(FlexDivRow)<{ fontSize?: string; lineHeight?: string }>`
     font-weight: 500;
-    font-size: ${(props) => (props.fontSize ? props.fontSize : '12px')};
-    line-height: ${(props) => (props.lineHeight ? props.lineHeight : '16px')};
-    color: var(--color-primary); ;
+    font-size: ${(props) => props.fontSize || '12px'};
+    line-height: ${(props) => props.lineHeight || '16px'};
+    color: #04045a;
 `;
 
 export const StyledInfoIIcon = styled(InfoIcon)`

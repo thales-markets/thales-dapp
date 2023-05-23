@@ -179,7 +179,7 @@ export const ContentInfo = styled.p`
 `;
 
 export const WarningContentInfo = styled(ContentInfo)`
-    color: #ffcc00;
+    ${(props) => props.theme.warning.textColor.primary};
 `;
 
 export const BoldContent = styled.span`

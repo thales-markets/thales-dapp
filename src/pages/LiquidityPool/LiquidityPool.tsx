@@ -57,7 +57,7 @@ import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery'
 import SimpleLoader from 'components/SimpleLoader';
 import Transactions from './Transactions';
 import PnL from './PnL';
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import Tooltip from 'components/TooltipV2';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';

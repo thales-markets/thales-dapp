@@ -336,12 +336,12 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                         {
                             Header: t(`options.home.markets-table.strike-price-col`),
                             accessor: 'market.strikePrice',
-                            Cell: (_props: any) => {
+                            Cell: (props: any) => {
                                 return (
                                     <TableText>
-                                        {_props.cell.row.original.range
-                                            ? _props.cell.value
-                                            : formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}
+                                        {props.cell.row.original.range
+                                            ? props.cell.value
+                                            : formatCurrencyWithSign(USD_SIGN, props?.cell?.value, 2)}
                                     </TableText>
                                 );
                             },
@@ -509,7 +509,7 @@ const Icon = styled.i`
 `;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
+    ${(props) => (props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
 `;
 
 const getColor = (data: any) => {

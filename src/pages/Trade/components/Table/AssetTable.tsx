@@ -73,10 +73,10 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                 id: 'discountedSide',
                 Header: t(`options.home.markets-table.discount-col`),
                 accessor: 'discountedSide',
-                Cell: (_props: any) => {
+                Cell: (props: any) => {
                     return (
-                        <TableText selected={rowIndex === _props.row.index} price={true}>
-                            {formatPercentage(_props.row.original.discount)}
+                        <TableText selected={rowIndex === props.row.index} price={true}>
+                            {formatPercentage(props.row.original.discount)}
                         </TableText>
                     );
                 },

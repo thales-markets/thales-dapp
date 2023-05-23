@@ -55,36 +55,36 @@ const Wrapper = styled.div`
 `;
 
 const Label = styled.span<{ fontSize?: string; color?: string }>`
-    color: ${(_props) => (_props?.color ? _props?.color : 'var(--color-white)')};
-    font-size: ${(_props) => (_props?.fontSize ? _props?.fontSize : '24px')};
+    color: ${(props) => (props?.color ? props?.color : 'var(--color-white)')};
+    font-size: ${(props) => (props?.fontSize ? props?.fontSize : '24px')};
 `;
 
 const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })<{ size?: string }>`
     border: 0;
     opacity: 0;
-    height: ${(_props) => (_props?.size ? _props.size : '32px')};
+    height: ${(props) => (props?.size ? props.size : '32px')};
     margin: -1px;
     overflow: hidden;
     padding: 0;
     position: absolute;
     white-space: nowrap;
-    width: ${(_props) => (_props?.size ? _props.size : '32px')};
+    width: ${(props) => (props?.size ? props.size : '32px')};
 `;
 
 const CheckboxContainer = styled.div<{ checked?: boolean; inputSize?: string; margin?: string }>`
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: ${(_props) => (_props?.checked ? '1 !important' : '0.5 !important')};
-    ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
+    opacity: ${(props) => (props?.checked ? '1 !important' : '0.5 !important')};
+    ${(props) => (props?.margin ? `margin: ${props.margin}` : '')};
     ${HiddenCheckbox} {
-        width: ${(_props) => (_props?.inputSize ? _props.inputSize : '32px')};
-        height: ${(_props) => (_props?.inputSize ? _props.inputSize : '32px')};
+        width: ${(props) => (props?.inputSize ? props.inputSize : '32px')};
+        height: ${(props) => (props?.inputSize ? props.inputSize : '32px')};
     }
 `;
 
 const Icon = styled.svg<{ checked?: boolean }>`
-    stroke: ${(_props) => (_props?.checked ? 'var(--input-border-color)' : 'var(--card-border-color)')};
+    stroke: ${(props) => (props?.checked ? 'var(--input-border-color)' : 'var(--card-border-color)')};
     fill: none;
     stroke-width: 2px;
 `;
@@ -92,18 +92,18 @@ const Icon = styled.svg<{ checked?: boolean }>`
 const StyledCheckbox = styled.div<{ checked?: boolean; size?: string; margin?: string }>`
     cursor: pointer;
     display: inline-block;
-    width: ${(_props) => (_props?.size ? _props?.size : '32px')};
-    height: ${(_props) => (_props?.size ? _props?.size : '32px')};
+    width: ${(props) => (props?.size ? props?.size : '32px')};
+    height: ${(props) => (props?.size ? props?.size : '32px')};
     background: transparent;
-    margin: ${(_props) => (_props?.margin ? _props.margin : '')};
+    margin: ${(props) => (props?.margin ? props.margin : '')};
     border-radius: 3px;
     transition: all 150ms;
-    border: 1px solid ${(_props) => (_props?.checked ? 'var(--input-border-color)' : 'var(--card-border-color)')};
+    border: 1px solid ${(props) => (props?.checked ? 'var(--input-border-color)' : 'var(--card-border-color)')};
     ${HiddenCheckbox}:focus + & {
         box-shadow: 0 0 0 2px rgba(4, 4, 90, 0.4);
     }
     ${Icon} {
-        visibility: ${(_props) => (_props?.checked ? 'visible' : 'hidden')};
+        visibility: ${(props) => (props?.checked ? 'visible' : 'hidden')};
     }
 `;
 

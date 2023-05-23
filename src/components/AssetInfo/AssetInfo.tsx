@@ -63,9 +63,9 @@ const AssetContainer = styled.div<{ displayInRowMobile?: boolean }>`
 `;
 
 const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
-    display: ${(_props) => (_props?.displayInRow ? 'flex' : 'block')};
-    ${(_props) => (_props?.displayInRow ? 'flex-direction: row;' : '')}
-    ${(_props) => (_props?.displayInRow ? 'align-items: baseline;' : '')}
+    display: ${(props) => (props?.displayInRow ? 'flex' : 'block')};
+    ${(props) => (props?.displayInRow ? 'flex-direction: row;' : '')}
+    ${(props) => (props?.displayInRow ? 'align-items: baseline;' : '')}
     text-align: left;
     font-size: 15px;
     color: var(--color-white) !important;
@@ -77,7 +77,7 @@ const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
 const AssetName = styled.span<{ fontSize?: string }>`
     display: block;
     font-weight: 300;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
     text-transform: uppercase;
     line-height: 120%;
     margin-right: 2px;
@@ -88,7 +88,7 @@ const AssetName = styled.span<{ fontSize?: string }>`
 
 const CurrencyKey = styled.span<{ fontSize?: string }>`
     display: block;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
     text-transform: uppercase;
     font-weight: 700;
 `;

@@ -178,9 +178,9 @@ const CustomizedAxisTick: React.FC<any> = (props: any) => {
 
 const ChartWrapper = styled.div<{ flexOrder?: boolean }>`
     width: 100%;
-    ${(_props) => (_props?.flexOrder ? 'display: flex;' : '')};
-    ${(_props) => (_props?.flexOrder ? 'flex-direction: row;' : '')};
-    ${(_props) => (_props?.flexOrder ? 'align-items: center;' : '')};
+    ${(props) => (props?.flexOrder ? 'display: flex;' : '')};
+    ${(props) => (props?.flexOrder ? 'flex-direction: row;' : '')};
+    ${(props) => (props?.flexOrder ? 'align-items: center;' : '')};
     text-align: center;
     margin: 0px 0px 0px 0px;
 `;
@@ -225,14 +225,14 @@ const FooterInfo = styled.p`
 const TimerangeChange = styled(FooterInfo)<{ fontSize?: string }>`
     color: ${(props) => props.theme.textColor.primary};
     text-align: left;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '')};
 `;
 
 const PriceChange = styled(FooterInfo)<{ uptrend?: boolean; fontSize?: string }>`
     color: ${(props: any) => (props.uptrend ? '#50CE99' : '#DE496D')};
     font-weight: bold;
     text-align: right;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '')};
 `;
 
 const SidePercentageChange = styled.div<{ uptrend?: boolean }>`

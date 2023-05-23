@@ -68,7 +68,7 @@ export const UserAvatar = styled(Image)<{ winner?: boolean }>`
 `;
 
 export const Gain = styled.p<{ color?: string }>`
-    color: ${(_props) => (_props?.color ? _props.color : '')};
+    color: ${(props) => (props?.color ? props.color : '')};
 `;
 
 export const CustomTableHeader = styled.div`
@@ -102,10 +102,10 @@ const MenuContainer: StyledComponent<'div', any, { justifyContent?: string; hide
     justifyContent?: string;
     hide?: boolean;
 }>`
-    ${(_props) => (_props?.hide ? 'display: none;' : '')}
+    ${(props) => (props?.hide ? 'display: none;' : '')}
     width: 100%;
     flex-direction: row;
-    justify-content: ${(_props) => (_props?.justifyContent ? _props.justifyContent : 'stretch')};
+    justify-content: ${(props) => (props?.justifyContent ? props.justifyContent : 'stretch')};
     align-items: stretch;
     border-bottom: 4px solid var(--table-border-color);
     border-radius: 3px;
@@ -140,17 +140,17 @@ const MenuItem = styled.div<{
     padding?: string;
 }>`
     text-align: center;
-    ${(_props) => (!_props?.noStrech ? 'flex: 1' : '')};
-    color: ${(_props) =>
-        _props?.customActiveLabelColor ? _props?.customActiveLabelColor : _props.theme.textColor.primary};
-    box-shadow: ${(_props) =>
-        _props?.active
-            ? _props?.customActiveColor
-                ? `${_props?.customActiveColor}`
+    ${(props) => (!props?.noStrech ? 'flex: 1' : '')};
+    color: ${(props) =>
+        props?.customActiveLabelColor ? props?.customActiveLabelColor : props.theme.textColor.primary};
+    box-shadow: ${(props) =>
+        props?.active
+            ? props?.customActiveColor
+                ? `${props?.customActiveColor}`
                 : '0px 4px var(--primary-filter-menu-active)'
             : ''};
     text-transform: uppercase;
-    padding: ${(_props) => (_props?.padding ? _props.padding : '12px 5px')};
+    padding: ${(props) => (props?.padding ? props.padding : '12px 5px')};
     cursor: pointer;
 `;
 

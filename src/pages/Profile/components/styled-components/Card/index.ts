@@ -21,17 +21,17 @@ type WrapperProps = {
 };
 
 const CardWrapper = styled.div<WrapperProps>`
-    background: ${(_props) =>
-        _props.background ? 'linear-gradient(rgba(130, 8, 252, 1), rgba(81, 106, 255, 1))' : 'transparent'};
+    background: ${(props) =>
+        props.background ? 'linear-gradient(rgba(130, 8, 252, 1), rgba(81, 106, 255, 1))' : 'transparent'};
     margin-bottom: 15px;
     border-radius: 15px;
-    box-shadow: ${(_props) => (_props.background ? ' 0px 0px 40px 3px rgba(100, 217, 254, 0.3)' : 'none')};
+    box-shadow: ${(props) => (props.background ? ' 0px 0px 40px 3px rgba(100, 217, 254, 0.3)' : 'none')};
     padding: 2px;
-    border: ${(_props) => (_props.background ? 'none' : '2px solid rgba(100, 217, 254, 0.5)')};
+    border: ${(props) => (props.background ? 'none' : '2px solid rgba(100, 217, 254, 0.5)')};
     &:hover {
         transform: scale(1.02);
-        border: ${(_props) => (_props.background ? 'none' : '2px solid rgba(100, 217, 254, 1)')};
-        box-shadow: ${(_props) => (_props.background ? ' 0px 0px 40px 3px rgba(100, 217, 254, 0.6)' : 'none')};
+        border: ${(props) => (props.background ? 'none' : '2px solid rgba(100, 217, 254, 1)')};
+        box-shadow: ${(props) => (props.background ? ' 0px 0px 40px 3px rgba(100, 217, 254, 0.6)' : 'none')};
     }
 `;
 
@@ -54,7 +54,7 @@ const CardColumn = styled.div<{ ranged?: boolean }>`
     align-items: flex-start;
     justify-content: space-between;
     height: 100%;
-    flex: ${(_props) => (_props.ranged ? 'none' : '2')};
+    flex: ${(props) => (props.ranged ? 'none' : '2')};
 `;
 
 const CardRow = styled.div`

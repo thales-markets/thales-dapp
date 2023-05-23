@@ -228,10 +228,10 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                         {
                             Header: <>{t('options.home.markets-table.asset-col')}</>,
                             accessor: 'market.currencyKey',
-                            Cell: (_props: any) => {
+                            Cell: (props: any) => {
                                 return (
                                     <Currency.Name
-                                        currencyKey={_props?.cell?.value}
+                                        currencyKey={props?.cell?.value}
                                         showIcon={true}
                                         iconProps={{ type: 'asset' }}
                                         synthIconStyle={{ width: 32, height: 32 }}
@@ -395,7 +395,7 @@ const Icon = styled.i`
 `;
 
 const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
+    ${(props) => (props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
 `;
 
 const getColor = (data: any) => {

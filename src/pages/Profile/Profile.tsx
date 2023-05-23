@@ -3,7 +3,7 @@ import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import SearchField from 'components/SearchInput/SearchInput';
-import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
+import TableGridSwitch from 'components/TableGridSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { USD_SIGN } from 'constants/currency';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
@@ -261,7 +261,7 @@ const LineUnderNav = styled.div`
 const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
     align-items: center;
-    justify-content: ${(_props) => _props.justifyContent};
+    justify-content: ${(props) => props.justifyContent};
     @media (max-width: 768px) {
         margin-top: 20px;
         justify-content: space-between;

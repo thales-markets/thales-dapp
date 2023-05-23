@@ -33,8 +33,8 @@ const Container = styled.div`
 
 const Message = styled(FlexDivRow)<{ fontSize?: string; lineHeight?: string }>`
     font-weight: 500;
-    font-size: ${(props) => (props.fontSize ? props.fontSize : '12px')};
-    line-height: ${(props) => (props.lineHeight ? props.lineHeight : '16px')};
+    font-size: ${(props) => props.fontSize || '12px'};
+    line-height: ${(props) => props.lineHeight || '16px'};
     color: #f55c05;
 `;
 

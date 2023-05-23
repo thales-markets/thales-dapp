@@ -7,6 +7,7 @@ import differenceInWeeks from 'date-fns/differenceInWeeks';
 import { formattedDuration, formattedDurationFull } from 'utils/formatters/date';
 import useInterval from 'hooks/useInterval';
 import styled from 'styled-components';
+import { Colors } from 'theme/common';
 
 type TimeRemainingProps = {
     end: Date | number;
@@ -99,17 +100,17 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
 
 const getColor = (duration: Duration) => {
     if (duration.years || duration.months || duration.days) {
-        return `var(--color-white)`;
+        return Colors.WHITE;
     }
     if (duration.hours) {
-        return `#FFCC00`;
+        return Colors.ORANGE;
     }
     if (duration.minutes && duration.minutes > 10) {
         if (duration.minutes > 10) {
-            return `#FF8800`;
+            return Colors.ORANGE_DARK;
         }
     }
-    return '#D82418';
+    return Colors.RED;
 };
 
 const Container = styled.span<{ fontSize?: number; duration: Duration; showBorder?: boolean; zIndex?: number }>`
@@ -119,7 +120,8 @@ const Container = styled.span<{ fontSize?: number; duration: Duration; showBorde
     }
     color: ${(props) => getColor(props.duration)};
     border: 1px solid
-        ${(props) => (props.showBorder ? (getColor(props.duration) === '#D82418' ? '#D82418' : 'transparent') : 'none')};
+        ${(props) =>
+            props.showBorder ? (getColor(props.duration) === Colors.RED ? Colors.RED : 'transparent') : 'none'};
     padding: ${(props) => (props.showBorder ? '2px 12px 4px 12px' : '0')};
     border-radius: ${(props) => (props.showBorder ? '5px' : '0')};
     text-align: center;

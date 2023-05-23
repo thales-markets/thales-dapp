@@ -63,7 +63,7 @@ const SubContainer: StyledComponent<'div', any, { hidden?: boolean }> & SubConta
     flex-direction: column;
     justify-content: start;
     margin: 10px 0px;
-    visibility: ${(_props) => (_props.hidden ? 'hidden' : '')};
+    visibility: ${(props) => (props.hidden ? 'hidden' : '')};
     justify-content: space-around;
 `;
 
@@ -76,19 +76,19 @@ const ColumnContainer = styled.div<{
 }>`
     display: flex;
     flex-direction: column;
-    align-items: ${(_props) => (_props?.alignItems ? _props.alignItems : 'baseline')};
+    align-items: ${(props) => (props?.alignItems ? props.alignItems : 'baseline')};
     justify-content: flex-start;
     @media (max-width: 568px) {
         padding: 0 10px;
         flex: 1;
-        flex-direction: ${(_props) => (_props?.currency ? 'row' : 'column')};
-        align-items: ${(_props) => (_props?.currency ? 'center' : 'baseline')};
-        grid-column-start: ${(_props) => _props?.priceChart && 2};
-        grid-row-start: ${(_props) => _props?.priceChart && 1};
+        flex-direction: ${(props) => (props?.currency ? 'row' : 'column')};
+        align-items: ${(props) => (props?.currency ? 'center' : 'baseline')};
+        grid-column-start: ${(props) => props?.priceChart && 2};
+        grid-row-start: ${(props) => props?.priceChart && 1};
     }
-    min-width: ${(_props) => (_props?.minWidth ? _props.minWidth : '')};
-    ${(_props) => (_props?.leftBorder ? 'border-left: 2px solid var(--card-border-color)' : '')};
-    cursor: ${(_props) => (_props?.currency ? 'pointer' : '')};
+    min-width: ${(props) => (props?.minWidth ? props.minWidth : '')};
+    ${(props) => (props?.leftBorder ? 'border-left: 2px solid var(--card-border-color)' : '')};
+    cursor: ${(props) => (props?.currency ? 'pointer' : '')};
 `;
 
 const Divider = styled.div`
@@ -106,7 +106,7 @@ const Divider = styled.div`
 const Icon = styled.i<{ color?: string }>`
     margin: 0 5px;
     font-size: 24px;
-    color: ${(_props) => (_props?.color ? _props.color : '')};
+    color: ${(props) => (props?.color ? props.color : '')};
 `;
 
 const Header = styled.span`
@@ -133,7 +133,7 @@ const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?
     font-weight: 700;
     font-size: 25px;
     white-space: pre;
-    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
+    color: ${(props) => (props?.color ? props.color : props.theme.textColor.primary)};
     @media (max-width: 1024px) {
         font-size: 21px;
     }
@@ -143,10 +143,10 @@ const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?
 `;
 
 const Liquidity = styled.span<{ shortLiqFlag?: boolean; inLiqFlag?: boolean }>`
-    ${(_props) => (_props?.shortLiqFlag == true ? `color: ${UI_COLORS.RED}` : '')};
-    ${(_props) => (_props?.shortLiqFlag == false ? `color: ${UI_COLORS.GREEN}` : '')};
-    ${(_props) => (_props?.inLiqFlag == true ? `color: ${UI_COLORS.IN_COLOR}` : '')};
-    ${(_props) => (_props?.inLiqFlag == false ? `color: ${UI_COLORS.OUT_COLOR}` : '')};
+    ${(props) => (props?.shortLiqFlag == true ? `color: ${UI_COLORS.RED}` : '')};
+    ${(props) => (props?.shortLiqFlag == false ? `color: ${UI_COLORS.GREEN}` : '')};
+    ${(props) => (props?.inLiqFlag == true ? `color: ${UI_COLORS.IN_COLOR}` : '')};
+    ${(props) => (props?.inLiqFlag == false ? `color: ${UI_COLORS.OUT_COLOR}` : '')};
 `;
 
 const OutOfLiquidity = styled.span`

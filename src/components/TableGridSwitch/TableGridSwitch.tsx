@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 
 type TableGridSwitchProps = {
     labels: Array<string>;

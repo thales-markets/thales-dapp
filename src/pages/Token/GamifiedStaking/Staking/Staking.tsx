@@ -1,4 +1,4 @@
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import { THALES_CURRENCY } from 'constants/currency';
 import { Tip125Link, Tip17Link } from 'pages/Token/components';
 import React, { useEffect, useMemo, useState } from 'react';

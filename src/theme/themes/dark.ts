@@ -81,4 +81,15 @@ export default {
             primary: Colors.RED,
         },
     },
+    warning: {
+        background: {
+            primary: Colors.GRAY_DARK,
+        },
+        textColor: {
+            primary: Colors.ORANGE,
+        },
+        borderColor: {
+            primary: Colors.ORANGE,
+        },
+    },
 };

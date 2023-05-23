@@ -16,7 +16,7 @@ const Container: any & Children = styled.div<ContainerProps>`
     display: flex;
     width: 100%;
     margin-top: 50px;
-    flex-direction: ${(_props) => (_props.layout ? 'row' : 'column-reverse')};
+    flex-direction: ${(props) => (props.layout ? 'row' : 'column-reverse')};
     @media (max-width: 1250px) {
         margin-top: 0;
         flex-direction: column-reverse;
@@ -45,7 +45,7 @@ const ContainerLeft = styled.div<ContainerProps>`
     display: flex;
     flex-direction: column;
     max-width: 50%;
-    max-width: ${(_props) => (_props.layout ? '50%' : '100%')};
+    max-width: ${(props) => (props.layout ? '50%' : '100%')};
     @media (max-width: 1250px) {
         max-width: 100%;
     }
@@ -54,12 +54,12 @@ const ContainerLeft = styled.div<ContainerProps>`
 const ContainerRight = styled.div<ContainerProps>`
     flex: 1;
     display: flex;
-    flex-direction: ${(_props) => (_props.layout ? 'column' : 'row-reverse')};
-    padding-left: ${(_props) => (_props.layout ? '80px' : '0')};
-    max-width: ${(_props) => (_props.layout ? '50%' : '100%')};
+    flex-direction: ${(props) => (props.layout ? 'column' : 'row-reverse')};
+    padding-left: ${(props) => (props.layout ? '80px' : '0')};
+    max-width: ${(props) => (props.layout ? '50%' : '100%')};
     align-items: center;
     & > div:nth-child(2) {
-        margin: ${(_props) => (_props.layout ? '' : '0 20px')};
+        margin: ${(props) => (props.layout ? '' : '0 20px')};
     }
     @media (max-width: 1250px) {
         max-width: 100%;

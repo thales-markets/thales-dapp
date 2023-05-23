@@ -7,7 +7,7 @@ import useInterval from 'hooks/useInterval';
 import Input from './components/Input';
 import Button from 'components/Button';
 import RangeSlider from 'components/RangeSlider';
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import Slippage from './components/Slippage';
 import Divider from './styled-components/Divider';
 import NetworkFees from './components/NetworkFees';

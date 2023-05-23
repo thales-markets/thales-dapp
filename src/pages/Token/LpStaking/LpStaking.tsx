@@ -12,7 +12,7 @@ import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import useGelatoQuery from 'queries/token/useGelatoQuery';
 import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import Stake from './Stake';
 import Unstake from './Unstake';
 import NetworkFees from '../components/NetworkFees';

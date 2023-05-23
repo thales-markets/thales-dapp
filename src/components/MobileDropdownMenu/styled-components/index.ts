@@ -8,9 +8,9 @@ export const PositionWrapper = styled.div`
 `;
 
 export const FiltersButton = styled.div<{ visible?: boolean }>`
-    /* display: ${(_props) => (_props?.visible ? 'block' : 'none')}; */
+    /* display: ${(props) => (props?.visible ? 'block' : 'none')}; */
     display: block;
-    visibility: ${(_props) => (_props?.visible ? 'visible' : 'hidden')};
+    visibility: ${(props) => (props?.visible ? 'visible' : 'hidden')};
     padding: 6px 20px;
     border: 1.5px solid rgba(100, 217, 254, 0.5);
     box-sizing: border-box;
@@ -36,7 +36,7 @@ export const Arrow = styled.i`
 
 export const Wrapper = styled.div<{ visible?: boolean }>`
     /* @media (max-width: 768px) { */
-    display: ${(_props) => (_props?.visible ? 'flex' : 'none')};
+    display: ${(props) => (props?.visible ? 'flex' : 'none')};
     flex-direction: column;
     background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
     border: 2px solid rgba(100, 217, 254, 0.5);
@@ -58,7 +58,7 @@ export const Wrapper = styled.div<{ visible?: boolean }>`
 export const Item = styled.div<{ active: boolean }>`
     text-transform: uppercase;
     cursor: pointer;
-    color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : _props.theme.textColor.primary)};
+    color: ${(props) => (props?.active ? 'var(--color-highlight)' : props.theme.textColor.primary)};
     display: flex;
     flex-direction: row;
     justify-content: center;

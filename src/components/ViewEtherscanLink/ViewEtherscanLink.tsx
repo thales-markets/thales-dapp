@@ -17,29 +17,27 @@ export const ViewEtherscanLink: React.FC<ViewEtherscanLinkProps> = ({ hash }) =>
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     return (
-        <>
-            <StyledLink href={getEtherscanTxLink(networkId, hash)} target="_blank" rel="noreferrer">
-                {t('common.transaction.view')}
-                <ArrowIcon width="8" height="8" />
-            </StyledLink>
-        </>
+        <StyledLink href={getEtherscanTxLink(networkId, hash)} target="_blank" rel="noreferrer">
+            {t('common.transaction.view')}
+            <ArrowIcon width="8" height="8" />
+        </StyledLink>
     );
 };
 
 const StyledLink = styled.a`
-    color: var(--color-white);
+    color: ${(props) => props.theme.link.textColor.secondary};
     &:hover {
-        color: var(--color-highlight);
+        color: ${(props) => props.theme.link.textColor.primary};
     }
 `;
 
 export const ArrowIcon = styled(ArrowHyperlinkIcon)`
     margin-left: 5px;
     ${StyledLink} {
-        fill: var(--color-white);
+        fill: ${(props) => props.theme.link.textColor.secondary};
     }
     ${StyledLink}:hover & path {
-        fill: var(--color-highlight);
+        fill: ${(props) => props.theme.link.textColor.primary};
     }
 `;
 

@@ -7,7 +7,7 @@ import useInterval from 'hooks/useInterval';
 import Input from '../AMM/components/Input';
 import Button from 'components/Button';
 import RangeSlider from 'components/RangeSlider';
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import Slippage from '../AMM/components/Slippage';
 import Divider from '../AMM/styled-components/Divider';
 import NetworkFees from '../AMM/components/NetworkFees';

@@ -144,8 +144,8 @@ const Select: React.FC<SelectPropsType> = ({ title, value, tooltip, container, o
 };
 
 const Wrapper = styled(InputContainer)<{ borderColor?: string; margin?: string }>`
-    ${(_props) => (_props?.borderColor ? `border-color: ${_props.borderColor};` : '')};
-    ${(_props) => (_props?.margin ? `margin: ${_props.margin};` : '')};
+    ${(props) => (props?.borderColor ? `border-color: ${props.borderColor};` : '')};
+    ${(props) => (props?.margin ? `margin: ${props.margin};` : '')};
     display: flex;
     flex-direction: column;
     padding: 5px 14px;
@@ -161,14 +161,14 @@ const DropdownContainer = styled.div`
 `;
 
 const Dropdown = styled.div<{ show?: boolean }>`
-    display: ${(_props) => (_props?.show ? 'flex' : 'none')};
+    display: ${(props) => (props?.show ? 'flex' : 'none')};
     position: absolute;
     z-index: 1;
     width: 100%;
     background-color: var(--background);
-    border: 0.8px solid ${(_props) => (_props?.show ? 'var(--input-border-color)' : 'var(--card-border-color)')};
+    border: 0.8px solid ${(props) => (props?.show ? 'var(--input-border-color)' : 'var(--card-border-color)')};
     border-radius: 15px;
-    ${(_props) => (_props?.show ? 'flex-direction: column' : '')};
+    ${(props) => (props?.show ? 'flex-direction: column' : '')};
 `;
 
 const ItemContainer = styled.div`
@@ -193,9 +193,9 @@ const Item = styled.span<{ active?: boolean }>`
     margin-left: 10px;
     text-transform: uppercase;
     border: 1px solid var(--input-border-color);
-    background-color: ${(_props) => (_props?.active ? 'var(--button-bg-active)' : 'var(--button-bg-inactive)')};
-    color: ${(_props) => (_props?.active ? 'var(--button-text-active)' : 'var(--button-text-inactive)')};
-    ${(_props) => (_props?.active ? `box-shadow: var(--shadow)` : '')};
+    background-color: ${(props) => (props?.active ? 'var(--button-bg-active)' : 'var(--button-bg-inactive)')};
+    color: ${(props) => (props?.active ? 'var(--button-text-active)' : 'var(--button-text-inactive)')};
+    ${(props) => (props?.active ? `box-shadow: var(--shadow)` : '')};
 `;
 
 const CustomInputContainer = styled.div`
@@ -244,8 +244,8 @@ const Title = styled.div<{ color?: string; fontSize?: string }>`
     font-weight: 400;
     margin-bottom: 5px;
     text-transform: uppercase;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--input-border-color)')};
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '14px')};
+    color: ${(props) => (props?.color ? props.color : 'var(--input-border-color)')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '14px')};
 `;
 
 const ValueContainer = styled.div`
@@ -257,8 +257,8 @@ const ValueContainer = styled.div`
 
 const Value = styled.input<{ color?: string; fontSize?: string }>`
     font-weight: 600;
-    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    color: ${(props) => (props?.color ? props.color : props.theme.textColor.primary)};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
     background: transparent;
     border: none;
     padding: 0;
@@ -271,7 +271,7 @@ const Value = styled.input<{ color?: string; fontSize?: string }>`
 
 const Arrow = styled.i<{ color?: string }>`
     content: url(${dropDown});
-    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
+    color: ${(props) => (props?.color ? props.color : props.theme.textColor.primary)};
     font-size: 18px;
 `;
 

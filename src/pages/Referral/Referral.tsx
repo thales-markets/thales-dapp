@@ -614,7 +614,7 @@ const ViewItem = styled.div<{ active: boolean }>`
         line-height: 162.5%;
         text-transform: uppercase;
         cursor: pointer;
-        color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
+        color: ${(props) => (props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
     }
 `;
 

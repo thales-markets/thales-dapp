@@ -59,7 +59,7 @@ const Label = styled(Text)`
 `;
 
 const Value = styled(Text)<ValueProps>`
-    color: ${(_props) => _props.color ?? 'none'};
+    color: ${(props) => props.color ?? 'none'};
     font-weight: 700;
     @media (max-width: 768px) {
         font-size: 16px;
