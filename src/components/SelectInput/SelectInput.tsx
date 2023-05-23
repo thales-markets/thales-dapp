@@ -60,6 +60,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
             },
             opacity: state.isDisabled ? 0.4 : 1,
             fontSize: fontSize || 16,
+            lineHeight: 20,
         }),
         placeholder: (provided: any) => ({
             ...provided,

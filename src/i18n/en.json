@@ -124,6 +124,7 @@
         "title": "Referral",
         "choose-landing": "Choose landing page",
         "choose-referral": "Choose your Referral ID",
+        "choose-referral-placeholder": "Enter Referral ID",
         "pages": {
             "market-page": "Markets page",
             "range-market-page": "Ranged markets page",

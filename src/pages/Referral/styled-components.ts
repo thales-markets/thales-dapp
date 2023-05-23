@@ -10,15 +10,17 @@ export const FormWrapper = styled.div`
 `;
 
 export const Label = styled.span`
-    font-size: 18px;
+    font-size: 15px;
     line-height: 18px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
+    margin-bottom: 6px;
+    text-transform: uppercase;
 `;
 
 export const StatisticsWrapper = styled.div`
-    border: 1.73987px solid var(--input-border-color);
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     padding: 16px 32px;
-    border-radius: 13.049px;
+    border-radius: 15px;
     @media screen and (max-width: 520px) {
         width: 100%;
         margin-bottom: 20px;
@@ -33,13 +35,13 @@ export const KeyValue = styled.span`
 
 export const StatLabel = styled.span<{ color?: string }>`
     font-size: 21px;
-    line-height: 26.53px;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
+    line-height: 25px;
+    color: ${(props) => props.color || props.theme.textColor.primary};
 `;
 
-export const StatValue = styled(StatLabel)<{ customColor?: string }>`
+export const StatValue = styled(StatLabel)<{ color?: string }>`
     font-weight: 700;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
+    color: ${(props) => props.color || props.theme.textColor.primary};
     padding-left: 100px;
     text-align: right;
     @media screen and (max-width: 520px) {
@@ -62,7 +64,7 @@ export const HeaderContainer = styled.div`
 `;
 
 export const DescriptionContainer = styled.div`
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     display: block;
     width: 40%;
     @media screen and (max-width: 520px) {
@@ -72,11 +74,10 @@ export const DescriptionContainer = styled.div`
 `;
 
 export const Text = styled.p<{ height?: string }>`
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 16px;
-    font-weight: 100 !important;
-    line-height: 150%;
-    height: ${(_props) => (_props?.height ? _props.height : '')};
+    line-height: 18px;
+    height: ${(props) => props.height || ''};
     transition: height 0.3s ease-out;
     overflow: hidden;
 `;
@@ -95,22 +96,4 @@ export const RowContrainer = styled.div`
     display: flex;
     flex-direction: column;
     margin: 7px 0;
-`;
-
-export const InputField = styled.input`
-    border: 1px solid var(--input-border-color);
-    background: rgba(0, 0, 0, 0);
-    border-radius: 30px;
-    color: var(--input-border-color);
-    width: 100%;
-    height: 34px;
-    font-size: 16px;
-    padding-left: 12px;
-    padding-right: 12px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    &::placeholder {
-        color: var(--input-border-color);
-    }
 `;

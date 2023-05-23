@@ -4,7 +4,6 @@ import {
     DescriptionContainer,
     FormWrapper,
     HeaderContainer,
-    InputField,
     KeyValue,
     Label,
     RowContrainer,
@@ -14,7 +13,7 @@ import {
     TableWrapper,
     Text,
 } from './styled-components';
-import Button from 'components/Button';
+import Button from 'components/ButtonV2';
 import { Trans, useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
@@ -34,10 +33,8 @@ import ROUTES from 'constants/routes';
 import useReferrerQuery from 'queries/referral/useReferrerQuery';
 import { orderBy } from 'lodash';
 import SelectInput from 'components/SelectInput';
-import InputWithIcon from 'components/InputWithIcon';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { UI_COLORS } from 'constants/ui';
 import ReadMoreButton from 'components/ReadMoreButton';
 import Tooltip from 'components/TooltipV2';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
@@ -50,6 +47,8 @@ import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
 import { generalConfig } from 'config/general';
 import axios from 'axios';
 import snxJSConnector from 'utils/snxJSConnector';
+import { Colors } from 'theme/common';
+import TextInput from 'components/fields/TextInput/TextInput';
 
 const tabs = [
     {
@@ -80,7 +79,7 @@ const Referral: React.FC = () => {
     const [reffererID, setReffererID] = useState('');
     const [savedReffererID, setSavedReffererID] = useState('');
     const [showMore, setShowMore] = useState(false);
-    const [textHeight, setHeight] = useState('170px');
+    const [textHeight, setHeight] = useState('150px');
     const [showViewsDropdown, setShowViewsDropdown] = useState(false);
 
     const reffererIDQuery = useGetReffererIdQuery(walletAddress || '', { enabled: !!walletAddress });
@@ -216,8 +215,8 @@ const Referral: React.FC = () => {
     }, [reffererIDQuery.isSuccess, reffererIDQuery.data]);
 
     const handleReadMore = () => {
-        if (!showMore) setHeight('370px');
-        if (showMore) setHeight('170px');
+        if (!showMore) setHeight('300px');
+        if (showMore) setHeight('150px');
         setShowMore(!showMore);
     };
 
@@ -242,21 +241,30 @@ const Referral: React.FC = () => {
                             defaultValue={0}
                         />
                     </RowContrainer>
-                    <Label>{t('referral-page.choose-referral')}</Label>
                     <RowContrainer>
-                        <InputField value={reffererID} onChange={(e) => setReffererID(e.target.value)} />
+                        <TextInput
+                            value={reffererID}
+                            onChange={(e: any) => setReffererID(e.target.value)}
+                            label={t('referral-page.choose-referral')}
+                            placeholder={t('referral-page.choose-referral-placeholder')}
+                        />
                     </RowContrainer>
                     <Button
                         disabled={!reffererID || savedReffererID === reffererID}
-                        padding={'5px 0px'}
-                        margin={'9px 0px 9px 0'}
-                        active={true}
-                        hoverShadow={'var(--button-shadow)'}
-                        onClickHandler={generateLinkHandler}
+                        margin={'0px 0px 10px 0px'}
+                        fontSize="15px"
+                        height="30px"
+                        onClick={generateLinkHandler}
                     >
                         {t('referral-page.generate.link-btn')}
                     </Button>
-                    <InputWithIcon text={referralLink} onIconClick={copyLink} customIconClass={'icon icon--copy'} />
+                    <TextInput
+                        value={referralLink}
+                        onIconClick={copyLink}
+                        iconClass={'icon icon--copy'}
+                        inputFontSize="13px"
+                        inputPadding="5px 30px 5px 10px"
+                    />
                 </FormWrapper>
                 <StatisticsWrapper>
                     <KeyValue>
@@ -272,8 +280,8 @@ const Referral: React.FC = () => {
                         <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume * 0.02)}</StatValue>
                     </KeyValue>
                     <KeyValue>
-                        <StatLabel color={UI_COLORS.GREEN}>{t('referral-page.statistics.earned')}</StatLabel>
-                        <StatValue color={UI_COLORS.GREEN}>
+                        <StatLabel color={Colors.GREEN}>{t('referral-page.statistics.earned')}</StatLabel>
+                        <StatValue color={Colors.GREEN}>
                             {formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned)}
                         </StatValue>
                     </KeyValue>
@@ -284,7 +292,6 @@ const Referral: React.FC = () => {
                             i18nKey={'referral-page.description'}
                             components={{ bold: <BoldText />, italic: <i /> }}
                         />
-                        {/* <TextGradient /> */}
                     </Text>
                     <ReadMoreButton onClick={handleReadMore} active={showMore} />
                 </DescriptionContainer>
@@ -500,18 +507,12 @@ const Referral: React.FC = () => {
             </Container.Tab>
             <ReferralFooter>
                 {t('referral-page.footer.sharing')}
-                <Tooltip overlay={t('referral-page.disclaimer')} iconFontSize={12} />
+                <Tooltip overlay={t('referral-page.disclaimer')} iconFontSize={14} />
                 &nbsp;
                 {t('referral-page.footer.and')}{' '}
-                <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href={termsOfUse}
-                    style={{ color: 'var(--color-white)', marginLeft: '5px', textDecoration: 'underline' }}
-                >
-                    {' '}
+                <StyledLink target="_blank" rel="noreferrer" href={termsOfUse}>
                     {t('referral-page.footer.terms')}
-                </a>
+                </StyledLink>
             </ReferralFooter>
             <Footer />
         </>
@@ -527,7 +528,7 @@ const ReferralFooter = styled.div`
     flex-direction: row;
     position: relative;
     font-size: 16px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     @media screen and (max-width: 520px) {
         margin-top: 50px;
         margin-bottom: 10px;
@@ -614,6 +615,14 @@ const ViewItem = styled.div<{ active: boolean }>`
         text-transform: uppercase;
         cursor: pointer;
         color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
+    }
+`;
+
+const StyledLink = styled.a`
+    color: ${(props) => props.theme.link.textColor.primary};
+    margin-left: 5px;
+    &:hover {
+        text-decoration: underline;
     }
 `;
 

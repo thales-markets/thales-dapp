@@ -25,19 +25,12 @@ import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import Currency from 'components/Currency';
 import { BigNumber, ethers } from 'ethers';
 import { FlexDiv, FlexDivColumn, Text, Button, FlexDivRow, FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
-
 import MarketSummary from './MarketSummary';
 import { convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'utils/formatters/date';
 import { Error, ErrorMessage, InputsWrapper } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
-import {
-    CurrencyLabel,
-    Input,
-    InputLabel,
-    ReactSelect,
-    ShortInputContainer,
-} from 'components/OldVersion/old-components';
+import { InputLabel, ReactSelect, ShortInputContainer } from 'components/OldVersion/old-components';
 import ProgressTracker from './ProgressTracker';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
@@ -50,6 +43,7 @@ import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
 import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
 import ApprovalModal from 'components/ApprovalModal';
+import NumericInput from 'components/fields/NumericInput/NumericInput';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 0;
 const MIN_FUNDING_AMOUNT_MAINNET = 0;
@@ -388,12 +382,9 @@ export const CreateMarket: React.FC = () => {
                                         opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
                                     }}
                                 >
-                                    <Input
-                                        className={!isStrikePriceValid ? 'error' : ''}
+                                    <NumericInput
                                         value={strikePrice}
-                                        onChange={(e) => {
-                                            const { value } = e.target;
-
+                                        onChange={(_, value) => {
                                             let trimmedValue = value;
                                             if (value.indexOf('.') > -1) {
                                                 const numberOfDecimals = value.split('.')[1].length;
@@ -421,23 +412,12 @@ export const CreateMarket: React.FC = () => {
                                                 setShowWarning(false);
                                             }
                                         }}
-                                        onBlur={(e) => {
-                                            if (Number(e.target.value) > 0) {
-                                                setIsStrikePriceValid(true);
-                                            } else {
-                                                setIsStrikePriceValid(false);
-                                            }
-                                        }}
-                                        readOnly={isCreatingMarket || isMarketCreated}
-                                        type="number"
+                                        disabled={isCreatingMarket || isMarketCreated}
+                                        label={t('options.create-market.details.strike-price-label')}
+                                        currencyLabel={USD_SIGN}
+                                        showValidation={!isStrikePriceValid}
+                                        validationMessage={t('options.create-market.enter-strike-price')}
                                     />
-                                    <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
-                                    <CurrencyLabel>{USD_SIGN}</CurrencyLabel>
-                                    <ErrorMessage
-                                        show={!isStrikePriceValid}
-                                        text={t('options.create-market.enter-strike-price')}
-                                    ></ErrorMessage>
-
                                     {showWarning && (
                                         <Error className="text-xxxs warning">
                                             {t('options.create-market.difference-warning')}
@@ -546,28 +526,30 @@ export const CreateMarket: React.FC = () => {
                                         opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
                                     }}
                                 >
-                                    <Input
-                                        className={!isAmountValid || !userHasEnoughFunds ? 'error' : ''}
+                                    <NumericInput
                                         value={initialFundingAmount}
-                                        onChange={(e) => {
-                                            setInitialFundingAmount(e.target.value);
-                                            Number(e.target.value) >=
+                                        onChange={(_, value) => {
+                                            setInitialFundingAmount(value);
+                                            Number(value) >=
                                             (networkId === 1 ? MIN_FUNDING_AMOUNT_MAINNET : MIN_FUNDING_AMOUNT_ROPSTEN)
                                                 ? setIsAmountValid(true)
                                                 : setIsAmountValid(false);
                                         }}
-                                        id="funding-amount"
-                                        onBlur={() => {
-                                            Number(initialFundingAmount) >=
-                                            (networkId === 1 ? MIN_FUNDING_AMOUNT_MAINNET : MIN_FUNDING_AMOUNT_ROPSTEN)
-                                                ? setIsAmountValid(true)
-                                                : setIsAmountValid(false);
-                                        }}
-                                        type="number"
-                                        readOnly={isCreatingMarket || isMarketCreated}
+                                        disabled={isCreatingMarket || isMarketCreated}
+                                        label={t('options.create-market.details.funding-amount.label')}
+                                        currencyLabel={getStableCoinForNetwork(networkId)}
+                                        showValidation={!isAmountValid || !userHasEnoughFunds}
+                                        validationMessage={
+                                            isAmountValid
+                                                ? t('options.create-market.insufficient-amount')
+                                                : t('options.create-market.min-amount', {
+                                                      minimum:
+                                                          networkId === 1
+                                                              ? MIN_FUNDING_AMOUNT_MAINNET
+                                                              : MIN_FUNDING_AMOUNT_ROPSTEN,
+                                                  })
+                                        }
                                     />
-                                    <InputLabel>{t('options.create-market.details.funding-amount.label')}</InputLabel>
-                                    <CurrencyLabel>{getStableCoinForNetwork(networkId)}</CurrencyLabel>
                                     <Text
                                         className="text-xxxs grey"
                                         style={{
@@ -581,21 +563,6 @@ export const CreateMarket: React.FC = () => {
                                             token: getStableCoinForNetwork(networkId),
                                         })}
                                     </Text>
-
-                                    <ErrorMessage
-                                        show={!isAmountValid}
-                                        text={t('options.create-market.min-amount', {
-                                            minimum:
-                                                networkId === 1
-                                                    ? MIN_FUNDING_AMOUNT_MAINNET
-                                                    : MIN_FUNDING_AMOUNT_ROPSTEN,
-                                        })}
-                                    />
-
-                                    <ErrorMessage
-                                        show={isAmountValid && !userHasEnoughFunds}
-                                        text={t('options.create-market.insufficient-amount')}
-                                    />
                                 </ShortInputContainer>
                             </FlexDivRow>
                             <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />

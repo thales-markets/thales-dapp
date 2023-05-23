@@ -1,7 +1,8 @@
-import Button from 'components/Button';
+import Button from 'components/ButtonV2';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { Colors } from 'theme/common';
 
 type ReadMoreButton = {
     active: boolean;
@@ -14,10 +15,11 @@ const ReadMoreButton: React.FC<ReadMoreButton> = ({ active, onClick }) => {
         <Wrapper>
             <Button
                 additionalStyles={{ zIndex: 1 }}
-                padding={'5px 10px'}
-                active={true}
-                hoverShadow={'var(--button-shadow)'}
-                onClickHandler={onClick}
+                onClick={onClick}
+                fontSize="13px"
+                height="26px"
+                padding="0px 15px"
+                backgroundColor={Colors.GRAY_LIGHT}
             >
                 {active ? t('common.show-less') : t('common.read-more')}
             </Button>
@@ -37,7 +39,7 @@ const Wrapper = styled.div`
         top: 50%;
         z-index: 0;
         left: 0;
-        border-top: 1px solid var(--color-secondary);
+        border-top: 1px solid ${(props) => props.theme.borderColor.primary};
         background: black;
         width: 100%;
         transform: translateY(-50%);

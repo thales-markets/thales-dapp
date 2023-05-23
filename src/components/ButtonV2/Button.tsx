@@ -70,7 +70,7 @@ const Wrapper = styled.button<{
     justify-content: center;
     width: ${(props) => props.width || 'auto'};
     min-height: ${(props) => props.height || '34px'};
-    border: 1px solid ${(props) => props.theme.button.background.primary};
+    border: 1px solid ${(props) => props.backgroundColor || props.theme.button.background.primary};
     border-radius: 30px;
     font-weight: 700;
     font-size: ${(props) => props.fontSize || '18px'};
