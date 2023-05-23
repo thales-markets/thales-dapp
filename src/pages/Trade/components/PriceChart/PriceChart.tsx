@@ -36,10 +36,20 @@ type PriceChartProps = {
     position: Positions;
 };
 
-const coinGeckoClient = new CoinGeckoClient({
+const coinGeckoClientPublic = new CoinGeckoClient({
     timeout: 10000,
     autoRetry: true,
 });
+
+const coinGeckoClientPrivate = new CoinGeckoClient(
+    {
+        timeout: 10000,
+        autoRetry: true,
+    },
+    process.env.COINGECKO_KEY
+);
+
+console.log(' process.env.COINGECKO_KEY: ', process.env.COINGECKO_KEY);
 
 const ToggleButtons = [
     { label: '1D', value: 1 },
@@ -89,12 +99,26 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
     useEffect(() => {
         const fetchData = async () => {
             if (currentPrice) {
+                let result;
                 try {
-                    const result = await coinGeckoClient.coinIdMarketChart({
+                    result = await coinGeckoClientPublic.coinIdMarketChart({
                         id: currencyKeyToCoinGeckoIndexMap[asset],
                         vs_currency: 'usd',
                         days: dateRange,
                     });
+                } catch (e) {
+                    console.log('Switching to private: ', e);
+                    try {
+                        result = await coinGeckoClientPrivate.coinIdMarketChart({
+                            id: currencyKeyToCoinGeckoIndexMap[asset],
+                            vs_currency: 'usd',
+                            days: dateRange,
+                        });
+                    } catch (e) {
+                        console.log('Private failed: ', e);
+                    }
+                }
+                if (result) {
                     const priceData = result.prices.map((price) => ({
                         date: format(new Date(price[0]), 'MM/dd'),
                         price: Number(price[1].toFixed(2)),
@@ -105,8 +129,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                     setData(priceData);
 
                     setTicks(getTicks(priceData[priceData.length - 1].price));
-                } catch (e) {
-                    console.log('COINGECKO error: ', e);
+                } else {
+                    console.log('COINGECKO API failed');
                 }
             }
         };
