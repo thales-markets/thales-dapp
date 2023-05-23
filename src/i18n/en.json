@@ -350,13 +350,12 @@
         "unsupported-network": {
             "title": "Oops! You are on the wrong network!",
             "description": "You have selected the wrong network in your wallet. To continue, please switch to one of the supported networks.",
-            "description2": "You have selected the wrong network in your wallet. To continue, please switch to one of the supported networks.",
             "button": {
                 "mainnet": "Switch to Mainnet",
                 "optimism": "Switch to Optimism",
                 "polygon": "Switch to Polygon",
                 "arbitrum": "Switch to Arbitrum",
-                "bsc": "Switch to BSC"
+                "bsc": "Switch to BNBChain"
             }
         },
         "user-info-card": {

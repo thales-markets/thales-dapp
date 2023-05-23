@@ -263,7 +263,8 @@
         "read-more": "阅读更多",
         "close": "关闭",
         "enter-amount": "输入金额",
-        "enter-percentage": "输入百分比"
+        "enter-percentage": "输入百分比",
+        "enter-address": "输入地址"
     },
     "modals": {
         "gwei": {

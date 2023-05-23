@@ -194,26 +194,34 @@ const App = () => {
                 <Suspense fallback={<Loader />}>
                     <Router history={history}>
                         <Switch>
-                            <Route exact path={ROUTES.Options.CreateMarket}>
-                                <DappLayout>
-                                    <CreateMarket />
-                                </DappLayout>
-                            </Route>
-
-                            <Route
-                                exact
-                                path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
-                                render={(routeProps) => (
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.CreateMarket}>
                                     <DappLayout>
-                                        <GovernancePage {...routeProps} />
+                                        <CreateMarket />
                                     </DappLayout>
-                                )}
-                            />
-                            <Route exact path={ROUTES.Options.Game}>
-                                <DappLayout>
-                                    <TaleOfThales />
-                                </DappLayout>
-                            </Route>
+                                </Route>
+                            )}
+
+                            {!isMainnet && (
+                                <Route
+                                    exact
+                                    path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <GovernancePage {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
+
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Game}>
+                                    <DappLayout>
+                                        <TaleOfThales />
+                                    </DappLayout>
+                                </Route>
+                            )}
+
                             {!isMainnet && (
                                 <Route exact path={ROUTES.Options.Profile}>
                                     <DappLayout>
@@ -221,6 +229,7 @@ const App = () => {
                                     </DappLayout>
                                 </Route>
                             )}
+
                             {!isPolygon && (
                                 <Route exact path={ROUTES.Options.Token}>
                                     <DappLayout>
@@ -229,13 +238,15 @@ const App = () => {
                                 </Route>
                             )}
 
-                            <Route exact path={ROUTES.Options.Referral}>
-                                <DappLayout>
-                                    <Referral />
-                                </DappLayout>
-                            </Route>
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Referral}>
+                                    <DappLayout>
+                                        <Referral />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isMainnet && (
                                 <Route exact path={ROUTES.Options.Vaults}>
                                     <DappLayout>
                                         <Vaults />
@@ -243,7 +254,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isMainnet && (
                                 <Route
                                     exact
                                     path={ROUTES.Options.Vault}
@@ -255,7 +266,7 @@ const App = () => {
                                 />
                             )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isMainnet && (
                                 <Route exact path={ROUTES.Options.LiquidityPool}>
                                     <DappLayout>
                                         <LiquidityPool />
@@ -263,7 +274,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isMainnet && (
                                 <Route exact path={ROUTES.Options.OPRewards}>
                                     <DappLayout>
                                         <OPRewards />
@@ -271,33 +282,35 @@ const App = () => {
                                 </Route>
                             )}
 
-                            <Route
-                                exact
-                                path={ROUTES.Options.MarketMatch}
-                                render={(routeProps) => (
-                                    <DappLayout>
-                                        <AMMTrading {...routeProps} />
-                                    </DappLayout>
-                                )}
-                            />
-
-                            <Route
-                                exact
-                                path={ROUTES.Options.RangeMarketMatch}
-                                render={(routeProps) => (
-                                    <DappLayout>
-                                        <AMMTrading {...routeProps} />
-                                    </DappLayout>
-                                )}
-                            />
+                            {!isMainnet && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.MarketMatch}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <AMMTrading {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
 
                             {!isMainnet && (
-                                <Route exact path={ROUTES.Options.Home}>
-                                    <DappLayout>
-                                        <Markets />
-                                    </DappLayout>
-                                </Route>
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.RangeMarketMatch}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <AMMTrading {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
                             )}
+
+                            <Route exact path={ROUTES.Options.Home}>
+                                <DappLayout>
+                                    <Markets />
+                                </DappLayout>
+                            </Route>
 
                             <Route exact path={ROUTES.Options.Wizard}>
                                 <DappLayout>
@@ -328,7 +341,7 @@ const App = () => {
                             </Route>
 
                             <Route>
-                                <Redirect to={ROUTES.Options.Wizard} />
+                                <Redirect to={ROUTES.Options.Home} />
                                 <DappLayout>
                                     <Markets />
                                 </DappLayout>

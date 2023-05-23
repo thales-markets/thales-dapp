@@ -30,12 +30,16 @@ const Sidebar: React.FC = () => {
 
     const [isMobileState, setIsMobileState] = useState(isMobile());
 
-    const showMarketsPage = !isMainnet;
+    const showVaultsPage = !isMainnet && !isPolygon && !isBSC;
+    const showLP = !isMainnet && !isPolygon && !isBSC;
+    const showWizardPage = !isMobileState;
+    const showReferralPage = !isMainnet;
     const showTokenPage = !isPolygon && !isBSC;
-    const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
-    const showVaultsPage = !isPolygon && !isBSC;
-    const showLP = !isPolygon && !isBSC;
+    const showOPRewardsPage = !isMainnet && !isPolygon && !isBSC && !isArbitrum;
+    const showGovernancePage = !isMainnet;
+    const showGamePage = !isMainnet;
     const showProfilePage = !isMainnet && isWalletConnected;
+    const showProfileDivider = showGamePage || showProfilePage;
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -75,14 +79,12 @@ const Sidebar: React.FC = () => {
                     <LogoIcon height="42" src={logoIcon} />
                 </SPAAnchor>
 
-                {showMarketsPage && (
-                    <DappHeaderItem
-                        className={`show ${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
-                        href={buildHref(ROUTES.Options.Home)}
-                        iconName="markets"
-                        label={t('common.sidebar.markets')}
-                    />
-                )}
+                <DappHeaderItem
+                    className={`show ${location.pathname === ROUTES.Options.Home ? 'selected' : ''}`}
+                    href={buildHref(ROUTES.Options.Home)}
+                    iconName="markets"
+                    label={t('common.sidebar.markets')}
+                />
 
                 {showVaultsPage && (
                     <DappHeaderItem
@@ -113,7 +115,7 @@ const Sidebar: React.FC = () => {
                     />
                 )} */}
 
-                {!isMobileState && (
+                {showWizardPage && (
                     <DappHeaderItem
                         className={`${collapse ? 'show' : ''} ${
                             location.pathname === ROUTES.Options.Wizard ? 'selected' : ''
@@ -123,15 +125,20 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.wizard')}
                     />
                 )}
-                <DappHeaderItem
-                    className={`${collapse ? 'show' : ''} ${
-                        location.pathname === ROUTES.Options.Referral ? 'selected' : ''
-                    }`}
-                    href={buildHref(ROUTES.Options.Referral)}
-                    iconName="referral-page"
-                    label={t('referral-page.title')}
-                />
+
+                {showReferralPage && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Referral ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.Referral)}
+                        iconName="referral-page"
+                        label={t('referral-page.title')}
+                    />
+                )}
+
                 <Divider />
+
                 {showTokenPage && (
                     <DappHeaderItem
                         className={`show ${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
@@ -152,23 +159,29 @@ const Sidebar: React.FC = () => {
                     />
                 )}
 
-                <DappHeaderItem
-                    className={`${collapse ? 'show' : ''} ${
-                        location.pathname === ROUTES.Governance.Home ? 'selected' : ''
-                    }`}
-                    href={buildHref(ROUTES.Governance.Home)}
-                    iconName="governance"
-                    label={t('common.sidebar.governance-label')}
-                />
-                <Divider />
-                <DappHeaderItem
-                    className={`${collapse ? 'show' : ''} ${
-                        location.pathname === ROUTES.Options.Game ? 'selected' : ''
-                    }`}
-                    href={buildHref(ROUTES.Options.Game)}
-                    iconName="game"
-                    label={t('common.sidebar.game-label')}
-                />
+                {showGovernancePage && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Governance.Home ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Governance.Home)}
+                        iconName="governance"
+                        label={t('common.sidebar.governance-label')}
+                    />
+                )}
+
+                {showProfileDivider && <Divider />}
+
+                {showGamePage && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Game ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.Game)}
+                        iconName="game"
+                        label={t('common.sidebar.game-label')}
+                    />
+                )}
 
                 {showProfilePage && (
                     <DappHeaderItem

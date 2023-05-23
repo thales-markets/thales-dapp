@@ -49,7 +49,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
 
     const [showBuyModal, setShowBuyModal] = useState(false);
     const [iframe, setIframe] = useState('');
-    const [iframeLoader, setLoader] = useState(false);
+    const [iframeLoader, setIframeLoader] = useState(false);
 
     const [showBungeePlugin, setShowBungeePlugin] = useState(false);
 
@@ -90,7 +90,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         switch (buttonType) {
             case Provider.BANXA:
                 setIframe(Provider.BANXA.toString());
-                setLoader(true);
+                setIframeLoader(true);
                 break;
             case Provider.MT_PELERIN:
                 const queryParams =
@@ -98,7 +98,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                         ? '&net=polygon_mainnet&bsc=EUR&bdc=MATIC&crys=MATIC'
                         : '&net=optimism_mainnet&bsc=EUR&bdc=ETH&crys=ETH';
                 setIframe(Provider.MT_PELERIN.toString() + queryParams);
-                setLoader(true);
+                setIframeLoader(true);
                 break;
             case Provider.BUNGEE:
                 setShowBungeePlugin(true);
@@ -359,7 +359,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
                 <Modal title="" onClose={() => setIframe('')} shouldCloseOnOverlayClick={true}>
                     <IFrameWrapper>
                         {iframeLoader && <SimpleLoader />}
-                        <IFrame src={iframe} onLoad={() => setLoader(false)} />
+                        <IFrame src={iframe} onLoad={() => setIframeLoader(false)} />
                     </IFrameWrapper>
                 </Modal>
             )}
