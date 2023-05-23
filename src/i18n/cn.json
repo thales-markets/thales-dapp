@@ -759,7 +759,8 @@
                 "disable-message": "此帐户已启用代表您的索赔。禁用？",
                 "label": "输入您要代表您启用/禁用声明的帐户",
                 "account-label": "帐户",
-                "guide": "<1 /><0>关于如何自动化您的每周理赔</0>。"
+                "guide": "<1 /><0>关于如何自动化您的每周理赔</0>。",
+                "guide-link": "向导"
             },
             "gamified-staking": {
                 "staking": {

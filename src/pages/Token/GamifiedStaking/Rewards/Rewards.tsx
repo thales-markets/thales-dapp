@@ -740,14 +740,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     </SectionContentWrapper>
                 </SectionWrapper>
             ) : (
-                <SectionWrapper
-                    marginTop={-gridGap}
-                    startColumn={5}
-                    columns={4}
-                    backgroundType={BackgroundType.CLAIM_ON_BEHALF}
-                >
-                    {getClaimOnBehalfSection()}
-                </SectionWrapper>
+                !isMobile() && (
+                    <SectionWrapper
+                        marginTop={-gridGap}
+                        startColumn={5}
+                        columns={4}
+                        backgroundType={BackgroundType.CLAIM_ON_BEHALF}
+                    >
+                        {getClaimOnBehalfSection()}
+                    </SectionWrapper>
+                )
             )}
 
             {/* Sixth row */}

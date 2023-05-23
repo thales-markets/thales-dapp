@@ -15,7 +15,7 @@ import {
     switchToNetworkId,
     updateWallet,
 } from 'redux/modules/wallet';
-import { getIsMainnet, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsBSC, getIsMainnet, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -67,6 +67,7 @@ const App = () => {
 
     const isMainnet = getIsMainnet(networkId);
     const isPolygon = getIsPolygon(networkId);
+    const isBSC = getIsBSC(networkId);
 
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
@@ -230,7 +231,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isBSC && (
                                 <Route exact path={ROUTES.Options.Token}>
                                     <DappLayout>
                                         <TokenPage />
@@ -372,7 +373,7 @@ const App = () => {
 const GlobalStyle = createGlobalStyle`
     * {
         font-family: ${(props) => props.theme.fontFamily.primary};
-        font-style: normal;
+        font-style: normal !important;
     }
     body #root {
         background: ${(props) => props.theme.background.primary};

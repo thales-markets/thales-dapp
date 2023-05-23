@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { LINKS } from 'constants/links';
 import balanceIcon from 'assets/images/token/balance-icon.svg';
+import { useTranslation } from 'react-i18next';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -114,14 +115,14 @@ export const FullRow = styled(FlexDiv)`
 `;
 
 export const TooltipLink = styled.a`
-    color: ${(props) => props.theme.link.textColor.primary};
+    color: ${(props) => props.theme.link.textColor.tertiary};
     &:hover {
         text-decoration: underline;
     }
 `;
 
 export const DescriptionLink = styled.a`
-    color: ${(props) => props.theme.link.textColor.primary};
+    color: ${(props) => props.theme.link.textColor.tertiary};
     &:hover {
         text-decoration: underline;
     }
@@ -254,9 +255,10 @@ export const Tip49Link: React.FC = () => {
 };
 
 export const ClaimOnBehalfGuideLink: React.FC = () => {
+    const { t } = useTranslation();
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.ClaimOnBehalfGuide}>
-            Guide
+            {t('options.earn.claim-on-behalf.guide-link')}
         </TooltipLink>
     );
 };

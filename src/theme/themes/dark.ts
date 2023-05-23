@@ -2,7 +2,7 @@ import { Colors } from '../common';
 
 export default {
     fontFamily: {
-        primary: "'Roboto' !important",
+        primary: "'Fira Sans' !important",
     },
     background: {
         primary: Colors.GRAY_DARK,
@@ -68,6 +68,17 @@ export default {
             primary: Colors.BLUE_LIGHT,
             secondary: Colors.WHITE,
             tertiary: Colors.GREEN,
+        },
+    },
+    error: {
+        background: {
+            primary: Colors.GRAY_DARK,
+        },
+        textColor: {
+            primary: Colors.RED,
+        },
+        borderColor: {
+            primary: Colors.RED,
         },
     },
 };

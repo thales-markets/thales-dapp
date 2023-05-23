@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
-import { FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered, XButton } from 'theme/common';
-import { Modal } from '@material-ui/core';
+import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import { InputContainer } from '../components';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
@@ -18,6 +17,7 @@ import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Button from 'components/ButtonV2/Button';
 import TextInput from 'components/fields/TextInput';
+import Modal from 'components/Modal';
 
 type ClaimOnBehalfModalProps = {
     onClose: () => void;
@@ -92,17 +92,30 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     };
 
     const getSubmitButton = () => {
+        const width = '300px';
         if (!isWalletConnected) {
-            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+            return (
+                <Button width={width} onClick={openConnectModal}>
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (!isAccountValid) {
-            return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
+            return (
+                <Button width={width} disabled={true}>
+                    {t(`common.errors.invalid-address`)}
+                </Button>
+            );
         }
         if (!isAccountEntered) {
-            return <Button disabled={true}>{t(`common.errors.enter-address`)}</Button>;
+            return (
+                <Button width={width} disabled={true}>
+                    {t(`common.errors.enter-address`)}
+                </Button>
+            );
         }
         return (
-            <Button disabled={isButtonDisabled} onClick={handleSubmit}>
+            <Button width={width} disabled={isButtonDisabled} onClick={handleSubmit}>
                 {!canClaimOnBehalf
                     ? !isSubmitting
                         ? t('options.earn.claim-on-behalf.enable-button.label')
@@ -115,17 +128,12 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
     };
     return (
         <Modal
-            open={true}
-            onClose={(_, reason) => {
-                if (reason !== 'backdropClick') onClose();
-            }}
-            style={{ backdropFilter: 'blur(10px)' }}
+            title={t('options.earn.claim-on-behalf.title')}
+            onClose={onClose}
+            shouldCloseOnOverlayClick={false}
+            customStyle={{ overlay: { zIndex: 201 } }}
         >
             <Container>
-                <Header>
-                    <div>{t('options.earn.claim-on-behalf.title')}</div>
-                    <XButton onClick={onClose} />
-                </Header>
                 <Description>
                     <Trans
                         i18nKey={`options.earn.claim-on-behalf.description`}
@@ -138,26 +146,18 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
                         components={[<span key="1" />, <ClaimOnBehalfGuideLink key="2" />]}
                     />
                 </Description>
-                <Label>{t('options.earn.claim-on-behalf.label')}:</Label>
-                <InputContainer>
+                <InputContainer marginTop={20}>
                     <TextInput
                         value={account}
                         onChange={(e: any) => setAccount(e.target.value)}
                         disabled={isSubmitting || !isWalletConnected}
-                        label={t('options.earn.claim-on-behalf.account-label')}
+                        label={t('options.earn.claim-on-behalf.label')}
                         placeholder={t('common.enter-address')}
                         showValidation={!isAccountValid}
                         validationMessage={t(`common.errors.invalid-address`)}
                     />
                 </InputContainer>
                 <ButtonContainer>
-                    {!isButtonDisabled && (
-                        <Message>
-                            {canClaimOnBehalf
-                                ? t('options.earn.claim-on-behalf.disable-message')
-                                : t('options.earn.claim-on-behalf.enable-message')}
-                        </Message>
-                    )}
                     {getSubmitButton()}
                     <ValidationMessage
                         showValidation={txErrorMessage !== null}
@@ -181,47 +181,18 @@ const ClaimOnBehalfModal: React.FC<ClaimOnBehalfModalProps> = ({ onClose }) => {
 };
 
 const Container = styled(FlexDivColumnCentered)`
-    font-size: 12px;
-    line-height: 24px;
-    border-radius: 15px;
     min-width: 70px;
-    background: ${(props) => props.theme.background.primary};
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
-    box-shadow: 0px 0px 90px 10px var(--color-highlight);
-    margin: auto;
     position: relative;
-    top: calc(50% - 200px);
-    padding: 20px;
-    width: 570px;
-    height: fit-content;
-`;
-
-const Header = styled(FlexDivRowCentered)`
-    font-weight: 600;
-    font-size: 20px;
-    letter-spacing: 0.15px;
-    color: ${(props) => props.theme.textColor.primary};
-    padding: 0px 2px 50px 2px;
+    width: 380px;
 `;
 
 const ButtonContainer = styled(FlexDivColumnCentered)`
-    padding-top: 15px;
-    padding-bottom: 10px;
     align-items: center;
 `;
 
-const Message = styled.div`
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
-    color: ${(props) => props.theme.textColor.primary};
-    margin-bottom: 10px;
-`;
-
 const Description = styled(FlexDivCentered)`
-    font-size: 16px;
-    line-height: 20px;
-    padding: 0 2px 20px 2px;
+    font-size: 13px;
+    line-height: 18px;
     text-align: start;
     display: inline;
     color: ${(props) => props.theme.textColor.primary};
@@ -232,14 +203,13 @@ const Label = styled(Description)`
 `;
 
 const EnabledAddressesTitle = styled(Label)`
-    font-weight: bold;
-    padding: 30px 2px 4px 2px;
-    font-size: 14px;
+    padding: 30px 2px 4px 0;
+    font-size: 13px;
     border-bottom: 1px solid ${(props) => props.theme.borderColor.primary};
 `;
 
 const EnabledAddressesItem = styled(Label)`
-    padding: 5px 2px 4px 2px;
+    padding: 5px 2px 4px 0;
     border-bottom: 1px dotted ${(props) => props.theme.borderColor.primary};
     :last-child {
         margin-bottom: 10px;
@@ -247,6 +217,7 @@ const EnabledAddressesItem = styled(Label)`
 `;
 
 const NoAddresses = styled(EnabledAddressesItem)`
+    font-size: 13px;
     text-align: center;
 `;
 
