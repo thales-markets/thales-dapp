@@ -1,5 +1,4 @@
 import React from 'react';
-import Select from 'components/Select';
 import { COLORS } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol, FlexDivColumnCentered } from 'theme/common';
@@ -118,85 +117,6 @@ export const DoubleShortInputContainer = styled(InputContainer)`
     width: 25%;
     &:last-child {
         margin-left: 10px;
-    }
-`;
-
-export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
-    text-transform: ${(prop) => (prop.isUppercase ? 'uppercase' : 'none')};
-    caret-color: transparent;
-    > div:first-of-type {
-        height: 64px;
-        background: #0a2e66;
-        > div:first-of-type div {
-            font-weight: bold;
-            font-size: 13px;
-            line-height: 24px;
-            letter-spacing: 0.4px;
-            color: #f6f6fe !important;
-            padding: 15px 0px 0 11px;
-        }
-    }
-    > div {
-        font-weight: bold;
-        font-size: 13px;
-        line-height: 24px;
-        letter-spacing: 0.4px;
-        color: #f6f6fe !important;
-        background: #0a2e66;
-        border: none;
-        border-radius: 12px;
-        box-shadow: none;
-        overflow: hidden;
-    }
-    & + label {
-        z-index: 100;
-    }
-
-    svg {
-        fill: #f6f6fe;
-    }
-    .react-select__option--is-selected {
-        border: 1px solid #00f9ff;
-        box-sizing: border-box;
-        border-radius: 10px;
-        background: #0a2e66;
-    }
-    .react-select__option--is-focused {
-        background: rgba(45, 131, 210, 0.3);
-        border-radius: 10px;
-        color: #b8c6e5;
-        cursor: pointer;
-    }
-
-    .react-select__value-container {
-        height: 100%;
-    }
-    .react-select__menu {
-        font-size: 13px;
-        padding: 0px 4px;
-    }
-    .react-select__control:hover {
-        border-color: #0a2e66;
-        cursor: pointer;
-    }
-    .react-select__control {
-        border: 2px solid #0a2e66;
-        box-sizing: border-box;
-    }
-    .react-select__control--is-focused,
-    .react-select__control--menu-is-open,
-    .react-select__control--is-focused:hover,
-    .react-select__control--menu-is-open:hover {
-        border: 2px solid #00f9ff;
-        box-sizing: border-box;
-        cursor: pointer;
-    }
-    &.error .react-select__control {
-        border: 2px solid #e53720;
-    }
-    &.disabled {
-        opacity: 0.4;
-        cursor: default;
     }
 `;
 
