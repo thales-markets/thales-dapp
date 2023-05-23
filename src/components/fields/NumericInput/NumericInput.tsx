@@ -7,7 +7,7 @@ import { FieldContainer, FieldLabel, Input } from '../common';
 import MuiTooltip from '@material-ui/core/Tooltip';
 import { FlexDivCentered } from 'theme/common';
 import { ReactComponent as BalanceIcon } from 'assets/images/token/balance-icon.svg';
-import SimpleLoader from 'pages/Token/components/SimpleLoader/SimpleLoader';
+import InlineLoader from 'components/InlineLoader';
 
 type NumericInputProps = {
     value: string | number;
@@ -82,7 +82,7 @@ const NumericInput: React.FC<NumericInputProps> = ({
                 {balance && (
                     <BalanceContainer>
                         <StyledBalanceIcon />
-                        {isBalanceLoading ? <SimpleLoader /> : balance}
+                        {isBalanceLoading ? <InlineLoader /> : balance}
                     </BalanceContainer>
                 )}
                 <StyledInput
