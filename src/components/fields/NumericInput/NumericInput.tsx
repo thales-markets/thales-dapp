@@ -29,6 +29,8 @@ type NumericInputProps = {
     inputPadding?: string;
     margin?: string;
     inputFontSize?: string;
+    width?: string;
+    height?: string;
 };
 
 const INVALID_CHARS = ['-', '+', 'e'];
@@ -52,6 +54,8 @@ const NumericInput: React.FC<NumericInputProps> = ({
     inputPadding,
     margin,
     inputFontSize,
+    width,
+    height,
     ...rest
 }) => {
     const { t } = useTranslation();
@@ -104,6 +108,8 @@ const NumericInput: React.FC<NumericInputProps> = ({
                     title=""
                     padding={inputPadding}
                     fontSize={inputFontSize}
+                    width={width}
+                    height={height}
                 />
                 <RightContainer>
                     {onMaxButton && (

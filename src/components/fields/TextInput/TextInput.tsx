@@ -16,6 +16,8 @@ type TextInputProps = {
     inputPadding?: string;
     margin?: string;
     inputFontSize?: string;
+    width?: string;
+    height?: string;
 };
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -30,6 +32,8 @@ const TextInput: React.FC<TextInputProps> = ({
     inputPadding,
     margin,
     inputFontSize,
+    width,
+    height,
     ...rest
 }) => {
     return (
@@ -52,6 +56,8 @@ const TextInput: React.FC<TextInputProps> = ({
                     title=""
                     padding={inputPadding}
                     fontSize={inputFontSize}
+                    width={width}
+                    height={height}
                 />
             </FieldContainer>
         </ValidationTooltip>

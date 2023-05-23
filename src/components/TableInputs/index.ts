@@ -1,4 +1,4 @@
 import TableGridSwitch from './TableGridSwitch';
-import SearchField from './SearchField';
+import SearchField from '../SearchInput/SearchInput';
 
 export default { TableGridSwitch, SearchField };

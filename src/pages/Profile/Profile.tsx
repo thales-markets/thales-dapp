@@ -2,7 +2,7 @@ import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
-import SearchField from 'components/TableInputs/SearchField';
+import SearchField from 'components/SearchInput/SearchInput';
 import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { USD_SIGN } from 'constants/currency';
