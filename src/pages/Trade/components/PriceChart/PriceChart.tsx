@@ -46,10 +46,10 @@ const coinGeckoClientPrivate = new CoinGeckoClient(
         timeout: 10000,
         autoRetry: true,
     },
-    process.env.COINGECKO_KEY
+    process.env.REACT_APP_COINGECKO_API_KEY
 );
 
-console.log(' process.env.COINGECKO_KEY: ', process.env.COINGECKO_KEY);
+console.log(' process.env.REACT_APP_COINGECKO_API_KEY: ', process.env.REACT_APP_COINGECKO_API_KEY);
 
 const ToggleButtons = [
     { label: '1D', value: 1 },
