@@ -2,7 +2,7 @@ import { Colors } from '../common';
 
 export default {
     fontFamily: {
-        primary: "'Titillium Regular' !important",
+        primary: "'Roboto' !important",
     },
     background: {
         primary: Colors.GRAY_DARK,
