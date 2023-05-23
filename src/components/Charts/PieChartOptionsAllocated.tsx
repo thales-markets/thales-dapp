@@ -100,7 +100,7 @@ const BalanceInfoContainer = styled.div`
     right: 0;
     margin: auto;
     position: absolute;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -110,14 +110,12 @@ const BalanceInfoContainer = styled.div`
 `;
 
 const Header = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: 600;
     font-size: 21px;
     line-height: 32px;
     text-align: center;
     letter-spacing: 0.035em;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 768px) {
         font-size: 10px;
         line-height: 12px;
@@ -125,9 +123,7 @@ const Header = styled.p`
 `;
 
 const SubHeader = styled.p`
-    font-family: Roboto !important;
     font-size: 32px;
-    font-style: normal;
     font-weight: 600;
     line-height: 32px;
     letter-spacing: 0.035em;

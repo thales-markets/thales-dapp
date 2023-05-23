@@ -117,7 +117,6 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                         border: 'none',
                                     }}
                                     itemStyle={{
-                                        fontFamily: 'Roboto !imporant',
                                         fontSize: '20px',
                                         fontWeight: 600,
                                         color: 'white',
@@ -187,7 +186,6 @@ const ChartWrapper = styled.div<{ flexOrder?: boolean }>`
 `;
 
 const ChartHeader = styled.div`
-    font-family: Roboto !important;
     width: 100%;
     margin-bottom: 10px;
     text-align: left;
@@ -198,20 +196,17 @@ const CoinName = styled.p`
     letter-spacing: 0.035em;
     text-transform: uppercase;
     color: var(--color-highlight);
-    font-family: Roboto !important;
     font-style: normal;
     font-weight: bold;
     font-size: 15px;
 `;
 
 const Price = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 15px;
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const ChartFooter = styled.div`
@@ -221,8 +216,6 @@ const ChartFooter = styled.div`
 `;
 
 const FooterInfo = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: normal;
     font-size: 15px;
     line-height: 102.6%;
@@ -230,7 +223,7 @@ const FooterInfo = styled.p`
 `;
 
 const TimerangeChange = styled(FooterInfo)<{ fontSize?: string }>`
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     text-align: left;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
 `;
@@ -243,7 +236,6 @@ const PriceChange = styled(FooterInfo)<{ uptrend?: boolean; fontSize?: string }>
 `;
 
 const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
-    font-family: Roboto !important;
     color: ${(props: any) => (props.uptrend ? '#50CE99' : '#DE496D')};
     font-weight: bold;
     font-size: 15px;

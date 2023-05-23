@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
-import Input from '../../../../../../components/Input';
 import { countDecimals } from 'utils/formatters/number';
+import NumericInput from 'components/fields/NumericInput';
 
 type SlippageProps = {
     fixed: Array<number>;
@@ -55,26 +55,23 @@ const Slippage: React.FC<SlippageProps> = ({ fixed, defaultValue, onChangeHandle
                         ))}
                     </FlexDivRowCentered>
                 )}
-                <Input
+                <NumericInput
                     value={slippage}
-                    valueType={'number'}
                     placeholder={t('options.trade.amm-trading.slippage.enter-value')}
-                    valueChange={(value) => onInputValueChange(value)}
-                    valueFontSize={'13px'}
-                    subValue={'%'}
-                    subValueFontSize={'13px'}
-                    container={inputFieldProps}
-                    showError={slippage !== '' && !isSlippageValid(Number(slippage))}
-                    errorMessage={t('options.trade.amm-trading.slippage.invalid-value')}
+                    onChange={(_, value) => onInputValueChange(value)}
+                    currencyLabel="%"
+                    showValidation={slippage !== '' && !isSlippageValid(Number(slippage))}
+                    validationMessage={t('options.trade.amm-trading.slippage.invalid-value')}
+                    margin="0px"
+                    inputPadding="5px 10px"
+                    inputFontSize="13px"
                 />
             </Row>
         </Container>
     );
 };
 
-const HEIGHT = '35px';
-
-const inputFieldProps = { width: '100px', height: HEIGHT, margin: '0px' };
+const HEIGHT = '34px';
 
 const Container = styled(FlexDivColumnCentered)``;
 
@@ -95,7 +92,6 @@ const Value = styled(FlexDivColumnCentered)<{ isSelected: boolean }>`
 `;
 
 const Text = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 600;
     font-size: 13px;

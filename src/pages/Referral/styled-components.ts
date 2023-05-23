@@ -79,7 +79,6 @@ export const Text = styled.p<{ height?: string }>`
     height: ${(_props) => (_props?.height ? _props.height : '')};
     transition: height 0.3s ease-out;
     overflow: hidden;
-    font-family: 'Roboto Thin' !important;
 `;
 
 export const TableWrapper = styled.div`

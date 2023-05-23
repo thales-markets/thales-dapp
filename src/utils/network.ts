@@ -127,15 +127,17 @@ export const isNetworkSupported = (networkId: NetworkId): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
 };
 
-export const getIsMultiCollateralSupported = (networkId: NetworkId): boolean => !!~[10].indexOf(networkId);
+export const getIsMainnet = (networkId: number): boolean => [1].includes(networkId);
 
-export const getIsBSC = (networkId: number): boolean => !!~[56].indexOf(networkId);
+export const getIsMultiCollateralSupported = (networkId: NetworkId): boolean => [10].includes(networkId);
 
-export const getIsOVM = (networkId: number): boolean => !!~[10, 69, 420].indexOf(networkId);
+export const getIsBSC = (networkId: number): boolean => [56].includes(networkId);
 
-export const getIsPolygon = (networkId: number): boolean => !!~[137, 80001].indexOf(networkId);
+export const getIsOVM = (networkId: number): boolean => [10, 69, 420].includes(networkId);
 
-export const getIsArbitrum = (networkId: number): boolean => !!~[42161].indexOf(networkId);
+export const getIsPolygon = (networkId: number): boolean => [137, 80001].includes(networkId);
+
+export const getIsArbitrum = (networkId: number): boolean => [42161].includes(networkId);
 
 export const formatGwei = (wei: number) => wei / GWEI_UNIT;
 

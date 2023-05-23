@@ -81,7 +81,6 @@ const Button = styled.div`
     background-color: var(--input-border-color);
     flex: 1;
     font-size: 13px;
-    font-family: Roboto !important;
     color: var(--background);
     font-weight: 600;
     border-radius: 20px;
@@ -100,7 +99,7 @@ const WalletContainer = styled.div<{ isClickable: boolean }>`
     width: 100%;
     margin: 9px auto;
     padding: 4px 12px;
-    border: 2px solid var(--color-white);
+    border: 2px solid ${(props) => props.theme.textColor.primary};
     border-radius: 20px;
     cursor: ${(props) => (props.isClickable ? 'pointer' : 'default')};
     @media (max-width: 1024px) {
@@ -113,16 +112,14 @@ const WalletContainer = styled.div<{ isClickable: boolean }>`
 `;
 
 const WalletIcon = styled.i`
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 20px;
     padding-right: 5px;
     display: inline;
 `;
 
 const WalletAddress = styled.p`
-    color: var(--color-white);
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
+    color: ${(props) => props.theme.textColor.primary};
     font-weight: normal;
     font-size: 12.5px;
     line-height: 14px;

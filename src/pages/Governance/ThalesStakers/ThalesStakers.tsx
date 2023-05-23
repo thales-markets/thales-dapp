@@ -3,9 +3,8 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivRowCentered, FlexDivColumn, FlexDivColumnCentered, FlexDiv } from 'theme/common';
+import { FlexDiv } from 'theme/common';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
@@ -13,9 +12,8 @@ import { EnsNames, Staker, Stakers } from 'types/governance';
 import SearchStakers from '../components/SearchStakers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'utils/network';
-import { ArrowIconMedium, Blockie, StyledLink } from '../components';
+import { Blockie, StyledLink } from '../styled-components';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { LightMediumTooltip } from 'components/OldVersion/old-components';
 import { PaginationWrapper } from 'components/OldVersion/styled-components';
 import Pagination from '../components/Pagination/Pagination';
 import Table from 'components/Table/Table';
@@ -24,6 +22,8 @@ import { truncateAddress } from 'utils/formatters/string';
 import { CellProps } from 'react-table';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import Tooltip from 'components/TooltipV2/Tooltip';
+import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
@@ -120,7 +120,7 @@ const ThalesStakers: React.FC = () => {
                 </Info>
                 <SearchStakers assetSearch={addressSearch} setAssetSearch={setAddressSearch} />
             </HeaderContainer>
-            <TabelContainer>
+            <TableContainer>
                 <Table
                     columns={[
                         {
@@ -135,7 +135,7 @@ const ThalesStakers: React.FC = () => {
                                     <FlexDiv style={{ textAlign: 'left' }}>
                                         <Blockie src={makeBlockie(cellProps.cell.value)} style={{ marginBottom: 2 }} />
                                         <StakerCell staker={cellProps.cell.row.original} />
-                                        <ArrowIconMedium />
+                                        <ArrowIcon />
                                     </FlexDiv>
                                 </StyledLink>
                             ),
@@ -155,9 +155,9 @@ const ThalesStakers: React.FC = () => {
                                 )} (${t('governance.stakers.tooltip-escrowed-amount')})`;
 
                                 return (
-                                    <LightMediumTooltip title={amountTooltip}>
+                                    <Tooltip overlay={amountTooltip}>
                                         <Amount>{formatCurrencyWithKey(THALES_CURRENCY, cellProps.cell.value)}</Amount>
-                                    </LightMediumTooltip>
+                                    </Tooltip>
                                 );
                             },
                             width: 150,
@@ -196,7 +196,7 @@ const ThalesStakers: React.FC = () => {
                         style={isMobile ? { padding: '0 5px 0 10px' } : { padding: '0 20px 0 30px' }}
                     />
                 )}
-            </TabelContainer>
+            </TableContainer>
         </Container>
     );
 };
@@ -221,57 +221,5 @@ const StakerCell: React.FC<StakerCellProps> = ({ staker }) => {
 
     return <Address>{stakerEns != null ? stakerEns : truncateAddress(staker.id)}</Address>;
 };
-
-const Container = styled(FlexDivColumnCentered)`
-    padding-top: 30px;
-    @media (max-width: 767px) {
-        padding-top: 10px;
-    }
-`;
-
-const HeaderContainer = styled(FlexDivRowCentered)`
-    @media (max-width: 767px) {
-        flex-direction: column;
-    }
-`;
-
-const TabelContainer = styled(FlexDivColumn)`
-    position: relative;
-    align-items: center;
-    padding: 0 30px;
-    width: 100%;
-    @media (max-width: 767px) {
-        padding: 0;
-    }
-`;
-
-const Info = styled.div`
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 24px;
-    color: ${(props) => props.theme.textColor.primary};
-    margin-left: 30px;
-    @media (max-width: 767px) {
-        margin-left: 0;
-    }
-`;
-const Address = styled.span`
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 22px;
-    @media (max-width: 767px) {
-        font-size: 12px;
-    }
-`;
-
-const Amount = styled.span`
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
-    color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 767px) {
-        font-size: 12px;
-    }
-`;
 
 export default ThalesStakers;

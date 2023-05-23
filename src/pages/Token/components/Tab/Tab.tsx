@@ -104,9 +104,6 @@ const Tab: React.FC<{
                     </SectionContent>
                 </>
             )}
-            {!isL2 && selectedTab === TokenTabEnum.LP_STAKING && (
-                <MigrationInfo messageKey="lp-staking" tipNumber={23} />
-            )}
             {selectedTab === TokenTabEnum.MIGRATION && <Migration />}
             {selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && <SnxStaking />}
         </Container>
@@ -130,7 +127,6 @@ const SectionRow = styled.div`
 const SectionHeader = styled.p`
     height: 50px;
     padding-top: 7px;
-    font-family: Roboto;
     font-weight: 600;
     font-size: 32px;
     line-height: 35px;
@@ -150,7 +146,6 @@ const SectionHeader = styled.p`
 `;
 
 const SectionDescription = styled.p`
-    font-family: Roboto;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
@@ -178,7 +173,6 @@ const WarningIcon = styled.i`
 `;
 
 const SectionWarning = styled.p`
-    font-family: Roboto;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;

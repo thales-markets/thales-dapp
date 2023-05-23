@@ -112,9 +112,7 @@ const Icon = styled.i<{ color?: string }>`
 const Header = styled.span`
     display: flex;
     flex-direction: row;
-    font-family: Roboto !important;
-    font-style: normal;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-weight: 400;
     font-size: 15px;
     margin-bottom: 8px;
@@ -132,12 +130,10 @@ const Header = styled.span`
 const Value: StyledComponent<'span', any> & ValueChildren = styled.span<{ color?: string }>`
     display: flex;
     flex-direction: row;
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: 700;
     font-size: 25px;
     white-space: pre;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
+    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
     @media (max-width: 1024px) {
         font-size: 21px;
     }
@@ -159,12 +155,10 @@ const OutOfLiquidity = styled.span`
 
 const IV = styled.span`
     display: inline-block;
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: 400;
     font-size: 14px;
     white-space: pre;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 Value.Liquidity = Liquidity;

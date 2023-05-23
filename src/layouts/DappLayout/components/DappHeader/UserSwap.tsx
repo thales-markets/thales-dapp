@@ -1,9 +1,9 @@
-import { Modal } from '@material-ui/core';
+import Modal from 'components/Modal';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { COLLATERALS } from 'constants/options';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -18,7 +18,6 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { StableCoins } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
-
 import {
     getAssetIcon,
     getDefaultStableIndexByBalance,
@@ -185,15 +184,12 @@ export const UserSwap: React.FC = () => {
             </SwapWrapper>
             {showSwap && (
                 <Modal
-                    open={showSwap}
-                    onClose={(_, reason) => {
-                        if (reason !== 'backdropClick') setShowSwap(false);
-                    }}
-                    style={{ backdropFilter: 'blur(10px)', zIndex: 2000 }}
+                    title=""
+                    onClose={() => setShowSwap(false)}
+                    shouldCloseOnOverlayClick={false}
+                    customStyle={{ overlay: { zIndex: 201 } }}
                 >
-                    <Suspense fallback={<></>}>
-                        <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>
-                    </Suspense>
+                    <Swap handleClose={closeSwap} initialToToken={swapToStableCoin}></Swap>
                 </Modal>
             )}
         </>
@@ -220,7 +216,6 @@ const SwapButton = styled.div<{ clickable: boolean }>`
     display: -webkit-flex;
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
-    font-family: ${(props) => props.theme.fontFamily.primary};
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;
     padding: 5px 7px;

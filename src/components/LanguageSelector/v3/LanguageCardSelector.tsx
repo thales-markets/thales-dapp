@@ -50,8 +50,6 @@ const FlagIcon = styled.i`
 `;
 
 const LanguageName = styled.p`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 20px;

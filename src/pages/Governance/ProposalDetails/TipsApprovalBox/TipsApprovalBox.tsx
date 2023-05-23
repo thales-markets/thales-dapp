@@ -1,13 +1,22 @@
 import React, { useMemo } from 'react';
-import { Colors, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
-import { LoaderContainer } from 'pages/Governance/components';
-import styled from 'styled-components';
+import { Colors, FlexDivColumnCentered } from 'theme/common';
+import { LoaderContainer } from 'pages/Governance/styled-components';
 import { StatusEnum } from 'constants/governance';
 import SimpleLoader from 'components/SimpleLoader';
 import { Proposal, ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import { Pie, PieChart, Cell } from 'recharts';
+import { Pie, Cell } from 'recharts';
 import { getProposalApprovalData } from 'utils/governance';
+import {
+    ChartInnerText,
+    Container,
+    StyledPieChart,
+    StyledPieChartContainer,
+    VoteNote,
+    VotedIn,
+    VotedInLabel,
+    Votes,
+} from './styled-components';
 
 type TipsApprovalBoxProps = {
     proposal: Proposal;
@@ -27,7 +36,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         proposalResults.results.resultsByVoteBalance &&
         proposalResults.results.resultsByVoteBalance[0] >= proposalApprovalVotes;
 
-    const chartColor = isPassed ? Colors.GREEN : closed ? Colors.RED : Colors.ORANGE;
+    const chartColor = isPassed ? Colors.GREEN : closed ? Colors.RED : Colors.GREEN;
 
     const pieData = useMemo(() => {
         const data = [];
@@ -112,68 +121,5 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         </>
     );
 };
-
-const Container = styled(FlexDivRow)`
-    width: 100%;
-`;
-
-const PieChartContainer = styled.div`
-    position: relative;
-    display: flex;
-    justify-content: center;
-    @media (max-width: 767px) {
-        flex-direction: column;
-    }
-`;
-
-const VotedIn = styled(FlexDivColumnCentered)`
-    margin: 0 15px 15px 15px;
-`;
-
-const VotedInLabel = styled.span`
-    font-weight: 500;
-    font-size: 25px;
-    line-height: 30px;
-    color: ${(props) => props.theme.textColor.primary};
-    text-align: center;
-    margin-top: 5px;
-`;
-
-const VoteNote = styled.span`
-    font-weight: 300;
-    font-size: 12px;
-    line-height: 24px;
-    text-align: center;
-    color: ${(props) => props.theme.textColor.quaternary};
-    text-transform: uppercase;
-`;
-
-const Votes = styled.span`
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 48px;
-    text-align: center;
-    color: ${(props) => props.theme.textColor.primary};
-`;
-
-const StyledPieChartContainer = styled(PieChartContainer)`
-    margin: 0 15px 15px 0;
-`;
-
-const StyledPieChart = styled(PieChart)``;
-
-const ChartInnerText = styled(FlexDivColumnCentered)<{ isInProgress: boolean }>`
-    position: absolute;
-    bottom: 36%;
-    left: 50%;
-    transform: translate(-50%, 0);
-    font-weight: ${(props) => (props.isInProgress ? 300 : 500)};
-    font-size: 14px;
-    line-height: ${(props) => (props.isInProgress ? 30 : 34)}px;
-    color: ${(props) => props.theme.textColor.primary};
-    text-transform: uppercase;
-    text-align: center;
-    width: 95px;
-`;
 
 export default TipsApprovalBox;

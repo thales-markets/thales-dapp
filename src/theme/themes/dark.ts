@@ -2,7 +2,7 @@ import { Colors } from '../common';
 
 export default {
     fontFamily: {
-        primary: "'Titillium Regular' !important",
+        primary: "'Roboto' !important",
     },
     background: {
         primary: Colors.GRAY_DARK,
@@ -25,23 +25,23 @@ export default {
     button: {
         background: {
             primary: Colors.GREEN,
-            secondary: Colors.GRAY,
-            tertiary: '',
+            secondary: Colors.GRAY_DARK,
+            tertiary: Colors.GRAY,
         },
         textColor: {
             primary: Colors.GRAY_DARK,
-            secondary: Colors.GRAY,
-            tertiary: '',
+            secondary: Colors.WHITE,
+            tertiary: Colors.GRAY_LIGHT,
             quaternary: Colors.ORANGE,
         },
         borderColor: {
             primary: Colors.GREEN,
-            secondary: Colors.GRAY,
+            secondary: Colors.GRAY_LIGHT,
         },
     },
     input: {
         background: {
-            primary: '',
+            primary: Colors.GRAY_DARK,
             selection: {
                 primary: Colors.WHITE,
             },
@@ -67,6 +67,7 @@ export default {
         textColor: {
             primary: Colors.BLUE_LIGHT,
             secondary: Colors.WHITE,
+            tertiary: Colors.GREEN,
         },
     },
 };

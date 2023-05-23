@@ -15,7 +15,7 @@ import {
     switchToNetworkId,
     updateWallet,
 } from 'redux/modules/wallet';
-import { getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { getIsMainnet, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
@@ -65,7 +65,9 @@ const App = () => {
     const networkId = useSelector((state) => getNetworkId(state));
     const switchedToNetworkId = useSelector((state) => getSwitchToNetworkId(state));
 
+    const isMainnet = getIsMainnet(networkId);
     const isPolygon = getIsPolygon(networkId);
+
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
     const isLedgerLive = isLedgerDappBrowserProvider();
 
@@ -192,31 +194,42 @@ const App = () => {
                 <Suspense fallback={<Loader />}>
                     <Router history={history}>
                         <Switch>
-                            <Route exact path={ROUTES.Options.CreateMarket}>
-                                <DappLayout>
-                                    <CreateMarket />
-                                </DappLayout>
-                            </Route>
-
-                            <Route
-                                exact
-                                path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
-                                render={(routeProps) => (
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.CreateMarket}>
                                     <DappLayout>
-                                        <GovernancePage {...routeProps} />
+                                        <CreateMarket />
                                     </DappLayout>
-                                )}
-                            />
-                            <Route exact path={ROUTES.Options.Game}>
-                                <DappLayout>
-                                    <TaleOfThales />
-                                </DappLayout>
-                            </Route>
-                            <Route exact path={ROUTES.Options.Profile}>
-                                <DappLayout>
-                                    <Profile />
-                                </DappLayout>
-                            </Route>
+                                </Route>
+                            )}
+
+                            {!isMainnet && (
+                                <Route
+                                    exact
+                                    path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <GovernancePage {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
+
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Game}>
+                                    <DappLayout>
+                                        <TaleOfThales />
+                                    </DappLayout>
+                                </Route>
+                            )}
+
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Profile}>
+                                    <DappLayout>
+                                        <Profile />
+                                    </DappLayout>
+                                </Route>
+                            )}
+
                             {!isPolygon && (
                                 <Route exact path={ROUTES.Options.Token}>
                                     <DappLayout>
@@ -225,13 +238,15 @@ const App = () => {
                                 </Route>
                             )}
 
-                            <Route exact path={ROUTES.Options.Referral}>
-                                <DappLayout>
-                                    <Referral />
-                                </DappLayout>
-                            </Route>
+                            {!isMainnet && (
+                                <Route exact path={ROUTES.Options.Referral}>
+                                    <DappLayout>
+                                        <Referral />
+                                    </DappLayout>
+                                </Route>
+                            )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isMainnet && (
                                 <Route exact path={ROUTES.Options.Vaults}>
                                     <DappLayout>
                                         <Vaults />
@@ -239,7 +254,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isMainnet && (
                                 <Route
                                     exact
                                     path={ROUTES.Options.Vault}
@@ -251,7 +266,7 @@ const App = () => {
                                 />
                             )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isMainnet && (
                                 <Route exact path={ROUTES.Options.LiquidityPool}>
                                     <DappLayout>
                                         <LiquidityPool />
@@ -259,7 +274,7 @@ const App = () => {
                                 </Route>
                             )}
 
-                            {!isPolygon && (
+                            {!isPolygon && !isMainnet && (
                                 <Route exact path={ROUTES.Options.OPRewards}>
                                     <DappLayout>
                                         <OPRewards />
@@ -267,25 +282,29 @@ const App = () => {
                                 </Route>
                             )}
 
-                            <Route
-                                exact
-                                path={ROUTES.Options.MarketMatch}
-                                render={(routeProps) => (
-                                    <DappLayout>
-                                        <AMMTrading {...routeProps} />
-                                    </DappLayout>
-                                )}
-                            />
+                            {!isMainnet && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.MarketMatch}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <AMMTrading {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
 
-                            <Route
-                                exact
-                                path={ROUTES.Options.RangeMarketMatch}
-                                render={(routeProps) => (
-                                    <DappLayout>
-                                        <AMMTrading {...routeProps} />
-                                    </DappLayout>
-                                )}
-                            />
+                            {!isMainnet && (
+                                <Route
+                                    exact
+                                    path={ROUTES.Options.RangeMarketMatch}
+                                    render={(routeProps) => (
+                                        <DappLayout>
+                                            <AMMTrading {...routeProps} />
+                                        </DappLayout>
+                                    )}
+                                />
+                            )}
 
                             <Route exact path={ROUTES.Options.Home}>
                                 <DappLayout>
@@ -320,6 +339,7 @@ const App = () => {
                                     <Whitepaper />
                                 </MainLayout>
                             </Route>
+
                             <Route>
                                 <Redirect to={ROUTES.Options.Home} />
                                 <DappLayout>
@@ -350,9 +370,13 @@ const App = () => {
 };
 
 const GlobalStyle = createGlobalStyle`
-  body #root {
-    background: ${(props) => props.theme.background.primary};
-  }
+    * {
+        font-family: ${(props) => props.theme.fontFamily.primary};
+        font-style: normal;
+    }
+    body #root {
+        background: ${(props) => props.theme.background.primary};
+    }
 `;
 
 export default App;

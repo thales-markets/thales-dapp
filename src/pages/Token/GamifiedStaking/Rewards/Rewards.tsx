@@ -6,8 +6,6 @@ import { LINKS } from 'constants/links';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import TimeRemaining from 'pages/Token/components/TimeRemaining';
@@ -17,8 +15,6 @@ import {
     DashedLine,
     DashedLineVertical,
     Line,
-    StyledInfoIcon,
-    StyledMaterialTooltip,
     Tip125Link,
     Tip48Link,
 } from 'pages/Token/components';
@@ -43,6 +39,8 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2/Button';
 
 enum SectionType {
     INFO,
@@ -75,9 +73,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const [isClaiming, setIsClaiming] = useState(false);
     const [isClosingPeriod, setIsClosingPeriod] = useState(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [showClaimOnBehalfModal, setShowClaimOnBehalfModal] = useState<boolean>(false);
-
     const { stakingThalesContract } = snxJSConnector as any;
 
     const stakingDataQuery = useStakingDataQuery(networkId, {
@@ -340,7 +336,6 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     };
 
     const handleClaimStakingRewards = async () => {
-        setShowTooltip(false);
         if (isClaimAvailable) {
             try {
                 setTxErrorMessage(null);
@@ -390,38 +385,19 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
 
     const getClaimButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button type={ButtonType.submit} active={true} onClickHandler={openConnectModal}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
 
         return (
-            <StyledMaterialTooltip
-                arrow
-                title={t('options.earn.gamified-staking.rewards.claim.button-tooltip') as string}
-                open={showTooltip}
-            >
+            <Tooltip overlay={t('options.earn.gamified-staking.rewards.claim.button-tooltip')}>
                 <ButtonWrapperTooltip>
-                    <Button
-                        type={ButtonType.submit}
-                        active={isClaimAvailable}
-                        disabled={!isClaimAvailable}
-                        onMouseOverHandler={() => {
-                            setShowTooltip(true);
-                        }}
-                        onMouseOutHandler={() => {
-                            setShowTooltip(false);
-                        }}
-                        onClickHandler={handleClaimStakingRewards}
-                    >
+                    <Button disabled={!isClaimAvailable} onClick={handleClaimStakingRewards}>
                         {isClaiming
                             ? t('options.earn.gamified-staking.rewards.claim.claiming')
                             : t('options.earn.gamified-staking.rewards.claim.claim')}
                     </Button>
                 </ButtonWrapperTooltip>
-            </StyledMaterialTooltip>
+            </Tooltip>
         );
     };
 
@@ -436,12 +412,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         '-'
                     )}
                     {canClosePeriod && (
-                        <Button
-                            type={ButtonType.label}
-                            onClickHandler={handleClosePeriod}
-                            active={isClosingPeriodAvailable}
-                            disabled={!isClosingPeriodAvailable}
-                        >
+                        <Button onClick={handleClosePeriod} disabled={!isClosingPeriodAvailable}>
                             {isClosingPeriod
                                 ? t('options.earn.gamified-staking.rewards.claim.close-period.progress-label')
                                 : t('options.earn.gamified-staking.rewards.claim.close-period.label')}
@@ -492,12 +463,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                         {t('options.earn.gamified-staking.rewards.claim-on-behalf.label-2')}
                     </SectionLabelContent>
                 </SectionLabel>
-                <Button
-                    type={ButtonType.popup}
-                    active={true}
-                    margin={'30px 0 5px auto'}
-                    onClickHandler={() => setShowClaimOnBehalfModal(true)}
-                >
+                <Button onClick={() => setShowClaimOnBehalfModal(true)} fontSize="15px">
                     {t('options.earn.gamified-staking.rewards.claim-on-behalf.enable')}
                 </Button>
             </SectionContentWrapper>
@@ -511,9 +477,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionLabelContent type={SectionType.LP_STAKING}>
                         {t('options.earn.gamified-staking.rewards.lp-staking.label-1')}
                     </SectionLabelContent>
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={
+                    <Tooltip
+                        overlay={
                             <Trans
                                 i18nKey="options.earn.gamified-staking.rewards.lp-staking.tooltip"
                                 components={[
@@ -521,10 +486,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                                 ]}
                             />
                         }
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                    />
                 </SectionLabel>
                 <SectionLabel type={SectionType.LP_STAKING}>
                     <SectionLabelContent type={SectionType.LP_STAKING}>
@@ -902,8 +864,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
 `;
 
 const SectionContent = styled.span`
-    font-family: 'Roboto';
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefault?: boolean }>`
@@ -1078,7 +1039,7 @@ const SectionDetailsLabel = styled.span<{ color?: string }>`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: ${(props) => props.color ?? 'var(--color-white)'};
+    color: ${(props) => props.color ?? props.theme.textColor.primary};
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -1090,7 +1051,7 @@ const SectionDetailsValue = styled.span<{ color?: string }>`
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => props.color ?? 'var(--color-white)'};
+    color: ${(props) => props.color ?? props.theme.textColor.primary};
 `;
 
 const ButtonWrapperTooltip = styled.div`

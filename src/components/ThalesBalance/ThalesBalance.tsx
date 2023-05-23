@@ -77,8 +77,6 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 15px;
     line-height: 15px;
@@ -108,13 +106,11 @@ const Bar = styled.div<{ width: number; background: string }>`
 `;
 
 const Label = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: normal;
     line-height: 21px;
     letter-spacing: 0.035em;
     text-transform: capitalize;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 12px;
     @media (max-width: 1024px) {
         font-size: 10px;
@@ -128,8 +124,6 @@ const Label = styled.p`
 `;
 
 const Amount = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 18px;
@@ -142,7 +136,7 @@ const Amount = styled.p`
     }
     letter-spacing: 0.035em;
     text-transform: capitalize;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const calculateWidth = (inWallet: number, staked: number, escrowedBalance: number) => {

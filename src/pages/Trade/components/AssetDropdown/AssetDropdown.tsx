@@ -95,8 +95,6 @@ const AssetWrapper = styled.div`
     user-select: none;
 `;
 const CurrencyName = styled.p`
-    font-family: 'Roboto';
-    font-style: normal;
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
@@ -104,8 +102,6 @@ const CurrencyName = styled.p`
     color: ${(props) => props.theme.textColor.primary};
 `;
 const CurrencyFullName = styled.p`
-    font-family: 'Roboto';
-    font-style: normal;
     font-weight: 400;
     font-size: 13px;
     line-height: 100%;
@@ -125,8 +121,6 @@ const AssetContainer = styled.div`
 //     padding-left: 20px;
 // `;
 // const Price = styled.p`
-//     font-family: 'Roboto';
-//     font-style: normal;
 //     font-weight: 400;
 //     font-size: 12px;
 //     line-height: 14px;
@@ -138,8 +132,6 @@ const AssetContainer = styled.div`
 // `;
 // const PriceChange = styled.p<{ uptrend?: boolean }>`
 //     margin-top: 2px;
-//     font-family: 'Roboto';
-//     font-style: normal;
 //     font-weight: 400;
 //     font-size: 12px;
 //     line-height: 14px;

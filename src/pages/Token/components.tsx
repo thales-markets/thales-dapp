@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
-import MaterialTooltip from '@material-ui/core/Tooltip';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import { ReactComponent as InfoIconGreen } from 'assets/images/info-circle-green.svg';
 import { LINKS } from 'constants/links';
 import balanceIcon from 'assets/images/token/balance-icon.svg';
 
@@ -116,61 +113,17 @@ export const FullRow = styled(FlexDiv)`
     margin-bottom: 10px;
 `;
 
-export const StyledMaterialTooltip = styled((props) => (
-    <MaterialTooltip classes={{ popper: props.className }} {...props} />
-))`
-    & .MuiTooltip-arrow {
-        &:before {
-            border: 1px solid ${(props) => props.theme.borderColor.primary};
-        }
-        color: ${(props) => props.theme.background.primary};
-        margin-left: 0px !important;
-    }
-    & .MuiTooltip-tooltip {
-        background-color: ${(props) => props.theme.background.primary};
-        border: 1px solid ${(props) => props.theme.borderColor.primary};
-        border-radius: 5px;
-        padding: 10px 15px;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 20px;
-        letter-spacing: 0.4px;
-        color: ${(props) => props.theme.textColor.primary};
-        max-width: ${window.innerWidth < 768 ? '350px' : '400px'};
-    }
-`;
-
 export const TooltipLink = styled.a`
-    color: #00f9ff;
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
-        color: rgb(116, 139, 198);
+        text-decoration: underline;
     }
 `;
 
 export const DescriptionLink = styled.a`
-    color: var(--color-highlight);
-    text-decoration: underline;
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
-        color: rgb(116, 139, 198);
-    }
-`;
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    margin-left: 5px;
-    width: 15px;
-    height: 15px;
-    @media (max-width: 768px) {
-        display: none;
-    }
-`;
-
-export const StyledInfoIconGreen = styled(InfoIconGreen)`
-    min-width: 15px;
-    min-height: 15px;
-    margin-left: 5px;
-    margin-bottom: 1px;
-    @media (max-width: 768px) {
-        display: none;
+        text-decoration: underline;
     }
 `;
 

@@ -94,7 +94,6 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                 <NoMarketsText>{t(`options.home.markets-table.no-markets`)}</NoMarketsText>
             ) : (
                 <TableV3
-                    hover="#1B1C33"
                     onTableRowClick={(row) => {
                         setRowIndex(row.index);
                         setMarket({ ...row.original, positionType: position });
@@ -111,8 +110,6 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
 };
 
 const TableHeaderStyle: React.CSSProperties = {
-    fontFamily: 'Inter !important',
-    fontStyle: 'normal',
     fontWeight: 500,
     fontSize: 13,
     lineHeight: '90%',
@@ -131,13 +128,9 @@ const Wrapper = styled(FlexDivColumn)`
 `;
 
 const TableText = styled.span<{ price?: boolean; selected?: boolean }>`
-    font-family: 'Titillium Web !important';
-    font-style: normal;
     font-weight: ${(props) => (props.selected ? 700 : 500)};
     font-size: 13px;
     line-height: 285.5%;
-    /* or 37px */
-
     text-align: center;
     text-transform: uppercase;
     white-space: nowrap;

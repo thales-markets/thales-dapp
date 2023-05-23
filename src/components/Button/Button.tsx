@@ -84,7 +84,6 @@ const Wrapper = styled.button<{
     ${(_props) => (_props?.height ? `height: ${_props.height}` : '')};
     border: 1px solid var(--button-bg-active);
     border-radius: 30px;
-    font-family: Roboto !important;
     font-weight: 700;
     font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
     cursor: ${(_props) => (_props?.disabled ? 'not-allowed' : 'pointer')};

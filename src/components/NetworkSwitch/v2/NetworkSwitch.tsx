@@ -109,7 +109,6 @@ const SelectedNetworkContainer = styled.div<{ dropdownOpen: boolean; cursor: str
 `;
 
 const NetworkItem = styled.div<{ dropdownOpen?: boolean }>`
-    font-family: 'Sansation' !important;
     display: flex;
     align-items: center;
     width: 100%;

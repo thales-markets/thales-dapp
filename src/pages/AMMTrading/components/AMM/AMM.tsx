@@ -63,7 +63,7 @@ import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, U
 import { toast } from 'react-toastify';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import { getReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
@@ -895,7 +895,7 @@ const AMM: React.FC = () => {
                     >
                         {t('common.max')}
                     </MaxButton>
-                    <Tooltip message={t('amm.max-button-tooltip')} type={'info'} />
+                    <Tooltip overlay={t('amm.max-button-tooltip')} />
                 </MaxButtonContainer>
             </Input>
             <RangeSlider

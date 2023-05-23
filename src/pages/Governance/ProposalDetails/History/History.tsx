@@ -6,16 +6,13 @@ import voting from 'utils/voting';
 import { truncateAddress, truncateText } from 'utils/formatters/string';
 import {
     Blockie,
-    VoteLabel,
     Percentage,
-    VoteRow,
     SidebarRowData,
     Votes,
     StyledLink,
-    NoVotes,
     LoaderContainer,
     ViewMore,
-} from 'pages/Governance/components';
+} from 'pages/Governance/styled-components';
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { Network } from 'utils/network';
@@ -26,7 +23,8 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';
-import { LightMediumTooltip } from 'components/OldVersion/old-components';
+import Tooltip from 'components/TooltipV2/Tooltip';
+import { VoteRow, VoteLabel, NoVotes } from './styled-components';
 
 type HistoryProps = {
     proposal: Proposal;
@@ -68,9 +66,9 @@ const History: React.FC<HistoryProps> = ({ proposal, proposalResults, isLoading 
                                                 <Voter address={vote.voter} walletAddress={walletAddress} />
                                             </FlexDivCentered>
                                         </StyledLink>
-                                        <LightMediumTooltip title={votes}>
+                                        <Tooltip overlay={votes}>
                                             <Votes>{formattedVotes}</Votes>
-                                        </LightMediumTooltip>
+                                        </Tooltip>
                                     </FlexDivCentered>
                                     <Percentage>{`${formatNumberShort(vote.balance)} ${spaceSymbol}`}</Percentage>
                                 </SidebarRowData>
@@ -130,9 +128,9 @@ const Voter: React.FC<StakerCellProps> = ({ address, walletAddress }) => {
             : address;
 
     return (
-        <LightMediumTooltip title={voterTooltip}>
+        <Tooltip overlay={voterTooltip}>
             <VoteLabel>{voter}</VoteLabel>
-        </LightMediumTooltip>
+        </Tooltip>
     );
 };
 

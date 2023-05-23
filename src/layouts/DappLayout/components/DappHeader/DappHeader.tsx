@@ -66,11 +66,9 @@ const Container = styled.div`
 `;
 
 const PageTitle = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: 600;
     font-size: 35px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 
     @media (max-width: 1024px) {
         margin-top: 20px;

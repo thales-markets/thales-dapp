@@ -3,16 +3,16 @@ import useProposalsQuery from 'queries/governance/useProposalsQuery';
 import { SpaceKey, StatusEnum } from 'constants/governance';
 import { Proposal } from 'types/governance';
 import ProposalCard from '../ProposalCard';
-import styled from 'styled-components';
 import { navigateToGovernance } from 'utils/routes';
-import { FlexDivColumn, Text } from 'theme/common';
+import { Text } from 'theme/common';
 import { useTranslation } from 'react-i18next';
-import { LoaderContainer } from '../components';
+import { LoaderContainer } from '../styled-components';
 import SimpleLoader from 'components/SimpleLoader';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import Button from 'components/ButtonV2/Button';
+import { NoProposals, Wrapper } from './styled-components';
 
 type ProposalListProps = {
     spaceKey: SpaceKey;
@@ -70,30 +70,5 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
         </>
     );
 };
-
-const NoProposals = styled(FlexDivColumn)`
-    margin-top: 30px;
-    min-height: 400px;
-    background: ${(props) => props.theme.background.primary};
-    justify-content: space-evenly;
-    align-items: center;
-    align-self: center;
-    border-radius: 5px;
-`;
-
-const Wrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-gap: 20px;
-    margin-top: 25px;
-    padding: 0 20px 0 0;
-    max-height: 1000px;
-    overflow: auto;
-    @media (max-width: 767px) {
-        padding: 0;
-        max-height: initial;
-        overflow: initial;
-    }
-`;
 
 export default ProposalList;

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { BalanceIcon, ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
+import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import NumericInput from 'pages/Token/components/NumericInput';
-import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
+import NumericInput from 'components/fields/NumericInput';
+import { InputContainer } from 'pages/Token/components/components';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -16,18 +16,13 @@ import { checkAllowance, formatGasLimit, getL1FeeInWei } from 'utils/network';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
-import SimpleLoader from '../../components/SimpleLoader';
-import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
 import { FlexDivColumnCentered } from 'theme/common';
 import useGelatoUserBalanceQuery from 'queries/token/useGelatoUserBalanceQuery';
 import { LP_TOKEN } from 'constants/currency';
 import ApprovalModal from 'components/ApprovalModal';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
-import { isMobile } from 'utils/device';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/ButtonV2/Button';
 
 type Properties = {
     isStakingPaused: boolean;
@@ -169,40 +164,17 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
 
     const getStakeButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    active={true}
-                    onClickHandler={openConnectModal}
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '60%'}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (insufficientBalance) {
-            return (
-                <Button disabled={true} type={ButtonType.submit} width={isMobile() ? '100%' : '60%'}>
-                    {t(`common.errors.insufficient-balance`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return (
-                <Button disabled={true} type={ButtonType.submit} width={isMobile() ? '100%' : '60%'}>
-                    {t(`common.errors.enter-amount`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
         if (!hasStakeAllowance) {
             return (
-                <Button
-                    active={!isAllowingStake}
-                    disabled={isAllowingStake}
-                    onClickHandler={() => setOpenApprovalModal(true)}
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '60%'}
-                >
+                <Button disabled={isAllowingStake} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowingStake
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: LP_TOKEN })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -213,13 +185,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
         }
 
         return (
-            <Button
-                active={!isButtonDisabled}
-                disabled={isButtonDisabled}
-                onClickHandler={handleStakeThales}
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '60%'}
-            >
+            <Button disabled={isButtonDisabled} onClick={handleStakeThales}>
                 {!isStaking
                     ? `${t('options.earn.gamified-staking.staking.stake.name')} ${formatCurrencyWithKey(
                           LP_TOKEN,
@@ -251,30 +217,20 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         value={amountToStake}
                         onChange={(_, value) => setAmountToStake(value)}
                         disabled={isStaking}
-                        className={isAmountValid ? '' : 'error'}
-                    />
-                    <InputLabel>{t('options.earn.gamified-staking.staking.stake.amount-to-stake')}</InputLabel>
-                    <CurrencyLabel className={isStaking ? 'disabled' : ''}>{LP_TOKEN}</CurrencyLabel>
-                    <ThalesWalletAmountLabel>
-                        {!isMobile() && <BalanceIcon />}
-                        {isWalletConnected ? (
-                            lpTokensBalanceQuery.isLoading ? (
-                                <SimpleLoader />
-                            ) : (
-                                t('options.earn.gamified-staking.staking.stake.balance') +
-                                ' ' +
-                                formatCurrency(lpTokensBalance)
-                            )
-                        ) : (
-                            '-'
-                        )}
-                        <MaxButton disabled={isStaking || !isWalletConnected} onClick={onMaxClick}>
-                            {t('common.max')}
-                        </MaxButton>
-                    </ThalesWalletAmountLabel>
-                    <FieldValidationMessage
+                        currencyLabel={LP_TOKEN}
+                        placeholder={t('common.enter-amount')}
+                        label={t('options.earn.gamified-staking.staking.stake.amount-to-stake')}
+                        onMaxButton={onMaxClick}
                         showValidation={!isAmountValid}
-                        message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LP_TOKEN })}
+                        validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LP_TOKEN })}
+                        balance={
+                            isWalletConnected
+                                ? `${t('options.earn.gamified-staking.staking.stake.balance')} ${formatCurrency(
+                                      lpTokensBalance
+                                  )}`
+                                : undefined
+                        }
+                        isBalanceLoading={lpTokensBalanceQuery.isLoading}
                     />
                 </InputContainer>
                 <Line margin={'0 0 10px 0'} />

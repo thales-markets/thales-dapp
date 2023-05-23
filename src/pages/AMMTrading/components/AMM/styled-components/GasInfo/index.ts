@@ -18,18 +18,16 @@ const Row: StyledComponent<'div', any> & RowChildren = styled.div`
 `;
 
 const Label = styled.span`
-    font-family: Roboto !important;
     font-size: 14px;
     font-weight: 400;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
 `;
 
 const Value = styled.span`
-    font-family: Roboto !important;
     font-size: 14px;
     font-weight: 400;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 Row.Label = Label;

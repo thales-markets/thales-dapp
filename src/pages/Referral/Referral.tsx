@@ -39,7 +39,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { UI_COLORS } from 'constants/ui';
 import ReadMoreButton from 'components/ReadMoreButton';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
@@ -500,13 +500,8 @@ const Referral: React.FC = () => {
             </Container.Tab>
             <ReferralFooter>
                 {t('referral-page.footer.sharing')}
-                <Tooltip
-                    message={t('referral-page.disclaimer')}
-                    type={'info'}
-                    iconColor={'var(--color-white)'}
-                    container={{ width: '15px' }}
-                    interactive={true}
-                />
+                <Tooltip overlay={t('referral-page.disclaimer')} iconFontSize={12} />
+                &nbsp;
                 {t('referral-page.footer.and')}{' '}
                 <a
                     target="_blank"
@@ -563,8 +558,6 @@ const ViewButton = styled.div`
         box-sizing: border-box;
         border-radius: 30px;
         background: transparent;
-        font-family: Roboto !important;
-        font-style: normal;
         font-weight: bold;
         font-size: 12px;
         text-transform: uppercase;
@@ -602,8 +595,6 @@ const ViewsDropDown = styled.div`
 `;
 
 const ViewTitle = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 100%;
@@ -622,8 +613,6 @@ const ViewItem = styled.div<{ active: boolean }>`
         line-height: 162.5%;
         text-transform: uppercase;
         cursor: pointer;
-        font-family: Roboto !important;
-        font-style: normal;
         color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
     }
 `;

@@ -1,13 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-    ClaimMessage,
-    EarnSection,
-    FullRow,
-    SectionContentContainer,
-    StyledMaterialTooltip,
-    Line,
-    BalanceIcon,
-} from '../../../components';
+import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -19,27 +11,23 @@ import styled from 'styled-components';
 import { getIsAppReady } from 'redux/modules/app';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import { ethers } from 'ethers';
-import NumericInput from 'pages/Token/components/NumericInput';
-import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
+import NumericInput from 'components/fields/NumericInput';
+import { InputContainer } from 'pages/Token/components/components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { formattedDuration } from 'utils/formatters/date';
-import { MaxButton, ThalesWalletAmountLabel } from '../../../Migration/components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
-import SimpleLoader from '../../../components/SimpleLoader';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
 import TimeRemaining from 'pages/Token/components/TimeRemaining';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
-import { isMobile } from 'utils/device';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2/Button';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -62,7 +50,6 @@ const Unstake: React.FC = () => {
     const [unstakingEnded, setUnstakingEnded] = useState<boolean>(false);
     const [amountToUnstake, setAmountToUnstake] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-    const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | GasLimit[] | null>(null);
     const [l1Fee, setL1Fee] = useState<number | number[] | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -226,7 +213,6 @@ const Unstake: React.FC = () => {
 
     const handleStartUnstakingThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
-        setShowTooltip(false);
 
         try {
             setTxErrorMessage(null);
@@ -309,22 +295,13 @@ const Unstake: React.FC = () => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button active={true} onClickHandler={openConnectModal} type={ButtonType.submit}>
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (isUnstakingInContract) {
             return (
                 <>
                     {unstakingEnded && (
-                        <Button
-                            active={!isUnstakeButtonDisabled}
-                            disabled={isUnstakeButtonDisabled}
-                            onClickHandler={handleUnstakeThales}
-                            type={ButtonType.submit}
-                        >
+                        <Button disabled={isUnstakeButtonDisabled} onClick={handleUnstakeThales}>
                             {!isUnstaking
                                 ? `${t('options.earn.gamified-staking.staking.unstake.name')} ${formatCurrencyWithKey(
                                       THALES_CURRENCY,
@@ -335,12 +312,7 @@ const Unstake: React.FC = () => {
                                   )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}...`}
                         </Button>
                     )}
-                    <Button
-                        active={!isCancelUnstakeButtonDisabled}
-                        disabled={isCancelUnstakeButtonDisabled}
-                        onClickHandler={handleCancelUnstakingThales}
-                        type={ButtonType.submit}
-                    >
+                    <Button disabled={isCancelUnstakeButtonDisabled} onClick={handleCancelUnstakingThales}>
                         {!isCanceling
                             ? `${t('options.earn.gamified-staking.staking.unstake.cancel')} ${formatCurrencyWithKey(
                                   THALES_CURRENCY,
@@ -355,42 +327,16 @@ const Unstake: React.FC = () => {
             );
         }
         if (insufficientBalance) {
-            return (
-                <Button disabled={true} type={ButtonType.submit}>
-                    {t(`common.errors.insufficient-staking-balance`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.insufficient-staking-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return (
-                <Button disabled={true} type={ButtonType.submit}>
-                    {t(`common.errors.enter-amount`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
 
         return (
-            <StyledMaterialTooltip
-                arrow={true}
-                open={showTooltip}
-                disableHoverListener={isStartUnstakeButtonDisabled}
-                disableTouchListener={isStartUnstakeButtonDisabled}
-                title={t('options.earn.gamified-staking.staking.unstake.start-unstaking-tooltip') as string}
-                placement="top"
-            >
+            <Tooltip overlay={t('options.earn.gamified-staking.staking.unstake.start-unstaking-tooltip')}>
                 <ButtonWrapperTooltip>
-                    <Button
-                        active={!isStartUnstakeButtonDisabled}
-                        disabled={isStartUnstakeButtonDisabled}
-                        onMouseOverHandler={() => {
-                            setShowTooltip(true);
-                        }}
-                        onMouseOutHandler={() => {
-                            setShowTooltip(false);
-                        }}
-                        onClickHandler={handleStartUnstakingThales}
-                        type={ButtonType.submit}
-                    >
+                    <Button disabled={isStartUnstakeButtonDisabled} onClick={handleStartUnstakingThales}>
                         {!isUnstaking
                             ? `${t(
                                   'options.earn.gamified-staking.staking.unstake.start-unstaking'
@@ -401,7 +347,7 @@ const Unstake: React.FC = () => {
                               )}...`}
                     </Button>
                 </ButtonWrapperTooltip>
-            </StyledMaterialTooltip>
+            </Tooltip>
         );
     };
 
@@ -483,48 +429,22 @@ const Unstake: React.FC = () => {
                         value={amountToUnstake}
                         onChange={(_, value) => setAmountToUnstake(value)}
                         disabled={isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused || isUserLPing}
-                        className={isAmountValid ? '' : 'error'}
-                    />
-                    <InputLabel>{t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}</InputLabel>
-                    <CurrencyLabel
-                        className={
-                            isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused || isUserLPing
-                                ? 'disabled'
-                                : ''
-                        }
-                    >
-                        {THALES_CURRENCY}
-                    </CurrencyLabel>
-                    <ThalesWalletAmountLabel>
-                        {!isMobile() && <BalanceIcon />}
-                        {isWalletConnected ? (
-                            userStakingDataQuery.isLoading ? (
-                                <SimpleLoader />
-                            ) : (
-                                t('options.earn.gamified-staking.staking.unstake.balance') +
-                                ' ' +
-                                formatCurrency(thalesStaked)
-                            )
-                        ) : (
-                            '-'
-                        )}
-                        <MaxButton
-                            disabled={
-                                isUnstakingInContract ||
-                                isUnstaking ||
-                                isCanceling ||
-                                isStakingPaused ||
-                                !isWalletConnected ||
-                                isUserLPing
-                            }
-                            onClick={onMaxClick}
-                        >
-                            {t('common.max')}
-                        </MaxButton>
-                    </ThalesWalletAmountLabel>
-                    <FieldValidationMessage
+                        currencyLabel={THALES_CURRENCY}
+                        placeholder={t('common.enter-amount')}
+                        label={t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}
+                        onMaxButton={onMaxClick}
                         showValidation={!isAmountValid}
-                        message={t(`common.errors.insufficient-staking-balance`, { currencyKey: THALES_CURRENCY })}
+                        validationMessage={t(`common.errors.insufficient-balance-wallet`, {
+                            currencyKey: THALES_CURRENCY,
+                        })}
+                        balance={
+                            isWalletConnected
+                                ? `${t('options.earn.gamified-staking.staking.unstake.balance')} ${formatCurrency(
+                                      thalesStaked
+                                  )}`
+                                : undefined
+                        }
+                        isBalanceLoading={userStakingDataQuery.isLoading}
                     />
                 </InputContainer>
                 <Line margin={'0 0 10px 0'} />

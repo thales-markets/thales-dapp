@@ -5,7 +5,7 @@ import useMaturityDatesByAssetQueryQuery from 'queries/options/useMaturityDatesB
 import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import useMarketsByAssetAndDateQuery from 'queries/options/useMarketsByAssetAndDateQuery';
 import styled from 'styled-components';
@@ -18,14 +18,19 @@ import PriceChart from './components/PriceChart/PriceChart';
 import RadioButtons from './components/RadioButtons/RadioButtons';
 import BannerCarousel from './components/BannerCarousel/BannerCarousel';
 import OpenPositions from './components/OpenPositions/OpenPositions';
-import Loader from 'components/Loader';
 import { useTranslation } from 'react-i18next';
+import { getIsMainnet } from 'utils/network';
+import UnsupportedNetwork from 'components/UnsupportedNetwork/UnsupportedNetwork';
 
 const TradePage: React.FC = () => {
+    const { t } = useTranslation();
+
     // selectors
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const { t } = useTranslation();
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    const isMainnet = getIsMainnet(networkId);
 
     // states
     const [currencyKey, setCurrencyKey] = useState('ETH');
@@ -35,13 +40,13 @@ const TradePage: React.FC = () => {
 
     // queries
     const assetsQuery = useAvailableAssetsQuery(networkId, {
-        enabled: isAppReady,
+        enabled: isAppReady && !isMainnet,
     });
     const maturityQuery = useMaturityDatesByAssetQueryQuery(currencyKey, networkId, {
-        enabled: isAppReady,
+        enabled: isAppReady && !isMainnet,
     });
     const marketsQuery = useMarketsByAssetAndDateQuery(currencyKey, Number(maturityDate), positionType, networkId, {
-        enabled: !!maturityDate,
+        enabled: !!maturityDate && !isMainnet,
     });
 
     // hooks
@@ -94,11 +99,11 @@ const TradePage: React.FC = () => {
     };
 
     return (
-        <Wrapper>
-            {networkId === 1 ? (
-                <Loader hideMainnet={true} />
+        <>
+            {isMainnet ? (
+                <UnsupportedNetwork />
             ) : (
-                <>
+                <Wrapper>
                     <BannerCarousel />
                     <ContentWrapper>
                         <LeftSide>
@@ -161,10 +166,10 @@ const TradePage: React.FC = () => {
                             }
                         }
                     />
-                    <OpenPositions />
-                </>
+                    {isWalletConnected && <OpenPositions />}
+                </Wrapper>
             )}
-        </Wrapper>
+        </>
     );
 };
 

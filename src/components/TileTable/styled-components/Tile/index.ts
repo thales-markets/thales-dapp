@@ -77,8 +77,8 @@ const Tile: StyledComponent<
 const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(FlexDiv)<{
     lineHidden?: boolean;
 }>`
-    color: var(--color-white) !important;
-    font-family: Roboto !important;
+    color: ${(props) => props.theme.textColor.primary} !important;
+
     font-weight: bold;
     height: 50px;
     position: relative;
@@ -127,20 +127,17 @@ const Cell: StyledComponent<'div', any> & Cell = styled.div<{ direction?: string
     align-items: center;
     flex-direction: ${(props) => props.direction || 'column'};
     gap: ${(props) => (props.direction ? '3px' : '0')};
-    color: var(--color-white) !important;
+    color: ${(props) => props.theme.textColor.primary} !important;
     justify-content: center;
 `;
 
 const CellTitle = styled.div<{ fontSize?: number }>`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-size: ${(props) => props.fontSize || '12'}px;
     text-transform: uppercase;
     line-height: 120%;
 `;
 
 const CellValue = styled.div<{ fontSize?: number }>`
-    font-family: Roboto !important;
     white-space: pre;
     font-style: normal;
     font-weight: bold;

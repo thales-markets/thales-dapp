@@ -24,12 +24,13 @@ import Loader from 'components/Loader';
 import { Trans, useTranslation } from 'react-i18next';
 import useUsersAmmBuyVolumeQuery from 'queries/user/useUsersAmmBuyVolumeQuery';
 import { truncateAddress } from 'utils/formatters/string';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import TimeRemaining from 'components/TimeRemaining';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import ElectionsBanner from 'components/ElectionsBanner';
+import { Colors } from 'theme/common';
 
 const THALES_REWARDS = [
     2000, // period 1
@@ -216,14 +217,12 @@ const OPRewards: React.FC = () => {
                             components={[<br key="0" />]}
                         />
                         <Tooltip
-                            message={t('op-rewards.table.info-text', {
+                            overlay={t('op-rewards.table.info-text', {
                                 volume: Number(cellProps.cell.value.volume).toFixed(2),
                                 percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                             })}
-                            type={'info'}
-                            iconColor={'var(--primary-color)'}
-                            container={{ display: 'inline-block' }}
-                            interactive={true}
+                            iconColor={Colors.WHITE}
+                            iconFontSize={12}
                         />
                     </p>
                 ),
@@ -245,14 +244,12 @@ const OPRewards: React.FC = () => {
                             components={[<br key="0" />]}
                         />
                         <Tooltip
-                            message={t('op-rewards.table.info-text', {
+                            overlay={t('op-rewards.table.info-text', {
                                 volume: Number(cellProps.cell.value.volume).toFixed(2),
                                 percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                             })}
-                            type={'info'}
-                            iconColor={'var(--primary-color)'}
-                            container={{ display: 'inline-block' }}
-                            interactive={true}
+                            iconColor={Colors.WHITE}
+                            iconFontSize={12}
                         />
                     </p>
                 ),

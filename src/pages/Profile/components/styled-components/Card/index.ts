@@ -77,8 +77,7 @@ const CardRow = styled.div`
 
 const CardText = styled.span`
     display: block;
-    font-family: Roboto !important;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     line-height: 100%;
     white-space: pre;
 `;

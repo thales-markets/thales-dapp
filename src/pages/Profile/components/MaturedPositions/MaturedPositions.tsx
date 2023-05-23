@@ -378,14 +378,12 @@ const Container = styled.div`
 `;
 
 const TableText = styled.span`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 15px;
     line-height: 285%;
     text-align: right;
     text-transform: uppercase;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const Icon = styled.i`

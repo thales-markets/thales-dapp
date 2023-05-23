@@ -5,12 +5,12 @@ import logoIcon from 'assets/images/logo-light.svg';
 import DappHeaderItem from './DappHeaderItem';
 import SPAAnchor from 'components/SPAAnchor';
 import { useLocation } from 'react-router-dom';
-import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
+import { getIsArbitrum, getIsBSC, getIsMainnet, getIsPolygon } from 'utils/network';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { isMobile } from 'utils/device';
@@ -18,22 +18,28 @@ import debounce from 'lodash/debounce';
 
 const Sidebar: React.FC = () => {
     const location = useLocation();
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
+    const isMainnet = getIsMainnet(networkId);
 
     const { t } = useTranslation();
     const [collapse, setCollapse] = useState(false);
 
     const [isMobileState, setIsMobileState] = useState(isMobile());
 
-    const showWizardPage = !isPolygon && !isMobileState && !isBSC && !isArbitrum;
+    const showVaultsPage = !isMainnet && !isPolygon && !isBSC;
+    const showLP = !isMainnet && !isPolygon && !isBSC;
+    const showWizardPage = !isMobileState;
+    const showReferralPage = !isMainnet;
     const showTokenPage = !isPolygon && !isBSC;
-    const showOPRewardsPage = !isPolygon && !isBSC && !isArbitrum;
-    const showVaultsPage = !isPolygon && !isBSC;
-    const showLP = !isPolygon && !isBSC;
+    const showOPRewardsPage = !isMainnet && !isPolygon && !isBSC && !isArbitrum;
+    const showGovernancePage = !isMainnet;
+    const showGamePage = !isMainnet;
+    const showProfilePage = !isMainnet && isWalletConnected;
+    const showProfileDivider = showGamePage || showProfilePage;
 
     useEffect(() => {
         const handleResize = debounce(() => {
@@ -119,15 +125,20 @@ const Sidebar: React.FC = () => {
                         label={t('common.sidebar.wizard')}
                     />
                 )}
-                <DappHeaderItem
-                    className={`${collapse ? 'show' : ''} ${
-                        location.pathname === ROUTES.Options.Referral ? 'selected' : ''
-                    }`}
-                    href={buildHref(ROUTES.Options.Referral)}
-                    iconName="referral-page"
-                    label={t('referral-page.title')}
-                />
+
+                {showReferralPage && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Referral ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.Referral)}
+                        iconName="referral-page"
+                        label={t('referral-page.title')}
+                    />
+                )}
+
                 <Divider />
+
                 {showTokenPage && (
                     <DappHeaderItem
                         className={`show ${location.pathname === ROUTES.Options.Token ? 'selected' : ''}`}
@@ -148,25 +159,31 @@ const Sidebar: React.FC = () => {
                     />
                 )}
 
-                <DappHeaderItem
-                    className={`${collapse ? 'show' : ''} ${
-                        location.pathname === ROUTES.Governance.Home ? 'selected' : ''
-                    }`}
-                    href={buildHref(ROUTES.Governance.Home)}
-                    iconName="governance"
-                    label={t('common.sidebar.governance-label')}
-                />
-                <Divider />
-                <DappHeaderItem
-                    className={`${collapse ? 'show' : ''} ${
-                        location.pathname === ROUTES.Options.Game ? 'selected' : ''
-                    }`}
-                    href={buildHref(ROUTES.Options.Game)}
-                    iconName="game"
-                    label={t('common.sidebar.game-label')}
-                />
+                {showGovernancePage && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Governance.Home ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Governance.Home)}
+                        iconName="governance"
+                        label={t('common.sidebar.governance-label')}
+                    />
+                )}
 
-                {walletAddress && (
+                {showProfileDivider && <Divider />}
+
+                {showGamePage && (
+                    <DappHeaderItem
+                        className={`${collapse ? 'show' : ''} ${
+                            location.pathname === ROUTES.Options.Game ? 'selected' : ''
+                        }`}
+                        href={buildHref(ROUTES.Options.Game)}
+                        iconName="game"
+                        label={t('common.sidebar.game-label')}
+                    />
+                )}
+
+                {showProfilePage && (
                     <DappHeaderItem
                         className={`show ${location.pathname === ROUTES.Options.Profile ? 'selected' : ''}`}
                         href={buildHref(ROUTES.Options.Profile)}

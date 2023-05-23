@@ -1,5 +1,5 @@
 import { ZERO_ADDRESS } from '@1inch/limit-order-protocol';
-import { COLLATERALS, STABLE_DECIMALS } from 'constants/options';
+import { COLLATERALS, COLLATERALS_INDEX, STABLE_DECIMALS } from 'constants/options';
 import { BigNumber, ethers } from 'ethers';
 import { OptionSide, RangedMarketPositionType, StableCoins } from 'types/options';
 import { stableCoinParser } from './formatters/ethers';
@@ -209,6 +209,20 @@ export const getAmountToApprove = (
     } else {
         return approveAmount;
     }
+};
+
+export const getAmountForApproval = (stableIndex: number, amountToApprove: string, networkId: NetworkId) => {
+    let collateralDecimals = 18;
+    if (networkId === Network.Arbitrum) {
+        collateralDecimals = 6;
+    } else {
+        const stable = COLLATERALS_INDEX[stableIndex];
+
+        if ((STABLE_DECIMALS as any)[stable]) {
+            collateralDecimals = (STABLE_DECIMALS as any)[stable];
+        }
+    }
+    return ethers.utils.parseUnits(amountToApprove, collateralDecimals);
 };
 
 export const parseSellAmount = (

@@ -1,5 +1,4 @@
-import { Slider, Tooltip, withStyles } from '@material-ui/core';
-import { InputContainer } from 'pages/Token/components/components';
+import { Slider, withStyles } from '@material-ui/core';
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -11,8 +10,6 @@ import {
     FlexDiv,
     Colors,
 } from 'theme/common';
-import MaterialTooltip from '@material-ui/core/Tooltip';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 export const Wrapper = styled(FlexDivColumn)`
     width: 100%;
@@ -214,29 +211,11 @@ export const LiquidityPoolFilledGraphicPercentage = styled(FlexDivStart)<{ width
     border-radius: 9px;
 `;
 
-export const SubmitButton = styled.button`
-    background: ${(props) => props.theme.button.background.primary};
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 20px;
-    color: ${(props) => props.theme.button.textColor.primary};
-    width: 100%;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-    text-transform: uppercase;
-    &:disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-`;
-
 export const ExternalButton = styled.a`
     background: ${(props) => props.theme.button.background.primary};
     margin-top: 5px;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 30px;
+    font-size: 18px;
     font-weight: 700;
     line-height: 20px;
     color: ${(props) => props.theme.button.textColor.primary};
@@ -249,69 +228,9 @@ export const ExternalButton = styled.a`
     height: 26px;
 `;
 
-export const CloseRoundButton = styled(SubmitButton)`
-    margin: 0;
-    width: auto;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 14px;
-    top: -2px;
-    position: relative;
-`;
-
-export const MaxButton = styled(SubmitButton)`
-    position: absolute;
-    background: transparent;
-    color: ${(props) => props.theme.button.textColor.quaternary};
-    border: 1px solid ${(props) => props.theme.button.borderColor.secondary};
-    border-radius: 15px;
-    width: 48px;
-    font-size: 10px;
-    line-height: 13px;
-    letter-spacing: 1px;
-    text-align: center;
-    padding: 0px 8px;
-    right: 15px;
-    top: 8px;
-    &.selected,
-    &:hover:not(:disabled) {
-        background: ${(props) => props.theme.button.background.secondary};
-    }
-`;
-
 export const ButtonContainer = styled(FlexDivColumnCentered)`
     width: 100%;
 `;
-
-export const InputWrapper = styled(InputContainer)`
-    width: 100%;
-    margin-bottom: 5px;
-    input {
-        border: 2px solid ${(props) => props.theme.input.borderColor.primary};
-        font-size: 14px;
-        height: 48px;
-        padding: 18px 68px 0 15px;
-    }
-    .currency-label {
-        font-size: 14px;
-        padding: 24px 16px 20px 0;
-    }
-    .input-label {
-        font-size: 13px;
-        padding: 6px 0 0 17px;
-    }
-`;
-
-export const ValidationTooltip = withStyles(() => ({
-    tooltip: {
-        minWidth: '100%',
-        width: '100%',
-        margin: '1px',
-        backgroundColor: '#FDB7B7',
-        color: '#F30101',
-        fontSize: '12px',
-    },
-}))(Tooltip);
 
 export const LoaderContainer = styled(FlexDivCentered)`
     position: relative;
@@ -392,36 +311,6 @@ export const TipLink: React.FC<{ href: string }> = ({ children, href }) => {
     );
 };
 
-export const StyledMaterialTooltip = withStyles(() => ({
-    arrow: {
-        '&:before': {
-            border: `1px solid ${Colors.GRAY}`,
-        },
-        color: Colors.GRAY,
-        marginLeft: '0px!important',
-    },
-    tooltip: {
-        background: Colors.GRAY,
-        border: '1px solid transparent',
-        borderRadius: '5px',
-        padding: '10px 15px',
-        fontWeight: 400,
-        fontSize: '16px',
-        lineHeight: '20px',
-        letterSpacing: '0.4px',
-        color: Colors.WHITE,
-        maxWidth: 500,
-    },
-}))(MaterialTooltip);
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    top: 2px;
-    margin-left: 5px;
-    width: 15px;
-    height: 15px;
-    position: relative;
-`;
-
 export const RadioButtonContainer = styled(FlexDivColumnCentered)`
     align-items: center;
     label {
@@ -484,3 +373,9 @@ export const SliderRange = styled.div`
         cursor: default;
     }
 `;
+
+export const defaultButtonProps = {
+    width: '100%',
+    fontSize: '15px',
+    height: '30px;',
+};

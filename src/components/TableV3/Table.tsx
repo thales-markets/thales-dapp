@@ -37,13 +37,11 @@ type TableProps = {
     expandedRow?: (row: Row<any>) => JSX.Element;
     stickyRow?: JSX.Element;
     showCurrentPrice?: boolean;
-    hover?: string;
     selectedRowIndex?: number;
 };
 
 const Table: React.FC<TableProps> = ({
     columns = [],
-
     data = [],
     options = {},
     noResultsMessage = null,
@@ -285,12 +283,9 @@ const Price = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
 
-    font-family: 'Inter';
-    font-style: normal;
     font-weight: 700;
     font-size: 10px;
     line-height: 90%;
-    /* identical to box height, or 9px */
 
     text-align: center;
     color: ${(props) => props.theme.borderColor.secondary};
@@ -345,7 +340,7 @@ const TableBody = styled.div`
     width: 100%;
 `;
 
-const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; hover?: string; background?: string; selected?: boolean }>`
+const TableRow = styled(FlexDiv)<{ cursorPointer?: boolean; background?: string; selected?: boolean }>`
     cursor: ${(props) => (props.cursorPointer ? 'pointer' : 'default')};
     min-height: 24px;
     height: 35px;
@@ -433,15 +428,15 @@ const NoResultContainer = styled(TableRow)`
 const SortIcon = styled.i<{ selected: boolean; sortDirection: SortDirection }>`
     font-size: ${(props) => (props.selected && props.sortDirection !== SortDirection.NONE ? 22 : 19)}px;
     &:before {
-        font-family: ExoticIcons !important;
+        font-family: Icons !important;
         content: ${(props) =>
             props.selected
                 ? props.sortDirection === SortDirection.ASC
-                    ? "'\\0046'"
+                    ? "'\\0022'"
                     : props.sortDirection === SortDirection.DESC
-                    ? "'\\0047'"
-                    : "'\\0045'"
-                : "'\\0045'"};
+                    ? "'\\0021'"
+                    : "'\\0023'"
+                : "'\\0023'"};
     }
     @media (max-width: 512px) {
         font-size: ${(props) => (props.selected && props.sortDirection !== SortDirection.NONE ? 17 : 14)}px;

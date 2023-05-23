@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { FlexDiv, FlexDivColumnCentered, FlexDivCentered, FlexDivRow } from 'theme/common';
-import { Input, InputContainer } from 'pages/Token/components/components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
+import { InputContainer } from 'pages/Token/components/components';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -14,9 +13,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { getIsAppReady } from 'redux/modules/app';
 import { ArrowContainer } from 'pages/Token/Migration/components';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
-import { isMobile } from 'utils/device';
 import YourTransactions from './Transactions';
-import Button, { ButtonType } from 'pages/Token/components/Button/Button';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { formatGasLimit, getL1FeeInWei, getIsOVM } from 'utils/network';
 import { ZERO_ADDRESS } from 'constants/network';
@@ -28,6 +25,8 @@ import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import Button from 'components/ButtonV2/Button';
+import TextInput from 'components/fields/TextInput/TextInput';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -231,39 +230,16 @@ const MergeAccount: React.FC = () => {
 
     const getMergeButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '50%'}
-                    active={true}
-                    onClickHandler={openConnectModal}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (!isDestAddressValid && isAccountMergingEnabled && !isMergeBlocked) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.invalid-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
         }
         if (!isDestAddressEntered && isAccountMergingEnabled && !isMergeBlocked) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.enter-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-address`)}</Button>;
         }
         return (
-            <Button
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '50%'}
-                active={!isButtonDisabled}
-                disabled={isButtonDisabled}
-                onClickHandler={handleMerge}
-            >
+            <Button disabled={isButtonDisabled} onClick={handleMerge}>
                 {!isMerging
                     ? t('options.earn.gamified-staking.merge-account.merge-button.label')
                     : t('options.earn.gamified-staking.merge-account.merge-button.progress-label')}
@@ -273,49 +249,26 @@ const MergeAccount: React.FC = () => {
 
     const getDelegateButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '50%'}
-                    active={true}
-                    onClickHandler={openConnectModal}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
 
         if (delegatedVolumeAddress !== ZERO_ADDRESS) {
             return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} onClickHandler={handleDelegate}>
+                <Button onClick={handleDelegate}>
                     {t(`options.earn.gamified-staking.merge-account.delegate-button.remove-delegation`)}
                 </Button>
             );
         }
 
         if (!isDelegateDestAddressValid) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.invalid-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.invalid-address`)}</Button>;
         }
         if (!isDelegateDestAddressEntered) {
-            return (
-                <Button type={ButtonType.submit} width={isMobile() ? '100%' : '50%'} disabled={true}>
-                    {t(`common.errors.enter-address`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-address`)}</Button>;
         }
 
         return (
-            <Button
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '50%'}
-                active={!isDelegateButtonDisabled}
-                disabled={isDelegateButtonDisabled}
-                onClickHandler={handleDelegate}
-            >
+            <Button disabled={isDelegateButtonDisabled} onClick={handleDelegate}>
                 {!isDelegating
                     ? t('options.earn.gamified-staking.merge-account.delegate-button.label')
                     : t('options.earn.gamified-staking.merge-account.delegate-button.progress-label')}
@@ -352,7 +305,7 @@ const MergeAccount: React.FC = () => {
                     <SectionTitle>{t('options.earn.gamified-staking.merge-account.delegate-volume')}</SectionTitle>
                     <InputContainer mediaMarginBottom={10}>
                         <div style={{ position: 'relative' }}>
-                            <StyledInput
+                            <TextInput
                                 value={
                                     delegatedVolumeAddress !== ZERO_ADDRESS
                                         ? delegatedVolumeAddress
@@ -360,16 +313,12 @@ const MergeAccount: React.FC = () => {
                                 }
                                 onChange={(e: any) => setDelegateDestAddress(e.target.value)}
                                 disabled={delegatedVolumeAddress !== ZERO_ADDRESS || isDelegating || !isWalletConnected}
-                                className={isDelegateDestAddressValid ? '' : 'error'}
+                                label={t('options.earn.gamified-staking.merge-account.delegate-volume-address-label')}
+                                placeholder={t('common.enter-address')}
+                                showValidation={!isDelegateDestAddressValid}
+                                validationMessage={t(`common.errors.invalid-address`)}
                             />
-                            <InputLabel>
-                                {t('options.earn.gamified-staking.merge-account.delegate-volume-address-label')}:
-                            </InputLabel>
                         </div>
-                        <FieldValidationMessage
-                            showValidation={!isDelegateDestAddressValid}
-                            message={t(`common.errors.invalid-address`)}
-                        />
                     </InputContainer>
                     <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                     <ButtonContainer>{getDelegateButton()}</ButtonContainer>
@@ -412,30 +361,27 @@ const MergeAccount: React.FC = () => {
                 <SectionContentWrapper>
                     <SectionTitle>{t('options.earn.gamified-staking.merge-account.merge-account')}</SectionTitle>
                     <InputContainer mediaMarginBottom={10}>
-                        <StyledInput value={walletAddress} disabled={true} onChange={undefined} />
-                        <InputLabel>
-                            {t('options.earn.gamified-staking.merge-account.source-account-label')}:
-                        </InputLabel>
+                        <TextInput
+                            value={walletAddress}
+                            disabled={true}
+                            label={t('options.earn.gamified-staking.merge-account.source-account-label')}
+                        />
                     </InputContainer>
                     <ArrowContainer>
                         <ArrowDown />
                     </ArrowContainer>
                     <InputContainer mediaMarginBottom={10}>
                         <div style={{ position: 'relative' }}>
-                            <StyledInput
+                            <TextInput
                                 value={destAddress}
                                 onChange={(e: any) => setDestAddress(e.target.value)}
                                 disabled={isMerging || !isAccountMergingEnabled || !isWalletConnected}
-                                className={isDestAddressValid ? '' : 'error'}
+                                label={t('options.earn.gamified-staking.merge-account.destination-account-label')}
+                                placeholder={t('common.enter-address')}
+                                showValidation={!isDestAddressValid}
+                                validationMessage={t(`common.errors.invalid-address`)}
                             />
-                            <InputLabel>
-                                {t('options.earn.gamified-staking.merge-account.destination-account-label')}:
-                            </InputLabel>
                         </div>
-                        <FieldValidationMessage
-                            showValidation={!isDestAddressValid}
-                            message={t(`common.errors.invalid-address`)}
-                        />
                     </InputContainer>
                     <MessageContainer>
                         <MergeInfo>{t('options.earn.gamified-staking.merge-account.info-message')}</MergeInfo>
@@ -548,7 +494,7 @@ const Message = styled.div`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: #ffcc00;
+    color: ${(props) => props.theme.textColor.primary};
     margin-top: 10px;
     div {
         margin-bottom: 5px;
@@ -556,40 +502,6 @@ const Message = styled.div`
     ul {
         list-style: initial;
         margin-left: 15px;
-    }
-`;
-
-const StyledInput = styled(Input)`
-    height: 45px;
-    text-overflow: ellipsis;
-    border-radius: 10px;
-    padding: 5px 15px 8px 120px;
-    width: 100%;
-    @media (max-width: 1192px) {
-        height: 60px;
-        font-size: 15px;
-    }
-`;
-
-const InputLabel = styled.label`
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
-    color: var(--color-highlight);
-    padding-left: 8px;
-    pointer-events: none;
-    z-index: 3;
-    position: absolute;
-    text-transform: uppercase;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    @media (max-width: 1192px) {
-        font-size: 9px;
-    }
-    @media (max-width: 768px) {
-        font-size: 12px;
-        padding-left: 10px;
     }
 `;
 
@@ -628,28 +540,18 @@ const DelegationAddress = styled.div`
 `;
 
 const StyledLink = styled.a`
-    color: #f6f6fe;
+    color: ${(props) => props.theme.link.textColor.secondary};
     &path {
-        fill: #f6f6fe;
+        fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
-        color: var(--color-highlight);
+        color: ${(props) => props.theme.link.textColor.primary};
         & path {
-            fill: var(--color-highlight);
+            fill: ${(props) => props.theme.link.textColor.primary};
         }
-    }
-    @media (max-width: 767px) {
-        color: var(--color-highlight);
     }
 `;
 
-const ArrowIcon = styled(ArrowHyperlinkIcon)`
-    @media (max-width: 767px) {
-        color: var(--color-highlight);
-        & path {
-            fill: var(--color-highlight);
-        }
-    }
-`;
+const ArrowIcon = styled(ArrowHyperlinkIcon)``;
 
 export default MergeAccount;

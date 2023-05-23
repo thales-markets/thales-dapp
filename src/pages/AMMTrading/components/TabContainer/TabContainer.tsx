@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
 import OptionPriceTab from '../Tabs/OptionPriceTab';
 import UserActivity from '../Tabs/UserActivity';
 import TradingView from '../Tabs/TradingView';
 import MarketActivity from '../Tabs/MarketActivity';
 import Container from './styled-components/Container';
-
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import SimilarMarkets from '../Tabs/SimilarMarkets';
 import RowCard from '../RowCard';
-
 import { MarketType } from 'types/options';
 import styled from 'styled-components';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -62,14 +58,6 @@ const TabContainer: React.FC = () => {
             title: t('options.market.widgets.recent-transactions-widget'),
             index: 4,
         },
-        ...(!inMaturity
-            ? [
-                  {
-                      title: t('options.market.overview.similar-markets'),
-                      index: 5,
-                  },
-              ]
-            : []),
     ];
 
     return (
@@ -133,7 +121,6 @@ const TabContainer: React.FC = () => {
                     {currentTab == 2 && <OptionPriceTab marketType={MARKET_TYPE[0] as MarketType} />}
                     {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[0] as MarketType} />}
                     {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[0] as MarketType} />}
-                    {currentTab == 5 && <SimilarMarkets />}
                 </Container.Tab>
             </Container>
         </>
@@ -154,8 +141,6 @@ const FiltersButton = styled.div`
     box-sizing: border-box;
     border-radius: 30px;
     background: transparent;
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 11px;
@@ -194,9 +179,7 @@ const Wrapper = styled.div`
 const Item = styled.div<{ active: boolean }>`
     text-transform: uppercase;
     cursor: pointer;
-    font-family: Roboto !important;
-    font-style: normal;
-    color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
+    color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : _props.theme.textColor.primary)};
 
     @media (max-width: 768px) {
         font-weight: bold;
@@ -206,8 +189,6 @@ const Item = styled.div<{ active: boolean }>`
 `;
 
 const Title = styled.p`
-    font-family: Roboto !important;
-    font-style: normal;
     font-weight: bold;
     font-size: 12px;
     line-height: 100%;

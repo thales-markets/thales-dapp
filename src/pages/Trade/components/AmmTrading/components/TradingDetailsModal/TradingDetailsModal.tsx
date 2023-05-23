@@ -1,4 +1,4 @@
-import { Modal } from '@material-ui/core';
+import Modal from 'components/Modal';
 import Button from 'components/ButtonV2';
 import { USD_SIGN } from 'constants/currency';
 import { Positions, SLIPPAGE_PERCENTAGE } from 'constants/options';
@@ -78,20 +78,12 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
 
     return (
         <Modal
-            open={true}
-            onClose={(_, reason) => {
-                if (reason !== 'backdropClick') onClose();
-            }}
-            style={{ backdropFilter: 'blur(10px)' }}
+            shouldCloseOnOverlayClick={false}
+            onClose={onClose}
+            title={t('options.trade.amm-trading.details-modal.confirm-order', { position: positionType })}
+            customStyle={{ overlay: { zIndex: 201 } }}
         >
             <Container>
-                <Header>
-                    <TextHeader>
-                        {t('options.trade.amm-trading.details-modal.confirm-order', { position: positionType })}
-                    </TextHeader>
-                    <CloseIcon className="icon icon--x-sign" onClick={onClose} />
-                </Header>
-
                 <MarketDetails>
                     <DetailsRow>
                         <TextLabel>{t('options.common.asset')}</TextLabel>
@@ -183,17 +175,6 @@ const defaultButtonProps = {
 const Container = styled(FlexDivColumnCentered)`
     position: relative;
     width: 306px;
-    height: fit-content;
-    padding: 15px;
-    margin: auto;
-    top: calc(50% - 200px);
-    background: ${(props) => props.theme.background.primary};
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
-    border-radius: 8px;
-`;
-
-const Header = styled(FlexDivRowCentered)`
-    margin-bottom: 15px;
 `;
 
 const MarketDetails = styled(FlexDivColumnCentered)`
@@ -220,26 +201,12 @@ const TradingDetailsSentence = styled(FlexDivRowCentered)<{ height?: string }>`
     margin-bottom: 15px;
 `;
 
-const CloseIcon = styled.i`
-    font-size: 16px;
-    line-height: 16px;
-    cursor: pointer;
-    color: ${(props) => props.theme.textColor.secondary};
-`;
-
 const Text = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 700;
     font-size: 13px;
     line-height: 15px;
 `;
 
-const TextHeader = styled(Text)`
-    font-size: 18px;
-    line-height: 110%;
-    color: ${(props) => props.theme.textColor.secondary};
-`;
 const TextLabel = styled(Text)`
     color: ${(props) => props.theme.textColor.secondary};
 `;

@@ -61,7 +61,6 @@ const Container = styled(FlexDivStart)`
 `;
 
 const Text = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
@@ -95,7 +94,7 @@ const Dropdown = styled(FlexDivColumnCentered)`
     position: absolute;
     top: 30px;
     left: -7px;
-    width: 76px;
+    width: 66px;
     padding: 8px 0;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};

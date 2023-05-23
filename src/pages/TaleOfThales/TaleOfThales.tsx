@@ -84,9 +84,7 @@ const Tab = styled.div<{ active: boolean }>`
     font-size: 25px;
     text-align: center;
     width: 25%;
-    font-family: Roboto !important;
-    font-style: normal;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     box-shadow: ${(props) => (props?.active ? '0px 4px var(--primary-filter-menu-active)' : '')};
     text-transform: uppercase;
     padding: 10px 5px;

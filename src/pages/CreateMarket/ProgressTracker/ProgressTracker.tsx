@@ -10,19 +10,12 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
-import { PositionType } from '../CreateMarket';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;
     isAllowing?: boolean;
     isMarketCreated?: boolean;
     isCreating?: boolean;
-    isLongSubmitted?: boolean;
-    isLongSubmitting?: boolean;
-    isShortSubmitted?: boolean;
-    isShortSubmitting?: boolean;
-    showLongProcess?: boolean;
-    showShortProcess?: boolean;
 };
 
 const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
@@ -46,7 +39,6 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                     })}
                 </Label>
             </FlexDiv>
-
             <FlexDiv className="progress-tracker-step" style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
                 <Image
                     className={props.isCreating ? 'blob' : ''}
@@ -59,58 +51,12 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                     {t('options.create-market.progress-tracker.creating-market')}
                 </Label>
             </FlexDiv>
-            {!props.showLongProcess && !props.showShortProcess && (
-                <FlexDiv
-                    className="progress-tracker-step"
-                    style={{ alignItems: 'center', position: 'relative', flex: 0 }}
-                >
-                    <Image src={!props.isMarketCreated ? stateEmpty : stateComplete}></Image>
-                    <Label className="text-s pale-grey" style={{ left: -20 }}>
-                        {t('options.create-market.progress-tracker.finished')}
-                    </Label>
-                </FlexDiv>
-            )}
-
-            {props.showLongProcess && (
-                <FlexDiv
-                    className={(!props.isMarketCreated ? 'responsive-hide' : '') + ' progress-tracker-step'}
-                    style={{ alignItems: 'center', position: 'relative', flex: props.showShortProcess ? 1 : 0 }}
-                >
-                    <Image
-                        className={props.isLongSubmitting ? 'blob' : ''}
-                        src={!props.isMarketCreated ? stateEmpty : props.isLongSubmitted ? stateComplete : stateCurrent}
-                    ></Image>
-                    {props.showShortProcess && <Line className={props.isLongSubmitted ? 'fill' : ''}></Line>}
-                    <Label className="text-s pale-grey">
-                        {t('options.create-market.progress-tracker.submitting', {
-                            currencyKey: PositionType.UP,
-                        })}
-                    </Label>
-                </FlexDiv>
-            )}
-
-            {props.showShortProcess && (
-                <FlexDiv
-                    className={(!props.isMarketCreated ? 'responsive-hide' : '') + ' progress-tracker-step'}
-                    style={{ alignItems: 'center', position: 'relative', flex: 0 }}
-                >
-                    <Image
-                        className={props.isShortSubmitting ? 'blob' : ''}
-                        src={
-                            (props.showLongProcess && !props.isLongSubmitted) || !props.isMarketCreated
-                                ? stateEmpty
-                                : props.isShortSubmitted
-                                ? stateComplete
-                                : stateCurrent
-                        }
-                    ></Image>
-                    <Label className="text-s pale-grey">
-                        {t('options.create-market.progress-tracker.submitting', {
-                            currencyKey: PositionType.DOWN,
-                        })}
-                    </Label>
-                </FlexDiv>
-            )}
+            <FlexDiv className="progress-tracker-step" style={{ alignItems: 'center', position: 'relative', flex: 0 }}>
+                <Image src={!props.isMarketCreated ? stateEmpty : stateComplete}></Image>
+                <Label className="text-s pale-grey" style={{ left: -20 }}>
+                    {t('options.create-market.progress-tracker.finished')}
+                </Label>
+            </FlexDiv>
         </Wrapper>
     );
 };

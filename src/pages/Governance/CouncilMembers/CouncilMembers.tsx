@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
 import useProposalQuery from 'queries/governance/useProposalQuery';
-import { SidebarContent, SidebarTitle, SidebarContentWrapper } from 'pages/Governance/components';
+import { SidebarContent, SidebarTitle, SidebarContentWrapper } from 'pages/Governance/styled-components';
 import { useTranslation } from 'react-i18next';
 import { COUNCIL_PROPOSAL_ID, SpaceKey } from 'constants/governance';
 import Results from '../ProposalDetails/Results';

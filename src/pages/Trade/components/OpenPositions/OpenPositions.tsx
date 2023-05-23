@@ -341,8 +341,6 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
 `;
 
 const Title = styled.span`
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 700;
     font-size: 13px;
     line-height: 100%;
@@ -375,7 +373,7 @@ const Position = styled.div`
     align-items: center;
     justify-content: space-between;
     padding: 0 17px;
-    gap: 20px;
+    gap: 10px;
     @media (max-width: 767px) {
         display: flex;
         flex-direction: column;
@@ -392,7 +390,7 @@ const Icon = styled.i`
 const AlignedFlex = styled.div`
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     justify-content: flex-end;
     width: 100%;
     @media (max-width: 767px) {
@@ -406,8 +404,8 @@ const FlexContainer = styled(AlignedFlex)`
     flex: 1;
     justify-content: center;
     &:first-child {
-        min-width: 210px;
-        max-width: 210px;
+        min-width: 195px;
+        max-width: 195px;
     }
     @media (max-width: 767px) {
         flex-direction: row;
@@ -434,8 +432,6 @@ const NoPositionsText = styled.span`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-family: ${(props) => props.theme.fontFamily.primary};
-    font-style: normal;
     font-weight: 600;
     font-size: 16px;
     line-height: 100%;

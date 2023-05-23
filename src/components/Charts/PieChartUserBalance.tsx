@@ -127,11 +127,10 @@ const BalanceInfoContainer = styled.div`
     justify-content: center;
     text-align: center;
     position: absolute;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const PartialAmount = styled.p`
-    font-family: Roboto !important;
     font-weight: 600;
     font-size: 17px;
     line-height: 19px;

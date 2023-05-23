@@ -10,7 +10,6 @@ import LanguageCardSelector from 'components/LanguageSelector/v3/LanguageCardSel
 import NetworkSwitchSection from 'components/NetworkSwitch/v2/NetworkSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
-import DisplayNameForm from 'components/DisplayNameForm/DisplayNameForm';
 
 const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ showCard, setShowCard }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -32,7 +31,6 @@ const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ 
                 </Container>
 
                 <PriceChart currencyKey={'THALES'} showHeading={true} />
-                {isWalletConnected && <DisplayNameForm />}
                 <LanguageCardSelector />
             </CardWrapper>
         </MenuCard>

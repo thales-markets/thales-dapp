@@ -1,14 +1,7 @@
 import ValidationMessage from 'components/ValidationMessage';
 import { BigNumber, ethers } from 'ethers';
-import {
-    CurrencyLabel,
-    DefaultSubmitButton,
-    Divider,
-    InputContainer,
-    InputLabel,
-    SubmitButtonContainer,
-} from 'pages/Token/components/components';
-import NumericInput from 'pages/Token/components/NumericInput';
+import { DefaultSubmitButton, Divider, InputContainer, SubmitButtonContainer } from 'pages/Token/components/components';
+import NumericInput from 'components/fields/NumericInput';
 import React, { useEffect, useState } from 'react';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -23,17 +16,7 @@ import { L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import FieldValidationMessage from 'components/FieldValidationMessage';
-import {
-    ArrowContainer,
-    InfoSection,
-    MaxButton,
-    NetworkLabel,
-    Result,
-    ResultContainer,
-    ThalesWalletAmountLabel,
-} from '../components';
-import SimpleLoader from '../../components/SimpleLoader';
+import { ArrowContainer, InfoSection } from '../components';
 import InfoMessage from 'components/InfoMessage';
 import InfoWarningMessage from 'components/InfoWarningMessage';
 import { FlexDiv } from 'theme/common';
@@ -228,7 +211,7 @@ const Bridge: React.FC = () => {
     };
 
     useEffect(() => {
-        setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= opThalesBalance));
+        setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= Number(opThalesBalance)));
     }, [amount, opThalesBalance]);
 
     return (
@@ -239,45 +222,37 @@ const Bridge: React.FC = () => {
                     value={amount}
                     onChange={(_, value) => setAmount(value)}
                     disabled={isSubmitting}
-                    className={isAmountValid ? '' : 'error'}
-                />
-                <InputLabel>
-                    {t('migration.from-label')}
-                    <NetworkLabel>{network.networkName}</NetworkLabel>
-                </InputLabel>
-                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{THALES_CURRENCY}</CurrencyLabel>
-                <ThalesWalletAmountLabel>
-                    {isWalletConnected ? (
-                        opThalesBalanceQuery.isLoading ? (
-                            <SimpleLoader />
-                        ) : (
-                            formatCurrencyWithKey(THALES_CURRENCY, opThalesBalance)
-                        )
-                    ) : (
-                        '-'
-                    )}
-                    <MaxButton disabled={isSubmitting || !isWalletConnected} onClick={onMaxClick}>
-                        {t('common.max')}
-                    </MaxButton>
-                </ThalesWalletAmountLabel>
-                <FieldValidationMessage
+                    currencyLabel={THALES_CURRENCY}
+                    placeholder={t('common.enter-amount')}
+                    label={`${t('migration.from-label')}: ${network.networkName}`}
+                    onMaxButton={onMaxClick}
                     showValidation={!isAmountValid}
-                    message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
+                    validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
+                    balance={
+                        isWalletConnected
+                            ? `${t('options.earn.gamified-staking.staking.stake.balance')} ${formatCurrencyWithKey(
+                                  THALES_CURRENCY,
+                                  opThalesBalance
+                              )}`
+                            : undefined
+                    }
+                    isBalanceLoading={opThalesBalanceQuery.isLoading}
                 />
             </InputContainer>
             <ArrowContainer>
                 <ArrowDown />
             </ArrowContainer>
-            <ResultContainer>
-                <Result>{amount}</Result>
-                <InputLabel>
-                    {t('migration.to-label')}
-                    <NetworkLabel>
-                        {SUPPORTED_NETWORKS_NAMES[L1_TO_L2_NETWORK_MAPPER[networkId] as NetworkId]}
-                    </NetworkLabel>
-                </InputLabel>
-                <CurrencyLabel>{THALES_CURRENCY}</CurrencyLabel>
-            </ResultContainer>
+            <InputContainer mediaMarginBottom={10}>
+                <NumericInput
+                    value={amount}
+                    onChange={() => {}}
+                    disabled={true}
+                    currencyLabel={THALES_CURRENCY}
+                    label={`${t('migration.to-label')}: ${
+                        SUPPORTED_NETWORKS_NAMES[L1_TO_L2_NETWORK_MAPPER[networkId] as NetworkId]
+                    }`}
+                />
+            </InputContainer>
             <Divider />
             <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
             <MessageContainer>

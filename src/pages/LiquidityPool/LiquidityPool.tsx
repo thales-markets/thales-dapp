@@ -3,7 +3,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
     Container,
     Title,
-    SubmitButton,
     ButtonContainer,
     Wrapper,
     ToggleContainer,
@@ -15,7 +14,6 @@ import {
     ContentInfo,
     BoldContent,
     WarningContentInfo,
-    CloseRoundButton,
     LoaderContainer,
     RoundEndContainer,
     RoundEndLabel,
@@ -33,20 +31,17 @@ import {
     Description,
     GetStakeThalesIcon,
     TipLink,
-    InputWrapper,
-    MaxButton,
-    StyledMaterialTooltip,
-    StyledInfoIcon,
     SliderContainer,
     SliderRange,
     StyledSlider,
     RadioButtonContainer,
+    defaultButtonProps,
 } from './styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { LiquidityPoolPnlType, LiquidityPoolTab } from 'constants/liquidityPool';
-import NumericInput from 'pages/Token/components/NumericInput';
+import NumericInput from 'components/fields/NumericInput';
 import { getIsAppReady } from 'redux/modules/app';
 import { UserLiquidityPoolData, LiquidityPoolData } from 'types/liquidityPool';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
@@ -63,15 +58,13 @@ import SimpleLoader from 'components/SimpleLoader';
 import Transactions from './Transactions';
 import PnL from './PnL';
 import Switch from 'components/SwitchInput/SwitchInputNew';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/TooltipV2';
 import useLiquidityPoolDataQuery from 'queries/liquidityPool/useLiquidityPoolDataQuery';
 import useLiquidityPoolUserDataQuery from 'queries/liquidityPool/useLiquidityPoolUserDataQuery';
 import { LINKS } from 'constants/links';
 import MaxAllowanceTooltip from './components/MaxAllowanceTooltip';
 import { refetchLiquidityPoolData } from 'utils/queryConnector';
 import { getMaxGasLimitForNetwork } from 'constants/options';
-import { CurrencyLabel, InputLabel } from 'pages/Token/components/components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
@@ -79,7 +72,8 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { Colors, FlexDivRow } from 'theme/common';
-import RadioButton from 'components/RadioButton/RadioButton';
+import RadioButton from 'components/fields/RadioButton';
+import Button from 'components/ButtonV2/Button';
 
 const LiquidityPool: React.FC = () => {
     const { t } = useTranslation();
@@ -335,76 +329,64 @@ const LiquidityPool: React.FC = () => {
         }
     };
 
-    const closeRound = async () => {
-        const { signer, liquidityPoolContract } = snxJSConnector;
-        if (signer && liquidityPoolContract) {
-            const id = toast.loading(t('options.market.toast-messsage.transaction-pending'));
-            setIsSubmitting(true);
-            try {
-                const liquidityPoolContractWithSigner = liquidityPoolContract.connect(signer);
-
-                const tx = await liquidityPoolContractWithSigner.closeRound({
-                    gasLimit: getMaxGasLimitForNetwork(networkId),
-                });
-                const txResult = await tx.wait();
-
-                if (txResult && txResult.events) {
-                    toast.update(
-                        id,
-                        getSuccessToastOptions(t('liquidity-pool.button.close-round-confirmation-message'))
-                    );
-                    setIsSubmitting(false);
-                    refetchLiquidityPoolData(walletAddress, networkId);
-                }
-            } catch (e) {
-                console.log(e);
-                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
-                setIsSubmitting(false);
-            }
-        }
-    };
-
     const getDepositSubmitButton = () => {
         if (!isWalletConnected) {
-            return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
+            return (
+                <Button onClick={openConnectModal} {...defaultButtonProps}>
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         if (insufficientBalance) {
-            return <SubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</SubmitButton>;
+            return (
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t(`common.errors.insufficient-balance`)}
+                </Button>
+            );
         }
         if (!isAmountEntered) {
-            return <SubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</SubmitButton>;
+            return (
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t(`common.errors.enter-amount`)}
+                </Button>
+            );
         }
         if (!hasAllowance) {
             return (
-                <SubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
+                <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)} {...defaultButtonProps}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: collateral })
                         : t('common.enable-wallet-access.approve-progress-label', {
                               currencyKey: collateral,
                           })}
-                </SubmitButton>
+                </Button>
             );
         }
         return (
-            <SubmitButton disabled={isDepositButtonDisabled} onClick={handleDeposit}>
+            <Button disabled={isDepositButtonDisabled} onClick={handleDeposit} {...defaultButtonProps}>
                 {!isSubmitting
                     ? t('liquidity-pool.button.deposit-label')
                     : t('liquidity-pool.button.deposit-progress-label')}
-            </SubmitButton>
+            </Button>
         );
     };
 
     const getWithdrawSubmitButton = () => {
         if (!isWalletConnected) {
-            return <SubmitButton onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</SubmitButton>;
+            return (
+                <Button onClick={openConnectModal} {...defaultButtonProps}>
+                    {t('common.wallet.connect-your-wallet')}
+                </Button>
+            );
         }
         return (
-            <SubmitButton
+            <Button
                 disabled={isRequestWithdrawalButtonDisabled || !isWithdrawalPercentageValid}
                 onClick={handleWithdrawalRequest}
+                {...defaultButtonProps}
             >
                 {t('liquidity-pool.button.request-withdrawal-label')}
-            </SubmitButton>
+            </Button>
         );
     };
 
@@ -462,11 +444,6 @@ const LiquidityPool: React.FC = () => {
                                                     fontSize={20}
                                                     showFullCounter
                                                 />
-                                            )}{' '}
-                                            {liquidityPoolData.canCloseCurrentRound && (
-                                                <CloseRoundButton disabled={isSubmitting} onClick={closeRound}>
-                                                    {t('liquidity-pool.button.close-round-label')}
-                                                </CloseRoundButton>
                                             )}
                                         </RoundEnd>
                                     </RoundEndContainer>
@@ -517,67 +494,39 @@ const LiquidityPool: React.FC = () => {
                                             <Trans i18nKey="liquidity-pool.deposit-max-amount-of-users-warning" />
                                         </WarningContentInfo>
                                     )}
-                                    <InputWrapper>
-                                        <NumericInput
-                                            value={amount}
-                                            disabled={isDepositAmountInputDisabled}
-                                            onChange={(_, value) => setAmount(value)}
-                                            className={
-                                                insufficientBalance ||
-                                                !!exceededLiquidityPoolCap ||
-                                                !!exceededMaxAllowance ||
-                                                !!invalidAmount
-                                                    ? 'error'
-                                                    : ''
-                                            }
-                                        />
-                                        <InputLabel
-                                            className={
-                                                isDepositAmountInputDisabled ? 'input-label disabled' : 'input-label'
-                                            }
-                                        >
-                                            {t('vault.deposit-amount-label')}
-                                        </InputLabel>
-                                        <CurrencyLabel
-                                            className={
-                                                isDepositAmountInputDisabled
-                                                    ? 'currency-label disabled'
-                                                    : 'currency-label'
-                                            }
-                                        >
-                                            {collateral}
-                                        </CurrencyLabel>
-                                        <MaxButton disabled={isDepositAmountInputDisabled} onClick={setMaxAmount}>
-                                            {t('common.max')}
-                                        </MaxButton>
-                                        <FieldValidationMessage
-                                            showValidation={
-                                                insufficientBalance ||
-                                                !!exceededLiquidityPoolCap ||
-                                                !!exceededMaxAllowance ||
-                                                !!invalidAmount
-                                            }
-                                            message={
-                                                t(
-                                                    `${
-                                                        insufficientBalance
-                                                            ? 'common.errors.insufficient-balance'
-                                                            : exceededLiquidityPoolCap
-                                                            ? 'liquidity-pool.deposit-liquidity-pool-cap-error'
-                                                            : exceededMaxAllowance
-                                                            ? 'liquidity-pool.deposit-staked-thales-error'
-                                                            : 'liquidity-pool.deposit-min-amount-error'
-                                                    }`,
-                                                    {
-                                                        amount: formatCurrencyWithSign(
-                                                            USD_SIGN,
-                                                            liquidityPoolData.minDepositAmount
-                                                        ),
-                                                    }
-                                                ) as string
-                                            }
-                                        />
-                                    </InputWrapper>
+                                    <NumericInput
+                                        value={amount}
+                                        disabled={isDepositAmountInputDisabled}
+                                        onChange={(_, value) => setAmount(value)}
+                                        currencyLabel={collateral}
+                                        onMaxButton={setMaxAmount}
+                                        placeholder={t('common.enter-amount')}
+                                        showValidation={
+                                            insufficientBalance ||
+                                            !!exceededLiquidityPoolCap ||
+                                            !!exceededMaxAllowance ||
+                                            !!invalidAmount
+                                        }
+                                        validationMessage={
+                                            t(
+                                                `${
+                                                    insufficientBalance
+                                                        ? 'common.errors.insufficient-balance'
+                                                        : exceededLiquidityPoolCap
+                                                        ? 'liquidity-pool.deposit-liquidity-pool-cap-error'
+                                                        : exceededMaxAllowance
+                                                        ? 'liquidity-pool.deposit-staked-thales-error'
+                                                        : 'liquidity-pool.deposit-min-amount-error'
+                                                }`,
+                                                {
+                                                    amount: formatCurrencyWithSign(
+                                                        USD_SIGN,
+                                                        liquidityPoolData.minDepositAmount
+                                                    ),
+                                                }
+                                            ) as string
+                                        }
+                                    />
                                     {getDepositSubmitButton()}
                                 </>
                             )}
@@ -622,13 +571,12 @@ const LiquidityPool: React.FC = () => {
                                                                             }}
                                                                         />
                                                                         <Tooltip
-                                                                            message={t(
+                                                                            overlay={t(
                                                                                 `liquidity-pool.estimated-amount-tooltip`
                                                                             )}
-                                                                            type={'info'}
-                                                                            container={{ display: 'inline' }}
                                                                             iconFontSize={14}
-                                                                            iconTop={-2}
+                                                                            marginLeft={2}
+                                                                            top={-1}
                                                                         />
                                                                     </ContentInfo>
                                                                     <ContentInfo>
@@ -652,50 +600,23 @@ const LiquidityPool: React.FC = () => {
                                                                             )}
                                                                         />
                                                                     </RadioButtonContainer>
-                                                                    <InputWrapper>
-                                                                        <NumericInput
-                                                                            value={withdrawalPercentage}
-                                                                            onChange={(_, value) =>
-                                                                                setWithdrawalPercentage(value)
-                                                                            }
-                                                                            disabled={isPartialWithdrawalDisabled}
-                                                                            className={
-                                                                                isWithdrawalPercentageValid
-                                                                                    ? ''
-                                                                                    : 'error'
-                                                                            }
-                                                                            step="1"
-                                                                        />
-                                                                        <InputLabel
-                                                                            className={`input-label ${
-                                                                                isPartialWithdrawalDisabled
-                                                                                    ? 'disabled'
-                                                                                    : ''
-                                                                            }`}
-                                                                        >
-                                                                            {t(`liquidity-pool.percentage-label`)}
-                                                                        </InputLabel>
-                                                                        <CurrencyLabel
-                                                                            className={`currency-label ${
-                                                                                isPartialWithdrawalDisabled
-                                                                                    ? 'disabled'
-                                                                                    : ''
-                                                                            }`}
-                                                                        >
-                                                                            %
-                                                                        </CurrencyLabel>
-                                                                        <FieldValidationMessage
-                                                                            showValidation={
-                                                                                !isWithdrawalPercentageValid
-                                                                            }
-                                                                            message={t(
-                                                                                Number(withdrawalPercentage) == 0
-                                                                                    ? 'common.errors.enter-percentage'
-                                                                                    : 'common.errors.invalid-percentage-range',
-                                                                                { min: 10, max: 90 }
-                                                                            )}
-                                                                        />
-                                                                    </InputWrapper>
+                                                                    <NumericInput
+                                                                        value={withdrawalPercentage}
+                                                                        onChange={(_, value) =>
+                                                                            setWithdrawalPercentage(value)
+                                                                        }
+                                                                        disabled={isPartialWithdrawalDisabled}
+                                                                        step="1"
+                                                                        currencyLabel="%"
+                                                                        placeholder={t('common.enter-percentage')}
+                                                                        showValidation={!isWithdrawalPercentageValid}
+                                                                        validationMessage={t(
+                                                                            Number(withdrawalPercentage) == 0
+                                                                                ? 'common.errors.enter-percentage'
+                                                                                : 'common.errors.invalid-percentage-range',
+                                                                            { min: 10, max: 90 }
+                                                                        )}
+                                                                    />
                                                                     <SliderContainer>
                                                                         <StyledSlider
                                                                             value={Number(withdrawalPercentage)}
@@ -742,13 +663,12 @@ const LiquidityPool: React.FC = () => {
                                                                             }}
                                                                         />
                                                                         <Tooltip
-                                                                            message={t(
+                                                                            overlay={t(
                                                                                 `liquidity-pool.estimated-amount-tooltip`
                                                                             )}
-                                                                            type={'info'}
-                                                                            container={{ display: 'inline' }}
                                                                             iconFontSize={14}
-                                                                            iconTop={-2}
+                                                                            marginLeft={2}
+                                                                            top={-1}
                                                                         />
                                                                     </ContentInfo>
                                                                 </>
@@ -775,13 +695,12 @@ const LiquidityPool: React.FC = () => {
                                                             bold: <BoldContent />,
                                                             tooltip: (
                                                                 <Tooltip
-                                                                    message={t(
+                                                                    overlay={t(
                                                                         `liquidity-pool.estimated-amount-tooltip`
                                                                     )}
-                                                                    type={'info'}
-                                                                    container={{ display: 'inline' }}
                                                                     iconFontSize={14}
-                                                                    iconTop={-2}
+                                                                    marginLeft={2}
+                                                                    top={-1}
                                                                 />
                                                             ),
                                                         }}
@@ -959,11 +878,10 @@ const LiquidityPool: React.FC = () => {
                                                 userLiquidityPoolData.balanceCurrentRound > 0 &&
                                                 userLiquidityPoolData.balanceTotal > 0 && (
                                                     <Tooltip
-                                                        message={t(`liquidity-pool.estimated-amount-tooltip`)}
-                                                        type={'info'}
-                                                        container={{ display: 'inline' }}
+                                                        overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
                                                         iconFontSize={14}
-                                                        iconTop={-2}
+                                                        marginLeft={2}
+                                                        top={-1}
                                                     />
                                                 )}
                                         </LiquidityPoolInfo>
@@ -981,10 +899,8 @@ const LiquidityPool: React.FC = () => {
                                                 USD_SIGN,
                                                 userLiquidityPoolData ? userLiquidityPoolData.maxDeposit : 0
                                             )}
-                                            <StyledMaterialTooltip
-                                                arrow
-                                                interactive
-                                                title={
+                                            <Tooltip
+                                                overlay={
                                                     <MaxAllowanceTooltip
                                                         stakedThales={
                                                             userLiquidityPoolData
@@ -996,9 +912,11 @@ const LiquidityPool: React.FC = () => {
                                                         }
                                                     />
                                                 }
-                                            >
-                                                <StyledInfoIcon />
-                                            </StyledMaterialTooltip>
+                                                overlayClassName="lp-max-allowance"
+                                                iconFontSize={14}
+                                                marginLeft={2}
+                                                top={-1}
+                                            />
                                         </LiquidityPoolInfo>
                                     </LiquidityPoolInfoContainer>
                                     {isWithdrawalRequested && (
@@ -1012,11 +930,10 @@ const LiquidityPool: React.FC = () => {
                                                 components={{
                                                     tooltip: (
                                                         <Tooltip
-                                                            message={t(`liquidity-pool.estimated-amount-tooltip`)}
-                                                            type={'info'}
-                                                            container={{ display: 'inline' }}
+                                                            overlay={t(`liquidity-pool.estimated-amount-tooltip`)}
                                                             iconFontSize={14}
-                                                            iconTop={-2}
+                                                            marginLeft={2}
+                                                            top={-1}
                                                         />
                                                     ),
                                                 }}

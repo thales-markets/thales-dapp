@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BalanceIcon, EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
+import { EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
 import { FlexDivColumnCentered } from 'theme/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -11,20 +11,16 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import styled from 'styled-components';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
-import NumericInput from 'pages/Token/components/NumericInput';
-import { CurrencyLabel, InputContainer, InputLabel } from 'pages/Token/components/components';
+import NumericInput from 'components/fields/NumericInput';
+import { InputContainer } from 'pages/Token/components/components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { dispatchMarketNotification } from 'utils/options';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
-import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
-import FieldValidationMessage from 'components/FieldValidationMessage';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { LP_TOKEN } from 'constants/currency';
-import Button from 'pages/Token/components/Button';
-import { ButtonType } from 'pages/Token/components/Button/Button';
-import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/ButtonV2/Button';
 
 type Properties = {
     staked: number;
@@ -113,40 +109,17 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <Button
-                    active={true}
-                    onClickHandler={openConnectModal}
-                    type={ButtonType.submit}
-                    width={isMobile() ? '100%' : '60%'}
-                >
-                    {t('common.wallet.connect-your-wallet')}
-                </Button>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (insufficientBalance) {
-            return (
-                <Button disabled={true} type={ButtonType.submit} width={isMobile() ? '100%' : '60%'}>
-                    {t(`common.errors.insufficient-staking-balance`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.insufficient-staking-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return (
-                <Button disabled={true} type={ButtonType.submit} width={isMobile() ? '100%' : '60%'}>
-                    {t(`common.errors.enter-amount`)}
-                </Button>
-            );
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
 
         return (
-            <Button
-                active={!isUnstakeButtonDisabled}
-                disabled={isUnstakeButtonDisabled}
-                onClickHandler={handleUnstakeThales}
-                type={ButtonType.submit}
-                width={isMobile() ? '100%' : '60%'}
-            >
+            <Button disabled={isUnstakeButtonDisabled} onClick={handleUnstakeThales}>
                 {!isUnstaking
                     ? `${t('options.earn.gamified-staking.staking.unstake.name')} ${formatCurrencyWithKey(
                           LP_TOKEN,
@@ -178,22 +151,19 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                         value={amountToUnstake}
                         onChange={(_, value) => setAmountToUnstake(value)}
                         disabled={isUnstaking}
-                        className={isAmountValid ? '' : 'error'}
-                    />
-                    <InputLabel>{t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}</InputLabel>
-                    <CurrencyLabel className={isUnstaking ? 'disabled' : ''}>{LP_TOKEN}</CurrencyLabel>
-                    <ThalesWalletAmountLabel>
-                        {!isMobile() && <BalanceIcon />}
-                        {isWalletConnected
-                            ? t('options.earn.gamified-staking.staking.unstake.balance') + ' ' + formatCurrency(staked)
-                            : '-'}
-                        <MaxButton disabled={isUnstaking || !isWalletConnected} onClick={onMaxClick}>
-                            {t('common.max')}
-                        </MaxButton>
-                    </ThalesWalletAmountLabel>
-                    <FieldValidationMessage
+                        currencyLabel={LP_TOKEN}
+                        placeholder={t('common.enter-amount')}
+                        label={t('options.earn.gamified-staking.staking.unstake.amount-to-unstake')}
+                        onMaxButton={onMaxClick}
                         showValidation={!isAmountValid}
-                        message={t(`common.errors.insufficient-staking-balance`, { currencyKey: LP_TOKEN })}
+                        validationMessage={t(`common.errors.insufficient-staking-balance`, { currencyKey: LP_TOKEN })}
+                        balance={
+                            isWalletConnected
+                                ? `${t('options.earn.gamified-staking.staking.unstake.balance')} ${formatCurrency(
+                                      staked
+                                  )}`
+                                : undefined
+                        }
                     />
                 </InputContainer>
                 <Line margin={'0 0 10px 0'} />

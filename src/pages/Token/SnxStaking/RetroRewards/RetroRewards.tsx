@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Cell, Pie, PieChart, Tooltip } from 'recharts';
+import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
@@ -17,17 +17,9 @@ import {
     EarnSection,
     SectionHeader,
     ClaimMessage,
-    StyledInfoIcon,
     SectionContentContainer,
 } from '../componentsOld';
-import {
-    PieChartCenterDiv,
-    PieChartCenterText,
-    PieChartContainer,
-    LearnMore,
-    StyledMaterialTooltip,
-    Tip37Link,
-} from '../../components';
+import { PieChartCenterDiv, PieChartCenterText, PieChartContainer, LearnMore, Tip37Link } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
@@ -38,6 +30,7 @@ import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import i18n from 'i18n';
 import { DefaultSubmitButton } from 'pages/Token/components/components';
 import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
+import Tooltip from 'components/TooltipV2/Tooltip';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -174,18 +167,16 @@ const RetroRewards: React.FC = () => {
             <SectionHeader>
                 <div>
                     {t('options.earn.snx-stakers.retro-rewards.title')}
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={
+                    <Tooltip
+                        overlay={
                             <Trans
                                 i18nKey="options.earn.snx-stakers.retro-rewards.info-tooltip"
                                 components={[<span key="1" />, <Tip37Link key="2" />]}
                             />
                         }
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
+                        iconFontSize={18}
+                        top={-1}
+                    />
                 </div>
             </SectionHeader>
             <GridContainer style={{ gridGap: 0 }}>
@@ -211,7 +202,7 @@ const RetroRewards: React.FC = () => {
                                 ))}
                             </Pie>
                             {!!vestingInfo.initialLocked && (
-                                <Tooltip
+                                <RechartsTooltip
                                     wrapperStyle={{ zIndex: 1000 }}
                                     content={<CustomTooltip />}
                                     allowEscapeViewBox={{ x: true, y: true }}
@@ -255,13 +246,9 @@ const RetroRewards: React.FC = () => {
                             </FlexDivColumnCentered>
                         </PieChartCenterDiv>
                         <LearnMore top="61%" style={{ fontSize: '13px' }}>
-                            <StyledMaterialTooltip
-                                enterTouchDelay={1}
-                                arrow={true}
-                                title={t('options.earn.snx-stakers.retro-rewards.learn-more-text') as string}
-                            >
+                            <Tooltip overlay={t('options.earn.snx-stakers.retro-rewards.learn-more-text')}>
                                 <span>{t('options.earn.snx-stakers.retro-rewards.learn-more')}</span>
-                            </StyledMaterialTooltip>
+                            </Tooltip>
                         </LearnMore>
                     </PieChartContainer>
                     <AmountsContainer>

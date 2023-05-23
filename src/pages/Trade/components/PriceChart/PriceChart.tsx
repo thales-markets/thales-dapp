@@ -27,6 +27,7 @@ import { getTheme } from 'redux/modules/ui';
 import { RootState } from 'redux/rootReducer';
 import { ThemeMap } from 'constants/ui';
 import { Positions } from 'constants/options';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 
 type PriceChartProps = {
     asset: string;
@@ -35,10 +36,18 @@ type PriceChartProps = {
     position: Positions;
 };
 
-const coinGeckoClient = new CoinGeckoClient({
+const coinGeckoClientPublic = new CoinGeckoClient({
     timeout: 10000,
     autoRetry: true,
 });
+
+const coinGeckoClientPrivate = new CoinGeckoClient(
+    {
+        timeout: 10000,
+        autoRetry: true,
+    },
+    process.env.REACT_APP_COINGECKO_API_KEY
+);
 
 const ToggleButtons = [
     { label: '1D', value: 1 },
@@ -57,6 +66,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
     const [ticks, setTicks] = useState<number[]>();
 
     const priceData = usePriceDataQuery({ currencyKey: asset, currencyVs: '', days: 1 }, { refetchInterval: false });
+
+    const exchangeRatesMarketDataQuery = useExchangeRatesQuery();
+
+    const currentPrice = useMemo(() => {
+        if (exchangeRatesMarketDataQuery.isSuccess && exchangeRatesMarketDataQuery.data) {
+            return exchangeRatesMarketDataQuery.data[asset];
+        }
+    }, [exchangeRatesMarketDataQuery.isSuccess, exchangeRatesMarketDataQuery.data, asset]);
 
     const processedPriceData = useMemo(() => {
         if (priceData.isSuccess && priceData.data && priceData?.data?.prices) {
@@ -79,37 +96,56 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const result = await coinGeckoClient.coinIdMarketChart({
-                    id: currencyKeyToCoinGeckoIndexMap[asset],
-                    vs_currency: 'usd',
-                    days: dateRange,
-                });
-                const priceData = result.prices.map((price) => ({
-                    date: format(new Date(price[0]), 'MM/dd'),
-                    price: Number(price[1].toFixed(2)),
-                }));
+            if (currentPrice) {
+                let result;
+                try {
+                    result = await coinGeckoClientPublic.coinIdMarketChart({
+                        id: currencyKeyToCoinGeckoIndexMap[asset],
+                        vs_currency: 'usd',
+                        days: dateRange,
+                    });
+                } catch (e) {
+                    console.log('Switching to private: ', e);
+                    try {
+                        result = await coinGeckoClientPrivate.coinIdMarketChart({
+                            id: currencyKeyToCoinGeckoIndexMap[asset],
+                            vs_currency: 'usd',
+                            days: dateRange,
+                        });
+                    } catch (e) {
+                        console.log('Private failed: ', e);
+                    }
+                }
+                if (result) {
+                    const priceData = result.prices.map((price) => ({
+                        date: format(new Date(price[0]), 'MM/dd'),
+                        price: Number(price[1].toFixed(2)),
+                    }));
 
-                setData(priceData);
+                    priceData.push({ date: format(new Date(), 'MM/dd'), price: currentPrice });
 
-                setTicks(getTicks(priceData[priceData.length - 1].price));
-            } catch (e) {
-                console.log('COINGECKO error: ', e);
+                    setData(priceData);
+
+                    setTicks(getTicks(priceData[priceData.length - 1].price));
+                } else {
+                    console.log('COINGECKO API failed');
+                }
             }
         };
         fetchData();
-    }, [asset, dateRange]);
+    }, [asset, dateRange, currentPrice]);
 
     const getReferenceArea = () => {
         if (position === Positions.UP || position === Positions.DOWN) {
             if (selectedPrice) {
                 return (
                     <ReferenceArea
+                        xHeight={1}
                         y1={selectedPrice}
                         y2={ticks ? (position === Positions.UP ? ticks[ticks.length - 1] : ticks[0]) : 0}
-                        stroke={ThemeMap[theme].textColor.quaternary}
-                        fill={ThemeMap[theme].textColor.quaternary}
+                        fill="url(#referenceGradient)"
                         fillOpacity={0.2}
+                        isFront={false}
                     />
                 );
             }
@@ -118,29 +154,32 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                 if (position === Positions.IN) {
                     return (
                         <ReferenceArea
+                            xHeight={1}
                             y1={selectedPrice}
                             y2={selectedRightPrice}
-                            stroke={ThemeMap[theme].textColor.quaternary}
-                            fill={ThemeMap[theme].textColor.quaternary}
+                            fill="url(#referenceGradient)"
                             fillOpacity={0.2}
+                            isFront={false}
                         />
                     );
                 } else {
                     return (
                         <>
                             <ReferenceArea
+                                xHeight={1}
                                 y1={selectedPrice}
                                 y2={ticks ? ticks[0] : 0}
-                                stroke={ThemeMap[theme].textColor.quaternary}
-                                fill={ThemeMap[theme].textColor.quaternary}
+                                fill="url(#referenceGradient)"
                                 fillOpacity={0.2}
+                                isFront={false}
                             />
                             <ReferenceArea
+                                xHeight={1}
                                 y1={selectedRightPrice}
                                 y2={ticks ? ticks[ticks.length - 1] : 0}
-                                stroke={ThemeMap[theme].textColor.quaternary}
-                                fill={ThemeMap[theme].textColor.quaternary}
+                                fill="url(#referenceGradient)"
                                 fillOpacity={0.2}
+                                isFront={false}
                             />
                         </>
                     );
@@ -154,16 +193,30 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
             <FlexDivSpaceBetween style={{ margin: '15px 0px' }}>
                 <IconPriceWrapper>
                     <Icon className={`currency-icon currency-icon--${asset.toLowerCase()}`} />
-                    <Price>{data ? formatCurrencyWithSign(USD_SIGN, data[data?.length - 1].price) : 'N/A'}</Price>
+                    <Price>{data ? formatCurrencyWithSign(USD_SIGN, currentPrice ?? 0) : 'N/A'}</Price>
                 </IconPriceWrapper>
                 <PriceChange up={processedPriceData > 0}>{formatPricePercentageGrowth(processedPriceData)}</PriceChange>
             </FlexDivSpaceBetween>
             {data && (
                 <ResponsiveContainer width="100%" height={266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
+                        <defs>
+                            <linearGradient id="referenceGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop
+                                    offset="0%"
+                                    stopColor={`${ThemeMap[theme].textColor.quaternary}`}
+                                    stopOpacity={position === Positions.UP ? 0 : 0.8}
+                                />
+                                <stop
+                                    offset="90.62%"
+                                    stopColor={`${ThemeMap[theme].textColor.quaternary}`}
+                                    stopOpacity={position === Positions.UP ? 0.8 : 0}
+                                />
+                            </linearGradient>
+                        </defs>
                         <CartesianGrid stroke="#2B3139" strokeDasharray="1" />
                         <XAxis
-                            tick={{ fontSize: '10px', fontFamily: 'Inter', fill: ThemeMap[theme].textColor.secondary }}
+                            tick={{ fontSize: '10px', fill: ThemeMap[theme].textColor.secondary }}
                             tickLine={false}
                             axisLine={false}
                             dataKey="date"
@@ -175,7 +228,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             ticks={ticks}
                             tick={{
                                 fontSize: '10px',
-                                fontFamily: 'Inter',
                                 fill: ThemeMap[theme].textColor.secondary,
                                 width: 100,
                             }}
@@ -190,7 +242,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 backgroundColor: 'var(--color-tertiary)',
                                 color: 'var(--color-white)',
                                 border: 'none',
-                                fontFamily: 'Roboto',
                                 fontSize: 14,
                             }}
                         />
@@ -200,6 +251,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             stroke="#F7B91A"
                             strokeWidth={2}
                             fill="var(--color-primary)"
+                            animationEasing="ease-in"
+                            animationDuration={400}
+                            xHeight={2}
                         />
 
                         <ReferenceLine
@@ -213,7 +267,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             <ReferenceLine
                                 y={selectedPrice}
                                 stroke="#03DAC6"
-                                strokeDasharray="3 3"
                                 label={<CustomLabel2 price={selectedPrice} />}
                             />
                         )}
@@ -224,7 +277,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             <ReferenceLine
                                 y={selectedRightPrice}
                                 stroke="#03DAC6"
-                                strokeDasharray="3 3"
                                 label={<CustomLabel2 price={selectedRightPrice} />}
                             />
                         )}
@@ -263,7 +315,6 @@ const Rectangle = styled.rect`
 const Text = styled.text`
     fill: ${(props) => props.theme.borderColor.secondary};
     font-size: 10px;
-    font-family: Inter !important;
 `;
 
 const CustomLabel2 = (props: any) => {
@@ -288,7 +339,6 @@ const Rectangle2 = styled.rect`
 const Text2 = styled.text`
     fill: ${(props) => props.theme.textColor.quaternary};
     font-size: 10px;
-    font-family: Inter !important;
 `;
 
 const Wrapper = styled.div`

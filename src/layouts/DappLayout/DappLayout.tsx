@@ -1,11 +1,9 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import Loader from 'components/Loader';
 import styled from 'styled-components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { isNetworkSupported } from 'utils/network';
 import { getNetworkId } from 'redux/modules/wallet';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
@@ -69,10 +67,6 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
     }, [rawParams, networkId]);
 
     useEffect(() => {
-        document.getElementsByTagName('body')[0].style.overflow = isNetworkSupported(networkId) ? 'auto' : 'hidden';
-    }, [networkId]);
-
-    useEffect(() => {
         const checkMetamaskBrowser = async () => {
             const isMetamaskBrowser = isMobile() && (await isMetamask());
             // Do not load Discord Widget Bot on Android MM browser due to issue with MM wallet connect
@@ -89,9 +83,8 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
             <Suspense fallback={<></>}>
                 <DappHeader />
             </Suspense>
-            <NewWrapper>{children}</NewWrapper>
+            <Wrapper>{children}</Wrapper>
             <ToastContainer theme={'colored'} />
-            {!isNetworkSupported(networkId) && <Loader />}
         </Background>
     );
 };
@@ -133,7 +126,7 @@ const Background = styled.section`
     --card-border-color: rgba(100, 217, 254, 0.3);
 `;
 
-const NewWrapper = styled.div`
+const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
