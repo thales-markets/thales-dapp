@@ -8,9 +8,9 @@ export const Wrapper = styled.div<{ disabled?: boolean; margin?: string; padding
     width: 100%;
     display: flex;
     flex-direction: column;
-    opacity: ${(_props) => (_props?.disabled ? '0.5 !important' : '')};
-    ${(_props) => (_props?.margin ? `margin: ${_props.margin}` : '')};
-    ${(_props) => (_props?.padding ? `padding: ${_props.padding}` : '')};
+    opacity: ${(props) => (props?.disabled ? '0.5 !important' : '')};
+    ${(props) => (props?.margin ? `margin: ${props.margin}` : '')};
+    ${(props) => (props?.padding ? `padding: ${props.padding}` : '')};
 `;
 
 // @ts-ignore
@@ -21,7 +21,7 @@ const Container: StyledComponent<'div', any, { shadow?: string }> & ContainerChi
     display: flex;
     align-items: center;
     height: 30px;
-    ${(_props) => (_props?.shadow ? `box-shadow: ${_props.shadow}` : '')};
+    ${(props) => (props?.shadow ? `box-shadow: ${props.shadow}` : '')};
 `;
 
 const Slider = styled.input`

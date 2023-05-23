@@ -40,5 +40,5 @@ export const OptionsContainer = styled.div`
 export const Icon = styled.i<{ color?: string }>`
     margin: 0 5px;
     font-size: 24px;
-    color: ${(_props) => (_props?.color ? _props.color : '')};
+    color: ${(props) => (props?.color ? props.color : '')};
 `;

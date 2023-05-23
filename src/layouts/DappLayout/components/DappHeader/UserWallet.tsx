@@ -135,7 +135,7 @@ const WrapperContainer = styled.div`
 
 const WalletContainer = styled.div<{ connected: boolean }>`
     width: 100%;
-    cursor: ${(_props) => (_props.connected ? 'text' : 'pointer')};
+    cursor: ${(props) => (props.connected ? 'text' : 'pointer')};
     padding: 5px 6px;
     display: flex;
     justify-content: center;

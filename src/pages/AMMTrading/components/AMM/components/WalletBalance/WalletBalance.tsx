@@ -176,7 +176,7 @@ const Balance = styled.span`
 const TokenIcon = styled.i<{ color?: string }>`
     font-size: 20px;
     margin-left: 8px;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
+    color: ${(props) => (props?.color ? props.color : 'var(--color-white)')};
 `;
 
 export default WalletBalance;

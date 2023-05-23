@@ -69,11 +69,11 @@ export const Fixed = styled.div<{ active?: boolean; margin?: string }>`
     font-size: 12px;
     width: 32px;
     height: 32px;
-    margin: ${(_props) => (_props?.margin ? _props?.margin : '0 11px 0 0')};
+    margin: ${(props) => (props?.margin ? props?.margin : '0 11px 0 0')};
     cursor: pointer;
     border: 1px solid var(--input-border-color);
-    background-color: ${(_props) => (_props?.active ? 'var(--button-bg-active)' : 'var(--button-bg-inactive)')};
-    color: ${(_props) => (_props?.active ? 'var(--button-text-active)' : 'var(--button-text-inactive)')};
+    background-color: ${(props) => (props?.active ? 'var(--button-bg-active)' : 'var(--button-bg-inactive)')};
+    color: ${(props) => (props?.active ? 'var(--button-text-active)' : 'var(--button-text-inactive)')};
 `;
 
 SlippageInput.InputField = InputField;

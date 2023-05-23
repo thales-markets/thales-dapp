@@ -179,7 +179,7 @@ const Wrapper = styled.div`
 const Item = styled.div<{ active: boolean }>`
     text-transform: uppercase;
     cursor: pointer;
-    color: ${(_props) => (_props?.active ? 'var(--color-highlight)' : _props.theme.textColor.primary)};
+    color: ${(props) => (props?.active ? 'var(--color-highlight)' : props.theme.textColor.primary)};
 
     @media (max-width: 768px) {
         font-weight: bold;

@@ -45,12 +45,12 @@ const Wrapper = styled.div<{
 }>`
     position: relative;
     border-radius: 20px;
-    ${(_props) => (_props.close ? 'display: none' : '')};
+    ${(props) => (props.close ? 'display: none' : '')};
     padding: 5px;
     width: 100%;
-    background-color: ${(_props) => (_props?.background ? _props?.background : 'var(--color-white)')};
-    color: ${(_props) => (_props.color ? _props.color : 'var(--background)')};
-    font-size: ${(_props) => (_props.fontSize ? _props.fontSize : '14px')};
+    background-color: ${(props) => (props?.background ? props?.background : 'var(--color-white)')};
+    color: ${(props) => (props.color ? props.color : 'var(--background)')};
+    font-size: ${(props) => (props.fontSize ? props.fontSize : '14px')};
     font-weight: 600;
     margin-top: 10px;
     margin-bottom: 10px;

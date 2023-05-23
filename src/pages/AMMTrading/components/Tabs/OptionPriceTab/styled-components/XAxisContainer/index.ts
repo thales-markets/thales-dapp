@@ -23,7 +23,7 @@ const Tick: StyledComponent<'div', any> & TickChildren = styled(FlexDivColumn)`
 const XAxisContainer: StyledComponent<'div', any, { numberOfTicks: number }> & Children = styled.div<{
     numberOfTicks: number;
 }>`
-    display: ${(_props) => (_props?.numberOfTicks > 0 ? 'flex' : 'none')};
+    display: ${(props) => (props?.numberOfTicks > 0 ? 'flex' : 'none')};
     flex-direction: row;
     justify-content: flex-start;
     width: 100%;
@@ -32,7 +32,7 @@ const XAxisContainer: StyledComponent<'div', any, { numberOfTicks: number }> & C
         margin-left: -16px;
     }
     ${Tick} {
-        margin-right: calc((95% / ${(_props) => _props.numberOfTicks}) - 18.5px);
+        margin-right: calc((95% / ${(props) => props.numberOfTicks}) - 18.5px);
     }
     &:last-child {
         margin-right: 0px !important;

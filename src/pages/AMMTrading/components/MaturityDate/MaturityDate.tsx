@@ -109,8 +109,8 @@ const MaturityDate: React.FC<MaturityDateProps> = ({
 const Display = styled.span<{ fontSize?: string; color?: string }>`
     cursor: pointer;
     font-weight: 700;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '25px')};
-    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '25px')};
+    color: ${(props) => (props?.color ? props.color : props.theme.textColor.primary)};
     width: 140px;
     display: block;
     @media (max-width: 1024px) {
