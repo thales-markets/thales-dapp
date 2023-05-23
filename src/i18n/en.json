@@ -374,7 +374,8 @@
         "none": "none",
         "enter-amount": "Enter amount",
         "enter-percentage": "Enter percentage",
-        "enter-address": "Enter address"
+        "enter-address": "Enter address",
+        "search-placeholder": "Search..."
     },
     "modals": {
         "gwei": {
@@ -1985,13 +1986,11 @@
     "op-rewards": {
         "title": "OP Rewards",
         "stay-tuned": "Stay tuned for new reward program soon!",
-        "description": "Thales markets is now incentivized with extra OP and THALES rewards each week. <br/><br/> ",
-        "description-1": "The amount of rewards will be distributed pro-rata as follows: <br/><br/>      - {{op}} OP + {{thales}} THALES for ITM (In the money) positions<br/> <br/>    - {{op}} OP + {{thales}} THALES for OTM (Out of the money) positions <br/><br/>",
-        "description-itm": "ITM (In The Money) represents a position that would be successful if matured immediately. Example: BTC is at 30k and you buy an UP position with strike price 29k. <br/><br/>",
-        "description-otm": "OTM (Out of The Money) positions would be resolved immediately as unsuccessful. Example: BTC is at 30k and you buy a DOWN position with strike price 29k.<br/><br/>",
-        "description-4": "<br/><br/>You can find all the detailed infomation on how to participate in <guidelinesLink>.",
-        "description-last": "The distribution of rewards per each 14-day round is as following: <br/><br/>      - 3,000 OP + 3,000 THALES split between all ITM Tokens Buyers <br/> <br/>  - 3,000 OP + 3,000 THALES split between all OTM Tokens Buyers <br/> <br/>   - Additional bonus rewards if you are a THALES staker, as per <tipLink>.",
-        "length-info": "The counter in this page will indicate when every round starts and ends, lasting 1 week, and also show how much rewards you'll be receiveing at the end of the round.<br/>  Please be aware that the amount of rewards displayed is just an estimation based on current amounts.",
+        "description": "Thales markets is now incentivized with extra <bold>OP and THALES rewards</bold> each week.",
+        "description-1": "<p>The amount of rewards will be distributed pro-rata as follows:</p><ul><li><bold>{{op}} OP</bold> + <bold>{{thales}} THALES</bold> for ITM (In the money) positions</li><li><bold>{{op}} OP</bold> + <bold>{{thales}} THALES</bold> for OTM (Out of the money) positions</li></ul>",
+        "description-itm": "<bold>ITM (In The Money)</bold> represents a position that would be successful if matured immediately. Example: BTC is at 30k and you buy an UP position with strike price 29k.",
+        "description-otm": "<bold>OTM (Out of The Money)</bold> positions would be resolved immediately as unsuccessful. Example: BTC is at 30k and you buy a DOWN position with strike price 29k.",
+        "length-info": "The counter in this page will indicate when every round starts and ends, lasting 1 week, and also show how much rewards you'll be receiveing at the end of the round. Please be aware that the amount of rewards displayed is just an estimation based on current amounts.",
         "table": {
             "wallet-address": "Wallet address",
             "my-wallet-address": " My wallet address",
@@ -2019,7 +2018,9 @@
         "discounted-volume-label": "DISCOUNTED Volume",
         "itm-volume-label": "ITM Volume",
         "otm-volume-label": "OTM Volume",
-        "volume-tooltip": "Current rewards:\n {{op}} + {{thales}} per $1,000 of Buy Volume"
+        "volume-tooltip": "Current rewards:\n {{op}} + {{thales}} per $1,000 of Buy Volume",
+        "search-placeholder": "Search wallet address",
+        "my-rewards-label": "My rewards"
     },
     "tale-of-thales": {
         "mint": {

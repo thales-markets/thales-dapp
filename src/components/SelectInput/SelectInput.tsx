@@ -9,10 +9,20 @@ type SelectInputProps = {
     handleChange: (value: number | undefined | null) => void;
     defaultValue?: number;
     width?: number;
+    height?: number;
+    fontSize?: number;
     isDisabled?: boolean;
 };
 
-const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaultValue, width, isDisabled }) => {
+const SelectInput: React.FC<SelectInputProps> = ({
+    options,
+    handleChange,
+    defaultValue,
+    width,
+    height,
+    fontSize,
+    isDisabled,
+}) => {
     const defaultOption = options[defaultValue ? defaultValue : 0];
 
     const customStyled = {
@@ -25,6 +35,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
             marginTop: 5,
             borderRadius: 15,
             overflow: 'auto',
+            fontSize: fontSize || 16,
         }),
         option: (provided: any, state: any) => ({
             ...provided,
@@ -40,6 +51,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
             color: Colors.GRAY_LIGHT,
             borderRadius: '15px',
             width: width,
+            minHeight: height || 38,
             cursor: 'pointer',
             boxShadow: 'none',
             '&:hover': {
@@ -47,6 +59,7 @@ const SelectInput: React.FC<SelectInputProps> = ({ options, handleChange, defaul
                 boxShadow: 'none',
             },
             opacity: state.isDisabled ? 0.4 : 1,
+            fontSize: fontSize || 16,
         }),
         placeholder: (provided: any) => ({
             ...provided,
