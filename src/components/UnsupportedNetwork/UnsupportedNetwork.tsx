@@ -46,7 +46,7 @@ const UnsupportedNetwork: React.FC = () => {
 
         return (
             <Button
-                width="240px"
+                width="250px"
                 additionalStyles={{ textTransform: 'none' }}
                 onClick={() => SUPPORTED_MAINNET_NETWORK_IDS_MAP[network].changeNetwork(network)}
             >

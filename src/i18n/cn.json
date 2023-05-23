@@ -264,7 +264,8 @@
         "close": "关闭",
         "enter-amount": "输入金额",
         "enter-percentage": "输入百分比",
-        "enter-address": "输入地址"
+        "enter-address": "输入地址",
+        "search-placeholder": "搜索..."
     },
     "modals": {
         "gwei": {
@@ -2240,7 +2241,9 @@
         "stay-tuned": "敬请期待新的奖励计划！",
         "description-otm": "OTM (Out of The Money) 头寸将被立即解决为不成功。示例：BTC 价格为 30k，您以 29k 的行使价购买了一个 DOWN 头寸。<br/><br/>",
         "description-itm": "ITM (In The Money) 代表如果立即成熟就会成功的头寸。示例：BTC 为 30k，您以 29k 的行使价买入 UP 头寸。<br/><br/>",
-        "description-1": "奖励金额将按比例分配如下：<br/><br/> - 2,000 OP + 2,000 THALES 用于 ITM（货币）头寸<br/><br/>- 2,000 OP + 2,000 THALES 用于 OTM（虚值）头寸<br/><br/>"
+        "description-1": "奖励金额将按比例分配如下：<br/><br/> - 2,000 OP + 2,000 THALES 用于 ITM（货币）头寸<br/><br/>- 2,000 OP + 2,000 THALES 用于 OTM（虚值）头寸<br/><br/>",
+        "search-placeholder": "搜索钱包地址",
+        "my-rewards-label": "我的奖励"
     },
     "footer": {
         "discover": "发现",

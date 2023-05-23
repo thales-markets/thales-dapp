@@ -3,11 +3,13 @@ import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 
 const Footer: React.FC = () => {
+    const year = new Date().getFullYear();
+
     return (
         <Wrapper>
             <ThalesLogoContainer>
                 <ThalesLogo className="icon icon--logo" />
-                <ThalesLogoText>© 2023 THALES DAO All Rights Reserved</ThalesLogoText>
+                <ThalesLogoText>© {year} THALES DAO All Rights Reserved</ThalesLogoText>
             </ThalesLogoContainer>
             <FooterIconsWrapper>
                 <TextLink target="_blank" rel="noreferrer" href="https://thalesmarket.io/article/token">
