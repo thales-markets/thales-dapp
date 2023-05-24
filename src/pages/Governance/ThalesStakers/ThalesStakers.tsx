@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -14,8 +14,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'utils/network';
 import { Blockie, StyledLink } from '../styled-components';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { PaginationWrapper } from 'components/OldVersion/styled-components';
-import Pagination from '../components/Pagination/Pagination';
 import Table from 'components/Table/Table';
 import { THALES_CURRENCY } from 'constants/currency';
 import { truncateAddress } from 'utils/formatters/string';
@@ -24,6 +22,7 @@ import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
+import Pagination from 'components/TableV2/styled-components/Pagination';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
@@ -85,14 +84,6 @@ const ThalesStakers: React.FC = () => {
         setRowsPerPage(Number(event.target.value));
         setPage(0);
     };
-
-    const numberOfPages = Math.ceil(searchFilteredStakers.length / rowsPerPage) || 1;
-    const memoizedPage = useMemo(() => {
-        if (page > numberOfPages - 1) {
-            return numberOfPages - 1;
-        }
-        return page;
-    }, [page, numberOfPages]);
 
     const handleResize = () => {
         if (window.innerWidth <= 767) {
@@ -182,19 +173,22 @@ const ThalesStakers: React.FC = () => {
                 />
 
                 {stakers.length !== 0 && (
-                    <PaginationWrapper
-                        rowsPerPageOptions={[10, 20, 30, 50]}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                        count={stakers.length ? stakers.length : 0}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        ActionsComponent={() => (
-                            <Pagination page={memoizedPage} numberOfPages={numberOfPages} setPage={setPage} />
-                        )}
-                        style={isMobile ? { padding: '0 5px 0 10px' } : { padding: '0 20px 0 30px' }}
-                    />
+                    <table>
+                        <tbody>
+                            <tr>
+                                <Pagination
+                                    rowsPerPageOptions={[10, 20, 30, 50]}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    labelRowsPerPage={t(`common.pagination.rows-per-page`)}
+                                    count={stakers.length ? stakers.length : 0}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    style={isMobile ? { padding: '0 5px 0 10px' } : { padding: '0 20px 0 30px' }}
+                                />
+                            </tr>
+                        </tbody>
+                    </table>
                 )}
             </TableContainer>
         </Container>
