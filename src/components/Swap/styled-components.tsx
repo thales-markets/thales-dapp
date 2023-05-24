@@ -33,7 +33,10 @@ export const ErrorMessage = styled.p`
 
 export const SectionWrapper = styled(FlexDivColumn)`
     background: ${(props) => props.theme.background.primary};
-    padding: 16px;
     position: relative;
-    margin-bottom: 20px;
+    margin: 10px;
 `;
+
+export const defaultButtonProps = {
+    margin: '10px',
+};

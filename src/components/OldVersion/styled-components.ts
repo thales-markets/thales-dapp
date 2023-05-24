@@ -1,5 +1,6 @@
 import { TablePagination } from '@material-ui/core';
 import styled from 'styled-components';
+
 export const PaginationWrapper = styled(TablePagination)`
     border: none !important;
     display: flex;

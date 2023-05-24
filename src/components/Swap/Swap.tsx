@@ -14,7 +14,7 @@ import { refetchBalances } from 'utils/queryConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
-import { Container, ErrorMessage, SectionWrapper } from './styled-components';
+import { Container, ErrorMessage, SectionWrapper, defaultButtonProps } from './styled-components';
 import {
     ETH_Eth,
     OP_Eth,
@@ -223,17 +223,30 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     };
 
     const getButton = () => {
-        if (!fromToken) return <Button disabled={true}>{t('options.swap.select-token')}</Button>;
+        if (!fromToken)
+            return (
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t('options.swap.select-token')}
+                </Button>
+            );
 
         if (fromToken && !allowance)
             return (
-                <Button disabled={!fromToken || isAllowing} onClick={() => setOpenApprovalModal(true)}>
+                <Button
+                    disabled={!fromToken || isAllowing}
+                    onClick={() => setOpenApprovalModal(true)}
+                    {...defaultButtonProps}
+                >
                     {t('options.swap.approve', { currency: (fromToken as any).symbol })}
                 </Button>
             );
 
         if (fromToken && allowance && Number(amount) <= 0)
-            return <Button disabled={true}>{t('options.swap.enter-amount')}</Button>;
+            return (
+                <Button disabled={true} {...defaultButtonProps}>
+                    {t('options.swap.enter-amount')}
+                </Button>
+            );
 
         if (fromToken && allowance && Number(amount) > 0)
             return (
@@ -243,13 +256,12 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                         handleClose(false);
                     }}
                     disabled={Number(amount) > Number(balance)}
+                    {...defaultButtonProps}
                 >
                     {Number(amount) > Number(balance) ? t('options.swap.insufficient-balance') : t('options.swap.swap')}
                 </Button>
             );
     };
-
-    console.log(toToken);
 
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
