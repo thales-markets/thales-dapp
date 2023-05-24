@@ -19,7 +19,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { formattedDuration } from 'utils/formatters/date';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
-import TimeRemaining from 'pages/Token/components/TimeRemaining';
+import TimeRemaining from 'components/TimeRemaining';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -28,6 +28,7 @@ import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
+import { isMobile } from 'utils/device';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -416,7 +417,7 @@ const Unstake: React.FC = () => {
                                         <TimeRemaining
                                             onEnded={() => setUnstakingEnded(true)}
                                             end={unstakeEndTime}
-                                            fontSize={16}
+                                            fontSize={isMobile() ? 12 : 16}
                                         />
                                     )}
                                 </CooldownCounter>

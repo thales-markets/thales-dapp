@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
 import { Line } from '../../components';
 import YourTransactions from './Transactions';
@@ -20,7 +20,7 @@ import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import { StakingData, UserStakingData } from 'types/token';
 import Tooltip from 'components/TooltipV2/Tooltip';
-import { Colors } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -44,6 +44,7 @@ const aprToApy = (interest: number) => ((1 + interest / 100 / APR_FREQUENCY) ** 
 
 const Staking: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -172,7 +173,7 @@ const Staking: React.FC = () => {
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
-                                    iconColor={Colors.GREEN}
+                                    iconColor={theme.textColor.quaternary}
                                     iconFontSize={20}
                                     top={-2}
                                 />
@@ -263,7 +264,7 @@ const Staking: React.FC = () => {
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
-                                    iconColor={Colors.GREEN}
+                                    iconColor={theme.textColor.quaternary}
                                     iconFontSize={20}
                                     top={-2}
                                 />
@@ -431,7 +432,7 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boo
 `;
 
 const BonusInfo = styled.span`
-    color: #03dac5;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 const StakedBalanceInfo = styled.div`

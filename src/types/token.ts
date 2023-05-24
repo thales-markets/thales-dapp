@@ -72,7 +72,6 @@ export type TokenTabSection = {
     description: string | ReactElement;
     warning?: string | ReactElement;
     isButton: boolean;
-    buttonWidth?: string;
 };
 
 export enum TransactionFilterEnum {

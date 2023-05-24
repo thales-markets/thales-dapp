@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TransactionsTable from '../TransactionsTable';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { FlexDivColumn, Text } from 'theme/common';
 import { TokenTransaction, TransactionFilterEnum } from 'types/token';
 import { useSelector } from 'react-redux';
@@ -12,9 +12,9 @@ import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransaction
 import { SectionHeader } from '../../components';
 import checkmark from 'assets/images/checkmark.svg';
 import { orderBy } from 'lodash';
-import Button from '../Button';
-import { ButtonType } from '../Button/Button';
+import Button from 'components/ButtonV2';
 import { isMobile } from 'utils/device';
+import { ThemeInterface } from 'types/ui';
 
 type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];
@@ -24,6 +24,7 @@ type TransactionsWithFiltersProps = {
 
 const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filters, gridColumns, gridColumnStart }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -72,7 +73,15 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                     onMouseEnter={() => (isMobile() ? '' : setShowFilters(true))}
                     onMouseLeave={() => setShowFilters(false)}
                 >
-                    <Button type={ButtonType.default} onClickHandler={() => setShowFilters(!showFilters)}>
+                    <Button
+                        height="30px"
+                        padding="5px 40px"
+                        fontSize="15px"
+                        textColor={theme.button.textColor.secondary}
+                        backgroundColor={theme.button.background.tertiary}
+                        borderColor={theme.button.borderColor.tertiary}
+                        onClick={() => setShowFilters(!showFilters)}
+                    >
                         {t(`options.earn.table.filter.button`)}
                     </Button>
                     <DropDownWrapper hidden={!showFilters}>
@@ -191,10 +200,10 @@ const DropDownWrapper = styled.div`
 const DropDown = styled.div`
     width: 100%;
     height: 100%;
-    border-radius: 15px;
-    padding: 15px;
+    border-radius: 8px;
+    padding: 5px;
     .selected {
-        color: #00f9ff !important;
+        color: ${(props) => props.theme.button.textColor.secondary} !important;
         &:before {
             content: url(${checkmark});
             position: absolute;
@@ -209,8 +218,10 @@ const FilterText = styled(Text)`
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
-    &:not(:first-child) {
-        padding-top: 15px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    &:hover {
+        background: ${(props) => props.theme.button.background.secondary};
     }
 `;
 

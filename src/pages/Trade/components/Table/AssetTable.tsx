@@ -5,9 +5,10 @@ import { USD_SIGN } from 'constants/currency';
 import { Positions } from 'constants/options';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { Colors, FlexDivColumn } from 'theme/common';
+import styled, { useTheme } from 'styled-components';
+import { FlexDivColumn } from 'theme/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
+import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 
 type TableProps = {
@@ -21,6 +22,7 @@ type TableProps = {
 const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoading }) => {
     // selectors
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
 
     // states
     const [rowIndex, setRowIndex] = useState<number>();
@@ -98,7 +100,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                         setRowIndex(row.index);
                         setMarket({ ...row.original, positionType: position });
                     }}
-                    tableHeadCellStyles={TableHeaderStyle}
+                    tableHeadCellStyles={getTableHeaderStyle(theme.textColor.secondary)}
                     data={markets}
                     columns={columns}
                     selectedRowIndex={rowIndex}
@@ -109,11 +111,13 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
     );
 };
 
-const TableHeaderStyle: React.CSSProperties = {
-    fontWeight: 500,
-    fontSize: 13,
-    lineHeight: '90%',
-    color: Colors.GRAY_LIGHT,
+const getTableHeaderStyle = (color: string): React.CSSProperties => {
+    return {
+        fontWeight: 500,
+        fontSize: 13,
+        lineHeight: '90%',
+        color,
+    };
 };
 
 const Wrapper = styled(FlexDivColumn)`

@@ -1,8 +1,8 @@
 import Button from 'components/ButtonV2';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { Colors } from 'theme/common';
+import styled, { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
 type ReadMoreButton = {
     active: boolean;
@@ -11,6 +11,7 @@ type ReadMoreButton = {
 
 const ReadMoreButton: React.FC<ReadMoreButton> = ({ active, onClick }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     return (
         <Wrapper>
             <Button
@@ -19,7 +20,7 @@ const ReadMoreButton: React.FC<ReadMoreButton> = ({ active, onClick }) => {
                 fontSize="13px"
                 height="26px"
                 padding="0px 15px"
-                backgroundColor={Colors.GRAY_LIGHT}
+                backgroundColor={theme.button.background.quaternary}
             >
                 {active ? t('common.show-less') : t('common.read-more')}
             </Button>

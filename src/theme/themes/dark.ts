@@ -27,6 +27,7 @@ export default {
             primary: Colors.GREEN,
             secondary: Colors.GRAY_DARK,
             tertiary: Colors.GRAY,
+            quaternary: Colors.GRAY_LIGHT,
         },
         textColor: {
             primary: Colors.GRAY_DARK,
@@ -37,6 +38,7 @@ export default {
         borderColor: {
             primary: Colors.GREEN,
             secondary: Colors.GRAY_LIGHT,
+            tertiary: Colors.GRAY,
         },
     },
     input: {
@@ -87,6 +89,7 @@ export default {
         },
         textColor: {
             primary: Colors.ORANGE,
+            secondary: Colors.ORANGE_DARK,
         },
         borderColor: {
             primary: Colors.ORANGE,

@@ -8,6 +8,7 @@ type ButtonProps = {
     margin?: string;
     textColor?: string;
     backgroundColor?: string;
+    borderColor?: string;
     onClick?: () => void;
     fontSize?: string;
     disabled?: boolean;
@@ -21,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({
     padding,
     textColor,
     backgroundColor,
+    borderColor,
     margin,
     onClick,
     disabled,
@@ -36,6 +38,7 @@ const Button: React.FC<ButtonProps> = ({
             margin={margin}
             textColor={textColor}
             backgroundColor={backgroundColor}
+            borderColor={borderColor}
             onClick={onClick}
             disabled={disabled}
             fontSize={fontSize}
@@ -53,8 +56,7 @@ const Wrapper = styled.button<{
     margin?: string;
     textColor?: string;
     backgroundColor?: string;
-    hoverShadow?: string;
-    hoverBorder?: boolean;
+    borderColor?: string;
     fontSize?: string;
 }>`
     display: flex;
@@ -63,7 +65,7 @@ const Wrapper = styled.button<{
     justify-content: center;
     width: ${(props) => props.width || 'auto'};
     min-height: ${(props) => props.height || '34px'};
-    border: 1px solid ${(props) => props.backgroundColor || props.theme.button.background.primary};
+    border: 1px solid ${(props) => props.borderColor || props.theme.button.background.primary};
     border-radius: 30px;
     font-weight: 700;
     font-size: ${(props) => props.fontSize || '18px'};

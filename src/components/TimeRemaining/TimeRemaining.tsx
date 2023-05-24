@@ -2,12 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import intervalToDuration from 'date-fns/intervalToDuration';
-//import differenceInHours from 'date-fns/differenceInHours';
 import differenceInWeeks from 'date-fns/differenceInWeeks';
 import { formattedDuration, formattedDurationFull } from 'utils/formatters/date';
 import useInterval from 'hooks/useInterval';
 import styled from 'styled-components';
-import { Colors } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
 
 type TimeRemainingProps = {
     end: Date | number;
@@ -30,7 +29,7 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     zIndex,
 }) => {
     const now = Date.now();
-    const [timeElapsed, setTimeElapsed] = useState(now >= end);
+    const [timeElapsed, setTimeElapsed] = useState(now >= Number(end));
     const [weeksDiff, setWeekDiff] = useState(Math.abs(differenceInWeeks(now, end)));
     const [showRemainingInWeeks, setShowRemainingInWeeks] = useState(weeksDiff > 4);
     const [countdownDisabled, setCountdownDisabled] = useState(timeElapsed || showRemainingInWeeks);
@@ -69,15 +68,15 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
 
     useMemo(() => {
         const today = Date.now();
-        setTimeElapsed(today >= end);
+        setTimeElapsed(today >= Number(end));
         setWeekDiff(Math.abs(differenceInWeeks(today, end)));
         setShowRemainingInWeeks(Math.abs(differenceInWeeks(today, end)) > 4);
-        setCountdownDisabled(today >= end || Math.abs(differenceInWeeks(today, end)) > 4);
+        setCountdownDisabled(today >= Number(end) || Math.abs(differenceInWeeks(today, end)) > 4);
         setDuration(intervalToDuration({ start: today, end }));
     }, [end]);
 
     useInterval(() => {
-        if (now <= end) {
+        if (now <= Number(end)) {
             setDuration(intervalToDuration({ start: now, end }));
         } else {
             setTimeElapsed(true);
@@ -98,19 +97,19 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({
     );
 };
 
-const getColor = (duration: Duration) => {
+const getColor = (duration: Duration, theme: ThemeInterface) => {
     if (duration.years || duration.months || duration.days) {
-        return Colors.WHITE;
+        return theme.textColor.primary;
     }
     if (duration.hours) {
-        return Colors.ORANGE;
+        return theme.warning.textColor.primary;
     }
     if (duration.minutes && duration.minutes > 10) {
         if (duration.minutes > 10) {
-            return Colors.ORANGE_DARK;
+            return theme.warning.textColor.secondary;
         }
     }
-    return Colors.RED;
+    return theme.error.textColor.primary;
 };
 
 const Container = styled.span<{ fontSize?: number; duration: Duration; showBorder?: boolean; zIndex?: number }>`
@@ -118,10 +117,14 @@ const Container = styled.span<{ fontSize?: number; duration: Duration; showBorde
     @media (max-width: 512px) {
         font-size: ${(props) => props.fontSize || 10}px;
     }
-    color: ${(props) => getColor(props.duration)};
-    border: 1px solid
-        ${(props) =>
-            props.showBorder ? (getColor(props.duration) === Colors.RED ? Colors.RED : 'transparent') : 'none'};
+    color: ${(props) => getColor(props.duration, props.theme)};
+    border: ${(props) =>
+        props.showBorder
+            ? '1px solid ' +
+              (getColor(props.duration, props.theme) === props.theme.error.textColor.primary
+                  ? props.theme.error.textColor.primary
+                  : 'transparent')
+            : 'none'};
     padding: ${(props) => (props.showBorder ? '2px 12px 4px 12px' : '0')};
     border-radius: ${(props) => (props.showBorder ? '5px' : '0')};
     text-align: center;

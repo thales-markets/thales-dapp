@@ -1,9 +1,10 @@
-import { Colors, FlexDivCentered, Image } from 'theme/common';
+import { FlexDivCentered, Image } from 'theme/common';
 import backArrow from 'assets/images/arrow-previous.svg';
 import nextArrow from 'assets/images/arrow-next.svg';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { ThemeInterface } from 'types/ui';
 
 type PaginationProps = {
     page: number;
@@ -13,6 +14,7 @@ type PaginationProps = {
 
 const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
 
     const NextPage = () => {
         if (page === numberOfPages - 1) return;
@@ -33,7 +35,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                         style={{
                             fontSize: '14px',
                             letterSpacing: '0.4px',
-                            color: Colors.WHITE,
+                            color: theme.textColor.primary,
                             margin: 0,
                         }}
                     >
@@ -51,7 +53,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                         width: '64px',
                         fontSize: '14px',
                         textAlign: 'center',
-                        color: Colors.WHITE,
+                        color: theme.textColor.primary,
                         whiteSpace: 'pre',
                     }}
                 >

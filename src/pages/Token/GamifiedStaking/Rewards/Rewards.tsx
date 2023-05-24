@@ -8,7 +8,7 @@ import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import TimeRemaining from 'pages/Token/components/TimeRemaining';
+import TimeRemaining from 'components/TimeRemaining';
 import {
     ButtonContainer,
     ClaimMessage,
