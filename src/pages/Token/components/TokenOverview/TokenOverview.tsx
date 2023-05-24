@@ -285,7 +285,7 @@ const Content = styled.div<{ fontSize?: number; color?: string }>`
 
 const StyledLink = styled.a`
     color: ${(props) => props.theme.link.textColor.primary};
-    &path {
+    & path {
         fill: ${(props) => props.theme.link.textColor.primary};
     }
     &:hover {
