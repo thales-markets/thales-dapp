@@ -20,6 +20,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 type TokenNavProps = {
     setSelectedTab: any;
@@ -41,28 +42,15 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
     const [showNav, setShowNav] = useState(false);
 
     return (
-        <NavFooter>
-            <BurgerWrapper onClick={setShowNav.bind(this, !showNav)}>
-                <BurgerLine />
-                <BurgerLine />
-                <BurgerLine />
-            </BurgerWrapper>
-            {showNav && (
-                <Container>
-                    <Icon
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: TokenTabEnum.GAMIFIED_STAKING,
-                                }),
-                            });
-                            setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
-                            setSelectedSection(TokenTabSectionIdEnum.STAKING);
-                        }}
-                        src={selectedSection === TokenTabSectionIdEnum.STAKING ? stakingActiveIcon : stakingIcon}
-                    />
-                    {(isL2 || isArb) && (
+        <OutsideClickHandler onOutsideClick={() => setShowNav(false)}>
+            <NavFooter>
+                <BurgerWrapper onClick={setShowNav.bind(this, !showNav)}>
+                    <BurgerLine />
+                    <BurgerLine />
+                    <BurgerLine />
+                </BurgerWrapper>
+                {showNav && (
+                    <Container>
                         <Icon
                             onClick={() => {
                                 history.push({
@@ -72,106 +60,125 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                     }),
                                 });
                                 setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
-                                setSelectedSection(TokenTabSectionIdEnum.REWARDS);
+                                setSelectedSection(TokenTabSectionIdEnum.STAKING);
                             }}
-                            src={
-                                selectedSection === TokenTabSectionIdEnum.REWARDS
-                                    ? snxStakingActiveIcon
-                                    : snxStakingIcon
-                            }
+                            src={selectedSection === TokenTabSectionIdEnum.STAKING ? stakingActiveIcon : stakingIcon}
                         />
-                    )}
-                    {(isL2 || isArb) && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.GAMIFIED_STAKING,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
-                                setSelectedSection(TokenTabSectionIdEnum.VESTING);
-                            }}
-                            src={selectedSection === TokenTabSectionIdEnum.VESTING ? vestingActiveIcon : vestingIcon}
-                        />
-                    )}
-                    {(isL2 || isArb) && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.GAMIFIED_STAKING,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
-                                setSelectedSection(TokenTabSectionIdEnum.MERGE_ACCOUNT);
-                            }}
-                            src={
-                                selectedSection === TokenTabSectionIdEnum.MERGE_ACCOUNT
-                                    ? migrationActiveIcon
-                                    : migrationIcon
-                            }
-                        />
-                    )}
-                    {!isArb && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.LP_STAKING,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.LP_STAKING);
-                                setSelectedSection(TokenTabSectionIdEnum.LP_STAKING);
-                            }}
-                            src={
-                                selectedTab === TokenTabEnum.LP_STAKING
-                                    ? isL2
-                                        ? lpl2ActiveIcon
-                                        : lpActiveIcon
-                                    : isL2
-                                    ? lpl2Icon
-                                    : lpIcon
-                            }
-                        />
-                    )}
+                        {(isL2 || isArb) && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.GAMIFIED_STAKING,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                    setSelectedSection(TokenTabSectionIdEnum.REWARDS);
+                                }}
+                                src={
+                                    selectedSection === TokenTabSectionIdEnum.REWARDS
+                                        ? snxStakingActiveIcon
+                                        : snxStakingIcon
+                                }
+                            />
+                        )}
+                        {(isL2 || isArb) && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.GAMIFIED_STAKING,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                    setSelectedSection(TokenTabSectionIdEnum.VESTING);
+                                }}
+                                src={
+                                    selectedSection === TokenTabSectionIdEnum.VESTING ? vestingActiveIcon : vestingIcon
+                                }
+                            />
+                        )}
+                        {(isL2 || isArb) && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.GAMIFIED_STAKING,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                    setSelectedSection(TokenTabSectionIdEnum.MERGE_ACCOUNT);
+                                }}
+                                src={
+                                    selectedSection === TokenTabSectionIdEnum.MERGE_ACCOUNT
+                                        ? migrationActiveIcon
+                                        : migrationIcon
+                                }
+                            />
+                        )}
+                        {!isArb && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.LP_STAKING,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.LP_STAKING);
+                                    setSelectedSection(TokenTabSectionIdEnum.LP_STAKING);
+                                }}
+                                src={
+                                    selectedTab === TokenTabEnum.LP_STAKING
+                                        ? isL2
+                                            ? lpl2ActiveIcon
+                                            : lpActiveIcon
+                                        : isL2
+                                        ? lpl2Icon
+                                        : lpIcon
+                                }
+                            />
+                        )}
 
-                    {!isL2 && !isArb && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.MIGRATION,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.MIGRATION);
-                            }}
-                            src={selectedTab === TokenTabEnum.MIGRATION ? migrationActiveIcon : migrationIcon}
-                        />
-                    )}
-                    {!isL2 && !isArb && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.STRATEGIC_INVESTORS,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.STRATEGIC_INVESTORS);
-                            }}
-                            src={
-                                selectedTab === TokenTabEnum.STRATEGIC_INVESTORS ? snxStakingActiveIcon : snxStakingIcon
-                            }
-                        />
-                    )}
-                </Container>
-            )}
-        </NavFooter>
+                        {!isL2 && !isArb && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.MIGRATION,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.MIGRATION);
+                                }}
+                                src={selectedTab === TokenTabEnum.MIGRATION ? migrationActiveIcon : migrationIcon}
+                            />
+                        )}
+                        {!isL2 && !isArb && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.STRATEGIC_INVESTORS,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.STRATEGIC_INVESTORS);
+                                }}
+                                src={
+                                    selectedTab === TokenTabEnum.STRATEGIC_INVESTORS
+                                        ? snxStakingActiveIcon
+                                        : snxStakingIcon
+                                }
+                            />
+                        )}
+                    </Container>
+                )}
+            </NavFooter>
+        </OutsideClickHandler>
     );
 };
 
@@ -184,8 +191,8 @@ const NavFooter = styled.div`
     justify-content: center;
     align-items: center;
     position: fixed;
-    bottom: 85px;
-    left: 0;
+    bottom: 130px;
+    right: -20px;
     width: 100px;
     padding: 0 10px;
     z-index: 999;
@@ -197,8 +204,8 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     position: fixed;
-    bottom: 145px;
-    left: 0;
+    bottom: 190px;
+    right: -20px;
     width: 100px;
 `;
 
