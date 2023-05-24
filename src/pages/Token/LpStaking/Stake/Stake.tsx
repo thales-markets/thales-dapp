@@ -225,7 +225,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LP_TOKEN })}
                         balance={
                             isWalletConnected
-                                ? `${t('options.earn.gamified-staking.staking.stake.balance')} ${formatCurrency(
+                                ? `${t('options.earn.gamified-staking.staking.stake.balance')}: ${formatCurrency(
                                       lpTokensBalance
                                   )}`
                                 : undefined

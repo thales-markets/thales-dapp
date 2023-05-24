@@ -1,34 +1,20 @@
 import ApprovalModal from 'components/ApprovalModal';
 import SimpleLoader from 'components/SimpleLoader';
-import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { BigNumber, ethers } from 'ethers';
-import { get } from 'lodash';
-import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivColumnCentered, FlexDivRow, FlexDivRowCentered, LoaderContainer } from 'theme/common';
+import { LoaderContainer } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import {
-    checkAllowance,
-    getIsArbitrum,
-    getIsBSC,
-    getIsOVM,
-    getIsPolygon,
-    getTransactionPrice,
-    Network,
-} from 'utils/network';
+import { checkAllowance, getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon, Network } from 'utils/network';
 import { refetchBalances } from 'utils/queryConnector';
 import useApproveSpender from './queries/useApproveSpender';
 import useQuoteTokensQuery from './queries/useQuoteTokensQuery';
 import useSwapTokenQuery from './queries/useSwapTokenQuery';
-import SwapDialog from './styled-components';
+import { Container, ErrorMessage, SectionWrapper } from './styled-components';
 import {
     ETH_Eth,
     OP_Eth,
@@ -45,11 +31,12 @@ import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { OneInchLiquidityProtocol } from 'constants/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import Button from 'components/ButtonV2';
+import NumericInput from 'components/fields/NumericInput';
+import CollateralSelector from 'components/CollateralSelectorV2/CollateralSelector';
 
 const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [preLoadTokens, setPreLoadTokens] = useState([] as any);
     const isL2 = getIsOVM(networkId);
@@ -73,13 +60,6 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
     const [isLoading, setLoading] = useState(false);
     const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
-
-    const ethGasPriceEip1559Query = useEthGasPriceEip1559Query(networkId, { enabled: isAppReady });
-    const gasPrice = ethGasPriceEip1559Query.isSuccess ? ethGasPriceEip1559Query.data.proposeGasPrice ?? null : null;
-
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, isPolygon ? CRYPTO_CURRENCY_MAP.MATIC : SYNTHS_MAP.sETH, null);
 
     const unsupportedNetwork = ![
         Network.Mainnet,
@@ -269,126 +249,63 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
             );
     };
 
+    console.log(toToken);
+
     return (
         <OutsideClickHandler disabled={openApprovalModal} onOutsideClick={handleClose.bind(this, true)}>
             {unsupportedNetwork ? (
-                <SwapDialog contentType="unsupported">
-                    <SwapDialog.ErrorMessage>{t('options.swap.not-supported')}</SwapDialog.ErrorMessage>
-                </SwapDialog>
+                <Container contentType="unsupported">
+                    <ErrorMessage>{t('options.swap.not-supported')}</ErrorMessage>
+                </Container>
             ) : (
-                <SwapDialog contentType={` ${isLoading ? 'loading' : ''}`}>
-                    <SwapDialog.SectionWrapper>
-                        <FlexDivRowCentered>
-                            <SwapDialog.Text>{t('options.swap.from')}:</SwapDialog.Text>
-                            <FlexDivRow>
-                                <SwapDialog.Text
-                                    style={{ alignSelf: 'center', marginRight: 5, cursor: 'pointer' }}
-                                    onClick={() => {
-                                        setAmount(Number(balance).toFixed(5));
-                                    }}
-                                >
-                                    {t('options.swap.balance')}: {Number(balance).toFixed(4)}
-                                </SwapDialog.Text>
-                                <SwapDialog.MaxButton
-                                    onClick={() => {
-                                        setAmount(Number(balance).toFixed(5));
-                                    }}
-                                >
-                                    {t('options.swap.max')}
-                                </SwapDialog.MaxButton>
-                            </FlexDivRow>
-                        </FlexDivRowCentered>
-                        <FlexDivRowCentered>
-                            <SwapDialog.TokenSelect
-                                options={preLoadTokens}
-                                formatOptionLabel={(option: any) => {
-                                    return (
-                                        <FlexDivRowCentered>
-                                            <SwapDialog.TokenLogo src={option.logoURI}></SwapDialog.TokenLogo>
-                                            <FlexDivColumnCentered>
-                                                <SwapDialog.Text contentSize="large">{option.symbol}</SwapDialog.Text>
-                                            </FlexDivColumnCentered>
-                                        </FlexDivRowCentered>
-                                    );
-                                }}
-                                isDisabled={true}
-                                value={fromToken}
-                                onChange={(option: any) => {
-                                    setFromToken(option);
-                                }}
-                            ></SwapDialog.TokenSelect>
-
-                            <SwapDialog.NumInput
-                                screenWidth={window.innerWidth}
-                                placeholder="0"
-                                value={amount !== '' ? Number(amount) : ''}
-                                onChange={(_: any, value: any) => {
-                                    setAmount(value);
-                                }}
-                            ></SwapDialog.NumInput>
-                        </FlexDivRowCentered>
-                    </SwapDialog.SectionWrapper>
-
-                    <SwapDialog.SectionWrapper>
-                        <FlexDivRowCentered>
-                            <SwapDialog.Text>{t('options.swap.to')}:</SwapDialog.Text>
-                            <SwapDialog.Text>
-                                {t('options.swap.estimated-gas')}:{' '}
-                                {previewData
-                                    ? formatCurrencyWithSign(
-                                          USD_SIGN,
-                                          getTransactionPrice(
-                                              gasPrice,
-                                              Number((previewData as any).estimatedGas),
-                                              ethRate
-                                          )
-                                      )
-                                    : 'n/a'}
-                            </SwapDialog.Text>
-                        </FlexDivRowCentered>
-                        <FlexDivRowCentered>
-                            <SwapDialog.TokenSelect
-                                options={preLoadTokens}
-                                formatOptionLabel={(option: any) => {
-                                    return (
-                                        <FlexDivRowCentered>
-                                            <SwapDialog.TokenLogo src={option.logoURI}></SwapDialog.TokenLogo>
-                                            <FlexDivColumnCentered>
-                                                <SwapDialog.Text contentSize="large">{option.symbol}</SwapDialog.Text>
-                                            </FlexDivColumnCentered>
-                                        </FlexDivRowCentered>
-                                    );
-                                }}
-                                isDisabled={false}
-                                value={toToken}
-                                components={
-                                    preLoadTokens?.length == 1
-                                        ? {
-                                              Menu: () => null,
-                                              MenuList: () => null,
-                                              DropdownIndicator: () => null,
-                                              IndicatorSeparator: () => null,
-                                          }
-                                        : {
-                                              IndicatorSeparator: () => null,
-                                          }
-                                }
-                                onChange={(option: any) => {
-                                    setToToken(option);
-                                }}
-                            ></SwapDialog.TokenSelect>
-                            <SwapDialog.NumericText>
-                                {previewData
+                <Container contentType={` ${isLoading ? 'loading' : ''}`}>
+                    <SectionWrapper>
+                        <NumericInput
+                            placeholder={t('common.enter-amount')}
+                            label={t('options.swap.from')}
+                            value={amount !== '' ? Number(amount) : ''}
+                            onChange={(_: any, value: any) => {
+                                setAmount(value);
+                            }}
+                            currencyLabel={fromToken.symbol}
+                            onMaxButton={() => {
+                                setAmount(Number(balance).toFixed(5));
+                            }}
+                            balance={`${t('options.swap.balance')}: ${Number(balance).toFixed(4)}`}
+                        />
+                    </SectionWrapper>
+                    <SectionWrapper>
+                        <NumericInput
+                            label={t('options.swap.to')}
+                            value={
+                                previewData
                                     ? Number(
                                           ethers.utils.formatUnits(
                                               (previewData as any).toTokenAmount,
                                               (previewData as any).toToken.decimals
                                           )
                                       ).toFixed(4)
-                                    : 'n/a'}
-                            </SwapDialog.NumericText>
-                        </FlexDivRowCentered>
-                    </SwapDialog.SectionWrapper>
+                                    : 'n/a'
+                            }
+                            onChange={() => {}}
+                            disabled={true}
+                            currencyLabel={preLoadTokens?.length == 1 ? toToken.symbol : undefined}
+                            currencyComponent={
+                                preLoadTokens?.length > 1 ? (
+                                    <CollateralSelector
+                                        collateralArray={preLoadTokens.map((item: any) => item.symbol)}
+                                        selectedItem={preLoadTokens.findIndex(
+                                            (item: any) => item.symbol === toToken.symbol
+                                        )}
+                                        onChangeCollateral={(index) => {
+                                            setToToken(preLoadTokens[index]);
+                                        }}
+                                    />
+                                ) : undefined
+                            }
+                            enableCurrencyComponentOnly
+                        />
+                    </SectionWrapper>
                     {getButton()}
                     {isLoading && (
                         <LoaderContainer>
@@ -405,7 +322,7 @@ const Swap: React.FC<any> = ({ handleClose, initialToToken }) => {
                             onClose={() => setOpenApprovalModal(false)}
                         />
                     )}
-                </SwapDialog>
+                </Container>
             )}
         </OutsideClickHandler>
     );

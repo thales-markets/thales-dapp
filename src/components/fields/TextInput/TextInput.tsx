@@ -47,7 +47,7 @@ const TextInput: React.FC<TextInputProps> = ({
                 {label && (
                     <FieldLabel>
                         {label}
-                        {tooltip && <Tooltip overlay={tooltip} />}
+                        {tooltip && <Tooltip overlay={tooltip} />}:
                     </FieldLabel>
                 )}
                 <StyledInput

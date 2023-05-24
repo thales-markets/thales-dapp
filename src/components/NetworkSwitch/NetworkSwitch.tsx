@@ -99,11 +99,4 @@ const InnerButton = styled(FlexDivRowCentered)`
     justify-content: center;
 `;
 
-export const StyledLink = styled.a`
-    color: #f6f6fe;
-    &path {
-        fill: #f6f6fe;
-    }
-`;
-
 export default NetworkSwitch;
