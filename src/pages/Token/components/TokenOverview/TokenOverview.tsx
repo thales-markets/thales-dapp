@@ -284,23 +284,23 @@ const Content = styled.div<{ fontSize?: number; color?: string }>`
 `;
 
 const StyledLink = styled.a`
-    color: ${(props) => props.theme.link.textColor.primary};
+    color: ${(props) => props.theme.link.textColor.secondary};
     & path {
-        fill: ${(props) => props.theme.link.textColor.primary};
+        fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
         text-decoration: underline;
     }
     @media (max-width: 767px) {
-        color: ${(props) => props.theme.link.textColor.primary};
+        color: ${(props) => props.theme.link.textColor.secondary};
     }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
     @media (max-width: 767px) {
-        color: ${(props) => props.theme.link.textColor.primary};
+        color: ${(props) => props.theme.link.textColor.secondary};
         & path {
-            fill: ${(props) => props.theme.link.textColor.primary};
+            fill: ${(props) => props.theme.link.textColor.secondary};
         }
     }
 `;
