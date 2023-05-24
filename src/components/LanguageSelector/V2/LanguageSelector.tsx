@@ -5,7 +5,7 @@ import i18n from 'i18n';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
-import { LandingPageTooltip } from 'components/OldVersion/old-components';
+import Tooltip from 'components/TooltipV2';
 
 type LanguageSelectorProps = {
     isBurger?: boolean;
@@ -49,13 +49,13 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }
                                 >
                                     {LanguageFlag(language as any)}
                                     {language !== SupportedLanguages.ENGLISH ? (
-                                        <LandingPageTooltip title="Coming soon">
+                                        <Tooltip overlay="Coming soon">
                                             <FlexDivCentered>
                                                 <LanguageName style={{ color: 'grey' }} key={language}>
                                                     {(LanguageNameMap as any)[language] + '*'}
                                                 </LanguageName>
                                             </FlexDivCentered>
-                                        </LandingPageTooltip>
+                                        </Tooltip>
                                     ) : (
                                         <FlexDivCentered>
                                             <LanguageName key={language}>
