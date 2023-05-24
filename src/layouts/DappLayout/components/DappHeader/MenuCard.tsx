@@ -7,7 +7,6 @@ import UserWalletExpanded from './UserWalletExpanded';
 import PieChartUserBalance from 'components/Charts/PieChartUserBalance';
 import PriceChart from 'components/Charts/PriceChart';
 import LanguageCardSelector from 'components/LanguageSelector/v3/LanguageCardSelector';
-import NetworkSwitchSection from 'components/NetworkSwitch/v2/NetworkSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { getIsArbitrum, getIsBSC, getIsPolygon } from 'utils/network';
 
@@ -24,7 +23,6 @@ const MenuCardComponent: React.FC<{ showCard: boolean; setShowCard: any }> = ({ 
                     <ThalesLogo className="icon icon--logo" />
                 </LogoContainer>
                 <UserWalletExpanded />
-                {isWalletConnected && <NetworkSwitchSection setShowCard={setShowCard} />}
                 <Container>
                     {isWalletConnected && <PieChartUserBalance />}
                     {isWalletConnected && showThalesBalance && <ThalesBalance />}

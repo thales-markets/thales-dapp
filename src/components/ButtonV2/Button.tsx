@@ -8,8 +8,6 @@ type ButtonProps = {
     margin?: string;
     textColor?: string;
     backgroundColor?: string;
-    hoverShadow?: string;
-    hoverBorder?: boolean;
     onClick?: () => void;
     fontSize?: string;
     disabled?: boolean;
@@ -23,8 +21,6 @@ const Button: React.FC<ButtonProps> = ({
     padding,
     textColor,
     backgroundColor,
-    hoverShadow,
-    hoverBorder,
     margin,
     onClick,
     disabled,
@@ -40,8 +36,6 @@ const Button: React.FC<ButtonProps> = ({
             margin={margin}
             textColor={textColor}
             backgroundColor={backgroundColor}
-            hoverShadow={hoverShadow}
-            hoverBorder={hoverBorder}
             onClick={onClick}
             disabled={disabled}
             fontSize={fontSize}
@@ -61,7 +55,6 @@ const Wrapper = styled.button<{
     backgroundColor?: string;
     hoverShadow?: string;
     hoverBorder?: boolean;
-    disabled?: boolean;
     fontSize?: string;
 }>`
     display: flex;
@@ -74,20 +67,14 @@ const Wrapper = styled.button<{
     border-radius: 30px;
     font-weight: 700;
     font-size: ${(props) => props.fontSize || '18px'};
-    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    cursor: pointer;
     color: ${(props) => props.textColor || props.theme.button.textColor.primary};
     background-color: ${(props) => props.backgroundColor || props.theme.button.background.primary};
-    margin: ${(props) => (props.margin ? props.margin : '')};
-    padding: ${(props) => (props.padding ? props.padding : '0 30px')};
-    &:hover {
-        ${(props) => (props.hoverShadow && !props.disabled ? `box-shadow: ${props.hoverShadow};` : '')}
-        ${(props) =>
-            props.hoverBorder && !props.disabled
-                ? `border: 1px solid ${props.theme.button.borderColor.secondary};`
-                : ''}
-    }
+    margin: ${(props) => props.margin || ''};
+    padding: ${(props) => props.padding || '0 30px'};
     &:disabled {
         opacity: 0.5;
+        cursor: default;
     }
 `;
 

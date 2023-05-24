@@ -66,11 +66,11 @@ const BannerContainer = styled(FlexDiv)<{ width?: number }>`
 
 const Info = styled.div`
     width: 100%;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     text-align: center;
     padding: 10px;
     font-size: 16px;
-    background-color: var(--background);
+    background-color: #1b314f;
     box-shadow: 0px 0px 20px rgb(0 0 0 / 40%);
     z-index: 2;
     position: absolute;
