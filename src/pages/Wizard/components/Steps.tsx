@@ -575,7 +575,7 @@ const Text = styled.p`
     color: ${(props) => props.theme.textColor.primary};
     a {
         font-weight: 700;
-        color: ${(props) => props.theme.link.textColor.tertiary};
+        color: ${(props) => props.theme.link.textColor.primary};
         &:hover {
             text-decoration: underline;
         }

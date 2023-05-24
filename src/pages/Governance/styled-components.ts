@@ -113,10 +113,7 @@ export const BackLink = styled(FlexDivCentered)`
     }
     &:hover {
         cursor: pointer;
-        color: ${(props) => props.theme.link.textColor.primary};
-        & path {
-            fill: ${(props) => props.theme.link.textColor.primary};
-        }
+        text-decoration: underline;
     }
 `;
 
@@ -193,10 +190,7 @@ export const StyledLink = styled.a`
         fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
-        color: ${(props) => props.theme.link.textColor.primary};
-        & path {
-            fill: ${(props) => props.theme.link.textColor.primary};
-        }
+        text-decoration: underline;
     }
 `;
 
@@ -222,7 +216,7 @@ export const ViewMore = styled(FlexDivCentered)<{ padding?: string }>`
     color: ${(props) => props.theme.link.textColor.secondary};
     &:hover {
         cursor: pointer;
-        color: ${(props) => props.theme.link.textColor.primary};
+        text-decoration: underline;
     }
 `;
 

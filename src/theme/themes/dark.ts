@@ -67,9 +67,8 @@ export default {
     },
     link: {
         textColor: {
-            primary: Colors.BLUE_LIGHT,
+            primary: Colors.GREEN,
             secondary: Colors.WHITE,
-            tertiary: Colors.GREEN,
         },
     },
     error: {

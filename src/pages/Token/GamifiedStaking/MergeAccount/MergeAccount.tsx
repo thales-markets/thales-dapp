@@ -545,10 +545,7 @@ const StyledLink = styled.a`
         fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
-        color: ${(props) => props.theme.link.textColor.tertiary};
-        & path {
-            fill: ${(props) => props.theme.link.textColor.tertiary};
-        }
+        text-decoration: underline;
     }
 `;
 
