@@ -8,6 +8,7 @@ export const FieldContainer = styled(FlexDivColumn)<{ margin?: string }>`
 `;
 
 export const FieldLabel = styled.label`
+    font-weight: normal;
     font-size: 13px;
     line-height: 15px;
     color: ${(props) => props.theme.textColor.primary};

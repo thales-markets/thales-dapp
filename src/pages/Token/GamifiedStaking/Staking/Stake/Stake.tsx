@@ -255,7 +255,7 @@ const Stake: React.FC = () => {
                         })}
                         balance={
                             isWalletConnected
-                                ? `${t('options.earn.gamified-staking.staking.stake.balance')} ${formatCurrency(
+                                ? `${t('options.earn.gamified-staking.staking.stake.balance')}: ${formatCurrency(
                                       thalesBalance
                                   )}`
                                 : undefined

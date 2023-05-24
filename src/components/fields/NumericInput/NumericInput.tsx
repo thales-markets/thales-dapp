@@ -31,6 +31,7 @@ type NumericInputProps = {
     inputFontSize?: string;
     width?: string;
     height?: string;
+    enableCurrencyComponentOnly?: boolean;
 };
 
 const INVALID_CHARS = ['-', '+', 'e'];
@@ -56,6 +57,7 @@ const NumericInput: React.FC<NumericInputProps> = ({
     inputFontSize,
     width,
     height,
+    enableCurrencyComponentOnly,
     ...rest
 }) => {
     const { t } = useTranslation();
@@ -80,7 +82,7 @@ const NumericInput: React.FC<NumericInputProps> = ({
                 {label && (
                     <FieldLabel>
                         {label}
-                        {tooltip && <Tooltip overlay={tooltip} />}
+                        {tooltip && <Tooltip overlay={tooltip} />}:
                     </FieldLabel>
                 )}
                 {balance && (
@@ -123,7 +125,9 @@ const NumericInput: React.FC<NumericInputProps> = ({
                         </CurrencyLabel>
                     )}
                     {currencyComponent && (
-                        <CurrencyComponentContainer className={disabled ? 'disabled' : ''}>
+                        <CurrencyComponentContainer
+                            className={disabled && !enableCurrencyComponentOnly ? 'disabled' : ''}
+                        >
                             {currencyComponent}
                         </CurrencyComponentContainer>
                     )}
@@ -191,15 +195,16 @@ const BalanceContainer = styled(FlexDivCentered)`
     position: absolute;
     right: 0;
     bottom: 40px;
-    font-size: 15px;
-    line-height: 18px;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 15px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 const StyledBalanceIcon = styled(BalanceIcon)`
-    height: 14px;
-    margin: 0 4px 1px 0;
+    height: 13px;
+    margin: 0 2px 1px 0;
     path {
         fill: ${(props) => props.theme.textColor.quaternary};
     }

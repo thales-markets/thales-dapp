@@ -159,7 +159,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                         validationMessage={t(`common.errors.insufficient-staking-balance`, { currencyKey: LP_TOKEN })}
                         balance={
                             isWalletConnected
-                                ? `${t('options.earn.gamified-staking.staking.unstake.balance')} ${formatCurrency(
+                                ? `${t('options.earn.gamified-staking.staking.unstake.balance')}: ${formatCurrency(
                                       staked
                                   )}`
                                 : undefined

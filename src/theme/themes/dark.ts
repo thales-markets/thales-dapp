@@ -55,8 +55,8 @@ export default {
             quaternary: Colors.RED,
         },
         borderColor: {
-            primary: Colors.GRAY,
-            secondary: '',
+            primary: Colors.GRAY_LIGHT,
+            secondary: Colors.GRAY,
             focus: {
                 primary: Colors.GREEN,
             },
