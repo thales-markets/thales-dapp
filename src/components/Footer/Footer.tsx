@@ -120,6 +120,9 @@ const TextLink = styled.a`
     font-size: 14px;
     line-height: 17px;
     color: ${(props) => props.theme.link.textColor.secondary};
+    &:hover {
+        text-decoration: underline;
+    }
 `;
 
 const FooterIcon = styled.i`
