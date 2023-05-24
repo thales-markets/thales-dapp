@@ -101,8 +101,8 @@ const Wrapper = styled.div<{ margin?: string; disabled?: boolean; spanColumns?: 
 `;
 
 const Label = styled.span<{ fontSize?: string }>`
-    font-size: ${(props) => (props?.fontSize ? props.fontSize : '12px')};
-    color: var(--color-white);
+    font-size: ${(props) => props.fontSize || '12px'};
+    color: ${(props) => props.theme.textColor.primary};
     margin-left: 5px;
     margin-right: 5px;
 `;
@@ -112,22 +112,21 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
     align-items: center;
     position: relative;
     cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'pointer')};
-    border-width: ${(props: any) => (props?.borderWidth ? props.borderWidth : '1px')};
+    border-width: ${(props: any) => props.borderWidth || '1px'};
     border-style: solid;
-    border-color: ${(props: any) => (props?.borderColor ? props.borderColor : 'var(--input-border-color)')};
+    border-color: ${(props: any) => props.borderColor || props.theme.borderColor.primary};
     border-radius: 30px;
-    width: ${(props: any) => (props?.width ? props.width : defaultSwitchHeight * 2.18 + 'px')};
-    height: ${(props: any) => (props?.height ? props.height : defaultSwitchHeight + 'px')};
+    width: ${(props: any) => props.width || defaultSwitchHeight * 2.18 + 'px'};
+    height: ${(props: any) => props.height || defaultSwitchHeight + 'px'};
     ${(props) => (props.shadow ? 'box-shadow: var(--shadow)' : '')}
 `;
 
 const Circle = styled.div<CircleProps>`
-    width: ${(props: any) => (props.size ? props.size : '15px')};
-    height: ${(props: any) => (props.size ? props.size : '15px')};
+    width: ${(props: any) => props.size || '15px'};
+    height: ${(props: any) => props.size || '15px'};
     border-radius: 60%;
     position: absolute;
-    ${(props: any) =>
-        props?.background ? `background-color: ${props.background}` : `background-color: var(--input-border-color)`};
+    background-color: ${(props: any) => props.background || props.theme.background.tertiary};
     ${(props: any) => (props?.active ? `right: 5px;` : `left: 5px;`)};
 `;
 
