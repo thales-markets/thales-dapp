@@ -1,7 +1,7 @@
-import { Theme, ThemeMap } from 'constants/ui';
 import { useEffect } from 'react';
+import { ThemeInterface } from 'types/ui';
 
-const useWidgetBotScript = (preventWidgetLoad: boolean, theme: Theme) => {
+const useWidgetBotScript = (preventWidgetLoad: boolean, theme: ThemeInterface) => {
     useEffect(() => {
         if (preventWidgetLoad) {
             return;
@@ -18,7 +18,7 @@ const useWidgetBotScript = (preventWidgetLoad: boolean, theme: Theme) => {
                 channel: '907009541965742080',
                 css: `
                     .button {
-                        background-color: ${ThemeMap[theme].background.secondary};
+                        background-color: ${theme.background.secondary};
                         box-shadow: none;
                     }
                     @media (max-width: 950px) {

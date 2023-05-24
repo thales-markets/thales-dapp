@@ -12,7 +12,7 @@ import {
     ReferenceArea,
 } from 'recharts';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { format } from 'date-fns';
 import Toggle from './components/DateToggle/Toggle';
 import {
@@ -22,12 +22,9 @@ import {
 } from 'utils/formatters/number';
 import usePriceDataQuery from 'queries/price/usePriceDataQuery';
 import { FlexDivSpaceBetween } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { getTheme } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
-import { ThemeMap } from 'constants/ui';
 import { Positions } from 'constants/options';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import { ThemeInterface } from 'types/ui';
 
 type PriceChartProps = {
     asset: string;
@@ -59,7 +56,7 @@ const ToggleButtons = [
 ];
 
 const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice, position }) => {
-    const theme = useSelector((state: RootState) => getTheme(state));
+    const theme: ThemeInterface = useTheme();
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [dateRange, setDateRange] = useState(14); // default date range
 
@@ -204,19 +201,19 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             <linearGradient id="referenceGradient" x1="0" y1="0" x2="0" y2="1">
                                 <stop
                                     offset="0%"
-                                    stopColor={`${ThemeMap[theme].textColor.quaternary}`}
+                                    stopColor={`${theme.textColor.quaternary}`}
                                     stopOpacity={position === Positions.UP ? 0 : 0.8}
                                 />
                                 <stop
                                     offset="90.62%"
-                                    stopColor={`${ThemeMap[theme].textColor.quaternary}`}
+                                    stopColor={`${theme.textColor.quaternary}`}
                                     stopOpacity={position === Positions.UP ? 0.8 : 0}
                                 />
                             </linearGradient>
                         </defs>
                         <CartesianGrid stroke="#2B3139" strokeDasharray="1" />
                         <XAxis
-                            tick={{ fontSize: '10px', fill: ThemeMap[theme].textColor.secondary }}
+                            tick={{ fontSize: '10px', fill: theme.textColor.secondary }}
                             tickLine={false}
                             axisLine={false}
                             dataKey="date"
@@ -228,7 +225,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             ticks={ticks}
                             tick={{
                                 fontSize: '10px',
-                                fill: ThemeMap[theme].textColor.secondary,
+                                fill: theme.textColor.secondary,
                                 width: 100,
                             }}
                             tickCount={8}

@@ -1,9 +1,6 @@
-import { ThemeMap } from 'constants/ui';
 import React, { CSSProperties } from 'react';
-import { useSelector } from 'react-redux';
-import { getTheme } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
 export enum ButtonType {
     default = 'default',
@@ -56,8 +53,7 @@ const Button: React.FC<ButtonProps> = ({
     children,
     type = ButtonType.default,
 }) => {
-    const themeName = useSelector((state: RootState) => getTheme(state));
-    const theme = ThemeMap[themeName];
+    const theme: ThemeInterface = useTheme();
 
     let typedWidth: string;
     let typedHeight: string;

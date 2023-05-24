@@ -41,6 +41,7 @@ import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
+import { EMPTY_VALUE } from 'constants/placeholder';
 
 enum SectionType {
     INFO,
@@ -409,7 +410,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     {stakingData ? (
                         <TimeRemaining end={stakingData.closingDate} fontSize={isMobile() ? 12 : 15} showFullCounter />
                     ) : (
-                        '-'
+                        EMPTY_VALUE
                     )}
                     {canClosePeriod && (
                         <Button onClick={handleClosePeriod} disabled={!isClosingPeriodAvailable}>

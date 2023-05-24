@@ -3,14 +3,13 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { Network, NetworkId, getDefaultCollateral } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import useAllSourceTokensQuery, { SOURCE_NETWORK_IDS } from './queries/useAllSourceTokensQuery';
-import { getTheme } from 'redux/modules/ui';
-import { ThemeMap } from 'constants/ui';
 import { hexToRGB } from 'utils/style';
 import { getNetworkId } from 'redux/modules/wallet';
+import { ThemeInterface } from 'types/ui';
 
 const SUPPORTED_DESTINATION_NETWORKS = [
     Network['Mainnet-Ovm'],
@@ -20,8 +19,8 @@ const SUPPORTED_DESTINATION_NETWORKS = [
 ];
 
 const BungeePlugin: React.FC = () => {
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const theme = useSelector((state: RootState) => getTheme(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const apiKey = process.env.REACT_APP_BUNGEE_API_KEY || '';
@@ -48,16 +47,16 @@ const BungeePlugin: React.FC = () => {
     const customize: Customize = {
         width: 386,
         responsiveWidth: false,
-        accent: hexToRGB(ThemeMap[theme].button.background.primary), // button
-        onAccent: hexToRGB(ThemeMap[theme].button.textColor.primary), // button text
-        primary: hexToRGB(ThemeMap[theme].background.primary), // background
-        secondary: hexToRGB(ThemeMap[theme].background.secondary), // main button wrapper
-        text: hexToRGB(ThemeMap[theme].textColor.primary),
-        secondaryText: hexToRGB(ThemeMap[theme].textColor.primary),
-        interactive: hexToRGB(ThemeMap[theme].button.background.secondary), // dropdown
-        onInteractive: hexToRGB(ThemeMap[theme].textColor.primary), // dropdown text
-        outline: hexToRGB(ThemeMap[theme].button.background.tertiary),
-        fontFamily: ThemeMap[theme].fontFamily.primary,
+        accent: hexToRGB(theme.button.background.primary), // button
+        onAccent: hexToRGB(theme.button.textColor.primary), // button text
+        primary: hexToRGB(theme.background.primary), // background
+        secondary: hexToRGB(theme.background.secondary), // main button wrapper
+        text: hexToRGB(theme.textColor.primary),
+        secondaryText: hexToRGB(theme.textColor.primary),
+        interactive: hexToRGB(theme.button.background.secondary), // dropdown
+        onInteractive: hexToRGB(theme.textColor.primary), // dropdown text
+        outline: hexToRGB(theme.button.background.tertiary),
+        fontFamily: theme.fontFamily.primary,
     };
 
     return (

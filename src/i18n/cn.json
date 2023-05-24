@@ -2138,7 +2138,8 @@
             "and": "和",
             "terms": "條款"
         },
-        "choose-referral": "选择您的推荐人 ID"
+        "choose-referral": "选择您的推荐人 ID",
+        "choose-referral-placeholder": "输入推荐 ID"
     },
     "wizard-page": {
         "question13-link-text": "看视频",

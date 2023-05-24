@@ -24,12 +24,9 @@ import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { isLedgerDappBrowserProvider } from 'utils/ledger';
 import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'wagmi';
 import snxJSConnector from 'utils/snxJSConnector';
-import ThemeProvider from 'layouts/Theme';
-import { Theme } from 'constants/ui';
-import { setTheme } from 'redux/modules/ui';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import localStore from 'utils/localStore';
 import { createGlobalStyle } from 'styled-components';
+import ThemeProvider from 'layouts/Theme';
+import { getDefaultTheme } from 'theme/common';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));
@@ -57,8 +54,6 @@ const Referral = lazy(() => import(/* webpackChunkName: "Referral" */ '../Referr
 const OPRewards = lazy(() => import(/* webpackChunkName: "OPRewards" */ '../OPRewards'));
 const LiquidityPool = lazy(() => import(/* webpackChunkName: "LiquidityPool" */ '../LiquidityPool'));
 
-const THEME = Theme.DARK;
-
 const App = () => {
     const dispatch = useDispatch();
     const walletAddress = useSelector((state) => getWalletAddress(state));
@@ -83,13 +78,7 @@ const App = () => {
     queryConnector.setQueryClient();
 
     useEffect(() => {
-        dispatch(setTheme(THEME));
-    }, []);
-
-    useEffect(() => {
-        const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
-        const theme =
-            lsTheme !== undefined ? (Object.values(Theme).includes(lsTheme) ? lsTheme : Theme.DARK) : Theme.DARK;
+        const theme = getDefaultTheme();
 
         trackPageView({
             customDimensions: [

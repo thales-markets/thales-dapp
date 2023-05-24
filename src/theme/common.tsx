@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import xSign from 'assets/images/x-sign.svg';
+import localStore from 'utils/localStore';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import { Theme } from 'constants/ui';
 
 export const FlexDiv = styled.div`
     display: flex;
@@ -231,6 +234,15 @@ export const NoDataContainer = styled.div`
         margin-top: 10px;
     }
 `;
+
+export const getDefaultTheme = (): Theme => {
+    const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
+    return lsTheme !== undefined
+        ? Object.values(Theme).includes(lsTheme as number)
+            ? (lsTheme as Theme)
+            : Theme.DARK
+        : Theme.DARK;
+};
 
 // TODO: Update color names
 export const Colors = {

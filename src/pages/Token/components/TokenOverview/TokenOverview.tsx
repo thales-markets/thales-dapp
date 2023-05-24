@@ -164,9 +164,9 @@ const ItemContainer: React.FC<{ className?: string }> = (props) => (
 );
 
 const Container = styled(FlexDiv)`
-    background: var(--color-primary);
-    border-radius: 16px;
-    border: 2px solid rgba(100, 217, 254, 0.5);
+    background: ${(props) => props.theme.background.primary};
+    border-radius: 15px;
+    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
     margin-bottom: 10px;
     flex-wrap: wrap;
     @media (max-width: 1024px) {
@@ -229,9 +229,8 @@ const InnerItemContainer = styled(FlexDivCentered)`
     flex: 1;
     min-height: 76px;
     &:not(:last-child) {
-        border-right: 2px solid rgba(1, 38, 81, 0.5);
+        border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
     }
-    color: #b8c6e5;
     @media (max-width: 1192px) {
         min-height: 60px;
     }

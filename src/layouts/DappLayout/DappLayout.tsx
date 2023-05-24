@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -13,7 +13,7 @@ import axios from 'axios';
 import { generalConfig } from 'config/general';
 import { isAndroid, isMetamask, isMobile } from 'utils/device';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
-import { getTheme } from 'redux/modules/ui';
+import { ThemeInterface } from 'types/ui';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -22,7 +22,7 @@ type DappLayoutProps = {
 };
 
 const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
-    const theme = useSelector((state: RootState) => getTheme(state));
+    const theme: ThemeInterface = useTheme();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const rawParams = useLocation();

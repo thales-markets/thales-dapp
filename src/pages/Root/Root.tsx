@@ -25,9 +25,8 @@ import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
 import { Network } from 'utils/network';
-import { Theme, ThemeMap } from 'constants/ui';
-import localStore from 'utils/localStore';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import { ThemeMap } from 'constants/ui';
+import { getDefaultTheme } from 'theme/common';
 dotenv.config();
 
 type RpcProvider = {
@@ -127,17 +126,10 @@ interface RootProps {
     store: Store;
 }
 
-const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
-const theme =
-    lsTheme !== undefined
-        ? Object.values(Theme).includes(lsTheme as number)
-            ? (lsTheme as Theme)
-            : Theme.DARK
-        : Theme.DARK;
+const theme = getDefaultTheme();
+const customTheme = merge(darkTheme(), { colors: { modalBackground: ThemeMap[theme].background.primary } });
 
 const Root: React.FC<RootProps> = ({ store }) => {
-    const customTheme = merge(darkTheme(), { colors: { modalBackground: ThemeMap[theme].background.primary } });
-
     return (
         <Provider store={store}>
             <MatomoProvider value={instance}>
