@@ -1,14 +1,6 @@
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
-
-type CellProps = {
-    justifyContent?: string;
-    alignItems?: string;
-    fontWeight?: string;
-    fontSize?: string;
-    padding?: string;
-    color?: string;
-};
+import { TablePagination } from '@material-ui/core';
 
 export const TableView = styled.div`
     color: ${(props) => props.theme.textColor.primary};
@@ -19,7 +11,7 @@ export const TableView = styled.div`
     display: flex;
 `;
 
-export const TableCell = styled.div<CellProps>`
+export const TableCell = styled.div`
     display: flex;
     flex: 1 !important;
     flex-direction: row;
@@ -123,11 +115,14 @@ export const TableArrow = styled.i`
 
 export const NoDataContainer = styled(TableRow)`
     justify-content: center;
-    padding: 20px 0px;
+    margin: 20px 0px;
     font-size: 15px;
     font-weight: bold;
     border: none;
-    margin: auto;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+  }
 `;
 
 export const LoaderContainer = styled(FlexDivCentered)`
@@ -138,4 +133,36 @@ export const LoaderContainer = styled(FlexDivCentered)`
 
 export const PaginationContainer = styled.table`
     width: 100%;
+`;
+
+export const Pagination = styled(TablePagination)`
+    border: none !important;
+    display: flex;
+    width: 100%;
+    height: auto;
+    color: ${(props) => props.theme.textColor.primary} !important;
+    .MuiToolbar-root {
+        padding: 0;
+        display: flex;
+        .MuiSelect-icon {
+            color: ${(props) => props.theme.textColor.primary};
+        }
+    }
+    .MuiIconButton-root.Mui-disabled {
+        color: ${(props) => props.theme.background.secondary};
+    }
+    .MuiTablePagination-toolbar > .MuiTablePagination-caption:last-of-type {
+        display: block;
+    }
+    .MuiTablePagination-selectRoot {
+        @media (max-width: 767px) {
+            margin-left: 0px;
+            margin-right: 10px;
+        }
+    }
+    .MuiIconButton-root {
+        @media (max-width: 767px) {
+            padding: 6px;
+        }
+    }
 `;

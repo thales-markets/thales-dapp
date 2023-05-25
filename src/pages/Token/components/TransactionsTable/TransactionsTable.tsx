@@ -99,6 +99,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                 data={transactions}
                 isLoading={isLoading}
                 noResultsMessage={noResultsMessage}
+                preventMobileView
                 hidePagination
             />
         </>

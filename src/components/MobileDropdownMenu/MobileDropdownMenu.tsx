@@ -20,21 +20,21 @@ type DropdownMenuProps = {
 };
 
 const processSort = (item: ItemProps) => {
-    if (item?.sortableIndex == 0) {
+    if (item.sortableIndex == 0) {
         item.sortableIndex = 1;
         item.onClick(undefined);
         return;
     }
 
-    if (item?.sortableIndex == 1) {
+    if (item.sortableIndex == 1) {
         item.sortableIndex = 2;
         item.onClick(1);
         return;
     }
 
-    if (item?.sortableIndex == 2) {
+    if (item.sortableIndex == 2) {
         item.sortableIndex = 0;
-        item?.clearSort ? item.clearSort() : '';
+        item.clearSort ? item.clearSort() : '';
         return;
     }
 };
@@ -54,16 +54,16 @@ const MobileDropdownMenu: React.FC<DropdownMenuProps> = ({ buttonTitle, dropdown
                             <Title>{dropdownTitle ? dropdownTitle : buttonTitle}</Title>
                             {items &&
                                 items.map((item: any, index: number) => {
-                                    return item?.title ? (
+                                    return item.title ? (
                                         <Item
-                                            active={item?.active ? true : false}
+                                            active={item.active ? true : false}
                                             key={index}
                                             onClick={() => {
-                                                !item?.sortable ? item.onClick() : processSort(item);
+                                                !item.sortable ? item.onClick() : processSort(item);
                                             }}
                                         >
                                             {item.title}
-                                            {item?.sortable ? (
+                                            {item.sortable ? (
                                                 <Arrow
                                                     className={`icon ${
                                                         item.sortable
