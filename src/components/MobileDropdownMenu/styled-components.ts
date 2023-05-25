@@ -8,24 +8,22 @@ export const PositionWrapper = styled.div`
 `;
 
 export const FiltersButton = styled.div<{ visible?: boolean }>`
-    /* display: ${(props) => (props?.visible ? 'block' : 'none')}; */
     display: block;
     visibility: ${(props) => (props?.visible ? 'visible' : 'hidden')};
     padding: 6px 20px;
-    border: 1.5px solid ${(props) => props.theme.borderColor.secondary};
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     box-sizing: border-box;
     border-radius: 30px;
-    background: transparent;
+    background: ${(props) => props.theme.button.background.tertiary};
     cursor: pointer;
     font-style: normal;
     font-weight: bold;
     font-size: 12px;
-    line-height: 11px;
+    line-height: 10px;
     text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.secondary};
+    color: ${(props) => props.theme.button.textColor.secondary};
     align-self: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 10px;
 `;
 
 export const Arrow = styled.i`
@@ -38,11 +36,10 @@ export const Arrow = styled.i`
 `;
 
 export const Wrapper = styled.div<{ visible?: boolean }>`
-    /* @media (max-width: 768px) { */
-    display: ${(props) => (props?.visible ? 'flex' : 'none')};
+    display: ${(props) => (props.visible ? 'flex' : 'none')};
     flex-direction: column;
-    background: ${(props) => props.theme.background.primary};
-    border: 1px solid ${(props) => props.theme.borderColor.secondary};
+    background: ${(props) => props.theme.background.secondary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     box-sizing: border-box;
     border-radius: 12px;
     padding: 15px 20px;
@@ -53,15 +50,14 @@ export const Wrapper = styled.div<{ visible?: boolean }>`
     left: 0;
     right: 0;
     text-align: center;
-    top: -56px;
+    top: -44px;
     z-index: 2;
-    /* } */
 `;
 
 export const Item = styled.div<{ active: boolean }>`
     text-transform: uppercase;
     cursor: pointer;
-    color: ${(props) => (props?.active ? props.theme.textColor.secondary : props.theme.textColor.primary)};
+    color: ${(props) => (props.active ? props.theme.textColor.quaternary : props.theme.button.textColor.secondary)};
     display: flex;
     flex-direction: row;
     justify-content: center;

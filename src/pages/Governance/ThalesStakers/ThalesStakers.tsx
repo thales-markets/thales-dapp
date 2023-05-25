@@ -126,6 +126,7 @@ const ThalesStakers: React.FC = () => {
                     isLoading={stakersQuery.isLoading}
                     noResultsMessage={t('governance.stakers.no-stakers-found')}
                     searchQuery={addressSearch}
+                    preventMobileView
                     initialState={{
                         sortBy: [
                             {

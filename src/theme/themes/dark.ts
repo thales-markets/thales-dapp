@@ -18,7 +18,7 @@ export default {
     },
     borderColor: {
         primary: Colors.GRAY,
-        secondary: Colors.GRAY,
+        secondary: Colors.GRAY_LIGHT,
         tertiary: Colors.ORANGE,
         quaternary: Colors.GREEN,
     },

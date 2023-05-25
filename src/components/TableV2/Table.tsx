@@ -22,8 +22,8 @@ import {
     LoaderContainer,
     NoDataContainer,
     PaginationContainer,
-} from './styled-components/Table';
-import Pagination from './styled-components/Pagination';
+    Pagination,
+} from './styled-components';
 import SPAAnchor from 'components/SPAAnchor';
 import { useTranslation } from 'react-i18next';
 import MobileDropdownMenu from 'components/MobileDropdownMenu';
@@ -49,6 +49,7 @@ type TableProps = {
     searchQuery?: string;
     hidePagination?: boolean;
     hasStickyRow?: boolean;
+    preventMobileView?: boolean;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -64,6 +65,7 @@ const Table: React.FC<TableProps> = ({
     searchQuery,
     hidePagination,
     hasStickyRow,
+    preventMobileView,
 }) => {
     const { t } = useTranslation();
     const [isMobile, setIsMobile] = useState(false);
@@ -122,7 +124,7 @@ const Table: React.FC<TableProps> = ({
     }, [sortBy, searchQuery]);
 
     const handleResize = () => {
-        if (window.innerWidth <= columns.length * 150 * 0.9) {
+        if (window.innerWidth <= columns.length * 150 * 0.9 && !preventMobileView) {
             setIsMobile(true);
         } else {
             setIsMobile(false);
