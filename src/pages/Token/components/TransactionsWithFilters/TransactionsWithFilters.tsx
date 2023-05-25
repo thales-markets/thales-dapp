@@ -140,7 +140,7 @@ const NoResultsContainer = styled.div<{ gridColumns?: number; gridColumnStart?: 
 
 const NoResultsText = styled.div<{ background?: boolean }>`
     display: grid;
-    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
+    color: ${(props) => (props.background ?? true ? props.theme.textColor.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     padding: 30px 15px;
@@ -160,7 +160,6 @@ const SectionContainer = styled.section<{
     @media (max-width: 768px) {
         grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : 12)};
         order: 12;
-        // height: ${(props) => (props.txCount === 0 ? '100%' : '550px')};
         height: 100%;
     }
 `;
@@ -220,8 +219,9 @@ const FilterText = styled(Text)`
     text-transform: uppercase;
     padding: 8px 10px;
     border-radius: 8px;
+    color: ${(props) => props.theme.textColor.primary};
     &:hover {
-        background: ${(props) => props.theme.button.background.secondary};
+        background: ${(props) => props.theme.background.primary};
     }
 `;
 

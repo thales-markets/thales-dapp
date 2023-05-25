@@ -11,7 +11,6 @@ import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { getIsAppReady } from 'redux/modules/app';
-import { ArrowContainer } from 'pages/Token/Migration/components';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import YourTransactions from './Transactions';
 import NetworkFees from 'pages/Token/components/NetworkFees';
@@ -550,5 +549,13 @@ const StyledLink = styled.a`
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)``;
+
+const ArrowContainer = styled(FlexDivCentered)`
+    margin-bottom: 15px;
+    margin-top: -5px;
+    @media (max-width: 1192px) {
+        margin-bottom: 5px;
+    }
+`;
 
 export default MergeAccount;

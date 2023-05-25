@@ -9,7 +9,7 @@ const SnxStaking: React.FC = () => {
         <Container>
             <ClaimMigratedRewards />
             <RetroRewards />
-            <YourTransactions />
+            <YourTransactions gridColumns={10} />
         </Container>
     );
 };
@@ -21,7 +21,6 @@ const Container = styled.div`
     grid-template-rows: auto min-content;
     grid-gap: 20px;
     padding: 20px;
-    border-radius: 10px;
     background: ${(props) => props.theme.background.primary};
     z-index: 0;
     width: 100%;

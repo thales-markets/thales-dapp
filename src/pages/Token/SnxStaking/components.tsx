@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -13,11 +12,9 @@ export const EarnSection = styled.section<{
     flex-direction: column;
     position: relative;
     background: ${(props) => props.theme.background.primary};
-    border-radius: 15px;
-    color: white;
+    color: ${(props) => props.theme.textColor.primary};
     grid-column: span 5;
     grid-row: span 3;
-    border: 1px solid rgba(100, 217, 254, 0.6);
     padding: 10px;
     max-width: 100%;
     @media screen and (max-width: 1024px) {
@@ -33,9 +30,9 @@ export const EarnSection = styled.section<{
 
 export const SectionHeader = styled(FlexDivRowCentered)`
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
     letter-spacing: 0.15px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     min-height: 50px;
     padding: 0px 20px 0 20px;
     @media (max-width: 767px) {
@@ -68,14 +65,7 @@ export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string }>`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: ${(props) => (props.color ? props.color : '#ffcc00')};
+    color: ${(props) => (props.color ? props.color : props.theme.warning.textColor.primary)};
     margin-top: 10px;
     visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
-`;
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    min-width: 20px;
-    min-height: 20px;
-    margin-left: 10px;
-    margin-bottom: -2px;
 `;

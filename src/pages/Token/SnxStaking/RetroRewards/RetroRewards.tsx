@@ -18,7 +18,7 @@ import {
     SectionHeader,
     ClaimMessage,
     SectionContentContainer,
-} from '../componentsOld';
+} from '../components';
 import { PieChartCenterDiv, PieChartCenterText, PieChartContainer, LearnMore, Tip37Link } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
@@ -357,10 +357,7 @@ const TooltipContainer = styled(FlexDivColumnCentered)<{ borderColor: string }>`
     z-index: 999;
     height: 78px;
     padding: 10px 14px;
-    background: linear-gradient(
-        281.48deg,
-        ${(props) => props.theme.background.primary} -16.58%,
-        var(--color-tertiary) 97.94%
+    background: ${(props) => props.theme.background.primary};
     );
 `;
 

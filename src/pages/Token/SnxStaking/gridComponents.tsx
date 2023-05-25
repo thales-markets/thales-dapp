@@ -8,9 +8,9 @@ export const GridContainer = styled.div`
     grid-template-rows: auto min-content;
     grid-gap: 1px;
     padding: 0;
-    background: rgba(100, 217, 254, 0.6);
-    border-radius: 15px;
-    border: 1px solid rgba(100, 217, 254, 0.6);
+    background: ${(props) => props.theme.borderColor.primary};
+    border-radius: 8px;
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     z-index: 0;
     width: 100%;
     overflow: hidden;
@@ -38,8 +38,8 @@ export const StakingRewardsLabel = styled.span`
     font-weight: 600;
     font-size: 14px;
     line-height: 24px;
-    color: ${(props) => props.theme.button.textColor.tertiary};
-    background: ${(props) => props.theme.button.background.tertiary};
+    color: ${(props) => props.theme.textColor.secondary};
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 5px;
     width: fit-content;
     padding: 3px 8px;
@@ -52,7 +52,7 @@ export const StakingRewardsContent = styled.span`
     font-size: 20px;
     line-height: 32px;
     letter-spacing: 0.5px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const GridAction = styled(FlexDivColumnCentered)`

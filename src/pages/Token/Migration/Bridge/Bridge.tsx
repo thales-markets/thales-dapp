@@ -1,6 +1,6 @@
 import ValidationMessage from 'components/ValidationMessage';
 import { BigNumber, ethers } from 'ethers';
-import { InputContainer, SubmitButtonContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/components';
 import NumericInput from 'components/fields/NumericInput';
 import React, { useEffect, useState } from 'react';
 import { dispatchMarketNotification } from 'utils/options';
@@ -16,10 +16,9 @@ import { L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import { ArrowContainer } from '../components';
 import InfoMessage from 'components/InfoMessage';
 import InfoWarningMessage from 'components/InfoWarningMessage';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import styled from 'styled-components';
 import ApprovalModal from 'components/ApprovalModal';
 import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';
@@ -293,6 +292,19 @@ const Divider = styled.hr`
     width: 100%;
     border: none;
     border-top: 2px solid ${(props) => props.theme.borderColor.tertiary};
+`;
+
+const ArrowContainer = styled(FlexDivCentered)`
+    margin-bottom: 15px;
+    margin-top: -5px;
+    @media (max-width: 1192px) {
+        margin-bottom: 5px;
+    }
+`;
+
+const SubmitButtonContainer = styled(FlexDivColumnCentered)`
+    margin-top: 40px;
+    align-items: center;
 `;
 
 export default Bridge;
