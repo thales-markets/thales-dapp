@@ -838,8 +838,6 @@ const AMM: React.FC = () => {
                     secondLabel: orderSideOptions[1].label.toUpperCase(),
                     fontSize: '25px',
                 }}
-                shadow={true}
-                dotBackground={'var(--amm-switch-circle)'}
                 handleClick={() => {
                     orderSide.value == 'buy' ? setOrderSide(orderSideOptions[1]) : setOrderSide(orderSideOptions[0]);
                 }}

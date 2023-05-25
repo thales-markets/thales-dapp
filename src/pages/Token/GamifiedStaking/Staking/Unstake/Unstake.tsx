@@ -496,7 +496,7 @@ const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
 `;
 
 const UnstakingPeriodConatiner = styled(FlexDivColumnCentered)`
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     border-radius: 10px;
     padding: 10px 0;
     text-align: center;

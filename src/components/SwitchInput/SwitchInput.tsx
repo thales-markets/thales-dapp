@@ -21,7 +21,6 @@ type SwitchProps = {
     dotBackground?: string;
     dotGradient?: boolean;
     label?: LabelProps;
-    shadow?: boolean;
     margin?: string;
     spanColumns?: number;
 };
@@ -35,7 +34,6 @@ type SwitchContainerProps = {
     height?: string;
     background?: string;
     backgroundGradient?: boolean;
-    shadow?: boolean;
 };
 
 type CircleProps = {
@@ -61,7 +59,6 @@ const Switch: React.FC<SwitchProps> = ({
     dotBackground,
     dotGradient,
     label,
-    shadow,
     margin,
     spanColumns,
 }) => {
@@ -76,7 +73,6 @@ const Switch: React.FC<SwitchProps> = ({
                 height={height}
                 background={background}
                 backgroundGradient={backgroundGradient}
-                shadow={shadow}
                 onClick={() => (!disabled && handleClick ? handleClick() : null)}
             >
                 <Circle active={active} size={dotSize} background={dotBackground} backgroundGradient={dotGradient} />
@@ -118,7 +114,6 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
     border-radius: 30px;
     width: ${(props: any) => props.width || defaultSwitchHeight * 2.18 + 'px'};
     height: ${(props: any) => props.height || defaultSwitchHeight + 'px'};
-    ${(props) => (props.shadow ? 'box-shadow: var(--shadow)' : '')}
 `;
 
 const Circle = styled.div<CircleProps>`

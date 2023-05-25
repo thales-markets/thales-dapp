@@ -2,7 +2,6 @@ import { isNumber } from 'lodash';
 import React from 'react';
 import { ResponsiveContainer, LineChart, Line, YAxis, CartesianGrid, XAxis, Tooltip } from 'recharts';
 import format from 'date-fns/format';
-import { tooltipContentStyle, tooltipItemStyle, tooltipLabelStyle } from './styles/Tooltip';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { MarketType } from 'types/options';
@@ -76,6 +75,27 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
             </LineChart>
         </ResponsiveContainer>
     );
+};
+
+const tooltipContentStyle = {
+    background: 'var(--background)',
+    border: '1px solid #44E1E2',
+    borderRadius: 10,
+};
+
+const tooltipItemStyle = {
+    fontWeight: 600,
+    fontSize: 12,
+    letterSpacing: 0.4,
+    fill: ' var(--color-primary)',
+};
+
+const tooltipLabelStyle = {
+    fontWeight: 600,
+    fontSize: 12,
+    lineHeight: 1.8,
+    letterSpacing: 1,
+    color: 'var(--color-white)',
 };
 
 export default OptionPriceChart;

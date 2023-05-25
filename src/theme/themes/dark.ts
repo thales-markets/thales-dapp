@@ -85,6 +85,7 @@ export default {
     warning: {
         background: {
             primary: Colors.GRAY_DARK,
+            secondary: Colors.GRAY,
         },
         textColor: {
             primary: Colors.ORANGE,
@@ -92,6 +93,17 @@ export default {
         },
         borderColor: {
             primary: Colors.ORANGE,
+        },
+    },
+    info: {
+        background: {
+            primary: Colors.GRAY_DARK,
+        },
+        textColor: {
+            primary: Colors.BLUE,
+        },
+        borderColor: {
+            primary: Colors.BLUE,
         },
     },
 };

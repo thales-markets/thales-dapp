@@ -1,40 +1,66 @@
-import { DefaultSubmitButton } from '../components';
 import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { FlexDivCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import ROUTES from 'constants/routes';
 import { navigateTo } from 'utils/routes';
-import Notice from '../Notice';
+import Button from 'components/ButtonV2';
 
 const MigrationNotice: React.FC = () => {
     const { t } = useTranslation();
 
     return (
-        <Notice>
-            <MigrateText>{t('migration.migration-notice.text')}</MigrateText>
-            <FlexDivCentered>
-                <MigrateButton onClick={() => navigateTo(ROUTES.Options.TokenMigration, true)}>
-                    {t('migration.migration-notice.button-label')}
-                </MigrateButton>
-            </FlexDivCentered>
-        </Notice>
+        <Wrapper>
+            <Container>
+                <Text>
+                    <MigrateText>{t('migration.migration-notice.text')}</MigrateText>
+                    <FlexDivCentered>
+                        <Button onClick={() => navigateTo(ROUTES.Options.TokenMigration, true)}>
+                            {t('migration.migration-notice.button-label')}
+                        </Button>
+                    </FlexDivCentered>
+                </Text>
+            </Container>
+        </Wrapper>
     );
 };
+
+const Wrapper = styled(FlexDivColumnCentered)`
+    border: none;
+    background: ${(props) => props.theme.borderColor.primary};
+    border-radius: 10px;
+    padding: 1px;
+    margin-bottom: 15px;
+`;
+
+const Container = styled(FlexDivCentered)`
+    background: ${(props) => props.theme.background.primary};
+    border-radius: 10px;
+    padding: 18px 20px;
+    @media (max-width: 767px) {
+        padding: 20px 20px;
+    }
+`;
+
+const Text = styled(FlexDiv)`
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 30px;
+    color: ${(props) => props.theme.textColor.primary};
+    align-items: center;
+    @media (max-width: 767px) {
+        margin-bottom: 20px;
+        margin-right: 0;
+        text-align: center;
+        flex-direction: column;
+    }
+`;
 
 export const MigrateText = styled.span`
     margin-right: 15px;
     @media (max-width: 767px) {
         margin-right: 0;
     }
-`;
-
-export const MigrateButton = styled(DefaultSubmitButton)`
-    background: ${(props) => props.theme.button.background.primary};
-    &:hover:not(:disabled) {
-        background: ${(props) => props.theme.button.background.primary};
-    }
-    white-space: nowrap;
 `;
 
 export default MigrationNotice;

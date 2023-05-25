@@ -474,7 +474,6 @@ const LiquidityPool: React.FC = () => {
                                                 : LiquidityPoolTab.DEPOSIT
                                         );
                                     }}
-                                    shadow={true}
                                 />
                             </ToggleContainer>
                             {selectedTab === LiquidityPoolTab.DEPOSIT && (

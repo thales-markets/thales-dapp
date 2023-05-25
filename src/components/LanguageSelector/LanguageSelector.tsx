@@ -98,7 +98,11 @@ const DropdownContainer = styled.div`
 `;
 
 const DropDown = styled(FlexDivColumn)`
-    background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
+    background: linear-gradient(
+        281.48deg,
+        ${(props) => props.theme.background.primary} -16.58%,
+        var(--color-tertiary) 97.94%
+    );
     border: 1px solid #4f759b;
     border-radius: 12px;
     position: absolute;

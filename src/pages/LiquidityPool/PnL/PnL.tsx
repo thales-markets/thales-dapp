@@ -77,7 +77,7 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                     cx={cx}
                     cy={cy}
                     r="4"
-                    fill={value === 0 ? Colors.BLUE_DARK : value > 0 ? Colors.GREEN : Colors.RED}
+                    fill={value === 0 ? Colors.BLUE : value > 0 ? Colors.GREEN : Colors.RED}
                 />
             </svg>
         );
@@ -146,7 +146,7 @@ const PnL: React.FC<PnlProps> = ({ lifetimePnl, type }) => {
                                 <Line
                                     type="monotone"
                                     dataKey="cumulativePnl"
-                                    stroke={Colors.BLUE_DARK}
+                                    stroke={Colors.BLUE}
                                     strokeWidth={2}
                                     dot={<CustomizedDot />}
                                 />

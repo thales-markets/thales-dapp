@@ -1,7 +1,6 @@
 import React from 'react';
-import { COLORS } from 'constants/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumn, FlexDivRow, GridDivCol, FlexDivColumnCentered } from 'theme/common';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark-circle.svg';
@@ -17,7 +16,7 @@ export const GridContainer = styled(GridDivCol)`
 `;
 
 export const Input = styled.input`
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     border: 1px solid ${(props) => props.theme.input.borderColor.primary};
     box-sizing: border-box;
     mix-blend-mode: normal;
@@ -75,26 +74,6 @@ export const InputLabel = styled.label`
     }
 `;
 
-export const CurrencyLabel = styled.label`
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 18px;
-    letter-spacing: 0.25px;
-    color: ${(props) => props.theme.input.textColor.primary};
-    padding: 36px 16px 17px 0;
-    pointer-events: none;
-    position: absolute;
-    right: 0;
-    &.disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-    @media (max-width: 767px) {
-        font-size: 18px;
-        padding-top: 33px;
-    }
-`;
-
 export const InputContainer = styled.div<{ marginTop?: number; mediaMarginBottom?: number }>`
     display: flex;
     flex-direction: column;
@@ -106,89 +85,9 @@ export const InputContainer = styled.div<{ marginTop?: number; mediaMarginBottom
     }
 `;
 
-export const ShortInputContainer = styled(InputContainer)`
-    width: 50%;
-    &:first-child {
-        margin-right: 10px;
-    }
-`;
-
-export const DoubleShortInputContainer = styled(InputContainer)`
-    width: 25%;
-    &:last-child {
-        margin-left: 10px;
-    }
-`;
-
-export const AmountButtonContainer = styled(FlexDivCentered)``;
-
-export const AmountButton = styled.button`
-    background: transparent;
-    border: 2px solid #0a2e66;
-    border-radius: 5px;
-    min-height: 28px;
-    width: 58px;
-    cursor: pointer;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 16px;
-    text-align: center;
-    letter-spacing: 0.25px;
-    color: #f6f6fe;
-    margin: 0 12px 20px 12px;
-    padding-bottom: 2px;
-    &:disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-    &.selected {
-        background: #0a2e66;
-        border: 2px solid #00f9ff;
-        color: #00f9ff;
-    }
-    &:hover:not(:disabled) {
-        background: rgba(1, 38, 81, 0.8);
-        border: 2px solid #0a2e66;
-        color: #b8c6e5;
-    }
-    &.selected:hover:not(:disabled) {
-        background: rgba(1, 38, 81, 0.8);
-        border: 2px solid #00f9ff;
-        color: #b8c6e5;
-    }
-`;
-
 export const SubmitButtonContainer = styled(FlexDivColumnCentered)`
     margin-top: 40px;
     align-items: center;
-`;
-
-export const SubmitButton = styled.button<{ isBuy?: boolean }>`
-    background: ${(prop) => (prop.isBuy ? COLORS.BUY : COLORS.SELL)};
-    border-radius: 23px;
-    border: none;
-    min-height: 40px;
-    cursor: pointer;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    color: ${(props) => props.theme.button.textColor.primary};
-    padding: 8px 38px;
-    &:disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-`;
-
-export const DefaultSubmitButton = styled(SubmitButton)`
-    background: ${(props) => props.theme.button.background.primary};
-    &.selected,
-    &:hover:not(:disabled) {
-        background: ${(props) => props.theme.button.borderColor.secondary};
-    }
 `;
 
 export const SummaryContainer = styled.div`
@@ -300,12 +199,6 @@ export const Wallet = styled.div<{ color?: string }>`
     text-align: center;
     letter-spacing: 0.25px;
     color: ${(props) => (props.color ? props.color : '#f6f6fe')};
-`;
-
-export const Divider = styled.hr`
-    width: 100%;
-    border: none;
-    border-top: 2px solid #0a2e66;
 `;
 
 type TooltipIconProps = {

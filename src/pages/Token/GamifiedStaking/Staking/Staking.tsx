@@ -288,8 +288,7 @@ const Staking: React.FC = () => {
                             secondLabel: stakeOptions.unstake.label.toUpperCase(),
                             fontSize: '23px',
                         }}
-                        shadow={true}
-                        dotBackground={'var(--amm-switch-circle)'}
+                        borderColor={theme.borderColor.tertiary}
                         spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value
@@ -345,7 +344,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
 const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?: BackgroundType }>`
     display: grid;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     @media (max-width: 768px) {

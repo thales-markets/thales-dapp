@@ -590,7 +590,6 @@ const Vault: React.FC<VaultProps> = (props) => {
                                                 selectedTab === VaultTab.DEPOSIT ? VaultTab.WITHDRAW : VaultTab.DEPOSIT
                                             );
                                         }}
-                                        shadow={true}
                                     />
                                 </ToggleContainer>
                                 {selectedTab === VaultTab.DEPOSIT && (

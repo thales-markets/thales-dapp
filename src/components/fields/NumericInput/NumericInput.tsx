@@ -120,13 +120,17 @@ const NumericInput: React.FC<NumericInputProps> = ({
                         </MaxButton>
                     )}
                     {currencyLabel && (
-                        <CurrencyLabel className={disabled ? 'currency-label disabled' : 'currency-label'}>
+                        <CurrencyLabel
+                            className={disabled ? 'currency-label disabled' : 'currency-label'}
+                            hasSeparator={onMaxButton}
+                        >
                             {currencyLabel}
                         </CurrencyLabel>
                     )}
                     {currencyComponent && (
                         <CurrencyComponentContainer
                             className={disabled && !enableCurrencyComponentOnly ? 'disabled' : ''}
+                            hasSeparator={onMaxButton}
                         >
                             {currencyComponent}
                         </CurrencyComponentContainer>
@@ -147,11 +151,11 @@ const RightContainer = styled(FlexDivCentered)`
     bottom: 8px;
 `;
 
-const CurrencyLabel = styled.label`
-    border-left: 2px solid ${(props) => props.theme.input.borderColor.primary};
+const CurrencyLabel = styled.label<{ hasSeparator?: boolean }>`
+    ${(props) => (props.hasSeparator ? `border-left: 2px solid ${props.theme.input.borderColor.primary};` : '')}
     font-weight: bold;
     font-size: 13px;
-    line-height: 20px;
+    line-height: 15px;
     color: ${(props) => props.theme.input.textColor.primary};
     padding-left: 8px;
     padding-right: 12px;
@@ -210,9 +214,9 @@ const StyledBalanceIcon = styled(BalanceIcon)`
     }
 `;
 
-const CurrencyComponentContainer = styled(FlexDivCentered)`
-    border-left: 2px solid ${(props) => props.theme.input.borderColor.primary};
-    line-height: 20px;
+const CurrencyComponentContainer = styled(FlexDivCentered)<{ hasSeparator?: boolean }>`
+    ${(props) => (props.hasSeparator ? `border-left: 2px solid ${props.theme.input.borderColor.primary};` : '')}
+    line-height: 15px;
     padding-right: 2px;
     &.disabled {
         opacity: 0.4;

@@ -100,7 +100,7 @@ export const getStatusColor = (status: string) => {
         case StatusEnum.Pending:
             return Colors.GRAY_LIGHT;
         case StatusEnum.Closed:
-            return Colors.BLUE;
+            return Colors.BLUE_DARK;
         default:
             return Colors.GREEN;
     }

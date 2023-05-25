@@ -24,9 +24,9 @@ import {
     GridAction,
 } from '../gridComponents';
 import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInvestorsRetroRewardsQuery';
-import { DefaultSubmitButton } from 'pages/Token/components/components';
 import styled from 'styled-components';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2';
 
 const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -169,7 +169,7 @@ const ClaimMigratedRewards: React.FC = () => {
             </SectionHeader>
             <GridContainer style={{ height: '100%' }}>
                 <StyledStakingRewardsItem style={{ gridColumn: 'span 12' }}>
-                    <StakingRewardsLabel color="var(--color-highlight)">
+                    <StakingRewardsLabel>
                         {t('options.earn.thales-staking.staking-rewards.unclaimed-rewards.rewards-label')}
                     </StakingRewardsLabel>
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, balance)}</StakingRewardsContent>
@@ -177,16 +177,13 @@ const ClaimMigratedRewards: React.FC = () => {
                 <StyledGridAction>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainer>
-                        <DefaultSubmitButton
-                            onClick={handleClaimOngoingAirdrop}
-                            disabled={!isClaimAvailable || isClaiming}
-                        >
+                        <Button onClick={handleClaimOngoingAirdrop} disabled={!isClaimAvailable || isClaiming}>
                             {isClaiming
                                 ? t('options.earn.thales-staking.staking-rewards.claiming') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
                                 : t('options.earn.thales-staking.staking-rewards.claim') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
-                        </DefaultSubmitButton>
+                        </Button>
                         {migratedRewards && migratedRewards.isPaused && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.paused-message')}

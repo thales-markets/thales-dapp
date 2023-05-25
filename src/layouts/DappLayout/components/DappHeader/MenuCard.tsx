@@ -47,7 +47,7 @@ const MenuCard = styled.div<{ isVisible: boolean }>`
     box-sizing: border-box;
     border-radius: 15px;
     z-index: 1000;
-    background-color: var(--color-primary);
+    background-color: ${(props) => props.theme.background.primary};
     --background: var(--color-primary);
     --icon-color: #f7f7f7;
     --shadow-color: 'var(--color-highlight)';

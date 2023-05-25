@@ -140,7 +140,7 @@ const NoResultsContainer = styled.div<{ gridColumns?: number; gridColumnStart?: 
 
 const NoResultsText = styled.div<{ background?: boolean }>`
     display: grid;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     padding: 30px 15px;

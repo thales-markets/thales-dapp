@@ -61,7 +61,7 @@ export const Error = styled(Text)`
 export const InputsWrapper = styled(FlexDivColumn)`
     padding: 20px;
     border-radius: 12px;
-    background: var(--color-primary); ;
+    background: ${(props) => props.theme.background.primary};
 `;
 
 export const NoteText = styled.p`

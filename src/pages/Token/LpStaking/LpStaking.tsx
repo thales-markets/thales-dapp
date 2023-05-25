@@ -338,8 +338,6 @@ const LpStaking: React.FC = () => {
                             secondLabel: stakeOptions.unstake.label.toUpperCase(),
                             fontSize: '25px',
                         }}
-                        shadow={true}
-                        dotBackground={'var(--amm-switch-circle)'}
                         spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value
@@ -442,7 +440,7 @@ const SectionContentWrapper = styled.div<{
             : ''}
     ${(props) => (props.columnsSpan ? `grid-column: span ${props.columnsSpan};` : '')}
     height: 100%;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     ${(props) => {

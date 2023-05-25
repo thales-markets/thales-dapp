@@ -237,7 +237,7 @@ const SectionWrapper = styled.section<{
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
     position: relative;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;

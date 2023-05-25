@@ -74,6 +74,7 @@ const Wrapper = styled.button<{
     background-color: ${(props) => props.backgroundColor || props.theme.button.background.primary};
     margin: ${(props) => props.margin || ''};
     padding: ${(props) => props.padding || '0 30px'};
+    outline: none;
     &:disabled {
         opacity: 0.5;
         cursor: default;

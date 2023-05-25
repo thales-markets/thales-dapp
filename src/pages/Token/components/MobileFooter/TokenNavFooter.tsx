@@ -4,7 +4,7 @@ import { Image } from 'theme/common';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
 import snxStakingActiveIcon from 'assets/images/snx-staking-active.png';
-import snxStakingIcon from 'assets/images/snx-staking.png';
+import snxStakingIcon from 'assets/images/snx-staking.svg';
 import stakingActiveIcon from 'assets/images/staking-active.svg';
 import stakingIcon from 'assets/images/staking.svg';
 import vestingActiveIcon from 'assets/images/vesting-active.svg';
@@ -57,12 +57,18 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                     pathname: location.pathname,
                                     search: queryString.stringify({
                                         tab: TokenTabEnum.GAMIFIED_STAKING,
+                                        activeButtonId: TokenTabSectionIdEnum.STAKING,
                                     }),
                                 });
                                 setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
                                 setSelectedSection(TokenTabSectionIdEnum.STAKING);
                             }}
-                            src={selectedSection === TokenTabSectionIdEnum.STAKING ? stakingActiveIcon : stakingIcon}
+                            src={
+                                selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
+                                selectedSection === TokenTabSectionIdEnum.STAKING
+                                    ? stakingActiveIcon
+                                    : stakingIcon
+                            }
                         />
                         {(isL2 || isArb) && (
                             <Icon
@@ -71,12 +77,14 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                         pathname: location.pathname,
                                         search: queryString.stringify({
                                             tab: TokenTabEnum.GAMIFIED_STAKING,
+                                            activeButtonId: TokenTabSectionIdEnum.REWARDS,
                                         }),
                                     });
                                     setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
                                     setSelectedSection(TokenTabSectionIdEnum.REWARDS);
                                 }}
                                 src={
+                                    selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
                                     selectedSection === TokenTabSectionIdEnum.REWARDS
                                         ? snxStakingActiveIcon
                                         : snxStakingIcon
@@ -90,13 +98,17 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                         pathname: location.pathname,
                                         search: queryString.stringify({
                                             tab: TokenTabEnum.GAMIFIED_STAKING,
+                                            activeButtonId: TokenTabSectionIdEnum.VESTING,
                                         }),
                                     });
                                     setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
                                     setSelectedSection(TokenTabSectionIdEnum.VESTING);
                                 }}
                                 src={
-                                    selectedSection === TokenTabSectionIdEnum.VESTING ? vestingActiveIcon : vestingIcon
+                                    selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
+                                    selectedSection === TokenTabSectionIdEnum.VESTING
+                                        ? vestingActiveIcon
+                                        : vestingIcon
                                 }
                             />
                         )}
@@ -107,32 +119,36 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                         pathname: location.pathname,
                                         search: queryString.stringify({
                                             tab: TokenTabEnum.GAMIFIED_STAKING,
+                                            activeButtonId: TokenTabSectionIdEnum.MERGE_ACCOUNT,
                                         }),
                                     });
                                     setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
                                     setSelectedSection(TokenTabSectionIdEnum.MERGE_ACCOUNT);
                                 }}
                                 src={
+                                    selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
                                     selectedSection === TokenTabSectionIdEnum.MERGE_ACCOUNT
                                         ? migrationActiveIcon
                                         : migrationIcon
                                 }
                             />
                         )}
-                        {!isArb && (
+                        {isL2 && (
                             <Icon
                                 onClick={() => {
                                     history.push({
                                         pathname: location.pathname,
                                         search: queryString.stringify({
                                             tab: TokenTabEnum.LP_STAKING,
+                                            activeButtonId: TokenTabSectionIdEnum.LP_STAKING,
                                         }),
                                     });
                                     setSelectedTab(TokenTabEnum.LP_STAKING);
                                     setSelectedSection(TokenTabSectionIdEnum.LP_STAKING);
                                 }}
                                 src={
-                                    selectedTab === TokenTabEnum.LP_STAKING
+                                    selectedTab === TokenTabEnum.LP_STAKING &&
+                                    selectedSection === TokenTabSectionIdEnum.LP_STAKING
                                         ? isL2
                                             ? lpl2ActiveIcon
                                             : lpActiveIcon
@@ -150,11 +166,16 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                         pathname: location.pathname,
                                         search: queryString.stringify({
                                             tab: TokenTabEnum.MIGRATION,
+                                            activeButtonId: undefined,
                                         }),
                                     });
                                     setSelectedTab(TokenTabEnum.MIGRATION);
                                 }}
-                                src={selectedTab === TokenTabEnum.MIGRATION ? migrationActiveIcon : migrationIcon}
+                                src={
+                                    selectedTab === TokenTabEnum.MIGRATION && selectedSection === undefined
+                                        ? migrationActiveIcon
+                                        : migrationIcon
+                                }
                             />
                         )}
                         {!isL2 && !isArb && (
@@ -164,12 +185,13 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
                                         pathname: location.pathname,
                                         search: queryString.stringify({
                                             tab: TokenTabEnum.STRATEGIC_INVESTORS,
+                                            activeButtonId: undefined,
                                         }),
                                     });
                                     setSelectedTab(TokenTabEnum.STRATEGIC_INVESTORS);
                                 }}
                                 src={
-                                    selectedTab === TokenTabEnum.STRATEGIC_INVESTORS
+                                    selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && selectedSection === undefined
                                         ? snxStakingActiveIcon
                                         : snxStakingIcon
                                 }

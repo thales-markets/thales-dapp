@@ -856,7 +856,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
     ${(props) => (props.noGrid ? '' : 'display: grid;')}
     position: relative;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;

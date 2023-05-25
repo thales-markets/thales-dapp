@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -28,9 +28,9 @@ import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import i18n from 'i18n';
-import { DefaultSubmitButton } from 'pages/Token/components/components';
 import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -272,16 +272,13 @@ const RetroRewards: React.FC = () => {
                     </AmountsContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainerBottom>
-                        <DefaultSubmitButton
-                            disabled={!isClaimAvailable || isClaiming}
-                            onClick={handleClaimRetroRewards}
-                        >
+                        <Button disabled={!isClaimAvailable || isClaiming} onClick={handleClaimRetroRewards}>
                             {isClaiming
                                 ? t('options.earn.snx-stakers.claiming-unlocked') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
                                 : t('options.earn.snx-stakers.claim') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
-                        </DefaultSubmitButton>
+                        </Button>
                         <ClaimMessage invisible={!!vestingInfo.initialLocked}>
                             {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
                         </ClaimMessage>
@@ -299,7 +296,7 @@ const RetroRewards: React.FC = () => {
 
 const StyledSectionContentContainer = styled(SectionContentContainer)`
     grid-column: span 12;
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     padding: 20px;
     @media (max-width: 767px) {
         padding: 0 20px 20px 20px;
@@ -360,7 +357,11 @@ const TooltipContainer = styled(FlexDivColumnCentered)<{ borderColor: string }>`
     z-index: 999;
     height: 78px;
     padding: 10px 14px;
-    background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
+    background: linear-gradient(
+        281.48deg,
+        ${(props) => props.theme.background.primary} -16.58%,
+        var(--color-tertiary) 97.94%
+    );
 `;
 
 const TooltipAmount = styled(FlexDivColumn)<{ color: string }>`
@@ -377,6 +378,16 @@ const TooltipTitle = styled.span<{ color: string }>`
     text-align: center;
     color: ${(props) => props.color};
     margin-bottom: 10px;
+`;
+
+const GradientText = styled.span<{ gradient: string; fontSize: number; fontWeight: number }>`
+    font-size: ${(props) => props.fontSize}px;
+    font-weight: ${(props) => props.fontWeight};
+    background: ${(props) => props.gradient};
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
 `;
 
 export default RetroRewards;

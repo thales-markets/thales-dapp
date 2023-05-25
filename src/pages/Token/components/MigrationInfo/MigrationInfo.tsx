@@ -39,12 +39,14 @@ const Conatiner = styled.section`
     flex-direction: column;
     position: relative;
     border-radius: 15px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     grid-column: span 10;
     padding: 30px;
     justify-content: center;
+    margin: 100px 0;
     @media (max-width: 767px) {
         padding: 5px;
+        margin: 0;
     }
 `;
 
