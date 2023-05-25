@@ -305,12 +305,12 @@ const Rectangle = styled.rect`
     stroke-width: 1px;
     width: 70px;
     height: 16px;
-    stroke: ${(props) => props.theme.borderColor.primary};
+    stroke: ${(props) => props.theme.borderColor.tertiary};
     fill: ${(props) => props.theme.background.primary};
 `;
 
 const Text = styled.text`
-    fill: ${(props) => props.theme.borderColor.primary};
+    fill: ${(props) => props.theme.borderColor.tertiary};
     font-size: 10px;
 `;
 
