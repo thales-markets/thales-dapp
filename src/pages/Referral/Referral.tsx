@@ -503,10 +503,12 @@ const Referral: React.FC = () => {
                 {t('referral-page.footer.sharing')}
                 <Tooltip overlay={t('referral-page.disclaimer')} iconFontSize={14} />
                 &nbsp;
-                {t('referral-page.footer.and')}{' '}
+                {t('referral-page.footer.and')}
+                &nbsp;
                 <FooterLink target="_blank" rel="noreferrer" href={termsOfUse}>
                     {t('referral-page.footer.terms')}
                 </FooterLink>
+                .
             </ReferralFooter>
             <Footer />
         </>

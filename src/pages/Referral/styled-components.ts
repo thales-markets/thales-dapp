@@ -19,7 +19,7 @@ export const Label = styled.span`
 `;
 
 export const StatisticsWrapper = styled.div`
-    border: 2px solid ${(props) => props.theme.borderColor.secondary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     padding: 16px 32px;
     border-radius: 15px;
     @media (max-width: 767px) {
@@ -103,7 +103,7 @@ export const MenuContainer = styled(FlexDiv)`
     flex-direction: row;
     justify-content: flex-start;
     align-items: stretch;
-    border-bottom: 4px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
     margin-bottom: 15px;
     @media (max-width: 768px) {
@@ -179,7 +179,7 @@ export const ViewsDropDown = styled.div`
         display: flex;
         flex-direction: column;
         background: ${(props) => props.theme.background.secondary};
-        border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+        border: 1px solid ${(props) => props.theme.borderColor.primary};
         box-sizing: border-box;
         border-radius: 12px;
         padding: 15px 20px;
@@ -227,7 +227,6 @@ export const StyledLink = styled.a`
 
 export const FooterLink = styled.a`
     color: ${(props) => props.theme.link.textColor.primary};
-    margin-left: 5px;
     &:hover {
         text-decoration: underline;
     }
