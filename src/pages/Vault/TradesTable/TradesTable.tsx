@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
 import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
-import Table from 'components/Table';
+import Table from 'components/TableV2';
 import { buildOptionsMarketLink } from 'utils/routes';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import './style.css';
@@ -36,13 +36,11 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                                 {formatTxTimestamp(cellProps.cell.value)}
                             </p>
                         ),
-                        width: 150,
                         sortable: true,
                     },
                     {
                         Header: <>{t('vault.trades-history.table.asset')}</>,
                         accessor: 'currencyKey',
-                        sortType: 'alphanumeric',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['currencyKey']>) => (
                             <SPAAnchor
                                 className="hover-underline"
@@ -57,8 +55,8 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                                 {cellProps.cell.value}
                             </SPAAnchor>
                         ),
-                        width: 150,
                         sortable: true,
+                        sortType: 'alphanumeric',
                     },
                     {
                         Header: <>{t('vault.trades-history.table.maturity-date-col')}</>,
@@ -66,23 +64,20 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['maturityDate']>) => (
                             <p>{formatShortDate(cellProps.cell.value)}</p>
                         ),
-                        width: 150,
                         sortable: true,
                     },
                     {
                         Header: <>{t('vault.trades-history.table.strike-price-col')}</>,
                         accessor: 'strikePrice',
-                        sortType: 'basic',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['strikePrice']>) => (
                             <p>${formatCurrency(cellProps.cell.value)}</p>
                         ),
-                        width: 150,
                         sortable: true,
+                        sortType: 'basic',
                     },
                     {
                         Header: <>{t('vault.trades-history.table.amount-col')}</>,
                         accessor: 'amount',
-                        sortType: 'basic',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['amount']>) => (
                             <p>
                                 {cellProps.cell.value}
@@ -99,18 +94,17 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                                 ></Icon>
                             </p>
                         ),
-                        width: 150,
                         sortable: true,
+                        sortType: 'basic',
                     },
                     {
                         Header: <>{t('vault.trades-history.table.usd-value-col')}</>,
                         accessor: 'paid',
-                        sortType: 'basic',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['paid']>) => (
                             <p>${formatCurrency(cellProps.cell.value)}</p>
                         ),
-                        width: 150,
                         sortable: true,
+                        sortType: 'basic',
                     },
                     {
                         Header: <>{t('vault.trades-history.table.result-col')}</>,
@@ -154,7 +148,7 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                 data={transactions}
                 isLoading={isLoading}
                 noResultsMessage={noResultsMessage}
-                tableRowCellStyles={{ fontSize: `${isMobile() ? '10px' : '14px'}` }}
+                hidePagination
             />
         </>
     );

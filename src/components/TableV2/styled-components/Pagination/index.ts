@@ -26,6 +26,11 @@ const Pagination = styled(TablePagination)`
             margin-right: 10px;
         }
     }
+    .MuiIconButton-root {
+        @media (max-width: 767px) {
+            padding: 6px;
+        }
+    }
 `;
 
 export default Pagination;

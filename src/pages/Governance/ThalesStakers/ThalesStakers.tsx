@@ -14,7 +14,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'utils/network';
 import { Blockie, StyledLink } from '../styled-components';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import Table from 'components/Table/Table';
+import Table from 'components/TableV2';
 import { THALES_CURRENCY } from 'constants/currency';
 import { truncateAddress } from 'utils/formatters/string';
 import { CellProps } from 'react-table';
@@ -22,11 +22,9 @@ import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
-import Pagination from 'components/TableV2/styled-components/Pagination';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
-    const [isMobile, setIsMobile] = useState(false);
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [addressSearch, setAddressSearch] = useState<string>('');
@@ -74,35 +72,6 @@ const ThalesStakers: React.FC = () => {
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const [page, setPage] = useState(0);
-    const handleChangePage = (_event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const [rowsPerPage, setRowsPerPage] = useState(20);
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(Number(event.target.value));
-        setPage(0);
-    };
-
-    const handleResize = () => {
-        if (window.innerWidth <= 767) {
-            setIsMobile(true);
-        } else {
-            setIsMobile(false);
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-        handleResize();
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
-    useEffect(() => setPage(0), [addressSearch]);
-
     return (
         <Container>
             <HeaderContainer>
@@ -130,7 +99,6 @@ const ThalesStakers: React.FC = () => {
                                     </FlexDiv>
                                 </StyledLink>
                             ),
-                            width: 150,
                             sortable: true,
                         },
                         {
@@ -151,17 +119,13 @@ const ThalesStakers: React.FC = () => {
                                     </Tooltip>
                                 );
                             },
-                            width: 150,
                             sortable: true,
                         },
                     ]}
                     data={addressSearch ? searchFilteredStakers : stakers}
                     isLoading={stakersQuery.isLoading}
                     noResultsMessage={t('governance.stakers.no-stakers-found')}
-                    tableRowHeadStyles={{ width: '100%' }}
-                    onSortByChanged={() => setPage(0)}
-                    currentPage={page}
-                    rowsPerPage={rowsPerPage}
+                    searchQuery={addressSearch}
                     initialState={{
                         sortBy: [
                             {
@@ -171,25 +135,6 @@ const ThalesStakers: React.FC = () => {
                         ],
                     }}
                 />
-
-                {stakers.length !== 0 && (
-                    <table>
-                        <tbody>
-                            <tr>
-                                <Pagination
-                                    rowsPerPageOptions={[10, 20, 30, 50]}
-                                    onRowsPerPageChange={handleChangeRowsPerPage}
-                                    labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                                    count={stakers.length ? stakers.length : 0}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onPageChange={handleChangePage}
-                                    style={isMobile ? { padding: '0 5px 0 10px' } : { padding: '0 20px 0 30px' }}
-                                />
-                            </tr>
-                        </tbody>
-                    </table>
-                )}
             </TableContainer>
         </Container>
     );

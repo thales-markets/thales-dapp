@@ -209,25 +209,6 @@ const Tab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
 
 const TableContainer = styled(FlexDivColumn)`
     overflow: auto;
-    ::-webkit-scrollbar {
-        width: 5px;
-    }
-    ::-webkit-scrollbar-track {
-        background: ${(props) => props.theme.background.secondary};
-    }
-    ::-webkit-scrollbar-thumb {
-        border-radius: 15px;
-        background: ${(props) => props.theme.background.tertiary};
-    }
-    ::-webkit-scrollbar-thumb:active {
-        background: ${(props) => props.theme.background.tertiary};
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: ${(props) => props.theme.background.tertiary};
-    }
-    @media (max-width: 767px) {
-        width: 700px;
-    }
 `;
 
 export const SelectContainer = styled.div`
