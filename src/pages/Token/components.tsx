@@ -129,7 +129,7 @@ export const DescriptionLink = styled.a`
 
 export const Line = styled.hr<{ margin?: string }>`
     height: 1px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     ${(props) => (props.margin ? `margin: ${props.margin}` : '')};
 `;
 
