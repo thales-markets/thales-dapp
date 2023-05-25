@@ -11,7 +11,7 @@ export const FiltersButton = styled.div<{ visible?: boolean }>`
     display: block;
     visibility: ${(props) => (props?.visible ? 'visible' : 'hidden')};
     padding: 6px 20px;
-    border: 1px solid ${(props) => props.theme.borderColor.secondary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     box-sizing: border-box;
     border-radius: 30px;
     background: ${(props) => props.theme.button.background.tertiary};
