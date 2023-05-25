@@ -15,8 +15,7 @@ import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
 import { formatShortDate } from 'utils/formatters/date';
-import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
-import SimpleLoader from 'components/SimpleLoader';
+import { NoDataContainer, NoDataText } from 'theme/common';
 import { TFunction } from 'i18next';
 import RangeIllustration from 'components/RangeIllustration';
 import { UI_COLORS } from 'constants/ui';
@@ -219,50 +218,48 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                         )}
                     </Content>
                 ))}
-            {!isLoading && !isSimpleView && data.length > 0 && (
+            {!isSimpleView && (
                 <Table
-                    containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
                     data={data}
                     searchQuery={searchText}
+                    isLoading={isLoading}
                     columns={[
                         {
                             Header: <>{t('options.home.markets-table.asset-col')}</>,
                             accessor: 'market.currencyKey',
-                            Cell: (props: any) => {
-                                return (
-                                    <Currency.Name
-                                        currencyKey={props?.cell?.value}
-                                        showIcon={true}
-                                        iconProps={{ type: 'asset' }}
-                                        synthIconStyle={{ width: 32, height: 32 }}
-                                        spanStyle={{ width: 60 }}
-                                        hideAssetName={true}
-                                    />
-                                );
-                            },
+                            Cell: (props: any) => (
+                                <Currency.Name
+                                    currencyKey={props.cell.value}
+                                    showIcon={true}
+                                    iconProps={{ type: 'asset' }}
+                                    synthIconStyle={{ width: 32, height: 32 }}
+                                    spanStyle={{ width: 60 }}
+                                    hideAssetName={true}
+                                />
+                            ),
                             sortable: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.maturity-date-col`),
-                            accessor: (row: any) => <TableText>{formatShortDate(row.market.maturityDate)}</TableText>,
-                            disableSortBy: true,
+                            Header: <>{t(`options.home.markets-table.maturity-date-col`)}</>,
+                            accessor: 'market.maturityDate',
+                            Cell: (props: any) => <TableText>{formatShortDate(props.cell.value)}</TableText>,
                         },
                         {
-                            Header: t(`options.home.markets-table.strike-price-col`),
-                            accessor: (row: any) => {
-                                return (
-                                    <TableText>
-                                        {row.range
-                                            ? formatCurrencyWithSignInRange(
-                                                  USD_SIGN,
-                                                  row.market.leftPrice,
-                                                  row.market.rightPrice,
-                                                  2
-                                              )
-                                            : formatCurrencyWithSign(USD_SIGN, row.market.strikePrice, 2)}
-                                    </TableText>
-                                );
-                            },
+                            Header: <>{t(`options.home.markets-table.strike-price-col`)}</>,
+                            accessor: 'range',
+                            Cell: (props: any) => (
+                                <TableText>
+                                    {props.cell.value
+                                        ? formatCurrencyWithSignInRange(
+                                              USD_SIGN,
+                                              props.row.original.market.leftPrice,
+                                              props.row.original.market.rightPrice,
+                                              2
+                                          )
+                                        : formatCurrencyWithSign(USD_SIGN, props.row.original.market.strikePrice, 2)}
+                                </TableText>
+                            ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstPrice =
                                     firstElem.original.market.leftPrice || firstElem.original.market.strikePrice;
@@ -279,10 +276,12 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                             },
                         },
                         {
-                            Header: t(`options.home.markets-table.final-asset-price-col`),
-                            accessor: (row: any) => {
-                                return <TableText>{formatCurrencyWithSign(USD_SIGN, row.market.finalPrice)}</TableText>;
-                            },
+                            Header: <>{t(`options.home.markets-table.final-asset-price-col`)}</>,
+                            accessor: 'market.finalPrice',
+                            Cell: (props: any) => (
+                                <TableText>{formatCurrencyWithSign(USD_SIGN, props.cell.value)}</TableText>
+                            ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 if (firstElem.original.market.finalPrice > secondElem.original.market.finalPrice)
                                     return 1;
@@ -292,34 +291,35 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                             },
                         },
                         {
-                            Header: t(`options.home.markets-table.status-col`),
-                            accessor: (row: any) => (
-                                <TableText>{getIconOrText(row.claimable, row.claimed, t)}</TableText>
+                            Header: <>{t(`options.home.markets-table.status-col`)}</>,
+                            accessor: 'claimable',
+                            Cell: (props: any) => (
+                                <TableText>{getIconOrText(props.cell.value, props.row.original.claimed, t)}</TableText>
                             ),
                         },
                         {
-                            Header: t('options.leaderboard.trades.table.amount-col'),
-                            accessor: (row: any) => {
-                                return (
-                                    <TableText
+                            Header: <>{t('options.leaderboard.trades.table.amount-col')}</>,
+                            accessor: 'balances.amount',
+                            Cell: (props: any) => (
+                                <TableText
+                                    style={{
+                                        minWidth: 100,
+                                        marginRight: 20,
+                                        textAlign: 'right',
+                                        display: 'inline-block',
+                                    }}
+                                >
+                                    {props.cell.value.toFixed(2)}
+                                    <Icon
                                         style={{
-                                            minWidth: 100,
-                                            marginRight: 20,
-                                            textAlign: 'right',
-                                            display: 'inline-block',
+                                            color: getColor(props.row.original),
+                                            marginLeft: 6,
                                         }}
-                                    >
-                                        {row.balances.amount.toFixed(2)}
-                                        <Icon
-                                            style={{
-                                                color: getColor(row),
-                                                marginLeft: 6,
-                                            }}
-                                            className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
-                                        ></Icon>
-                                    </TableText>
-                                );
-                            },
+                                        className={`v2-icon v2-icon--${props.row.original.balances.type.toLowerCase()}`}
+                                    ></Icon>
+                                </TableText>
+                            ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 if (firstElem.original.balances.amount > secondElem.original.balances.amount) return 1;
                                 if (firstElem.original.balances.amount < secondElem.original.balances.amount) return -1;
@@ -328,11 +328,6 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                         },
                     ]}
                 />
-            )}
-            {isLoading && (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
             )}
         </Container>
     );

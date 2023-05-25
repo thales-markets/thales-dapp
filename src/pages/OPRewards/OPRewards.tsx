@@ -14,7 +14,6 @@ import {
     MyRewardsTotal,
     MyRewardsList,
     MyRewards,
-    LoaderContainer,
 } from './styled-components';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
@@ -33,7 +32,6 @@ import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'u
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import ElectionsBanner from 'components/ElectionsBanner';
 import { Colors } from 'theme/common';
-import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import { isMobile } from 'utils/device';
 import { Rewards, emptyRewards } from 'types/rewards';
 
@@ -200,7 +198,7 @@ const OPRewards: React.FC = () => {
                 Header: t('op-rewards.table.wallet-address'),
                 accessor: 'account',
                 Cell: (cellProps: any) => (
-                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                    <p>
                         <AddressLink
                             href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
                             target="_blank"
@@ -213,13 +211,12 @@ const OPRewards: React.FC = () => {
                         </AddressLink>
                     </p>
                 ),
-                disableSortBy: true,
             },
             {
                 Header: t('op-rewards.table.itm-info'),
                 accessor: 'itmInfo',
                 Cell: (cellProps: any) => (
-                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                    <p>
                         <Trans
                             i18nKey={'op-rewards.table.reward-text'}
                             values={{
@@ -238,6 +235,7 @@ const OPRewards: React.FC = () => {
                         />
                     </p>
                 ),
+                sortable: true,
                 sortType: itmRewardsSort(),
                 sortDescFirst: true,
             },
@@ -246,7 +244,7 @@ const OPRewards: React.FC = () => {
                 Header: t('op-rewards.table.otm-info'),
                 accessor: 'otmInfo',
                 Cell: (cellProps: any) => (
-                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                    <p>
                         <Trans
                             i18nKey={'op-rewards.table.reward-text'}
                             values={{
@@ -265,6 +263,7 @@ const OPRewards: React.FC = () => {
                         />
                     </p>
                 ),
+                sortable: true,
                 sortType: otmRewardsSort(),
                 sortDescFirst: true,
             },
@@ -272,7 +271,7 @@ const OPRewards: React.FC = () => {
                 Header: t('op-rewards.table.total-rewards'),
                 accessor: 'totalRewards',
                 Cell: (cellProps: any) => (
-                    <p style={{ width: '100%', textAlign: 'center', fontSize: 12 }}>
+                    <p>
                         <Trans
                             i18nKey={'op-rewards.table.reward-text'}
                             values={{
@@ -283,6 +282,7 @@ const OPRewards: React.FC = () => {
                         />
                     </p>
                 ),
+                sortable: true,
                 sortType: rewardsSort(),
                 sortDescFirst: true,
             },
@@ -400,32 +400,21 @@ const OPRewards: React.FC = () => {
                     />
                 </SummaryRow>
             </SummaryWrapper>
-            {isLoading ? (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
-            ) : (
-                <>
-                    <Table
-                        containerStyle={{
-                            width: '100%',
-                            maxWidth: '100%',
-                        }}
-                        data={tableData}
-                        leaderboardView={true}
-                        hasStickyRow={true}
-                        columns={getColumns()}
-                        initialState={{
-                            sortBy: [
-                                {
-                                    id: 'totalRewards',
-                                    desc: true,
-                                },
-                            ],
-                        }}
-                    />
-                </>
-            )}
+            <Table
+                data={tableData}
+                columns={getColumns()}
+                isLoading={isLoading}
+                searchQuery={searchQuery}
+                hasStickyRow={true}
+                initialState={{
+                    sortBy: [
+                        {
+                            id: 'totalRewards',
+                            desc: true,
+                        },
+                    ],
+                }}
+            />
         </Wrapper>
     );
 };

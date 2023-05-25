@@ -4,7 +4,7 @@ import { CellProps } from 'react-table';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatTxTimestamp } from 'utils/formatters/date';
-import Table from 'components/Table';
+import Table from 'components/TableV2';
 import { TokenTransaction, TokenTransactions, TransactionFilterEnum } from 'types/token';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { EMPTY_VALUE } from 'constants/placeholder';
@@ -45,7 +45,6 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['timestamp']>) => (
                             <p>{formatTxTimestamp(cellProps.cell.value)}</p>
                         ),
-                        width: 150,
                         sortable: true,
                     },
                     {
@@ -66,7 +65,6 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                     },
                     {
                         Header: <>{t('options.earn.table.amount-col')}</>,
-                        sortType: amountSort,
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
                             <p>
@@ -88,6 +86,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                             </p>
                         ),
                         sortable: true,
+                        sortType: amountSort,
                     },
                     {
                         Header: <>{t('options.earn.table.tx-status-col')}</>,
@@ -100,7 +99,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                 data={transactions}
                 isLoading={isLoading}
                 noResultsMessage={noResultsMessage}
-                tableHeadCellStyles={{ color: 'var(--color-highlight)' }}
+                hidePagination
             />
         </>
     );

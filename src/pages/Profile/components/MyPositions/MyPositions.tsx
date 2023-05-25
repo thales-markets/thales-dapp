@@ -14,8 +14,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
-import SimpleLoader from 'components/SimpleLoader';
-import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
+import { NoDataContainer, NoDataText } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import RangeIllustration from 'components/RangeIllustration';
 import TimeRemaining from 'components/TimeRemaining';
@@ -275,36 +274,34 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                     </Content>
                 ))}
 
-            {!isLoading && !isSimpleView && data.length > 0 && (
+            {!isSimpleView && (
                 <Table
-                    containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
                     data={data}
                     searchQuery={searchText}
+                    isLoading={isLoading}
                     columns={[
                         {
-                            id: 'market.currencyKey',
                             Header: <>{t('options.home.markets-table.asset-col')}</>,
-                            accessor: (row: any) => {
-                                return (
-                                    <Currency.Name
-                                        currencyKey={row?.market?.currencyKey}
-                                        showIcon={true}
-                                        hideAssetName={true}
-                                        iconProps={{ type: 'asset' }}
-                                        synthIconStyle={{ width: 32, height: 32 }}
-                                        spanStyle={{ width: 60 }}
-                                        additionalIconType={
-                                            !row.range
-                                                ? row?.balances?.type === 'UP'
-                                                    ? 4
-                                                    : 5
-                                                : row?.balances?.type === 'IN'
-                                                ? 1
-                                                : 2
-                                        }
-                                    />
-                                );
-                            },
+                            accessor: 'balances.type',
+                            Cell: (props: any) => (
+                                <Currency.Name
+                                    currencyKey={props.cell.row.original.market.currencyKey}
+                                    showIcon={true}
+                                    hideAssetName={true}
+                                    iconProps={{ type: 'asset' }}
+                                    synthIconStyle={{ width: 32, height: 32 }}
+                                    spanStyle={{ width: 60 }}
+                                    additionalIconType={
+                                        !props.cell.row.original.range
+                                            ? props.cell.value === 'UP'
+                                                ? 4
+                                                : 5
+                                            : props.cell.value === 'IN'
+                                            ? 1
+                                            : 2
+                                    }
+                                />
+                            ),
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstCurrency = firstElem.original.market.currencyKey;
                                 const secondCurrency = secondElem.original.market.currencyKey;
@@ -314,10 +311,11 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                             sortable: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.24h-change-col`),
-                            accessor: (row: any) => (
+                            Header: <>{t(`options.home.markets-table.24h-change-col`)}</>,
+                            accessor: 'market.currencyKey',
+                            Cell: (props: any) => (
                                 <PriceChart
-                                    currencyKey={row?.market?.currencyKey}
+                                    currencyKey={props.cell.value}
                                     height={30}
                                     width={isMobile() ? 90 : 100}
                                     showFooter={false}
@@ -331,20 +329,20 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     footerStyle={{ fontSize: '10px' }}
                                 />
                             ),
-                            disableSortBy: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.strike-price-col`),
+                            Header: <>{t(`options.home.markets-table.strike-price-col`)}</>,
                             accessor: 'market.strikePrice',
                             Cell: (props: any) => {
                                 return (
                                     <TableText>
                                         {props.cell.row.original.range
                                             ? props.cell.value
-                                            : formatCurrencyWithSign(USD_SIGN, props?.cell?.value, 2)}
+                                            : formatCurrencyWithSign(USD_SIGN, props.cell.value, 2)}
                                     </TableText>
                                 );
                             },
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstStrikePrice =
                                     firstElem.original.market.leftPrice || firstElem.original.market.strikePrice;
@@ -357,15 +355,19 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     ? -1
                                     : 0;
                             },
-                            sortable: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.current-asset-price-col`),
-                            accessor: (row: any) => (
+                            Header: <>{t(`options.home.markets-table.current-asset-price-col`)}</>,
+                            accessor: 'market',
+                            Cell: (props: any) => (
                                 <TableText>
-                                    {formatCurrencyWithSign(USD_SIGN, exchangeRates?.[row.market.currencyKey] || 0)}
+                                    {formatCurrencyWithSign(
+                                        USD_SIGN,
+                                        exchangeRates?.[props.cell.row.original.value] || 0
+                                    )}
                                 </TableText>
                             ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstAssetPrice = exchangeRates?.[firstElem.original.market.currencyKey] || 0;
                                 const secondAssetPrice = exchangeRates?.[secondElem.original.market.currencyKey] || 0;
@@ -376,13 +378,14 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     ? -1
                                     : 0;
                             },
-                            sortable: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.time-remaining-col`),
-                            accessor: (row: any) => (
-                                <TimeRemaining end={row.market.maturityDate} fontSize={15} showFullCounter={true} />
+                            Header: <>{t(`options.home.markets-table.time-remaining-col`)}</>,
+                            accessor: 'market.maturityDate',
+                            Cell: (props: any) => (
+                                <TimeRemaining end={props.cell.value} fontSize={15} showFullCounter={true} />
                             ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstMaturityDate = firstElem.original.market.maturityDate;
                                 const secondMaturityDate = secondElem.original.market.maturityDate;
@@ -393,67 +396,65 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     ? -1
                                     : 0;
                             },
-                            sortable: true,
                         },
                         {
-                            Header: t('options.leaderboard.trades.table.amount-col'),
-                            accessor: (row: any) => {
-                                return (
-                                    <TableText
+                            Header: <>{t('options.leaderboard.trades.table.amount-col')}</>,
+                            accessor: 'balances.amount',
+                            Cell: (props: any) => (
+                                <TableText
+                                    style={{
+                                        minWidth: 100,
+                                        marginRight: 20,
+                                        textAlign: 'right',
+                                        display: 'inline-block',
+                                    }}
+                                >
+                                    {props.cell.value.toFixed(2)}
+                                    <Icon
                                         style={{
-                                            minWidth: 100,
-                                            marginRight: 20,
-                                            textAlign: 'right',
-                                            display: 'inline-block',
+                                            color: getColor(props.cell.row.original),
+                                            marginLeft: 6,
                                         }}
-                                    >
-                                        {row.balances.amount.toFixed(2)}
-                                        <Icon
-                                            style={{
-                                                color: getColor(row),
-                                                marginLeft: 6,
-                                            }}
-                                            className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
-                                        ></Icon>
-                                    </TableText>
-                                );
-                            },
+                                        className={`v2-icon v2-icon--${props.cell.row.original.balances.type.toLowerCase()}`}
+                                    ></Icon>
+                                </TableText>
+                            ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstAmount = firstElem.original.balances.amount;
                                 const secondAmount = secondElem.original.balances.amount;
 
                                 return firstAmount > secondAmount ? 1 : firstAmount < secondAmount ? -1 : 0;
                             },
-                            sortable: true,
                         },
                         {
-                            Header: t('options.home.market-card.position-value'),
-                            accessor: (row: any) => {
-                                return (
-                                    <TableText>
-                                        {row?.balances?.value === 0 ? (
-                                            <>
-                                                N/A
-                                                <Tooltip
-                                                    overlay={
-                                                        <Trans
-                                                            i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
-                                                            components={[
-                                                                <span key="1">
-                                                                    <UsingAmmLink key="2" />
-                                                                </span>,
-                                                            ]}
-                                                        />
-                                                    }
-                                                    iconFontSize={16}
-                                                />
-                                            </>
-                                        ) : (
-                                            formatCurrencyWithSign(USD_SIGN, row?.balances?.value)
-                                        )}
-                                    </TableText>
-                                );
-                            },
+                            Header: <>{t('options.home.market-card.position-value')}</>,
+                            accessor: 'balances.value',
+                            Cell: (props: any) => (
+                                <TableText>
+                                    {props.cell.value.value === 0 ? (
+                                        <>
+                                            N/A
+                                            <Tooltip
+                                                overlay={
+                                                    <Trans
+                                                        i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                                        components={[
+                                                            <span key="1">
+                                                                <UsingAmmLink key="2" />
+                                                            </span>,
+                                                        ]}
+                                                    />
+                                                }
+                                                iconFontSize={16}
+                                            />
+                                        </>
+                                    ) : (
+                                        formatCurrencyWithSign(USD_SIGN, props.cell.row.original.balances.value)
+                                    )}
+                                </TableText>
+                            ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstValue = firstElem.original.balances?.value || 0;
                                 const secondValue = secondElem.original.balances?.value || 0;
@@ -463,11 +464,6 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                         },
                     ]}
                 />
-            )}
-            {isLoading && (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
             )}
         </Container>
     );

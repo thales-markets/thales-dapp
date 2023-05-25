@@ -21,6 +21,7 @@ const ReadMoreButton: React.FC<ReadMoreButton> = ({ active, onClick }) => {
                 height="26px"
                 padding="0px 15px"
                 backgroundColor={theme.button.background.quaternary}
+                borderColor={theme.button.borderColor.secondary}
             >
                 {active ? t('common.show-less') : t('common.read-more')}
             </Button>

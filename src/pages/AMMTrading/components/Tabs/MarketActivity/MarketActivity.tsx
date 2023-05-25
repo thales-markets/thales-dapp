@@ -1,22 +1,17 @@
 import React, { useMemo } from 'react';
-
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import Table from 'components/TableV2';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
-
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
 import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
-
 import { useTranslation } from 'react-i18next';
 import { uniqBy, orderBy } from 'lodash';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-
 import { UI_COLORS } from 'constants/ui';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
@@ -24,6 +19,7 @@ import { getStableCoinForNetwork } from '../../../../../utils/currency';
 import { MarketType, OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { MARKET_TYPE } from 'constants/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import { FlexDivColumn } from 'theme/common';
 
 const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     const { t } = useTranslation();
@@ -103,10 +99,9 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     );
 
     return (
-        <>
+        <FlexDivColumn>
             <Table
                 data={transactions}
-                defaultPage={10}
                 columns={[
                     {
                         Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
@@ -131,7 +126,6 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                     },
                     {
                         Header: <>{t('options.market.transactions-card.table.amount-col')}</>,
-                        sortType: 'basic',
                         accessor: 'amount',
                         Cell: (cellProps: any) => (
                             <p style={{ color: getCellColor(cellProps.cell.row.original.type), fontWeight: 'bold' }}>
@@ -147,10 +141,10 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                             </p>
                         ),
                         sortable: true,
+                        sortType: 'basic',
                     },
                     {
                         Header: <>{t('options.market.transactions-card.table.price-col')}</>,
-                        sortType: priceSort,
                         accessor: 'price',
                         Cell: (cellProps: any) => (
                             <p>
@@ -164,6 +158,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                             </p>
                         ),
                         sortable: true,
+                        sortType: priceSort,
                     },
                     {
                         Header: <>{t('options.market.transactions-card.table.tx-status-col')}</>,
@@ -177,7 +172,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                     },
                 ]}
             />
-        </>
+        </FlexDivColumn>
     );
 };
 

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FlexDivColumn } from 'theme/common';
 
 export const FormWrapper = styled.div`
     display: flex;
@@ -82,9 +83,8 @@ export const Text = styled.p<{ height?: string }>`
     overflow: hidden;
 `;
 
-export const TableWrapper = styled.div`
+export const TableWrapper = styled(FlexDivColumn)`
     width: 100%;
-    display: flex;
     align-items: center;
     margin-bottom: 100px;
     @media (max-width: 768px) {

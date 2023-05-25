@@ -58,9 +58,6 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
         [userTokenTransactions, filter]
     );
 
-    const noResults = filteredTransactions.length === 0;
-    const noUserTx = filteredTransactions.length === 0;
-
     return (
         <SectionContainer
             txCount={filteredTransactions.length}
@@ -105,46 +102,16 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
                     </DropDownWrapper>
                 </FilterContainer>
             </FilterWrapper>
-            {!noUserTx ? (
-                <SectionContent>
-                    <TransactionsTable
-                        transactions={filteredTransactions}
-                        isLoading={userTokenTransactionsQuery.isLoading}
-                        noResultsMessage={
-                            noResults ? <span>{t(`options.earn.table.no-results.${filter}`)}</span> : undefined
-                        }
-                    />
-                </SectionContent>
-            ) : (
-                <NoResultsContainer gridColumns={gridColumns} gridColumnStart={gridColumnStart}>
-                    <NoResultsText>{t(`options.earn.table.no-activity`)}</NoResultsText>
-                </NoResultsContainer>
-            )}
+            <SectionContent>
+                <TransactionsTable
+                    transactions={filteredTransactions}
+                    isLoading={userTokenTransactionsQuery.isLoading}
+                    noResultsMessage={t(`options.earn.table.no-results.${filter}`)}
+                />
+            </SectionContent>
         </SectionContainer>
     );
 };
-
-const NoResultsContainer = styled.div<{ gridColumns?: number; gridColumnStart?: number }>`
-    box-sizing: border-box;
-    border-radius: 15px;
-    grid-column: ${(props) => (props.gridColumnStart ? `${props.gridColumnStart} /` : '')} span
-        ${(props) => (props.gridColumns ? props.gridColumns : '8')};
-    grid-row: span 3;
-    background: var(--color-highlight) 80;
-    padding: 2px;
-    margin-top: 20px;
-    @media (max-width: 768px) {
-        margin-top: 10px;
-    }
-`;
-
-const NoResultsText = styled.div<{ background?: boolean }>`
-    display: grid;
-    color: ${(props) => (props.background ?? true ? props.theme.textColor.primary : 'none')};
-    border-radius: 15px;
-    align-items: center;
-    padding: 30px 15px;
-`;
 
 const SectionContainer = styled.section<{
     txCount: number;
