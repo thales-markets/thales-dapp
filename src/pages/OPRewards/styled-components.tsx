@@ -119,11 +119,10 @@ export const BoldText = styled.span`
     font-weight: 900;
 `;
 
-export const AddressLink = styled.a<{ isHighlighted?: boolean }>`
-    color: ${(props) => (props.isHighlighted ? props.theme.button.textColor.primary : props.theme.textColor.primary)};
+export const StyledLink = styled.a`
+    color: ${(props) => props.theme.link.textColor.secondary};
     &:hover {
-        color: ${(props) =>
-            props.isHighlighted ? props.theme.button.textColor.primary : props.theme.button.background.primary};
+        text-decoration: underline;
     }
 `;
 

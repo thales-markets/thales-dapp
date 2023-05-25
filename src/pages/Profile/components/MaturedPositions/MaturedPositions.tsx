@@ -15,10 +15,11 @@ import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
 import Table from 'components/TableV2';
 import { formatShortDate } from 'utils/formatters/date';
-import { NoDataContainer, NoDataText } from 'theme/common';
+import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
 import { TFunction } from 'i18next';
 import RangeIllustration from 'components/RangeIllustration';
 import { UI_COLORS } from 'constants/ui';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -218,6 +219,11 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                         )}
                     </Content>
                 ))}
+            {isLoading && isSimpleView && (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            )}
             {!isSimpleView && (
                 <Table
                     data={data}

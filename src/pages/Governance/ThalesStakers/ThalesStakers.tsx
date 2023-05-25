@@ -9,7 +9,6 @@ import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
 import { EnsNames, Staker, Stakers } from 'types/governance';
-import SearchStakers from '../components/SearchStakers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'utils/network';
 import { Blockie, StyledLink } from '../styled-components';
@@ -22,6 +21,7 @@ import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
+import SearchInput from 'components/SearchInput';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
@@ -78,7 +78,12 @@ const ThalesStakers: React.FC = () => {
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
                 </Info>
-                <SearchStakers assetSearch={addressSearch} setAssetSearch={setAddressSearch} />
+                <SearchInput
+                    text={addressSearch}
+                    placeholder={t('op-rewards.search-placeholder')}
+                    handleChange={setAddressSearch}
+                    width="320px"
+                />
             </HeaderContainer>
             <TableContainer>
                 <Table

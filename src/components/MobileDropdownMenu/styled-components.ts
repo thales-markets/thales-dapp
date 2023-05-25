@@ -9,7 +9,7 @@ export const PositionWrapper = styled.div`
 
 export const FiltersButton = styled.div<{ visible?: boolean }>`
     display: block;
-    visibility: ${(props) => (props?.visible ? 'visible' : 'hidden')};
+    visibility: ${(props) => (props.visible ? 'visible' : 'hidden')};
     padding: 6px 20px;
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     box-sizing: border-box;
@@ -62,11 +62,9 @@ export const Item = styled.div<{ active: boolean }>`
     flex-direction: row;
     justify-content: center;
     user-select: none;
-    @media (max-width: 768px) {
-        font-weight: bold;
-        font-size: 12px;
-        line-height: 162.5%;
-    }
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 18px;
 `;
 
 export const Title = styled.p`

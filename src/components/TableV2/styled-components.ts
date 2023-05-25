@@ -122,6 +122,9 @@ export const NoDataContainer = styled(TableRow)`
     width: 100%;
     height: 20px;
     text-align: center;
+    @media (max-width: 767px) {
+        font-size: 13px;
+    }
   }
 `;
 

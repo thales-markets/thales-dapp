@@ -5,7 +5,6 @@ import {
     SummaryWrapper,
     SummaryInfo,
     Wrapper,
-    AddressLink,
     SummaryRow,
     SummaryItem,
     SummaryLabel,
@@ -14,10 +13,11 @@ import {
     MyRewardsTotal,
     MyRewardsList,
     MyRewards,
+    StyledLink,
 } from './styled-components';
 import SelectInput from 'components/SelectInput';
 import Table from 'components/TableV2';
-import SearchField from 'components/SearchInput';
+import SearchInput from 'components/SearchInput';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -197,20 +197,18 @@ const OPRewards: React.FC = () => {
             {
                 Header: t('op-rewards.table.wallet-address'),
                 accessor: 'account',
-                Cell: (cellProps: any) => (
-                    <p>
-                        <AddressLink
+                Cell: (cellProps: any) =>
+                    walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase() ? (
+                        <p>{t('op-rewards.table.my-rewards')}</p>
+                    ) : (
+                        <StyledLink
                             href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
                             target="_blank"
                             rel="noreferrer"
-                            isHighlighted={walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()}
                         >
-                            {walletAddress.toLowerCase() == cellProps.cell.value.toLowerCase()
-                                ? t('op-rewards.table.my-rewards')
-                                : truncateAddress(cellProps.cell.value)}
-                        </AddressLink>
-                    </p>
-                ),
+                            {truncateAddress(cellProps.cell.value)}
+                        </StyledLink>
+                    ),
             },
             {
                 Header: t('op-rewards.table.itm-info'),
@@ -390,7 +388,7 @@ const OPRewards: React.FC = () => {
                             </MyRewardsContainer>
                         </SummaryItem>
                     )}
-                    <SearchField
+                    <SearchInput
                         text={searchQuery}
                         placeholder={t('op-rewards.search-placeholder')}
                         handleChange={(value) => setSearchQuery(value)}

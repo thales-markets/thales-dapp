@@ -14,7 +14,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import Card from '../styled-components/Card';
-import { NoDataContainer, NoDataText } from 'theme/common';
+import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import RangeIllustration from 'components/RangeIllustration';
 import TimeRemaining from 'components/TimeRemaining';
@@ -22,6 +22,7 @@ import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { LINKS } from 'constants/links';
 import { isMobile } from 'utils/device';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -273,7 +274,11 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                         )}
                     </Content>
                 ))}
-
+            {isLoading && isSimpleView && (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            )}
             {!isSimpleView && (
                 <Table
                     data={data}

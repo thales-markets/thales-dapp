@@ -12,6 +12,18 @@ import {
     StatValue,
     TableWrapper,
     Text,
+    MenuContainer,
+    MenuItem,
+    Tab,
+    BoldText,
+    ViewsDropDownWrapper,
+    ViewButton,
+    ViewsDropDown,
+    ViewTitle,
+    ViewItem,
+    ReferralFooter,
+    StyledLink,
+    FooterLink,
 } from './styled-components';
 import Button from 'components/ButtonV2';
 import { Trans, useTranslation } from 'react-i18next';
@@ -25,7 +37,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-import Container from 'pages/Leaderboard/styled-components';
 import useReferralTransactionsQuery, { ReferralTransactions } from 'queries/referral/useReferralTransactionsQuery';
 import useReferredTradersQuery, { ReferredTrader } from 'queries/referral/useReferredTradersQuery';
 import { buildReferrerLink } from 'utils/routes';
@@ -34,7 +45,6 @@ import useReferrerQuery from 'queries/referral/useReferrerQuery';
 import { orderBy } from 'lodash';
 import SelectInput from 'components/SelectInput';
 import { toast } from 'react-toastify';
-import styled from 'styled-components';
 import ReadMoreButton from 'components/ReadMoreButton';
 import Tooltip from 'components/TooltipV2';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
@@ -49,6 +59,7 @@ import axios from 'axios';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Colors } from 'theme/common';
 import TextInput from 'components/fields/TextInput/TextInput';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 
 const tabs = [
     {
@@ -215,7 +226,7 @@ const Referral: React.FC = () => {
     }, [reffererIDQuery.isSuccess, reffererIDQuery.data]);
 
     const handleReadMore = () => {
-        if (!showMore) setHeight('300px');
+        if (!showMore) setHeight('100%');
         if (showMore) setHeight('150px');
         setShowMore(!showMore);
     };
@@ -322,273 +333,184 @@ const Referral: React.FC = () => {
                     </ViewsDropDown>
                 </ViewsDropDownWrapper>
             )}
-            <Container.Main justifyContent="flex-start" hide={false}>
-                <Container.Main.Item
-                    noStrech={true}
-                    padding={'20px 30px'}
-                    active={tabIndex == 0}
-                    onClick={() => setTabIndex(tabs[0].id)}
-                >
+            <MenuContainer>
+                <MenuItem active={tabIndex == 0} onClick={() => setTabIndex(tabs[0].id)}>
                     {t(tabs[0].i18label)}
-                </Container.Main.Item>
-                <Container.Main.Item
-                    noStrech={true}
-                    padding={'20px 30px'}
-                    active={tabIndex == 1}
-                    onClick={() => setTabIndex(tabs[1].id)}
-                >
+                </MenuItem>
+                <MenuItem active={tabIndex == 1} onClick={() => setTabIndex(tabs[1].id)}>
                     {t(tabs[1].i18label)}
-                </Container.Main.Item>
-                <Container.Main.Item
-                    noStrech={true}
-                    padding={'20px 30px'}
-                    active={tabIndex == 2}
-                    onClick={() => setTabIndex(tabs[2].id)}
-                >
+                </MenuItem>
+                <MenuItem active={tabIndex == 2} onClick={() => setTabIndex(tabs[2].id)}>
                     {t(tabs[2].i18label)}
-                </Container.Main.Item>
-            </Container.Main>
-            <Container.Tab>
-                <>
-                    {tabIndex == tabs[0].id && (
-                        <TableWrapper>
-                            <Table
-                                data={transactionData}
-                                columns={[
-                                    {
-                                        Header: <>{t('referral-page.table.address')}</>,
-                                        accessor: 'trader',
-                                        Cell: (cellProps: any) => <p>{truncateAddress(cellProps.cell.value)}</p>,
+                </MenuItem>
+            </MenuContainer>
+            <Tab>
+                {tabIndex == tabs[0].id && (
+                    <TableWrapper>
+                        <Table
+                            data={transactionData}
+                            isLoading={transactionsQuery.isLoading}
+                            columns={[
+                                {
+                                    Header: <>{t('referral-page.table.address')}</>,
+                                    accessor: 'trader',
+                                    Cell: (cellProps: any) => (
+                                        <StyledLink
+                                            href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {truncateAddress(cellProps.cell.value)}
+                                        </StyledLink>
+                                    ),
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.volume')}</>,
+                                    accessor: 'volume',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.earned')}</>,
+                                    accessor: 'amount',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.transaction-date')}</>,
+                                    accessor: 'timestamp',
+                                    Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.tx-info')}</>,
+                                    accessor: 'id',
+                                    Cell: (cellProps: any) => <ViewEtherscanLink hash={cellProps.cell.value} />,
+                                },
+                            ]}
+                        />
+                    </TableWrapper>
+                )}
+                {tabIndex == tabs[1].id && (
+                    <TableWrapper>
+                        <Table
+                            data={tradersData}
+                            isLoading={tradersQuery.isLoading}
+                            columns={[
+                                {
+                                    id: 'index',
+                                    Header: <>{t('referral-page.table.index')}</>,
+                                    Cell: (cellProps: any) => {
+                                        return <p>{cellProps?.row?.id ? Number(cellProps?.row?.id) + 1 : ''}</p>;
                                     },
-                                    {
-                                        Header: <>{t('referral-page.table.volume')}</>,
-                                        accessor: 'volume',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.earned')}</>,
-                                        accessor: 'amount',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.transaction-date')}</>,
-                                        accessor: 'timestamp',
-                                        Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.tx-info')}</>,
-                                        accessor: 'id',
-                                        Cell: (cellProps: any) => <ViewEtherscanLink hash={cellProps.cell.value} />,
-                                    },
-                                ]}
-                            />
-                        </TableWrapper>
-                    )}
-                    {tabIndex == tabs[1].id && (
-                        <TableWrapper>
-                            <Table
-                                data={tradersData}
-                                columns={[
-                                    {
-                                        id: 'index',
-                                        Header: <>{t('referral-page.table.index')}</>,
-                                        Cell: (cellProps: any) => {
-                                            return <p>{cellProps?.row?.id ? Number(cellProps?.row?.id) + 1 : ''}</p>;
-                                        },
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.address')}</>,
-                                        accessor: 'id',
-                                        Cell: (cellProps: any) => <p>{truncateAddress(cellProps.cell.value)}</p>,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.trades')}</>,
-                                        accessor: 'trades',
-                                        Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.total-volume')}</>,
-                                        accessor: 'totalVolume',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.total-earned')}</>,
-                                        accessor: 'totalEarned',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                    },
-                                ]}
-                            />
-                        </TableWrapper>
-                    )}
-                    {tabIndex == tabs[2].id && (
-                        <TableWrapper>
-                            <Table
-                                data={affiliateCompetitionData}
-                                columns={[
-                                    {
-                                        Header: <>{t('referral-page.table.address')}</>,
-                                        accessor: 'id',
-                                        Cell: (cellProps: any) => <p>{truncateAddress(cellProps.cell.value)}</p>,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.trades')}</>,
-                                        accessor: 'trades',
-                                        Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.total-volume')}</>,
-                                        accessor: 'totalVolume',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.total-earned')}</>,
-                                        accessor: 'totalEarned',
-                                        Cell: (cellProps: any) => (
-                                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
-                                        ),
-                                        sortable: true,
-                                    },
-                                    {
-                                        Header: <>{t('referral-page.table.first-transaction')}</>,
-                                        accessor: 'timestamp',
-                                        Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
-                                        sortable: true,
-                                    },
-                                ]}
-                            />
-                        </TableWrapper>
-                    )}
-                </>
-            </Container.Tab>
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.address')}</>,
+                                    accessor: 'id',
+                                    Cell: (cellProps: any) => (
+                                        <StyledLink
+                                            href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {truncateAddress(cellProps.cell.value)}
+                                        </StyledLink>
+                                    ),
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.trades')}</>,
+                                    accessor: 'trades',
+                                    Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.total-volume')}</>,
+                                    accessor: 'totalVolume',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.total-earned')}</>,
+                                    accessor: 'totalEarned',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                            ]}
+                        />
+                    </TableWrapper>
+                )}
+                {tabIndex == tabs[2].id && (
+                    <TableWrapper>
+                        <Table
+                            data={affiliateCompetitionData}
+                            isLoading={affiliateLeaderboardQuery.isLoading}
+                            columns={[
+                                {
+                                    Header: <>{t('referral-page.table.address')}</>,
+                                    accessor: 'id',
+                                    Cell: (cellProps: any) => (
+                                        <StyledLink
+                                            href={getEtherscanAddressLink(networkId, cellProps.cell.value)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {truncateAddress(cellProps.cell.value)}
+                                        </StyledLink>
+                                    ),
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.trades')}</>,
+                                    accessor: 'trades',
+                                    Cell: (cellProps: any) => <p>{cellProps.cell.value}</p>,
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.total-volume')}</>,
+                                    accessor: 'totalVolume',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.total-earned')}</>,
+                                    accessor: 'totalEarned',
+                                    Cell: (cellProps: any) => (
+                                        <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value)}</p>
+                                    ),
+                                    sortable: true,
+                                },
+                                {
+                                    Header: <>{t('referral-page.table.first-transaction')}</>,
+                                    accessor: 'timestamp',
+                                    Cell: (cellProps: any) => <p>{formatTxTimestamp(cellProps.cell.value)}</p>,
+                                    sortable: true,
+                                },
+                            ]}
+                        />
+                    </TableWrapper>
+                )}
+            </Tab>
             <ReferralFooter>
                 {t('referral-page.footer.sharing')}
                 <Tooltip overlay={t('referral-page.disclaimer')} iconFontSize={14} />
                 &nbsp;
                 {t('referral-page.footer.and')}{' '}
-                <StyledLink target="_blank" rel="noreferrer" href={termsOfUse}>
+                <FooterLink target="_blank" rel="noreferrer" href={termsOfUse}>
                     {t('referral-page.footer.terms')}
-                </StyledLink>
+                </FooterLink>
             </ReferralFooter>
             <Footer />
         </>
     );
 };
-
-const BoldText = styled.span`
-    font-weight: 900;
-`;
-
-const ReferralFooter = styled.div`
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    font-size: 16px;
-    color: ${(props) => props.theme.textColor.primary};
-    @media screen and (max-width: 520px) {
-        margin-top: 50px;
-        margin-bottom: 10px;
-        display: inline-block;
-        div {
-            display: inline;
-        }
-    }
-`;
-
-const ViewButton = styled.div`
-    display: none;
-    @media (max-width: 768px) {
-        display: block;
-        align-self: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        padding: 6px 20px;
-        border: 1.5px solid rgba(100, 217, 254, 0.5);
-        box-sizing: border-box;
-        border-radius: 30px;
-        background: transparent;
-        font-weight: bold;
-        font-size: 12px;
-        text-transform: uppercase;
-        color: var(--color-highlight);
-    }
-`;
-
-const ViewsDropDownWrapper = styled.div`
-    position: relative;
-    width: 100%;
-    height: 0;
-    z-index: 2;
-`;
-
-const ViewsDropDown = styled.div`
-    display: none;
-    @media (max-width: 768px) {
-        display: flex;
-        flex-direction: column;
-        background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
-        border: 2px solid rgba(100, 217, 254, 0.5);
-        box-sizing: border-box;
-        border-radius: 12px;
-        padding: 15px 20px;
-        max-width: 240px;
-        position: absolute;
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        text-align: center;
-        top: -56px;
-        z-index: 2;
-    }
-`;
-
-const ViewTitle = styled.p`
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 100%;
-    text-transform: uppercase;
-    color: var(--color-highlight);
-    @media (min-width: 769px) {
-        display: none;
-    }
-    margin-bottom: 10px;
-`;
-
-const ViewItem = styled.div<{ active: boolean }>`
-    @media (max-width: 768px) {
-        font-weight: bold;
-        font-size: 12px;
-        line-height: 162.5%;
-        text-transform: uppercase;
-        cursor: pointer;
-        color: ${(props) => (props?.active ? 'var(--color-highlight)' : 'var(--color-white)')};
-    }
-`;
-
-const StyledLink = styled.a`
-    color: ${(props) => props.theme.link.textColor.primary};
-    margin-left: 5px;
-    &:hover {
-        text-decoration: underline;
-    }
-`;
 
 export default Referral;

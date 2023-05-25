@@ -144,7 +144,7 @@ const Table: React.FC<TableProps> = ({
 
         headerGroups.forEach((headerGroup: any) => {
             headerGroup.headers.map((column: any) => {
-                if (column.toggleSortBy) {
+                if (column.sortable) {
                     menuItems.push({
                         active: false,
                         onClick: column.toggleSortBy,

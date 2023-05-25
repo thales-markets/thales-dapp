@@ -10,8 +10,10 @@ export const Container = styled(FlexDivColumnCentered)`
 `;
 
 export const HeaderContainer = styled(FlexDivRowCentered)`
+    margin: 0 30px 20px 30px;
     @media (max-width: 767px) {
         flex-direction: column;
+        margin: 0 0 20px 0;
     }
 `;
 
@@ -30,9 +32,9 @@ export const Info = styled.div`
     font-size: 18px;
     line-height: 24px;
     color: ${(props) => props.theme.textColor.primary};
-    margin-left: 30px;
     @media (max-width: 767px) {
         margin-left: 0;
+        margin-bottom: 10px;
     }
 `;
 export const Address = styled.span`

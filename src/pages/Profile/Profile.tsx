@@ -2,7 +2,7 @@ import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
-import SearchField from 'components/SearchInput/SearchInput';
+import SearchInput from 'components/SearchInput/SearchInput';
 import TableGridSwitch from 'components/TableGridSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { USD_SIGN } from 'constants/currency';
@@ -135,7 +135,7 @@ const Profile: React.FC = () => {
             <ElectionsBanner />
             <Container layout={isSimpleView}>
                 <Container.Fixed>
-                    <SearchField
+                    <SearchInput
                         placeholder={t('options.trading-profile.search-placeholder')}
                         text={searchText}
                         handleChange={(value) => setSearchText(value)}
