@@ -108,7 +108,7 @@ const SummaryHeader = styled.div`
     white-space: pre;
     padding: 10px 0px;
     width: 100%;
-    border-bottom: 1px solid ${(props) => props.theme.borderColor.primary};
+    border-bottom: 1px solid ${(props) => props.theme.borderColor.secondary};
     text-align: center;
 `;
 
@@ -143,14 +143,14 @@ const PriceInfo = styled.span<{ color?: string }>`
 `;
 
 const InfoContainer = styled.div`
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 23px;
     padding: 15px 24px;
 `;
 
 const InfoItem = styled(FlexDivSpaceBetween)`
     :first-child {
-        border-bottom: 1px solid ${(props) => props.theme.borderColor.primary};
+        border-bottom: 1px solid ${(props) => props.theme.borderColor.secondary};
     }
 `;
 

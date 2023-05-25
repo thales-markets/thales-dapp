@@ -12,7 +12,7 @@ export const FiltersButton = styled.div<{ visible?: boolean }>`
     display: block;
     visibility: ${(props) => (props?.visible ? 'visible' : 'hidden')};
     padding: 6px 20px;
-    border: 1.5px solid ${(props) => props.theme.borderColor.primary};
+    border: 1.5px solid ${(props) => props.theme.borderColor.secondary};
     box-sizing: border-box;
     border-radius: 30px;
     background: transparent;
@@ -42,7 +42,7 @@ export const Wrapper = styled.div<{ visible?: boolean }>`
     display: ${(props) => (props?.visible ? 'flex' : 'none')};
     flex-direction: column;
     background: ${(props) => props.theme.background.primary};
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     box-sizing: border-box;
     border-radius: 12px;
     padding: 15px 20px;

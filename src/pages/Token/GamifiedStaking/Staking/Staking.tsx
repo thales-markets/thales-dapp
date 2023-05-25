@@ -288,7 +288,7 @@ const Staking: React.FC = () => {
                             secondLabel: stakeOptions.unstake.label.toUpperCase(),
                             fontSize: '23px',
                         }}
-                        borderColor={theme.borderColor.tertiary}
+                        borderColor={theme.borderColor.primary}
                         spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value

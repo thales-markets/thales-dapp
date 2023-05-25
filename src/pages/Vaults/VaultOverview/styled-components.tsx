@@ -3,7 +3,7 @@ import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 
 export const SpaContainer = styled(FlexDivColumn)`
     background: linear-gradient(0deg, rgba(3, 218, 198, 0.2) 0%, rgba(3, 218, 198, 0) 90.62%);
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     transition: 0.2s all;
     &:hover {
@@ -54,7 +54,7 @@ export const VaultTitle = styled.span`
     margin-bottom: 10px;
     width: 100%;
     padding-bottom: 20px;
-    border-bottom: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 2px solid ${(props) => props.theme.borderColor.primary};
     text-align: center;
     color: ${(props) => props.theme.textColor.quaternary};
 `;

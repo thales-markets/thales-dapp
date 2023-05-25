@@ -142,7 +142,7 @@ const QuestionGroup = styled.div<{ questionOpened: boolean }>`
     display: ${(props) => (props.questionOpened ? '' : 'flex')};
     justify-content: space-between;
     cursor: pointer;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     position: relative;
     margin-bottom: 10px;

@@ -41,7 +41,7 @@ const Wrapper = styled.div`
         top: 50%;
         z-index: 0;
         left: 0;
-        border-top: 1px solid ${(props) => props.theme.borderColor.primary};
+        border-top: 1px solid ${(props) => props.theme.borderColor.secondary};
         background: black;
         width: 100%;
         transform: translateY(-50%);

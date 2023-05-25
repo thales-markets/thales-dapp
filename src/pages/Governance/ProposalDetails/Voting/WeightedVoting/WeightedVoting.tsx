@@ -234,7 +234,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
     flex: 1;
     box-sizing: content-box;
     height: 50px;
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 5px;
     margin-bottom: 20px;
     font-weight: bold;
@@ -283,8 +283,8 @@ const PlusMinus = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 45px;
     min-width: 45px;
-    border-left: 2px solid ${(props) => props.theme.borderColor.tertiary};
-    border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-left: 2px solid ${(props) => props.theme.borderColor.primary};
+    border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     &:hover {
         border-left: 2px solid ${(props) => props.theme.borderColor.quaternary};
         border-right: 2px solid ${(props) => props.theme.borderColor.quaternary};
@@ -340,7 +340,7 @@ const SeePitchButton = styled.button`
     font-size: 16px;
     line-height: 36px;
     border-radius: 23px;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     cursor: pointer;
     color: white;
     background: transparent;

@@ -92,7 +92,7 @@ const Results: React.FC<ResultsProps> = ({
                                 opacity={isCouncilResults && index >= numberOfCouncilMemebers ? 0.5 : 1}
                                 borderColor={
                                     (isCouncilVoting || isCouncilResults) && index === numberOfCouncilMemebers - 1
-                                        ? theme.borderColor.tertiary
+                                        ? theme.borderColor.primary
                                         : undefined
                                 }
                                 paddingBottom={

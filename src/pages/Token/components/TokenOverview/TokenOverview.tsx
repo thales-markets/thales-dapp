@@ -169,7 +169,7 @@ const Container = styled(FlexDivCentered)`
     min-height: 76px;
     background: ${(props) => props.theme.background.primary};
     border-radius: 15px;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     margin-bottom: 10px;
     flex-wrap: wrap;
     @media (max-width: 1024px) {
@@ -187,13 +187,13 @@ const Container = styled(FlexDivCentered)`
             &:nth-child(1) {
                 flex-basis: 50%;
                 order: 1;
-                border-bottom: 1px solid ${(props) => props.theme.borderColor.tertiary} !important;
+                border-bottom: 1px solid ${(props) => props.theme.borderColor.primary} !important;
                 justify-content: flex-start;
             }
             &:nth-child(2) {
                 flex-basis: 50%;
                 order: 2;
-                border-bottom: 1px solid ${(props) => props.theme.borderColor.tertiary} !important;
+                border-bottom: 1px solid ${(props) => props.theme.borderColor.primary} !important;
                 justify-content: flex-start;
             }
             &:nth-child(3) {
@@ -219,7 +219,7 @@ const Container = styled(FlexDivCentered)`
             &:nth-child(7) {
                 flex-basis: 100%;
                 order: 7;
-                border-top: 1px solid ${(props) => props.theme.borderColor.tertiary} !important;
+                border-top: 1px solid ${(props) => props.theme.borderColor.primary} !important;
             }
             &:nth-child(7) span {
                 font-size: 14px;
@@ -233,7 +233,7 @@ const InnerItemContainer = styled(FlexDivCentered)`
     flex: 1;
     height: 50px;
     &:not(:last-child) {
-        border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
+        border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     }
     @media (max-width: 1192px) {
         min-height: 60px;

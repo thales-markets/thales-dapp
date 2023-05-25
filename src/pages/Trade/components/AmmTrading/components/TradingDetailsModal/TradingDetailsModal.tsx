@@ -195,7 +195,7 @@ const DetailsRow = styled(FlexDivRowCentered)<{ margin?: string; padding?: strin
 `;
 
 const TradingDetails = styled(FlexDivColumnCentered)`
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 15px;

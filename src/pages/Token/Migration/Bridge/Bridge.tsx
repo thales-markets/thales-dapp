@@ -291,7 +291,7 @@ const InfoSection = styled.span`
 const Divider = styled.hr`
     width: 100%;
     border: none;
-    border-top: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-top: 2px solid ${(props) => props.theme.borderColor.primary};
 `;
 
 const ArrowContainer = styled(FlexDivCentered)`

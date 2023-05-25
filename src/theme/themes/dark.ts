@@ -17,9 +17,9 @@ export default {
         quaternary: Colors.GREEN,
     },
     borderColor: {
-        primary: Colors.GRAY_LIGHT,
-        secondary: Colors.ORANGE,
-        tertiary: Colors.GRAY,
+        primary: Colors.GRAY,
+        secondary: Colors.GRAY,
+        tertiary: Colors.ORANGE,
         quaternary: Colors.GREEN,
     },
     button: {

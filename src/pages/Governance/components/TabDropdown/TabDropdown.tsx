@@ -106,7 +106,7 @@ const DropdownContainer = styled.div`
 
 const DropDown = styled(FlexDivColumn)`
     background: ${(props) => props.theme.background.primary};
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 20px;
     position: absolute;
     margin-top: 2px;

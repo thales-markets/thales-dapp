@@ -46,9 +46,9 @@ export const TableRow = styled(FlexDiv)<{
             props.isMobile
                 ? props.isSticky
                     ? props.theme.button.borderColor.primary
-                    : props.theme.borderColor.tertiary
+                    : props.theme.borderColor.primary
                 : 'transparent'};
-    border-bottom: 1px solid ${(props) => (!props.isSticky ? props.theme.borderColor.tertiary : 'transparent')};
+    border-bottom: 1px solid ${(props) => (!props.isSticky ? props.theme.borderColor.primary : 'transparent')};
     background: ${(props) =>
         props.isClaimable
             ? 'linear-gradient(90deg, #36d1dc -1.48%, #5b86e5 102.44%)'
@@ -73,7 +73,7 @@ export const TableRowMobile = styled.div<{ isSticky?: boolean }>`
     flex-direction: row;
     padding: 0 10px;
     :not(:last-child) {
-        border-bottom: 1px solid ${(props) => props.theme.borderColor.tertiary};
+        border-bottom: 1px solid ${(props) => props.theme.borderColor.primary};
     }
     ${TableCell} {
         height: auto;
@@ -100,8 +100,8 @@ export const TableHeader = styled(FlexDiv)`
         }
     }
     ${TableRow} {
-        border-top: 2px solid ${(props) => props.theme.borderColor.tertiary};
-        border-bottom: 2px solid ${(props) => props.theme.borderColor.tertiary};
+        border-top: 2px solid ${(props) => props.theme.borderColor.primary};
+        border-bottom: 2px solid ${(props) => props.theme.borderColor.primary};
         width: 100%;
     }
 `;

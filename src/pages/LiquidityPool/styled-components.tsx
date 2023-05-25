@@ -54,7 +54,7 @@ export const ContentContainer = styled(FlexDivColumn)`
 
 export const MainContainer = styled(Container)`
     width: 100%;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 10px;
     padding: 0 10px;
 `;

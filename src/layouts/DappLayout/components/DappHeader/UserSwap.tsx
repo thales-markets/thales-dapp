@@ -214,7 +214,7 @@ const SwapWrapper = styled.div`
 
 const SwapButton = styled.div<{ clickable: boolean }>`
     display: -webkit-flex;
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     border-radius: 8px;
     cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
     white-space: pre;

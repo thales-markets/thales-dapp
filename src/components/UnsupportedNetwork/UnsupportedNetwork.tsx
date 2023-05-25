@@ -77,7 +77,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     background: ${(props) => props.theme.background.primary};
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     border-radius: 8px;
     padding: 20px;
     max-width: 600px;

@@ -205,12 +205,12 @@ const Label = styled(Description)`
 const EnabledAddressesTitle = styled(Label)`
     padding: 30px 2px 4px 0;
     font-size: 13px;
-    border-bottom: 1px solid ${(props) => props.theme.borderColor.primary};
+    border-bottom: 1px solid ${(props) => props.theme.borderColor.secondary};
 `;
 
 const EnabledAddressesItem = styled(Label)`
     padding: 5px 2px 4px 0;
-    border-bottom: 1px dotted ${(props) => props.theme.borderColor.primary};
+    border-bottom: 1px dotted ${(props) => props.theme.borderColor.secondary};
     :last-child {
         margin-bottom: 10px;
     }

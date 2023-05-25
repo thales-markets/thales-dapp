@@ -71,7 +71,7 @@ export const Modal: React.FC<ModalProps> = ({
 };
 
 const Container = styled.div<{ mobileStyle?: CSSProperties }>`
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     background: ${(props) => props.theme.background.primary};
     padding: 20px;
     border-radius: 8px;

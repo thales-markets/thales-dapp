@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { LINKS } from 'constants/links';
-import balanceIcon from 'assets/images/token/balance-icon.svg';
 import { useTranslation } from 'react-i18next';
 
 export const EarnSection = styled.section<{
@@ -35,7 +34,7 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     font-size: 20px;
     line-height: 20px;
     letter-spacing: 0.035em;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
     min-height: 30px;
     padding: 0 20px;
@@ -69,7 +68,7 @@ export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string; ab
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: ${(props) => (props.color ? props.color : '#ffcc00')};
+    color: ${(props) => (props.color ? props.color : props.theme.warning.textColor.primary)};
     ${(props) => (props.above ? 'margin-bottom: 10px;' : 'margin-top: 10px;')}
     visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
     min-height: 16px;
@@ -103,7 +102,7 @@ export const PieChartCenterText = styled.span<{ disabled?: boolean }>`
     white-space: break-spaces;
     text-align: center;
     margin-bottom: 5px;
-    color: ${(props) => (props.disabled ? '#B8C6E5' : 'white')};
+    color: ${(props) => (props.disabled ? props.theme.textColor.secondary : props.theme.textColor.primary)};
 `;
 
 export const FullRow = styled(FlexDiv)`
@@ -128,11 +127,6 @@ export const DescriptionLink = styled.a`
     }
 `;
 
-export const BalanceIcon = styled.span`
-    content: url(${balanceIcon});
-    margin: 0 4px 2px 0;
-`;
-
 export const Line = styled.hr<{ margin?: string }>`
     height: 1px;
     color: var(--color-white);
@@ -141,7 +135,7 @@ export const Line = styled.hr<{ margin?: string }>`
 
 export const DashedLine = styled.hr<{ gridRow: number; widthPer: number }>`
     border: none;
-    border-bottom: 2px dashed var(--color-highlight) 80;
+    border-bottom: 2px dashed ${(props) => props.theme.borderColor.primary};
     grid-row: ${(props) => props.gridRow};
     grid-column: 1 / 13;
     width: ${(props) => props.widthPer}%;
@@ -159,7 +153,7 @@ export const DashedLineVertical = styled.hr<{
     mobileLong?: boolean;
 }>`
     border: none;
-    border-left: 2px dashed var(--color-highlight) 80;
+    border-left: 2px dashed ${(props) => props.theme.borderColor.primary};
     grid-row: ${(props) => props.gridRow};
     grid-column-start: ${(props) => props.columnStart};
     margin-top: ${(props) => props.marginTop}px;
@@ -179,7 +173,7 @@ export const LearnMore = styled.span<{ top: string }>`
     bottom: 18%;
     left: 50%;
     transform: translate(-50%, 0);
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     font-size: 14px;
     line-height: 24px;
     cursor: pointer;
@@ -242,14 +236,6 @@ export const Tip125Link: React.FC = () => {
     return (
         <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP125}>
             TIP-125
-        </TooltipLink>
-    );
-};
-
-export const Tip49Link: React.FC = () => {
-    return (
-        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP49}>
-            TIP-49
         </TooltipLink>
     );
 };

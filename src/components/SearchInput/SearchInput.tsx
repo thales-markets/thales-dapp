@@ -39,7 +39,7 @@ const Wrapper = styled(FlexDivCentered)`
 
 const Icon = styled.i<{ iconTop?: string }>`
     font-size: 15px;
-    color: ${(props) => props.theme.borderColor.primary};
+    color: ${(props) => props.theme.borderColor.secondary};
     position: absolute;
     right: 8px;
     top: ${(props) => props.iconTop || '8px'};

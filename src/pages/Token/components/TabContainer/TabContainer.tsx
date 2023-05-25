@@ -60,7 +60,7 @@ const MenuContainer = styled(FlexDiv)`
     flex-direction: row;
     justify-content: stretch;
     align-items: stretch;
-    border-bottom: 4px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
     @media (max-width: 1024px) {
         margin-top: 30px;

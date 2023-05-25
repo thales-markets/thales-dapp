@@ -41,7 +41,7 @@ const GridWrapper = styled(FlexDivColumnCentered)`
 `;
 
 const Wrapper = styled(FlexDivColumnCentered)`
-    background: ${(props) => props.theme.borderColor.primary};
+    background: ${(props) => props.theme.borderColor.secondary};
     padding: 1px;
     border-radius: 15px;
     margin: 60px 10px 50px 10px;

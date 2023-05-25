@@ -27,7 +27,7 @@ const MigrationNotice: React.FC = () => {
 
 const Wrapper = styled(FlexDivColumnCentered)`
     border: none;
-    background: ${(props) => props.theme.borderColor.primary};
+    background: ${(props) => props.theme.borderColor.secondary};
     border-radius: 10px;
     padding: 1px;
     margin-bottom: 15px;

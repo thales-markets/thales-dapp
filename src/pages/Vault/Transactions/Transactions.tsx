@@ -162,7 +162,7 @@ const Container = styled(FlexDivColumn)`
     @media (max-width: 767px) {
         width: 95%;
     }
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
 `;
 
 const Header = styled(FlexDivRow)`

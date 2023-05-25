@@ -260,7 +260,7 @@ const Table: React.FC<TableProps> = ({
 const PriceWrapper = styled.div`
     width: 100%;
     height: 0;
-    border-top: 1px dashed ${(props) => props.theme.borderColor.secondary};
+    border-top: 1px dashed ${(props) => props.theme.borderColor.primary};
     margin: 8px 0;
     position: relative;
 `;
@@ -277,7 +277,7 @@ const Price = styled.div`
     padding: 3px 10px;
     background-color: ${(props) => props.theme.background.primary};
     display: flex;
-    border: 1px solid ${(props) => props.theme.borderColor.secondary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     position: absolute;
     top: 50%;
     left: 50%;
@@ -288,7 +288,7 @@ const Price = styled.div`
     line-height: 90%;
 
     text-align: center;
-    color: ${(props) => props.theme.borderColor.secondary};
+    color: ${(props) => props.theme.borderColor.primary};
 `;
 
 const ExpandableRowReact: React.FC<{

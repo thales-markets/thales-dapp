@@ -19,7 +19,7 @@ export const Label = styled.span`
 `;
 
 export const StatisticsWrapper = styled.div`
-    border: 2px solid ${(props) => props.theme.borderColor.primary};
+    border: 2px solid ${(props) => props.theme.borderColor.secondary};
     padding: 16px 32px;
     border-radius: 15px;
     @media screen and (max-width: 520px) {

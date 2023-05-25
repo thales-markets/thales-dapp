@@ -110,7 +110,7 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
     cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'pointer')};
     border-width: ${(props: any) => props.borderWidth || '1px'};
     border-style: solid;
-    border-color: ${(props: any) => props.borderColor || props.theme.borderColor.primary};
+    border-color: ${(props: any) => props.borderColor || props.theme.borderColor.secondary};
     border-radius: 30px;
     width: ${(props: any) => props.width || defaultSwitchHeight * 2.18 + 'px'};
     height: ${(props: any) => props.height || defaultSwitchHeight + 'px'};

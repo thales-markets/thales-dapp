@@ -22,7 +22,7 @@ export const RowPercentageContainer = styled.div`
 
 export const RowPercentage = styled.div`
     height: 3px;
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 10px;
     background-color: ${(props) => props.theme.background.secondary};
 `;

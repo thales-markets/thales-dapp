@@ -44,7 +44,7 @@ export const LeftContainer = styled(ContentContainer)`
 `;
 
 export const RightContainer = styled(ContentContainer)`
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     width: 40%;
     padding: 30px 40px 20px 40px;
@@ -95,7 +95,7 @@ export const RoundAllocationContainer = styled(FlexDivColumn)`
     max-width: 200px;
     padding: 5px 0;
     :not(:last-child) {
-        border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
+        border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     }
     @media (max-width: 767px) {
         :not(:last-child) {
@@ -140,7 +140,7 @@ export const Description = styled.div`
 `;
 
 export const Info = styled(Description)`
-    border-bottom: 3px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 3px solid ${(props) => props.theme.borderColor.primary};
     padding-bottom: 10px;
     padding-top: 0px;
 `;
@@ -274,7 +274,7 @@ export const ToggleContainer = styled(FlexDiv)`
     margin-bottom: 20px;
     width: 100%;
     text-transform: uppercase;
-    border-bottom: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 2px solid ${(props) => props.theme.borderColor.primary};
     padding-bottom: 20px;
 `;
 

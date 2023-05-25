@@ -208,7 +208,7 @@ const LifetimePnl = styled.span<{ color: string }>`
 `;
 
 const NoData = styled(FlexDivCentered)`
-    border: 2px dotted ${(props) => props.theme.borderColor.primary};
+    border: 2px dotted ${(props) => props.theme.borderColor.secondary};
     margin-bottom: 10px;
     height: 200px;
     color: ${(props) => props.theme.textColor.secondary};

@@ -8,9 +8,9 @@ export const GridContainer = styled.div`
     grid-template-rows: auto min-content;
     grid-gap: 1px;
     padding: 0;
-    background: ${(props) => props.theme.borderColor.primary};
+    background: ${(props) => props.theme.borderColor.secondary};
     border-radius: 8px;
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     z-index: 0;
     width: 100%;
     overflow: hidden;

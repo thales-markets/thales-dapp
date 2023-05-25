@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -31,6 +31,7 @@ import i18n from 'i18n';
 import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2';
+import { ThemeInterface } from 'types/ui';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -42,6 +43,7 @@ const initialVestingInfo = {
 
 const RetroRewards: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -137,12 +139,20 @@ const RetroRewards: React.FC = () => {
 
     const pieData = useMemo(() => {
         if (!vestingInfo.initialLocked) {
-            return [{ name: 'Locked', value: 100, color: '#748bc6' }];
+            return [{ name: 'Locked', value: 100, color: theme.textColor.secondary }];
         }
         return [
-            { name: t('options.earn.snx-stakers.unlocked'), value: vestingInfo.unlocked, color: '#5EA0A0' },
-            { name: t('options.earn.snx-stakers.claimed'), value: vestingInfo.totalClaimed, color: '#AFC171' },
-            { name: t('options.earn.snx-stakers.locked'), value: locked, color: '#FFD9BA' },
+            {
+                name: t('options.earn.snx-stakers.unlocked'),
+                value: vestingInfo.unlocked,
+                color: theme.textColor.quaternary,
+            },
+            {
+                name: t('options.earn.snx-stakers.claimed'),
+                value: vestingInfo.totalClaimed,
+                color: theme.warning.textColor.primary,
+            },
+            { name: t('options.earn.snx-stakers.locked'), value: locked, color: theme.error.textColor.primary },
         ];
     }, [vestingInfo, locked, selectedLanguage]);
 
@@ -222,9 +232,7 @@ const RetroRewards: React.FC = () => {
                                 </PieChartCenterText>
                                 <GradientText
                                     gradient={`${
-                                        !vestingInfo.initialLocked
-                                            ? '#748BC6'
-                                            : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                        !vestingInfo.initialLocked ? theme.textColor.secondary : theme.textColor.primary
                                     }`}
                                     fontSize={17}
                                     fontWeight={600}
@@ -234,9 +242,7 @@ const RetroRewards: React.FC = () => {
                                 </GradientText>
                                 <GradientText
                                     gradient={`${
-                                        !vestingInfo.initialLocked
-                                            ? '#748BC6'
-                                            : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                        !vestingInfo.initialLocked ? theme.textColor.secondary : theme.textColor.primary
                                     }`}
                                     fontSize={17}
                                     fontWeight={600}
@@ -253,19 +259,19 @@ const RetroRewards: React.FC = () => {
                     </PieChartContainer>
                     <AmountsContainer>
                         <div>
-                            <Dot backgroundColor="#5EA0A0" />
+                            <Dot backgroundColor={theme.textColor.quaternary} />
                             {t('options.earn.snx-stakers.unlocked')}:{' '}
                             <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
                         </div>
                         <div>
-                            <Dot backgroundColor="#AFC171" />
+                            <Dot backgroundColor={theme.warning.textColor.primary} />
                             {t('options.earn.snx-stakers.claimed')}:{' '}
                             <span className="bold">
                                 {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}
                             </span>
                         </div>
                         <div>
-                            <Dot backgroundColor="#FFD9BA" />
+                            <Dot backgroundColor={theme.error.textColor.primary} />
                             {t('options.earn.snx-stakers.locked')}:{' '}
                             <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
                         </div>
@@ -358,7 +364,6 @@ const TooltipContainer = styled(FlexDivColumnCentered)<{ borderColor: string }>`
     height: 78px;
     padding: 10px 14px;
     background: ${(props) => props.theme.background.primary};
-    );
 `;
 
 const TooltipAmount = styled(FlexDivColumn)<{ color: string }>`

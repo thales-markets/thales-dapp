@@ -34,7 +34,7 @@ export const DetailsWrapper = styled(FlexDivRow)`
 export const DetailsContainer = styled(FlexDivColumnCentered)`
     padding: 15px;
     border-radius: 5px;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     color: ${(props) => props.theme.textColor.primary};
     &:first-child {
         margin-right: 40px;
@@ -103,7 +103,7 @@ export const Body = styled(FlexDivColumn)`
         display: block;
         th,
         td {
-            border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+            border: 1px solid ${(props) => props.theme.borderColor.primary};
             padding: 6px 13px;
         }
     }
@@ -154,7 +154,7 @@ export const VotingPowerTitle = styled(DetailsTitle)`
 export const Divider = styled.hr`
     width: 100%;
     border: none;
-    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border-top: 1px solid ${(props) => props.theme.borderColor.primary};
 `;
 
 export const ArrowIcon = styled(ArrowHyperlinkIcon)`

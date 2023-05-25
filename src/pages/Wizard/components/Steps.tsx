@@ -439,7 +439,7 @@ const CardWrapper = styled.div<{ justifyContent?: boolean }>`
 const Card = styled.div<{ clickable: boolean; active?: boolean }>`
     width: 195px;
     height: 189px;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     text-align: center;
     padding: 40px 0;

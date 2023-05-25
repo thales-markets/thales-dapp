@@ -93,7 +93,7 @@ const RightContainer = styled(FlexDivCentered)`
 
 const Icon = styled.i`
     font-size: 15px;
-    color: ${(props) => props.theme.borderColor.primary};
+    color: ${(props) => props.theme.borderColor.secondary};
     padding-right: 10px;
     cursor: pointer;
     &.disabled {

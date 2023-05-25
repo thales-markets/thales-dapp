@@ -49,7 +49,7 @@ export const SummaryRow = styled(FlexDivRow)`
 `;
 
 export const SummaryItem = styled(FlexDivCentered)<{ width?: string; mobileDirection?: string }>`
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
     padding: 0px 15px;
     width: ${(props) => props.width || '100%'};
@@ -66,7 +66,7 @@ export const SummaryItem = styled(FlexDivCentered)<{ width?: string; mobileDirec
 
 export const SummarySubItem = styled(FlexDivCentered)`
     :last-child {
-        border-left: 2px solid ${(props) => props.theme.borderColor.tertiary};
+        border-left: 2px solid ${(props) => props.theme.borderColor.primary};
     }
     width: 100%;
     @media (max-width: 767px) {
@@ -96,7 +96,7 @@ export const MyRewardsContainer = styled(FlexDivCentered)`
 
 export const MyRewardsTotal = styled.span`
     color: ${(props) => props.theme.textColor.quaternary};
-    border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     padding-right: 6px;
     margin-right: 6px;
     @media (max-width: 767px) {
