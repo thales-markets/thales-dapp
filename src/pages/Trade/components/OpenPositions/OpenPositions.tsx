@@ -1,11 +1,11 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Button from 'components/ButtonV2/Button';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import { POSITIONS_TO_SIDE_MAP, Positions, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
-import { intervalToDuration } from 'date-fns';
 import { BigNumber, ethers } from 'ethers';
 
 import useUserOpenPositions, { UserLivePositions } from 'queries/user/useUserOpenPositions';
@@ -21,7 +21,7 @@ import { ThemeInterface } from 'types/ui';
 import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
 import rangedMarketContract from 'utils/contracts/rangedMarketContract';
-import { formatShortDateWithTime, formattedDurationFull } from 'utils/formatters/date';
+import { formatShortDateWithTime } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, formatNumberShort, roundNumberToDecimals } from 'utils/formatters/number';
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
@@ -32,28 +32,6 @@ const OpenPositions: React.FC = () => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const theme: ThemeInterface = useTheme();
-
-    const dateTimeTranslationMap = {
-        years: t('options.common.time-remaining.years'),
-        year: t('options.common.time-remaining.year'),
-        months: t('options.common.time-remaining.months'),
-        month: t('options.common.time-remaining.month'),
-        weeks: t('options.common.time-remaining.weeks'),
-        week: t('options.common.time-remaining.week'),
-        days: t('options.common.time-remaining.days'),
-        day: t('options.common.time-remaining.day'),
-        hours: t('options.common.time-remaining.hours'),
-        hour: t('options.common.time-remaining.hour'),
-        minutes: t('options.common.time-remaining.minutes'),
-        minute: t('options.common.time-remaining.minute'),
-        seconds: t('options.common.time-remaining.seconds'),
-        second: t('options.common.time-remaining.second'),
-        'days-short': t('options.common.time-remaining.days-short'),
-        'hours-short': t('options.common.time-remaining.hours-short'),
-        'minutes-short': t('options.common.time-remaining.minutes-short'),
-        'seconds-short': t('options.common.time-remaining.seconds-short'),
-        'months-short': t('options.common.time-remaining.months-short'),
-    };
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -334,12 +312,7 @@ const OpenPositions: React.FC = () => {
                         <Separator />
                         <FlexContainer style={{ minWidth: 200 }}>
                             <Label>{t('options.trade.user-positions.results')}</Label>
-                            <Value>
-                                {formattedDurationFull(
-                                    intervalToDuration({ start: Date.now(), end: position.maturityDate }),
-                                    dateTimeTranslationMap
-                                )}
-                            </Value>
+                            <TimeRemaining fontSize={13} end={position.maturityDate} />
                         </FlexContainer>
                     </>
                 );
