@@ -854,7 +854,7 @@ const SectionWrapper = styled.section<{
     @media (max-width: 768px) {
         grid-column: span
             ${(props) =>
-                props.backgroundType === undefined ||
+                props.backgroundType !== undefined &&
                 [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS].includes(props.backgroundType)
                     ? 6
                     : 12};
@@ -1109,7 +1109,7 @@ const LpStakingLink = styled.span`
 const PlusSectionConnect = styled.div`
     text-align: center;
     grid-column: span 12;
-    color: props.theme.borderColor.primary;
+    color: ${(props) => props.theme.borderColor.primary};
     font-weight: 700;
     font-size: 30px;
 `;
