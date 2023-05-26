@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-gap: 20px;
-    margin-top: 25px;
+    margin-top: 20px;
     padding: 0 20px 0 0;
     max-height: 1000px;
     overflow: auto;

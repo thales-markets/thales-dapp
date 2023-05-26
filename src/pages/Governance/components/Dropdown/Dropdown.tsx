@@ -2,53 +2,54 @@ import React, { useState } from 'react';
 import { FlexDivCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
-import { StatusEnum } from 'constants/governance';
 import { ReactComponent as DownIcon } from 'assets/images/down.svg';
 import { useTranslation } from 'react-i18next';
 
-type StatusDropdownProps = {
-    activeStatus: StatusEnum;
+type DropdownProps = {
+    options: any;
+    activeOption: any;
     onSelect: any;
+    translationKey: string;
 };
 
-export const StatusDropdown: React.FC<StatusDropdownProps> = ({ activeStatus, onSelect }) => {
+export const Dropdown: React.FC<DropdownProps> = ({ options, activeOption, onSelect, translationKey }) => {
     const { t } = useTranslation();
-    const [statusDropdownIsOpen, setStatusDropdownIsOpen] = useState(false);
-    const setDropdownIsOpen = (isOpen: boolean) => {
-        if (!isOpen && !statusDropdownIsOpen) {
+    const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
+    const handleDropdownOpening = (isOpen: boolean) => {
+        if (!isOpen && !dropdownIsOpen) {
             return;
         }
-        setStatusDropdownIsOpen(isOpen);
+        setDropdownIsOpen(isOpen);
     };
 
     return (
         <>
-            <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
+            <OutsideClickHandler onOutsideClick={() => handleDropdownOpening(false)}>
                 <Container>
-                    <StatusButton
+                    <Button
                         onClick={() => {
-                            setDropdownIsOpen(!statusDropdownIsOpen);
+                            handleDropdownOpening(!dropdownIsOpen);
                         }}
-                        isActive={statusDropdownIsOpen}
+                        isActive={dropdownIsOpen}
                     >
                         <InnerButton>
-                            <FlexDiv>{t(`governance.status.${activeStatus}`)}</FlexDiv>
+                            <FlexDiv>{t(`governance.${translationKey}.${activeOption}`)}</FlexDiv>
                             <StyledDownIcon />
                         </InnerButton>
-                    </StatusButton>
-                    {statusDropdownIsOpen && (
+                    </Button>
+                    {dropdownIsOpen && (
                         <DropdownContainer>
                             <DropDown>
-                                {Object.values(StatusEnum).map((status: string) => (
+                                {options.map((options: string) => (
                                     <DropDownItem
-                                        key={status}
+                                        key={options}
                                         onClick={() => {
-                                            onSelect(status);
-                                            setDropdownIsOpen(false);
+                                            onSelect(options);
+                                            handleDropdownOpening(false);
                                         }}
                                     >
                                         <FlexDivCentered>
-                                            <StatusName>{t(`governance.status.${status}`)}</StatusName>
+                                            <Name>{t(`governance.${translationKey}.${options}`)}</Name>
                                         </FlexDivCentered>
                                     </DropDownItem>
                                 ))}
@@ -65,10 +66,11 @@ const Container = styled(FlexDivColumnCentered)`
     width: 140px;
     @media (max-width: 767px) {
         width: 100%;
+        margin-bottom: 10px;
     }
 `;
 
-const StatusButton = styled.button<{ isActive: boolean }>`
+const Button = styled.button<{ isActive: boolean }>`
     position: relative;
     width: 140px;
     height: 40px;
@@ -122,7 +124,7 @@ const DropDownItem = styled(FlexDiv)`
     }
 `;
 
-const StatusName = styled.div`
+const Name = styled.div`
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
@@ -140,4 +142,4 @@ const StyledDownIcon = styled(DownIcon)`
     }
 `;
 
-export default StatusDropdown;
+export default Dropdown;

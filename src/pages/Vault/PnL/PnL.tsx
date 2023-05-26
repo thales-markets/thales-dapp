@@ -8,8 +8,10 @@ import { getIsAppReady } from 'redux/modules/app';
 import { VaultPnls } from 'types/vault';
 import useVaultPnlsQuery from 'queries/vault/useVaultPnlsQuery';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Colors, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { formatPercentageWithSign } from 'utils/formatters/number';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type PnlProps = {
     vaultAddress: string;
@@ -18,6 +20,7 @@ type PnlProps = {
 
 const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [vaultPnls, setVaultPnls] = useState<VaultPnls>([]);
@@ -53,7 +56,15 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                 <Title>{t(`vault.pnl.title`)}</Title>
                 <LifetimePnlContainer>
                     <LifetimePnlLabel>{t('vault.pnl.lifetime-pnl')}:</LifetimePnlLabel>
-                    <LifetimePnl color={lifetimePnl === 0 ? Colors.WHITE : lifetimePnl > 0 ? Colors.GREEN : Colors.RED}>
+                    <LifetimePnl
+                        color={
+                            lifetimePnl === 0
+                                ? theme.textColor.primary
+                                : lifetimePnl > 0
+                                ? theme.textColor.quaternary
+                                : theme.textColor.tertiary
+                        }
+                    >
                         {formatPercentageWithSign(lifetimePnl)}
                     </LifetimePnl>
                 </LifetimePnlContainer>
@@ -62,12 +73,12 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                 <ChartContainer>
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={vaultPnls}>
-                            <CartesianGrid strokeDasharray="2 2" strokeWidth={0.5} stroke={Colors.GRAY_LIGHT} />
+                            <CartesianGrid strokeDasharray="2 2" strokeWidth={0.5} stroke={theme.textColor.secondary} />
                             <XAxis
                                 dataKey="round"
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{ fill: Colors.GRAY_LIGHT }}
+                                tick={{ fill: theme.textColor.secondary }}
                                 style={{
                                     fontSize: '15px',
                                 }}
@@ -78,7 +89,7 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                                 }}
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{ fill: Colors.GRAY_LIGHT }}
+                                tick={{ fill: theme.textColor.secondary }}
                                 style={{
                                     fontSize: '15px',
                                 }}
@@ -86,12 +97,15 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
                             />
                             <Tooltip
                                 content={<CustomTooltip />}
-                                cursor={{ fill: Colors.GRAY_LIGHT, fillOpacity: '0.2' }}
+                                cursor={{ fill: theme.textColor.secondary, fillOpacity: '0.2' }}
                                 wrapperStyle={{ outline: 'none' }}
                             />
                             <Bar dataKey="pnl" radius={[4, 4, 0, 0]} maxBarSize={60}>
                                 {vaultPnls.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.pnl > 0 ? Colors.GREEN : Colors.RED} />
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={entry.pnl > 0 ? theme.textColor.quaternary : theme.textColor.tertiary}
+                                    />
                                 ))}
                             </Bar>
                         </BarChart>

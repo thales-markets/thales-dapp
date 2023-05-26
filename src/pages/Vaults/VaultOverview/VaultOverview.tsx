@@ -29,6 +29,8 @@ import { formatPercentage, formatPercentageWithSign } from 'utils/formatters/num
 import SimpleLoader from 'components/SimpleLoader';
 import TimeRemaining from 'components/TimeRemaining';
 import { Colors, FlexDivColumn } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type VaultOverviewProps = {
     vaultId: string;
@@ -36,6 +38,7 @@ type VaultOverviewProps = {
 
 const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const language = i18n.language;
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -118,10 +121,10 @@ const VaultOverview: React.FC<VaultOverviewProps> = ({ vaultId }) => {
                                         <VaultInfo
                                             color={
                                                 vaultData.lifetimePnl === 0
-                                                    ? Colors.WHITE
+                                                    ? theme.textColor.primary
                                                     : vaultData.lifetimePnl > 0
-                                                    ? Colors.GREEN
-                                                    : Colors.RED
+                                                    ? theme.textColor.quaternary
+                                                    : theme.textColor.tertiary
                                             }
                                         >
                                             {formatPercentageWithSign(vaultData.lifetimePnl)}

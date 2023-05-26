@@ -10,10 +10,10 @@ import { formatCurrency } from 'utils/formatters/number';
 import SPAAnchor from 'components/SPAAnchor';
 import { VaultTrade, VaultTrades } from 'types/vault';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
-import { UI_COLORS } from 'constants/ui';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { VaultTradeStatus } from 'constants/vault';
 import { isMobile } from 'utils/device';
+import { ThemeInterface } from 'types/ui';
 
 type TradesTableProps = {
     transactions: VaultTrades;
@@ -23,6 +23,8 @@ type TradesTableProps = {
 
 export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
+
     // @ts-ignore
     return (
         <>
@@ -80,12 +82,12 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                             <p>
                                 {cellProps.cell.value}
                                 <Icon
-                                    style={{
-                                        color: `${
-                                            cellProps.cell.row.original.position === 0 ? UI_COLORS.GREEN : UI_COLORS.RED
-                                        }`,
-                                        marginLeft: 6,
-                                    }}
+                                    color={
+                                        cellProps.cell.value === 0
+                                            ? theme.textColor.quaternary
+                                            : theme.textColor.tertiary
+                                    }
+                                    marginLeft="6px"
                                     className={`v2-icon v2-icon--${
                                         cellProps.cell.row.original.position === 0 ? 'up' : 'down'
                                     }`}
@@ -111,10 +113,12 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                             <>
                                 {cellProps.cell.value !== null && (
                                     <Icon
-                                        style={{
-                                            color: `${cellProps.cell.value === 0 ? UI_COLORS.GREEN : UI_COLORS.RED}`,
-                                            marginRight: 6,
-                                        }}
+                                        color={
+                                            cellProps.cell.value === 0
+                                                ? theme.textColor.quaternary
+                                                : theme.textColor.tertiary
+                                        }
+                                        marginRight="6px"
                                         className={`v2-icon v2-icon--${cellProps.cell.value === 0 ? 'up' : 'down'}`}
                                     ></Icon>
                                 )}
@@ -122,8 +126,8 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                                     <Status
                                         color={
                                             cellProps.row.original.status == VaultTradeStatus.WIN
-                                                ? UI_COLORS.GREEN
-                                                : UI_COLORS.RED
+                                                ? theme.textColor.quaternary
+                                                : theme.textColor.tertiary
                                         }
                                     >
                                         {cellProps.row.original.status}
@@ -156,8 +160,11 @@ const Status = styled.span<{ color: string }>`
     color: ${(props) => props.color};
 `;
 
-const Icon = styled.i`
+const Icon = styled.i<{ color: string; marginLeft?: string; marginRight?: string }>`
     font-size: 15px;
+    color: ${(props) => props.color} !important;
+    margin-left: ${(props) => props.marginLeft || '0px'};
+    margin-right: ${(props) => props.marginRight || '0px'};
 `;
 
 export default TradesTable;

@@ -3,10 +3,12 @@ import { indexOf, max } from 'lodash';
 import TimeRemaining from 'components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlexDivRowCentered, Colors } from 'theme/common';
+import { FlexDivRowCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { truncateText } from 'utils/formatters/string';
 import { Body, Card, CardContainer, Result, ResultContainer, RightSection, Status, Title } from './styled-components';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type ProposalCardProps = {
     proposal: Proposal;
@@ -15,6 +17,7 @@ type ProposalCardProps = {
 
 const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const closed = proposal.state === StatusEnum.Closed;
     const pending = proposal.state === StatusEnum.Pending;
 
@@ -34,7 +37,13 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
                     {!!closed && proposal.space.id === SpaceKey.TIPS && (
                         <ResultContainer>
                             <span>{t(`governance.proposal.final-result-label`)}: </span>
-                            <Result color={finalChoice.toUpperCase() === 'NO' ? Colors.RED : Colors.GREEN}>
+                            <Result
+                                color={
+                                    finalChoice.toUpperCase() === 'NO'
+                                        ? theme.textColor.tertiary
+                                        : theme.textColor.quaternary
+                                }
+                            >
                                 {finalChoice}
                             </Result>
                         </ResultContainer>

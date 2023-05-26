@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
-import { Colors } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type SelectOptions = Array<{ value: number | string; label: string }>;
 
@@ -23,6 +24,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
     fontSize,
     isDisabled,
 }) => {
+    const theme: ThemeInterface = useTheme();
     const defaultOption = options[defaultValue ? defaultValue : 0];
 
     const customStyled = {
@@ -30,8 +32,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
             ...provided,
             width: '100%',
             color: state.selectProps.menuColor,
-            backgroundColor: Colors.GRAY_DARK,
-            border: `1px solid ${Colors.GRAY_LIGHT}`,
+            backgroundColor: theme.background.primary,
+            border: `1px solid ${theme.borderColor.secondary}`,
             marginTop: 5,
             borderRadius: 15,
             overflow: 'auto',
@@ -39,23 +41,23 @@ const SelectInput: React.FC<SelectInputProps> = ({
         }),
         option: (provided: any, state: any) => ({
             ...provided,
-            color: Colors.WHITE,
-            backgroundColor: state?.isFocused || state.isSelected ? Colors.GRAY : 'transparent',
+            color: theme.textColor.primary,
+            backgroundColor: state?.isFocused || state.isSelected ? theme.background.secondary : 'transparent',
             opacity: state.isSelected && !state?.isFocused ? 0.7 : 1,
             cursor: 'pointer',
         }),
         control: (provided: any, state: any) => ({
             ...provided,
-            backgroundColor: Colors.GRAY_DARK,
-            borderColor: Colors.GRAY_LIGHT,
-            color: Colors.GRAY_LIGHT,
+            backgroundColor: theme.background.primary,
+            borderColor: theme.borderColor.secondary,
+            color: theme.textColor.secondary,
             borderRadius: '15px',
             width: width,
             minHeight: height || 38,
             cursor: 'pointer',
             boxShadow: 'none',
             '&:hover': {
-                border: `1px solid ${Colors.GREEN}`,
+                border: `1px solid ${theme.borderColor.quaternary}`,
                 boxShadow: 'none',
             },
             opacity: state.isDisabled ? 0.4 : 1,
@@ -64,18 +66,18 @@ const SelectInput: React.FC<SelectInputProps> = ({
         }),
         placeholder: (provided: any) => ({
             ...provided,
-            color: Colors.WHITE,
+            color: theme.textColor.primary,
         }),
         singleValue: (provided: any) => ({
             ...provided,
-            color: Colors.WHITE,
+            color: theme.textColor.primary,
         }),
         dropdownIndicator: (provided: any) => ({
             ...provided,
-            color: Colors.WHITE,
+            color: theme.textColor.primary,
             [':hover']: {
                 ...provided[':hover'],
-                color: Colors.WHITE,
+                color: theme.textColor.primary,
             },
         }),
     };

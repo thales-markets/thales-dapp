@@ -31,7 +31,6 @@ import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/curren
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import ElectionsBanner from 'components/ElectionsBanner';
-import { Colors } from 'theme/common';
 import { isMobile } from 'utils/device';
 import { Rewards, emptyRewards } from 'types/rewards';
 import Footer from 'components/Footer/Footer';
@@ -229,7 +228,6 @@ const OPRewards: React.FC = () => {
                                 volume: Number(cellProps.cell.value.volume).toFixed(2),
                                 percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                             })}
-                            iconColor={Colors.WHITE}
                             iconFontSize={12}
                         />
                     </p>
@@ -257,7 +255,6 @@ const OPRewards: React.FC = () => {
                                 volume: Number(cellProps.cell.value.volume).toFixed(2),
                                 percentage: (Number(cellProps.cell.value.percentage) * 100).toFixed(2),
                             })}
-                            iconColor={Colors.WHITE}
                             iconFontSize={12}
                         />
                     </p>
