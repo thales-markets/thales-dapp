@@ -2,7 +2,6 @@ import { ValueType } from 'react-select';
 import { CurrencyKeyOptionType } from '../CreateMarket';
 import React, { useMemo } from 'react';
 import {
-    Colors,
     FlexDivCentered,
     FlexDivColumn,
     FlexDivColumnCentered,
@@ -17,6 +16,8 @@ import { ReactComponent as ArrowUp } from 'assets/images/green-arrow-up.svg';
 import { ReactComponent as ArrowDown } from 'assets/images/red-arrow-down.svg';
 import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;
@@ -29,6 +30,7 @@ type MarketSummaryProps = {
 
 const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
 
     const difference = useMemo(() => {
         if (props.strikingPrice && props.currentPrice) {
@@ -63,7 +65,9 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                             <Tooltip overlay="Difference between strike and current price">
                                 <FlexDivRowCentered>
                                     {difference.side ? <StyledArrowUp /> : <StyledArrowDown />}
-                                    <PriceInfo color={difference.side ? Colors.GREEN : Colors.RED}>
+                                    <PriceInfo
+                                        color={difference.side ? theme.textColor.quaternary : theme.textColor.tertiary}
+                                    >
                                         {difference.value}%
                                     </PriceInfo>
                                 </FlexDivRowCentered>

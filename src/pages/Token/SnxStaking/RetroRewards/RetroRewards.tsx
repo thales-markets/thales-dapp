@@ -185,6 +185,7 @@ const RetroRewards: React.FC = () => {
                             />
                         }
                         iconFontSize={18}
+                        mobileIconFontSize={15}
                         top={-1}
                     />
                 </div>

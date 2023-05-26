@@ -8,10 +8,8 @@ import { Proposal } from 'types/governance';
 import CouncilMembers from './CouncilMembers';
 import { RouteComponentProps } from 'react-router-dom';
 import request, { gql } from 'graphql-request';
-import StatusDropdown from './components/StatusDropdown';
 import SidebarDetails from './ProposalDetails/SidebarDetails';
 import ThalesStakers from './ThalesStakers';
-import TabDropdown from './components/TabDropdown';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
 import { useSelector } from 'react-redux';
@@ -33,6 +31,7 @@ import {
     SidebarContainer,
     SidebarWrapper,
 } from './styled-components';
+import Dropdown from './components/Dropdown';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -176,7 +175,12 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             <>
                                 <OptionsTabWrapper>
                                     {isMobile ? (
-                                        <TabDropdown activeTab={selectedTab} onSelect={setSelectedTab} />
+                                        <Dropdown
+                                            options={Object.values(SpaceKey)}
+                                            activeOption={selectedTab}
+                                            onSelect={setSelectedTab}
+                                            translationKey="tabs"
+                                        />
                                     ) : (
                                         <OptionsTabContainer>
                                             {optionsTabContent.map((tab, index) => (
@@ -196,7 +200,12 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                         </OptionsTabContainer>
                                     )}
                                     {selectedTab !== SpaceKey.THALES_STAKERS && (
-                                        <StatusDropdown activeStatus={statusFilter} onSelect={setStatusFilter} />
+                                        <Dropdown
+                                            options={Object.values(StatusEnum)}
+                                            activeOption={statusFilter}
+                                            onSelect={setStatusFilter}
+                                            translationKey="status"
+                                        />
                                     )}
                                 </OptionsTabWrapper>
                                 {selectedTab === SpaceKey.TIPS && (

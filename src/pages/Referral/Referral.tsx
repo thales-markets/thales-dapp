@@ -57,9 +57,10 @@ import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
 import { generalConfig } from 'config/general';
 import axios from 'axios';
 import snxJSConnector from 'utils/snxJSConnector';
-import { Colors } from 'theme/common';
 import TextInput from 'components/fields/TextInput/TextInput';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 const tabs = [
     {
@@ -78,6 +79,7 @@ const tabs = [
 
 const Referral: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -291,8 +293,8 @@ const Referral: React.FC = () => {
                         <StatValue>{formatCurrencyWithSign(USD_SIGN, statisticsData.totalVolume * 0.02)}</StatValue>
                     </KeyValue>
                     <KeyValue>
-                        <StatLabel color={Colors.GREEN}>{t('referral-page.statistics.earned')}</StatLabel>
-                        <StatValue color={Colors.GREEN}>
+                        <StatLabel color={theme.textColor.quaternary}>{t('referral-page.statistics.earned')}</StatLabel>
+                        <StatValue color={theme.textColor.quaternary}>
                             {formatCurrencyWithSign(USD_SIGN, statisticsData.totalEarned)}
                         </StatValue>
                     </KeyValue>

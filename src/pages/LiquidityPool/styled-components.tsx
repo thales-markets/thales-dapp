@@ -327,9 +327,9 @@ export const SliderContainer = styled.div`
 
 export const StyledSlider = withStyles({
     root: {
-        color: Colors.BLUE_LIGHT,
+        color: Colors.GREEN,
         '&$disabled': {
-            color: Colors.BLUE_LIGHT,
+            color: Colors.GREEN,
             opacity: 0.5,
         },
         padding: '6px 0 10px 0',

@@ -135,7 +135,7 @@ const Staking: React.FC = () => {
         return (
             <SectionLabel>
                 <SectionLabelContent>{t(labelTransKey, defaultValue)}</SectionLabelContent>
-                {!noIcon && <Tooltip overlay={t(labelTransKey + '-tooltip')} />}
+                {!noIcon && <Tooltip overlay={t(labelTransKey + '-tooltip')} mobileIconFontSize={11} />}
             </SectionLabel>
         );
     };
@@ -174,8 +174,9 @@ const Staking: React.FC = () => {
                                         />
                                     }
                                     iconColor={theme.textColor.quaternary}
-                                    iconFontSize={20}
-                                    top={-2}
+                                    iconFontSize={22}
+                                    mobileIconFontSize={12}
+                                    top={-1}
                                 />
                             </BonusInfo>
                         </SectionValueContent>
@@ -265,8 +266,9 @@ const Staking: React.FC = () => {
                                         />
                                     }
                                     iconColor={theme.textColor.quaternary}
-                                    iconFontSize={20}
-                                    top={-2}
+                                    iconFontSize={22}
+                                    mobileIconFontSize={12}
+                                    top={-1}
                                 />
                             </BonusInfo>
                         </SectionValueContent>
