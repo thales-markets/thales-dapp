@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TransactionsTable from '../TransactionsTable';
 import styled, { useTheme } from 'styled-components';
-import { FlexDivColumn, Text } from 'theme/common';
+import { FlexDivColumn } from 'theme/common';
 import { TokenTransaction, TransactionFilterEnum } from 'types/token';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -179,7 +179,7 @@ const DropDown = styled.div`
     }
 `;
 
-const FilterText = styled(Text)`
+const FilterText = styled.p`
     cursor: pointer;
     font-weight: 700;
     font-size: 15px;

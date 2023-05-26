@@ -18,10 +18,16 @@ export const Wrapper = styled.div`
 
 export const NoProposals = styled(FlexDivColumn)`
     margin-top: 30px;
-    min-height: 400px;
+    min-height: 300px;
     background: ${(props) => props.theme.background.primary};
     justify-content: space-evenly;
     align-items: center;
     align-self: center;
     border-radius: 5px;
+`;
+
+export const NoProposalsText = styled.p`
+    color: ${(props) => props.theme.textColor.primary};
+    font-size: 20px;
+    font-weight: bold;
 `;

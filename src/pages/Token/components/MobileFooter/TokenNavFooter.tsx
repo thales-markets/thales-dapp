@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Image } from 'theme/common';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
 import snxStakingActiveIcon from 'assets/images/snx-staking-active.png';
@@ -231,7 +230,7 @@ const Container = styled.div`
     width: 100px;
 `;
 
-const Icon = styled(Image)`
+const Icon = styled.img`
     width: 42px;
     height: 42px;
     padding: 4px;

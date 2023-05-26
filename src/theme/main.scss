@@ -148,15 +148,15 @@ table {
 
 *::-webkit-scrollbar {
     border-radius: 8px;
-    width: var(--scrollbar-width, 10px);
+    width: 10px;
 }
 *::-webkit-scrollbar-track {
     border-radius: 8px;
-    background: var(--color-wrapper, #2b3139);
+    background: #2b3139;
 }
 *::-webkit-scrollbar-thumb {
     border-radius: 8px;
-    background: var(--color, #848e9c);
+    background: #848e9c;
 }
 
 input::-webkit-outer-spin-button,
@@ -183,14 +183,7 @@ input[type='number'] {
     --color-highlight: #848e9c;
     --color-highlight-2: rgba(121, 177, 255, 0.6);
     --color-white: #f4f4f4;
-
     --color-text: #808997;
-
-    // --color-primary: #1e1e1e;
-    // --color-secondary: #2b3139;
-    // --color-tertiary: #848e9c;
-    // --color-highlight: #03dac6;
-    // --color-white: #ffffff;
 
     &.collapse {
         overflow: hidden;
@@ -208,13 +201,9 @@ a {
 @import './fonts.css';
 @import './overrides.css';
 @import './text.css';
-@import './colors.css';
 @import './datepicker.css';
 @import './hero.css';
-@import './medias/market-options.css';
-@import './medias/landing-page.css';
 @import './icons.css';
 @import './sidebar-icons.css';
 @import './thales-icons.css';
-@import './royale-avatars.css';
 @import './currencies.css';

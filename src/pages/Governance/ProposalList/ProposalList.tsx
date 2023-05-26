@@ -4,7 +4,6 @@ import { SpaceKey, StatusEnum } from 'constants/governance';
 import { Proposal } from 'types/governance';
 import ProposalCard from '../ProposalCard';
 import { navigateToGovernance } from 'utils/routes';
-import { Text } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import { LoaderContainer } from '../styled-components';
 import SimpleLoader from 'components/SimpleLoader';
@@ -12,7 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import Button from 'components/ButtonV2/Button';
-import { NoProposals, Wrapper } from './styled-components';
+import { NoProposals, NoProposalsText, Wrapper } from './styled-components';
 
 type ProposalListProps = {
     spaceKey: SpaceKey;
@@ -57,7 +56,7 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
             {!hasProposals && !isLoading && (
                 <NoProposals>
                     <>
-                        <Text className="text-l bold pale-grey">{t('governance.proposal.no-proposals-found')}</Text>
+                        <NoProposalsText>{t('governance.proposal.no-proposals-found')}</NoProposalsText>
                         <Button onClick={resetFilters}>{t('governance.proposal.view-all-proposals')}</Button>
                     </>
                 </NoProposals>

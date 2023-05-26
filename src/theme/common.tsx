@@ -75,17 +75,6 @@ export const LoaderContainer = styled(GridDivCenteredRow)`
     transform: translate(-50%, -50%);
 `;
 
-export const Text = styled.p`
-    strong {
-        font-weight: bold;
-    }
-`;
-
-export const Image = styled.img`
-    width: 100%;
-    height: 100%;
-`;
-
 export const UserCardSectionHeader = styled.span`
     font-weight: bold;
     font-size: 15px;
