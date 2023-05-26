@@ -61,7 +61,10 @@ const OpenPositions: React.FC = () => {
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [submittingAddress, setSubmittingAddress] = useState('');
 
-    const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', { enabled: true });
+    const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', {
+        enabled: true,
+        refetchInterval: 10000,
+    }); // 10sec refetch
     const livePositions = useMemo(() => {
         if (positionsQuery.isSuccess) return positionsQuery.data;
         return [];
@@ -274,14 +277,16 @@ const OpenPositions: React.FC = () => {
 
             try {
                 const tx = await marketContractWithSigner.exerciseOptions();
-                const txResult = await tx.wait();
+                await tx.wait();
                 toast.update(
                     id,
                     getSuccessToastOptions(
                         t(`options.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`)
                     )
                 );
-                console.log(txResult);
+
+                refetchBalances(walletAddress, networkId);
+                refetchUserOpenPositions(walletAddress, networkId);
             } catch (e) {
                 console.log(e);
                 toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
