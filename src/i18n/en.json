@@ -427,7 +427,9 @@
                 "size": "Size",
                 "paid": "Paid",
                 "cash-out": "Cash out",
-                "cash-out-progress": "Cashing out..."
+                "cash-out-progress": "Cashing out...",
+                "claim-win": "Claim win",
+                "claim-win-progress": "Claiming win..."
             }
         },
         "phases": {

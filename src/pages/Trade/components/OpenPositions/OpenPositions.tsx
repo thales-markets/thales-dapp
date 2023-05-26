@@ -5,6 +5,7 @@ import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import { POSITIONS_TO_SIDE_MAP, Positions, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
 import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { intervalToDuration } from 'date-fns';
 import { BigNumber, ethers } from 'ethers';
 
 import useUserOpenPositions, { UserLivePositions } from 'queries/user/useUserOpenPositions';
@@ -14,10 +15,13 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled, { CSSProperties } from 'styled-components';
+import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
 import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
-import { formatShortDateWithTime } from 'utils/formatters/date';
+import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
+import rangedMarketContract from 'utils/contracts/rangedMarketContract';
+import { formatShortDateWithTime, formattedDurationFull } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, formatNumberShort, roundNumberToDecimals } from 'utils/formatters/number';
 import { getIsArbitrum, getIsBSC, getIsOVM, getIsPolygon } from 'utils/network';
@@ -27,6 +31,29 @@ import snxJSConnector from 'utils/snxJSConnector';
 const OpenPositions: React.FC = () => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
+    const theme: ThemeInterface = useTheme();
+
+    const dateTimeTranslationMap = {
+        years: t('options.common.time-remaining.years'),
+        year: t('options.common.time-remaining.year'),
+        months: t('options.common.time-remaining.months'),
+        month: t('options.common.time-remaining.month'),
+        weeks: t('options.common.time-remaining.weeks'),
+        week: t('options.common.time-remaining.week'),
+        days: t('options.common.time-remaining.days'),
+        day: t('options.common.time-remaining.day'),
+        hours: t('options.common.time-remaining.hours'),
+        hour: t('options.common.time-remaining.hour'),
+        minutes: t('options.common.time-remaining.minutes'),
+        minute: t('options.common.time-remaining.minute'),
+        seconds: t('options.common.time-remaining.seconds'),
+        second: t('options.common.time-remaining.second'),
+        'days-short': t('options.common.time-remaining.days-short'),
+        'hours-short': t('options.common.time-remaining.hours-short'),
+        'minutes-short': t('options.common.time-remaining.minutes-short'),
+        'seconds-short': t('options.common.time-remaining.seconds-short'),
+        'months-short': t('options.common.time-remaining.months-short'),
+    };
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -233,7 +260,87 @@ const OpenPositions: React.FC = () => {
         }
     };
 
+    const handleExercise = async (position: UserLivePositions) => {
+        let marketContract;
+        if (position.side === Positions.UP || position.side === Positions.DOWN) {
+            marketContract = new ethers.Contract(position.market, binaryOptionMarketContract.abi);
+        } else {
+            marketContract = new ethers.Contract(position.market, rangedMarketContract.abi);
+        }
+
+        if (marketContract && snxJSConnector.signer) {
+            const marketContractWithSigner = marketContract.connect(snxJSConnector.signer);
+            const id = toast.loading(t('amm.progress'));
+
+            try {
+                const tx = await marketContractWithSigner.exerciseOptions();
+                const txResult = await tx.wait();
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t(`options.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`)
+                    )
+                );
+                console.log(txResult);
+            } catch (e) {
+                console.log(e);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            }
+        }
+    };
+
     const getPositionsList = (position: UserLivePositions, index: number) => {
+        const getButton = (position: UserLivePositions) => {
+            if (position.claimable && position.amount > 0) {
+                return (
+                    <Button
+                        {...defaultButtonProps}
+                        disabled={Number(position.value) === 0}
+                        additionalStyles={additionalStyle}
+                        backgroundColor={theme.button.textColor.quaternary}
+                        onClick={() => handleExercise(position)}
+                    >
+                        {submittingAddress === position.market
+                            ? t(`options.trade.user-positions.claim-win-progress`)
+                            : t('options.trade.user-positions.claim-win')}
+                        {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
+                    </Button>
+                );
+            }
+            const today = new Date();
+            if (position.maturityDate > today.getTime() / 1000 && position.value > 0) {
+                return (
+                    <Button
+                        {...defaultButtonProps}
+                        disabled={Number(position.value) === 0}
+                        additionalStyles={additionalStyle}
+                        onClick={() => handleSubmit(position)}
+                    >
+                        {submittingAddress === position.market
+                            ? t(`options.trade.user-positions.cash-out-progress`)
+                            : t('options.trade.user-positions.cash-out')}
+                        {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
+                    </Button>
+                );
+            }
+            if (position.maturityDate > today.getTime() / 1000 && position.value === 0) {
+                return (
+                    <>
+                        <Separator />
+                        <FlexContainer style={{ minWidth: 200 }}>
+                            <Label>{t('options.trade.user-positions.results')}</Label>
+                            <Value>
+                                {formattedDurationFull(
+                                    intervalToDuration({ start: Date.now(), end: position.maturityDate }),
+                                    dateTimeTranslationMap
+                                )}
+                            </Value>
+                        </FlexContainer>
+                    </>
+                );
+            }
+        };
+
         return (
             <Position key={index}>
                 <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
@@ -258,17 +365,7 @@ const OpenPositions: React.FC = () => {
                         <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                     </FlexContainer>
                 </AlignedFlex>
-                <Button
-                    {...defaultButtonProps}
-                    disabled={Number(position.value) === 0}
-                    additionalStyles={additionalStyle}
-                    onClick={() => handleSubmit(position)}
-                >
-                    {submittingAddress === position.market
-                        ? t(`options.trade.user-positions.cash-out-progress`)
-                        : t('options.trade.user-positions.cash-out')}
-                    {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
-                </Button>
+                {getButton(position)}
             </Position>
         );
     };
@@ -361,6 +458,7 @@ const additionalStyle: CSSProperties = {
     fontSize: '13px',
     lineHeight: '100%',
     textTransform: 'uppercase',
+    border: 'none',
 };
 
 const Position = styled.div`
@@ -378,7 +476,9 @@ const Position = styled.div`
         display: flex;
         flex-direction: column;
         height: 100%;
+        min-height: 172px;
         padding: 10px 10px;
+        margin-bottom: 10px;
         gap: 10px;
     }
 `;
