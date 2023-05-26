@@ -119,7 +119,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         price: Number(price[1].toFixed(2)),
                     }));
 
-                    priceData.push({ date: format(new Date(), 'MM/dd'), price: currentPrice });
+                    priceData.push({ date: format(new Date(), 'dd/MM'), price: currentPrice });
 
                     setData(priceData);
 
