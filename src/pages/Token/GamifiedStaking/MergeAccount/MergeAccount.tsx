@@ -154,18 +154,20 @@ const MergeAccount: React.FC = () => {
         const fetchGasLimit = async () => {
             try {
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        stakingThalesContractWithSigner.estimateGas.delegateVolume(getAddress(ZERO_ADDRESS)),
-                        fetchL1Fee(stakingThalesContractWithSigner),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await stakingThalesContractWithSigner.estimateGas.delegateVolume(
-                        getAddress(ZERO_ADDRESS)
-                    );
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                if (stakingThalesContractWithSigner.signer) {
+                    if (isL2) {
+                        const [gasEstimate, l1FeeInWei] = await Promise.all([
+                            stakingThalesContractWithSigner.estimateGas.delegateVolume(getAddress(ZERO_ADDRESS)),
+                            fetchL1Fee(stakingThalesContractWithSigner),
+                        ]);
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                        setL1Fee(l1FeeInWei);
+                    } else {
+                        const gasEstimate = await stakingThalesContractWithSigner.estimateGas.delegateVolume(
+                            getAddress(ZERO_ADDRESS)
+                        );
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    }
                 }
             } catch (e) {
                 console.log(e);

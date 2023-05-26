@@ -1770,7 +1770,9 @@
                 "your-positions": "您的空缺职位",
                 "cash-out": "兑现",
                 "cash-out-progress": "兑现...",
-                "no-positions": "您的未平仓头寸将在此处可见"
+                "no-positions": "您的未平仓头寸将在此处可见",
+                "claim-win-progress": "声称获胜...",
+                "claim-win": "声称获胜"
             }
         }
     },
