@@ -59,7 +59,7 @@ const OpenPositions: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [submittingAddress, setSubmittingAddress] = useState('');
+    const [submittingPosition, setSubmittingPosition] = useState('');
 
     const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', {
         enabled: true,
@@ -185,13 +185,13 @@ const OpenPositions: React.FC = () => {
             return { totalValueChanged, latestGasLimit };
         };
 
-        setSubmittingAddress(position.market);
+        setSubmittingPosition(position.market + position.side);
         const id = toast.loading(t('amm.progress'));
 
         const { totalValueChanged, latestGasLimit } = await fetchAmmPriceData(position.paid);
         if (totalValueChanged) {
             toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
-            setSubmittingAddress('');
+            setSubmittingPosition('');
             refetchUserOpenPositions(walletAddress, networkId);
             return;
         }
@@ -248,7 +248,7 @@ const OpenPositions: React.FC = () => {
                     : refetchAmmData(walletAddress, position.market);
                 refetchUserOpenPositions(walletAddress, networkId);
 
-                setSubmittingAddress('');
+                setSubmittingPosition('');
                 setGasLimit(null);
 
                 trackEvent({
@@ -259,7 +259,7 @@ const OpenPositions: React.FC = () => {
         } catch (e) {
             console.log(e);
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
-            setSubmittingAddress('');
+            setSubmittingPosition('');
         }
     };
 
@@ -305,7 +305,7 @@ const OpenPositions: React.FC = () => {
                         backgroundColor={theme.button.textColor.quaternary}
                         onClick={() => handleExercise(position)}
                     >
-                        {submittingAddress === position.market
+                        {submittingPosition === position.market + position.side
                             ? t(`options.trade.user-positions.claim-win-progress`)
                             : t('options.trade.user-positions.claim-win')}
                         {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
@@ -321,7 +321,7 @@ const OpenPositions: React.FC = () => {
                         additionalStyles={additionalStyle}
                         onClick={() => handleSubmit(position)}
                     >
-                        {submittingAddress === position.market
+                        {submittingPosition === position.market + position.side
                             ? t(`options.trade.user-positions.cash-out-progress`)
                             : t('options.trade.user-positions.cash-out')}
                         {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}

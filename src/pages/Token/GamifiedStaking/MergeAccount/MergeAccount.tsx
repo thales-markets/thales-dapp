@@ -352,7 +352,7 @@ const MergeAccount: React.FC = () => {
                             rel="noreferrer"
                         >
                             <DelegationAddress key={address}>
-                                {address} <ArrowIcon width="10" height="10" />
+                                {address} <ArrowHyperlinkIcon width="10" height="10" />
                             </DelegationAddress>
                         </StyledLink>
                     ))}
@@ -549,8 +549,6 @@ const StyledLink = styled.a`
         text-decoration: underline;
     }
 `;
-
-const ArrowIcon = styled(ArrowHyperlinkIcon)``;
 
 const ArrowContainer = styled(FlexDivCentered)`
     margin-bottom: 15px;

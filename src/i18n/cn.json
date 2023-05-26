@@ -1772,7 +1772,8 @@
                 "cash-out-progress": "兑现...",
                 "no-positions": "您的未平仓头寸将在此处可见",
                 "claim-win-progress": "声称获胜...",
-                "claim-win": "声称获胜"
+                "claim-win": "声称获胜",
+                "results": "结果是"
             }
         }
     },

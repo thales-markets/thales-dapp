@@ -429,7 +429,8 @@
                 "cash-out": "Cash out",
                 "cash-out-progress": "Cashing out...",
                 "claim-win": "Claim win",
-                "claim-win-progress": "Claiming win..."
+                "claim-win-progress": "Claiming win...",
+                "results": "Results in"
             }
         },
         "phases": {

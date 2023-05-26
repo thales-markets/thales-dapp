@@ -61,6 +61,7 @@ const Tab: React.FC<{
                                             margin={'0 20px 0 0'}
                                             padding={'5px 20px'}
                                             fontSize="15px"
+                                            additionalStyles={{ whiteSpace: 'nowrap' }}
                                             onClick={() => {
                                                 const paramTab = queryString.parse(location.search).tab;
                                                 history.push({

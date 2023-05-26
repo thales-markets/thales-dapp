@@ -27,7 +27,7 @@ const Tile: StyledComponent<
 }>`
     position: relative;
     background: ${(props) => props.backgroundColor || 'transparent'};
-    border: 2px solid ${(props) => (props.backgroundColor ? 'transparent' : 'rgba(100, 217, 254, 0.5)')};
+    border: 2px solid ${(props) => (props.backgroundColor ? 'transparent' : props.theme.borderColor.primary)};
     box-sizing: border-box;
     border-radius: 15px;
     justify-content: space-between;
