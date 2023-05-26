@@ -26,8 +26,8 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { FlexDivEnd } from 'theme/common';
+import styled, { useTheme } from 'styled-components';
+import { Colors, FlexDivEnd } from 'theme/common';
 import { StakingData, TokenTabEnum, UserStakingData } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
@@ -42,6 +42,7 @@ import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { ThemeInterface } from 'types/ui';
 
 enum SectionType {
     INFO,
@@ -59,6 +60,7 @@ type RewardsProperties = {
 
 const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const { openConnectModal } = useConnectModal();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -322,10 +324,20 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionDetailsValue>{value.volume}</SectionDetailsValue>
                 </SectionDetails>
                 <SectionDetails>
-                    <SectionDetailsLabel color={!label.bonusEligible ? '#ffcc00' : !value.bonus ? '#50ce99' : ''}>
+                    <SectionDetailsLabel
+                        color={
+                            !label.bonusEligible
+                                ? theme.warning.textColor.primary
+                                : !value.bonus
+                                ? theme.textColor.quaternary
+                                : ''
+                        }
+                    >
                         {label.bonus}
                     </SectionDetailsLabel>
-                    {value.bonus && <SectionDetailsValue color={'#50ce99'}>{value.bonus}</SectionDetailsValue>}
+                    {value.bonus && (
+                        <SectionDetailsValue color={theme.textColor.quaternary}>{value.bonus}</SectionDetailsValue>
+                    )}
                 </SectionDetails>
                 <Line margin={'0 0 10px 0'} />
                 <SectionDetails>
@@ -803,15 +815,14 @@ const SectionWrapper = styled.section<{
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.RANGED:
                 return 'linear-gradient(-20deg, #801BF2 0%, #464DCF 100%)';
-            case BackgroundType.LP_STAKING:
-                return props.theme.background.secondary;
             case BackgroundType.SPORTS:
-                return '#303656';
-            case BackgroundType.CLAIM:
+                return Colors.GRAY_PURPLE;
             case BackgroundType.CLAIM_ON_BEHALF:
-                return 'var(--color-highlight)';
+            case BackgroundType.CLAIM:
+            case BackgroundType.LP_STAKING:
+                return props.theme.borderColor.primary;
             default:
-                return props.theme.background.secondary;
+                return props.theme.borderColor.primary;
         }
     }};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
@@ -843,7 +854,8 @@ const SectionWrapper = styled.section<{
     @media (max-width: 768px) {
         grid-column: span
             ${(props) =>
-                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS].includes(props.backgroundType ?? -1)
+                props.backgroundType === undefined ||
+                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS].includes(props.backgroundType)
                     ? 6
                     : 12};
         ${(props) => (props.backgroundType === BackgroundType.SPORTS ? 'grid-column-start: 4;' : '')}
@@ -1075,7 +1087,7 @@ const PeriodLabel = styled(SectionContent)`
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -1097,7 +1109,7 @@ const LpStakingLink = styled.span`
 const PlusSectionConnect = styled.div`
     text-align: center;
     grid-column: span 12;
-    color: var(--color-highlight);
+    color: props.theme.borderColor.primary;
     font-weight: 700;
     font-size: 30px;
 `;

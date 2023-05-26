@@ -136,6 +136,7 @@ export const Colors = {
     GRAY: '#2B3139',
     GRAY_LIGHT: '#848E9C',
     GRAY_DARK: '#181A20',
+    GRAY_PURPLE: '#303656',
 
     WHITE: '#FFFFFF',
 

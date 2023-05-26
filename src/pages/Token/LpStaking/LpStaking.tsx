@@ -578,7 +578,7 @@ const SectionValue = styled.div<{ type: SectionType }>`
 const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?: boolean }>`
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    ${(props) => (props.colored ? 'color: #50ce99;' : '')}
+    ${(props) => (props.colored ? `color: ${props.theme.textColor.quaternary};` : '')}
     ${(props) => {
         switch (props.type) {
             case SectionType.INFO:
@@ -621,7 +621,7 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 17px;
     letter-spacing: 0.035em;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -632,7 +632,7 @@ const SectionDetailsValue = styled.span`
     font-weight: 500;
     font-size: 15px;
     line-height: 17px;
-    color: #50ce99;
+    color: ${(props) => props.theme.textColor.quaternary};
     @media (max-width: 768px) {
         font-size: 15px;
     }
@@ -653,7 +653,7 @@ const VerticalLineWrapper = styled.div`
 `;
 
 const VerticalLineCenter = styled.hr`
-    border: 1px solid var(--color-highlight) 80;
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     position: absolute;
     top: -18px;
     left: 0;

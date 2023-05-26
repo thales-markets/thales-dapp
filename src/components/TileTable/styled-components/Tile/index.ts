@@ -47,10 +47,10 @@ const Tile: StyledComponent<
         width: 15px;
         height: 15px;
         border-radius: 50%;
-        border: 4px solid var(--background);
-        background: ${(props) => props.dotColor || 'var(--color-highlight)'} !important;
-        box-shadow: 0 0 0 3px ${(props) => props.dotColor || 'var(--color-highlight)'} !important;
-        opacity: ${(props) => (props.dotColor || props.disabled ? '1' : '0.5')} !important;
+        border: 4px solid ${(props) => props.theme.background.primary};
+        background: ${(props) => props.dotColor || props.theme.background.quaternary} !important;
+        box-shadow: 0 0 0 3px ${(props) => props.dotColor || props.theme.background.quaternary} !important;
+        opacity: ${(props) => (props.disabled ? '0.5' : '1')} !important;
     }
     &:after {
         content: '';
@@ -60,8 +60,8 @@ const Tile: StyledComponent<
         top: -31px;
         width: 2px;
         height: 43px;
-        background: var(--color-highlight);
-        opacity: ${(props) => (props.disabled ? '1' : '0.5')} !important;
+        background: ${(props) => props.theme.background.quaternary};
+        opacity: ${(props) => (props.disabled ? '0.5' : '1')} !important;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: 767px) {
             height: ${(props) => (props.heightSmall ? '44px' : '68px')};
@@ -97,10 +97,10 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
         width: 15px;
         height: 15px;
         border-radius: 50%;
-        border: 4px solid var(--background);
-        background: var(--color-highlight) !important;
-        box-shadow: 0 0 0 3px var(--color-highlight) !important;
-        opacity: 0.5 !important;
+        border: 4px solid ${(props) => props.theme.background.primary};
+        background: ${(props) => props.theme.background.quaternary} !important;
+        box-shadow: 0 0 0 3px ${(props) => props.theme.background.quaternary} !important;
+        opacity: 1 !important;
     }
     &:after {
         content: '';
@@ -110,8 +110,8 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
         top: -31px;
         width: 2px;
         height: 43px;
-        background: var(--color-highlight);
-        opacity: 0.5;
+        background: ${(props) => props.theme.background.quaternary};
+        opacity: 1;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: 767px) {
             height: 68px;

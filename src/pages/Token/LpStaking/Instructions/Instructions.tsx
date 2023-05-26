@@ -121,10 +121,10 @@ const Step = styled.div`
     position: relative;
     width: ${STEP_WIDTH};
     height: 60px;
-    background: var(--background);
+    background: ${(props) => props.theme.background.primary};
     border-radius: 50%;
-    border: 4px solid var(--input-border-color);
-    color: var(--input-border-color);
+    border: 4px solid ${(props) => props.theme.borderColor.secondary};
+    color: ${(props) => props.theme.borderColor.secondary};
     text-align: center;
     font-style: normal;
     font-weight: 700;
@@ -136,14 +136,14 @@ const Step = styled.div`
 
 const StepConnect = styled.div`
     width: calc(20% - ${STEP_WIDTH});
-    border-top: 3px solid var(--input-border-color);
+    border-top: 3px solid ${(props) => props.theme.borderColor.secondary};
 `;
 
 const StepInfo = styled.div`
     display: flex;
     flex-direction: column;
     width: 200px;
-    border: 1px dashed var(--input-border-color);
+    border: 1px dashed ${(props) => props.theme.borderColor.secondary};
     border-radius: 15px;
     padding: 15px 10px;
     @media (min-width: 768px) and (max-width: 1192px) {
@@ -173,7 +173,7 @@ const StepNavContainer = styled.div`
 
 const StepNav = styled.div<{ selected: boolean }>`
     border-radius: 50%;
-    background: var(--color-highlight);
+    background: ${(props) => props.theme.borderColor.secondary};
     width: 14px;
     height: 14px;
     margin: 0 5px;

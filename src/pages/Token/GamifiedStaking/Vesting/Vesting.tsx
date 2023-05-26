@@ -20,7 +20,6 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsOVM, getL1FeeInWei, formatGasLimit } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import DateTimeContainer from './styled-components/TimeDateContainer';
 import { isMobile } from 'utils/device';
 import { UserVestingData } from 'types/token';
 import { refetchTokenQueries } from 'utils/queryConnector';
@@ -201,12 +200,8 @@ const SchedulerFirstColumn: React.FC<{ value: TileRow | string }> = ({ value }) 
     if (typeof value !== 'string') {
         return (
             <DateTimeContainer>
-                <DateTimeContainer.Date>
-                    {formatShortDateWithTime(Number(value?.cells[0]?.value))}
-                </DateTimeContainer.Date>
-                <DateTimeContainer.Time>
-                    {formatHoursAndMinutesFromTimestamp(Number(value?.cells[0]?.value))}
-                </DateTimeContainer.Time>
+                <Date>{formatShortDateWithTime(Number(value?.cells[0]?.value))}</Date>
+                <Time>{formatHoursAndMinutesFromTimestamp(Number(value?.cells[0]?.value))}</Time>
             </DateTimeContainer>
         );
     }
@@ -227,7 +222,7 @@ const SectionWrapper = styled.section<{
     ${(props) => (props.rows ? 'display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; grid-gap: 24px;' : '')}
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
     padding: 2px;
-    background: ${(props) => (props.background ?? true ? 'var(--color-highlight)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.borderColor.primary : 'none')};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
 
     @media (max-width: 768px) {
@@ -304,6 +299,34 @@ const NetworkFeesWrapper = styled.div`
     margin: 0 80px;
     @media (max-width: 768px) {
         margin: auto;
+    }
+`;
+
+const DateTimeContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: ${(props) => props.theme.textColor.primary};
+    min-width: 120px;
+`;
+
+const Date = styled.span`
+    display: block;
+    font-weight: 700;
+    font-size: 15px;
+    white-space: nowrap;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
+`;
+
+const Time = styled.span`
+    display: block;
+    font-weight: 300;
+    font-size: 15px;
+    @media (max-width: 768px) {
+        font-size: 12px;
     }
 `;
 

@@ -155,7 +155,7 @@ const DropDownWrapper = styled.div`
     top: 5px;
     background: ${(props) => props.theme.background.secondary};
     width: 220px;
-    right: 64px;
+    right: 83px;
     padding: 2px;
     z-index: 100;
     border-radius: 15px;

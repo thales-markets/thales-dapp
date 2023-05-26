@@ -323,16 +323,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
-    background: ${(props) => {
-        switch (props.backgroundType) {
-            case BackgroundType.INFO:
-                return props.theme.background.secondary;
-            case BackgroundType.STAKE:
-                return props.theme.background.secondary;
-            default:
-                return props.theme.background.secondary;
-        }
-    }};
+    background: ${(props) => props.theme.background.secondary};
     padding: 2px;
     @media (max-width: 768px) {
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
@@ -411,7 +402,7 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 768px) {
         font-size: 12px;
     }
@@ -424,7 +415,7 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boo
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => (props.unavailable ? '#ffcc00' : 'var(--color-white)')};
+    color: ${(props) => (props.unavailable ? props.theme.warning.textColor.primary : props.theme.textColor.primary)};
     @media (max-width: 768px) {
         font-size: 14px;
     }
@@ -438,7 +429,7 @@ const StakedBalanceInfo = styled.div`
     position: absolute;
     top: 80px;
     padding: 10px 15px;
-    color: #ffcc00;
+    color: ${(props) => props.theme.warning.textColor.primary};
     font-size: 14px;
     @media (max-width: 768px) {
         padding: 10px;
@@ -450,7 +441,8 @@ const StakedBalanceInfo = styled.div`
 const UnstakingInfo = styled.span`
     font-weight: 400;
     font-size: 12px;
-    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+    background: ${(props) => props.theme.button.background.primary};
+    color: ${(props) => props.theme.button.textColor.primary};
     border-radius: 5px;
     padding: 3px 5px;
     margin-left: 5px;

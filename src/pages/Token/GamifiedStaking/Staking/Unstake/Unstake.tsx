@@ -506,7 +506,7 @@ const CooldownText = styled.span`
     font-weight: normal;
     font-size: 14px;
     line-height: 24px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
 `;
 
@@ -515,7 +515,7 @@ const CooldownCounter = styled.span`
     font-size: 16px;
     line-height: 20px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 const UnstakingTitleText = styled.span`
