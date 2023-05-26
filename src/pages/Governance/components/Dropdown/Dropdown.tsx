@@ -80,7 +80,6 @@ const Button = styled.button<{ isActive: boolean }>`
     border-radius: 23px;
     &:hover {
         cursor: pointer;
-        background: ${(props) => props.theme.borderColor.quaternary};
     }
     @media (max-width: 767px) {
         width: 100%;
@@ -88,7 +87,7 @@ const Button = styled.button<{ isActive: boolean }>`
 `;
 
 const InnerButton = styled(FlexDivRowCentered)`
-    background: ${(props) => props.theme.background.primary};
+    background: ${(props) => props.theme.background.secondary};
     border-radius: 23px;
     font-weight: 500;
     font-size: 16px;
@@ -106,7 +105,7 @@ const DropdownContainer = styled.div`
 `;
 
 const DropDown = styled(FlexDivColumn)`
-    background: ${(props) => props.theme.background.primary};
+    background: ${(props) => props.theme.background.secondary};
     border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 20px;
     position: absolute;
@@ -119,7 +118,7 @@ const DropDownItem = styled(FlexDiv)`
     padding: 8px 12px;
     cursor: pointer;
     &:hover {
-        background: ${(props) => props.theme.background.secondary};
+        background: ${(props) => props.theme.background.primary};
         border-radius: 12px;
     }
 `;

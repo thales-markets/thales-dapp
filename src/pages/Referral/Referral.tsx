@@ -57,7 +57,6 @@ import useGetReffererIdQuery from 'queries/referral/useGetReffererIdQuery';
 import { generalConfig } from 'config/general';
 import axios from 'axios';
 import snxJSConnector from 'utils/snxJSConnector';
-import { Colors } from 'theme/common';
 import TextInput from 'components/fields/TextInput/TextInput';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { ThemeInterface } from 'types/ui';
