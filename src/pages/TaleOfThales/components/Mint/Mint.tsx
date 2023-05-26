@@ -142,7 +142,7 @@ const CollectionTitleContainer = styled.div`
 
 const CollectionTitle = styled.span`
     font-family: basis33 !important;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
     font-size: 28px;
     line-height: 105%;
@@ -151,7 +151,7 @@ const CollectionTitle = styled.span`
 
 const NFTTitle = styled.span`
     font-family: basis33 !important;
-    color: var(--background);
+    color: ${(props) => props.theme.button.textColor.primary};
     z-index: 1;
     text-transform: uppercase;
     font-size: 25px;
@@ -184,8 +184,8 @@ const StyledNFTContainerImage = styled.img`
 const Button = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
     background: #e1b689;
-    border: 2px dashed var(--color-primary);
-    color: var(--background);
+    border: 2px dashed ${(props) => props.theme.button.borderColor.quaternary};
+    color: ${(props) => props.theme.button.textColor.primary};
     width: 100%;
     height: 35px;
     font-size: 25px;
@@ -202,8 +202,8 @@ const Button = styled.button<{ invisible?: boolean }>`
 const CollectionButton = styled.button<{ invisible?: boolean }>`
     font-family: basis33 !important;
     background: #e1b689;
-    border: 2px dashed var(--color-primary);
-    color: var(--background);
+    border: 2px dashed ${(props) => props.theme.button.borderColor.quaternary};
+    color: ${(props) => props.theme.button.textColor.primary};
     width: 350px;
     height: 35px;
     font-size: 25px;

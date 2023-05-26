@@ -155,10 +155,13 @@ const Container = styled(FlexDivColumn)`
     min-height: 370px;
     overflow-y: auto;
     width: 70%;
-    padding: 10px;
     margin-top: 20px;
     @media (max-width: 1440px) {
         width: 95%;
+    }
+    @media (max-width: 767px) {
+        max-height: 1100px;
+        min-height: initial;
     }
 `;
 

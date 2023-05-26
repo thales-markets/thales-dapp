@@ -39,6 +39,7 @@ export default {
             primary: Colors.GREEN,
             secondary: Colors.GRAY_LIGHT,
             tertiary: Colors.GRAY,
+            quaternary: Colors.GRAY_DARK,
         },
     },
     input: {

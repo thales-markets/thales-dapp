@@ -157,12 +157,12 @@ const Container = styled(FlexDivColumn)`
     min-height: 362px;
     overflow-y: auto;
     width: 100%;
-    padding: 10px;
     margin-top: 20px;
     @media (max-width: 767px) {
         width: 95%;
+        max-height: 1100px;
+        min-height: initial;
     }
-    border: 2px solid ${(props) => props.theme.borderColor.primary};
 `;
 
 const Header = styled(FlexDivRow)`

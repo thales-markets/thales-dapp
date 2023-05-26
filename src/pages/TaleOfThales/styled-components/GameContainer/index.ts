@@ -33,8 +33,9 @@ const WalletMessage = styled.div`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: #ffcc00;
+    color: ${(props) => props.theme.warning.textColor.primary};
     margin-top: 10px;
+    margin-bottom: 10px;
     text-align: center;
 `;
 

@@ -32,9 +32,7 @@ export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResults
                         Header: <>{t('vault.trades-history.table.date-time-col')}</>,
                         accessor: 'timestamp',
                         Cell: (cellProps: CellProps<VaultTrade, VaultTrade['timestamp']>) => (
-                            <p style={{ fontSize: `${isMobile() ? '10px' : '12px'}` }}>
-                                {formatTxTimestamp(cellProps.cell.value)}
-                            </p>
+                            <p>{formatTxTimestamp(cellProps.cell.value)}</p>
                         ),
                         sortable: true,
                     },
@@ -159,10 +157,7 @@ const Status = styled.span<{ color: string }>`
 `;
 
 const Icon = styled.i`
-    font-size: 19px;
-    @media (max-width: 512px) {
-        font-size: 16px;
-    }
+    font-size: 15px;
 `;
 
 export default TradesTable;
