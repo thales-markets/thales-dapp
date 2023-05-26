@@ -64,7 +64,7 @@ const MergeAccount: React.FC = () => {
     });
 
     const destStakingThalesQuery = useUserStakingDataQuery(destAddress, networkId, {
-        enabled: isAppReady && isDestAddressValid && !destAddress,
+        enabled: isAppReady && isDestAddressValid && !!destAddress,
     });
 
     const userTokenTransactionsQuery = useUserTokenTransactionsQuery(
