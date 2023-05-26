@@ -888,7 +888,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 };
 
 const Container = styled(FlexDivRow)`
-    min-width: 980px;
     height: 78px;
     @media (max-width: 767px) {
         min-width: initial;
