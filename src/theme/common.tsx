@@ -79,24 +79,24 @@ export const UserCardSectionHeader = styled.span`
     font-weight: bold;
     font-size: 15px;
     line-height: 20px;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.textColor.secondary};
     text-transform: uppercase;
 `;
 
 export const CardContainer = styled.div`
-    border: 2px solid var(--card-border-color);
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
 `;
 
 export const InputContainer = styled.div`
-    border: 0.8px solid var(--card-border-color);
+    border: 0.8px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 10px;
 `;
 
 export const NoDataText = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 24px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: 767px) {
         font-size: 15px;
     }
 `;
@@ -106,7 +106,7 @@ export const NoDataContainer = styled.div`
     width: 100%;
     text-align: center;
     margin-top: 50px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: 767px) {
         margin-top: 10px;
     }
 `;

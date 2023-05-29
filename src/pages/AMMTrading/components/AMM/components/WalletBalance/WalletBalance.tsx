@@ -149,7 +149,7 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     margin: 10px auto;
-    border: 1px solid var(--card-border-color);
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     padding: 3px 5px;
 `;
@@ -161,12 +161,6 @@ const BalanceContainer = styled.div`
     text-align: center;
     margin: 0 7px;
 `;
-
-// const WalletIcon = styled.i`
-//     font-size: 20px;
-//     margin-right: 8px;
-//     color: var(--card-border-color);
-// `;
 
 const Balance = styled.span`
     font-size: 13px;
