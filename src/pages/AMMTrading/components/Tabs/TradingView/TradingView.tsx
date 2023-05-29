@@ -4,7 +4,7 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 
 import { assetToTradingViewMap } from 'config/tradingView';
 
-import { Container, CopyrightLabel, TradingViewLink } from './styled-components/Container';
+import { Container, CopyrightLabel, TradingViewLink } from './styled-components';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 const TradingView: React.FC = () => {

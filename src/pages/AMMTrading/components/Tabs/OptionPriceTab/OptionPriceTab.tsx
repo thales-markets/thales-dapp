@@ -1,9 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-
 import OptionPriceChart from '../../OptionPriceChart';
-import ChartContainer from './styled-components/ChartContainer';
-import Container from './styled-components/Container';
 import { useMarketContext } from '../../../contexts/MarketContext';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
@@ -13,6 +10,7 @@ import { MarketType, OptionsMarketInfo, OptionsTransactions, RangedMarketData } 
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
 import { MARKET_TYPE } from 'constants/options';
+import { ChartContainer, Container } from './styled-components';
 
 const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     // TODO: fix this warning

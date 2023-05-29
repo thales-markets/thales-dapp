@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import { uniqBy, orderBy } from 'lodash';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
-import { UI_COLORS } from 'constants/ui';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { getStableCoinForNetwork } from '../../../../../utils/currency';
@@ -20,9 +19,13 @@ import { MarketType, OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { MARKET_TYPE } from 'constants/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import { FlexDivColumn } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
 
     // TODO: fix this warning
     // eslint-disable-next-line
@@ -62,23 +65,23 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     const getCellColor = (type: string) => {
         switch (type) {
             case 'buy':
-                return UI_COLORS.GREEN;
+                return theme.tradeTypeColor.buy;
             case 'long':
-                return UI_COLORS.GREEN;
+                return theme.positionColor.up;
             case 'up':
-                return UI_COLORS.GREEN;
+                return theme.positionColor.up;
             case 'sell':
-                return UI_COLORS.RED;
+                return theme.tradeTypeColor.sell;
             case 'short':
-                return UI_COLORS.RED;
+                return theme.positionColor.down;
             case 'down':
-                return UI_COLORS.RED;
+                return theme.positionColor.down;
             case 'in':
-                return UI_COLORS.IN_COLOR;
+                return theme.positionColor.in;
             case 'out':
-                return UI_COLORS.OUT_COLOR;
+                return theme.positionColor.out;
             default:
-                return 'var(--color-white)';
+                return theme.textColor.primary;
         }
     };
 
@@ -99,7 +102,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     );
 
     return (
-        <FlexDivColumn>
+        <Container>
             <Table
                 data={transactions}
                 columns={[
@@ -172,8 +175,12 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
                     },
                 ]}
             />
-        </FlexDivColumn>
+        </Container>
     );
 };
+
+const Container = styled(FlexDivColumn)`
+    width: 100%;
+`;
 
 export default MarketActivity;

@@ -59,18 +59,21 @@ import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/que
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import TradingDetailsModal from './components/TradingDetailsModal';
+import TradingDetailsSection from './components/TradingDetails';
 import { convertPriceImpactToBonus } from 'utils/options';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
+import SkewSlippageDetails from './components/SkewSlippageDetails/SkewSlippageDetails';
 
 type AmmTradingProps = {
     currencyKey: string;
     maturityDate: number;
     market: MarketInfo | RangedMarketPerPosition;
+    isDetailsPage?: boolean;
 };
 
 const ONE_HUNDRED_AND_THREE_PERCENT = 1.03;
 
-const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, market }) => {
+const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, market, isDetailsPage }) => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
     const { openConnectModal } = useConnectModal();
@@ -810,16 +813,18 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     };
 
     return (
-        <Container>
-            <TradingDetails>
-                {getTradingDetailsAsSentence(false)}
-                <DetailsIcon
-                    className="icon icon--gear"
-                    disabled={isButtonDisabled}
-                    onClick={() => !isButtonDisabled && setOpenTradingDetailsModal(true)}
-                />
-            </TradingDetails>
-            <FinalizeTrade>
+        <Container isDetailsPage={isDetailsPage}>
+            {!isDetailsPage && (
+                <TradingDetails>
+                    {getTradingDetailsAsSentence(false)}
+                    <DetailsIcon
+                        className="icon icon--gear"
+                        disabled={isButtonDisabled}
+                        onClick={() => !isButtonDisabled && setOpenTradingDetailsModal(true)}
+                    />
+                </TradingDetails>
+            )}
+            <FinalizeTrade isDetailsPage={isDetailsPage}>
                 <ColumnSpaceBetween>
                     <NumericInput
                         value={paidAmount}
@@ -846,6 +851,29 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         }
                         currencyLabel={!isMultiCollateralSupported ? getStableCoinForNetwork(networkId) : undefined}
                     />
+                    {isDetailsPage && (
+                        <>
+                            <TradingDetailsSection
+                                positionType={market.positionType}
+                                positionPrice={Number(positionPrice) > 0 ? Number(positionPrice) : Number(basePrice)}
+                                positionBonus={convertPriceImpactToBonus(
+                                    Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)
+                                )}
+                                positionAmount={Number(positionPrice) > 0 ? Number(positionAmount) : 0}
+                                paidAmount={Number(paidAmount)}
+                                selectedStable={getStableCoinForNetwork(
+                                    networkId,
+                                    isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
+                                )}
+                                profit={Number(priceProfit) * Number(paidAmount)}
+                            />
+                            <SkewSlippageDetails
+                                skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}
+                                slippage={slippagePerc}
+                                setSlippage={setSlippagePerc}
+                            />
+                        </>
+                    )}
                     {getSubmitButton()}
                 </ColumnSpaceBetween>
             </FinalizeTrade>
@@ -858,8 +886,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     rightStrikePrice={(market as RangedMarketPerPosition).rightPrice}
                     positionType={market.positionType}
                     positionPrice={Number(positionPrice) > 0 ? Number(positionPrice) : Number(basePrice)}
-                    positionBonus={convertPriceImpactToBonus(market.discount)}
-                    positionAmount={Number(positionAmount)}
+                    positionBonus={convertPriceImpactToBonus(
+                        Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)
+                    )}
+                    positionAmount={Number(positionPrice) > 0 ? Number(positionAmount) : 0}
                     paidAmount={Number(paidAmount)}
                     selectedStable={getStableCoinForNetwork(
                         networkId,
@@ -887,8 +917,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     );
 };
 
-const Container = styled(FlexDivRow)`
-    height: 78px;
+const Container = styled(FlexDivRow)<{ isDetailsPage?: boolean }>`
+    height: ${(props) => (props.isDetailsPage ? 'auto' : '78px')};
     @media (max-width: 767px) {
         min-width: initial;
         height: 100%;
@@ -908,8 +938,8 @@ const TradingDetails = styled(FlexDivRowCentered)`
     }
 `;
 
-const FinalizeTrade = styled(FlexDivCentered)`
-    width: 350px;
+const FinalizeTrade = styled(FlexDivCentered)<{ isDetailsPage?: boolean }>`
+    width: ${(props) => (props.isDetailsPage ? '100%' : '350px')};
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
     @media (max-width: 767px) {

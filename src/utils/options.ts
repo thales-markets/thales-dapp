@@ -6,6 +6,7 @@ import { Color } from '@material-ui/lab';
 import { ethers } from 'ethers';
 import { NetworkId } from './network';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
+import { formatCurrency } from './formatters/number';
 
 export enum SortDirection {
     NONE,
@@ -121,4 +122,4 @@ export const getSellTokenCurrency = (
 
 export const convertPriceImpactToBonus = (priceImpact: number): number => -((priceImpact / (1 + priceImpact)) * 100);
 
-export const getFormattedBonus = (bonus: number | undefined) => `+${Math.ceil(Number(bonus))}%`;
+export const getFormattedBonus = (bonus: number | undefined) => `+${formatCurrency(Number(bonus))}%`;

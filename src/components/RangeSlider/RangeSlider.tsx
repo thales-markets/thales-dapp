@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import Container, { Wrapper } from './styled-components/Container';
-import Footer from './styled-components/Footer';
+import React from 'react';
+import { Container, Footer, Slider, Wrapper } from './styled-components';
 
 type RangeSliderProps = {
     min: number;
@@ -30,35 +29,23 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     onChangeEventHandler,
     disabled,
 }) => {
-    const [focus, setFocus] = useState<boolean>(false);
-
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof onChangeEventHandler == 'function') {
             onChangeEventHandler(event.currentTarget.valueAsNumber);
         }
     };
 
-    const onFocus = () => {
-        setFocus(true);
-    };
-
-    const onBlur = () => {
-        setFocus(false);
-    };
-
     return (
         <Wrapper disabled={disabled} margin={container?.margin} padding={container?.padding}>
-            <Container shadow={focus ? 'var(--button-shadow)' : undefined}>
-                <Container.Slider
+            <Container>
+                <Slider
                     type="range"
                     min={min}
                     max={max}
                     value={defaultValue}
-                    step={step ? step : '0.1'}
+                    step={step || '0.1'}
                     onChange={(event) => onChangeHandler(event)}
                     disabled={disabled}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
                 />
             </Container>
             {showFooter && <Footer>{footerText}</Footer>}

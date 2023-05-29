@@ -3,21 +3,24 @@ import { FlexDiv } from 'theme/common';
 
 export const Container = styled(FlexDiv)`
     width: 100%;
-    height: 600px;
+    height: 450px;
     display: flex;
     flex-direction: column;
+    font-size: 13px;
 `;
 
 export const CopyrightLabel = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-white);
-    margin-top: 20px;
+    color: ${(props) => props.theme.textColor.primary};
+    margin-top: 15px;
 `;
 
 export const TradingViewLink = styled.a`
-    text-decoration: underline;
-    color: var(--input-border-color);
+    color: ${(props) => props.theme.link.textColor.primary};
+    &:hover {
+        text-decoration: underline;
+    }
     margin-right: 5px;
 `;

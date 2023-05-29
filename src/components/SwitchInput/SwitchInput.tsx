@@ -23,6 +23,7 @@ type SwitchProps = {
     label?: LabelProps;
     margin?: string;
     spanColumns?: number;
+    circlePosition?: string;
 };
 
 type SwitchContainerProps = {
@@ -41,11 +42,12 @@ type CircleProps = {
     size?: string;
     background?: string;
     backgroundGradient?: boolean;
+    circlePosition?: string;
 };
 
 const defaultSwitchHeight = 28;
 
-const Switch: React.FC<SwitchProps> = ({
+const SwitchInput: React.FC<SwitchProps> = ({
     active,
     disabled,
     handleClick,
@@ -61,6 +63,7 @@ const Switch: React.FC<SwitchProps> = ({
     label,
     margin,
     spanColumns,
+    circlePosition,
 }) => {
     return (
         <Wrapper margin={margin} disabled={disabled} spanColumns={spanColumns}>
@@ -75,7 +78,13 @@ const Switch: React.FC<SwitchProps> = ({
                 backgroundGradient={backgroundGradient}
                 onClick={() => (!disabled && handleClick ? handleClick() : null)}
             >
-                <Circle active={active} size={dotSize} background={dotBackground} backgroundGradient={dotGradient} />
+                <Circle
+                    active={active}
+                    size={dotSize}
+                    background={dotBackground}
+                    backgroundGradient={dotGradient}
+                    circlePosition={circlePosition}
+                />
             </SwitchContainer>
             {label?.secondLabel && <Label fontSize={label?.fontSize}>{label.secondLabel}</Label>}
         </Wrapper>
@@ -122,7 +131,8 @@ const Circle = styled.div<CircleProps>`
     border-radius: 60%;
     position: absolute;
     background-color: ${(props: any) => props.background || props.theme.background.tertiary};
-    ${(props: any) => (props?.active ? `right: 5px;` : `left: 5px;`)};
+    ${(props: any) =>
+        props?.active ? `right: ${props.circlePosition || '5px'};` : `left: ${props.circlePosition || '5px'};`};
 `;
 
-export default Switch;
+export default SwitchInput;

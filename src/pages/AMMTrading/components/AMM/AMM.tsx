@@ -58,7 +58,6 @@ import {
 } from 'utils/network';
 
 import { useTranslation } from 'react-i18next';
-import WalletBalance from './components/WalletBalance';
 import { getErrorToastOptions, getSuccessToastOptions, getWarningToastOptions, UI_COLORS } from 'constants/ui';
 import { toast } from 'react-toastify';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
@@ -826,7 +825,6 @@ const AMM: React.FC = () => {
                     onChangeCollateral={(index) => setStableIndex(index)}
                 />
             )}
-            <WalletBalance type={optionSide} stableIndex={isBuy ? selectedStableIndex : undefined} />
             <Switch
                 active={orderSide.value !== 'buy'}
                 width={'94px'}
@@ -1028,10 +1026,7 @@ const Wrapper = styled.div`
     border-radius: 15px;
     padding: 30px;
     margin-right: 27px;
-    width: 40%;
-    @media (max-width: 1024px) {
-        width: 100%;
-    }
+    width: 100%;
 `;
 
 const ButtonWrapper = styled.div`

@@ -1,36 +1,41 @@
 import React, { useMemo } from 'react';
-
-import Container from './styled-components/Container';
+import {
+    Container,
+    ColumnContainer,
+    Header,
+    SubContainer,
+    Value,
+    CurrencyContainer,
+    CurrencyIcon,
+    CurrencyLabel,
+    ColumnAnchorSubContainer,
+} from './styled-components';
 import MaturityDate from '../MaturityDate';
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
-
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-
 import useRangedAMMMaxLimitsQuery, {
     RangeAmmMaxLimits,
 } from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
-
 import { RangedMarketBalanceInfo, RangedMarketData } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
-import { currencyKeyToDataFeedSourceMap, USD_SIGN } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 import { Trans, useTranslation } from 'react-i18next';
-import { UI_COLORS } from 'constants/ui';
 import { getIsBuyState } from 'redux/modules/marketWidgets';
 import Tooltip from 'components/TooltipV2';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { UsingAmmLink } from 'pages/Profile/components/MyPositions/MyPositions';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import styled from 'styled-components';
+import { Positions } from 'constants/options';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 const RowCardRangedMarket: React.FC = () => {
     const marketInfo = useRangedMarketContext();
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isBuy = useSelector((state: RootState) => getIsBuyState(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -100,177 +105,146 @@ const RowCardRangedMarket: React.FC = () => {
         <>
             {marketInfo && (
                 <Container>
-                    <Container.ColumnContainer currency={true} alignItems={'center'}>
-                        <Container.ColumnAnchorSubContainer
+                    <ColumnContainer alignItems="center">
+                        <ColumnAnchorSubContainer
                             href={getEtherscanAddressLink(networkId, marketInfo.address)}
                             target="_blank"
                             rel="noreferrer"
                         >
-                            <Container.SubContainer>
+                            <CurrencyContainer>
                                 <CurrencyIcon
-                                    synthIconStyle={{
-                                        height: '51px',
-                                        width: '51px',
-                                        marginRight: '0px !important',
-                                    }}
-                                    iconType={3}
-                                    currencyKey={marketInfo.currencyKey}
-                                    width={'51px'}
-                                    height={'51px'}
+                                    className={`currency-icon currency-icon--${marketInfo.currencyKey.toLowerCase()}`}
                                 />
-                            </Container.SubContainer>
-                            <Container.SubContainer>
-                                <Container.SubContainer.Value>
-                                    {marketInfo.currencyKey}
-                                    {currencyKeyToDataFeedSourceMap[marketInfo.currencyKey]?.source == 'TWAP' && (
-                                        <Tooltip overlay={t('options.home.markets-table.twap-tooltip')} />
-                                    )}
-                                </Container.SubContainer.Value>
-                            </Container.SubContainer>
-                        </Container.ColumnAnchorSubContainer>
-                    </Container.ColumnContainer>
-                    <Container.ColumnContainer>
-                        <Container.SubContainer>
-                            <Container.SubContainer.Header>
-                                {t('options.market.overview.maturity-date')}
-                            </Container.SubContainer.Header>
-                            <Container.SubContainer.Value>
-                                <MaturityDate maturityDateUnix={marketInfo.maturityDate} showFullCounter={true} />
-                            </Container.SubContainer.Value>
-                        </Container.SubContainer>
-                        <Container.SubContainer>
-                            <Container.SubContainer.Header>
-                                {t('options.market.ranged-markets.strike-range')}
-                            </Container.SubContainer.Header>
-                            <Container.SubContainer.Value>
+                                <CurrencyLabel>{marketInfo.currencyKey}</CurrencyLabel>
+                            </CurrencyContainer>
+                        </ColumnAnchorSubContainer>
+                    </ColumnContainer>
+                    <ColumnContainer>
+                        <SubContainer>
+                            <Header>{t('options.market.ranged-markets.strike-range')}</Header>
+                            <Value>
                                 {`> ${formatCurrencyWithSign(USD_SIGN, marketInfo.leftPrice)}`}
                                 <br />
                                 {`< ${formatCurrencyWithSign(USD_SIGN, marketInfo.rightPrice)}`}
-                            </Container.SubContainer.Value>
-                        </Container.SubContainer>
-                    </Container.ColumnContainer>
-                    <Container.Divider />
-                    <Container.ColumnContainer>
-                        <Container.SubContainer>
-                            <Container.SubContainer.Header>
+                            </Value>
+                        </SubContainer>
+                    </ColumnContainer>
+                    <ColumnContainer>
+                        <SubContainer>
+                            <Header>{t('options.market.overview.maturity-date')}</Header>
+                            <Value>
+                                <MaturityDate maturityDateUnix={marketInfo.maturityDate} showFullCounter={true} />
+                            </Value>
+                        </SubContainer>
+                        <SubContainer>
+                            <Header>
                                 {marketInfo?.phase == 'maturity'
                                     ? t('options.market.overview.final-price-label', {
                                           currencyKey: marketInfo.currencyKey,
                                       })
                                     : t('options.home.market-card.current-asset-price')}
-                            </Container.SubContainer.Header>
-                            <Container.SubContainer.Value>
+                            </Header>
+                            <Value>
                                 {marketInfo?.phase == 'maturity'
                                     ? formatCurrencyWithSign(USD_SIGN, marketInfo.finalPrice)
                                     : formatCurrencyWithSign(USD_SIGN, marketInfo.currentPrice)}
                                 {}
-                            </Container.SubContainer.Value>
-                        </Container.SubContainer>
-                    </Container.ColumnContainer>
-                    <Container.Divider />
-                    <Container.ColumnContainer>
-                        <Container.SubContainer>
-                            <Container.SubContainer.Header>
+                            </Value>
+                        </SubContainer>
+                    </ColumnContainer>
+                    <ColumnContainer>
+                        <SubContainer>
+                            <Header>
                                 {marketInfo?.phase !== 'maturity'
                                     ? t('options.market.overview.my-positions')
                                     : t('options.market.overview.my-position')}
-                            </Container.SubContainer.Header>
-                            <Container.SubContainer.Value>
-                                {optBalances?.in > 0 && `${formatCurrency(optBalances?.in)}`}
-                                {optBalances?.in > 0 && (
-                                    <Container.Icon className="v2-icon v2-icon--in" color={UI_COLORS.IN_COLOR} />
-                                )}
+                            </Header>
+                            <Value>
+                                {optBalances?.in > 0 && <Value>{formatCurrency(optBalances?.in)} </Value>}
+                                {optBalances?.in > 0 && <Value color={theme.positionColor.in}>{Positions.IN}</Value>}
                                 {optBalances?.in > 0 && optBalances?.out > 0 && ' / '}
-                                {optBalances?.out > 0 && `${formatCurrency(optBalances?.out)}`}
-                                {optBalances?.out > 0 && (
-                                    <Container.Icon className="v2-icon v2-icon--out" color={UI_COLORS.OUT_COLOR} />
-                                )}
+                                {optBalances?.out > 0 && <Value>{formatCurrency(optBalances?.out)} </Value>}
+                                {optBalances?.out > 0 && <Value color={theme.positionColor.out}>{Positions.OUT}</Value>}
                                 {rangedMarketPositionBalance.isLoading
                                     ? '-'
                                     : optBalances?.in == 0 && optBalances?.out == 0 && 'N/A'}
-                            </Container.SubContainer.Value>
-                        </Container.SubContainer>
-                        <Container.SubContainer>
-                            <Container.SubContainer.Header>
+                            </Value>
+                        </SubContainer>
+                        <SubContainer>
+                            <Header>
                                 {marketInfo?.phase !== 'maturity'
                                     ? t('options.market.overview.positions-value')
                                     : t('options.market.overview.position-value')}
-                            </Container.SubContainer.Header>
-                            <Container.SubContainer.Value>
+                            </Header>
+                            <Value>
                                 <PositionPrice
                                     marketInfo={marketInfo}
                                     positionCurrentValue={positionCurrentValue}
                                     optBalances={optBalances}
                                     isLoading={ammMaxLimitsQuery.isLoading || rangedMarketPositionBalance.isLoading}
                                 />
-                            </Container.SubContainer.Value>
-                        </Container.SubContainer>
-                    </Container.ColumnContainer>
-                    <Container.Divider />
+                            </Value>
+                        </SubContainer>
+                    </ColumnContainer>
                     {marketInfo.phase == 'trading' && (
-                        <Container.ColumnContainer>
-                            <Container.SubContainer>
-                                <Container.SubContainer.Header>
+                        <ColumnContainer>
+                            <SubContainer>
+                                <Header>
                                     {t('options.market.overview.amm-liquidity')}
                                     <Tooltip
                                         overlay={t('options.market.overview.amm-liquidity-tooltip')}
-                                        iconFontSize={14}
+                                        iconFontSize={12}
                                     />
-                                </Container.SubContainer.Header>
-                                <Container.SubContainer.Value>
+                                </Header>
+                                <Value>
                                     {(ammData && ammData.maxIn > 0) || (ammData && ammData.maxOut > 0) ? (
                                         <>
-                                            <Container.SubContainer.Value.Liquidity inLiqFlag={true}>
-                                                {ammData ? ammData.maxIn?.toFixed(1) : '0'}
-                                            </Container.SubContainer.Value.Liquidity>
+                                            <Value color={theme.positionColor.in}>
+                                                {ammData ? formatCurrency(ammData.maxIn, 0) : '0'}
+                                            </Value>
                                             {' / '}
-                                            <Container.SubContainer.Value.Liquidity inLiqFlag={false}>
-                                                {ammData ? ammData.maxOut?.toFixed(1) : '0'}
-                                            </Container.SubContainer.Value.Liquidity>
+                                            <Value color={theme.positionColor.out}>
+                                                {ammData ? formatCurrency(ammData.maxOut, 0) : '0'}
+                                            </Value>
                                         </>
                                     ) : (
-                                        <Container.SubContainer.Value.OutOfLiquidity>
+                                        <Value color={theme.warning.textColor.primary}>
                                             {ammData ? t('options.home.markets-table.out-of-liquidity') : ''}
-                                        </Container.SubContainer.Value.OutOfLiquidity>
+                                        </Value>
                                     )}
-                                </Container.SubContainer.Value>
-                            </Container.SubContainer>
-                            <Container.SubContainer>
-                                <Container.SubContainer.Header>
-                                    {t('options.market.overview.amm-price')}
-                                </Container.SubContainer.Header>
-                                <Container.SubContainer.Value>
-                                    <Container.SubContainer.Value.Liquidity inLiqFlag={true}>
-                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceIn, 3) : '0'}
-                                    </Container.SubContainer.Value.Liquidity>
+                                </Value>
+                            </SubContainer>
+                            <SubContainer>
+                                <Header>{t('options.market.overview.amm-price')}</Header>
+                                <Value>
+                                    <Value color={theme.positionColor.in}>
+                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceIn) : '0'}
+                                    </Value>
                                     {' / '}
-                                    <Container.SubContainer.Value.Liquidity inLiqFlag={false}>
-                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceOut, 3) : '0'}
-                                    </Container.SubContainer.Value.Liquidity>
-                                </Container.SubContainer.Value>
-                            </Container.SubContainer>
-                        </Container.ColumnContainer>
+                                    <Value color={theme.positionColor.out}>
+                                        {ammData ? formatCurrencyWithSign(USD_SIGN, ammData.priceOut) : '0'}
+                                    </Value>
+                                </Value>
+                            </SubContainer>
+                        </ColumnContainer>
                     )}
                     {marketInfo?.phase == 'maturity' && (
-                        <Container.ColumnContainer>
-                            <Container.SubContainer>
-                                <Container.SubContainer.Header>
-                                    {t('options.market.overview.final-result')}
-                                </Container.SubContainer.Header>
-                                <Container.SubContainer.Value>
-                                    <Container.Icon
-                                        className={`v2-icon ${
-                                            marketInfo.result == 'in' ? 'v2-icon--in' : 'v2-icon--out'
-                                        }`}
-                                        color={marketInfo.result == 'out' ? UI_COLORS.OUT_COLOR : UI_COLORS.IN_COLOR}
-                                    />
-                                </Container.SubContainer.Value>
-                            </Container.SubContainer>
-                            <Container.SubContainer hidden={true}>
-                                <Container.SubContainer.Header>{'Hidden'}</Container.SubContainer.Header>
-                                <Container.SubContainer.Value>{'Hidden'}</Container.SubContainer.Value>
-                            </Container.SubContainer>
-                        </Container.ColumnContainer>
+                        <ColumnContainer>
+                            <SubContainer>
+                                <Header>{t('options.market.overview.final-result')}</Header>
+                                <Value
+                                    color={
+                                        marketInfo.result == 'out' ? theme.positionColor.out : theme.positionColor.in
+                                    }
+                                >
+                                    {marketInfo.result == 'out' ? Positions.OUT : Positions.IN}
+                                </Value>
+                            </SubContainer>
+                            <SubContainer hidden={true}>
+                                <Header>{'Hidden'}</Header>
+                                <Value>{'Hidden'}</Value>
+                            </SubContainer>
+                        </ColumnContainer>
                     )}
                 </Container>
             )}
@@ -324,8 +298,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
                                 ]}
                             />
                         }
-                        iconFontSize={20}
-                        top={2}
+                        iconFontSize={12}
                     />
                 </>
             )}
@@ -349,8 +322,7 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
                                 ]}
                             />
                         }
-                        iconFontSize={20}
-                        top={2}
+                        iconFontSize={12}
                     />
                 </>
             )}
@@ -359,12 +331,5 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
         </>
     );
 };
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    min-width: 20px;
-    min-height: 20px;
-    margin-left: 6px;
-    margin-top: 3px;
-`;
 
 export default RowCardRangedMarket;
