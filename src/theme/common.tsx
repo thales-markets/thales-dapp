@@ -130,7 +130,7 @@ export const Colors = {
     WHITE: '#FFFFFF',
 
     GREEN: '#03DAC5',
-    GREEN_LIGHT: '#93F9B9',
+    GREEN_LIGHT: '#B0FFE7',
     GREEN_DARK: '#1D976C',
 
     BLACK: '#000000',
@@ -149,4 +149,6 @@ export const Colors = {
     ORANGE_DARK: '#FF8800',
 
     YELLOW: '#FFCC00',
+
+    PURPLE: '#BF7EFF',
 };

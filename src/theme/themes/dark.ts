@@ -107,4 +107,14 @@ export default {
             primary: Colors.BLUE,
         },
     },
+    positionColor: {
+        up: Colors.GREEN,
+        down: Colors.RED,
+        in: Colors.GREEN_LIGHT,
+        out: Colors.PURPLE,
+    },
+    tradeTypeColor: {
+        buy: Colors.GREEN,
+        sell: Colors.RED,
+    },
 };
