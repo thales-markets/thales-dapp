@@ -12,6 +12,7 @@ import { formatPriceChangeInterval } from 'utils/formatters/string';
 import { CurrencyKey } from 'constants/currency';
 
 import { useTranslation } from 'react-i18next';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PriceChartProps = {
     currencyKey: CurrencyKey;
@@ -240,7 +241,7 @@ const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
     font-weight: bold;
     font-size: 15px;
     margin-left: 30px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-left: 5px;
     }
 `;

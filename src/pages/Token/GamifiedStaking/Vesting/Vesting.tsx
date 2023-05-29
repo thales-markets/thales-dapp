@@ -26,6 +26,7 @@ import { refetchTokenQueries } from 'utils/queryConnector';
 import Button from 'components/ButtonV2/Button';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
@@ -229,7 +230,7 @@ const SectionWrapper = styled.section<{
     background: ${(props) => (props.background ?? true ? props.theme.borderColor.primary : 'none')};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span 12;
     }
 `;
@@ -241,7 +242,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 10px;
     }
 `;
@@ -254,7 +255,7 @@ const SectionContent = styled.span`
 const ScheduleLabel = styled.div`
     display: flex;
     padding-bottom: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-bottom: 10px;
     }
 `;
@@ -263,14 +264,14 @@ const ScheduleLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 16px;
     }
 `;
 
 const SectionLabel = styled.div`
     padding-bottom: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-bottom: 10px;
     }
 `;
@@ -279,7 +280,7 @@ const SectionLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -294,14 +295,14 @@ const SectionValueContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 30px;
     color: ${(props) => props.theme.textColor.quaternary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 20px;
     }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 80px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin: auto;
     }
 `;
@@ -320,7 +321,7 @@ const Date = styled.span`
     font-weight: 700;
     font-size: 15px;
     white-space: nowrap;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -329,7 +330,7 @@ const Time = styled.span`
     display: block;
     font-weight: 300;
     font-size: 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;

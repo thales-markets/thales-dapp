@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
 import { TablePagination } from '@material-ui/core';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const TableView = styled.div`
     color: ${(props) => props.theme.textColor.primary};
@@ -53,7 +54,7 @@ export const TableRow = styled(FlexDiv)<{
     i {
         color: ${(props) => (props.isSticky ? props.theme.button.textColor.primary : props.theme.textColor.primary)};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         min-height: 30px;
         font-size: ${(props) => (props.isMobile ? '13px' : '10px')};
     }
@@ -122,7 +123,7 @@ export const NoDataContainer = styled(TableRow)`
     width: 100%;
     height: 20px;
     text-align: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 13px;
     }
   }
@@ -158,13 +159,13 @@ export const Pagination = styled(TablePagination)`
         display: block;
     }
     .MuiTablePagination-selectRoot {
-        @media (max-width: 767px) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
             margin-left: 0px;
             margin-right: 10px;
         }
     }
     .MuiIconButton-root {
-        @media (max-width: 767px) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
             padding: 6px;
         }
     }

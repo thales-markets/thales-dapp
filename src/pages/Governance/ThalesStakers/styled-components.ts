@@ -1,17 +1,18 @@
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const Container = styled(FlexDivColumnCentered)`
     padding-top: 30px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-top: 10px;
     }
 `;
 
 export const HeaderContainer = styled(FlexDivRowCentered)`
     margin: 0 30px 20px 30px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
         margin: 0 0 20px 0;
     }
@@ -22,7 +23,7 @@ export const TableContainer = styled(FlexDivColumn)`
     align-items: center;
     padding: 0 30px;
     width: 100%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 0;
     }
 `;
@@ -32,7 +33,7 @@ export const Info = styled.div`
     font-size: 18px;
     line-height: 24px;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-left: 0;
         margin-bottom: 10px;
     }
@@ -41,7 +42,7 @@ export const Address = styled.span`
     font-weight: bold;
     font-size: 14px;
     line-height: 22px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -51,7 +52,7 @@ export const Amount = styled.span`
     font-size: 14px;
     line-height: 16px;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;

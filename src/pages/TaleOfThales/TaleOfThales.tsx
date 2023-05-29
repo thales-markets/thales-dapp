@@ -4,6 +4,7 @@ import Metaverse from './components/Metaverse';
 import Mint from './components/Mint';
 import Story from './components/Story';
 import { history } from 'utils/routes';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -74,7 +75,7 @@ const TabsContainer = styled.div`
     @media (max-width: 1024px) {
         margin-top: 30px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
 `;

@@ -25,6 +25,7 @@ import { FlexDivSpaceBetween } from 'theme/common';
 import { Positions } from 'constants/options';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PriceChartProps = {
     asset: string;
@@ -337,7 +338,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-height: 300px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
 `;

@@ -3,6 +3,7 @@ import TableV3 from 'components/TableV3';
 
 import { USD_SIGN } from 'constants/currency';
 import { Positions } from 'constants/options';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled, { useTheme } from 'styled-components';
@@ -123,7 +124,7 @@ const getTableHeaderStyle = (color: string): React.CSSProperties => {
 const Wrapper = styled(FlexDivColumn)`
     width: 100%;
     height: calc(100% - 20px);
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         max-width: initial;
         height: calc(100% - 80px);
     }

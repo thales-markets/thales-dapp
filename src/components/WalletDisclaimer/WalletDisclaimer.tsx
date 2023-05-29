@@ -5,6 +5,7 @@ import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import { DisclaimerComponent } from '@rainbow-me/rainbowkit';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const WalletDisclaimer: DisclaimerComponent = ({ Text, Link }) => {
     return (
@@ -31,7 +32,7 @@ const WalletDisclaimer: DisclaimerComponent = ({ Text, Link }) => {
 };
 
 const Wrapper = styled.div`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-top: -15px;
         margin-bottom: -15px;
     }

@@ -20,6 +20,7 @@ import Lottie from 'lottie-react';
 import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -176,7 +177,7 @@ const Container = styled(FlexDivCentered)`
         padding-left: 10px;
         padding-right: 10px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         border-radius: 23px;
         margin-top: 20px;
         padding-left: 0;
@@ -241,7 +242,7 @@ const InnerItemContainer = styled(FlexDivCentered)`
     @media (max-width: 1024px) {
         flex-basis: 33%;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         min-height: 50px;
     }
 `;
@@ -256,7 +257,7 @@ const Title = styled.p<{ color?: string; noWrap?: boolean }>`
     line-height: 18px;
     color: ${(props) => props.color || props.theme.textColor.primary};
     ${(props) => (props.noWrap ? 'white-space: nowrap;' : '')};
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
         line-height: 16px;
     }
@@ -276,7 +277,7 @@ const Content = styled.div<{ fontSize?: number; color?: string }>`
         font-size: 14px;
         line-height: 16px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-weight: 600;
         font-size: 14px;
         line-height: 16px;
@@ -291,13 +292,13 @@ const StyledLink = styled.a`
     &:hover {
         text-decoration: underline;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         color: ${(props) => props.theme.link.textColor.secondary};
     }
 `;
 
 const ArrowIcon = styled(ArrowHyperlinkIcon)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         color: ${(props) => props.theme.link.textColor.secondary};
         & path {
             fill: ${(props) => props.theme.link.textColor.secondary};
@@ -319,7 +320,7 @@ export const StyledInfoIcon = styled(InfoIcon)`
     min-width: 18px;
     min-height: 18px;
     margin-bottom: -2px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
 `;

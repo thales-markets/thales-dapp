@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ClaimMigratedRewards from './ClaimMigratedRewards';
 import RetroRewards from './RetroRewards';
 import YourTransactions from './Transactions';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const SnxStaking: React.FC = () => {
     return (
@@ -24,7 +25,7 @@ const Container = styled.div`
     background: ${(props) => props.theme.background.primary};
     z-index: 0;
     width: 100%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         background: transparent;
         border: none;
         padding: 1px;

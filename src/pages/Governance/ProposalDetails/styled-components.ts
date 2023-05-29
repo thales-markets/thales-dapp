@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDivRow, FlexDivCentered, FlexDivRowCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getStatusColor } from 'utils/governance';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const Container = styled(FlexDivColumnCentered)`
     padding: 10px 40px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 10px 20px;
     }
 `;
@@ -26,7 +27,7 @@ export const Title = styled(FlexDivColumnCentered)`
 `;
 
 export const DetailsWrapper = styled(FlexDivRow)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
@@ -38,7 +39,7 @@ export const DetailsContainer = styled(FlexDivColumnCentered)`
     color: ${(props) => props.theme.textColor.primary};
     &:first-child {
         margin-right: 40px;
-        @media (max-width: 767px) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
             flex-direction: column;
             margin-right: 0px;
             margin-bottom: 10px;
@@ -118,7 +119,7 @@ export const Body = styled(FlexDivColumn)`
 `;
 
 export const VoteHeader = styled(FlexDivRowCentered)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
         align-items: start;
     }
@@ -146,7 +147,7 @@ export const DetailsTitle = styled(FlexDivRow)`
 `;
 
 export const VotingPowerTitle = styled(DetailsTitle)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-top: 0;
     }
 `;

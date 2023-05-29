@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import React from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
@@ -42,7 +43,7 @@ const Wrapper = styled.div`
     margin-top: 20px;
     display: flex;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: grid;
         justify-items: center;
     }
@@ -51,7 +52,7 @@ const Wrapper = styled.div`
 const ThalesLogoContainer = styled.div`
     display: flex;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         order: 2;
     }
 `;
@@ -59,7 +60,7 @@ const ThalesLogoContainer = styled.div`
 const ThalesLogo = styled.i`
     font-size: 88px;
     height: 83px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 80px;
     }
 `;
@@ -72,7 +73,7 @@ const ThalesLogoText = styled.p`
     line-height: 8px;
     text-align: center;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         height: 24px;
     }
 `;
@@ -100,7 +101,7 @@ const FooterIconsWrapper = styled(FlexDiv)`
     @media (max-width: 900px) {
         gap: 4em;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         order: 1;
         &:last-child {
             margin-left: 0;

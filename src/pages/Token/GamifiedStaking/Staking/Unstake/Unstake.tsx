@@ -29,6 +29,7 @@ import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
 import { isMobile } from 'utils/device';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -490,7 +491,7 @@ const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
     @media (max-width: 1192px) {
         min-width: 110px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         min-width: 110px;
     }
 `;
@@ -526,7 +527,7 @@ const UnstakingTitleText = styled.span`
     @media (max-width: 1192px) {
         font-size: 12px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
         margin-right: 0px;
     }

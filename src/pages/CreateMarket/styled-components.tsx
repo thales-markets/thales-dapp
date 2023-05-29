@@ -3,23 +3,24 @@ import styled from 'styled-components';
 import errorIcon from 'assets/images/errorIcon.svg';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import Select from 'pages/CreateMarket/components/Select';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const Container = styled(FlexDiv)`
     padding: 50px 0;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
 
 export const Row = styled(FlexDivRow)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
 export const DatePickerRow = styled(FlexDivRow)`
     width: 50%;
     margin-right: 10px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
     }
 `;
@@ -87,7 +88,7 @@ export const ShortInputContainer = styled.div`
     &:first-child {
         margin-right: 10px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
     }
 `;

@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 
 import { getSynthName } from 'utils/currency';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export type AssetInfoProps = {
     currencyKey: string;
@@ -26,7 +30,7 @@ const AssetInfo: React.FC<AssetInfoProps> = ({
     displayInRowMobile,
     iconType,
 }) => {
-    const isMobile = window.innerWidth < 768;
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     return (
         <AssetContainer displayInRowMobile={displayInRowMobile}>
@@ -55,7 +59,7 @@ const AssetContainer = styled.div<{ displayInRowMobile?: boolean }>`
     justify-content: start;
     align-items: center;
     flex: 1;
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         min-height: 100%;
         flex-direction: ${(props) => (props.displayInRowMobile ? 'row' : 'column')};
         justify-content: ${(props) => (props.displayInRowMobile ? 'flex-start' : 'space-evenly')};
@@ -69,7 +73,7 @@ const AssetNameContainer = styled.div<{ displayInRow?: boolean }>`
     text-align: left;
     font-size: 15px;
     color: var(--color-white) !important;
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         text-align: center;
     }
 `;
@@ -81,7 +85,7 @@ const AssetName = styled.span<{ fontSize?: string }>`
     text-transform: uppercase;
     line-height: 120%;
     margin-right: 2px;
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
 `;

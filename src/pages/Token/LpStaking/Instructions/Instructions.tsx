@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import { ProvideLiquidityLink, UniswapExchangeLink } from 'pages/Token/components';
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -93,7 +94,7 @@ const STEP_WIDTH = '60px';
 const Container = styled.div`
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: auto min-content;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         overflow-x: scroll;
         &::-webkit-scrollbar {
             display: none;
@@ -112,7 +113,7 @@ const StepsWrapper = styled.div<{ firstRow?: boolean }>`
               `
             : ''};
     justify-content: ${(props) => (props.firstRow ? 'center' : 'space-around')};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 320%;
     }
 `;
@@ -146,7 +147,7 @@ const StepInfo = styled.div`
     border: 1px dashed ${(props) => props.theme.borderColor.secondary};
     border-radius: 15px;
     padding: 15px 10px;
-    @media (min-width: 768px) and (max-width: 1192px) {
+    @media (min-width: ${ScreenSizeBreakpoint.SMALL}) and (max-width: 1192px) {
         width: 180px;
     }
 `;

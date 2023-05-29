@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 
@@ -13,7 +14,7 @@ export const SpaContainer = styled(FlexDivColumn)`
     :not(:last-child) {
         margin-right: 20px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
         :not(:last-child) {
             margin-right: 0;
@@ -32,7 +33,7 @@ export const VaultContainer = styled(FlexDivColumn)`
     font-size: 18px;
     line-height: 20px;
     padding: 30px 40px 30px 40px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 20px 20px 20px 20px;
     }
     height: 100%;

@@ -4,6 +4,7 @@ import { Trans } from 'react-i18next';
 import { FlexDivCentered } from 'theme/common';
 import NetworkSwitch from 'components/NetworkSwitch';
 import { Tip20Link, Tip23Link } from '../../components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type MigrationInfoProps = {
     messageKey: string;
@@ -44,7 +45,7 @@ const Conatiner = styled.section`
     padding: 30px;
     justify-content: center;
     margin: 100px 0;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 5px;
         margin: 0;
     }
@@ -57,7 +58,7 @@ const Message = styled(FlexDivCentered)`
     padding: 20px 0;
     text-align: center;
     display: inline;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 16px;
         line-height: 18px;
         padding: 30px 0;

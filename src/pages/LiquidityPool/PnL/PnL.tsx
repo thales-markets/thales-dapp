@@ -24,6 +24,7 @@ import { formatPercentageWithSign } from 'utils/formatters/number';
 import { LiquidityPoolPnlType } from 'constants/liquidityPool';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PnlProps = {
     lifetimePnl: number;
@@ -187,7 +188,7 @@ const Container = styled(FlexDivColumn)`
 const ChartContainer = styled.div`
     height: 220px;
     width: 100%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         height: 200px;
     }
 `;
