@@ -8,13 +8,12 @@ import { orderBy } from 'lodash';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { UsersAssets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { LoaderContainer } from 'theme/common';
-import { UI_COLORS } from 'constants/ui';
 import RangeIllustration from 'components/RangeIllustration';
 import TimeRemaining from 'components/TimeRemaining';
 import { LINKS } from 'constants/links';
@@ -28,12 +27,20 @@ import {
     CardRowTitle,
     CardSection,
     CardWrapper,
+    Container,
+    Content,
+    Icon,
+    MiddleContrainer,
     NoDataContainer,
     NoDataText,
+    PriceDifferenceInfo,
+    TableText,
+    getColor,
 } from '../styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
+import { ThemeInterface } from 'types/ui';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -53,6 +60,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
     rangedPositions,
 }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const data = useMemo(() => {
@@ -136,7 +144,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     <CardRowSubtitle>{data.market.currencyKey}</CardRowSubtitle>
                                                     <CardRowTitle
                                                         style={{
-                                                            color: getColor(data),
+                                                            color: getColor(data, theme),
                                                         }}
                                                     >
                                                         {!data.range
@@ -231,10 +239,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     {data.balances.amount.toFixed(2)}
 
                                                     <Icon
-                                                        style={{
-                                                            color: getColor(data),
-                                                            marginLeft: 6,
-                                                        }}
+                                                        margin="0 0 0 6px"
+                                                        color={getColor(data, theme)}
                                                         className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
                                                     ></Icon>
                                                 </CardRowSubtitle>
@@ -428,10 +434,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                 >
                                     {props.cell.value.toFixed(2)}
                                     <Icon
-                                        style={{
-                                            color: getColor(props.cell.row.original),
-                                            marginLeft: 6,
-                                        }}
+                                        margin="0 0 0 6px"
+                                        color={getColor(props.cell.row.original, theme)}
                                         className={`v2-icon v2-icon--${props.cell.row.original.balances.type.toLowerCase()}`}
                                     ></Icon>
                                 </TableText>
@@ -486,56 +490,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({
     );
 };
 
-const MiddleContrainer = styled.div`
-    display: flex;
-    width: 100%;
-    margin-top: 10px;
-    min-width: 180px;
-`;
-
-const Content = styled.div`
-    display: content;
-`;
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-top: 15px;
-    position: relative;
-    min-height: 200px;
-`;
-
-const TableText = styled.span`
-    font-weight: bold;
-    font-size: 15px;
-    line-height: 285%;
-    text-align: right;
-    text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
-`;
-
-const Icon = styled.i`
-    @media (max-width: 568px) {
-        font-size: 16px;
-        line-height: 100%;
-    }
-`;
-
-const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    ${(props) => (props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
-`;
-
-const getColor = (data: any) => {
-    if (data.range) {
-        return data.balances.type === 'IN' ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR;
-    }
-    return data.balances.type === 'UP' ? UI_COLORS.GREEN : UI_COLORS.RED;
-};
-
 const TooltipLink = styled.a`
-    color: #00f9ff;
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
-        color: rgb(116, 139, 198);
+        text-decoration: underline;
     }
 `;
 
