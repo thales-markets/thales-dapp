@@ -4,6 +4,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { ReactComponent as DownIcon } from 'assets/images/down.svg';
 import { useTranslation } from 'react-i18next';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type DropdownProps = {
     options: any;
@@ -64,7 +65,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, activeOption, onSel
 
 const Container = styled(FlexDivColumnCentered)`
     width: 140px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
         margin-bottom: 10px;
     }
@@ -81,7 +82,7 @@ const Button = styled.button<{ isActive: boolean }>`
     &:hover {
         cursor: pointer;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
     }
 `;

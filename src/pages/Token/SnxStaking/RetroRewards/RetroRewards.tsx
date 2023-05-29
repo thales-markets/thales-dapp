@@ -19,7 +19,13 @@ import {
     ClaimMessage,
     SectionContentContainer,
 } from '../components';
-import { PieChartCenterDiv, PieChartCenterText, PieChartContainer, LearnMore, Tip37Link } from '../../components';
+import {
+    PieChartCenterDiv,
+    PieChartCenterText,
+    PieChartContainer,
+    LearnMore,
+    Tip37Link,
+} from '../../styled-components';
 import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
@@ -32,6 +38,7 @@ import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -305,7 +312,7 @@ const StyledSectionContentContainer = styled(SectionContentContainer)`
     grid-column: span 12;
     background: ${(props) => props.theme.background.primary};
     padding: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 0 20px 20px 20px;
     }
 `;
@@ -319,7 +326,7 @@ const InfoLabel = styled.div`
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.25px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-top: 15px;
     }
 `;
@@ -348,7 +355,7 @@ const AmountsContainer = styled(FlexDiv)`
             margin-right: 10px;
         }
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-top: 25px;
         padding-bottom: 25px;
         > * {

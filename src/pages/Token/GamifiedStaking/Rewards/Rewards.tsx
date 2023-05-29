@@ -17,7 +17,7 @@ import {
     Line,
     Tip125Link,
     Tip48Link,
-} from 'pages/Token/components';
+} from 'pages/Token/styled-components';
 import YourTransactions from './Transactions';
 import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
@@ -34,7 +34,6 @@ import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { isMobile } from 'utils/device';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
@@ -43,6 +42,8 @@ import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 enum SectionType {
     INFO,
@@ -67,7 +68,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isL2 = getIsOVM(networkId);
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
@@ -130,6 +131,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         [thalesStaked, totalThalesStaked, escrowedBalance]
     );
     const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare]);
+
+    const isL2 = getIsOVM(networkId);
 
     const snxVolumeRewardsMultiplier = stakingData ? stakingData.snxVolumeRewardsMultiplier : 0;
     const ammVolumeRewardsMultiplier = stakingData ? stakingData.ammVolumeRewardsMultiplier : 0;
@@ -420,7 +423,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 <RewardPeriod>
                     <PeriodLabel>{t('options.earn.gamified-staking.rewards.claim.period')}</PeriodLabel>
                     {stakingData ? (
-                        <TimeRemaining end={stakingData.closingDate} fontSize={isMobile() ? 12 : 15} showFullCounter />
+                        <TimeRemaining end={stakingData.closingDate} fontSize={isMobile ? 12 : 15} showFullCounter />
                     ) : (
                         EMPTY_VALUE
                     )}
@@ -563,7 +566,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     t('options.earn.gamified-staking.rewards.volume.ranged-desc')
                 )}
             </SectionWrapper>
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical
                     gridRow={4}
                     columnStart={4}
@@ -573,7 +576,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     mobileLong={true}
                 />
             )}
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical
                     gridRow={4}
                     columnStart={10}
@@ -593,7 +596,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 )}
             </SectionWrapper>
 
-            {isMobile() ? (
+            {isMobile ? (
                 <DashedLineVertical gridRow={5} columnStart={7} marginLeft={-5} marginTop={-gridGap} heightPer={135} />
             ) : (
                 <>
@@ -648,7 +651,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     }
                 )}
             </SectionWrapper>
-            {isMobile() && <PlusSectionConnect>+</PlusSectionConnect>}
+            {isMobile && <PlusSectionConnect>+</PlusSectionConnect>}
             {isL2 && (
                 <SectionWrapper columns={5}>
                     {getRewardSection(
@@ -675,11 +678,11 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 </SectionWrapper>
             )}
 
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical gridRow={10} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
             )}
 
-            {!isMobile() && (
+            {!isMobile && (
                 <>
                     <DashedLine gridRow={5} widthPer={42.5} />
                     <DashedLineVertical gridRow={5} columnStart={4} marginTop={-gridGap} heightPer={135} />
@@ -695,7 +698,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             {/* Fourth row */}
-            {!isMobile() && isL2 ? (
+            {!isMobile && isL2 ? (
                 <SectionWrapper columns={3} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
                     {getClaimOnBehalfSection()}
                 </SectionWrapper>
@@ -718,7 +721,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionWrapper startColumn={isL2 ? undefined : 4} columns={6} backgroundType={BackgroundType.CLAIM}>
                 {getClaimSection()}
             </SectionWrapper>
-            {!isMobile() && isL2 && (
+            {!isMobile && isL2 && (
                 <SectionWrapper
                     columns={3}
                     backgroundType={BackgroundType.LP_STAKING}
@@ -729,10 +732,10 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             <DashedLine gridRow={7} widthPer={0} />
-            {!isMobile() && (
+            {!isMobile && (
                 <DashedLineVertical gridRow={7} columnStart={7} marginTop={-gridGap} heightPer={210} marginLeft={-10} />
             )}
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical gridRow={12} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
             )}
 
@@ -753,7 +756,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     </SectionContentWrapper>
                 </SectionWrapper>
             ) : (
-                !isMobile() && (
+                !isMobile && (
                     <SectionWrapper
                         marginTop={-gridGap}
                         startColumn={5}
@@ -851,7 +854,7 @@ const SectionWrapper = styled.section<{
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span
             ${(props) =>
                 props.backgroundType !== undefined &&
@@ -873,7 +876,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 10px;
     }
 `;
@@ -915,7 +918,7 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefaul
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-bottom: 10px;
     }
 `;
@@ -949,7 +952,7 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -995,7 +998,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                     font-size: 23px;
                     color: ${props.isOp ? props.theme.textColor.primary : props.theme.textColor.quaternary};
                     text-transform: uppercase;
-                    @media (max-width: 768px) {
+                    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
                         font-size: 20px;
                     }
                 `;
@@ -1005,7 +1008,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                     font-size: 23px;
                     color: ${props.theme.textColor.primary};
                     text-transform: uppercase;
-                    @media (max-width: 768px) {
+                    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
                         font-size: 20px;
                     }
                 `;
@@ -1038,7 +1041,7 @@ const SectionDescriptionContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 15px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -1055,7 +1058,7 @@ const SectionDetailsLabel = styled.span<{ color?: string }>`
     line-height: 15px;
     letter-spacing: 0.035em;
     color: ${(props) => props.color ?? props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -1073,7 +1076,7 @@ const ButtonWrapperTooltip = styled.div`
     width: 70%;
     display: flex;
     justify-content: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
     }
 `;
@@ -1088,14 +1091,14 @@ const PeriodLabel = styled(SectionContent)`
     font-size: 15px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 50px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin: auto;
     }
 `;

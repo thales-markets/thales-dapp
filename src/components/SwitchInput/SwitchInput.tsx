@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -100,7 +101,7 @@ const Wrapper = styled.div<{ margin?: string; disabled?: boolean; spanColumns?: 
     justify-content: center;
     width: 100%;
     cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'default')};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         ${(props) => (props?.spanColumns ? `grid-column: span ${props.spanColumns}` : '')};
     }
 `;

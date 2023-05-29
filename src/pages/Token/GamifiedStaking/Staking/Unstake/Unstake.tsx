@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../components';
+import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
@@ -28,7 +28,8 @@ import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
-import { isMobile } from 'utils/device';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -43,6 +44,8 @@ const Unstake: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [isUnstakingInContract, setIsUnstakingInContract] = useState<boolean>(false);
@@ -417,7 +420,7 @@ const Unstake: React.FC = () => {
                                         <TimeRemaining
                                             onEnded={() => setUnstakingEnded(true)}
                                             end={unstakeEndTime}
-                                            fontSize={isMobile() ? 12 : 16}
+                                            fontSize={isMobile ? 12 : 16}
                                         />
                                     )}
                                 </CooldownCounter>
@@ -490,7 +493,7 @@ const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
     @media (max-width: 1192px) {
         min-width: 110px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         min-width: 110px;
     }
 `;
@@ -526,7 +529,7 @@ const UnstakingTitleText = styled.span`
     @media (max-width: 1192px) {
         font-size: 12px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
         margin-right: 0px;
     }

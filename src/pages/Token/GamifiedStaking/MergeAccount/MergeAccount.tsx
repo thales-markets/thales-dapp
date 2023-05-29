@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { FlexDiv, FlexDivColumnCentered, FlexDivCentered, FlexDivRow } from 'theme/common';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -26,6 +26,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Button from 'components/ButtonV2/Button';
 import TextInput from 'components/fields/TextInput/TextInput';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -428,7 +429,7 @@ const SectionWrapper = styled.section`
     grid-column: 1 / span 4;
     background: ${(props) => props.theme.background.secondary};
     padding: 2px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span 12;
     }
 `;
@@ -445,7 +446,7 @@ const SectionDescription = styled.section<{ width?: number }>`
     border-radius: 15px;
     grid-column: 5 / span ${(props) => props.width || 8};
     padding: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span 12;
     }
 `;
@@ -474,7 +475,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     @media (max-width: 1192px) {
         padding: 10px 15px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 10px;
         box-shadow: none;
     }
@@ -516,7 +517,7 @@ const MergeInfo = styled.div`
 const AddressesDelegatingToYouContainer = styled.div`
     grid-column: 9 / span 4;
     padding: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span 12;
     }
 `;
@@ -535,7 +536,7 @@ const DelegationAddress = styled.div`
     line-height: 138.69%;
     text-transform: uppercase;
     margin-bottom: 5px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 11px;
     }
 `;

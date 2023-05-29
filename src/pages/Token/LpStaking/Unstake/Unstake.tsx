@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
+import { EarnSection, FullRow, Line, SectionContentContainer } from '../../styled-components';
 import { FlexDivColumnCentered } from 'theme/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import NetworkFees from 'pages/Token/components/NetworkFees';
 import styled from 'styled-components';
 import { refetchTokenQueries, refetchLPStakingQueries } from 'utils/queryConnector';
 import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { dispatchMarketNotification } from 'utils/options';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';

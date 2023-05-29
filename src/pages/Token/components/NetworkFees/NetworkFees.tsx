@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
 import { getNetworkId } from 'redux/modules/wallet';
 import { FlexDivRow } from 'theme/common';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export type GasLimit = {
     gasLimit: number;
@@ -115,7 +116,7 @@ const SummaryContent = styled.div<{ color?: string }>`
     width: 200px;
     text-align: end;
     color: ${(props) => props.color ?? props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100px;
     }
 `;
@@ -129,7 +130,7 @@ const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     font-size: 14px;
     line-height: 21px;
     text-transform: uppercase;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -140,7 +141,7 @@ const NetworkFeeSummaryContent = styled(SummaryContent)`
     line-height: 21px;
     text-transform: uppercase;
     flex: 1;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;

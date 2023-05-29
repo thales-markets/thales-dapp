@@ -1,6 +1,6 @@
 import ValidationMessage from 'components/ValidationMessage';
 import { BigNumber, ethers } from 'ethers';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import NumericInput from 'components/fields/NumericInput';
 import React, { useEffect, useState } from 'react';
 import { dispatchMarketNotification } from 'utils/options';

@@ -6,6 +6,7 @@ import { FlexDiv } from 'theme/common';
 import { TokenTabSection, TokenTabSectionIdEnum } from 'types/token';
 import { history } from 'utils/routes';
 import Tab from '../Tab';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TabItem = { id: string; name: string };
 
@@ -65,7 +66,7 @@ const MenuContainer = styled(FlexDiv)`
     @media (max-width: 1024px) {
         margin-top: 30px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
 `;

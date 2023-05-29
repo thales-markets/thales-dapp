@@ -73,3 +73,7 @@ export const getInfoToastOptions = (message: string) => {
 };
 
 export const REFERRAL_COOKIE_LIFETIME = 648000;
+
+export enum ScreenSizeBreakpoint {
+    SMALL = 767,
+}

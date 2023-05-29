@@ -25,6 +25,7 @@ import { FlexDivSpaceBetween } from 'theme/common';
 import { Positions } from 'constants/options';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PriceChartProps = {
     asset: string;
@@ -337,7 +338,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-height: 300px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
 `;
@@ -382,30 +383,41 @@ const getTicks = (prices: number[]) => {
         if (price < min) min = price;
     });
 
-    let multiplier = 1;
+    const roundedPow = Math.round(Math.log(prices[prices.length - 1]) / Math.log(10));
+    const step = Math.pow(10, roundedPow - 1);
+    const interval = (max - min) / tickCount;
 
-    if (prices[0] < 10) {
-        multiplier = 100;
+    let final = interval;
+    let stepChange = step;
+
+    if (final < stepChange / 2) {
+        while (final < stepChange / 2) {
+            stepChange = stepChange / 2;
+        }
+        final = stepChange;
     }
 
-    const roundedPow = Math.round((Math.log(prices[prices.length - 1]) * multiplier) / Math.log(10));
+    if (final > stepChange * 1.5) {
+        while (final > stepChange * 1.5) {
+            stepChange = stepChange * 1.5;
+        }
+        final = stepChange;
+    }
 
-    const step = Math.pow(10, roundedPow - 1);
-    const interval = (multiplier * (max - min)) / tickCount;
-    const diff = Math.floor(step / interval);
+    console.log(interval, step, final);
 
-    const stepFinal = Math.round(step / diff);
-    const log1 = Math.round(Math.log(stepFinal) / Math.log(10));
-    const stepFinal2 = (Math.round(stepFinal / Math.pow(10, log1)) * Math.pow(10, log1)) / multiplier;
+    // const stepFinal = Math.round(step / diff);
+    // const log1 = Math.round(Math.log(stepFinal) / Math.log(10));
+    // const stepFinal2 = (Math.round(stepFinal / Math.pow(10, log1)) * Math.pow(10, log1)) / multiplier;
 
-    const startTick = Math.round(min / stepFinal2) * stepFinal2 - 2 * stepFinal2;
-    const endTick = Math.round(max / stepFinal2) * stepFinal2 + 2 * stepFinal2;
+    const startTick = Math.round(min / final) * final - 1 * final;
+    const endTick = Math.round(max / final) * final + 1 * final;
     const ticks = [];
 
-    for (let tick = startTick; tick <= endTick; tick += stepFinal2) {
+    for (let tick = startTick; tick <= endTick; tick += final) {
         ticks.push(tick);
     }
-
+    console.log('ticks: ', ticks);
     return ticks;
 };
 

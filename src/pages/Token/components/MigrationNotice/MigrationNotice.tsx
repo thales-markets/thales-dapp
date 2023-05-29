@@ -5,6 +5,7 @@ import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import ROUTES from 'constants/routes';
 import { navigateTo } from 'utils/routes';
 import Button from 'components/ButtonV2';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const MigrationNotice: React.FC = () => {
     const { t } = useTranslation();
@@ -37,7 +38,7 @@ const Container = styled(FlexDivCentered)`
     background: ${(props) => props.theme.background.primary};
     border-radius: 10px;
     padding: 18px 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 20px 20px;
     }
 `;
@@ -48,7 +49,7 @@ const Text = styled(FlexDiv)`
     line-height: 30px;
     color: ${(props) => props.theme.textColor.primary};
     align-items: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-bottom: 20px;
         margin-right: 0;
         text-align: center;
@@ -58,7 +59,7 @@ const Text = styled(FlexDiv)`
 
 export const MigrateText = styled.span`
     margin-right: 15px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-right: 0;
     }
 `;

@@ -12,6 +12,7 @@ import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } fro
 import { formatPercentageWithSign } from 'utils/formatters/number';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PnlProps = {
     vaultAddress: string;
@@ -120,7 +121,7 @@ const PnL: React.FC<PnlProps> = ({ vaultAddress, lifetimePnl }) => {
 
 const Container = styled(FlexDivColumn)`
     width: 100%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 95%;
     }
 `;

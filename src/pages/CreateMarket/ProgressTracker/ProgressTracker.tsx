@@ -9,6 +9,7 @@ import { getStableCoinForNetwork } from 'utils/currency';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;
@@ -58,7 +59,7 @@ const Wrapper = styled(FlexDiv)`
     img {
         width: 24px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: block;
         padding: 0 48%;
     }
@@ -71,7 +72,7 @@ const Line = styled.div`
     &.fill {
         background: ${(props) => props.theme.background.quaternary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 4px;
         height: 60px;
         background: ${(props) => props.theme.textColor.primary};
@@ -101,7 +102,7 @@ const Label = styled.p`
         text-align: center;
         width: 100px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         top: 26px;
         text-align: center;
         left: -67px !important;
@@ -118,7 +119,7 @@ const ProgressTrackerStep = styled(FlexDiv)`
     align-items: center;
     position: relative;
     flex: 1;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: block;
         margin-left: -4px;
     }

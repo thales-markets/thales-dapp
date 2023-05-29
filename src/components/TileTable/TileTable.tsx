@@ -73,7 +73,6 @@ const TileTable: React.FC<Properties> = ({
     ) : (
         <Container>
             {rows.map((row, index) => {
-                console.log(typeof row);
                 if (typeof row !== 'string') {
                     const cells = row.cells.slice(
                         firstColumnRenderer ? 1 : 0,

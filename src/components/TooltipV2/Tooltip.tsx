@@ -2,6 +2,7 @@ import React, { CSSProperties } from 'react';
 import ReactTooltip from 'rc-tooltip';
 import styled from 'styled-components';
 import 'theme/tooltip.css';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TooltipProps = {
     component?: any;
@@ -69,7 +70,7 @@ const InfoIcon = styled.i<{
         font-family: ThalesIcons !important;
         content: '\\0043';
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: ${(props) =>
             props.mobileIconFontSize ? props.mobileIconFontSize : props.iconFontSize ? props.iconFontSize : 15}px;
     }

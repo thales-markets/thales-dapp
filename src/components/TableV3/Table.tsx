@@ -8,6 +8,7 @@ import useExchangeRatesQuery, { Rates } from 'queries/rates/useExchangeRatesQuer
 import { OptionsMarkets } from 'types/options';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type CSSPropertiesWithMedia = { cssProperties: CSSProperties } & { mediaMaxWidth: string };
 
@@ -386,7 +387,7 @@ const TableCellHead = styled(FlexDivCentered)<{
     font-weight: 600;
     font-size: 15px;
     letter-spacing: 0.5px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 13px;
     }
     @media (max-width: ${(props) => (props.cssProp ? props.cssProp.mediaMaxWidth : '600px')}) {

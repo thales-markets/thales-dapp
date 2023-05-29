@@ -5,7 +5,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import { ButtonContainer, Line } from 'pages/Token/components';
+import { ButtonContainer, Line } from 'pages/Token/styled-components';
 import YourTransactions from './Transactions';
 import useUserVestingDataQuery from 'queries/token/useUserVestingDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -20,12 +20,13 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsOVM, getL1FeeInWei, formatGasLimit } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { isMobile } from 'utils/device';
 import { UserVestingData } from 'types/token';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import Button from 'components/ButtonV2/Button';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
@@ -34,6 +35,8 @@ const Vesting: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -71,7 +74,7 @@ const Vesting: React.FC = () => {
                     { value: row.date },
                     {
                         value: `${formatCurrencyWithKey(THALES_CURRENCY, row.amount)}`,
-                        valueFontSize: isMobile() ? 12 : 15,
+                        valueFontSize: isMobile ? 12 : 15,
                     },
                 ],
                 heightSmall: true,
@@ -162,7 +165,7 @@ const Vesting: React.FC = () => {
                         </SectionValueContent>
                     </SectionValue>
                     <NetworkFeesWrapper>
-                        <Line margin={isMobile() ? '0 0 10px 0' : '10px 0'} />
+                        <Line margin={isMobile ? '0 0 10px 0' : '10px 0'} />
                         <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     </NetworkFeesWrapper>
                     <ButtonContainer>{getVestButton()}</ButtonContainer>
@@ -195,7 +198,7 @@ const Vesting: React.FC = () => {
                 </SectionContentWrapper>
             </SectionWrapper>
 
-            <YourTransactions gridColumns={isMobile() ? 12 : 7} />
+            <YourTransactions gridColumns={isMobile ? 12 : 7} />
         </>
     );
 };
@@ -229,7 +232,7 @@ const SectionWrapper = styled.section<{
     background: ${(props) => (props.background ?? true ? props.theme.borderColor.primary : 'none')};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span 12;
     }
 `;
@@ -241,7 +244,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 10px;
     }
 `;
@@ -254,7 +257,7 @@ const SectionContent = styled.span`
 const ScheduleLabel = styled.div`
     display: flex;
     padding-bottom: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-bottom: 10px;
     }
 `;
@@ -263,14 +266,14 @@ const ScheduleLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 16px;
     }
 `;
 
 const SectionLabel = styled.div`
     padding-bottom: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-bottom: 10px;
     }
 `;
@@ -279,7 +282,7 @@ const SectionLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -294,14 +297,14 @@ const SectionValueContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 30px;
     color: ${(props) => props.theme.textColor.quaternary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 20px;
     }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 80px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin: auto;
     }
 `;
@@ -320,7 +323,7 @@ const Date = styled.span`
     font-weight: 700;
     font-size: 15px;
     white-space: nowrap;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -329,7 +332,7 @@ const Time = styled.span`
     display: block;
     font-weight: 300;
     font-size: 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;

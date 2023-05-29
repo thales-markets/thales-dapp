@@ -1,6 +1,6 @@
 import Switch from 'components/SwitchInput/SwitchInput';
 import { THALES_CURRENCY } from 'constants/currency';
-import { Tip125Link, Tip17Link } from 'pages/Token/components';
+import { Tip125Link, Tip17Link } from 'pages/Token/styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -9,11 +9,10 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
-import { Line } from '../../components';
+import { Line } from '../../styled-components';
 import YourTransactions from './Transactions';
 import Stake from './Stake';
 import Unstake from './Unstake';
-import { isMobile } from 'utils/device';
 import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
 import { getIsOVM } from 'utils/network';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
@@ -21,6 +20,8 @@ import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import { StakingData, UserStakingData } from 'types/token';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -49,7 +50,7 @@ const Staking: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isL2 = getIsOVM(networkId);
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
@@ -63,6 +64,8 @@ const Staking: React.FC = () => {
     const stakingDataQuery = useStakingDataQuery(networkId, {
         enabled: isAppReady,
     });
+
+    const isL2 = getIsOVM(networkId);
 
     useEffect(() => {
         if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
@@ -223,7 +226,7 @@ const Staking: React.FC = () => {
                             </UnstakingInfo>
                         )}
                     </SectionDetails>
-                    <Line margin={isMobile() ? '3px 10px' : '0 15px'} />
+                    <Line margin={isMobile ? '3px 10px' : '0 15px'} />
                     <SectionDetails positionUp={false}>
                         <SectionDetailsLabel>
                             {t('options.earn.gamified-staking.staking.escrow-balance')}
@@ -321,16 +324,17 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
                 display: grid; 
                 grid-template-columns: 1fr; 
                 grid-auto-rows: 1fr; 
-                grid-gap: ${(isMobile() ? GRID_GAP_MOBILE : GRID_GAP) + 4}px;` // page GRID_GAP + borders(2 x 2px)
+                grid-gap: ${GRID_GAP + 4}px;` // page GRID_GAP + borders(2 x 2px)
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
     background: ${(props) => props.theme.background.secondary};
     padding: 2px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
         ${(props) =>
             props.backgroundType === BackgroundType.STAKE ? '' : `background: ${props.theme.background.secondary}`};
+        grid-gap: ${GRID_GAP_MOBILE + 4}px;
     }
 `;
 
@@ -340,7 +344,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?
     background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         ${(props) => (props.backgroundType === BackgroundType.INFO ? 'background: none' : '')};
     }
 `;
@@ -348,7 +352,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?
 const SectionLabel = styled.div`
     display: flex;
     padding: 10px 15px 5px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 10px;
     }
 `;
@@ -357,7 +361,7 @@ const SectionValue = styled.div`
     display: flex;
     padding: 5px 15px 10px 15px;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 0 10px 10px 10px;
     }
 `;
@@ -371,7 +375,7 @@ const SectionLabelContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 15px;
     line-height: 17px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
         line-height: 12px;
     }
@@ -382,7 +386,7 @@ const SectionValueContent = styled(SectionContent)`
     font-size: 23px;
     line-height: 30px;
     letter-spacing: 0.035em;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 15px;
         line-height: 20px;
     }
@@ -391,7 +395,7 @@ const SectionValueContent = styled(SectionContent)`
 const SectionDetails = styled.div<{ positionUp: boolean }>`
     padding: ${(props) => (props.positionUp ? '15px 15px 5px 15px' : '5px 15px 15px 15px')};
     text-align: end;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: ${(props) => (props.positionUp ? '10px 10px 0 10px' : '0 10px 10px 10px')};
     }
 `;
@@ -405,7 +409,7 @@ const SectionDetailsLabel = styled.span`
     line-height: 15px;
     letter-spacing: 0.035em;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -418,7 +422,7 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boo
     font-size: 15px;
     line-height: 15px;
     color: ${(props) => (props.unavailable ? props.theme.warning.textColor.primary : props.theme.textColor.primary)};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 14px;
     }
 `;
@@ -433,7 +437,7 @@ const StakedBalanceInfo = styled.div`
     padding: 10px 15px;
     color: ${(props) => props.theme.warning.textColor.primary};
     font-size: 14px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 10px;
         top: 130px;
         font-size: 12px;
