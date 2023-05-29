@@ -14,6 +14,8 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getStableCoinForNetwork } from '../../utils/currency';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import { useTranslation } from 'react-i18next';
+import { getIsMobile } from 'redux/modules/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PieChartProps = {
     claimable?: number;
@@ -25,6 +27,7 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const walletBalancesQuery = useStableBalanceQuery(walletAddress, network.networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -58,7 +61,7 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
                             {formatCurrencyWithKey(getStableCoinForNetwork(network.networkId), claimable)}
                         </SubHeader>
                     </BalanceInfoContainer>
-                    <PieChart width={getSize()} height={getSize()}>
+                    <PieChart width={getSize(isMobile)} height={getSize(isMobile)}>
                         <Pie
                             startAngle={-45}
                             cornerRadius={20}
@@ -80,11 +83,11 @@ const PieChartOptionsAllocated: React.FC<PieChartProps> = ({ claimable }) => {
     );
 };
 
-const getSize = () => {
+const getSize = (isMobile: boolean) => {
     if (window.innerWidth <= 500) {
         return 174;
     }
-    if (window.innerWidth <= 768) {
+    if (isMobile) {
         return 230;
     }
 
@@ -116,7 +119,7 @@ const Header = styled.p`
     text-align: center;
     letter-spacing: 0.035em;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 10px;
         line-height: 12px;
     }
@@ -129,7 +132,7 @@ const SubHeader = styled.p`
     letter-spacing: 0.035em;
     text-align: center;
     margin-bottom: 10px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 18px;
         line-height: 20px;
     }

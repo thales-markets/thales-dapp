@@ -31,6 +31,7 @@ import MaturedPositions from './components/MaturedPositions/MaturedPositions';
 import MyPositions from './components/MyPositions/MyPositions';
 import Container from './components/styled-components/Layout';
 import Wrapper from './components/styled-components/UserData';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -262,7 +263,7 @@ const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
     align-items: center;
     justify-content: ${(props) => props.justifyContent};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-top: 20px;
         justify-content: space-between;
     }
@@ -280,7 +281,7 @@ const NavItem = styled.p`
     &.active {
         box-shadow: 0px 4px var(--primary-filter-menu-active);
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 14px;
         padding: 0 20px;
     }

@@ -18,6 +18,7 @@ import { history } from 'utils/routes';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -123,7 +124,7 @@ export const GRID_GAP_MOBILE = 10;
 
 const Container = styled.div`
     margin-top: 10px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-top: 0;
     }
 `;
@@ -144,7 +145,7 @@ const SectionHeader = styled.p`
         font-size: 25px;
         line-height: 25px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         height: auto;
         padding-top: 0;
         padding-bottom: 10px;
@@ -159,7 +160,7 @@ const SectionDescription = styled.p`
     line-height: 20px;
     padding-top: 5px;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -173,7 +174,7 @@ const WarningIcon = styled.i`
     line-height: 18px;
     padding-top: 5px;
     color: ${(props) => props.theme.textColor.tertiary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -186,7 +187,7 @@ const SectionWarning = styled.p`
     line-height: 20px;
     padding-top: 5px;
     color: ${(props) => props.theme.textColor.tertiary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -205,7 +206,7 @@ const SectionButtons = styled.div`
         margin-bottom: 0;
         margin-top: 5px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
 `;
@@ -222,7 +223,7 @@ const SectionContent = styled.div`
     z-index: 0;
     width: 100%;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         background: transparent;
         border: none;
         padding: 1px;

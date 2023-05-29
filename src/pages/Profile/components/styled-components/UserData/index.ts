@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled, { StyledComponent } from 'styled-components';
 
 type Children = {
@@ -24,7 +25,7 @@ const Wrapper: StyledComponent<'div', any> & Children = styled.div`
     @media (max-width: 1250px) {
         margin-left: 40px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 8px;
         margin-left: 20px;
     }
@@ -53,7 +54,7 @@ const Text = styled.span`
 
 const Label = styled(Text)`
     font-weight: 400;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -61,7 +62,7 @@ const Label = styled(Text)`
 const Value = styled(Text)<ValueProps>`
     color: ${(props) => props.color ?? 'none'};
     font-weight: 700;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 16px;
     }
     @media (max-width: 500px) {

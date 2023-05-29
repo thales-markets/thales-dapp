@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ReactComponent as ArrowDown } from 'assets/images/wizard/arrow-down.svg';
 import { ReactComponent as ArrowUp } from 'assets/images/wizard/arrow-up.svg';
 import SPAAnchor from 'components/SPAAnchor';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const WizardFaq: React.FC = () => {
     const { t } = useTranslation();
@@ -157,7 +158,7 @@ const Question = styled.p`
     span {
         text-transform: lowercase;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 15px 60px 15px 15px;
         font-size: 13px;
         line-height: 22px;
@@ -180,7 +181,7 @@ const StyledArrowUp = styled(ArrowUp)`
         fill: ${(props) => props.theme.textColor.quaternary};
         fill-opacity: 1;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         right: 15px;
         height: 12px;
     }
@@ -194,7 +195,7 @@ const StyledArrowDown = styled(ArrowDown)`
         fill: ${(props) => props.theme.textColor.quaternary};
         fill-opacity: 1;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         right: 15px;
         height: 12px;
     }
@@ -208,7 +209,7 @@ const Answer = styled.p`
     color: ${(props) => props.theme.textColor.primary};
     cursor: text;
     padding: 0 30px 20px 30px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 0px 15px 15px 15px;
     }
 `;

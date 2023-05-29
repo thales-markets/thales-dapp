@@ -21,6 +21,7 @@ import BungeePlugin from 'components/BungeePlugin';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Modal from 'components/Modal';
 import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -390,7 +391,7 @@ const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
     align-items: center;
     justify-content: ${(props) => props.justifyContent};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-top: 20px;
     }
 `;
@@ -409,7 +410,7 @@ const NavItem = styled.div<{ clickable: boolean }>`
     &.active {
         box-shadow: 0px 4px ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 14px;
         padding: 0 20px;
     }

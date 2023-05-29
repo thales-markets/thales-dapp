@@ -15,6 +15,7 @@ import { orderBy } from 'lodash';
 import Button from 'components/ButtonV2';
 import { isMobile } from 'utils/device';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];
@@ -124,7 +125,7 @@ const SectionContainer = styled.section<{
     height: ${(props) => (props.txCount > 10 ? '390px' : '100%')};
     min-height: 200px;
     margin-bottom: 0;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : 12)};
         order: 12;
         height: 100%;
@@ -145,7 +146,7 @@ const FilterContainer = styled.div`
     top: -30px;
     right: 40px;
     width: 136px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100px;
     }
 `;
@@ -159,7 +160,7 @@ const DropDownWrapper = styled.div`
     padding: 2px;
     z-index: 100;
     border-radius: 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         right: 100px;
     }
 `;

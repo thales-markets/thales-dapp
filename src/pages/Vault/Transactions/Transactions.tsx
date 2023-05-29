@@ -14,6 +14,7 @@ import SelectInput from 'components/SelectInput';
 import { VaultTransaction } from 'constants/vault';
 import UserTransactionsTable from '../UserTransactionsTable';
 import useVaultUserTransactionsQuery from 'queries/vault/useVaultUserTransactionsQuery';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TransactionsProps = {
     vaultAddress: string;
@@ -158,7 +159,7 @@ const Container = styled(FlexDivColumn)`
     overflow-y: auto;
     width: 100%;
     margin-top: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 95%;
         max-height: 1100px;
         min-height: initial;
@@ -168,7 +169,7 @@ const Container = styled(FlexDivColumn)`
 const Header = styled(FlexDivRow)`
     margin: 10px 18px;
     align-items: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
@@ -182,7 +183,7 @@ export const SelectContainer = styled.div`
 `;
 
 const TabContainer = styled(FlexDiv)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
@@ -203,7 +204,7 @@ const Tab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
         cursor: pointer;
         color: ${(props) => props.theme.textColor.primary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-bottom: 10px;
         margin-left: 0px;
         margin-right: 0px;

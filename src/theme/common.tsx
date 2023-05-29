@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import localStore from 'utils/localStore';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import { Theme } from 'constants/ui';
+import { ScreenSizeBreakpoint, Theme } from 'constants/ui';
 
 export const FlexDiv = styled.div`
     display: flex;
@@ -96,7 +96,7 @@ export const InputContainer = styled.div`
 export const NoDataText = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 24px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 15px;
     }
 `;
@@ -106,7 +106,7 @@ export const NoDataContainer = styled.div`
     width: 100%;
     text-align: center;
     margin-top: 50px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-top: 10px;
     }
 `;

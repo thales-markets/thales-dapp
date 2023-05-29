@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivStart, FlexDivRow, FlexDiv } from 'theme/common';
 
@@ -12,7 +13,7 @@ export const Container = styled(FlexDivRow)`
     position: relative;
     align-items: start;
     margin-top: 30px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
         width: 95%;
     }
@@ -36,7 +37,7 @@ export const LeftContainer = styled(ContentContainer)`
     margin-right: 25px;
     width: 60%;
     align-items: start;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-right: 0px;
         padding-top: 0px;
         width: 100%;
@@ -48,7 +49,7 @@ export const RightContainer = styled(ContentContainer)`
     border-radius: 15px;
     width: 40%;
     padding: 30px 40px 20px 40px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 20px 20px 10px 20px;
         width: 100%;
     }
@@ -57,7 +58,7 @@ export const RightContainer = styled(ContentContainer)`
 export const RoundInfoWrapper = styled(FlexDivColumn)`
     width: 100%;
     padding: 0px 20px 20px 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 20px 20px 0px 20px;
         width: 95%;
     }
@@ -85,7 +86,7 @@ export const RoundEnd = styled.p`
 `;
 
 export const RoundAllocationWrapper = styled(FlexDivCentered)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
@@ -97,7 +98,7 @@ export const RoundAllocationContainer = styled(FlexDivColumn)`
     :not(:last-child) {
         border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         :not(:last-child) {
             border-right: none;
         }
@@ -134,7 +135,7 @@ export const Description = styled.div`
     p {
         margin-bottom: 10px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 16px;
     }
 `;
@@ -195,7 +196,7 @@ export const Title = styled.span`
     margin-top: 10px;
     width: 100%;
     text-align: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-top: 0px;
         font-size: 25px;
     }
@@ -207,7 +208,7 @@ export const TitleVaultIcon = styled.i`
     margin-right: 8px;
     top: -3px;
     position: relative;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 30px;
     }
 `;

@@ -18,6 +18,7 @@ import { USD_SIGN } from 'constants/currency';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;
@@ -103,7 +104,7 @@ const Wrapper = styled(FlexDivColumn)`
     line-height: 32px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-left: 0px;
     }
 `;
@@ -199,7 +200,7 @@ const MarketInfo = styled(FlexDivColumn)`
     @media screen and (max-width: 1024px) {
         padding: 35px 38px;
     }
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 0px;
         width: 100%;
         margin-top: 45px;

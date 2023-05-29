@@ -1,10 +1,11 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn } from 'theme/common';
 
 export const FormWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
         margin-bottom: 20px;
     }
@@ -22,7 +23,7 @@ export const StatisticsWrapper = styled.div`
     border: 2px solid ${(props) => props.theme.borderColor.primary};
     padding: 16px 32px;
     border-radius: 15px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
         margin-bottom: 20px;
     }
@@ -45,7 +46,7 @@ export const StatValue = styled(StatLabel)<{ color?: string }>`
     color: ${(props) => props.color || props.theme.textColor.primary};
     padding-left: 100px;
     text-align: right;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-left: 0px;
     }
 `;
@@ -58,7 +59,7 @@ export const HeaderContainer = styled.div`
     flex-wrap: wrap;
     width: 100%;
     margin-bottom: 31px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         justify-content: center;
         margin-bottom: 0;
     }
@@ -68,7 +69,7 @@ export const DescriptionContainer = styled.div`
     color: ${(props) => props.theme.textColor.primary};
     display: block;
     width: 40%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
         margin-bottom: 20px;
     }
@@ -87,7 +88,7 @@ export const TableWrapper = styled(FlexDivColumn)`
     width: 100%;
     align-items: center;
     margin-bottom: 100px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-bottom: 10px;
     }
 `;
@@ -106,7 +107,7 @@ export const MenuContainer = styled(FlexDiv)`
     border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
     margin-bottom: 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
 `;
@@ -137,7 +138,7 @@ export const ReferralFooter = styled.div`
     position: relative;
     font-size: 16px;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-top: 50px;
         margin-bottom: 10px;
         display: inline-block;
@@ -149,7 +150,7 @@ export const ReferralFooter = styled.div`
 
 export const ViewButton = styled.div`
     display: none;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: block;
         align-self: center;
         padding: 6px 20px;
@@ -175,7 +176,7 @@ export const ViewsDropDownWrapper = styled.div`
 
 export const ViewsDropDown = styled.div`
     display: none;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: flex;
         flex-direction: column;
         background: ${(props) => props.theme.background.secondary};
@@ -201,14 +202,14 @@ export const ViewTitle = styled.p`
     line-height: 100%;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.secondary};
-    @media (min-width: 768px) {
+    @media (min-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
     margin-bottom: 10px;
 `;
 
 export const ViewItem = styled.div<{ active: boolean }>`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-weight: bold;
         font-size: 12px;
         line-height: 18px;

@@ -1,40 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../rootReducer';
 
 const sliceName = 'ui';
 
-export enum UISize {
-    Small,
-    Medium,
-    Large,
-}
-
 type UISliceState = {
-    size: UISize;
-};
-
-const initialUISize = () => {
-    const width = window.innerWidth;
-    if (width <= 568) {
-        return UISize.Small;
-    }
-    if (width <= 1250) {
-        return UISize.Medium;
-    }
-    return UISize.Large;
+    isMobile: boolean;
 };
 
 const initialState: UISliceState = {
-    size: initialUISize(),
+    isMobile: false,
 };
 
 export const uiSlice = createSlice({
     name: sliceName,
     initialState,
-    reducers: {},
+    reducers: {
+        setIsMobile: (state, action: PayloadAction<boolean>) => {
+            state.isMobile = action.payload;
+        },
+    },
 });
 
 export const getUIState = (state: RootState) => state[sliceName];
-export const getUISize = (state: RootState) => getUIState(state).size;
+export const getIsMobile = (state: RootState) => getUIState(state).isMobile;
+
+export const { setIsMobile } = uiSlice.actions;
 
 export default uiSlice.reducer;

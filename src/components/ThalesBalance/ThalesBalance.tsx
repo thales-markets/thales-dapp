@@ -10,6 +10,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getIsOVM } from 'utils/network';
 import useOpThalesBalanceQuery from '../../queries/walletBalances/useOpThalesBalanceQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type ThalesBalanceProps = {
     showTitle?: boolean;
@@ -84,7 +85,7 @@ const Title = styled.p`
     text-transform: uppercase;
     color: var(--color-highlight);
     margin-bottom: 10px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;

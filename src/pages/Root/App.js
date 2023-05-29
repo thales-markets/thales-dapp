@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { setAppReady } from 'redux/modules/app';
+import { setIsMobile } from 'redux/modules/ui';
 import {
     getNetworkId,
     getSwitchToNetworkId,
@@ -15,6 +16,7 @@ import {
     switchToNetworkId,
     updateWallet,
 } from 'redux/modules/wallet';
+import { isMobile } from 'utils/device';
 import { getIsBSC, getIsMainnet, getIsPolygon, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
@@ -170,6 +172,28 @@ const App = () => {
             disconnect();
         }
     }, [disconnect, chain]);
+
+    useEffect(() => {
+        const handlePageResized = () => {
+            dispatch(setIsMobile(isMobile()));
+        };
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', handlePageResized);
+            window.addEventListener('orientationchange', handlePageResized);
+            window.addEventListener('load', handlePageResized);
+            window.addEventListener('reload', handlePageResized);
+        }
+
+        return () => {
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('resize', handlePageResized);
+                window.removeEventListener('orientationchange', handlePageResized);
+                window.removeEventListener('load', handlePageResized);
+                window.removeEventListener('reload', handlePageResized);
+            }
+        };
+    }, [dispatch]);
 
     const onSnackbarClosed = (e) => {
         if (e) {

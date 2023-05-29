@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'theme/common';
 
@@ -27,7 +28,7 @@ export const StakingRewardsItem = styled(StakeInfoItem)<{
     orderOnMobile?: number;
 }>`
     grid-column: span 4;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span 12 !important;
         order: ${(props) => props.orderOnMobile ?? 10};
     }
@@ -59,7 +60,7 @@ export const GridAction = styled(FlexDivColumnCentered)`
     grid-column: span 12;
     background: ${(props) => props.theme.background.primary};
     padding: 20px 100px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 20px 20px;
         order: 10;
     }

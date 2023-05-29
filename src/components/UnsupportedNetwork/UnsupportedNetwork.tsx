@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import { Network, NetworkId, getIsMainnet } from 'utils/network';
 import Button from 'components/ButtonV2';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const UnsupportedNetwork: React.FC = () => {
     const { t } = useTranslation();
@@ -83,7 +84,7 @@ const Wrapper = styled.div`
     max-width: 600px;
     text-align: center;
 
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 5px;
         max-width: calc(100% - 10px);
     }
@@ -114,7 +115,7 @@ const ButtonWrapper = styled.div`
     align-items: center;
     margin: 20px 0px;
 
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
         margin: 10px 0px;
         gap: 20px;

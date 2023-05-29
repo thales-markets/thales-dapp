@@ -20,6 +20,7 @@ import { getIsArbitrum, getIsOVM } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TokenNavProps = {
     setSelectedTab: any;
@@ -204,7 +205,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
 };
 
 const NavFooter = styled.div`
-    @media (min-width: 767px) {
+    @media (min-width: ${ScreenSizeBreakpoint.SMALL}) {
         display: none;
     }
     display: flex;

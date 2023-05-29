@@ -12,6 +12,7 @@ import SelectInput from 'components/SelectInput';
 import useLiquidityPoolUserTransactionsQuery from 'queries/liquidityPool/useLiquidityPoolUserTransactionsQuery';
 import UserTransactionsTable from '../UserTransactionsTable';
 import { LiquidityPoolTransaction } from 'constants/liquidityPool';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TransactionsProps = {
     currentRound: number;
@@ -159,7 +160,7 @@ const Container = styled(FlexDivColumn)`
     @media (max-width: 1440px) {
         width: 95%;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         max-height: 1100px;
         min-height: initial;
     }
@@ -168,21 +169,21 @@ const Container = styled(FlexDivColumn)`
 const Header = styled(FlexDivRow)`
     margin: 15px 18px;
     align-items: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
 
 const RightHeader = styled(FlexDivRow)`
     align-items: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
 
 const TabContainer = styled(FlexDiv)`
     min-height: 38px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         flex-direction: column;
     }
 `;
@@ -203,7 +204,7 @@ const Tab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
         cursor: pointer;
         color: ${(props) => props.theme.textColor.primary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin-bottom: 10px;
         margin-left: 0px;
         margin-right: 0px;

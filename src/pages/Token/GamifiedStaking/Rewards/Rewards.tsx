@@ -43,6 +43,7 @@ import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 enum SectionType {
     INFO,
@@ -851,7 +852,7 @@ const SectionWrapper = styled.section<{
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         grid-column: span
             ${(props) =>
                 props.backgroundType !== undefined &&
@@ -873,7 +874,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding: 10px;
     }
 `;
@@ -915,7 +916,7 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefaul
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         padding-bottom: 10px;
     }
 `;
@@ -949,7 +950,7 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -995,7 +996,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                     font-size: 23px;
                     color: ${props.isOp ? props.theme.textColor.primary : props.theme.textColor.quaternary};
                     text-transform: uppercase;
-                    @media (max-width: 768px) {
+                    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
                         font-size: 20px;
                     }
                 `;
@@ -1005,7 +1006,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                     font-size: 23px;
                     color: ${props.theme.textColor.primary};
                     text-transform: uppercase;
-                    @media (max-width: 768px) {
+                    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
                         font-size: 20px;
                     }
                 `;
@@ -1038,7 +1039,7 @@ const SectionDescriptionContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 15px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -1055,7 +1056,7 @@ const SectionDetailsLabel = styled.span<{ color?: string }>`
     line-height: 15px;
     letter-spacing: 0.035em;
     color: ${(props) => props.color ?? props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
@@ -1073,7 +1074,7 @@ const ButtonWrapperTooltip = styled.div`
     width: 70%;
     display: flex;
     justify-content: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         width: 100%;
     }
 `;
@@ -1088,14 +1089,14 @@ const PeriodLabel = styled(SectionContent)`
     font-size: 15px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
     }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 50px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         margin: auto;
     }
 `;
