@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import localStore from 'utils/localStore';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import { ScreenSizeBreakpoint, Theme } from 'constants/ui';
+import { Theme } from 'constants/ui';
 
 export const FlexDiv = styled.div`
     display: flex;
