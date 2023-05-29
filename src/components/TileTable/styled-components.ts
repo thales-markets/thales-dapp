@@ -1,29 +1,17 @@
 import styled from 'styled-components';
-import { FlexDiv } from 'theme/common';
-import { StyledComponent } from 'styled-components';
+import { FlexDiv, FlexDivCentered } from 'theme/common';
 
-type Cell = {
-    Title: StyledComponent<'div', any, { fontSize?: number }>;
-    Value: StyledComponent<'div', any, { fontSize?: number }>;
-};
+export const Container = styled.div`
+    width: 100%;
+`;
 
-type Children = {
-    Cell: StyledComponent<'div', any, { direction?: string; color?: string }> & Cell;
-    Title: StyledComponent<'div', any, { lineHidden?: boolean }>;
-};
-
-// @ts-ignore
-const Tile: StyledComponent<
-    'div',
-    any,
-    { disabled?: boolean; lineHidden?: boolean; dotColor?: string; backgroundColor?: string; heightSmall?: boolean }
-> &
-    Children = styled(FlexDiv)<{
+export const Tile = styled(FlexDiv)<{
     dotColor?: string;
     backgroundColor?: string;
     disabled?: boolean;
     lineHidden?: boolean;
     heightSmall?: boolean;
+    defaultFlowColor?: string;
 }>`
     position: relative;
     background: ${(props) => props.backgroundColor || 'transparent'};
@@ -48,8 +36,9 @@ const Tile: StyledComponent<
         height: 15px;
         border-radius: 50%;
         border: 4px solid ${(props) => props.theme.background.primary};
-        background: ${(props) => props.dotColor || props.theme.background.quaternary} !important;
-        box-shadow: 0 0 0 3px ${(props) => props.dotColor || props.theme.background.quaternary} !important;
+        background: ${(props) =>
+            props.defaultFlowColor || props.dotColor || props.theme.background.secondary} !important;
+        box-shadow: 0 0 0 3px ${(props) => props.defaultFlowColor || props.dotColor || props.theme.background.secondary} !important;
         opacity: ${(props) => (props.disabled ? '0.5' : '1')} !important;
     }
     &:after {
@@ -59,12 +48,13 @@ const Tile: StyledComponent<
         left: -24px;
         top: -31px;
         width: 2px;
-        height: 43px;
-        background: ${(props) => props.theme.background.quaternary};
+        height: 44px;
+        background: ${(props) => props.defaultFlowColor || props.theme.background.secondary};
         opacity: ${(props) => (props.disabled ? '0.5' : '1')} !important;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: 767px) {
-            height: ${(props) => (props.heightSmall ? '44px' : '68px')};
+            height: ${(props) => (props.heightSmall ? '44px' : '94px')};
+            top: ${(props) => (props.heightSmall ? '-31px' : '-56px')};
         }
     }
     @media screen and (max-width: 767px) {
@@ -74,11 +64,11 @@ const Tile: StyledComponent<
     }
 `;
 
-const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(FlexDiv)<{
+export const Title = styled(FlexDiv)<{
     lineHidden?: boolean;
+    defaultFlowColor?: string;
 }>`
     color: ${(props) => props.theme.textColor.primary} !important;
-
     font-weight: bold;
     height: 50px;
     position: relative;
@@ -98,8 +88,8 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
         height: 15px;
         border-radius: 50%;
         border: 4px solid ${(props) => props.theme.background.primary};
-        background: ${(props) => props.theme.background.quaternary} !important;
-        box-shadow: 0 0 0 3px ${(props) => props.theme.background.quaternary} !important;
+        background: ${(props) => props.defaultFlowColor || props.theme.background.secondary} !important;
+        box-shadow: 0 0 0 3px ${(props) => props.defaultFlowColor || props.theme.background.secondary} !important;
         opacity: 1 !important;
     }
     &:after {
@@ -109,19 +99,18 @@ const Title: StyledComponent<'div', any, { lineHidden?: boolean }> = styled(Flex
         left: -24px;
         top: -31px;
         width: 2px;
-        height: 43px;
-        background: ${(props) => props.theme.background.quaternary};
+        height: 44px;
+        background: ${(props) => props.defaultFlowColor || props.theme.background.secondary};
         opacity: 1;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: 767px) {
-            height: 68px;
+            height: 69px;
             top: -56px;
         }
     }
 `;
 
-// @ts-ignore
-const Cell: StyledComponent<'div', any> & Cell = styled.div<{ direction?: string; color?: string }>`
+export const Cell = styled.div<{ direction?: string; color?: string }>`
     display: flex;
     flex: 1;
     align-items: center;
@@ -131,13 +120,14 @@ const Cell: StyledComponent<'div', any> & Cell = styled.div<{ direction?: string
     justify-content: center;
 `;
 
-const CellTitle = styled.div<{ fontSize?: number }>`
+export const CellTitle = styled.div<{ fontSize?: number }>`
     font-size: ${(props) => props.fontSize || '12'}px;
+    color: ${(props) => props.theme.textColor.secondary};
     text-transform: uppercase;
     line-height: 120%;
 `;
 
-const CellValue = styled.div<{ fontSize?: number }>`
+export const CellValue = styled.div<{ fontSize?: number }>`
     white-space: pre;
     font-style: normal;
     font-weight: bold;
@@ -145,9 +135,23 @@ const CellValue = styled.div<{ fontSize?: number }>`
     text-transform: uppercase;
 `;
 
-Cell.Title = CellTitle;
-Cell.Value = CellValue;
-Tile.Cell = Cell;
-Tile.Title = Title;
+export const LoaderContainer = styled(FlexDivCentered)`
+    position: relative;
+    min-height: 220px;
+    width: 100%;
+`;
 
-export default Tile;
+export const NoDataContainer = styled(FlexDivCentered)`
+    color: ${(props) => props.theme.textColor.primary};
+    justify-content: center;
+    margin: 20px 0px;
+    font-size: 15px;
+    font-weight: bold;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    @media (max-width: 767px) {
+        font-size: 13px;
+    }
+  }
+`;

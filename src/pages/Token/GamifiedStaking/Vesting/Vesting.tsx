@@ -15,7 +15,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { formatHoursAndMinutesFromTimestamp, formatShortDateWithTime } from 'utils/formatters/date';
+import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsOVM, getL1FeeInWei, formatGasLimit } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
@@ -24,9 +24,12 @@ import { isMobile } from 'utils/device';
 import { UserVestingData } from 'types/token';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import Button from 'components/ButtonV2/Button';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -187,6 +190,7 @@ const Vesting: React.FC = () => {
                                 ? t(`options.earn.gamified-staking.vesting.schedule-no-results`)
                                 : undefined
                         }
+                        defaultFlowColor={theme.background.quaternary}
                     />
                 </SectionContentWrapper>
             </SectionWrapper>
@@ -200,7 +204,7 @@ const SchedulerFirstColumn: React.FC<{ value: TileRow | string }> = ({ value }) 
     if (typeof value !== 'string') {
         return (
             <DateTimeContainer>
-                <Date>{formatShortDateWithTime(Number(value?.cells[0]?.value))}</Date>
+                <Date>{formatShortDate(Number(value?.cells[0]?.value))}</Date>
                 <Time>{formatHoursAndMinutesFromTimestamp(Number(value?.cells[0]?.value))}</Time>
             </DateTimeContainer>
         );

@@ -1,8 +1,16 @@
 import React, { ReactElement } from 'react';
-import Container from './styled-components/Container';
-import Tile from './styled-components/Tile';
+import {
+    Container,
+    Cell,
+    CellTitle,
+    CellValue,
+    LoaderContainer,
+    NoDataContainer,
+    Tile,
+    Title,
+} from './styled-components';
 import AssetInfo, { AssetInfoProps } from '../AssetInfo/AssetInfo';
-import { FlexDiv, LoaderContainer, NoDataText, NoDataContainer } from 'theme/common';
+import { FlexDiv } from 'theme/common';
 import SPAAnchor from '../SPAAnchor';
 import SimpleLoader from '../SimpleLoader';
 import { useTranslation } from 'react-i18next';
@@ -33,6 +41,7 @@ type Properties = {
     rows: (TileRow | string)[];
     isLoading?: boolean;
     noResultsMessage?: string;
+    defaultFlowColor?: string;
 };
 
 const wrapInAnchor = (child: JSX.Element, index: number, href?: string) => {
@@ -51,18 +60,20 @@ const TileTable: React.FC<Properties> = ({
     rows,
     isLoading,
     noResultsMessage,
+    defaultFlowColor,
 }) => {
     const { t } = useTranslation();
-    if (!isLoading && !rows?.length) {
-        return (
-            <NoDataContainer>
-                <NoDataText>{noResultsMessage ? noResultsMessage : t('common.no-data-available')}</NoDataText>
-            </NoDataContainer>
-        );
-    }
-    return !isLoading ? (
+
+    return isLoading ? (
+        <LoaderContainer>
+            <SimpleLoader />
+        </LoaderContainer>
+    ) : rows.length === 0 ? (
+        <NoDataContainer>{noResultsMessage || t('common.no-data-available')}</NoDataContainer>
+    ) : (
         <Container>
             {rows.map((row, index) => {
+                console.log(typeof row);
                 if (typeof row !== 'string') {
                     const cells = row.cells.slice(
                         firstColumnRenderer ? 1 : 0,
@@ -78,18 +89,17 @@ const TileTable: React.FC<Properties> = ({
                                 dotColor={row.dotColor}
                                 backgroundColor={row.backgroundColor}
                                 heightSmall={row.heightSmall}
+                                defaultFlowColor={defaultFlowColor}
                                 key={index}
                             >
                                 {row.asset && <AssetInfo {...row.asset} />}
                                 {cells.map((cell, index) => (
-                                    <Tile.Cell direction={cell.flexDirection} key={index}>
+                                    <Cell direction={cell.flexDirection} key={index}>
                                         {cell.title && (
-                                            <Tile.Cell.Title fontSize={cell.titleFontSize}>
-                                                {cell.title}
-                                            </Tile.Cell.Title>
+                                            <CellTitle fontSize={cell.titleFontSize}>{cell.title}</CellTitle>
                                         )}
-                                        <Tile.Cell.Value fontSize={cell.valueFontSize}>{cell.value}</Tile.Cell.Value>
-                                    </Tile.Cell>
+                                        <CellValue fontSize={cell.valueFontSize}>{cell.value}</CellValue>
+                                    </Cell>
                                 ))}
                             </Tile>
                             {lastColumnRenderer && lastColumnRenderer(row)}
@@ -101,19 +111,15 @@ const TileTable: React.FC<Properties> = ({
                     return (
                         <FlexDiv key={index}>
                             {firstColumnRenderer && firstColumnRenderer(row)}
-                            <Tile.Title lineHidden={index === 0} key={index}>
+                            <Title lineHidden={index === 0} defaultFlowColor={defaultFlowColor} key={index}>
                                 {row}
-                            </Tile.Title>
+                            </Title>
                             {lastColumnRenderer && lastColumnRenderer(row)}
                         </FlexDiv>
                     );
                 }
             })}
         </Container>
-    ) : (
-        <LoaderContainer>
-            <SimpleLoader />
-        </LoaderContainer>
     );
 };
 
