@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { ButtonContainer, Line } from '../components';
+import { ButtonContainer, Line } from '../styled-components';
 import Instructions from './Instructions';
 import YourTransactions from './Transactions';
 import { useSelector } from 'react-redux';
@@ -23,11 +23,11 @@ import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
-import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
 import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 enum SectionType {
     INFO,
@@ -43,6 +43,7 @@ const LpStaking: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const stakeOptions = {
         stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
@@ -179,7 +180,7 @@ const LpStaking: React.FC = () => {
     const getClaimSection = () => {
         return (
             <SectionContentWrapper columnsTemplate={2}>
-                {isMobile() && (
+                {isMobile && (
                     <SectionWrapper columnsOnMobile={2} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                         <SectionContentWrapper>
                             <SectionLabelContent type={SectionType.CLAIM_INFO}>
@@ -274,7 +275,7 @@ const LpStaking: React.FC = () => {
             </SectionWrapper>
 
             {/* Third row */}
-            {!isMobile() && (
+            {!isMobile && (
                 <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                     <SectionContentWrapper>
                         <SectionLabelContent type={SectionType.CLAIM_INFO}>
@@ -287,10 +288,7 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            <Trans
-                                i18nKey="options.earn.lp-staking.info.tvl"
-                                components={[isMobile() ? '' : ' (tvl)']}
-                            />
+                            <Trans i18nKey="options.earn.lp-staking.info.tvl" components={[isMobile ? '' : ' (tvl)']} />
                         </SectionLabelContent>
                         <Tooltip overlay={t('options.earn.lp-staking.info.tvl-tooltip')} />
                     </SectionLabel>

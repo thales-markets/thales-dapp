@@ -12,7 +12,7 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchMigratedInvestorsRetroRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../components';
-import { Tip37Link } from '../../components';
+import { Tip37Link } from '../../styled-components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';

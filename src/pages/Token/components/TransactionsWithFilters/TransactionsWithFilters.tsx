@@ -9,13 +9,13 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransactionsQuery';
-import { SectionHeader } from '../../components';
+import { SectionHeader } from '../../styled-components';
 import checkmark from 'assets/images/checkmark.svg';
 import { orderBy } from 'lodash';
 import Button from 'components/ButtonV2';
-import { isMobile } from 'utils/device';
 import { ThemeInterface } from 'types/ui';
 import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];
@@ -30,6 +30,8 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
     const [showFilters, setShowFilters] = useState<boolean>(false);
 
@@ -68,7 +70,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
             <SectionHeader>{t('options.earn.table.title')}</SectionHeader>
             <FilterWrapper>
                 <FilterContainer
-                    onMouseEnter={() => (isMobile() ? '' : setShowFilters(true))}
+                    onMouseEnter={() => (isMobile ? '' : setShowFilters(true))}
                     onMouseLeave={() => setShowFilters(false)}
                 >
                     <Button

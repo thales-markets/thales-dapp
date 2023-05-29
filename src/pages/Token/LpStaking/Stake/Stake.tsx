@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
+import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';

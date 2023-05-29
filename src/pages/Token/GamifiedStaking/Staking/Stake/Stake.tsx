@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../components';
+import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -21,11 +21,11 @@ import { dispatchMarketNotification } from 'utils/options';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { FlexDivColumnCentered } from 'theme/common';
 import ApprovalModal from 'components/ApprovalModal';
-import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Button from 'components/ButtonV2/Button';
+import { getIsMobile } from 'redux/modules/ui';
 
 const Stake: React.FC = () => {
     const { t } = useTranslation();
@@ -34,6 +34,8 @@ const Stake: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const [amountToStake, setAmountToStake] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isAllowingStake, setIsAllowingStake] = useState<boolean>(false);
@@ -240,7 +242,7 @@ const Stake: React.FC = () => {
     return (
         <EarnSection spanOnTablet={5} orderOnMobile={4} orderOnTablet={4}>
             <SectionContentContainer>
-                <InputContainer marginTop={isMobile() ? 20 : 40}>
+                <InputContainer marginTop={isMobile ? 20 : 40}>
                     <NumericInput
                         value={amountToStake}
                         onChange={(_, value) => setAmountToStake(value)}
@@ -263,7 +265,7 @@ const Stake: React.FC = () => {
                         isBalanceLoading={thalesBalanceQuery.isLoading}
                     />
                 </InputContainer>
-                <Line margin={isMobile() ? '10px 0' : '41px 0 10px 0'} />
+                <Line margin={isMobile ? '10px 0' : '41px 0 10px 0'} />
                 <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />
                 <StakeButtonDiv>
                     {getStakeButton()}

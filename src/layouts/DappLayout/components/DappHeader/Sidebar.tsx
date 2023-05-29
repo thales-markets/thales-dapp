@@ -249,6 +249,10 @@ const SidebarHtml = styled.nav`
         display: none;
     }
 
+    *::-webkit-scrollbar-thumb {
+        background: transparent;
+    }
+
     @media (min-width: 1024px) {
         &:hover {
             width: 300px;

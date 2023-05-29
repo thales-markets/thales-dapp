@@ -1,12 +1,15 @@
 import { ScreenSizeBreakpoint } from 'constants/ui';
-import { ProvideLiquidityLink, UniswapExchangeLink } from 'pages/Token/components';
+import { ProvideLiquidityLink, UniswapExchangeLink } from 'pages/Token/styled-components';
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { isMobile } from 'utils/device';
 
 const Instructions: React.FC = () => {
     const { t } = useTranslation();
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [stepSelected, setStepSelected] = useState(1);
 
@@ -24,7 +27,7 @@ const Instructions: React.FC = () => {
     return (
         <>
             <Container>
-                {!isMobile() && (
+                {!isMobile && (
                     <StepsWrapper firstRow={true}>
                         <Step>1</Step>
                         <StepConnect />
@@ -76,7 +79,7 @@ const Instructions: React.FC = () => {
                     </StepInfo>
                 </StepsWrapper>
             </Container>
-            {isMobile() && (
+            {isMobile && (
                 <StepNavContainer>
                     <StepNav onClick={() => stepNavClickhandler(step1, 1)} selected={stepSelected === 1} />
                     <StepNav onClick={() => stepNavClickhandler(step2, 2)} selected={stepSelected === 2} />

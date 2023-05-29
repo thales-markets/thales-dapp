@@ -1,6 +1,6 @@
 import Switch from 'components/SwitchInput/SwitchInput';
 import { THALES_CURRENCY } from 'constants/currency';
-import { Tip125Link, Tip17Link } from 'pages/Token/components';
+import { Tip125Link, Tip17Link } from 'pages/Token/styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -9,11 +9,10 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled, { useTheme } from 'styled-components';
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
-import { Line } from '../../components';
+import { Line } from '../../styled-components';
 import YourTransactions from './Transactions';
 import Stake from './Stake';
 import Unstake from './Unstake';
-import { isMobile } from 'utils/device';
 import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
 import { getIsOVM } from 'utils/network';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
@@ -22,6 +21,7 @@ import { StakingData, UserStakingData } from 'types/token';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import { ThemeInterface } from 'types/ui';
 import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -50,7 +50,7 @@ const Staking: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isL2 = getIsOVM(networkId);
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
@@ -64,6 +64,8 @@ const Staking: React.FC = () => {
     const stakingDataQuery = useStakingDataQuery(networkId, {
         enabled: isAppReady,
     });
+
+    const isL2 = getIsOVM(networkId);
 
     useEffect(() => {
         if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
@@ -224,7 +226,7 @@ const Staking: React.FC = () => {
                             </UnstakingInfo>
                         )}
                     </SectionDetails>
-                    <Line margin={isMobile() ? '3px 10px' : '0 15px'} />
+                    <Line margin={isMobile ? '3px 10px' : '0 15px'} />
                     <SectionDetails positionUp={false}>
                         <SectionDetailsLabel>
                             {t('options.earn.gamified-staking.staking.escrow-balance')}
@@ -322,7 +324,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
                 display: grid; 
                 grid-template-columns: 1fr; 
                 grid-auto-rows: 1fr; 
-                grid-gap: ${(isMobile() ? GRID_GAP_MOBILE : GRID_GAP) + 4}px;` // page GRID_GAP + borders(2 x 2px)
+                grid-gap: ${GRID_GAP + 4}px;` // page GRID_GAP + borders(2 x 2px)
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
@@ -332,6 +334,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
         ${(props) =>
             props.backgroundType === BackgroundType.STAKE ? '' : `background: ${props.theme.background.secondary}`};
+        grid-gap: ${GRID_GAP_MOBILE + 4}px;
     }
 `;
 

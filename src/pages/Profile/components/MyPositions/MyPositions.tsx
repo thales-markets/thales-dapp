@@ -13,16 +13,27 @@ import { UsersAssets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import Card from '../styled-components/Card';
-import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
+import { LoaderContainer } from 'theme/common';
 import { UI_COLORS } from 'constants/ui';
 import RangeIllustration from 'components/RangeIllustration';
 import TimeRemaining from 'components/TimeRemaining';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { LINKS } from 'constants/links';
-import { isMobile } from 'utils/device';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import {
+    Card,
+    CardColumn,
+    CardRow,
+    CardRowSubtitle,
+    CardRowTitle,
+    CardSection,
+    CardWrapper,
+    NoDataContainer,
+    NoDataText,
+} from '../styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getIsMobile } from 'redux/modules/ui';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -42,6 +53,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
     rangedPositions,
 }) => {
     const { t } = useTranslation();
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const data = useMemo(() => {
         const newArray: any = [];
@@ -102,10 +114,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                         : buildOptionsMarketLink(data.market.id)
                                 }
                             >
-                                <Card.Wrapper>
+                                <CardWrapper>
                                     <Card>
-                                        <Card.Column>
-                                            <Card.Row style={{ marginBottom: 10 }}>
+                                        <CardColumn>
+                                            <CardRow style={{ marginBottom: 10 }}>
                                                 <CurrencyIcon
                                                     width="36px"
                                                     height="36px"
@@ -120,9 +132,9 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                             : 2
                                                     }
                                                 />
-                                                <Card.Section>
-                                                    <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
-                                                    <Card.RowTitle
+                                                <CardSection>
+                                                    <CardRowSubtitle>{data.market.currencyKey}</CardRowSubtitle>
+                                                    <CardRowTitle
                                                         style={{
                                                             color: getColor(data),
                                                         }}
@@ -134,30 +146,30 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                             : data?.balances?.type === 'IN'
                                                             ? t('options.common.in')
                                                             : t('options.common.out')}
-                                                    </Card.RowTitle>
-                                                </Card.Section>
-                                            </Card.Row>
-                                            <Card.Section>
-                                                <Card.RowTitle>
+                                                    </CardRowTitle>
+                                                </CardSection>
+                                            </CardRow>
+                                            <CardSection>
+                                                <CardRowTitle>
                                                     {t(`options.home.markets-table.maturity-date-col`)}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
+                                                </CardRowTitle>
+                                                <CardRowSubtitle>
                                                     {formatShortDate(data.market.maturityDate)}
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                            <Card.Section>
-                                                <Card.RowTitle>
+                                                </CardRowSubtitle>
+                                            </CardSection>
+                                            <CardSection>
+                                                <CardRowTitle>
                                                     {t(`options.home.markets-table.time-remaining-col`)}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
+                                                </CardRowTitle>
+                                                <CardRowSubtitle>
                                                     <TimeRemaining
                                                         end={data.market.maturityDate}
                                                         fontSize={20}
                                                         showFullCounter={true}
                                                     />
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                        </Card.Column>
+                                                </CardRowSubtitle>
+                                            </CardSection>
+                                        </CardColumn>
                                         {data.range ? (
                                             <MiddleContrainer>
                                                 <RangeIllustration
@@ -171,32 +183,32 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                 />
                                             </MiddleContrainer>
                                         ) : (
-                                            <Card.Column>
-                                                <Card.Section>
-                                                    <Card.RowTitle>
+                                            <CardColumn>
+                                                <CardSection>
+                                                    <CardRowTitle>
                                                         {t('options.home.market-card.strike-price')}
-                                                    </Card.RowTitle>
-                                                    <Card.RowSubtitle>
+                                                    </CardRowTitle>
+                                                    <CardRowSubtitle>
                                                         {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
-                                                    </Card.RowSubtitle>
-                                                </Card.Section>
-                                                <Card.Section>
-                                                    <Card.RowTitle>
+                                                    </CardRowSubtitle>
+                                                </CardSection>
+                                                <CardSection>
+                                                    <CardRowTitle>
                                                         {t('options.home.market-card.current-asset-price')}
-                                                    </Card.RowTitle>
-                                                    <Card.RowSubtitle>
+                                                    </CardRowTitle>
+                                                    <CardRowSubtitle>
                                                         {formatCurrencyWithSign(
                                                             USD_SIGN,
                                                             exchangeRates?.[data.market.currencyKey] || 0
                                                         )}
-                                                    </Card.RowSubtitle>
-                                                </Card.Section>
+                                                    </CardRowSubtitle>
+                                                </CardSection>
 
-                                                <Card.Section>
-                                                    <Card.RowTitle>
+                                                <CardSection>
+                                                    <CardRowTitle>
                                                         {t('options.home.market-card.price-difference')}
-                                                    </Card.RowTitle>
-                                                    <Card.RowSubtitle>
+                                                    </CardRowTitle>
+                                                    <CardRowSubtitle>
                                                         <PriceDifferenceInfo
                                                             priceDiff={
                                                                 data.market.strikePrice <
@@ -205,17 +217,17 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                         >
                                                             {`${data.balances.priceDiff.toFixed(2)}%`}
                                                         </PriceDifferenceInfo>
-                                                    </Card.RowSubtitle>
-                                                </Card.Section>
-                                            </Card.Column>
+                                                    </CardRowSubtitle>
+                                                </CardSection>
+                                            </CardColumn>
                                         )}
 
-                                        <Card.Column>
-                                            <Card.Section>
-                                                <Card.RowTitle>
+                                        <CardColumn>
+                                            <CardSection>
+                                                <CardRowTitle>
                                                     {t('options.leaderboard.trades.table.amount-col')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
+                                                </CardRowTitle>
+                                                <CardRowSubtitle>
                                                     {data.balances.amount.toFixed(2)}
 
                                                     <Icon
@@ -225,13 +237,13 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                         }}
                                                         className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
                                                     ></Icon>
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                            <Card.Section>
-                                                <Card.RowTitle>
+                                                </CardRowSubtitle>
+                                            </CardSection>
+                                            <CardSection>
+                                                <CardRowTitle>
                                                     {t('options.home.market-card.position-value')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
+                                                </CardRowTitle>
+                                                <CardRowSubtitle>
                                                     {data.balances.value === 0 ? (
                                                         <>
                                                             N/A
@@ -255,9 +267,9 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     ) : (
                                                         formatCurrencyWithSign(USD_SIGN, data.balances.value)
                                                     )}
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                            <Card.Section>
+                                                </CardRowSubtitle>
+                                            </CardSection>
+                                            <CardSection>
                                                 <PriceChart
                                                     containerStyle={{ margin: 'auto' }}
                                                     currencyKey={data.market.currencyKey}
@@ -266,10 +278,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     footerFontSize="8px"
                                                     showFooter={window.innerWidth > 500}
                                                 />
-                                            </Card.Section>
-                                        </Card.Column>
+                                            </CardSection>
+                                        </CardColumn>
                                     </Card>
-                                </Card.Wrapper>
+                                </CardWrapper>
                             </SPAAnchor>
                         )}
                     </Content>
@@ -322,7 +334,7 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                 <PriceChart
                                     currencyKey={props.cell.value}
                                     height={30}
-                                    width={isMobile() ? 90 : 100}
+                                    width={isMobile ? 90 : 100}
                                     showFooter={false}
                                     showPercentageChangeOnSide={true}
                                     containerStyle={{
@@ -520,18 +532,11 @@ const getColor = (data: any) => {
     return data.balances.type === 'UP' ? UI_COLORS.GREEN : UI_COLORS.RED;
 };
 
-export const TooltipLink = styled.a`
+const TooltipLink = styled.a`
     color: #00f9ff;
     &:hover {
         color: rgb(116, 139, 198);
     }
-`;
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    min-width: 20px;
-    min-height: 20px;
-    margin-left: 6px;
-    margin-bottom: -2px;
 `;
 
 export const UsingAmmLink: React.FC = () => {

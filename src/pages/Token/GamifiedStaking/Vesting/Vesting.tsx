@@ -5,7 +5,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import { ButtonContainer, Line } from 'pages/Token/components';
+import { ButtonContainer, Line } from 'pages/Token/styled-components';
 import YourTransactions from './Transactions';
 import useUserVestingDataQuery from 'queries/token/useUserVestingDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -20,13 +20,13 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsOVM, getL1FeeInWei, formatGasLimit } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { isMobile } from 'utils/device';
 import { UserVestingData } from 'types/token';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import Button from 'components/ButtonV2/Button';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
@@ -35,6 +35,8 @@ const Vesting: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -72,7 +74,7 @@ const Vesting: React.FC = () => {
                     { value: row.date },
                     {
                         value: `${formatCurrencyWithKey(THALES_CURRENCY, row.amount)}`,
-                        valueFontSize: isMobile() ? 12 : 15,
+                        valueFontSize: isMobile ? 12 : 15,
                     },
                 ],
                 heightSmall: true,
@@ -163,7 +165,7 @@ const Vesting: React.FC = () => {
                         </SectionValueContent>
                     </SectionValue>
                     <NetworkFeesWrapper>
-                        <Line margin={isMobile() ? '0 0 10px 0' : '10px 0'} />
+                        <Line margin={isMobile ? '0 0 10px 0' : '10px 0'} />
                         <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     </NetworkFeesWrapper>
                     <ButtonContainer>{getVestButton()}</ButtonContainer>
@@ -196,7 +198,7 @@ const Vesting: React.FC = () => {
                 </SectionContentWrapper>
             </SectionWrapper>
 
-            <YourTransactions gridColumns={isMobile() ? 12 : 7} />
+            <YourTransactions gridColumns={isMobile ? 12 : 7} />
         </>
     );
 };

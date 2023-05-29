@@ -19,7 +19,13 @@ import {
     ClaimMessage,
     SectionContentContainer,
 } from '../components';
-import { PieChartCenterDiv, PieChartCenterText, PieChartContainer, LearnMore, Tip37Link } from '../../components';
+import {
+    PieChartCenterDiv,
+    PieChartCenterText,
+    PieChartContainer,
+    LearnMore,
+    Tip37Link,
+} from '../../styled-components';
 import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';

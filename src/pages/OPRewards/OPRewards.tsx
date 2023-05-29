@@ -31,9 +31,9 @@ import { CRYPTO_CURRENCY_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/curren
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import ElectionsBanner from 'components/ElectionsBanner';
-import { isMobile } from 'utils/device';
 import { Rewards, emptyRewards } from 'types/rewards';
 import Footer from 'components/Footer/Footer';
+import { getIsMobile } from 'redux/modules/ui';
 
 const THALES_REWARDS = [
     2000, // period 1
@@ -86,6 +86,7 @@ const OPRewards: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [period, setPeriod] = useState<number>(1);
@@ -342,7 +343,7 @@ const OPRewards: React.FC = () => {
                                     <SummaryInfo>
                                         <TimeRemaining
                                             end={periodRangeTimestamps[period - 1].maxTimestamp * 1000}
-                                            fontSize={isMobile() ? 15 : 18}
+                                            fontSize={isMobile ? 15 : 18}
                                             showFullCounter
                                             zIndex={0}
                                         />

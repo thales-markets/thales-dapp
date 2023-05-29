@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Trans } from 'react-i18next';
 import { FlexDivCentered } from 'theme/common';
 import NetworkSwitch from 'components/NetworkSwitch';
-import { Tip20Link, Tip23Link } from '../../components';
+import { Tip20Link, Tip23Link } from '../../styled-components';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type MigrationInfoProps = {
