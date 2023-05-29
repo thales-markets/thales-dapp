@@ -13,6 +13,7 @@ export const ThemeMap: Record<Theme, ThemeInterface> = {
 export enum UI_COLORS {
     RED = '#DE496D',
     GREEN = '#03DAC5',
+    YELLOW = '#F7B91A',
     IN_COLOR = '#B0FFE7',
     OUT_COLOR = '#BF7EFF',
 }
