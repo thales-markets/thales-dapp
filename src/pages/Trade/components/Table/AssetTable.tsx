@@ -6,11 +6,13 @@ import { Positions } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 
 type TableProps = {
     markets: MarketInfo[] | RangedMarketPerPosition[];
@@ -24,6 +26,7 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
     // selectors
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
+    const navigate = useHistory();
 
     // states
     const [rowIndex, setRowIndex] = useState<number>();
@@ -78,13 +81,16 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                 accessor: 'discountedSide',
                 Cell: (props: any) => {
                     return (
-                        <TableText selected={rowIndex === props.row.index} price={true}>
-                            {formatPercentage(props.row.original.discount)}
-                        </TableText>
+                        <>
+                            <TableText selected={rowIndex === props.row.index} price={true}>
+                                {formatPercentage(props.row.original.discount)}
+                            </TableText>
+                            <Icon selected={rowIndex === props.row.index} className="icon icon--arrow-down" />
+                        </>
                     );
                 },
-                width: '80px',
-                headWidth: '87px',
+                width: '90px',
+                headWidth: '97px',
             },
         ];
     }, [t, position, rowIndex]);
@@ -100,6 +106,15 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                     onTableRowClick={(row) => {
                         setRowIndex(row.index);
                         setMarket({ ...row.original, positionType: position });
+                        if (rowIndex === row.index) {
+                            let url = '';
+                            if (position === Positions.UP || position === Positions.DOWN) {
+                                url = buildOptionsMarketLink(row.original.address);
+                            } else {
+                                url = buildRangeMarketLink(row.original.address);
+                            }
+                            navigate.push(url);
+                        }
                     }}
                     tableHeadCellStyles={getTableHeaderStyle(theme.textColor.secondary)}
                     data={markets}
@@ -111,6 +126,14 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
         </Wrapper>
     );
 };
+
+const Icon = styled.i<{ selected: boolean }>`
+    color: ${(props) => props.theme.button.textColor.primary};
+    transform: rotate(-90deg);
+    font-size: 14px;
+    margin-left: 10px;
+    visibility: ${(props) => (props.selected ? 'show' : 'hidden')}; ;
+`;
 
 const getTableHeaderStyle = (color: string): React.CSSProperties => {
     return {
