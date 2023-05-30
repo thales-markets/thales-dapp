@@ -1,22 +1,34 @@
+import { Positions } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
-export const NoDataText = styled.span`
-    color: ${(props) => props.theme.textColor.primary};
-    font-size: 24px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
-        font-size: 15px;
-    }
+export const Content = styled.div`
+    display: content;
 `;
 
-export const NoDataContainer = styled.div`
-    display: block;
+export const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding-top: 15px;
+    position: relative;
+    min-height: 200px;
+`;
+
+export const MiddleContrainer = styled.div`
+    display: flex;
     width: 100%;
-    text-align: center;
-    margin-top: 50px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
-        margin-top: 10px;
-    }
+    margin-top: 10px;
+    min-width: 180px;
+`;
+
+export const TableText = styled.span`
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 285%;
+    text-align: right;
+    text-transform: uppercase;
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export const CardWrapper = styled.div<{ background?: boolean }>`
@@ -120,5 +132,43 @@ export const CardRowSubtitle = styled(CardText)`
         span {
             font-size: 12px !important;
         }
+    }
+`;
+
+export const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
+    color: ${(props) => (props.priceDiff ? props.theme.textColor.quaternary : props.theme.textColor.tertiary)};
+`;
+
+export const getColor = (data: any, theme: ThemeInterface) => {
+    if (data.range) {
+        return data.balances.type === Positions.IN ? theme.positionColor.in : theme.positionColor.out;
+    }
+    return data.balances.type === Positions.UP ? theme.positionColor.up : theme.positionColor.down;
+};
+
+export const Icon = styled.i<{ margin?: string; color?: string }>`
+    ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
+    ${(props) => (props.color ? `color: ${props.color}` : '')};
+    @media (max-width: 568px) {
+        font-size: 16px;
+        line-height: 100%;
+    }
+`;
+
+export const NoDataText = styled.span`
+    color: ${(props) => props.theme.textColor.primary};
+    font-size: 24px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        font-size: 15px;
+    }
+`;
+
+export const NoDataContainer = styled.div`
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        margin-top: 10px;
     }
 `;

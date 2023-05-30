@@ -21,6 +21,8 @@ import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
+import { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import localStore from 'utils/localStore';
 import { history } from 'utils/routes';
@@ -37,14 +39,12 @@ import {
     Label,
     Nav,
     NavItem,
+    Notification,
     PriceContainer,
     Row,
     Value,
     Wrapper,
-    Notification,
 } from './styled-components';
-import { ThemeInterface } from 'types/ui';
-import { useTheme } from 'styled-components';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -99,7 +99,7 @@ const Profile: React.FC = () => {
     const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
         enabled: isAppReady && walletAddress !== null,
     });
-    const dataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
+    const dataForUI = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
     const tableViewStorageKey = LOCAL_STORAGE_KEYS.PROFILE_TABLE_VIEW + networkId;
     const tableViewLocalStorageValue: boolean = localStore.get(tableViewStorageKey) || false;
@@ -208,7 +208,7 @@ const Profile: React.FC = () => {
                         {view === NavItems.History && (
                             <History
                                 markets={[...(markets as any), ...(rangedMarkets as any)]}
-                                trades={dataForUi ? dataForUi.trades : []}
+                                trades={dataForUI ? dataForUI.trades : []}
                                 searchText={searchAddress ? '' : searchText}
                                 isLoading={allTxAndDataQuery.isLoading}
                             />
@@ -224,41 +224,41 @@ const Profile: React.FC = () => {
                             <Label>{t('options.leaderboard.table.netprofit-col')}: </Label>
                             <Value
                                 color={
-                                    dataForUi?.userData.profit === 0
+                                    dataForUI?.userData.profit === 0
                                         ? theme.textColor.primary
-                                        : dataForUi?.userData.profit > 0
+                                        : dataForUI?.userData.profit > 0
                                         ? theme.textColor.quaternary
                                         : theme.textColor.tertiary
                                 }
                             >
-                                {formatCurrencyWithSign(USD_SIGN, dataForUi?.userData.profit, 2)}
+                                {formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.profit, 2)}
                             </Value>
                         </Row>
                         <Row>
                             <Label>{t('options.leaderboard.table.gain-col')}: </Label>
                             <Value
                                 color={
-                                    dataForUi?.userData.gain === 0
+                                    dataForUI?.userData.gain === 0
                                         ? theme.textColor.primary
-                                        : dataForUi?.userData.gain > 0
+                                        : dataForUI?.userData.gain > 0
                                         ? theme.textColor.quaternary
                                         : theme.textColor.tertiary
                                 }
                             >
-                                {formatCurrencyWithSign('', dataForUi?.userData.gain * 100, 2)}%
+                                {formatCurrencyWithSign('', dataForUI?.userData.gain * 100, 2)}%
                             </Value>
                         </Row>
                         <Row>
                             <Label>{t('options.leaderboard.table.trades-col')}: </Label>
-                            <Value>{dataForUi?.userData.trades}</Value>
+                            <Value>{dataForUI?.userData.trades}</Value>
                         </Row>
                         <Row>
                             <Label>{t('options.leaderboard.table.volume-col')}: </Label>
-                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUi?.userData.volume, 2)}</Value>
+                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.volume, 2)}</Value>
                         </Row>
                         <Row>
                             <Label>{t('options.leaderboard.table.investment-col')}: </Label>
-                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUi?.userData.investment, 2)}</Value>
+                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.investment, 2)}</Value>
                         </Row>
                         {!isPolygon && (
                             <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>

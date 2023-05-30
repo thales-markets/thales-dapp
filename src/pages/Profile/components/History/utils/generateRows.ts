@@ -2,9 +2,8 @@ import { formatCurrency } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { TFunction } from 'i18next';
-
-const WIN_COLOR = '#50CE99';
-const LOSE_COLOR = '#DE496D';
+import { ThemeInterface } from 'types/ui';
+import { POSITIONS_TO_SIDE_MAP, Positions, RANGE_SIDE } from 'constants/options';
 
 const formatAMPM = (date: Date) => {
     let hours = date.getHours();
@@ -44,7 +43,7 @@ const generateStrike = (market: any) => {
     return '$' + formatCurrency(market.strikePrice);
 };
 
-const generateRows = (data: any[], translator: TFunction) => {
+const generateRows = (data: any[], translator: TFunction, theme: ThemeInterface) => {
     try {
         const dateMap: Record<string, any> = {};
         const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
@@ -66,19 +65,27 @@ const generateRows = (data: any[], translator: TFunction) => {
             if (typeof d === 'string') {
                 return d;
             }
-            const isRanged = d.optionSide == 'in' || d.optionSide == 'out' ? true : false;
+            const isRanged =
+                d.optionSide === RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.IN]] ||
+                d.optionSide == RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.OUT]]
+                    ? true
+                    : false;
             const marketExpired = d.marketItem?.result;
-            const isLong = d.optionSide === 'long';
             const optionPrice = d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
             const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;
 
             return {
-                dotColor: marketExpired ? (isLong ? WIN_COLOR : LOSE_COLOR) : '',
+                dotColor: marketExpired ? '' : theme.background.quaternary,
                 asset: {
                     currencyKey: d.marketItem.currencyKey,
                     assetNameFontSize: '12px',
                     currencyKeyFontSize: '12px',
-                    iconType: d.optionSide === 'in' ? 1 : d.optionSide === 'out' ? 2 : 0,
+                    iconType:
+                        d.optionSide === RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.IN]]
+                            ? 1
+                            : d.optionSide === RANGE_SIDE[POSITIONS_TO_SIDE_MAP[Positions.OUT]]
+                            ? 2
+                            : 0,
                 },
                 cells: [
                     { title: d.orderSide, value: formatAMPM(new Date(d.timestamp)) },

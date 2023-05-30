@@ -1,11 +1,11 @@
-import { UI_COLORS } from 'constants/ui';
 import React, { useEffect, useRef } from 'react';
 import PointerIcon from 'assets/images/ranged-markets/RangedMarkets_point.svg';
 import LeftPriceIcon from 'assets/images/ranged-markets/RangedMarkets_A_tiengle.svg';
 import RightPriceIcon from 'assets/images/ranged-markets/RangedMarkets_B_triangle.svg';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
 type RangeIllustrationProps = {
     priceData: {
@@ -28,6 +28,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
     fontSize = 20,
     maxWidth = 50,
 }) => {
+    const theme: ThemeInterface = useTheme();
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -42,8 +43,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
                 const WIDTH_OF_OUT_RANGE = 86;
                 const HEIGHT = 7;
                 const HALF_WIDTH_OF_POINTER_ICON = 7;
-                // const POSITION_OF_LEFT_PRICE = WIDTH_OF_OUT_RANGE;
-                // const POSITION_OF_RIGHT_PRICE = WIDTH_OF_IN_RANGE + WIDTH_OF_IN_RANGE;
+
                 const { MIN_PRICE, MAX_PRICE } = calculateMinAndMaxPrice(priceData.left, priceData.right);
                 const CURRENT_PRICE_POSITION = calculatePositionForGivenPrice(
                     priceData.current,
@@ -51,10 +51,6 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
                     [0, 2 * WIDTH_OF_OUT_RANGE + WIDTH_OF_IN_RANGE]
                 );
                 const CURRENT_PRICE_ICON_POSITION = [CURRENT_PRICE_POSITION, START_POINT[1] - 23];
-
-                // console.log('MIN_PRICE ', MIN_PRICE);
-                // console.log('MAX_PRICE ', MAX_PRICE);
-                // console.log('CURRENT_PRICE_POSITION ', CURRENT_PRICE_POSITION);
 
                 // Calculate points position
 
@@ -71,7 +67,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
                 firstOutPosition.lineTo(START_POINT[0] + WIDTH_OF_OUT_RANGE, START_POINT[1] + HEIGHT);
                 firstOutPosition.lineTo(START_POINT[0], START_POINT[1] + HEIGHT);
                 firstOutPosition.closePath();
-                ctx.fillStyle = outColor ? outColor : UI_COLORS.OUT_COLOR;
+                ctx.fillStyle = outColor ? outColor : theme.positionColor.out;
                 ctx.fill(firstOutPosition);
 
                 // Rectangle inside range
@@ -81,7 +77,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
                 inPosition.lineTo(START_POINT_OF_IN_RANGE[0] + WIDTH_OF_IN_RANGE, START_POINT_OF_IN_RANGE[1] + HEIGHT);
                 inPosition.lineTo(START_POINT_OF_IN_RANGE[0], START_POINT_OF_IN_RANGE[1] + HEIGHT);
                 inPosition.closePath();
-                ctx.fillStyle = inColor ? inColor : UI_COLORS.IN_COLOR;
+                ctx.fillStyle = inColor ? inColor : theme.positionColor.in;
                 ctx.fill(inPosition);
 
                 // Second out position
@@ -100,7 +96,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
                     START_POINT_OF_SECOND_OUT_RANGE[1] + HEIGHT
                 );
                 secondOutPosition.closePath();
-                ctx.fillStyle = outColor ? outColor : UI_COLORS.OUT_COLOR;
+                ctx.fillStyle = outColor ? outColor : theme.positionColor.out;
                 ctx.fill(secondOutPosition);
 
                 // Current price pointer svg
@@ -136,7 +132,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
                     // Left price label
                     ctx.font = 'normal small-caps bold ' + fontSize + 'px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillStyle = UI_COLORS.GREEN;
+                    ctx.fillStyle = theme.textColor.quaternary;
                     ctx.fillText(
                         formatCurrencyWithSign(USD_SIGN, priceData.left),
                         START_POINT_OF_IN_RANGE[0],
@@ -147,7 +143,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
                     // Right price label
                     ctx.font = 'normal small-caps bold' + fontSize + 'px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillStyle = UI_COLORS.GREEN;
+                    ctx.fillStyle = theme.textColor.quaternary;
                     ctx.fillText(
                         formatCurrencyWithSign(USD_SIGN, priceData.right),
                         START_POINT_OF_SECOND_OUT_RANGE[0],
@@ -158,7 +154,7 @@ const RangeIllustration: React.FC<RangeIllustrationProps> = ({
                     // Current price element
                     ctx.font = 'normal small-caps bold' + fontSize + 'px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillStyle = UI_COLORS.GREEN;
+                    ctx.fillStyle = theme.textColor.quaternary;
                     ctx.fillText(
                         formatCurrencyWithSign(USD_SIGN, priceData.current),
                         START_POINT[0] + CURRENT_PRICE_POSITION,
@@ -185,7 +181,6 @@ const Container = styled.canvas`
     margin-right: auto;
     display: block;
     max-width: 350px;
-    /* height: 150px; */
 `;
 
 const calculateMinAndMaxPrice = (leftPrice: number, rightPrice: number) => {

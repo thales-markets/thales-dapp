@@ -4,7 +4,6 @@ import SPAAnchor from 'components/SPAAnchor';
 import { USD_SIGN } from 'constants/currency';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
 import { UsersAssets } from 'types/options';
 import {
     formatCurrencyWithSign,
@@ -17,7 +16,6 @@ import { formatShortDate } from 'utils/formatters/date';
 import { LoaderContainer } from 'theme/common';
 import { TFunction } from 'i18next';
 import RangeIllustration from 'components/RangeIllustration';
-import { UI_COLORS } from 'constants/ui';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import {
     Card,
@@ -26,9 +24,18 @@ import {
     CardRowTitle,
     CardSection,
     CardWrapper,
+    Container,
+    Content,
+    Icon,
+    MiddleContrainer,
     NoDataContainer,
     NoDataText,
+    PriceDifferenceInfo,
+    TableText,
+    getColor,
 } from '../styled-components';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -50,6 +57,8 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     claimedRange,
 }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
+
     const data = useMemo(() => {
         const newArray: any = [];
 
@@ -205,10 +214,8 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                 <CardRowSubtitle>
                                                     {data.balances.amount.toFixed(2)}
                                                     <Icon
-                                                        style={{
-                                                            color: getColor(data),
-                                                            marginLeft: 6,
-                                                        }}
+                                                        margin="0 0 0 6px"
+                                                        color={getColor(data, theme)}
                                                         className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
                                                     ></Icon>
                                                 </CardRowSubtitle>
@@ -218,7 +225,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                     {t(`options.home.markets-table.status-col`)}
                                                 </CardRowTitle>
                                                 <CardRowSubtitle>
-                                                    {getIconOrText(data.claimable, data.claimed, t)}
+                                                    {getIconOrText(data.claimable, data.claimed, t, theme)}
                                                 </CardRowSubtitle>
                                             </CardSection>
                                         </CardColumn>
@@ -309,7 +316,9 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                             Header: <>{t(`options.home.markets-table.status-col`)}</>,
                             accessor: 'claimable',
                             Cell: (props: any) => (
-                                <TableText>{getIconOrText(props.cell.value, props.row.original.claimed, t)}</TableText>
+                                <TableText>
+                                    {getIconOrText(props.cell.value, props.row.original.claimed, t, theme)}
+                                </TableText>
                             ),
                         },
                         {
@@ -326,10 +335,8 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                 >
                                     {props.cell.value.toFixed(2)}
                                     <Icon
-                                        style={{
-                                            color: getColor(props.row.original),
-                                            marginLeft: 6,
-                                        }}
+                                        margin="0 0 0 6px"
+                                        color={getColor(props.row.original, theme)}
                                         className={`v2-icon v2-icon--${props.row.original.balances.type.toLowerCase()}`}
                                     ></Icon>
                                 </TableText>
@@ -348,71 +355,25 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
     );
 };
 
-const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction) => {
+const getIconOrText = (claimable: boolean, claimed: boolean, t: TFunction, theme: ThemeInterface) => {
     if (claimable) {
         return (
             <span>
                 {t('options.home.market-card.claim')}
-                <Icon style={{ color: '#50CE99' }} className="v2-icon v2-icon--dollar"></Icon>
+                <Icon color={theme.textColor.quaternary} margin="0 0 0 6px" className="v2-icon v2-icon--dollar"></Icon>
             </span>
         );
     }
     if (claimed) {
-        return <span style={{ color: '#8208FC' }}>{t('options.home.market-card.claimed')}</span>;
+        return <span style={{ color: theme.textColor.tertiary }}>{t('options.home.market-card.claimed')}</span>;
     } else {
         return (
             <span>
                 {t('options.home.market-card.rip')}
-                <Icon style={{ color: '#DE496D' }} className="v2-icon v2-icon--rip"></Icon>
+                <Icon color={theme.textColor.tertiary} margin="0 0 0 6px" className="v2-icon v2-icon--rip"></Icon>
             </span>
         );
     }
-};
-
-const Content = styled.div`
-    display: content;
-`;
-
-const MiddleContrainer = styled.div`
-    display: flex;
-    width: 100%;
-    margin-top: 10px;
-`;
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-top: 15px;
-    position: relative;
-    min-height: 200px;
-`;
-
-const TableText = styled.span`
-    font-weight: bold;
-    font-size: 15px;
-    line-height: 285%;
-    text-align: right;
-    text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
-`;
-
-const Icon = styled.i`
-    margin-left: 6px;
-    @media (max-width: 568px) {
-        font-size: 16px;
-        line-height: 100%;
-    }
-`;
-
-const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    ${(props) => (props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
-`;
-
-const getColor = (data: any) => {
-    if (data.range) {
-        return data.balances.type === 'IN' ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR;
-    }
-    return data.balances.type === 'UP' ? UI_COLORS.GREEN : UI_COLORS.RED;
 };
 
 export default MaturedPositions;

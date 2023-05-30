@@ -11,6 +11,8 @@ import { getIsOVM } from 'utils/network';
 import useOpThalesBalanceQuery from '../../queries/walletBalances/useOpThalesBalanceQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type ThalesBalanceProps = {
     showTitle?: boolean;
@@ -18,6 +20,7 @@ type ThalesBalanceProps = {
 
 const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -55,17 +58,19 @@ const ThalesBalance: React.FC<ThalesBalanceProps> = ({ showTitle = true }) => {
     return (
         <Wrapper>
             {showTitle && <Title>{t('user-info.wallet.my-thales')}:</Title>}
-            <Bar background="#464DCF" width={proportions.inWallet}>
+            <Bar background={theme.background.secondary} width={proportions.inWallet}>
                 <Label>{t('user-info.wallet.in-wallet')}</Label>
                 <Amount>{formatCurrencyWithSign('', inWallet.toFixed(2))}</Amount>
             </Bar>
-            <Bar background="#801BF2" width={proportions.staked}>
+            <Bar background={theme.background.tertiary} width={proportions.staked}>
                 <Label>{t('user-info.wallet.total-staked')}</Label>
                 <Amount>{formatCurrencyWithSign('', staked.toFixed(2))}</Amount>
             </Bar>
-            <Bar background="#1BAB9C" width={proportions.escrowed}>
-                <Label>{t('user-info.wallet.total-escrowed')}</Label>
-                <Amount>{formatCurrencyWithSign('', escrowedBalance.toFixed(2))}</Amount>
+            <Bar background={theme.background.quaternary} width={proportions.escrowed}>
+                <Label color={theme.button.textColor.primary}>{t('user-info.wallet.total-escrowed')}</Label>
+                <Amount color={theme.button.textColor.primary}>
+                    {formatCurrencyWithSign('', escrowedBalance.toFixed(2))}
+                </Amount>
             </Bar>
         </Wrapper>
     );
@@ -83,7 +88,7 @@ const Title = styled.p`
     line-height: 15px;
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 10px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
         font-size: 12px;
@@ -106,12 +111,12 @@ const Bar = styled.div<{ width: number; background: string }>`
     }
 `;
 
-const Label = styled.p`
+const Label = styled.p<{ color?: string }>`
     font-weight: normal;
     line-height: 21px;
     letter-spacing: 0.035em;
     text-transform: capitalize;
-    color: ${(props) => props.theme.textColor.primary};
+    color: ${(props) => (props.color ? props.color : props.theme.textColor.primary)};
     font-size: 12px;
     @media (max-width: 1024px) {
         font-size: 10px;
@@ -124,10 +129,13 @@ const Label = styled.p`
     }
 `;
 
-const Amount = styled.p`
+const Amount = styled.p<{ color?: string }>`
     font-weight: bold;
     font-size: 12px;
     line-height: 18px;
+    letter-spacing: 0.035em;
+    text-transform: capitalize;
+    color: ${(props) => (props.color ? props.color : props.theme.textColor.primary)};
     @media (max-width: 1024px) {
         font-size: 10px;
     }
@@ -135,9 +143,6 @@ const Amount = styled.p`
     @media (max-width: 512px) {
         font-size: 8px;
     }
-    letter-spacing: 0.035em;
-    text-transform: capitalize;
-    color: ${(props) => props.theme.textColor.primary};
 `;
 
 const calculateWidth = (inWallet: number, staked: number, escrowedBalance: number) => {
