@@ -180,7 +180,7 @@ const Profile: React.FC = () => {
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
                     </Nav>
-                    <ContentWrapper isScrollable={isSimpleView}>
+                    <ContentWrapper isScrollable={isSimpleView || view === NavItems.History}>
                         {view === NavItems.MyPositions && (
                             <MyPositions
                                 isSimpleView={isSimpleView}
