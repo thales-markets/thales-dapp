@@ -1,3 +1,6 @@
+import { LINKS } from 'constants/links';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween } from 'theme/common';
 
@@ -74,3 +77,26 @@ export const CurrencyLabel = styled.span`
     text-align: center;
     margin-top: 4px;
 `;
+
+const TooltipLink = styled.a`
+    color: ${(props) => props.theme.link.textColor.primary};
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+export const UsingAmmLink: React.FC = () => {
+    const { t } = useTranslation();
+    return (
+        <TooltipLink
+            target="_blank"
+            rel="noreferrer"
+            href={LINKS.AMM.UsingAmm}
+            onClick={(event) => {
+                event?.stopPropagation();
+            }}
+        >
+            {t('common.here')}
+        </TooltipLink>
+    );
+};

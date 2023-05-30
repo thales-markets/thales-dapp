@@ -9,13 +9,13 @@ import { AccountMarketInfo, MarketType, RangedMarketBalanceInfo, StableCoins } f
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getAssetIcon, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
+import { getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import { COLLATERALS, MARKET_TYPE, Positions } from 'constants/options';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import { FlexDivRow, FlexDivRowCentered, FlexDivSpaceBetween } from 'theme/common';
+import { FlexDivRowCentered, FlexDivSpaceBetween } from 'theme/common';
 
 type WalletBalancePropsType = {
     type: Positions;

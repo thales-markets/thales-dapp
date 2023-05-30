@@ -7,11 +7,10 @@ import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import {
     COLLATERALS,
+    MINIMUM_AMM_LIQUIDITY,
     MIN_SCEW_IMPACT,
     POSITIONS_TO_SIDE_MAP,
     Positions,
-    RANGE_SIDE,
-    SIDE,
     SLIPPAGE_PERCENTAGE,
     getMaxGasLimitForNetwork,
 } from 'constants/options';
@@ -98,6 +97,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [isFetchingQuote, setIsFetchingQuote] = useState(false);
     const [selectedStableIndex, setSelectedStableIndex] = useState(userSelectedCollateral);
     const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
+    const [outOfLiquidity, setOutOfLiquidity] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [liquidity, setLiquidity] = useState(0);
@@ -157,8 +157,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         !rangedAmmMaxLimits.out.maxSell;
     const isPositionPricePositive = Number(positionPrice) > 0;
     const isPaidAmountEntered = Number(paidAmount) > 0;
-    const isLong = POSITIONS_TO_SIDE_MAP[market.positionType] === SIDE.long;
-    const isInPosition = POSITIONS_TO_SIDE_MAP[market.positionType] === RANGE_SIDE.in;
+    const isUpPosition = market.positionType === Positions.UP;
+    const isInPosition = market.positionType === Positions.IN;
 
     const insufficientBalance = stableBalance < Number(paidAmount) || !stableBalance;
 
@@ -174,12 +174,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
         !hasAllowance;
 
-    const isInputDisabled =
+    const isFormDisabled =
         !market.address ||
         isSubmitting ||
-        (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
-        isFetchingQuote;
-
+        outOfLiquidity ||
+        (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled);
     const collateral = useMemo(() => {
         let address = undefined;
         let currency = '';
@@ -262,7 +261,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
         const calcPrice = !positionPrice ? Number(basePrice) : Number(positionPrice);
         if (market.address && totalToPay > 0 && calcPrice > 0) {
-            const suggestedAmount = totalToPay / calcPrice;
+            let suggestedAmount = totalToPay / calcPrice;
+            if (isMax && suggestedAmount >= liquidity) {
+                suggestedAmount = liquidity;
+            }
 
             try {
                 const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
@@ -270,18 +272,15 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
                 const parsedAmount = ethers.utils.parseEther(suggestedAmount.toString());
                 const promises = isRangedAmm
-                    ? [
-                          getQuoteFromRangedAMM(
-                              isNonDefaultStable,
-                              true,
-                              contract,
-                              parsedAmount,
-                              market.address,
-                              POSITIONS_TO_SIDE_MAP[market.positionType],
-                              collateral.address
-                          ),
-                          0, // No price impact for ranged markets
-                      ]
+                    ? getQuoteFromRangedAMM(
+                          isNonDefaultStable,
+                          true,
+                          contract,
+                          parsedAmount,
+                          market.address,
+                          POSITIONS_TO_SIDE_MAP[market.positionType],
+                          collateral.address
+                      )
                     : getQuoteFromAMM(
                           isNonDefaultStable,
                           true,
@@ -489,7 +488,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     useDebouncedEffect(() => {
         fetchAmmPriceData(Number(paidAmount), false);
-    }, [paidAmount, market.address, walletAddress, selectedStableIndex]);
+    }, [paidAmount, market.address, walletAddress, selectedStableIndex, market.positionType]);
 
     useInterval(async () => {
         fetchAmmPriceData(Number(paidAmount), true);
@@ -607,13 +606,15 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 if (isInPosition) {
                     max = rangedAmmMaxLimits.in.maxBuy;
                     base = rangedAmmMaxLimits.in.buyPrice;
+                    baseImpact = rangedAmmMaxLimits.in.priceImpact;
                 } else {
                     max = rangedAmmMaxLimits.out.maxBuy;
                     base = rangedAmmMaxLimits.out.buyPrice;
+                    baseImpact = rangedAmmMaxLimits.out.priceImpact;
                 }
             }
         } else if (ammMaxLimits) {
-            if (isLong) {
+            if (isUpPosition) {
                 max = ammMaxLimits.maxBuyLong;
                 base = ammMaxLimits.buyLongPrice;
                 baseImpact = ammMaxLimits.buyLongPriceImpact;
@@ -626,10 +627,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         setLiquidity(max);
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
+        setOutOfLiquidity(max < MINIMUM_AMM_LIQUIDITY);
     }, [
         ammMaxLimitsQuery.data,
         ammMaxLimits,
-        isLong,
+        isUpPosition,
         isRangedAmm,
         rangedAmmMaxLimitsQuery.data,
         rangedAmmMaxLimits,
@@ -671,7 +673,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             action: 'click-on-max-button',
         });
 
-        if (isInputDisabled) return;
+        if (isFormDisabled) return;
 
         const maxPaidAmount = Number(truncToDecimals(Number(stableBalance) * (1 - slippagePerc / 100)));
         fetchAmmPriceData(maxPaidAmount, false, false, true);
@@ -686,6 +688,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         if (!isWalletConnected) {
             return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
+        }
+        if (outOfLiquidity) {
+            return <Button disabled={true}>{t(`common.errors.out-of-liquidity`)}</Button>;
         }
         if (insufficientLiquidity) {
             return <Button disabled={true}>{t(`common.errors.insufficient-liquidity`)}</Button>;
@@ -828,7 +833,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 <ColumnSpaceBetween>
                     <NumericInput
                         value={paidAmount}
-                        disabled={isInputDisabled}
+                        disabled={isFormDisabled}
                         placeholder={t('options.trade.amm-trading.enter-amount')}
                         onChange={(_, value) => onTotalPriceValueChange(value)}
                         onMaxButton={onMaxClick}
@@ -845,7 +850,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                     collateralArray={COLLATERALS}
                                     selectedItem={selectedStableIndex}
                                     onChangeCollateral={(index) => setSelectedStableIndex(index)}
-                                    disabled={isInputDisabled}
+                                    disabled={isFormDisabled}
                                 />
                             ) : undefined
                         }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
 import TabContainer from './components/TabContainer';
@@ -27,6 +27,7 @@ import WalletBalance from './components/AMM/components/WalletBalance/WalletBalan
 import SwitchInput from 'components/SwitchInput/SwitchInput';
 import { useTranslation } from 'react-i18next';
 import RadioButtons from 'pages/Trade/components/RadioButtons/RadioButtons';
+import { setIsBuy } from 'redux/modules/marketWidgets';
 
 type MarketProps = {
     marketAddress: string;
@@ -35,6 +36,7 @@ type MarketProps = {
 
 const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -48,6 +50,10 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const rangedMarketQuery = useRangedMarketQuery(marketAddress, {
         enabled: isAppReady && isRangedMarket,
     });
+
+    useEffect(() => {
+        dispatch(setIsBuy(orderSide === 'buy'));
+    }, [orderSide]);
 
     useEffect(() => {
         if (networkSwitched) {
@@ -100,13 +106,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                     <AmmTradingContainer>
                                         <SwitchInput
                                             active={orderSide === 'sell'}
-                                            width="34px"
+                                            width="40px"
                                             height="16px"
                                             dotSize="10px"
                                             circlePosition="2px"
                                             label={{
-                                                firstLabel: t(`common.buy`).toUpperCase(),
-                                                secondLabel: t(`common.sell`).toUpperCase(),
+                                                firstLabel: t(`common.buy`),
+                                                secondLabel: t(`common.sell`),
                                                 fontSize: '13px',
                                             }}
                                             handleClick={() => {
@@ -156,13 +162,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                     <AmmTradingContainer>
                                         <SwitchInput
                                             active={orderSide === 'sell'}
-                                            width="34px"
+                                            width="40px"
                                             height="16px"
                                             dotSize="10px"
                                             circlePosition="2px"
                                             label={{
-                                                firstLabel: t(`common.buy`).toUpperCase(),
-                                                secondLabel: t(`common.sell`).toUpperCase(),
+                                                firstLabel: t(`common.buy`),
+                                                secondLabel: t(`common.sell`),
                                                 fontSize: '13px',
                                             }}
                                             handleClick={() => {

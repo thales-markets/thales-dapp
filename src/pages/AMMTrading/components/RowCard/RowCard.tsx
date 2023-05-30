@@ -9,6 +9,7 @@ import {
     CurrencyIcon,
     CurrencyLabel,
     ColumnAnchorSubContainer,
+    UsingAmmLink,
 } from './styled-components';
 import MaturityDate from '../MaturityDate';
 import { useMarketContext } from '../../contexts/MarketContext';
@@ -22,10 +23,9 @@ import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { Trans, useTranslation } from 'react-i18next';
-import { getIsBuyState } from 'redux/modules/marketWidgets';
+import { getIsBuy } from 'redux/modules/marketWidgets';
 import Tooltip from 'components/TooltipV2';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { UsingAmmLink } from 'pages/Profile/components/MyPositions/MyPositions';
 import { Positions } from 'constants/options';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
@@ -34,7 +34,7 @@ const RowCard: React.FC = () => {
     const marketInfo = useMarketContext();
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const isBuy = useSelector((state: RootState) => getIsBuyState(state));
+    const isBuy = useSelector((state: RootState) => getIsBuy(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     let optBalances = {

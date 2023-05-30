@@ -48,7 +48,9 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
             </DetailsRow>
             <DetailsRow>
                 <TextLabel>{t('options.trade.amm-trading.details-modal.position-bonus')}</TextLabel>
-                <TextValue isProfit={true}>{positionBonus ? getFormattedBonus(positionBonus) : EMPTY_VALUE}</TextValue>
+                <TextValue isProfit={true}>
+                    {positionBonus > 0 ? getFormattedBonus(positionBonus) : EMPTY_VALUE}
+                </TextValue>
             </DetailsRow>
             <DetailsRow>
                 <TextLabel>{t('options.trade.amm-trading.details-modal.amount')}</TextLabel>

@@ -16,7 +16,7 @@ import ApprovalModal from 'components/ApprovalModal';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { setBuyState } from 'redux/modules/marketWidgets';
+import { setIsBuy } from 'redux/modules/marketWidgets';
 import styled from 'styled-components';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
@@ -283,7 +283,7 @@ const AMM: React.FC = () => {
     }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance, sellAmount, isAllowing]);
 
     useEffect(() => {
-        orderSide.value == 'buy' ? dispatch(setBuyState(true)) : dispatch(setBuyState(false));
+        orderSide.value == 'buy' ? dispatch(setIsBuy(true)) : dispatch(setIsBuy(false));
     }, [orderSide?.value]);
 
     useEffect(() => {

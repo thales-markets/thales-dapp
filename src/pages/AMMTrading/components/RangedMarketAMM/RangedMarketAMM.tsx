@@ -16,7 +16,7 @@ import ApprovalModal from 'components/ApprovalModal';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { setBuyState } from 'redux/modules/marketWidgets';
+import { setIsBuy } from 'redux/modules/marketWidgets';
 import styled from 'styled-components';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
@@ -306,7 +306,7 @@ const AMM: React.FC = () => {
     }, [walletAddress, isWalletConnected, isBuy, rangeSide, hasAllowance, sellAmount, isAllowing]);
 
     useEffect(() => {
-        orderSide.value == 'buy' ? dispatch(setBuyState(true)) : dispatch(setBuyState(false));
+        orderSide.value == 'buy' ? dispatch(setIsBuy(true)) : dispatch(setIsBuy(false));
     }, [orderSide?.value]);
 
     useEffect(() => {
@@ -469,7 +469,8 @@ const AMM: React.FC = () => {
                     parsedAmount,
                     rangedMarketData.address,
                     RANGE_SIDE[rangeSide],
-                    sellToken
+                    sellToken,
+                    true
                 );
 
                 if (isNonDefaultStable) {
@@ -815,7 +816,8 @@ const AMM: React.FC = () => {
                     suggestedAmount,
                     rangedMarketData.address,
                     RANGE_SIDE[rangeSide],
-                    sellToken
+                    sellToken,
+                    true
                 );
 
                 if (isNonDefaultStable) {

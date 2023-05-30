@@ -49,20 +49,30 @@ export const getQuoteFromRangedAMM = (
     parsedAmount: BigNumber,
     marketAddress: string,
     side: number | RangedMarketPositionType,
-    sellToken?: string
+    sellToken?: string,
+    excludeImpact?: boolean
 ) => {
+    const promises = [];
+
     if (isNonDefaultStable) {
-        return ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(
-            marketAddress,
-            side,
-            parsedAmount,
-            sellToken
+        promises.push(
+            ammContractWithSigner.buyFromAmmQuoteWithDifferentCollateral(marketAddress, side, parsedAmount, sellToken)
         );
+        promises.push(ammContractWithSigner.getPriceImpact(marketAddress, side));
     } else {
-        return isBuy
-            ? ammContractWithSigner.buyFromAmmQuote(marketAddress, side, parsedAmount)
-            : ammContractWithSigner.sellToAmmQuote(marketAddress, side, parsedAmount);
+        promises.push(
+            isBuy
+                ? ammContractWithSigner.buyFromAmmQuote(marketAddress, side, parsedAmount)
+                : ammContractWithSigner.sellToAmmQuote(marketAddress, side, parsedAmount)
+        );
+        promises.push(ammContractWithSigner.getPriceImpact(marketAddress, side));
     }
+
+    if (excludeImpact) {
+        return promises[0];
+    }
+
+    return promises;
 };
 
 export const prepareTransactionForAMM = async (

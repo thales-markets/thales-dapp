@@ -114,17 +114,14 @@ const OpenPositions: React.FC = () => {
 
                     const parsedAmount = ethers.utils.parseEther(position.amount.toString());
                     const promises = isRangedAmm
-                        ? [
-                              getQuoteFromRangedAMM(
-                                  false,
-                                  false,
-                                  contract,
-                                  parsedAmount,
-                                  position.market,
-                                  POSITIONS_TO_SIDE_MAP[position.side]
-                              ),
-                              0, // No price impact for ranged markets
-                          ]
+                        ? getQuoteFromRangedAMM(
+                              false,
+                              false,
+                              contract,
+                              parsedAmount,
+                              position.market,
+                              POSITIONS_TO_SIDE_MAP[position.side]
+                          )
                         : getQuoteFromAMM(
                               false,
                               false,

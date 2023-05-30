@@ -107,10 +107,12 @@ const Wrapper = styled.div<{ margin?: string; disabled?: boolean; spanColumns?: 
 `;
 
 const Label = styled.span<{ fontSize?: string }>`
+    font-weight: 600;
     font-size: ${(props) => props.fontSize || '12px'};
     color: ${(props) => props.theme.textColor.primary};
     margin-left: 5px;
     margin-right: 5px;
+    text-transform: uppercase;
 `;
 
 const SwitchContainer = styled.div<SwitchContainerProps>`
@@ -120,7 +122,7 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
     cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'pointer')};
     border-width: ${(props: any) => props.borderWidth || '1px'};
     border-style: solid;
-    border-color: ${(props: any) => props.borderColor || props.theme.borderColor.secondary};
+    border-color: ${(props: any) => props.borderColor || props.theme.textColor.primary};
     border-radius: 30px;
     width: ${(props: any) => props.width || defaultSwitchHeight * 2.18 + 'px'};
     height: ${(props: any) => props.height || defaultSwitchHeight + 'px'};
@@ -131,7 +133,7 @@ const Circle = styled.div<CircleProps>`
     height: ${(props: any) => props.size || '15px'};
     border-radius: 60%;
     position: absolute;
-    background-color: ${(props: any) => props.background || props.theme.background.tertiary};
+    background-color: ${(props: any) => props.background || props.theme.textColor.primary};
     ${(props: any) =>
         props?.active ? `right: ${props.circlePosition || '5px'};` : `left: ${props.circlePosition || '5px'};`};
 `;

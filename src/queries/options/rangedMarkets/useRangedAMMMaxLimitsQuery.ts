@@ -11,12 +11,14 @@ export type RangeAmmMaxLimits = {
         maxSell: number;
         buyPrice: number;
         sellPrice: number;
+        priceImpact: number;
     };
     out: {
         maxBuy: number;
         maxSell: number;
         buyPrice: number;
         sellPrice: number;
+        priceImpact: number;
     };
 };
 
@@ -34,12 +36,14 @@ const useRangedAMMMaxLimitsQuery = (
                     maxSell: 0,
                     buyPrice: 0,
                     sellPrice: 0,
+                    priceImpact: 0,
                 },
                 out: {
                     maxBuy: 0,
                     maxSell: 0,
                     buyPrice: 0,
                     sellPrice: 0,
+                    priceImpact: 0,
                 },
             };
 
@@ -55,6 +59,8 @@ const useRangedAMMMaxLimitsQuery = (
                     buyOutPrice,
                     sellInPrice,
                     sellOutPrice,
+                    inPriceImpact,
+                    outPriceImpact,
                 ] = await Promise.all([
                     ammContract.availableToBuyFromAMM(marketAddress, RANGE_SIDE['in']),
                     ammContract.availableToSellToAMM(marketAddress, RANGE_SIDE['in']),
@@ -64,6 +70,8 @@ const useRangedAMMMaxLimitsQuery = (
                     ammContract.buyFromAmmQuote(marketAddress, RANGE_SIDE['out'], parsedAmount),
                     ammContract.sellToAmmQuote(marketAddress, RANGE_SIDE['in'], parsedAmount),
                     ammContract.sellToAmmQuote(marketAddress, RANGE_SIDE['out'], parsedAmount),
+                    ammContract.getPriceImpact(marketAddress, RANGE_SIDE['in']),
+                    ammContract.getPriceImpact(marketAddress, RANGE_SIDE['out']),
                 ]);
 
                 ammMaxLimits.in.maxBuy =
@@ -86,6 +94,8 @@ const useRangedAMMMaxLimitsQuery = (
                 ammMaxLimits.out.buyPrice = stableCoinFormatter(buyOutPrice, networkId);
                 ammMaxLimits.in.sellPrice = stableCoinFormatter(sellInPrice, networkId);
                 ammMaxLimits.out.sellPrice = stableCoinFormatter(sellOutPrice, networkId);
+                ammMaxLimits.in.priceImpact = bigNumberFormatter(inPriceImpact);
+                ammMaxLimits.out.priceImpact = bigNumberFormatter(outPriceImpact);
             }
 
             return ammMaxLimits;
