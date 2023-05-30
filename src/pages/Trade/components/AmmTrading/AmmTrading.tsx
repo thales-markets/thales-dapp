@@ -3,7 +3,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/ButtonV2';
 import CollateralSelector from 'components/CollateralSelectorV2';
-import { USD_SIGN } from 'constants/currency';
 import {
     COLLATERALS,
     MINIMUM_AMM_LIQUIDITY,
@@ -13,7 +12,7 @@ import {
     SLIPPAGE_PERCENTAGE,
     getMaxGasLimitForNetwork,
 } from 'constants/options';
-import { ScreenSizeBreakpoint, getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
@@ -28,8 +27,6 @@ import { toast } from 'react-toastify';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { FlexDivCentered, FlexDivRow, FlexDivRowCentered } from 'theme/common';
 import {
     AccountMarketInfo,
     MarketInfo,
@@ -41,21 +38,14 @@ import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
-import { formatShortDateWithTime } from 'utils/formatters/date';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import {
-    countDecimals,
-    formatCurrencyWithKey,
-    formatCurrencyWithSign,
-    roundNumberToDecimals,
-    truncToDecimals,
-} from 'utils/formatters/number';
+import { countDecimals, roundNumberToDecimals, truncToDecimals } from 'utils/formatters/number';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
 import TradingDetailsModal from './components/TradingDetailsModal';
-import TradingDetailsSection from './components/TradingDetails';
+import TradingDetails from './components/TradingDetails';
 import { convertPriceImpactToBonus } from 'utils/options';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import SkewSlippageDetails from './components/SkewSlippageDetails/SkewSlippageDetails';
@@ -63,6 +53,14 @@ import { isSlippageValid } from './components/Slippage/Slippage';
 import { getIsBuy } from 'redux/modules/marketWidgets';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
+import TradingDetailsSentence from './components/TradingDetailsSentence/TradingDetailsSentence';
+import {
+    ColumnSpaceBetween,
+    Container,
+    DetailsIcon,
+    FinalizeTrade,
+    TradingDetailsContainer,
+} from './styled-components';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -622,108 +620,26 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         );
     };
 
-    const potentialWinFormatted = isFetchingQuote
-        ? '...'
-        : `${formatCurrencyWithKey(
-              getStableCoinForNetwork(networkId),
-              Number(priceProfit) * Number(paidAmount) + Number(paidAmount)
-          )}`;
-
-    const positionTypeFormatted =
-        market.positionType === Positions.UP
-            ? t('options.common.above')
-            : market.positionType === Positions.DOWN
-            ? t('options.common.below')
-            : market.positionType === Positions.IN
-            ? t('options.common.between')
-            : t('options.common.not-between');
-
-    const getTradingDetailsAsSentence = (breakFirstLine: boolean) => {
-        return (
-            <ColumnSpaceBetween>
-                <FlexDivCentered>
-                    <Text>
-                        <TextLabel>{t('options.trade.amm-trading.asset-price', { asset: currencyKey })}</TextLabel>
-                        {market.address ? (
-                            <>
-                                <TextValue uppercase={true}>{positionTypeFormatted}</TextValue>
-                                {isRangedAmm ? (
-                                    !breakFirstLine && (
-                                        <>
-                                            <TextValue>
-                                                {formatCurrencyWithSign(
-                                                    USD_SIGN,
-                                                    (market as RangedMarketPerPosition).leftPrice
-                                                )}
-                                            </TextValue>
-                                            <Text>
-                                                <TextLabel>{' ' + t('options.common.and')}</TextLabel>
-                                            </Text>
-                                            <TextValue>
-                                                {formatCurrencyWithSign(
-                                                    USD_SIGN,
-                                                    (market as RangedMarketPerPosition).rightPrice
-                                                )}
-                                            </TextValue>
-                                        </>
-                                    )
-                                ) : (
-                                    <TextValue>
-                                        {formatCurrencyWithSign(USD_SIGN, (market as MarketInfo).strikePrice)}
-                                    </TextValue>
-                                )}
-                            </>
-                        ) : (
-                            <TextValue>{'( ' + t('options.trade.amm-trading.pick-price') + ' )'}</TextValue>
-                        )}
-                    </Text>
-                </FlexDivCentered>
-                {breakFirstLine && isRangedAmm && market.address && (
-                    <FlexDivCentered>
-                        <Text>
-                            <TextValue>
-                                {formatCurrencyWithSign(USD_SIGN, (market as RangedMarketPerPosition).leftPrice)}
-                            </TextValue>
-                            <Text>
-                                <TextLabel>{' ' + t('options.common.and')}</TextLabel>
-                            </Text>
-                            <TextValue>
-                                {formatCurrencyWithSign(USD_SIGN, (market as RangedMarketPerPosition).rightPrice)}
-                            </TextValue>
-                        </Text>
-                    </FlexDivCentered>
-                )}
-                <FlexDivCentered>
-                    <Text>
-                        <TextLabel>{t('options.common.on')}</TextLabel>
-                        <TextValue>{formatShortDateWithTime(maturityDate)}</TextValue>
-                    </Text>
-                </FlexDivCentered>
-                <FlexDivCentered>
-                    <Text>
-                        <TextLabel>{t('options.trade.amm-trading.you-win')}</TextLabel>
-                        <TextValue isProfit={true}>
-                            {Number(priceProfit) > 0 && Number(paidAmount) > 0
-                                ? potentialWinFormatted
-                                : '( ' + t('options.trade.amm-trading.based-amount') + ' )'}
-                        </TextValue>
-                    </Text>
-                </FlexDivCentered>
-            </ColumnSpaceBetween>
-        );
-    };
-
     return (
         <Container isDetailsPage={isDetailsPage}>
             {!isDetailsPage && (
-                <TradingDetails>
-                    {getTradingDetailsAsSentence(false)}
+                <TradingDetailsContainer>
+                    <TradingDetailsSentence
+                        currencyKey={currencyKey}
+                        maturityDate={maturityDate}
+                        market={market}
+                        isRangedAmm={isRangedAmm}
+                        isFetchingQuote={isFetchingQuote}
+                        priceProfit={priceProfit}
+                        paidAmount={paidAmount}
+                        breakFirstLine={false}
+                    />
                     <DetailsIcon
                         className="icon icon--gear"
                         disabled={isButtonDisabled}
                         onClick={() => !isButtonDisabled && setOpenTradingDetailsModal(true)}
                     />
-                </TradingDetails>
+                </TradingDetailsContainer>
             )}
             <FinalizeTrade isDetailsPage={isDetailsPage}>
                 <ColumnSpaceBetween>
@@ -760,7 +676,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     />
                     {isDetailsPage && (
                         <>
-                            <TradingDetailsSection
+                            <TradingDetails
                                 positionType={market.positionType}
                                 positionPrice={Number(positionPrice) > 0 ? Number(positionPrice) : Number(basePrice)}
                                 positionBonus={convertPriceImpactToBonus(
@@ -807,7 +723,18 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}
                     slippage={slippagePerc}
                     setSlippage={setSlippagePerc}
-                    tradingDetailsSentence={getTradingDetailsAsSentence(true)}
+                    tradingDetailsSentence={
+                        <TradingDetailsSentence
+                            currencyKey={currencyKey}
+                            maturityDate={maturityDate}
+                            market={market}
+                            isRangedAmm={isRangedAmm}
+                            isFetchingQuote={isFetchingQuote}
+                            priceProfit={priceProfit}
+                            paidAmount={paidAmount}
+                            breakFirstLine={true}
+                        />
+                    }
                     onClose={() => setOpenTradingDetailsModal(false)}
                 />
             )}
@@ -824,70 +751,5 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         </Container>
     );
 };
-
-const Container = styled(FlexDivRow)<{ isDetailsPage?: boolean }>`
-    height: ${(props) => (props.isDetailsPage ? 'auto' : '78px')};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
-        min-width: initial;
-        height: 100%;
-        flex-direction: column;
-    }
-`;
-
-const TradingDetails = styled(FlexDivRowCentered)`
-    position: relative;
-    width: 600px;
-    background: ${(props) => props.theme.background.secondary};
-    border-radius: 8px;
-    padding: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-`;
-
-const FinalizeTrade = styled(FlexDivCentered)<{ isDetailsPage?: boolean }>`
-    width: ${(props) => (props.isDetailsPage ? '100%' : '350px')};
-    color: ${(props) => props.theme.textColor.primary};
-    font-size: 13px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
-        width: 100%;
-    }
-`;
-
-const DetailsIcon = styled.i<{ disabled: boolean }>`
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 16px;
-    color: ${(props) => props.theme.textColor.secondary};
-    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
-    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
-`;
-
-const Text = styled.span`
-    font-style: normal;
-    font-weight: 700;
-    font-size: 13px;
-    line-height: 15px;
-`;
-
-const TextLabel = styled.span`
-    color: ${(props) => props.theme.textColor.secondary};
-`;
-
-const TextValue = styled.span<{ isProfit?: boolean; uppercase?: boolean }>`
-    color: ${(props) => (props.isProfit ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
-    padding-left: 5px;
-    text-transform: ${(props) => (props.uppercase ? 'uppercase;' : 'initial')};
-`;
-
-const ColumnSpaceBetween = styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-`;
 
 export default AmmTrading;
