@@ -405,8 +405,10 @@
                     "confirm-order": "Confirm {{position}} order",
                     "position-price": "Price per position",
                     "position-bonus": "Bonus",
-                    "amount": "Amount to buy",
+                    "amount-buy": "Amount to buy",
+                    "amount-sell": "Amount to sell",
                     "total-pay": "Total to pay",
+                    "total-receive": "Total to receive",
                     "potential-profit": "Potential profit",
                     "skew": "Skew impact"
                 },

@@ -27,6 +27,7 @@ type TradingDetailsProps = {
     paidAmount: number;
     selectedStable: string;
     profit: number;
+    isBuy: boolean;
     isLoading?: boolean;
 };
 
@@ -38,6 +39,7 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
     paidAmount,
     selectedStable,
     profit,
+    isBuy,
     isLoading,
 }) => {
     const { t } = useTranslation();
@@ -55,29 +57,37 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
                 <TextLabel>{t('options.trade.amm-trading.details-modal.position-price')}</TextLabel>
                 {getTextValue(formatCurrencyWithSign(USD_SIGN, positionPrice), positionPrice > 0, isLoading)}
             </DetailsRow>
+            {isBuy && (
+                <DetailsRow>
+                    <TextLabel>{t('options.trade.amm-trading.details-modal.position-bonus')}</TextLabel>
+                    {getTextValue(getFormattedBonus(positionBonus), positionBonus > 0, isLoading, true)}
+                </DetailsRow>
+            )}
             <DetailsRow>
-                <TextLabel>{t('options.trade.amm-trading.details-modal.position-bonus')}</TextLabel>
-                {getTextValue(getFormattedBonus(positionBonus), positionBonus > 0, isLoading, true)}
-            </DetailsRow>
-            <DetailsRow>
-                <TextLabel>{t('options.trade.amm-trading.details-modal.amount')}</TextLabel>
+                <TextLabel>
+                    {t(`options.trade.amm-trading.details-modal.${isBuy ? 'amount-buy' : 'total-receive'}`)}
+                </TextLabel>
                 {getTextValue(formatCurrencyWithKey(positionType, positionAmount), positionAmount > 0, isLoading)}
             </DetailsRow>
             <DetailsRow>
-                <TextLabel>{t('options.trade.amm-trading.details-modal.total-pay')}</TextLabel>
+                <TextLabel>
+                    {t(`options.trade.amm-trading.details-modal.${isBuy ? 'total-pay' : 'amount-sell'}`)}
+                </TextLabel>
                 {getTextValue(formatCurrencyWithKey(selectedStable, paidAmount), paidAmount > 0, isLoading)}
             </DetailsRow>
-            <DetailsRow>
-                <TextLabel>{t('options.trade.amm-trading.details-modal.potential-profit')}</TextLabel>
-                {getTextValue(
-                    `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), profit)} (${formatPercentage(
-                        calculateAndFormatPercentage(paidAmount, positionAmount)
-                    )})`,
-                    profit > 0 && positionAmount > 0,
-                    isLoading,
-                    true
-                )}
-            </DetailsRow>
+            {isBuy && (
+                <DetailsRow>
+                    <TextLabel>{t('options.trade.amm-trading.details-modal.potential-profit')}</TextLabel>
+                    {getTextValue(
+                        `${formatCurrencyWithKey(getStableCoinForNetwork(networkId), profit)} (${formatPercentage(
+                            calculateAndFormatPercentage(paidAmount, positionAmount)
+                        )})`,
+                        profit > 0 && positionAmount > 0,
+                        isLoading,
+                        true
+                    )}
+                </DetailsRow>
+            )}
         </Container>
     );
 };

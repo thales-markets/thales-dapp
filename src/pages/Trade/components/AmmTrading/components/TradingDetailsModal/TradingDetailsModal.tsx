@@ -87,6 +87,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
                     paidAmount={paidAmount}
                     selectedStable={selectedStable}
                     profit={profit}
+                    isBuy={true}
                 />
                 <SkewSlippageDetails skew={skew} slippage={slippage} setSlippage={setSlippageTolerance} />
                 <TradingDetailsSentence>{tradingDetailsSentence}</TradingDetailsSentence>

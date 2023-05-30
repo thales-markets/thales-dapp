@@ -82,7 +82,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const userSelectedCollateral = useSelector((state: RootState) => getSelectedCollateral(state));
-    const isBuy = useSelector((state: RootState) => getIsBuy(state));
+    const isBuy = useSelector((state: RootState) => getIsBuy(state)) || !isDetailsPage;
 
     const [positionAmount, setPositionAmount] = useState<number | string>('');
     const [positionPrice, setPositionPrice] = useState<number | string>('');
@@ -103,9 +103,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [errorMessageKey, setErrorMessageKey] = useState('');
     const [openApprovalModal, setOpenApprovalModal] = useState(false);
     const [openTradingDetailsModal, setOpenTradingDetailsModal] = useState(false);
+    const [isAmmTradingDisabled, setIsAmmTradingDisabled] = useState(false);
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
+    const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported;
     const isRangedAmm = [Positions.IN, Positions.OUT].includes(market.positionType);
+    const isUpPosition = market.positionType === Positions.UP;
+    const isInPosition = market.positionType === Positions.IN;
 
     const ammMaxLimitsQuery = useAmmMaxLimitsQuery(market.address, networkId, {
         enabled: isAppReady && !isRangedAmm && !!market.address,
@@ -113,45 +117,68 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const rangedAmmMaxLimitsQuery = useRangedAMMMaxLimitsQuery(market.address, networkId, {
         enabled: isAppReady && isRangedAmm && !!market.address,
     });
+
+    useEffect(() => {
+        let max = 0;
+        let base = 0;
+        let baseImpact = 0;
+        let isTradingDisabled = false;
+        if (isRangedAmm) {
+            if (rangedAmmMaxLimitsQuery.isSuccess && rangedAmmMaxLimitsQuery.data) {
+                const rangedAmmMaxLimits = rangedAmmMaxLimitsQuery.data;
+                if (isInPosition) {
+                    max = isBuy ? rangedAmmMaxLimits.in.maxBuy : rangedAmmMaxLimits.in.maxSell;
+                    base = isBuy ? rangedAmmMaxLimits.in.buyPrice : rangedAmmMaxLimits.in.sellPrice;
+                    baseImpact = rangedAmmMaxLimits.in.priceImpact;
+                } else {
+                    max = isBuy ? rangedAmmMaxLimits.out.maxBuy : rangedAmmMaxLimits.out.maxSell;
+                    base = isBuy ? rangedAmmMaxLimits.out.buyPrice : rangedAmmMaxLimits.out.sellPrice;
+                    baseImpact = rangedAmmMaxLimits.out.priceImpact;
+                }
+                isTradingDisabled =
+                    !rangedAmmMaxLimits.in.maxBuy &&
+                    !rangedAmmMaxLimits.in.maxSell &&
+                    !rangedAmmMaxLimits.out.maxBuy &&
+                    !rangedAmmMaxLimits.out.maxSell;
+                setOutOfLiquidity(max < MINIMUM_AMM_LIQUIDITY);
+            }
+        } else {
+            if (ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data) {
+                const ammMaxLimits = ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data;
+                if (isUpPosition) {
+                    max = isBuy ? ammMaxLimits.maxBuyLong : ammMaxLimits.maxSellLong;
+                    base = isBuy ? ammMaxLimits.buyLongPrice : ammMaxLimits.sellLongPrice;
+                    baseImpact = isBuy ? ammMaxLimits.buyLongPriceImpact : ammMaxLimits.sellLongPriceImpact;
+                } else {
+                    max = isBuy ? ammMaxLimits.maxBuyShort : ammMaxLimits.maxSellShort;
+                    base = isBuy ? ammMaxLimits.buyShortPrice : ammMaxLimits.sellShortPrice;
+                    baseImpact = isBuy ? ammMaxLimits.buyShortPriceImpact : ammMaxLimits.sellShortPriceImpact;
+                }
+                isTradingDisabled = !ammMaxLimits.isMarketInAmmTrading;
+                setOutOfLiquidity(max < MINIMUM_AMM_LIQUIDITY);
+            }
+        }
+        setLiquidity(max);
+        setBasePrice(base);
+        setBasePriceImpact(baseImpact);
+        setIsAmmTradingDisabled(isTradingDisabled);
+    }, [
+        isRangedAmm,
+        ammMaxLimitsQuery.data,
+        ammMaxLimitsQuery.isSuccess,
+        isUpPosition,
+        rangedAmmMaxLimitsQuery.data,
+        rangedAmmMaxLimitsQuery.isSuccess,
+        isInPosition,
+        isBuy,
+    ]);
+
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !isMultiCollateralSupported,
     });
     const multipleStableBalances = useMultipleCollateralBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && isMultiCollateralSupported,
     });
-
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isRangedAmm && !!market.address,
-    });
-    const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(market.address, walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && isRangedAmm && !!market.address,
-    });
-
-    const ammMaxLimits = useMemo(() => {
-        return ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? ammMaxLimitsQuery.data : undefined;
-    }, [ammMaxLimitsQuery.data, ammMaxLimitsQuery.isSuccess]);
-
-    const rangedAmmMaxLimits = useMemo(() => {
-        return rangedAmmMaxLimitsQuery.isSuccess && rangedAmmMaxLimitsQuery.data
-            ? rangedAmmMaxLimitsQuery.data
-            : undefined;
-    }, [rangedAmmMaxLimitsQuery.data, rangedAmmMaxLimitsQuery.isSuccess]);
-
-    let optBalances = isRangedAmm ? { in: 0, out: 0 } : { short: 0, long: 0 };
-    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedAmm) {
-        optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
-    }
-
-    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedAmm) {
-        optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
-    }
-    const tokenBalance = isRangedAmm
-        ? market.positionType == Positions.UP
-            ? optBalances.long
-            : optBalances.short
-        : market.positionType == Positions.IN
-        ? optBalances.in
-        : optBalances.out;
 
     const walletBalancesMap = useMemo(() => {
         return stableBalanceQuery.isSuccess ? stableBalanceQuery.data : null;
@@ -165,43 +192,28 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId) as StableCoins);
     }, [networkId, multipleStableBalances, walletBalancesMap, selectedStableIndex, isMultiCollateralSupported]);
 
-    const isPositionAmountPositive = Number(positionAmount) > 0;
-    const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported;
-    const isAmmTradingDisabled = !isRangedAmm && ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
-    const isRangedAmmTradingDisabled =
-        isRangedAmm &&
-        rangedAmmMaxLimits &&
-        !rangedAmmMaxLimits.in.maxBuy &&
-        !rangedAmmMaxLimits.in.maxSell &&
-        !rangedAmmMaxLimits.out.maxBuy &&
-        !rangedAmmMaxLimits.out.maxSell;
-    const isPositionPricePositive = Number(positionPrice) > 0;
-    const isPaidAmountEntered = Number(paidAmount) > 0;
-    const isUpPosition = market.positionType === Positions.UP;
-    const isInPosition = market.positionType === Positions.IN;
+    // If sUSD balance is zero, select first stable with nonzero value as default
+    useEffect(() => {
+        if (
+            multipleStableBalances?.data &&
+            multipleStableBalances?.isSuccess &&
+            selectedStableIndex == 0 &&
+            isMultiCollateralSupported
+        ) {
+            const defaultStableBalance = getDefaultStableIndexByBalance(multipleStableBalances?.data);
+            setSelectedStableIndex(defaultStableBalance);
+        }
+    }, [
+        multipleStableBalances?.isSuccess,
+        multipleStableBalances?.data,
+        selectedStableIndex,
+        isMultiCollateralSupported,
+    ]);
 
-    const insufficientBalance = isBuy
-        ? stableBalance < Number(paidAmount) || !stableBalance
-        : !tokenBalance || (!!tokenBalance && tokenBalance < Number(paidAmount));
-    const isSlippagePercValid = isSlippageValid(Number(slippagePerc));
+    useEffect(() => {
+        setSelectedStableIndex(userSelectedCollateral);
+    }, [userSelectedCollateral]);
 
-    const isButtonDisabled =
-        !isPaidAmountEntered ||
-        !isPositionPricePositive ||
-        !isPositionAmountPositive ||
-        isSubmitting ||
-        !isWalletConnected ||
-        insufficientBalance ||
-        insufficientLiquidity ||
-        isFetchingQuote ||
-        (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) ||
-        !hasAllowance;
-
-    const isFormDisabled =
-        !market.address ||
-        isSubmitting ||
-        outOfLiquidity ||
-        (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled);
     const collateral = useMemo(() => {
         let address = undefined;
         let currency = '';
@@ -221,6 +233,125 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         walletAddress && getReferralWallet()?.toLowerCase() !== walletAddress?.toLowerCase()
             ? getReferralWallet()
             : null;
+
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
+        enabled: isAppReady && isWalletConnected && !isRangedAmm && !!market.address,
+    });
+    const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(market.address, walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && isRangedAmm && !!market.address,
+    });
+
+    let optBalances = isRangedAmm ? { in: 0, out: 0 } : { short: 0, long: 0 };
+    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedAmm) {
+        optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
+    }
+    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedAmm) {
+        optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
+    }
+    const tokenBalance = isRangedAmm
+        ? market.positionType == Positions.UP
+            ? optBalances.long
+            : optBalances.short
+        : market.positionType == Positions.IN
+        ? optBalances.in
+        : optBalances.out;
+
+    const isPositionAmountPositive = Number(positionAmount) > 0;
+    const isPositionPricePositive = Number(positionPrice) > 0;
+    const isPaidAmountEntered = Number(paidAmount) > 0;
+
+    const insufficientBalance = isBuy
+        ? stableBalance < Number(paidAmount) || !stableBalance
+        : !tokenBalance || (!!tokenBalance && tokenBalance < Number(paidAmount));
+    const isSlippagePercValid = isSlippageValid(Number(slippagePerc));
+
+    const isButtonDisabled =
+        !isPaidAmountEntered ||
+        !isPositionPricePositive ||
+        !isPositionAmountPositive ||
+        isSubmitting ||
+        !isWalletConnected ||
+        insufficientBalance ||
+        insufficientLiquidity ||
+        isFetchingQuote ||
+        isAmmTradingDisabled ||
+        !hasAllowance;
+
+    const isFormDisabled = !market.address || isSubmitting || outOfLiquidity || isAmmTradingDisabled;
+
+    useEffect(() => {
+        if (!collateral.address) {
+            return;
+        }
+        const erc20Instance = new ethers.Contract(
+            collateral.address as any,
+            erc20Contract.abi,
+            snxJSConnector.provider
+        );
+        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
+        const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+
+        const getAllowance = async () => {
+            try {
+                const parsedAmount: BigNumber = stableCoinParser(
+                    Number(paidAmount)?.toString(),
+                    networkId,
+                    COLLATERALS[selectedStableIndex]
+                );
+
+                const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
+
+                setAllowance(allowance);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        if (isWalletConnected && erc20Instance.provider) {
+            getAllowance();
+        }
+    }, [
+        dispatch,
+        collateral.address,
+        networkId,
+        paidAmount,
+        selectedStableIndex,
+        walletAddress,
+        isWalletConnected,
+        hasAllowance,
+        isAllowing,
+        isRangedAmm,
+    ]);
+
+    const handleAllowance = async (approveAmount: BigNumber) => {
+        const erc20Instance = new ethers.Contract(collateral.address as any, erc20Contract.abi, snxJSConnector.signer);
+        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
+        const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
+
+        const id = toast.loading(t('amm.progress'));
+        try {
+            setIsAllowing(true);
+            const providerOptions = {
+                gasLimit: getMaxGasLimitForNetwork(networkId),
+            };
+
+            const tx = (await erc20Instance.approve(
+                addressToApprove,
+                approveAmount,
+                providerOptions
+            )) as ethers.ContractTransaction;
+            setOpenApprovalModal(false);
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`)));
+                setIsAllowing(false);
+            }
+        } catch (e) {
+            console.log(e);
+            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            setIsAllowing(false);
+            setOpenApprovalModal(false);
+        }
+    };
 
     const resetData = () => {
         setPositionAmount('');
@@ -311,37 +442,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         return priceChanged;
     };
 
-    const handleAllowance = async (approveAmount: BigNumber) => {
-        const erc20Instance = new ethers.Contract(collateral.address as any, erc20Contract.abi, snxJSConnector.signer);
-        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
-        const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
-
-        const id = toast.loading(t('amm.progress'));
-        try {
-            setIsAllowing(true);
-            const providerOptions = {
-                gasLimit: getMaxGasLimitForNetwork(networkId),
-            };
-
-            const tx = (await erc20Instance.approve(
-                addressToApprove,
-                approveAmount,
-                providerOptions
-            )) as ethers.ContractTransaction;
-            setOpenApprovalModal(false);
-            const txResult = await tx.wait();
-            if (txResult && txResult.transactionHash) {
-                toast.update(id, getSuccessToastOptions(t(`amm.transaction-successful`)));
-                setIsAllowing(false);
-            }
-        } catch (e) {
-            console.log(e);
-            toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
-            setIsAllowing(false);
-            setOpenApprovalModal(false);
-        }
-    };
-
     const handleSubmit = async () => {
         setIsSubmitting(true);
 
@@ -428,106 +528,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     }, [market.address]);
 
     useEffect(() => {
-        refetchBalances(walletAddress, networkId);
-    }, [walletAddress, networkId]);
-
-    // If sUSD balance is zero, select first stable with nonzero value as default
-    useEffect(() => {
-        if (
-            multipleStableBalances?.data &&
-            multipleStableBalances?.isSuccess &&
-            selectedStableIndex == 0 &&
-            isMultiCollateralSupported
-        ) {
-            const defaultStableBalance = getDefaultStableIndexByBalance(multipleStableBalances?.data);
-            setSelectedStableIndex(defaultStableBalance);
-        }
-    }, [
-        multipleStableBalances?.isSuccess,
-        multipleStableBalances?.data,
-        selectedStableIndex,
-        isMultiCollateralSupported,
-    ]);
-
-    useEffect(() => {
-        setSelectedStableIndex(userSelectedCollateral);
-    }, [userSelectedCollateral]);
-
-    useEffect(() => {
-        if (!collateral.address) {
-            return;
-        }
-        const erc20Instance = new ethers.Contract(
-            collateral.address as any,
-            erc20Contract.abi,
-            snxJSConnector.provider
-        );
-        const { ammContract, rangedMarketAMMContract } = snxJSConnector;
-        const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
-
-        const getAllowance = async () => {
-            try {
-                const parsedAmount: BigNumber = stableCoinParser(
-                    Number(paidAmount)?.toString(),
-                    networkId,
-                    COLLATERALS[selectedStableIndex]
-                );
-
-                const allowance = await checkAllowance(parsedAmount, erc20Instance, walletAddress, addressToApprove);
-
-                setAllowance(allowance);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-        if (isWalletConnected && erc20Instance.provider) {
-            getAllowance();
-        }
-    }, [
-        dispatch,
-        collateral.address,
-        networkId,
-        paidAmount,
-        selectedStableIndex,
-        walletAddress,
-        isWalletConnected,
-        hasAllowance,
-        isAllowing,
-        isRangedAmm,
-    ]);
-
-    useEffect(() => {
-        let max = 0;
-        let base = 0;
-        let baseImpact = 0;
-        if (isRangedAmm) {
-            if (rangedAmmMaxLimits) {
-                if (isInPosition) {
-                    max = isBuy ? rangedAmmMaxLimits.in.maxBuy : rangedAmmMaxLimits.in.maxSell;
-                    base = isBuy ? rangedAmmMaxLimits.in.buyPrice : rangedAmmMaxLimits.in.sellPrice;
-                    baseImpact = rangedAmmMaxLimits.in.priceImpact;
-                } else {
-                    max = isBuy ? rangedAmmMaxLimits.out.maxBuy : rangedAmmMaxLimits.out.maxSell;
-                    base = isBuy ? rangedAmmMaxLimits.out.buyPrice : rangedAmmMaxLimits.out.sellPrice;
-                    baseImpact = rangedAmmMaxLimits.out.priceImpact;
-                }
-            }
-        } else if (ammMaxLimits) {
-            if (isUpPosition) {
-                max = isBuy ? ammMaxLimits.maxBuyLong : ammMaxLimits.maxSellLong;
-                base = isBuy ? ammMaxLimits.buyLongPrice : ammMaxLimits.sellLongPrice;
-                baseImpact = isBuy ? ammMaxLimits.buyLongPriceImpact : ammMaxLimits.sellLongPriceImpact;
-            } else {
-                max = isBuy ? ammMaxLimits.maxBuyShort : ammMaxLimits.maxSellShort;
-                base = isBuy ? ammMaxLimits.buyShortPrice : ammMaxLimits.sellShortPrice;
-                baseImpact = isBuy ? ammMaxLimits.buyShortPriceImpact : ammMaxLimits.sellShortPriceImpact;
-            }
-        }
-        setLiquidity(max);
-        setBasePrice(base);
-        setBasePriceImpact(baseImpact);
-        setOutOfLiquidity(max < MINIMUM_AMM_LIQUIDITY);
-    }, [isRangedAmm, ammMaxLimits, isUpPosition, rangedAmmMaxLimits, isInPosition, isBuy]);
+        setPaidAmount('');
+    }, [isBuy]);
 
     useEffect(() => {
         let messageKey = '';
@@ -574,7 +576,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         if (!market.address) {
             return <Button disabled={true}>{t('options.trade.amm-trading.select-price')}</Button>;
         }
-        if (isRangedAmm ? isRangedAmmTradingDisabled : isAmmTradingDisabled) {
+        if (isAmmTradingDisabled) {
             return <Button disabled={true}>{t('amm.amm-disabled')}</Button>;
         }
         if (!isWalletConnected) {
@@ -690,11 +692,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                 )}
                                 profit={Number(priceProfit) * Number(paidAmount)}
                                 isLoading={isFetchingQuote}
+                                isBuy={isBuy}
                             />
                             <SkewSlippageDetails
                                 skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}
                                 slippage={slippagePerc}
                                 setSlippage={setSlippagePerc}
+                                hideScew={isRangedAmm && !isBuy}
                             />
                         </>
                     )}

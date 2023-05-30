@@ -11,17 +11,20 @@ type SkewSlippageDetailsProps = {
     skew: number;
     slippage: number;
     setSlippage: (value: number) => void;
+    hideScew?: boolean;
 };
 
-const SkewSlippageDetails: React.FC<SkewSlippageDetailsProps> = ({ skew, slippage, setSlippage }) => {
+const SkewSlippageDetails: React.FC<SkewSlippageDetailsProps> = ({ skew, slippage, setSlippage, hideScew }) => {
     const { t } = useTranslation();
 
     return (
         <Container>
-            <DetailsRow>
-                <TextLabel>{t('options.trade.amm-trading.details-modal.skew')}</TextLabel>
-                <TextValue>{formatPercentage(skew)}</TextValue>
-            </DetailsRow>
+            {!hideScew && (
+                <DetailsRow>
+                    <TextLabel>{t('options.trade.amm-trading.details-modal.skew')}</TextLabel>
+                    <TextValue>{formatPercentage(skew)}</TextValue>
+                </DetailsRow>
+            )}
             <DetailsRow>
                 <Slippage
                     fixed={SLIPPAGE_PERCENTAGE}
