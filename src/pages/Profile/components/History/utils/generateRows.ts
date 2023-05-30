@@ -1,26 +1,9 @@
 import { formatCurrency } from 'utils/formatters/number';
-import { formatShortDate } from 'utils/formatters/date';
+import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { TFunction } from 'i18next';
 import { ThemeInterface } from 'types/ui';
 import { POSITIONS_TO_SIDE_MAP, Positions, RANGE_SIDE } from 'constants/options';
-
-const formatAMPM = (date: Date) => {
-    let hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    const minutesString = minutes < 10 ? '0' + minutes : minutes;
-    return hours + ':' + minutesString + ' ' + ampm;
-};
-
-const generateDateKey = (date: Date) => {
-    const monthName = date.toLocaleString('default', { month: 'long' }); //TODO: add different languages
-    const dayOfTheMonth = date.getDate();
-    const year = date.getFullYear();
-    return `${monthName} ${dayOfTheMonth}, ${year}`;
-};
 
 const getOptionSideLabel = (optionSide: string) => {
     switch (optionSide.toLowerCase()) {
@@ -48,7 +31,7 @@ const generateRows = (data: any[], translator: TFunction, theme: ThemeInterface)
         const dateMap: Record<string, any> = {};
         const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
         sortedData.forEach((trade) => {
-            const tradeDateKey = generateDateKey(new Date(trade.timestamp));
+            const tradeDateKey = formatShortDate(trade.timestamp);
             if (!dateMap[tradeDateKey]) {
                 dateMap[tradeDateKey] = [];
             }
@@ -88,7 +71,7 @@ const generateRows = (data: any[], translator: TFunction, theme: ThemeInterface)
                             : 0,
                 },
                 cells: [
-                    { title: d.orderSide, value: formatAMPM(new Date(d.timestamp)) },
+                    { title: d.orderSide, value: formatHoursAndMinutesFromTimestamp(d.timestamp) },
                     {
                         title: translator('options.trading-profile.history.strike'),
                         value: generateStrike(d.marketItem),
