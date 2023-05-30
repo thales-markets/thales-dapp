@@ -57,7 +57,7 @@ export const TableRow = styled(FlexDiv)<{
     i {
         color: ${(props) => (props.isSticky ? props.theme.button.textColor.primary : props.theme.textColor.primary)};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-height: 30px;
         font-size: ${(props) => (props.isMobile ? '13px' : '10px')};
     }
@@ -126,7 +126,7 @@ export const NoDataContainer = styled(TableRow)`
     width: 100%;
     height: 20px;
     text-align: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
     }
   }
@@ -162,13 +162,13 @@ export const Pagination = styled(TablePagination)`
         display: block;
     }
     .MuiTablePagination-selectRoot {
-        @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             margin-left: 0px;
             margin-right: 10px;
         }
     }
     .MuiIconButton-root {
-        @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             padding: 6px;
         }
     }

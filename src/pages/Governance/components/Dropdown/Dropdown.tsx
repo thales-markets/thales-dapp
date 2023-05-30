@@ -65,7 +65,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, activeOption, onSel
 
 const Container = styled(FlexDivColumnCentered)`
     width: 140px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         margin-bottom: 10px;
     }
@@ -82,7 +82,7 @@ const Button = styled.button<{ isActive: boolean }>`
     &:hover {
         cursor: pointer;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;

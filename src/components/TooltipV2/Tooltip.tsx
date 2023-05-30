@@ -70,7 +70,7 @@ const InfoIcon = styled.i<{
         font-family: ThalesIcons !important;
         content: '\\0043';
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: ${(props) =>
             props.mobileIconFontSize ? props.mobileIconFontSize : props.iconFontSize ? props.iconFontSize : 15}px;
     }

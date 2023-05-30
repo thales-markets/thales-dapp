@@ -312,7 +312,7 @@ const StyledSectionContentContainer = styled(SectionContentContainer)`
     grid-column: span 12;
     background: ${(props) => props.theme.background.primary};
     padding: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 20px 20px 20px;
     }
 `;
@@ -326,7 +326,7 @@ const InfoLabel = styled.div`
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.25px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-top: 15px;
     }
 `;
@@ -355,7 +355,7 @@ const AmountsContainer = styled(FlexDiv)`
             margin-right: 10px;
         }
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-top: 25px;
         padding-bottom: 25px;
         > * {

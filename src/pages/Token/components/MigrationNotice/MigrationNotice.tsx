@@ -38,7 +38,7 @@ const Container = styled(FlexDivCentered)`
     background: ${(props) => props.theme.background.primary};
     border-radius: 10px;
     padding: 18px 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px;
     }
 `;
@@ -49,7 +49,7 @@ const Text = styled(FlexDiv)`
     line-height: 30px;
     color: ${(props) => props.theme.textColor.primary};
     align-items: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-bottom: 20px;
         margin-right: 0;
         text-align: center;
@@ -59,7 +59,7 @@ const Text = styled(FlexDiv)`
 
 export const MigrateText = styled.span`
     margin-right: 15px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-right: 0;
     }
 `;

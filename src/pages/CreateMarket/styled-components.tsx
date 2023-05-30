@@ -7,20 +7,20 @@ import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const Container = styled(FlexDiv)`
     padding: 50px 0;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
 
 export const Row = styled(FlexDivRow)`
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
 export const DatePickerRow = styled(FlexDivRow)`
     width: 50%;
     margin-right: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;
@@ -88,7 +88,7 @@ export const ShortInputContainer = styled.div`
     &:first-child {
         margin-right: 10px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;

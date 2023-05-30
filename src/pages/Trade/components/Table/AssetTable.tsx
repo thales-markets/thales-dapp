@@ -124,7 +124,7 @@ const getTableHeaderStyle = (color: string): React.CSSProperties => {
 const Wrapper = styled(FlexDivColumn)`
     width: 100%;
     height: calc(100% - 20px);
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
         height: calc(100% - 80px);
     }

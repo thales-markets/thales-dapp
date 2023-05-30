@@ -401,7 +401,7 @@ const SectionWrapper = styled.section<{
     }};
     ${(props) => (props.noPadding ? '' : 'padding: 2px;')}
 
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span ${(props) => (props.columnsOnMobile ? props.columnsOnMobile : 12)};
         order: ${(props) => props.orderOnMobile ?? 10};
         ${(props) => {
@@ -455,7 +455,7 @@ const SectionContentWrapper = styled.div<{
                 return '';
         }
     }}
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => {
             switch (props.backgroundType) {
                 case BackgroundType.STAKE:
@@ -499,7 +499,7 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string }>`
                 return '';
         }
     }}
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
@@ -532,7 +532,7 @@ const SectionLabelContent = styled(SectionContent)<{ type?: SectionType }>`
                 return '';
         }
     }}
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: ${(props) => (props.type === SectionType.CLAIM_INFO ? 16 : 12)}px;
         ${(props) => (props.type === SectionType.CLAIM_INFO ? 'padding-top: 0' : '')};
     }
@@ -558,7 +558,7 @@ const SectionValue = styled.div<{ type: SectionType }>`
                 return '';
         }
     }}
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => {
             switch (props.type) {
                 case SectionType.INFO:
@@ -602,7 +602,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
                 return '';
         }
     }}
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: ${(props) =>
             props.type === SectionType.CLAIM || props.type === SectionType.CLAIM_INFO ? 18 : 15}px;
         line-height: 20px;
@@ -621,7 +621,7 @@ const SectionDetailsLabel = styled.span`
     line-height: 17px;
     letter-spacing: 0.035em;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -632,7 +632,7 @@ const SectionDetailsValue = styled.span`
     font-size: 15px;
     line-height: 17px;
     color: ${(props) => props.theme.textColor.quaternary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
     }
 `;
@@ -646,7 +646,7 @@ const VerticalLineRight = styled.hr`
 
 const VerticalLineWrapper = styled.div`
     position: relative;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         order: 10;
     }
 `;

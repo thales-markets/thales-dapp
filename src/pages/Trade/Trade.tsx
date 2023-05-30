@@ -185,7 +185,7 @@ const Wrapper = styled.div`
 
 const UnsupportedNetworkWrapper = styled.div`
     margin: 90px 0;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: 0;
     }
 `;
@@ -198,7 +198,7 @@ const ContentWrapper = styled.div`
     margin-bottom: 30px;
     justify-content: space-between;
     height: 400px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
     }
@@ -207,7 +207,7 @@ const ContentWrapper = styled.div`
 const PositionedWrapper = styled(FlexDivColumnCentered)`
     position: relative;
     text-align: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;
@@ -216,7 +216,7 @@ const LeftSide = styled.div`
     height: 100%;
     width: 100%;
     max-width: 600px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
         height: 60px;
     }
@@ -225,7 +225,7 @@ const RightSide = styled.div`
     width: 100%;
     height: 100%;
     max-width: 350px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
     }
 `;
@@ -237,14 +237,14 @@ const Info = styled(FlexDivColumnCentered)`
     text-transform: uppercase;
     margin-bottom: 5px;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
 
 const DropdownsWrapper = styled(FlexDivRowCentered)`
     gap: 15px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
     }

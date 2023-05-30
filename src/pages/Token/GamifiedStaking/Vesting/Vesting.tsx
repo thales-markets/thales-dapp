@@ -232,7 +232,7 @@ const SectionWrapper = styled.section<{
     background: ${(props) => (props.background ?? true ? props.theme.borderColor.primary : 'none')};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
 
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -244,7 +244,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
@@ -257,7 +257,7 @@ const SectionContent = styled.span`
 const ScheduleLabel = styled.div`
     display: flex;
     padding-bottom: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-bottom: 10px;
     }
 `;
@@ -266,14 +266,14 @@ const ScheduleLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
     }
 `;
 
 const SectionLabel = styled.div`
     padding-bottom: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-bottom: 10px;
     }
 `;
@@ -282,7 +282,7 @@ const SectionLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -297,14 +297,14 @@ const SectionValueContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 30px;
     color: ${(props) => props.theme.textColor.quaternary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 20px;
     }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 80px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: auto;
     }
 `;
@@ -323,7 +323,7 @@ const Date = styled.span`
     font-weight: 700;
     font-size: 15px;
     white-space: nowrap;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -332,7 +332,7 @@ const Time = styled.span`
     display: block;
     font-weight: 300;
     font-size: 15px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;

@@ -429,7 +429,7 @@ const SectionWrapper = styled.section`
     grid-column: 1 / span 4;
     background: ${(props) => props.theme.background.secondary};
     padding: 2px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -446,7 +446,7 @@ const SectionDescription = styled.section<{ width?: number }>`
     border-radius: 15px;
     grid-column: 5 / span ${(props) => props.width || 8};
     padding: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -475,7 +475,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     @media (max-width: 1192px) {
         padding: 10px 15px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
         box-shadow: none;
     }
@@ -517,7 +517,7 @@ const MergeInfo = styled.div`
 const AddressesDelegatingToYouContainer = styled.div`
     grid-column: 9 / span 4;
     padding: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -536,7 +536,7 @@ const DelegationAddress = styled.div`
     line-height: 138.69%;
     text-transform: uppercase;
     margin-bottom: 5px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 11px;
     }
 `;

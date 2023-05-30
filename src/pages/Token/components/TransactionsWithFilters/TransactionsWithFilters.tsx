@@ -127,7 +127,7 @@ const SectionContainer = styled.section<{
     height: ${(props) => (props.txCount > 10 ? '390px' : '100%')};
     min-height: 200px;
     margin-bottom: 0;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span ${(props) => (props.gridColumns ? props.gridColumns : 12)};
         order: 12;
         height: 100%;
@@ -148,7 +148,7 @@ const FilterContainer = styled.div`
     top: -30px;
     right: 40px;
     width: 136px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100px;
     }
 `;
@@ -162,7 +162,7 @@ const DropDownWrapper = styled.div`
     padding: 2px;
     z-index: 100;
     border-radius: 15px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         right: 100px;
     }
 `;

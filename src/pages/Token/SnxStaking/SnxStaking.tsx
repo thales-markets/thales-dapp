@@ -25,7 +25,7 @@ const Container = styled.div`
     background: ${(props) => props.theme.background.primary};
     z-index: 0;
     width: 100%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         background: transparent;
         border: none;
         padding: 1px;

@@ -116,7 +116,7 @@ const SummaryContent = styled.div<{ color?: string }>`
     width: 200px;
     text-align: end;
     color: ${(props) => props.color ?? props.theme.textColor.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100px;
     }
 `;
@@ -130,7 +130,7 @@ const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     font-size: 14px;
     line-height: 21px;
     text-transform: uppercase;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -141,7 +141,7 @@ const NetworkFeeSummaryContent = styled(SummaryContent)`
     line-height: 21px;
     text-transform: uppercase;
     flex: 1;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;

@@ -60,7 +60,7 @@ export const NetworkSwitch: React.FC = () => {
 const Container = styled(FlexDivColumnCentered)`
     width: 170px;
     margin-right: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         margin-bottom: 20px;
         margin-right: 0px;
@@ -82,7 +82,7 @@ const OptimismButton = styled.button`
     &:hover {
         cursor: pointer;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;

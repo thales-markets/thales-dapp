@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
     padding: 0 20px 0 0;
     max-height: 1000px;
     overflow: auto;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0;
         max-height: initial;
         overflow: initial;

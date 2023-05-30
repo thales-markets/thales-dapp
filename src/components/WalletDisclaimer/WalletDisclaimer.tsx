@@ -32,7 +32,7 @@ const WalletDisclaimer: DisclaimerComponent = ({ Text, Link }) => {
 };
 
 const Wrapper = styled.div`
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: -15px;
         margin-bottom: -15px;
     }

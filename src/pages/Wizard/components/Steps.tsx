@@ -391,7 +391,7 @@ const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
     align-items: center;
     justify-content: ${(props) => props.justifyContent};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 20px;
     }
 `;
@@ -410,7 +410,7 @@ const NavItem = styled.div<{ clickable: boolean }>`
     &.active {
         box-shadow: 0px 4px ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 14px;
         padding: 0 20px;
     }

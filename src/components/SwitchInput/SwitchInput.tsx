@@ -92,7 +92,7 @@ const Wrapper = styled.div<{ margin?: string; disabled?: boolean; spanColumns?: 
     justify-content: center;
     width: 100%;
     cursor: ${(props: any) => (props.disabled ? 'not-allowed' : 'default')};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => (props?.spanColumns ? `grid-column: span ${props.spanColumns}` : '')};
     }
 `;

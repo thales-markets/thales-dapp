@@ -31,7 +31,7 @@ export const Container = styled(FlexDivRow)`
         width: 100%;
         padding: 0;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
@@ -48,7 +48,7 @@ export const ContentContainer = styled(FlexDivColumn)`
     p {
         margin-bottom: 5px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px 5px 10px 5px;
     }
 `;
@@ -143,7 +143,7 @@ export const Description = styled.div`
     li {
         margin-bottom: 4px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 5px;
         width: 100%;
         :first-child {
@@ -179,7 +179,7 @@ export const Title = styled.span`
     line-height: 100%;
     margin-bottom: 10px;
     margin-top: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 10px;
         margin-bottom: 0;
     }
@@ -279,7 +279,7 @@ export const LiquidityPoolInfoGraphic = styled(FlexDivStart)<{ background: strin
     @media (max-width: 991px) {
         width: ${(props) => 120 * props.widthPercentage}px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: ${(props) => 200 * props.widthPercentage}px;
     }
     @media (max-width: 575px) {

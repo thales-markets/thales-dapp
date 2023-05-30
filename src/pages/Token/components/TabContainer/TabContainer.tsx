@@ -66,7 +66,7 @@ const MenuContainer = styled(FlexDiv)`
     @media (max-width: 1024px) {
         margin-top: 30px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;

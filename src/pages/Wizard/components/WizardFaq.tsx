@@ -158,7 +158,7 @@ const Question = styled.p`
     span {
         text-transform: lowercase;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 15px 60px 15px 15px;
         font-size: 13px;
         line-height: 22px;
@@ -181,7 +181,7 @@ const StyledArrowUp = styled(ArrowUp)`
         fill: ${(props) => props.theme.textColor.quaternary};
         fill-opacity: 1;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         right: 15px;
         height: 12px;
     }
@@ -195,7 +195,7 @@ const StyledArrowDown = styled(ArrowDown)`
         fill: ${(props) => props.theme.textColor.quaternary};
         fill-opacity: 1;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         right: 15px;
         height: 12px;
     }
@@ -209,7 +209,7 @@ const Answer = styled.p`
     color: ${(props) => props.theme.textColor.primary};
     cursor: text;
     padding: 0 30px 20px 30px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0px 15px 15px 15px;
     }
 `;

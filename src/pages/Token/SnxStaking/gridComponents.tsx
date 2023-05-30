@@ -28,7 +28,7 @@ export const StakingRewardsItem = styled(StakeInfoItem)<{
     orderOnMobile?: number;
 }>`
     grid-column: span 4;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12 !important;
         order: ${(props) => props.orderOnMobile ?? 10};
     }
@@ -60,7 +60,7 @@ export const GridAction = styled(FlexDivColumnCentered)`
     grid-column: span 12;
     background: ${(props) => props.theme.background.primary};
     padding: 20px 100px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px;
         order: 10;
     }

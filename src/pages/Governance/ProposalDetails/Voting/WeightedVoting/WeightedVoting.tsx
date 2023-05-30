@@ -256,7 +256,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
         margin-bottom: 19px;
         border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 46px;
         font-size: 16px;
         line-height: 46px;
@@ -268,14 +268,14 @@ const Option = styled(FlexDivRowCentered)`
     padding-right: 5px;
     white-space: break-spaces;
     line-height: 22px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-left: 10px;
     }
 `;
 
 const Selection = styled(FlexDiv)`
     width: 230px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 165px;
     }
 `;
@@ -291,7 +291,7 @@ const PlusMinus = styled(FlexDivColumnCentered)`
         border-right: 2px solid ${(props) => props.theme.borderColor.quaternary};
         cursor: pointer;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: 35px;
         min-width: 35px;
     }
@@ -301,7 +301,7 @@ const Percentage = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 80px;
     min-width: 80px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: 55px;
         min-width: 55px;
     }
@@ -321,7 +321,7 @@ const Input = styled.input`
     text-align: center;
     overfloe: hidden;
     text-overflow: ellipsis;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
         max-width: 40px;
         min-width: 40px;
@@ -331,7 +331,7 @@ const Input = styled.input`
 const SeePitchWrapper = styled.div`
     align-self: center;
     margin-bottom: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-bottom: 35px;
     }
 `;
@@ -355,7 +355,7 @@ const SeePitchButton = styled.button`
     &:hover:not(:disabled) {
         border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-left: 0;
         line-height: 26px;
     }
@@ -410,7 +410,7 @@ const CloseDialog = styled(CloseIconContainer)`
 `;
 
 const VotingWrapper = styled(FlexDiv)`
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;

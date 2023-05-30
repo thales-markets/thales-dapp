@@ -19,7 +19,7 @@ export const MainContentContainer = styled.div<{ isOverviewPage: boolean }>`
     @media (max-width: 1200px) {
         width: 100%;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         border: none;
         background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.secondary)};
     }
@@ -29,7 +29,7 @@ export const MainContentWrapper = styled.div<{ isOverviewPage: boolean }>`
     border-radius: 15px;
     padding: ${(props) => (props.isOverviewPage ? '0px' : '25px 0px 30px 0px')};
     background: ${(props) => props.theme.background.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         background: ${(props) => (props.isOverviewPage ? 'transparent' : props.theme.background.primary)};
         padding: ${(props) => (props.isOverviewPage ? '0px 0px 10px 0px' : '25px 0px 30px 0px')};
     }
@@ -64,7 +64,7 @@ export const Sidebar = styled.div`
 
 export const OptionsTabWrapper = styled(FlexDivRow)`
     padding: 0 28px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         padding: 0;
     }
@@ -99,7 +99,7 @@ export const BackLinkWrapper = styled(FlexDiv)<{ isOverviewPage: boolean }>`
     height: 20px;
     align-self: start;
     margin-bottom: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: ${(props) => (props.isOverviewPage ? '0' : '20px')};
     }
 `;

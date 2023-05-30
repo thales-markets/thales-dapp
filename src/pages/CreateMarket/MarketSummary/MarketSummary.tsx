@@ -104,7 +104,7 @@ const Wrapper = styled(FlexDivColumn)`
     line-height: 32px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-left: 0px;
     }
 `;
@@ -200,7 +200,7 @@ const MarketInfo = styled(FlexDivColumn)`
     @media screen and (max-width: 1024px) {
         padding: 35px 38px;
     }
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0px;
         width: 100%;
         margin-top: 45px;

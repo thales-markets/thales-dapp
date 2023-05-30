@@ -158,7 +158,7 @@ export const Icon = styled.i<{ margin?: string; color?: string }>`
 export const NoDataText = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 24px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
     }
 `;
@@ -168,7 +168,7 @@ export const NoDataContainer = styled.div`
     width: 100%;
     text-align: center;
     margin-top: 50px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 10px;
     }
 `;

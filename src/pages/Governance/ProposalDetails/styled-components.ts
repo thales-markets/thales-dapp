@@ -6,7 +6,7 @@ import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const Container = styled(FlexDivColumnCentered)`
     padding: 10px 40px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px 20px;
     }
 `;
@@ -27,7 +27,7 @@ export const Title = styled(FlexDivColumnCentered)`
 `;
 
 export const DetailsWrapper = styled(FlexDivRow)`
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
@@ -39,7 +39,7 @@ export const DetailsContainer = styled(FlexDivColumnCentered)`
     color: ${(props) => props.theme.textColor.primary};
     &:first-child {
         margin-right: 40px;
-        @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             flex-direction: column;
             margin-right: 0px;
             margin-bottom: 10px;
@@ -119,7 +119,7 @@ export const Body = styled(FlexDivColumn)`
 `;
 
 export const VoteHeader = styled(FlexDivRowCentered)`
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         align-items: start;
     }
@@ -147,7 +147,7 @@ export const DetailsTitle = styled(FlexDivRow)`
 `;
 
 export const VotingPowerTitle = styled(DetailsTitle)`
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 0;
     }
 `;

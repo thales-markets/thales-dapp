@@ -409,7 +409,7 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
     overflow-y: auto;
     max-height: 560px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
         overflow: auto;
     }
@@ -450,7 +450,7 @@ const Position = styled.div`
     justify-content: space-between;
     padding: 0 17px;
     gap: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -471,7 +471,7 @@ const AlignedFlex = styled.div`
     gap: 10px;
     justify-content: flex-end;
     width: 100%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 6px;
     }
@@ -485,7 +485,7 @@ const FlexContainer = styled(AlignedFlex)`
         min-width: 195px;
         max-width: 195px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
         gap: 4px;
     }
@@ -522,7 +522,7 @@ const Separator = styled.div`
     height: 14px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 3px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;

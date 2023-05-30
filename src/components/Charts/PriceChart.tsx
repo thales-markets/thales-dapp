@@ -241,7 +241,7 @@ const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
     font-weight: bold;
     font-size: 15px;
     margin-left: 30px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-left: 5px;
     }
 `;

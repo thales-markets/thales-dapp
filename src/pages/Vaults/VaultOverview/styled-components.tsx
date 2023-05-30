@@ -14,7 +14,7 @@ export const SpaContainer = styled(FlexDivColumn)`
     :not(:last-child) {
         margin-right: 20px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         :not(:last-child) {
             margin-right: 0;
@@ -33,7 +33,7 @@ export const VaultContainer = styled(FlexDivColumn)`
     font-size: 18px;
     line-height: 20px;
     padding: 30px 40px 30px 40px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px 20px 20px;
     }
     height: 100%;

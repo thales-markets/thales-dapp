@@ -205,7 +205,7 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
 };
 
 const NavFooter = styled.div`
-    @media (min-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (min-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
     display: flex;

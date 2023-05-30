@@ -387,7 +387,7 @@ const TableCellHead = styled(FlexDivCentered)<{
     font-weight: 600;
     font-size: 15px;
     letter-spacing: 0.5px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
     }
     @media (max-width: ${(props) => (props.cssProp ? props.cssProp.mediaMaxWidth : '600px')}) {

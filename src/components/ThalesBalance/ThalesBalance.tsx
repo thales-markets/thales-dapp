@@ -90,7 +90,7 @@ const Title = styled.p`
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;

@@ -53,7 +53,7 @@ const Container = styled.div`
     overflow: hidden;
     margin: 0 0 30px 0;
     max-width: 100%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;

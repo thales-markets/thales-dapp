@@ -53,12 +53,12 @@ export const Tile = styled(FlexDiv)<{
         background: ${(props) => props.defaultFlowColor || props.theme.background.secondary};
         opacity: ${(props) => (props.disabled ? '0.5' : '1')} !important;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
-        @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             height: ${(props) => (props.heightSmall ? '44px' : '94px')};
             top: ${(props) => (props.heightSmall ? '-31px' : '-56px')};
         }
     }
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         flex-wrap: wrap;
         min-height: ${(props) => (props.heightSmall ? '50px' : '100px')};
@@ -104,7 +104,7 @@ export const Title = styled(FlexDiv)<{
         background: ${(props) => props.defaultFlowColor || props.theme.background.secondary};
         opacity: 1;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
-        @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             height: 69px;
             top: -56px;
         }
@@ -151,7 +151,7 @@ export const NoDataContainer = styled(FlexDivCentered)`
     width: 100%;
     height: 20px;
     text-align: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
     }
   }
