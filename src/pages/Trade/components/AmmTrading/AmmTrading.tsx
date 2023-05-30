@@ -4,7 +4,6 @@ import ApprovalModal from 'components/ApprovalModal';
 import Button from 'components/ButtonV2';
 import CollateralSelector from 'components/CollateralSelectorV2';
 import { USD_SIGN } from 'constants/currency';
-import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import {
     COLLATERALS,
     MINIMUM_AMM_LIQUIDITY,
@@ -22,7 +21,7 @@ import useRangedAMMMaxLimitsQuery from 'queries/options/rangedMarkets/useRangedA
 import useAmmMaxLimitsQuery from 'queries/options/useAmmMaxLimitsQuery';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -38,7 +37,7 @@ import {
     RangedMarketPerPosition,
     StableCoins,
 } from 'types/options';
-import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
+import { getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
@@ -51,15 +50,7 @@ import {
     roundNumberToDecimals,
     truncToDecimals,
 } from 'utils/formatters/number';
-import {
-    checkAllowance,
-    getIsArbitrum,
-    getIsBSC,
-    getIsMultiCollateralSupported,
-    getIsOVM,
-    getIsPolygon,
-    getProvider,
-} from 'utils/network';
+import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -103,7 +94,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [basePriceImpact, setBasePriceImpact] = useState<number | string>('');
     const [slippagePerc, setSlippagePerc] = useState<number>(SLIPPAGE_PERCENTAGE[2]);
     const [priceProfit, setPriceProfit] = useState<number | string>('');
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [hasAllowance, setAllowance] = useState(false);
     const [isFetchingQuote, setIsFetchingQuote] = useState(false);
     const [selectedStableIndex, setSelectedStableIndex] = useState(userSelectedCollateral);
@@ -177,10 +167,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             : getCurrencyKeyStableBalance(walletBalancesMap, getStableCoinForNetwork(networkId) as StableCoins);
     }, [networkId, multipleStableBalances, walletBalancesMap, selectedStableIndex, isMultiCollateralSupported]);
 
-    const isOVM = getIsOVM(networkId);
-    const isPolygon = getIsPolygon(networkId);
-    const isBSC = getIsBSC(networkId);
-    const isArbitrum = getIsArbitrum(networkId);
     const isPositionAmountPositive = Number(positionAmount) > 0;
     const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported;
     const isAmmTradingDisabled = !isRangedAmm && ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
@@ -243,57 +229,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         setPositionPrice('');
         setPriceProfit('');
         setPriceImpact('');
-        setGasLimit(null);
         setErrorMessageKey('');
     };
 
-    const fetchGasLimit = useCallback(
-        async (marketAddress: string, side: any, parsedAmount: any, parsedTotal: any, parsedSlippage: any) => {
-            try {
-                const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
-                const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
-
-                if (isOVM) {
-                    const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
-                    setGasLimit(maxGasLimitForNetwork);
-
-                    return maxGasLimitForNetwork;
-                } else if (isBSC || isPolygon || isArbitrum) {
-                    const gasLimit = await getEstimatedGasFees(
-                        isNonDefaultStable,
-                        true,
-                        contract,
-                        marketAddress,
-                        side,
-                        parsedAmount,
-                        parsedTotal,
-                        parsedSlippage,
-                        collateral.address,
-                        referral
-                    );
-
-                    const safeGasLimit = Math.round(Number(+gasLimit + 0.1 * +gasLimit));
-                    setGasLimit(safeGasLimit);
-
-                    return safeGasLimit;
-                } else {
-                    const maxGasLimitForNetwork = getMaxGasLimitForNetwork(networkId);
-                    setGasLimit(maxGasLimitForNetwork);
-
-                    return maxGasLimitForNetwork;
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-                return null;
-            }
-        },
-        [collateral.address, isArbitrum, isBSC, isNonDefaultStable, isOVM, isPolygon, networkId, referral, isRangedAmm]
-    );
-
     const fetchAmmPriceData = async (totalToPay: number, isRefresh: boolean, isSubmit = false, isMax = false) => {
         let priceChanged = false;
-        let latestGasLimit = null;
         if (!isRefresh && !isSubmit) {
             setIsFetchingQuote(true);
         }
@@ -355,44 +295,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - MIN_SCEW_IMPACT : 0);
                 setPriceProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
 
-                const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
-                const isQuoteChanged =
-                    ammPrice !== positionPrice ||
-                    totalToPay !==
-                        stableCoinFormatter(
-                            ammQuote,
-                            networkId,
-                            isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
-                        );
-
-                if (isSubmit) {
-                    latestGasLimit = await fetchGasLimit(
-                        market.address,
-                        POSITIONS_TO_SIDE_MAP[market.positionType],
-                        parsedAmount,
-                        ammQuote,
-                        parsedSlippage
-                    );
-                } else {
-                    if (
-                        ammPrice > 0 &&
-                        stableCoinFormatter(
-                            ammQuote,
-                            networkId,
-                            isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
-                        ) > 0 &&
-                        isQuoteChanged &&
-                        hasAllowance
-                    ) {
-                        fetchGasLimit(
-                            market.address,
-                            POSITIONS_TO_SIDE_MAP[market.positionType],
-                            parsedAmount,
-                            ammQuote,
-                            parsedSlippage
-                        );
-                    }
-                }
                 // Between 2 calls ammPrice will be always different as it is based on position amount which is changed when price is changed
                 priceChanged =
                     ammPrice < Number(positionPrice) * (1 - slippagePerc / 100) ||
@@ -408,7 +310,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         if (!isRefresh && !isSubmit) {
             setIsFetchingQuote(false);
         }
-        return { priceChanged, latestGasLimit };
+        return priceChanged;
     };
 
     const handleAllowance = async (approveAmount: BigNumber) => {
@@ -416,14 +318,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         const { ammContract, rangedMarketAMMContract } = snxJSConnector;
         const addressToApprove = (isRangedAmm ? rangedMarketAMMContract?.address : ammContract?.address) || '';
 
-        const gasPrice = await snxJSConnector.provider?.getGasPrice();
-        const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
-
         const id = toast.loading(t('amm.progress'));
         try {
             setIsAllowing(true);
-            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, approveAmount);
-            const providerOptions = getProvider(gasEstimate, gasInGwei, networkId);
+            const providerOptions = {
+                gasLimit: getMaxGasLimitForNetwork(networkId),
+            };
 
             const tx = (await erc20Instance.approve(
                 addressToApprove,
@@ -449,7 +349,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
         const id = toast.loading(t('amm.progress'));
 
-        const { priceChanged, latestGasLimit } = await fetchAmmPriceData(Number(paidAmount), true, true);
+        const priceChanged = await fetchAmmPriceData(Number(paidAmount), true, true);
         if (priceChanged) {
             toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
             setIsSubmitting(false);
@@ -462,21 +362,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
             const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
-            const gasPrice = await snxJSConnector.provider?.getGasPrice();
 
-            const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
-
-            const providerOptions = isPolygon
-                ? {
-                      gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
-                      gasPrice: ethers.utils.parseUnits(
-                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
-                          'gwei'
-                      ),
-                  }
-                : {
-                      gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
-                  };
+            const providerOptions = {
+                gasLimit: getMaxGasLimitForNetwork(networkId),
+            };
 
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
                 isNonDefaultStable,
@@ -607,33 +496,6 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         hasAllowance,
         isAllowing,
         isRangedAmm,
-    ]);
-
-    useEffect(() => {
-        if (isButtonDisabled) {
-            return;
-        }
-        const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
-        const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
-        const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
-        fetchGasLimit(
-            market.address,
-            POSITIONS_TO_SIDE_MAP[market.positionType],
-            parsedAmount,
-            parsedTotal,
-            parsedSlippage
-        );
-    }, [
-        fetchGasLimit,
-        paidAmount,
-        market.positionType,
-        isButtonDisabled,
-        networkId,
-        isWalletConnected,
-        hasAllowance,
-        positionAmount,
-        market.address,
-        slippagePerc,
     ]);
 
     useEffect(() => {
