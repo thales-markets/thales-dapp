@@ -39,7 +39,7 @@ import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getDefaultStableIndexByBalance, getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import { bigNumberFormatter, stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
-import { countDecimals, roundNumberToDecimals, truncToDecimals } from 'utils/formatters/number';
+import { roundNumberToDecimals, truncToDecimals } from 'utils/formatters/number';
 import { checkAllowance, getIsMultiCollateralSupported } from 'utils/network';
 import { refetchAmmData, refetchBalances, refetchRangedAmmData } from 'utils/queryConnector';
 import { getReferralWallet } from 'utils/referral';
@@ -106,7 +106,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const [isAmmTradingDisabled, setIsAmmTradingDisabled] = useState(false);
 
     const isMultiCollateralSupported = getIsMultiCollateralSupported(networkId);
-    const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported;
+    const isNonDefaultStable = selectedStableIndex !== 0 && isMultiCollateralSupported && isBuy;
     const isRangedAmm = [Positions.IN, Positions.OUT].includes(market.positionType);
     const isUpPosition = market.positionType === Positions.UP;
     const isInPosition = market.positionType === Positions.IN;
@@ -249,12 +249,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
     }
     const tokenBalance = isRangedAmm
-        ? market.positionType == Positions.UP
-            ? optBalances.long
-            : optBalances.short
-        : market.positionType == Positions.IN
-        ? optBalances.in
-        : optBalances.out;
+        ? market.positionType === Positions.IN
+            ? optBalances.in || 0
+            : optBalances.out || 0
+        : market.positionType === Positions.UP
+        ? optBalances.long || 0
+        : optBalances.short || 0;
 
     const isPositionAmountPositive = Number(positionAmount) > 0;
     const isPositionPricePositive = Number(positionPrice) > 0;
@@ -262,7 +262,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     const insufficientBalance = isBuy
         ? stableBalance < Number(paidAmount) || !stableBalance
-        : !tokenBalance || (!!tokenBalance && tokenBalance < Number(paidAmount));
+        : tokenBalance < Number(paidAmount) || !tokenBalance;
     const isSlippagePercValid = isSlippageValid(Number(slippagePerc));
 
     const isButtonDisabled =
@@ -369,8 +369,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
         const calcPrice = !positionPrice ? Number(basePrice) : Number(positionPrice);
         if (market.address && totalToPay > 0 && calcPrice > 0) {
-            let suggestedAmount = totalToPay / calcPrice;
-            if (isMax && suggestedAmount >= liquidity) {
+            let suggestedAmount = isBuy ? totalToPay / calcPrice : totalToPay;
+            if (isBuy && isMax && suggestedAmount >= liquidity) {
                 suggestedAmount = liquidity;
             }
 
@@ -382,7 +382,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 const promises = isRangedAmm
                     ? getQuoteFromRangedAMM(
                           isNonDefaultStable,
-                          true,
+                          isBuy,
                           contract,
                           parsedAmount,
                           market.address,
@@ -391,7 +391,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                       )
                     : getQuoteFromAMM(
                           isNonDefaultStable,
-                          true,
+                          isBuy,
                           contract,
                           parsedAmount,
                           market.address,
@@ -401,16 +401,15 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
                 const [ammQuotes, ammPriceImpact]: Array<BigNumber> = await Promise.all(promises);
                 const ammQuote = isNonDefaultStable ? (ammQuotes as any)[0] : ammQuotes;
-
-                const ammPrice =
-                    stableCoinFormatter(
-                        ammQuote,
-                        networkId,
-                        isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
-                    ) / suggestedAmount;
+                const formattedAmmQuote = stableCoinFormatter(
+                    ammQuote,
+                    networkId,
+                    isNonDefaultStable ? COLLATERALS[selectedStableIndex] : undefined
+                );
+                const ammPrice = formattedAmmQuote / suggestedAmount;
 
                 let calcAmount = totalToPay / ammPrice;
-                if (isMax) {
+                if (isBuy && isMax) {
                     if (calcAmount >= liquidity) {
                         calcAmount = Number(truncToDecimals(liquidity));
                         setPaidAmount(calcAmount * ammPrice);
@@ -419,10 +418,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     }
                 }
 
-                setPositionAmount(calcAmount);
+                setPositionAmount(isBuy ? calcAmount : formattedAmmQuote);
                 setPositionPrice(ammPrice);
                 setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - MIN_SCEW_IMPACT : 0);
-                setPriceProfit(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
+                setPriceProfit(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
 
                 // Between 2 calls ammPrice will be always different as it is based on position amount which is changed when price is changed
                 priceChanged =
@@ -457,8 +456,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
             const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
 
-            const parsedAmount = ethers.utils.parseEther(positionAmount.toString());
-            const parsedTotal = stableCoinParser(paidAmount.toString(), networkId);
+            const parsedAmount = isBuy
+                ? ethers.utils.parseEther(positionAmount.toString())
+                : stableCoinParser(paidAmount.toString(), networkId);
+            const parsedTotal = isBuy
+                ? stableCoinParser(paidAmount.toString(), networkId)
+                : ethers.utils.parseEther(positionAmount.toString());
             const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
 
             const providerOptions = {
@@ -467,7 +470,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
             const tx: ethers.ContractTransaction = await prepareTransactionForAMM(
                 isNonDefaultStable,
-                true,
+                isBuy,
                 ammContractWithSigner,
                 market.address,
                 POSITIONS_TO_SIDE_MAP[market.positionType],
@@ -485,7 +488,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 toast.update(
                     id,
                     getSuccessToastOptions(
-                        t(`options.market.trade-options.place-order.swap-confirm-button.buy.confirmation-message`)
+                        t(
+                            `options.market.trade-options.place-order.swap-confirm-button.${
+                                isBuy ? 'but' : 'sell'
+                            }.confirmation-message`
+                        )
                     )
                 );
 
@@ -499,11 +506,18 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 resetData();
                 setPaidAmount('');
 
-                trackEvent({
-                    category: isRangedAmm ? 'RangeAMM' : 'AMM',
-                    action: `buy-with-${COLLATERALS[selectedStableIndex]}`,
-                    value: Number(paidAmount),
-                });
+                if (isBuy) {
+                    trackEvent({
+                        category: isRangedAmm ? 'RangeAMM' : 'AMM',
+                        action: `buy-with-${COLLATERALS[selectedStableIndex]}`,
+                        value: Number(paidAmount),
+                    });
+                } else {
+                    trackEvent({
+                        category: isRangedAmm ? 'RangeAMM' : 'AMM',
+                        action: 'sell-to-amm',
+                    });
+                }
             }
         } catch (e) {
             console.log(e);
@@ -539,7 +553,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         } else if (
             isWalletConnected &&
             market.address &&
-            ((Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) || stableBalance === 0)
+            (isBuy
+                ? (Number(paidAmount) > 0 && Number(paidAmount) > stableBalance) || stableBalance === 0
+                : (Number(paidAmount) > 0 && Number(paidAmount) > tokenBalance) || tokenBalance === 0)
         ) {
             messageKey = 'common.errors.insufficient-balance-wallet';
         }
@@ -549,16 +565,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 
     useEffect(() => {
         if (market.address) {
-            setInsufficientLiquidity(Number(positionAmount) > liquidity);
+            setInsufficientLiquidity(isBuy ? Number(positionAmount) > liquidity : Number(paidAmount) > liquidity);
         }
-    }, [positionAmount, liquidity, market.address]);
-
-    const onTotalPriceValueChange = async (value: number | string) => {
-        if (countDecimals(Number(value)) > 2 || value === Number(paidAmount)) {
-            return;
-        }
-        setPaidAmount(value);
-    };
+    }, [positionAmount, paidAmount, liquidity, market.address, isBuy]);
 
     const onMaxClick = async () => {
         trackEvent({
@@ -566,10 +575,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             action: 'click-on-max-button',
         });
 
-        if (isFormDisabled) return;
-
-        const maxPaidAmount = Number(truncToDecimals(Number(stableBalance) * (1 - slippagePerc / 100)));
-        fetchAmmPriceData(maxPaidAmount, false, false, true);
+        if (isBuy) {
+            const maxPaidAmount = Number(truncToDecimals(Number(stableBalance) * (1 - slippagePerc / 100)));
+            fetchAmmPriceData(maxPaidAmount, false, false, true);
+        } else {
+            setPaidAmount(truncToDecimals(tokenBalance, 4));
+        }
     };
 
     const getSubmitButton = () => {
@@ -616,8 +627,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         return (
             <Button disabled={isButtonDisabled} onClick={handleSubmit}>
                 {isSubmitting
-                    ? t(`options.market.trade-options.place-order.swap-confirm-button.buy.progress-label`)
-                    : t(`options.market.trade-options.place-order.swap-confirm-button.buy.label`)}
+                    ? t(
+                          `options.market.trade-options.place-order.swap-confirm-button.${
+                              isBuy ? 'but' : 'sell'
+                          }.progress-label`
+                      )
+                    : t(`options.market.trade-options.place-order.swap-confirm-button.${isBuy ? 'but' : 'sell'}.label`)}
             </Button>
         );
     };
@@ -649,14 +664,16 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                         value={paidAmount}
                         disabled={isFormDisabled}
                         placeholder={t('options.trade.amm-trading.enter-amount')}
-                        onChange={(_, value) => onTotalPriceValueChange(value)}
+                        onChange={(_, value) => setPaidAmount(value)}
                         onMaxButton={onMaxClick}
                         showValidation={!!errorMessageKey}
                         validationMessage={t(errorMessageKey, {
-                            currencyKey: getStableCoinForNetwork(
-                                networkId,
-                                isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
-                            ),
+                            currencyKey: isBuy
+                                ? getStableCoinForNetwork(
+                                      networkId,
+                                      isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
+                                  )
+                                : market.positionType,
                         })}
                         currencyComponent={
                             isBuy && isMultiCollateralSupported ? (

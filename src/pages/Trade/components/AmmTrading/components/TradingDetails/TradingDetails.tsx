@@ -67,13 +67,21 @@ const TradingDetails: React.FC<TradingDetailsProps> = ({
                 <TextLabel>
                     {t(`options.trade.amm-trading.details-modal.${isBuy ? 'amount-buy' : 'total-receive'}`)}
                 </TextLabel>
-                {getTextValue(formatCurrencyWithKey(positionType, positionAmount), positionAmount > 0, isLoading)}
+                {getTextValue(
+                    formatCurrencyWithKey(isBuy ? positionType : getStableCoinForNetwork(networkId), positionAmount),
+                    positionAmount > 0,
+                    isLoading
+                )}
             </DetailsRow>
             <DetailsRow>
                 <TextLabel>
                     {t(`options.trade.amm-trading.details-modal.${isBuy ? 'total-pay' : 'amount-sell'}`)}
                 </TextLabel>
-                {getTextValue(formatCurrencyWithKey(selectedStable, paidAmount), paidAmount > 0, isLoading)}
+                {getTextValue(
+                    formatCurrencyWithKey(isBuy ? selectedStable : positionType, paidAmount),
+                    paidAmount > 0,
+                    isLoading
+                )}
             </DetailsRow>
             {isBuy && (
                 <DetailsRow>
