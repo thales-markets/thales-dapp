@@ -169,7 +169,7 @@ export const Notification = styled.span`
     }
 `;
 
-export const ContentWrapper = styled.div`
+export const ContentWrapper = styled.div<{ isScrollable?: boolean }>`
     width: calc(100% + 80px);
     overflow: hidden;
     overflow-y: auto;
@@ -178,7 +178,7 @@ export const ContentWrapper = styled.div`
     margin-top: 10px;
     padding-left: 50px;
     padding-right: 20px;
-    max-height: 590px;
+    ${(props) => (props.isScrollable ? 'max-height: 590px;' : 'height: 100%;')}
 `;
 
 export const PriceContainer = styled.div`

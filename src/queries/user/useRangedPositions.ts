@@ -37,7 +37,7 @@ const useRangedPositions = (
             });
 
             const livePosition = rangedPositionBalances.filter(
-                (balance: any) => Number(balance.amount) !== 0 && balance.position.market.result === null
+                (balance: any) => Number(balance.amount) > 0 && balance.position.market.result === null
             );
 
             await Promise.all(
@@ -73,7 +73,7 @@ const useRangedPositions = (
             );
 
             const maturedPositions = rangedPositionBalances.filter(
-                (balance: any) => Number(balance.amount) !== 0 && balance.position.market.result !== null
+                (balance: any) => Number(balance.amount) > 0 && balance.position.market.result !== null
             );
 
             maturedPositions.map((balance: any) => {
@@ -103,44 +103,29 @@ const useRangedPositions = (
                 account: walletAddress,
                 network: networkId,
             });
+            const marketTxFiltered = marketTx.filter((tx: any) => tx.type !== 'mint' && tx.amount !== 0);
 
-            const txMap = new Map();
-
-            marketTx.map((tx: any) => {
-                if (tx.type !== 'mint') {
-                    txMap.set(tx.market, tx);
-                }
-            });
-
-            const claimedMap = new Map();
-
-            const today = new Date();
-            // thales-data takes timestamp argument in seconds - take markets from last 120 days (4 months)
-            const priorDate = Math.round(new Date(new Date().setDate(today.getDate() - 120)).getTime() / 1000);
-
-            const optionsMarkets: RangedMarket[] = await thalesData.binaryOptions.rangedMarkets({
+            const rangedMarketIds = marketTxFiltered.map((tx: any) => tx.market);
+            const rangedMarkets: RangedMarket[] = await thalesData.binaryOptions.rangedMarkets({
                 max: Infinity,
                 network: networkId,
-                minMaturity: priorDate,
+                marketIds: rangedMarketIds,
             });
 
-            optionsMarkets
-                .filter((market) => market.maturityDate <= +Date.now())
-                .map((market) => {
-                    if (txMap.has(market.address)) {
-                        claimedMap.set(market.address, { market, tx: txMap.get(market.address) });
-                    }
-                });
+            const claimed = rangedMarkets.map((rangedMarket) => {
+                return {
+                    market: rangedMarket,
+                    tx: marketTxFiltered.find((tx: any) => tx.market === rangedMarket.address),
+                };
+            });
 
-            const result = {
+            return {
                 claimable,
                 claimableAmount,
-                claimed: Array.from(claimedMap.values()),
+                claimed,
                 matured,
                 live,
             };
-
-            return result;
         },
         options
     );

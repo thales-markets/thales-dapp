@@ -180,7 +180,7 @@ const Profile: React.FC = () => {
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
                     </Nav>
-                    <ContentWrapper>
+                    <ContentWrapper isScrollable={isSimpleView}>
                         {view === NavItems.MyPositions && (
                             <MyPositions
                                 isSimpleView={isSimpleView}
@@ -198,7 +198,7 @@ const Profile: React.FC = () => {
                                 claimed={positions.claimed}
                                 claimedRange={userRangePositions.claimed}
                                 searchText={searchAddress ? '' : searchText}
-                                isLoading={userPositionsQuery.isLoading}
+                                isLoading={userPositionsQuery.isLoading || userRangePositionsQuery.isLoading}
                                 rangedPositions={userRangePositions.matured}
                             />
                         )}
