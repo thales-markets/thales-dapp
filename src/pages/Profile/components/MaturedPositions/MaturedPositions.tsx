@@ -134,112 +134,108 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 filteredData.length > 0 &&
                 filteredData.map((data: any, index: number) => (
                     <Content key={index}>
-                        {data.balances.amount > 0 && (
-                            <SPAAnchor href={data.link}>
-                                <CardWrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
-                                    <Card>
-                                        <CardColumn style={{ flex: 1 }}>
-                                            <CardSection>
-                                                <CurrencyIcon
-                                                    width="40px"
-                                                    height="40px"
-                                                    currencyKey={data.market.currencyKey}
-                                                    iconType={
-                                                        !data.range
-                                                            ? IconType.NORMAL
-                                                            : data.balances.type === Positions.IN
-                                                            ? IconType.IN
-                                                            : IconType.OUT
-                                                    }
-                                                />
-                                                <CardRowSubtitle>{data.market.currencyKey}</CardRowSubtitle>
-                                            </CardSection>
-                                        </CardColumn>
+                        <SPAAnchor href={data.link}>
+                            <CardWrapper background={data.claimable} style={{ opacity: data.claimed ? 0.5 : 1 }}>
+                                <Card>
+                                    <CardColumn style={{ flex: 1 }}>
+                                        <CardSection>
+                                            <CurrencyIcon
+                                                width="40px"
+                                                height="40px"
+                                                currencyKey={data.market.currencyKey}
+                                                iconType={
+                                                    !data.range
+                                                        ? IconType.NORMAL
+                                                        : data.balances.type === Positions.IN
+                                                        ? IconType.IN
+                                                        : IconType.OUT
+                                                }
+                                            />
+                                            <CardRowSubtitle>{data.market.currencyKey}</CardRowSubtitle>
+                                        </CardSection>
+                                    </CardColumn>
+                                    <CardColumn>
+                                        <CardSection>
+                                            <CardRowTitle>
+                                                {t(`options.home.markets-table.maturity-date-col`)}
+                                            </CardRowTitle>
+                                            <CardRowSubtitle>
+                                                {formatShortDate(data.market.maturityDate)}
+                                            </CardRowSubtitle>
+                                        </CardSection>
+                                        <CardSection>
+                                            <CardRowTitle>
+                                                {t(`options.home.markets-table.final-asset-price-col`)}
+                                            </CardRowTitle>
+                                            <CardRowSubtitle>
+                                                {formatCurrencyWithSign(USD_SIGN, data.market.finalPrice)}
+                                            </CardRowSubtitle>
+                                        </CardSection>
+                                    </CardColumn>
+                                    {data.range ? (
+                                        <MiddleContrainer>
+                                            <RangeIllustration
+                                                priceData={{
+                                                    left: data.market.leftPrice,
+                                                    right: data.market.rightPrice,
+                                                    current: data.market.finalPrice,
+                                                }}
+                                                fontSize={24}
+                                                maxWidth={65}
+                                            />
+                                        </MiddleContrainer>
+                                    ) : (
                                         <CardColumn>
                                             <CardSection>
                                                 <CardRowTitle>
-                                                    {t(`options.home.markets-table.maturity-date-col`)}
+                                                    {t(`options.home.markets-table.strike-price-col`)}
                                                 </CardRowTitle>
                                                 <CardRowSubtitle>
-                                                    {formatShortDate(data.market.maturityDate)}
+                                                    {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
                                                 </CardRowSubtitle>
                                             </CardSection>
                                             <CardSection>
                                                 <CardRowTitle>
-                                                    {t(`options.home.markets-table.final-asset-price-col`)}
+                                                    {t('options.home.market-card.price-difference')}
                                                 </CardRowTitle>
                                                 <CardRowSubtitle>
-                                                    {formatCurrencyWithSign(USD_SIGN, data.market.finalPrice)}
+                                                    <PriceDifferenceInfo
+                                                        priceDiff={data.market.strikePrice < data.market.finalPrice}
+                                                    >
+                                                        {`${getPercentageDifference(
+                                                            data.market.finalPrice,
+                                                            data.market.strikePrice
+                                                        ).toFixed(2)}%`}
+                                                    </PriceDifferenceInfo>
                                                 </CardRowSubtitle>
                                             </CardSection>
                                         </CardColumn>
-                                        {data.range ? (
-                                            <MiddleContrainer>
-                                                <RangeIllustration
-                                                    priceData={{
-                                                        left: data.market.leftPrice,
-                                                        right: data.market.rightPrice,
-                                                        current: data.market.finalPrice,
-                                                    }}
-                                                    fontSize={24}
-                                                    maxWidth={65}
-                                                />
-                                            </MiddleContrainer>
-                                        ) : (
-                                            <CardColumn>
-                                                <CardSection>
-                                                    <CardRowTitle>
-                                                        {t(`options.home.markets-table.strike-price-col`)}
-                                                    </CardRowTitle>
-                                                    <CardRowSubtitle>
-                                                        {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
-                                                    </CardRowSubtitle>
-                                                </CardSection>
-                                                <CardSection>
-                                                    <CardRowTitle>
-                                                        {t('options.home.market-card.price-difference')}
-                                                    </CardRowTitle>
-                                                    <CardRowSubtitle>
-                                                        <PriceDifferenceInfo
-                                                            priceDiff={data.market.strikePrice < data.market.finalPrice}
-                                                        >
-                                                            {`${getPercentageDifference(
-                                                                data.market.finalPrice,
-                                                                data.market.strikePrice
-                                                            ).toFixed(2)}%`}
-                                                        </PriceDifferenceInfo>
-                                                    </CardRowSubtitle>
-                                                </CardSection>
-                                            </CardColumn>
-                                        )}
+                                    )}
 
-                                        <CardColumn>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t('options.leaderboard.trades.table.amount-col')}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {data.balances.amount.toFixed(2)}
-                                                    <Icon
-                                                        margin="0 0 0 6px"
-                                                        color={getColor(data, theme)}
-                                                        className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
-                                                    ></Icon>
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                            <CardSection>
-                                                <CardRowTitle>
-                                                    {t(`options.home.markets-table.status-col`)}
-                                                </CardRowTitle>
-                                                <CardRowSubtitle>
-                                                    {getIconOrText(data.claimable, data.claimed, t, theme)}
-                                                </CardRowSubtitle>
-                                            </CardSection>
-                                        </CardColumn>
-                                    </Card>
-                                </CardWrapper>
-                            </SPAAnchor>
-                        )}
+                                    <CardColumn>
+                                        <CardSection>
+                                            <CardRowTitle>
+                                                {t('options.leaderboard.trades.table.amount-col')}
+                                            </CardRowTitle>
+                                            <CardRowSubtitle>
+                                                {data.balances.amount.toFixed(2)}
+                                                <Icon
+                                                    margin="0 0 0 6px"
+                                                    color={getColor(data, theme)}
+                                                    className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
+                                                ></Icon>
+                                            </CardRowSubtitle>
+                                        </CardSection>
+                                        <CardSection>
+                                            <CardRowTitle>{t(`options.home.markets-table.status-col`)}</CardRowTitle>
+                                            <CardRowSubtitle>
+                                                {getIconOrText(data.claimable, data.claimed, t, theme)}
+                                            </CardRowSubtitle>
+                                        </CardSection>
+                                    </CardColumn>
+                                </Card>
+                            </CardWrapper>
+                        </SPAAnchor>
                     </Content>
                 ))}
             {isLoading && isSimpleView && (
