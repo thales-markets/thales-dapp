@@ -3,7 +3,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 import { TFunction } from 'i18next';
 import { ThemeInterface } from 'types/ui';
-import { POSITIONS_TO_SIDE_MAP, Positions, RANGE_SIDE, SIDE } from 'constants/options';
+import { POSITIONS_TO_SIDE_MAP, Positions, RANGE_SIDE } from 'constants/options';
 
 const formatAMPM = (date: Date) => {
     let hours = date.getHours();
@@ -71,12 +71,11 @@ const generateRows = (data: any[], translator: TFunction, theme: ThemeInterface)
                     ? true
                     : false;
             const marketExpired = d.marketItem?.result;
-            const isLong = d.optionSide === SIDE[POSITIONS_TO_SIDE_MAP[Positions.UP]];
             const optionPrice = d.orderSide != 'sell' ? d.takerAmount / d.makerAmount : d.makerAmount / d.takerAmount;
             const paidAmount = d.orderSide == 'sell' ? d.makerAmount : d.takerAmount;
 
             return {
-                dotColor: marketExpired ? (isLong ? theme.positionColor.up : theme.positionColor.down) : '',
+                dotColor: marketExpired ? '' : theme.background.quaternary,
                 asset: {
                     currencyKey: d.marketItem.currencyKey,
                     assetNameFontSize: '12px',

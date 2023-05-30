@@ -8,17 +8,14 @@ const useRangedMarketsQuery = (networkId: NetworkId, options?: UseQueryOptions<R
     return useQuery<RangedMarket[]>(
         QUERY_KEYS.BinaryOptions.RangedMarkets(networkId),
         async () => {
-            // const today = new Date();
-            // // thales-data takes timestamp argument in seconds - take markets from last 120 days (4 months)
-            // const priorDate = Math.round(new Date(new Date().setDate(today.getDate() - 120)).getTime() / 1000);
-
             const today = new Date();
-            const tomorrow = Math.round(new Date(new Date().setDate(today.getDate() + 1)).getTime() / 1000);
+            // thales-data takes timestamp argument in seconds - take markets from last 120 days (4 months)
+            const priorDate = Math.round(new Date(new Date().setDate(today.getDate() - 120)).getTime() / 1000);
 
             const rangedMarkets: RangedMarket[] = await thalesData.binaryOptions.rangedMarkets({
                 max: Infinity,
                 network: networkId,
-                minMaturity: tomorrow,
+                minMaturity: priorDate,
             });
 
             return rangedMarkets;
