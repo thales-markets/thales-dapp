@@ -170,15 +170,15 @@ export const Notification = styled.span`
 `;
 
 export const ContentWrapper = styled.div`
-    width: calc(100% + 100px);
-    padding-right: 50px;
+    width: calc(100% + 80px);
     overflow: hidden;
     overflow-y: auto;
-    padding-left: 50px;
     position: relative;
     left: -50px;
-    padding-bottom: 40px;
-    height: 100%;
+    margin-top: 10px;
+    padding-left: 50px;
+    padding-right: 20px;
+    max-height: 590px;
 `;
 
 export const PriceContainer = styled.div`

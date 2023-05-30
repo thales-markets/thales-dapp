@@ -148,7 +148,7 @@ export const getColor = (data: any, theme: ThemeInterface) => {
 
 export const Icon = styled.i<{ margin?: string; color?: string }>`
     ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
-    ${(props) => (props.color ? `color: ${props.color}` : '')};
+    ${(props) => (props.color ? `color: ${props.color} !important` : '')};
     @media (max-width: 568px) {
         font-size: 16px;
         line-height: 100%;
