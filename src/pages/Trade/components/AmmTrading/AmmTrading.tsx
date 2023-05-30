@@ -31,7 +31,13 @@ import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAdd
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow, FlexDivRowCentered } from 'theme/common';
-import { MarketInfo, RangedMarketPerPosition, StableCoins } from 'types/options';
+import {
+    AccountMarketInfo,
+    MarketInfo,
+    RangedMarketBalanceInfo,
+    RangedMarketPerPosition,
+    StableCoins,
+} from 'types/options';
 import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import erc20Contract from 'utils/contracts/erc20Contract';
@@ -63,6 +69,9 @@ import { convertPriceImpactToBonus } from 'utils/options';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import SkewSlippageDetails from './components/SkewSlippageDetails/SkewSlippageDetails';
 import { isSlippageValid } from './components/Slippage/Slippage';
+import { getIsBuy } from 'redux/modules/marketWidgets';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
+import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -84,6 +93,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const userSelectedCollateral = useSelector((state: RootState) => getSelectedCollateral(state));
+    const isBuy = useSelector((state: RootState) => getIsBuy(state));
 
     const [positionAmount, setPositionAmount] = useState<number | string>('');
     const [positionPrice, setPositionPrice] = useState<number | string>('');
@@ -122,6 +132,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         enabled: isAppReady && isWalletConnected && isMultiCollateralSupported,
     });
 
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
+        enabled: isAppReady && isWalletConnected && !isRangedAmm && !!market.address,
+    });
+    const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(market.address, walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && isRangedAmm && !!market.address,
+    });
+
     const ammMaxLimits = useMemo(() => {
         return ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? ammMaxLimitsQuery.data : undefined;
     }, [ammMaxLimitsQuery.data, ammMaxLimitsQuery.isSuccess]);
@@ -131,6 +148,22 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             ? rangedAmmMaxLimitsQuery.data
             : undefined;
     }, [rangedAmmMaxLimitsQuery.data, rangedAmmMaxLimitsQuery.isSuccess]);
+
+    let optBalances = isRangedAmm ? { in: 0, out: 0 } : { short: 0, long: 0 };
+    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedAmm) {
+        optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
+    }
+
+    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedAmm) {
+        optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
+    }
+    const tokenBalance = isRangedAmm
+        ? market.positionType == Positions.UP
+            ? optBalances.long
+            : optBalances.short
+        : market.positionType == Positions.IN
+        ? optBalances.in
+        : optBalances.out;
 
     const walletBalancesMap = useMemo(() => {
         return stableBalanceQuery.isSuccess ? stableBalanceQuery.data : null;
@@ -163,7 +196,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const isUpPosition = market.positionType === Positions.UP;
     const isInPosition = market.positionType === Positions.IN;
 
-    const insufficientBalance = stableBalance < Number(paidAmount) || !stableBalance;
+    const insufficientBalance = isBuy
+        ? stableBalance < Number(paidAmount) || !stableBalance
+        : !tokenBalance || (!!tokenBalance && tokenBalance < Number(paidAmount));
     const isSlippagePercValid = isSlippageValid(Number(slippagePerc));
 
     const isButtonDisabled =
@@ -605,35 +640,34 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         let max = 0;
         let base = 0;
         let baseImpact = 0;
-        console.log(isRangedAmm, rangedAmmMaxLimits);
         if (isRangedAmm) {
             if (rangedAmmMaxLimits) {
                 if (isInPosition) {
-                    max = rangedAmmMaxLimits.in.maxBuy;
-                    base = rangedAmmMaxLimits.in.buyPrice;
+                    max = isBuy ? rangedAmmMaxLimits.in.maxBuy : rangedAmmMaxLimits.in.maxSell;
+                    base = isBuy ? rangedAmmMaxLimits.in.buyPrice : rangedAmmMaxLimits.in.sellPrice;
                     baseImpact = rangedAmmMaxLimits.in.priceImpact;
                 } else {
-                    max = rangedAmmMaxLimits.out.maxBuy;
-                    base = rangedAmmMaxLimits.out.buyPrice;
+                    max = isBuy ? rangedAmmMaxLimits.out.maxBuy : rangedAmmMaxLimits.out.maxSell;
+                    base = isBuy ? rangedAmmMaxLimits.out.buyPrice : rangedAmmMaxLimits.out.sellPrice;
                     baseImpact = rangedAmmMaxLimits.out.priceImpact;
                 }
             }
         } else if (ammMaxLimits) {
             if (isUpPosition) {
-                max = ammMaxLimits.maxBuyLong;
-                base = ammMaxLimits.buyLongPrice;
-                baseImpact = ammMaxLimits.buyLongPriceImpact;
+                max = isBuy ? ammMaxLimits.maxBuyLong : ammMaxLimits.maxSellLong;
+                base = isBuy ? ammMaxLimits.buyLongPrice : ammMaxLimits.sellLongPrice;
+                baseImpact = isBuy ? ammMaxLimits.buyLongPriceImpact : ammMaxLimits.sellLongPriceImpact;
             } else {
-                max = ammMaxLimits.maxBuyShort;
-                base = ammMaxLimits.buyShortPrice;
-                baseImpact = ammMaxLimits.buyShortPriceImpact;
+                max = isBuy ? ammMaxLimits.maxBuyShort : ammMaxLimits.maxSellShort;
+                base = isBuy ? ammMaxLimits.buyShortPrice : ammMaxLimits.sellShortPrice;
+                baseImpact = isBuy ? ammMaxLimits.buyShortPriceImpact : ammMaxLimits.sellShortPriceImpact;
             }
         }
         setLiquidity(max);
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
         setOutOfLiquidity(max < MINIMUM_AMM_LIQUIDITY);
-    }, [isRangedAmm, ammMaxLimits, isUpPosition, rangedAmmMaxLimits, isInPosition]);
+    }, [isRangedAmm, ammMaxLimits, isUpPosition, rangedAmmMaxLimits, isInPosition, isBuy]);
 
     useEffect(() => {
         let messageKey = '';
@@ -845,7 +879,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                             ),
                         })}
                         currencyComponent={
-                            isMultiCollateralSupported ? (
+                            isBuy && isMultiCollateralSupported ? (
                                 <CollateralSelector
                                     collateralArray={COLLATERALS}
                                     selectedItem={selectedStableIndex}
@@ -854,7 +888,13 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                 />
                             ) : undefined
                         }
-                        currencyLabel={!isMultiCollateralSupported ? getStableCoinForNetwork(networkId) : undefined}
+                        currencyLabel={
+                            isBuy
+                                ? !isMultiCollateralSupported
+                                    ? getStableCoinForNetwork(networkId)
+                                    : undefined
+                                : market.positionType
+                        }
                     />
                     {isDetailsPage && (
                         <>
