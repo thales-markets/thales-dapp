@@ -11,7 +11,7 @@ import styled, { useTheme } from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import { formatNumberShort, formatPercentage } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 
 type TableProps = {
@@ -52,15 +52,23 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: (row: any, index: number) => {
+                    let strikePrice;
+                    if (position === Positions.UP || position === Positions.DOWN) {
+                        strikePrice = `${USD_SIGN} ${formatNumberShort(row.strikePrice, false)}`;
+                    } else if (position === Positions.IN) {
+                        strikePrice = `${USD_SIGN} ${formatNumberShort(
+                            row.leftPrice,
+                            false
+                        )} <-> ${USD_SIGN} ${formatNumberShort(row.rightPrice, false)}`;
+                    } else {
+                        strikePrice = `<- ${USD_SIGN} ${formatNumberShort(
+                            row.leftPrice,
+                            false
+                        )}  ${USD_SIGN} ${formatNumberShort(row.rightPrice, false)} ->`;
+                    }
                     return (
                         <TableText selected={rowIndex === index} price={false}>
-                            {position === Positions.UP || position === Positions.DOWN
-                                ? formatCurrencyWithSign(USD_SIGN, row.strikePrice, 2)
-                                : `${formatCurrencyWithSign(USD_SIGN, row.leftPrice, 2)} - ${formatCurrencyWithSign(
-                                      USD_SIGN,
-                                      row.rightPrice,
-                                      2
-                                  )}`}
+                            {strikePrice}
                         </TableText>
                     );
                 },
@@ -160,7 +168,7 @@ const TableText = styled.span<{ price?: boolean; selected?: boolean }>`
     line-height: 285.5%;
     text-align: center;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: pre;
     color: ${(props) =>
         props.selected
             ? props.theme.background.primary
