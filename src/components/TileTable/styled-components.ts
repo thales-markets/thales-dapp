@@ -13,6 +13,7 @@ export const Tile = styled(FlexDiv)<{
     lineHidden?: boolean;
     heightSmall?: boolean;
     defaultFlowColor?: string;
+    lineSmall?: boolean;
 }>`
     position: relative;
     background: ${(props) => props.backgroundColor || 'transparent'};
@@ -54,8 +55,8 @@ export const Tile = styled(FlexDiv)<{
         opacity: ${(props) => (props.disabled ? '0.5' : '1')} !important;
         display: ${(props) => (props.lineHidden ? 'none' : 'block')} !important;
         @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-            height: ${(props) => (props.heightSmall ? '44px' : '94px')};
-            top: ${(props) => (props.heightSmall ? '-31px' : '-56px')};
+            height: ${(props) => (props.heightSmall ? '44px' : props.lineSmall ? '70px' : '94px')};
+            top: ${(props) => (props.heightSmall || props.lineSmall ? '-31px' : '-56px')};
         }
     }
     @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {

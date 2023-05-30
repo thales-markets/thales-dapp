@@ -64,6 +64,8 @@ const TileTable: React.FC<Properties> = ({
 }) => {
     const { t } = useTranslation();
 
+    let isPrevRowTitle = false;
+
     return isLoading ? (
         <LoaderContainer>
             <SimpleLoader />
@@ -74,6 +76,8 @@ const TileTable: React.FC<Properties> = ({
         <Container>
             {rows.map((row, index) => {
                 if (typeof row !== 'string') {
+                    const lineSmall = isPrevRowTitle;
+                    isPrevRowTitle = false;
                     const cells = row.cells.slice(
                         firstColumnRenderer ? 1 : 0,
                         lastColumnRenderer ? row.cells.length - 1 : row.cells.length
@@ -89,6 +93,7 @@ const TileTable: React.FC<Properties> = ({
                                 backgroundColor={row.backgroundColor}
                                 heightSmall={row.heightSmall}
                                 defaultFlowColor={defaultFlowColor}
+                                lineSmall={lineSmall}
                                 key={index}
                             >
                                 {row.asset && <AssetInfo {...row.asset} />}
@@ -107,6 +112,7 @@ const TileTable: React.FC<Properties> = ({
                         row.link
                     );
                 } else {
+                    isPrevRowTitle = true;
                     return (
                         <FlexDiv key={index}>
                             {firstColumnRenderer && firstColumnRenderer(row)}

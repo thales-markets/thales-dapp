@@ -1,5 +1,5 @@
 import Currency from 'components/Currency/v2';
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
+import CurrencyIcon, { IconType } from 'components/Currency/v2/CurrencyIcon';
 import SPAAnchor from 'components/SPAAnchor';
 import { USD_SIGN } from 'constants/currency';
 import React, { useMemo } from 'react';
@@ -36,6 +36,7 @@ import {
 } from '../styled-components';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { Positions } from 'constants/options';
 
 type MaturedPositionsProps = {
     claimed: any[];
@@ -68,7 +69,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 modifiedValue.range = false;
                 modifiedValue.balances = {};
                 modifiedValue.balances.amount = value.tx.amount;
-                modifiedValue.balances.type = value.tx.side === 'short' ? 'DOWN' : 'UP';
+                modifiedValue.balances.type = value.tx.side === 'short' ? Positions.DOWN : Positions.UP;
                 modifiedValue.claimable = false;
                 modifiedValue.claimed = true;
                 modifiedValue.link = buildOptionsMarketLink(value.tx.market);
@@ -81,7 +82,7 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                 modifiedValue.range = true;
                 modifiedValue.balances = {};
                 modifiedValue.balances.amount = value.tx.amount;
-                modifiedValue.balances.type = value.tx.side === 'in' ? 'IN' : 'OUT';
+                modifiedValue.balances.type = value.tx.side === 'in' ? Positions.IN : Positions.OUT;
                 modifiedValue.claimable = false;
                 modifiedValue.claimed = true;
                 modifiedValue.link = buildRangeMarketLink(value.tx.market);
@@ -143,7 +144,13 @@ const MaturedPositions: React.FC<MaturedPositionsProps> = ({
                                                     width="40px"
                                                     height="40px"
                                                     currencyKey={data.market.currencyKey}
-                                                    iconType={!data.range ? 0 : data.balances.type === 'IN' ? 1 : 2}
+                                                    iconType={
+                                                        !data.range
+                                                            ? IconType.NORMAL
+                                                            : data.balances.type === Positions.IN
+                                                            ? IconType.IN
+                                                            : IconType.OUT
+                                                    }
                                                 />
                                                 <CardRowSubtitle>{data.market.currencyKey}</CardRowSubtitle>
                                             </CardSection>

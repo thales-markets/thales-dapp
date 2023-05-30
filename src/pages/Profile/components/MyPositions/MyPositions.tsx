@@ -1,6 +1,6 @@
 import PriceChart from 'components/Charts/PriceChart';
 import Currency from 'components/Currency/v2';
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
+import CurrencyIcon, { IconType } from 'components/Currency/v2/CurrencyIcon';
 import SPAAnchor from 'components/SPAAnchor';
 import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
@@ -41,6 +41,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsMobile } from 'redux/modules/ui';
 import { ThemeInterface } from 'types/ui';
+import { Positions } from 'constants/options';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -132,12 +133,12 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     currencyKey={data.market.currencyKey}
                                                     iconType={
                                                         !data.range
-                                                            ? data?.balances?.type === 'UP'
-                                                                ? 4
-                                                                : 5
-                                                            : data?.balances?.type === 'IN'
-                                                            ? 1
-                                                            : 2
+                                                            ? data?.balances?.type === Positions.UP
+                                                                ? IconType.UP
+                                                                : IconType.DOWN
+                                                            : data?.balances?.type === Positions.IN
+                                                            ? IconType.IN
+                                                            : IconType.OUT
                                                     }
                                                 />
                                                 <CardSection>
@@ -148,10 +149,10 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                         }}
                                                     >
                                                         {!data.range
-                                                            ? data?.balances?.type === 'UP'
+                                                            ? data?.balances?.type === Positions.UP
                                                                 ? t('options.common.long')
                                                                 : t('options.common.short')
-                                                            : data?.balances?.type === 'IN'
+                                                            : data?.balances?.type === Positions.IN
                                                             ? t('options.common.in')
                                                             : t('options.common.out')}
                                                     </CardRowTitle>
@@ -316,12 +317,12 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     spanStyle={{ width: 60 }}
                                     additionalIconType={
                                         !props.cell.row.original.range
-                                            ? props.cell.value === 'UP'
-                                                ? 4
-                                                : 5
-                                            : props.cell.value === 'IN'
-                                            ? 1
-                                            : 2
+                                            ? props.cell.value === Positions.UP
+                                                ? IconType.UP
+                                                : IconType.DOWN
+                                            : props.cell.value === Positions.IN
+                                            ? IconType.IN
+                                            : IconType.OUT
                                     }
                                 />
                             ),
