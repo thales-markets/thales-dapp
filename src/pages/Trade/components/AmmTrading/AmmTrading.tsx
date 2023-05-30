@@ -62,6 +62,7 @@ import TradingDetailsSection from './components/TradingDetails';
 import { convertPriceImpactToBonus } from 'utils/options';
 import NumericInput from 'components/fields/NumericInput/NumericInput';
 import SkewSlippageDetails from './components/SkewSlippageDetails/SkewSlippageDetails';
+import { isSlippageValid } from './components/Slippage/Slippage';
 
 type AmmTradingProps = {
     currencyKey: string;
@@ -122,12 +123,14 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     });
 
     const ammMaxLimits = useMemo(() => {
-        return ammMaxLimitsQuery.isSuccess ? ammMaxLimitsQuery.data : undefined;
-    }, [ammMaxLimitsQuery]);
+        return ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? ammMaxLimitsQuery.data : undefined;
+    }, [ammMaxLimitsQuery.data, ammMaxLimitsQuery.isSuccess]);
 
     const rangedAmmMaxLimits = useMemo(() => {
-        return rangedAmmMaxLimitsQuery.isSuccess ? rangedAmmMaxLimitsQuery.data : undefined;
-    }, [rangedAmmMaxLimitsQuery]);
+        return rangedAmmMaxLimitsQuery.isSuccess && rangedAmmMaxLimitsQuery.data
+            ? rangedAmmMaxLimitsQuery.data
+            : undefined;
+    }, [rangedAmmMaxLimitsQuery.data, rangedAmmMaxLimitsQuery.isSuccess]);
 
     const walletBalancesMap = useMemo(() => {
         return stableBalanceQuery.isSuccess ? stableBalanceQuery.data : null;
@@ -161,6 +164,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
     const isInPosition = market.positionType === Positions.IN;
 
     const insufficientBalance = stableBalance < Number(paidAmount) || !stableBalance;
+    const isSlippagePercValid = isSlippageValid(Number(slippagePerc));
 
     const isButtonDisabled =
         !isPaidAmountEntered ||
@@ -601,6 +605,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         let max = 0;
         let base = 0;
         let baseImpact = 0;
+        console.log(isRangedAmm, rangedAmmMaxLimits);
         if (isRangedAmm) {
             if (rangedAmmMaxLimits) {
                 if (isInPosition) {
@@ -628,15 +633,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
         setOutOfLiquidity(max < MINIMUM_AMM_LIQUIDITY);
-    }, [
-        ammMaxLimitsQuery.data,
-        ammMaxLimits,
-        isUpPosition,
-        isRangedAmm,
-        rangedAmmMaxLimitsQuery.data,
-        rangedAmmMaxLimits,
-        isInPosition,
-    ]);
+    }, [isRangedAmm, ammMaxLimits, isUpPosition, rangedAmmMaxLimits, isInPosition]);
 
     useEffect(() => {
         let messageKey = '';
@@ -700,6 +697,9 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         if (!isPaidAmountEntered) {
             return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
+        }
+        if (!isSlippagePercValid) {
+            return <Button disabled={true}>{t(`common.errors.enter-slippage`)}</Button>;
         }
         if (!hasAllowance) {
             return (
@@ -871,6 +871,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                                     isNonDefaultStable ? (COLLATERALS[selectedStableIndex] as StableCoins) : undefined
                                 )}
                                 profit={Number(priceProfit) * Number(paidAmount)}
+                                isLoading={isFetchingQuote}
                             />
                             <SkewSlippageDetails
                                 skew={Number(positionPrice) > 0 ? Number(priceImpact) : Number(basePriceImpact)}

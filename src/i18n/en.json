@@ -283,7 +283,7 @@
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
             "enter-address": "Enter address",
-            "enter-valid-slippage": "Enter a valid slippage percentage",
+            "enter-slippage": "Enter slippage",
             "invalid-price": "Invalid price",
             "invalid-address": "Invalid address",
             "invalid-price-max": "The price cannot be higher than ${{max}}",
