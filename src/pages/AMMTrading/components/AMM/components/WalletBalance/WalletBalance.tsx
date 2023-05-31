@@ -5,29 +5,27 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-import { AccountMarketInfo, MarketType, RangedMarketBalanceInfo, StableCoins } from 'types/options';
+import { AccountMarketInfo, RangedMarketBalanceInfo, StableCoins } from 'types/options';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import { getIsWalletConnected, getNetworkId, getSelectedCollateral, getWalletAddress } from 'redux/modules/wallet';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getStableCoinBalance, getStableCoinForNetwork } from 'utils/currency';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import { COLLATERALS, MARKET_TYPE, Positions } from 'constants/options';
+import { COLLATERALS, Positions } from 'constants/options';
 import useMultipleCollateralBalanceQuery from 'queries/walletBalances/useMultipleCollateralBalanceQuery';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import { FlexDivRowCentered, FlexDivSpaceBetween } from 'theme/common';
+import { useTranslation } from 'react-i18next';
 
-type WalletBalancePropsType = {
-    type: Positions;
+type WalletBalanceProps = {
+    isRangedMarket: boolean;
+    positionType: Positions;
 };
 
-const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
-    const isRangedAmm = [Positions.IN, Positions.OUT].includes(type);
-    const marketType: MarketType = isRangedAmm ? (MARKET_TYPE[1] as MarketType) : (MARKET_TYPE[0] as MarketType);
-    // TODO: fix this warning
-    // eslint-disable-next-line
-    const optionsMarket = isRangedAmm ? useRangedMarketContext() : useMarketContext();
-    let optBalances = isRangedAmm ? { in: 0, out: 0 } : { short: 0, long: 0 };
+const WalletBalance: React.FC<WalletBalanceProps> = ({ isRangedMarket, positionType }) => {
+    const optionsMarket = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const { t } = useTranslation();
 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -35,40 +33,30 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const userSelectedCollateral = useSelector((state: RootState) => getSelectedCollateral(state));
 
+    let optBalances = isRangedMarket ? { in: 0, out: 0 } : { short: 0, long: 0 };
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
-        enabled: isAppReady && walletAddress !== '' && marketType == MARKET_TYPE[0],
+        enabled: isAppReady && isWalletConnected && !isRangedMarket,
     });
 
     const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(optionsMarket?.address, walletAddress, networkId, {
-        enabled: isAppReady && walletAddress !== '' && marketType == MARKET_TYPE[1],
+        enabled: isAppReady && isWalletConnected && isRangedMarket,
     });
 
-    if (
-        isWalletConnected &&
-        accountMarketInfoQuery.isSuccess &&
-        accountMarketInfoQuery.data &&
-        marketType == MARKET_TYPE[0]
-    ) {
+    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedMarket) {
         optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
     }
 
-    if (
-        isWalletConnected &&
-        rangedMarketsBalance.isSuccess &&
-        rangedMarketsBalance.data &&
-        marketType == MARKET_TYPE[1]
-    ) {
+    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedMarket) {
         optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
     }
 
-    const tokenBalance =
-        marketType == MARKET_TYPE[0]
-            ? type == Positions.UP
-                ? optBalances.long
-                : optBalances.short
-            : type == Positions.IN
+    const tokenBalance = isRangedMarket
+        ? positionType == Positions.IN
             ? optBalances.in
-            : optBalances.out;
+            : optBalances.out
+        : positionType == Positions.UP
+        ? optBalances.long
+        : optBalances.short;
 
     const stableBalanceQuery = useStableBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -87,7 +75,7 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
 
     return (
         <Wrapper>
-            <Label>Wallet balance:</Label>
+            <Label>{t(`common.wallet.balance`)}:</Label>
             <BalanceContainer>
                 <Balance>
                     {formatCurrencyWithKey(
@@ -98,7 +86,7 @@ const WalletBalance: React.FC<WalletBalancePropsType> = ({ type }) => {
                         sUSDBalance
                     )}
                 </Balance>
-                {!!tokenBalance && <Balance>{formatCurrencyWithKey(type, tokenBalance)}</Balance>}
+                {!!tokenBalance && <Balance>{formatCurrencyWithKey(positionType, tokenBalance)}</Balance>}
             </BalanceContainer>
         </Wrapper>
     );

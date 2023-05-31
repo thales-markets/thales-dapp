@@ -306,8 +306,12 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 console.log(e);
             }
         };
-        if (isWalletConnected && erc20Instance.provider) {
-            getAllowance();
+        if (isBuy) {
+            if (isWalletConnected && erc20Instance.provider) {
+                getAllowance();
+            }
+        } else {
+            setAllowance(true);
         }
     }, [
         dispatch,
@@ -320,6 +324,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         hasAllowance,
         isAllowing,
         isRangedAmm,
+        isBuy,
     ]);
 
     const handleAllowance = async (approveAmount: BigNumber) => {
@@ -459,9 +464,11 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             const parsedAmount = isBuy
                 ? ethers.utils.parseEther(positionAmount.toString())
                 : stableCoinParser(paidAmount.toString(), networkId);
+
             const parsedTotal = isBuy
                 ? stableCoinParser(paidAmount.toString(), networkId)
                 : ethers.utils.parseEther(positionAmount.toString());
+
             const parsedSlippage = ethers.utils.parseEther((slippagePerc / 100).toString());
 
             const providerOptions = {
@@ -490,7 +497,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                     getSuccessToastOptions(
                         t(
                             `options.market.trade-options.place-order.swap-confirm-button.${
-                                isBuy ? 'but' : 'sell'
+                                isBuy ? 'buy' : 'sell'
                             }.confirmation-message`
                         )
                     )
@@ -610,11 +617,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
         }
         if (!hasAllowance) {
             return (
-                <Button
-                    additionalStyles={{ textTransform: 'none' }}
-                    disabled={isAllowing}
-                    onClick={() => setOpenApprovalModal(true)}
-                >
+                <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve').toUpperCase() + ' ' + collateral.currency
                         : t('common.enable-wallet-access.approve-progress').toUpperCase() +
@@ -629,10 +632,10 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
                 {isSubmitting
                     ? t(
                           `options.market.trade-options.place-order.swap-confirm-button.${
-                              isBuy ? 'but' : 'sell'
+                              isBuy ? 'buy' : 'sell'
                           }.progress-label`
                       )
-                    : t(`options.market.trade-options.place-order.swap-confirm-button.${isBuy ? 'but' : 'sell'}.label`)}
+                    : t(`options.market.trade-options.place-order.swap-confirm-button.${isBuy ? 'buy' : 'sell'}.label`)}
             </Button>
         );
     };

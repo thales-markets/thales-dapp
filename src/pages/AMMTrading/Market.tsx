@@ -90,7 +90,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                         <Container>
                             {optionMarket && (
                                 <>
-                                    <WalletBalance type={positionType} />
+                                    <WalletBalance isRangedAmm={false} positionType={positionType} />
                                     <AmmTradingContainer>
                                         <SwitchInput
                                             active={orderSide === 'sell'}
@@ -143,7 +143,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                         <Container>
                             {rangedMarket && (
                                 <>
-                                    <WalletBalance type={positionType} />
+                                    <WalletBalance isRangedAmm={true} positionType={positionType} />
                                     <AmmTradingContainer>
                                         <SwitchInput
                                             active={orderSide === 'sell'}
