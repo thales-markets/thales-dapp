@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
 import TabContainer from './components/TabContainer';
-import AMM from './components/AMM';
 import Maturity from './components/Maturity';
-import RangedMarketAMM from './components/RangedMarketAMM';
 import { MarketProvider } from './contexts/MarketContext';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import useRangedMarketQuery from 'queries/options/rangedMarkets/useRangedMarketQuery';
@@ -19,11 +17,11 @@ import ROUTES from 'constants/routes';
 import { FlexDivColumn } from 'theme/common';
 import AmmTrading from 'pages/Trade/components/AmmTrading/AmmTrading';
 import { Positions } from 'constants/options';
-import BannerCarousel from 'pages/Trade/components/BannerCarousel/BannerCarousel';
-import WalletBalance from './components/AMM/components/WalletBalance/WalletBalance';
-import SwitchInput from 'components/SwitchInput/SwitchInput';
+import BannerCarousel from 'pages/Trade/components/BannerCarousel';
+import WalletBalance from './components/WalletBalance';
+import SwitchInput from 'components/SwitchInput';
 import { useTranslation } from 'react-i18next';
-import RadioButtons from 'pages/Trade/components/RadioButtons/RadioButtons';
+import RadioButtons from 'pages/Trade/components/RadioButtons';
 import { setIsBuy } from 'redux/modules/marketWidgets';
 
 type MarketProps = {
@@ -133,7 +131,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                     </AmmTradingContainer>
                                 </>
                             )}
-                            {inMaturityPhase ? <Maturity isRangedMarket={false} /> : <AMM />}
+                            {inMaturityPhase && <Maturity isRangedMarket={false} />}
                         </Container>
                         <TabContainer isRangedMarket={false} />
                     </MarketProvider>
@@ -186,7 +184,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                     </AmmTradingContainer>
                                 </>
                             )}
-                            {inMaturityPhase ? <Maturity isRangedMarket={true} /> : <RangedMarketAMM />}
+                            {inMaturityPhase && <Maturity isRangedMarket={true} />}
                         </Container>
                         <TabContainer isRangedMarket={true} />
                     </RangedMarketProvider>
