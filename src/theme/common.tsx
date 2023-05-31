@@ -40,32 +40,11 @@ export const FlexDivColumnCentered = styled(FlexDivColumn)`
     justify-content: center;
 `;
 
-export const GridDiv = styled.div`
+export const LoaderContainer = styled.div`
     display: grid;
-`;
-
-export const GridDivCentered = styled(GridDiv)`
-    align-items: center;
-`;
-
-export const GridDivRow = styled(GridDiv)`
     grid-auto-flow: row;
-`;
-
-export const GridDivCenteredRow = styled(GridDivCentered)`
-    grid-auto-flow: row;
-`;
-
-export const GridDivCol = styled(GridDiv)`
-    grid-auto-flow: column;
-`;
-
-export const GridDivCenteredCol = styled(GridDivCentered)`
-    grid-auto-flow: column;
-`;
-
-export const LoaderContainer = styled(GridDivCenteredRow)`
     grid-gap: 10px;
+    align-items: center;
     position: absolute;
     left: 50%;
     top: 50%;

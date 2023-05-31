@@ -1,32 +1,9 @@
-export type SynthExchange = {
-    block: number;
-    date: Date;
-    feesInUSD: number;
-    fromAddress: string;
-    fromAmount: number;
-    fromAmountInUSD: number;
-    fromCurrencyKey: string;
-    fromCurrencyKeyBytes: string;
-    gasPrice: number;
-    hash: string;
-    timestamp: number;
-    toAddress: string;
-    toAmount: number;
-    toAmountInUSD: number;
-    toCurrencyKey: string;
-    toCurrencyKeyBytes: string;
-};
-
-export type SynthExchanges = SynthExchange[];
-
 export type BaseRateUpdate = {
     timestamp: number;
     rate: number;
 };
 
-export type BaseRateUpdates = BaseRateUpdate[];
-
-export type RateUpdate = BaseRateUpdate & {
+type RateUpdate = BaseRateUpdate & {
     block: number;
     synth: string;
     date: string;
@@ -34,14 +11,3 @@ export type RateUpdate = BaseRateUpdate & {
 };
 
 export type RateUpdates = RateUpdate[];
-
-export type HistoricalRatesUpdates = {
-    rates: RateUpdates;
-    low: number;
-    high: number;
-    change: number;
-};
-
-export type MarketCap = {
-    marketCap: number;
-};
