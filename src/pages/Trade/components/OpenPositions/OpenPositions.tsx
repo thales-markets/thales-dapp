@@ -112,14 +112,13 @@ const OpenPositions: React.FC = () => {
                     const { ammContract, rangedMarketAMMContract } = snxJSConnector as any;
                     const contract = isRangedAmm ? rangedMarketAMMContract : ammContract;
 
-                    const parsedAmount = ethers.utils.parseEther(position.amount.toString());
                     const promises = isRangedAmm
                         ? [
                               getQuoteFromRangedAMM(
                                   false,
                                   false,
                                   contract,
-                                  parsedAmount,
+                                  position.amountBigNumber,
                                   position.market,
                                   POSITIONS_TO_SIDE_MAP[position.side]
                               ),
@@ -129,24 +128,23 @@ const OpenPositions: React.FC = () => {
                               false,
                               false,
                               contract,
-                              parsedAmount,
+                              position.amountBigNumber,
                               position.market,
                               POSITIONS_TO_SIDE_MAP[position.side]
                           );
 
                     const [ammQuotes]: Array<BigNumber> = await Promise.all(promises);
 
-                    const ammPrice = stableCoinFormatter(ammQuotes, networkId, undefined) / position.amount;
                     const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
-
                     latestGasLimit = await fetchGasLimit(
                         position.market,
                         POSITIONS_TO_SIDE_MAP[position.side],
-                        parsedAmount,
+                        position.amountBigNumber,
                         ammQuotes,
                         parsedSlippage
                     );
 
+                    const ammPrice = stableCoinFormatter(ammQuotes, networkId, undefined) / position.amount;
                     // changes in cash out value less than 0.01 sUSD are not relevant
                     totalValueChanged =
                         roundNumberToDecimals(position.value, 3) !==
@@ -177,7 +175,6 @@ const OpenPositions: React.FC = () => {
             const { ammContract, rangedMarketAMMContract, signer } = snxJSConnector as any;
             const ammContractWithSigner = (isRangedAmm ? rangedMarketAMMContract : ammContract).connect(signer);
 
-            const parsedAmount = ethers.utils.parseEther(position.amount.toString());
             const parsedTotal = stableCoinParser(position.value.toString(), networkId);
             const parsedSlippage = ethers.utils.parseEther((SLIPPAGE_PERCENTAGE[2] / 100).toString());
             const gasPrice = await snxJSConnector.provider?.getGasPrice();
@@ -202,7 +199,7 @@ const OpenPositions: React.FC = () => {
                 ammContractWithSigner,
                 position.market,
                 POSITIONS_TO_SIDE_MAP[position.side],
-                parsedAmount,
+                position.amountBigNumber,
                 parsedTotal,
                 parsedSlippage,
                 undefined,
@@ -376,6 +373,7 @@ const dummyPositions: UserLivePositions[] = [
         market: '0x1',
         currencyKey: 'BTC',
         amount: 15,
+        amountBigNumber: BigNumber.from('15'),
         paid: 100,
         maturityDate: 1684483200000,
         strikePrice: '$ 25,000.00',
@@ -386,6 +384,7 @@ const dummyPositions: UserLivePositions[] = [
         market: '0x2',
         currencyKey: 'BTC',
         amount: 10,
+        amountBigNumber: BigNumber.from('10'),
         paid: 200,
         maturityDate: 1684483200000,
         strikePrice: '$ 35,000.00',

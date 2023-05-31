@@ -6,7 +6,7 @@ import { Positions, RANGE_SIDE, SIDE } from 'constants/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
 import { formatStrikePrice } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
 import { orderBy } from 'lodash';
 import { rangedPositionContract } from 'utils/contracts/rangedPositionContract';
@@ -16,6 +16,7 @@ export type UserLivePositions = {
     currencyKey: string;
     strikePrice: string;
     amount: number;
+    amountBigNumber: BigNumber;
     maturityDate: number;
     market: string;
     side: Positions;
@@ -136,6 +137,7 @@ const useUserOpenPositions = (
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
@@ -152,6 +154,7 @@ const useUserOpenPositions = (
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
@@ -168,6 +171,7 @@ const useUserOpenPositions = (
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
@@ -185,6 +189,7 @@ const useUserOpenPositions = (
                         market: positionBalance.position.market.id,
                         currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        amountBigNumber: positionBalance.amount,
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
                         strikePrice: formatStrikePrice(
