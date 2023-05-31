@@ -11,7 +11,7 @@ import styled, { useTheme } from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { formatPercentage, formatStrikePrice } from 'utils/formatters/number';
+import { formatStrikePrice } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 
 type TableProps = {
@@ -69,28 +69,35 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
             {
                 Header: t(`options.home.markets-table.roi`),
                 accessor: (row: any, index: number) => (
-                    <TableText selected={rowIndex === index} price={true}>
-                        {row.price.toFixed(0)}%
-                    </TableText>
+                    <PriceContainer>
+                        <TableText selected={rowIndex === index} price={true}>
+                            {row.roi.toFixed(0)}%
+                        </TableText>
+                        {row.discount > 0 && (
+                            <TableText selected={rowIndex === index} bonus={true} price={false}>
+                                + {row.discount.toFixed(0)}%
+                            </TableText>
+                        )}
+                    </PriceContainer>
                 ),
-                width: '60px',
+                width: '75px',
             },
             {
-                id: 'discountedSide',
-                Header: t(`options.home.markets-table.discount-col`),
-                accessor: 'discountedSide',
+                id: 'price',
+                Header: t(`options.home.markets-table.price`),
+                accessor: 'price',
                 Cell: (props: any) => {
                     return (
                         <>
-                            <TableText selected={rowIndex === props.row.index} price={true}>
-                                {formatPercentage(props.row.original.discount)}
+                            <TableText selected={rowIndex === props.row.index} price={false}>
+                                {props.row.original.price}
                             </TableText>
                             <Icon selected={rowIndex === props.row.index} className="icon icon--arrow-down" />
                         </>
                     );
                 },
-                width: '90px',
-                headWidth: '97px',
+                width: '70px',
+                headWidth: '110px',
             },
         ];
     }, [t, position, rowIndex]);
@@ -154,7 +161,7 @@ const Wrapper = styled(FlexDivColumn)`
     position: relative;
 `;
 
-const TableText = styled.span<{ price?: boolean; selected?: boolean }>`
+const TableText = styled.span<{ price?: boolean; selected?: boolean; bonus?: boolean }>`
     font-weight: ${(props) => (props.selected ? 700 : 500)};
     font-size: 13px;
     line-height: 285.5%;
@@ -163,14 +170,24 @@ const TableText = styled.span<{ price?: boolean; selected?: boolean }>`
     white-space: pre;
     color: ${(props) =>
         props.selected
-            ? props.theme.background.primary
+            ? props.theme.table.textColor.secondary
             : props.price
-            ? props.theme.textColor.quaternary
-            : props.theme.textColor.primary};
+            ? props.theme.table.textColor.quaternary
+            : props.bonus
+            ? props.theme.table.textColor.tertiary
+            : props.theme.table.textColor.primary};
+    margin-left: ${(props) => (props.bonus ? '4px' : 0)}; ;
 `;
 
 const NoMarketsText = styled(TableText)`
     color: ${(props) => props.theme.textColor.secondary};
+`;
+
+const PriceContainer = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
 `;
 
 export default AssetTable;

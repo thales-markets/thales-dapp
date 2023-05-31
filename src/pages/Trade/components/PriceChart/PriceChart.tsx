@@ -116,7 +116,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                 }
                 if (result) {
                     const priceData = result.prices.map((price) => ({
-                        date: format(new Date(price[0]), 'MM/dd'),
+                        date: format(new Date(price[0]), 'dd/MM'),
                         price: Number(price[1].toFixed(2)),
                     }));
 

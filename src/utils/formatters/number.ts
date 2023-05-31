@@ -129,7 +129,6 @@ export const formatStrikePrice = (leftPrice: number, position: Positions, rightP
             false
         )} ->`;
     }
-    console.log(strikePrice);
     return strikePrice;
 };
 
