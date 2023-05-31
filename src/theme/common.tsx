@@ -59,34 +59,6 @@ export const UserCardSectionHeader = styled.span`
     text-transform: uppercase;
 `;
 
-export const CardContainer = styled.div`
-    border: 2px solid ${(props) => props.theme.borderColor.primary};
-    border-radius: 15px;
-`;
-
-export const InputContainer = styled.div`
-    border: 0.8px solid ${(props) => props.theme.borderColor.primary};
-    border-radius: 10px;
-`;
-
-export const NoDataText = styled.span`
-    color: ${(props) => props.theme.textColor.primary};
-    font-size: 24px;
-    @media (max-width: 767px) {
-        font-size: 15px;
-    }
-`;
-
-export const NoDataContainer = styled.div`
-    display: block;
-    width: 100%;
-    text-align: center;
-    margin-top: 50px;
-    @media (max-width: 767px) {
-        margin-top: 10px;
-    }
-`;
-
 // TODO: Update color names
 export const Colors = {
     GRAY: '#2B3139',
