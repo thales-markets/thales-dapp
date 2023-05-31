@@ -73,7 +73,7 @@ const RowCardRangedMarket: React.FC = () => {
         if (!ammMaxLimits) return undefined;
 
         return {
-            maxIn: isBuy ? ammMaxLimits?.in.maxBuy : ammMaxLimits?.in.maxSell,
+            maxIn: isBuy ? ammMaxLimits.in.maxBuy : ammMaxLimits.in.maxSell,
             maxOut: isBuy ? ammMaxLimits.out.maxBuy : ammMaxLimits.out.maxSell,
             priceIn: isBuy ? ammMaxLimits.in.buyPrice : ammMaxLimits.in.sellPrice,
             priceOut: isBuy ? ammMaxLimits.out.buyPrice : ammMaxLimits.out.sellPrice,
@@ -81,16 +81,17 @@ const RowCardRangedMarket: React.FC = () => {
     }, [ammMaxLimits, isBuy]);
 
     const positionCurrentValue = useMemo(() => {
-        if (ammMaxLimitsQuery?.isSuccess && (optBalances?.in > 0 || optBalances?.out > 0)) {
-            const inPosition = ammMaxLimitsQuery?.data?.in;
-            const outPosition = ammMaxLimitsQuery?.data?.out;
+        if (ammMaxLimitsQuery.isSuccess && (optBalances.in > 0 || optBalances.out > 0)) {
+            const inPosition = ammMaxLimitsQuery.data.in;
+            const outPosition = ammMaxLimitsQuery.data.out;
+
             return {
                 inPositionValue:
-                    inPosition.sellPrice && inPosition.sellPrice > 0 && optBalances?.in > 0
+                    inPosition.sellPrice && inPosition.sellPrice > 0 && optBalances.in > 0
                         ? inPosition.sellPrice * optBalances?.in
                         : 0,
                 outPositionValue:
-                    outPosition.sellPrice && outPosition.sellPrice > 0 && optBalances?.out > 0
+                    outPosition.sellPrice && outPosition.sellPrice > 0 && optBalances.out > 0
                         ? outPosition.sellPrice * optBalances?.out
                         : 0,
             };

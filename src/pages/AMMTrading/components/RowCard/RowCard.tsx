@@ -69,7 +69,7 @@ const RowCard: React.FC = () => {
         if (!ammMaxLimits) return undefined;
 
         return {
-            maxUp: isBuy ? ammMaxLimits?.maxBuyLong : ammMaxLimits?.maxSellLong,
+            maxUp: isBuy ? ammMaxLimits.maxBuyLong : ammMaxLimits.maxSellLong,
             maxDown: isBuy ? ammMaxLimits.maxBuyShort : ammMaxLimits.maxSellShort,
             priceUp: isBuy ? ammMaxLimits.buyLongPrice : ammMaxLimits.sellLongPrice,
             priceDown: isBuy ? ammMaxLimits.buyShortPrice : ammMaxLimits.sellShortPrice,
@@ -77,21 +77,23 @@ const RowCard: React.FC = () => {
     }, [ammMaxLimits, isBuy]);
 
     const positionCurrentValue = useMemo(() => {
-        if (ammMaxLimitsQuery?.isSuccess && (optBalances?.long > 0 || optBalances?.short > 0)) {
-            const { sellLongPrice, sellShortPrice } = ammMaxLimitsQuery?.data;
+        if (ammMaxLimitsQuery.isSuccess && (optBalances.long > 0 || optBalances.short > 0)) {
+            const { sellLongPrice, sellShortPrice } = ammMaxLimitsQuery.data;
 
             return {
                 longPositionValue:
-                    sellLongPrice && sellLongPrice > 0 && optBalances?.long > 0
-                        ? sellLongPrice * optBalances?.long
-                        : null,
+                    sellLongPrice && sellLongPrice > 0 && optBalances?.long > 0 ? sellLongPrice * optBalances.long : 0,
                 shortPositionValue:
-                    sellShortPrice && sellShortPrice > 0 && optBalances?.short > 0
-                        ? sellShortPrice * optBalances?.short
-                        : null,
+                    sellShortPrice && sellShortPrice > 0 && optBalances.short > 0
+                        ? sellShortPrice * optBalances.short
+                        : 0,
             };
         }
-    }, [ammMaxLimitsQuery.isLoading, optBalances?.long, optBalances?.short]);
+        return {
+            longPositionValue: 0,
+            shortPositionValue: 0,
+        };
+    }, [ammMaxLimitsQuery.isLoading, optBalances.long, optBalances.short]);
 
     const priceDifference = useMemo(() => {
         return formatPricePercentageDifference(
@@ -276,12 +278,10 @@ type PositionPriceProps = {
         long: number;
         short: number;
     };
-    positionCurrentValue:
-        | undefined
-        | {
-              longPositionValue: number | null;
-              shortPositionValue: number | null;
-          };
+    positionCurrentValue: {
+        longPositionValue: number;
+        shortPositionValue: number;
+    };
     isLoading?: boolean;
 };
 
@@ -293,12 +293,8 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
 
     const noPositions = optBalances.long == 0 && optBalances.short == 0;
     const hasBothPositions = optBalances.long > 0 && optBalances.short > 0;
-    const isLongOutOfLiqudity =
-        optBalances.long > 0 &&
-        (positionCurrentValue?.longPositionValue == 0 || positionCurrentValue?.longPositionValue === null);
-    const isShortOutOfLiqudity =
-        optBalances.short > 0 &&
-        (positionCurrentValue?.shortPositionValue == 0 || positionCurrentValue?.shortPositionValue === null);
+    const isLongOutOfLiqudity = optBalances.long > 0 && positionCurrentValue.longPositionValue == 0;
+    const isShortOutOfLiqudity = optBalances.short > 0 && positionCurrentValue.shortPositionValue == 0;
     const areBothOutOfLiqudity = isLongOutOfLiqudity && isShortOutOfLiqudity;
 
     return isLoading ? (
@@ -306,9 +302,9 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
     ) : (
         <>
             {optBalances.long > 0 &&
-                positionCurrentValue?.longPositionValue &&
-                positionCurrentValue?.longPositionValue > 0 &&
-                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.longPositionValue)}`}
+                positionCurrentValue.longPositionValue &&
+                positionCurrentValue.longPositionValue > 0 &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue.longPositionValue)}`}
             {(isLongOutOfLiqudity || areBothOutOfLiqudity) && (
                 <>
                     N/A
@@ -331,9 +327,9 @@ const PositionPrice: React.FC<PositionPriceProps> = ({ marketInfo, optBalances, 
             {hasBothPositions && !areBothOutOfLiqudity && ' / '}
 
             {optBalances.short > 0 &&
-                positionCurrentValue?.shortPositionValue &&
-                positionCurrentValue?.shortPositionValue > 0 &&
-                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue?.shortPositionValue)}`}
+                positionCurrentValue.shortPositionValue &&
+                positionCurrentValue.shortPositionValue > 0 &&
+                `${formatCurrencyWithSign(USD_SIGN, positionCurrentValue.shortPositionValue)}`}
             {isShortOutOfLiqudity && !areBothOutOfLiqudity && (
                 <>
                     N/A
