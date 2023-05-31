@@ -36,7 +36,7 @@ const useMarketsByAssetAndDateQuery = (
                 const finalResult = result1.filter((marketInfo: any) => Number(marketInfo.liquidity) !== 0);
                 return finalResult
                     .map((market: any) => {
-                        const discount = Math.abs(Number(ethers.utils.formatEther(market.priceImpact)));
+                        const discount = Number(ethers.utils.formatEther(market.priceImpact));
 
                         const price = stableCoinFormatter(market.price, networkId);
                         const newPrice = (1 - discount) * price;
@@ -49,9 +49,9 @@ const useMarketsByAssetAndDateQuery = (
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
                             price: Number(truncDecimals(price, 2)),
-                            roi: roi,
+                            roi: newRoi,
                             strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
-                            discount: Math.floor(newRoi - roi),
+                            discount: Math.floor(roi - newRoi),
                         };
                     })
                     .sort((a: MarketInfo, b: MarketInfo) => {
@@ -85,22 +85,23 @@ const useMarketsByAssetAndDateQuery = (
 
                 return finalResult
                     .map((market: any) => {
-                        const discount = Math.abs(Number(ethers.utils.formatEther(market.priceImpact)));
+                        const discount = Number(ethers.utils.formatEther(market.priceImpact));
 
                         const price = stableCoinFormatter(market.price, networkId);
                         const newPrice = (1 - discount) * price;
 
                         const roi = calculatePotentialProfit(price);
                         const newRoi = calculatePotentialProfit(newPrice);
+
                         return {
                             currencyKey: asset,
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
                             price: Number(truncDecimals(price, 2)),
-                            roi: roi,
+                            roi: newRoi,
                             leftPrice: Number(ethers.utils.formatEther(market.leftPrice)),
                             rightPrice: Number(ethers.utils.formatEther(market.rightPrice)),
-                            discount: Math.round(newRoi - roi),
+                            discount: Math.floor(roi - newRoi),
                         };
                     })
                     .sort((a: RangedMarketPerPosition, b: RangedMarketPerPosition) => {
