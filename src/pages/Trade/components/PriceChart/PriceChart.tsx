@@ -404,8 +404,6 @@ const getTicks = (prices: number[]) => {
         final = stepChange;
     }
 
-    console.log(interval, step, final);
-
     // const stepFinal = Math.round(step / diff);
     // const log1 = Math.round(Math.log(stepFinal) / Math.log(10));
     // const stepFinal2 = (Math.round(stepFinal / Math.pow(10, log1)) * Math.pow(10, log1)) / multiplier;
@@ -417,7 +415,7 @@ const getTicks = (prices: number[]) => {
     for (let tick = startTick; tick <= endTick; tick += final) {
         ticks.push(tick);
     }
-    console.log('ticks: ', ticks);
+
     return ticks;
 };
 
