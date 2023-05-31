@@ -178,7 +178,9 @@ export const ContentWrapper = styled.div<{ isScrollable?: boolean }>`
     margin-top: 10px;
     padding-left: 50px;
     padding-right: 20px;
-    ${(props) => (props.isScrollable ? 'max-height: 800px;' : 'height: 100%;')}
+    height: 100%;
+    min-height: 300px;
+    ${(props) => (props.isScrollable ? 'max-height: 800px;' : '')}
 `;
 
 export const PriceContainer = styled.div`

@@ -31,7 +31,7 @@ const generateRows = (data: any[], translator: TFunction, theme: ThemeInterface)
         const dateMap: Record<string, any> = {};
         const sortedData = data.sort((a, b) => b.timestamp - a.timestamp);
         sortedData.forEach((trade) => {
-            const tradeDateKey = formatShortDate(trade.timestamp);
+            const tradeDateKey = formatShortDate(trade.timestamp).toUpperCase();
             if (!dateMap[tradeDateKey]) {
                 dateMap[tradeDateKey] = [];
             }
