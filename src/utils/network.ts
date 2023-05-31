@@ -41,19 +41,6 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     42161: 'ARBITRUM-ONE',
 };
 
-export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
-    1: 'MAINNET',
-    3: 'ROPSTEN',
-    42: 'KOVAN',
-    10: 'OPTIMISM-MAINNET',
-    69: 'OPTIMISM-KOVAN',
-    420: 'OPTIMISM-GOERLI',
-    80001: 'POLYGON-MUMBAI',
-    137: 'POLYGON-MAINNET',
-    56: '',
-    42161: 'ARBITRUM-ONE',
-};
-
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
@@ -106,22 +93,7 @@ export const getTransactionPrice = (
 
 export const isMainNet = (networkId: NetworkId) => networkId === 1;
 
-export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
-
-export const normalizeL2GasLimit = (gasLimit: number) => Math.trunc(gasLimit * 1.2);
-
-export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
-
-export const getInfuraRpcURL = (networkId: NetworkId) => {
-    const network = INFURA_SUPPORTED_NETWORKS[networkId];
-    if (!network) return '';
-    return `https://${network?.toLowerCase()}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
-};
-
-export const getPublicRpc = (networkId: NetworkId) => {
-    if (networkId == Network.BSC) return 'https://bsc-dataseed.binance.org/';
-    return 'https://mainnet.optimism.io';
-};
+const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
 
 export const isNetworkSupported = (networkId: NetworkId): boolean => {
     return !!SUPPORTED_NETWORKS[networkId];
@@ -143,9 +115,6 @@ export const formatGwei = (wei: number) => wei / GWEI_UNIT;
 
 export const formatGasLimit = (gasEstimate: ethers.BigNumber | number, networkId: number): number =>
     getIsOVM(networkId) ? Number(gasEstimate) : normalizeGasLimit(Number(gasEstimate));
-
-export const formatL2GasLimit = (gasEstimate: ethers.BigNumber | number): number =>
-    normalizeL2GasLimit(Number(gasEstimate));
 
 export const getL1FeeInWei = async (txRequest: any, snxJSConnector: any) => {
     try {

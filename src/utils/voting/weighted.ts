@@ -6,7 +6,7 @@ export function percentageOfTotal(i: number, values: any, total: any) {
     return isNaN(percent) ? 0 : percent;
 }
 
-export function weightedPower(i: number, choice: any, balance: number) {
+function weightedPower(i: number, choice: any, balance: number) {
     return (percentageOfTotal(i + 1, choice, Object.values(choice)) / 100) * balance;
 }
 

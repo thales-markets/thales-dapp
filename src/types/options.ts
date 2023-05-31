@@ -219,10 +219,3 @@ export type UsersAssets = {
         shortValue?: number;
     };
 };
-
-export type SortOption = {
-    property: string;
-    displayName: string;
-    desc: boolean;
-    asc: boolean;
-};

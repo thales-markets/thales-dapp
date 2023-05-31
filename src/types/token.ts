@@ -1,19 +1,5 @@
 import { ReactElement } from 'react';
 
-type AccountInfo = {
-    balance: number;
-    rawBalance: string;
-    index: number;
-    proof: string[];
-};
-
-export type Airdrop = {
-    isPaused: boolean;
-    hasClaimRights: boolean;
-    claimed: boolean;
-    accountInfo?: AccountInfo;
-};
-
 export type VestingInfo = {
     startTime: number;
     endTime: number;
@@ -22,7 +8,7 @@ export type VestingInfo = {
     unlocked: number;
 };
 
-export type TokenTransactionType =
+type TokenTransactionType =
     | 'claimRetroAirdrop'
     | 'claimRetroUnlocked'
     | 'claimStakingRewards'
@@ -98,7 +84,7 @@ export enum TransactionFilterEnum {
 
 export type TokenTransactions = TokenTransaction[];
 
-export type VestingScheduleItem = {
+type VestingScheduleItem = {
     date: number;
     amount: number | string;
 };
@@ -109,53 +95,6 @@ export type UserVestingData = {
     claimable: number;
     rawClaimable: string;
     vestingSchedule: VestingSchedule;
-};
-
-export type StakingReward = {
-    closingDate: number;
-    period: number;
-    isPaused: boolean;
-    hasClaimRights: boolean;
-    claimed: boolean;
-    canClosePeriod: boolean;
-    baseRewardsPool: number;
-    bonusRewardsPool: number;
-    bonusRewardsPoolPercentage: number;
-    rewards: number;
-    baseRewards: number;
-    totalBonus: number;
-    snxBonus: number;
-    ammBonus: number;
-    maxSnxBonusPercentage: number;
-    maxAmmBonusPercentage: number;
-    maxThalesRoyaleBonusPercentage: number;
-    maxSnxBonus: number;
-    maxAmmBonus: number;
-    maxThalesRoyaleBonus: number;
-    ammVolumeRewardsMultiplier: number;
-    snxVolumeRewardsMultiplier: number;
-    snxStaked: number;
-    ammVolume: number;
-    thalesAmmVolume: number;
-    rangedAmmVolume: number;
-    sportsAmmVolume: number;
-};
-
-type Reward = {
-    balance: number;
-    rawBalance: string;
-    stakingBalance: number;
-    snxBalance: number;
-    previousBalance: number;
-    index: number;
-    proof: string[];
-};
-
-export type MigratedReward = {
-    isPaused: boolean;
-    hasClaimRights: boolean;
-    claimed: boolean;
-    reward?: Reward;
 };
 
 export type TokenInfo = {
