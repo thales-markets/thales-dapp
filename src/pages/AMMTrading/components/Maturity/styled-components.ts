@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { CSSProperties } from 'styled-components';
-import { FlexDivColumn, FlexDivRow, FlexDivSpaceBetween } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivSpaceBetween } from 'theme/common';
 
 export const Container = styled(FlexDivColumn)`
     border: 1px solid ${(props) => props.theme.borderColor.primary};
@@ -63,12 +63,13 @@ export const Info = styled.span`
     color: ${(props) => props.theme.textColor.quaternary};
 `;
 
-export const Icon = styled.i<{ color?: string }>`
-    margin: 0 5px;
-    font-size: 24px;
-    color: ${(props) => (props?.color ? props.color : '')};
+export const LoaderContainer = styled(FlexDivCentered)`
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border-radius: 8px;
+    position: relative;
+    min-height: 220px;
+    width: 100%;
 `;
-
 export const additionalButtonStyle: CSSProperties = {
     border: 'none',
 };

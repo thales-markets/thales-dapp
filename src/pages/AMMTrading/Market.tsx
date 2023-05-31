@@ -72,13 +72,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     }, [marketQuery.isSuccess, marketQuery.data, rangedMarketQuery.isSuccess, rangedMarketQuery.data, marketAddress]);
 
     useEffect(() => {
-        if (
-            (!isRangedMarket && optionMarket?.phase == 'maturity') ||
-            (isRangedMarket && rangedMarket?.phase == 'maturity')
-        ) {
+        if (!isRangedMarket && optionMarket?.phase == 'maturity') {
             setMaturityPhase(true);
+        } else if (isRangedMarket && rangedMarket?.phase == 'maturity') {
+            setMaturityPhase(true);
+        } else {
+            setMaturityPhase(false);
         }
-        setMaturityPhase(false);
     }, [optionMarket?.phase, rangedMarket?.phase]);
 
     return optionMarket || rangedMarket ? (
@@ -88,9 +88,9 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                 {!isRangedMarket && (
                     <MarketProvider optionsMarket={optionMarket}>
                         <Container>
-                            {optionMarket && (
+                            {optionMarket && !inMaturityPhase && (
                                 <>
-                                    <WalletBalance isRangedAmm={false} positionType={positionType} />
+                                    <WalletBalance isRangedMarket={false} positionType={positionType} />
                                     <AmmTradingContainer>
                                         <SwitchInput
                                             active={orderSide === 'sell'}
@@ -133,7 +133,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                     </AmmTradingContainer>
                                 </>
                             )}
-                            {inMaturityPhase ? <Maturity isRangedAmm={false} /> : <AMM />}
+                            {inMaturityPhase ? <Maturity isRangedMarket={false} /> : <AMM />}
                         </Container>
                         <TabContainer isRangedMarket={false} />
                     </MarketProvider>
@@ -141,9 +141,9 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                 {isRangedMarket && (
                     <RangedMarketProvider rangedMarket={rangedMarket}>
                         <Container>
-                            {rangedMarket && (
+                            {rangedMarket && !inMaturityPhase && (
                                 <>
-                                    <WalletBalance isRangedAmm={true} positionType={positionType} />
+                                    <WalletBalance isRangedMarket={true} positionType={positionType} />
                                     <AmmTradingContainer>
                                         <SwitchInput
                                             active={orderSide === 'sell'}
@@ -186,7 +186,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                     </AmmTradingContainer>
                                 </>
                             )}
-                            {inMaturityPhase ? <Maturity isRangedAmm={true} /> : <RangedMarketAMM />}
+                            {inMaturityPhase ? <Maturity isRangedMarket={true} /> : <RangedMarketAMM />}
                         </Container>
                         <TabContainer isRangedMarket={true} />
                     </RangedMarketProvider>

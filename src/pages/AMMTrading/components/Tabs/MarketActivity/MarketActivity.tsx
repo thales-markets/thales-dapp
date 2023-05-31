@@ -103,6 +103,7 @@ const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
             <Table
                 data={transactions}
                 isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
+                defaultPageSize={10}
                 columns={[
                     {
                         Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,

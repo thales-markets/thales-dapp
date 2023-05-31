@@ -13,6 +13,7 @@ import {
     additionalButtonStyle,
     InfoLabel,
     Info,
+    LoaderContainer,
 } from './styled-components';
 import Button from 'components/ButtonV2';
 import TimeRemaining from 'components/TimeRemaining';
@@ -34,12 +35,17 @@ import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/u
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 
-const Maturity: React.FC<{ isRangedAmm: boolean }> = ({ isRangedAmm }) => {
+type MaturityProps = {
+    isRangedMarket: boolean;
+};
+
+const Maturity: React.FC<MaturityProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
+    const BOMContract = useBOMContractContext();
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const optionsMarket = isRangedAmm ? useRangedMarketContext() : useMarketContext();
-    const BOMContract = useBOMContractContext();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -48,25 +54,25 @@ const Maturity: React.FC<{ isRangedAmm: boolean }> = ({ isRangedAmm }) => {
 
     const [isExercising, setIsExercising] = useState<boolean>(false);
 
-    let optBalances = isRangedAmm ? { in: 0, out: 0 } : { short: 0, long: 0 };
+    let optBalances = isRangedMarket ? { in: 0, out: 0 } : { short: 0, long: 0 };
 
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected && !isRangedAmm,
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(market.address, walletAddress, {
+        enabled: isAppReady && isWalletConnected && !isRangedMarket,
     });
 
-    const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(optionsMarket.address, walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && isRangedAmm,
+    const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(market.address, walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && isRangedMarket,
     });
 
-    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedAmm) {
+    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedMarket) {
         optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
     }
 
-    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedAmm) {
+    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedMarket) {
         optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
     }
 
-    const { result } = optionsMarket;
+    const { result } = market;
     const upAmount = optBalances.long || 0;
     const downAmount = optBalances.short || 0;
     const inAmount = optBalances.in || 0;
@@ -75,7 +81,7 @@ const Maturity: React.FC<{ isRangedAmm: boolean }> = ({ isRangedAmm }) => {
     const isUpResult = result === 'long';
     const isInResult = (result as RangedMarketPositionType) === 'in';
 
-    const nothingToExercise = isRangedAmm
+    const nothingToExercise = isRangedMarket
         ? (isInResult && !inAmount) || (!isInResult && !outAmount)
         : (isUpResult && !upAmount) || (!isUpResult && !downAmount);
     const isButtonDisabled = isExercising || !isWalletConnected || nothingToExercise;
@@ -91,7 +97,7 @@ const Maturity: React.FC<{ isRangedAmm: boolean }> = ({ isRangedAmm }) => {
                 gasLimit: getMaxGasLimitForNetwork(networkId),
             };
 
-            const tx = (isRangedAmm
+            const tx = (isRangedMarket
                 ? await BOMContractWithSigner.exercisePositions(providerOptions)
                 : await BOMContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
 
@@ -101,9 +107,9 @@ const Maturity: React.FC<{ isRangedAmm: boolean }> = ({ isRangedAmm }) => {
                     id,
                     getSuccessToastOptions(t('options.market.trade-card.maturity.confirm-button.confirmation-message'))
                 );
-                isRangedAmm
-                    ? refetchRangeMarketQueries(walletAddress, BOMContract.address, optionsMarket.address, networkId)
-                    : refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                isRangedMarket
+                    ? refetchRangeMarketQueries(walletAddress, BOMContract.address, market.address, networkId)
+                    : refetchMarketQueries(walletAddress, BOMContract.address, market.address);
                 refetchBalances(walletAddress, networkId);
                 setIsExercising(false);
             }
@@ -117,70 +123,82 @@ const Maturity: React.FC<{ isRangedAmm: boolean }> = ({ isRangedAmm }) => {
     return (
         <>
             <Header>{t('options.market.trade-card.maturity.card-title')}</Header>
-            <Container>
-                <Label>
-                    {nothingToExercise
-                        ? t('options.market.trade-card.maturity.nothing-to-exercise')
-                        : t('options.market.trade-card.maturity.exercise-options')}
-                </Label>
-                <PositionsContainer>
-                    <Position
-                        isDisabled={isRangedAmm ? !isInResult || !inAmount : !isUpResult || !upAmount}
-                        color={isRangedAmm ? theme.positionColor.in : theme.positionColor.up}
+            {accountMarketInfoQuery.isLoading || rangedMarketsBalance.isLoading ? (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            ) : (
+                <Container>
+                    <Label>
+                        {nothingToExercise
+                            ? t('options.market.trade-card.maturity.nothing-to-exercise')
+                            : t('options.market.trade-card.maturity.exercise-options')}
+                    </Label>
+                    <PositionsContainer>
+                        <Position
+                            isDisabled={isRangedMarket ? !isInResult || !inAmount : !isUpResult || !upAmount}
+                            color={isRangedMarket ? theme.positionColor.in : theme.positionColor.up}
+                        >
+                            <span>{formatCurrencyWithPrecision(isRangedMarket ? inAmount : upAmount)}</span>
+                            <span>{isRangedMarket ? Positions.IN : Positions.UP}</span>
+                        </Position>
+                        <Position
+                            isDisabled={isRangedMarket ? isUpResult || !outAmount : isUpResult || !downAmount}
+                            color={isRangedMarket ? theme.positionColor.out : theme.positionColor.down}
+                        >
+                            <span>{formatCurrencyWithPrecision(isRangedMarket ? outAmount : downAmount)}</span>
+                            <span>{isRangedMarket ? Positions.OUT : Positions.DOWN}</span>
+                        </Position>
+                    </PositionsContainer>
+                    <InfoContainer>
+                        <InfoItem>
+                            <InfoLabel>{t('options.market.trade-card.maturity.payout-amount-label')}</InfoLabel>
+                            <Info>
+                                {formatCurrencyWithKey(
+                                    getStableCoinForNetwork(networkId),
+                                    isRangedMarket
+                                        ? isInResult
+                                            ? inAmount
+                                            : outAmount
+                                        : isUpResult
+                                        ? upAmount
+                                        : downAmount
+                                )}
+                            </Info>
+                        </InfoItem>
+                        <InfoItem>
+                            <InfoLabel>{t('options.market.trade-card.maturity.end-label')}</InfoLabel>
+                            <TimeRemaining
+                                end={market.timeRemaining}
+                                fontSize={13}
+                                onEnded={() =>
+                                    isRangedMarket
+                                        ? refetchRangeMarketQueries(
+                                              walletAddress,
+                                              BOMContract.address,
+                                              market.address,
+                                              networkId
+                                          )
+                                        : refetchMarketQueries(walletAddress, BOMContract.address, market.address)
+                                }
+                            />
+                        </InfoItem>
+                    </InfoContainer>
+                    <Button
+                        onClick={handleExercise}
+                        margin={'30px auto 10px auto'}
+                        disabled={isButtonDisabled}
+                        backgroundColor={theme.button.textColor.quaternary}
+                        additionalStyles={additionalButtonStyle}
                     >
-                        <span>{formatCurrencyWithPrecision(isRangedAmm ? inAmount : upAmount)}</span>
-                        <span>{isRangedAmm ? Positions.IN : Positions.UP}</span>
-                    </Position>
-                    <Position
-                        isDisabled={isRangedAmm ? isUpResult || !outAmount : isUpResult || !downAmount}
-                        color={isRangedAmm ? theme.positionColor.out : theme.positionColor.down}
-                    >
-                        <span>{formatCurrencyWithPrecision(isRangedAmm ? outAmount : downAmount)}</span>
-                        <span>{isRangedAmm ? Positions.OUT : Positions.DOWN}</span>
-                    </Position>
-                </PositionsContainer>
-                <InfoContainer>
-                    <InfoItem>
-                        <InfoLabel>{t('options.market.trade-card.maturity.payout-amount-label')}</InfoLabel>
-                        <Info>
-                            {formatCurrencyWithKey(
-                                getStableCoinForNetwork(networkId),
-                                isRangedAmm ? (isInResult ? inAmount : outAmount) : isUpResult ? upAmount : downAmount
-                            )}
-                        </Info>
-                    </InfoItem>
-                    <InfoItem>
-                        <InfoLabel>{t('options.market.trade-card.maturity.end-label')}</InfoLabel>
-                        <TimeRemaining
-                            end={optionsMarket.timeRemaining}
-                            fontSize={13}
-                            onEnded={() =>
-                                isRangedAmm
-                                    ? refetchRangeMarketQueries(
-                                          walletAddress,
-                                          BOMContract.address,
-                                          optionsMarket.address,
-                                          networkId
-                                      )
-                                    : refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address)
-                            }
-                        />
-                    </InfoItem>
-                </InfoContainer>
-                <Button
-                    onClick={handleExercise}
-                    margin={'30px auto 10px auto'}
-                    disabled={isButtonDisabled}
-                    backgroundColor={theme.button.textColor.quaternary}
-                    additionalStyles={additionalButtonStyle}
-                >
-                    {nothingToExercise
-                        ? t('options.market.trade-card.maturity.confirm-button.success-label')
-                        : !isExercising
-                        ? t('options.market.trade-card.maturity.confirm-button.label')
-                        : t('options.market.trade-card.maturity.confirm-button.progress-label')}
-                </Button>
-            </Container>
+                        {nothingToExercise
+                            ? t('options.market.trade-card.maturity.confirm-button.success-label')
+                            : !isExercising
+                            ? t('options.market.trade-card.maturity.confirm-button.label')
+                            : t('options.market.trade-card.maturity.confirm-button.progress-label')}
+                    </Button>
+                </Container>
+            )}
         </>
     );
 };
