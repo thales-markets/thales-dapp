@@ -4,13 +4,12 @@ import styled from 'styled-components';
 type CheckboxProps = {
     value: string | number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    className?: string;
     disabled?: boolean;
     checked: boolean;
     label?: string;
 };
 
-const Checkbox: React.FC<CheckboxProps> = ({ value, onChange, className, disabled, checked, label, ...rest }) => {
+const Checkbox: React.FC<CheckboxProps> = ({ value, onChange, disabled, checked, label, ...rest }) => {
     return (
         <CheckboxContainer className={disabled ? 'disabled' : ''}>
             {label}
@@ -20,7 +19,6 @@ const Checkbox: React.FC<CheckboxProps> = ({ value, onChange, className, disable
                 checked={checked}
                 value={value}
                 onChange={onChange}
-                className={className}
                 disabled={disabled}
             />
             <Checkmark className="checkmark" />
