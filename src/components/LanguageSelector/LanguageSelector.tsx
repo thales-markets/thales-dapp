@@ -71,7 +71,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isLandingPag
 
 const Container = styled(FlexDivColumnCentered)<{ isLandingPage?: boolean }>`
     width: 74px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         position: absolute;
         right: ${(props) => (props.isLandingPage ? 60 : 40)}px;
         top: ${(props) => (props.isLandingPage ? 30 : 40)}px;
@@ -134,7 +134,7 @@ const LanguageName = styled.div`
     color: #f6f6fe;
     margin-left: 10px;
     display: block;
-    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media screen and (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;

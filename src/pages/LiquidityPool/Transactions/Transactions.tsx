@@ -160,7 +160,7 @@ const Container = styled(FlexDivColumn)`
     @media (max-width: 1440px) {
         width: 95%;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-height: 1100px;
         min-height: initial;
     }
@@ -169,21 +169,21 @@ const Container = styled(FlexDivColumn)`
 const Header = styled(FlexDivRow)`
     margin: 15px 18px;
     align-items: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
 
 const RightHeader = styled(FlexDivRow)`
     align-items: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
 
 const TabContainer = styled(FlexDiv)`
     min-height: 38px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
@@ -204,7 +204,7 @@ const Tab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
         cursor: pointer;
         color: ${(props) => props.theme.textColor.primary};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-bottom: 10px;
         margin-left: 0px;
         margin-right: 0px;

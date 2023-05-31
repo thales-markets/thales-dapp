@@ -188,7 +188,7 @@ const Container = styled(FlexDivColumn)`
 const ChartContainer = styled.div`
     height: 220px;
     width: 100%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 200px;
     }
 `;

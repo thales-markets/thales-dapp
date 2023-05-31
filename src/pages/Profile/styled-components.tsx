@@ -70,7 +70,7 @@ export const Wrapper = styled.div`
     @media (max-width: 1250px) {
         margin-left: 40px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 8px;
         margin-left: 20px;
     }
@@ -99,7 +99,7 @@ const Text = styled.span`
 
 export const Label = styled(Text)`
     font-weight: 400;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -107,7 +107,7 @@ export const Label = styled(Text)`
 export const Value = styled(Text)<{ color?: string }>`
     color: ${(props) => props.color ?? 'none'};
     font-weight: 700;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
     }
     @media (max-width: 500px) {
@@ -121,7 +121,7 @@ export const Nav = styled.div<{ justifyContent: string }>`
     justify-content: ${(props) => props.justifyContent};
     border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 20px;
         justify-content: space-between;
     }
@@ -139,7 +139,7 @@ export const NavItem = styled.p`
     &.active {
         box-shadow: 0px 4px ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 14px;
         padding: 0 20px;
     }
@@ -169,16 +169,16 @@ export const Notification = styled.span`
     }
 `;
 
-export const ContentWrapper = styled.div`
-    width: calc(100% + 100px);
-    padding-right: 50px;
+export const ContentWrapper = styled.div<{ isScrollable?: boolean }>`
+    width: calc(100% + 80px);
     overflow: hidden;
     overflow-y: auto;
-    padding-left: 50px;
     position: relative;
     left: -50px;
-    padding-bottom: 40px;
-    height: 100%;
+    margin-top: 10px;
+    padding-left: 50px;
+    padding-right: 20px;
+    ${(props) => (props.isScrollable ? 'max-height: 800px;' : 'height: 100%;')}
 `;
 
 export const PriceContainer = styled.div`

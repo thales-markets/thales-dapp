@@ -148,7 +148,7 @@ export const getColor = (data: any, theme: ThemeInterface) => {
 
 export const Icon = styled.i<{ margin?: string; color?: string }>`
     ${(props) => (props.margin ? `margin: ${props.margin};` : '')}
-    ${(props) => (props.color ? `color: ${props.color}` : '')};
+    ${(props) => (props.color ? `color: ${props.color} !important` : '')};
     @media (max-width: 568px) {
         font-size: 16px;
         line-height: 100%;
@@ -158,7 +158,7 @@ export const Icon = styled.i<{ margin?: string; color?: string }>`
 export const NoDataText = styled.span`
     color: ${(props) => props.theme.textColor.primary};
     font-size: 24px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
     }
 `;
@@ -168,7 +168,7 @@ export const NoDataContainer = styled.div`
     width: 100%;
     text-align: center;
     margin-top: 50px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 10px;
     }
 `;

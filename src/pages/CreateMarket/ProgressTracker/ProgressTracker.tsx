@@ -59,7 +59,7 @@ const Wrapper = styled(FlexDiv)`
     img {
         width: 24px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: block;
         padding: 0 48%;
     }
@@ -72,7 +72,7 @@ const Line = styled.div`
     &.fill {
         background: ${(props) => props.theme.background.quaternary};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 4px;
         height: 60px;
         background: ${(props) => props.theme.textColor.primary};
@@ -102,7 +102,7 @@ const Label = styled.p`
         text-align: center;
         width: 100px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         top: 26px;
         text-align: center;
         left: -67px !important;
@@ -119,7 +119,7 @@ const ProgressTrackerStep = styled(FlexDiv)`
     align-items: center;
     position: relative;
     flex: 1;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: block;
         margin-left: -4px;
     }

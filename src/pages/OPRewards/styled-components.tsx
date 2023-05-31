@@ -24,7 +24,7 @@ export const Description = styled.div`
     li {
         margin-bottom: 8px;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
         line-height: 15px;
     }
@@ -42,7 +42,7 @@ export const SummaryRow = styled(FlexDivRow)`
     height: 44px;
     margin-bottom: 10px;
     gap: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         align-items: center;
         height: initial;
@@ -57,7 +57,7 @@ export const SummaryItem = styled(FlexDivCentered)<{ width?: string; mobileDirec
     line-height: 28px;
     font-size: 18px;
     font-weight: bold;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         font-size: 15px;
         flex-direction: ${(props) => props.mobileDirection || 'row'};
@@ -70,7 +70,7 @@ export const SummarySubItem = styled(FlexDivCentered)`
         border-left: 2px solid ${(props) => props.theme.borderColor.primary};
     }
     width: 100%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         :last-child {
             border-left: none;
         }
@@ -88,7 +88,7 @@ export const SummaryInfo = styled.span`
 
 export const MyRewardsContainer = styled(FlexDivCentered)`
     width: 100%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         :not(:first-child) {
             margin-bottom: 4px;
         }
@@ -100,7 +100,7 @@ export const MyRewardsTotal = styled.span`
     border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     padding-right: 6px;
     margin-right: 6px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 50%;
         text-align: end;
     }
@@ -111,7 +111,7 @@ export const MyRewardsList = styled(FlexDivColumnCentered)``;
 export const MyRewards = styled.span`
     font-size: 13px;
     line-height: 15px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 50%;
     }
 `;

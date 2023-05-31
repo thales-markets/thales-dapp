@@ -11,7 +11,7 @@ export const PieChartContainer = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;

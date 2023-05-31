@@ -47,7 +47,7 @@ const Wrapper = styled(FlexDivColumnCentered)`
     border-radius: 15px;
     margin: 60px 10px 50px 10px;
     min-width: 550px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: 10px;
         min-width: 200px;
     }
@@ -58,7 +58,7 @@ const Container = styled(FlexDivColumn)`
     border-radius: 15px;
     padding: 30px 60px 40px 60px;
     max-width: 550px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 30px 20px 40px 20px;
     }
 `;

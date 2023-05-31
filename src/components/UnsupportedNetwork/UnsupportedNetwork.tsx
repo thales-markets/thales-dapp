@@ -84,7 +84,7 @@ const Wrapper = styled.div`
     max-width: 600px;
     text-align: center;
 
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 5px;
         max-width: calc(100% - 10px);
     }
@@ -115,7 +115,7 @@ const ButtonWrapper = styled.div`
     align-items: center;
     margin: 20px 0px;
 
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         margin: 10px 0px;
         gap: 20px;

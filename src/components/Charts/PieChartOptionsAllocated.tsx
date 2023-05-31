@@ -121,7 +121,7 @@ const Header = styled.p`
     text-align: center;
     letter-spacing: 0.035em;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 10px;
         line-height: 12px;
     }
@@ -135,7 +135,7 @@ const SubHeader = styled.p<{ color?: string }>`
     letter-spacing: 0.035em;
     text-align: center;
     margin-bottom: 10px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 18px;
         line-height: 20px;
     }

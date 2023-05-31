@@ -23,7 +23,7 @@ export const EarnSection = styled.section<{
         grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;
         order: ${(props) => props.orderOnTablet ?? 10};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 10 !important;
         order: ${(props) => props.orderOnMobile ?? 10};
         padding: ${(props) => props.paddingOnMobile ?? 2}px;
@@ -39,7 +39,7 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     text-transform: uppercase;
     min-height: 30px;
     padding: 0 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
         padding: 0px 5px;
         min-height: 25px;
@@ -51,7 +51,7 @@ export const SectionHeader = styled(FlexDivRowCentered)`
 
 export const SectionContentContainer = styled(FlexDivColumn)`
     height: 100%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 5px 0 5px;
     }
 `;
@@ -60,7 +60,7 @@ export const ButtonContainer = styled(FlexDivColumnCentered)`
     margin-top: 20px;
     margin-bottom: 10px;
     align-items: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 10px;
     }
 `;
@@ -73,7 +73,7 @@ export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string; ab
     ${(props) => (props.above ? 'margin-bottom: 10px;' : 'margin-top: 10px;')}
     visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
     min-height: 16px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -82,7 +82,7 @@ export const PieChartContainer = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
@@ -140,7 +140,7 @@ export const DashedLine = styled.hr<{ gridRow: number; widthPer: number }>`
     grid-row: ${(props) => props.gridRow};
     grid-column: 1 / 13;
     width: ${(props) => props.widthPer}%;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
@@ -160,7 +160,7 @@ export const DashedLineVertical = styled.hr<{
     margin-top: ${(props) => props.marginTop}px;
     height: ${(props) => props.heightPer}%;
     ${(props) => (props.marginLeft ? `margin-left: ${props.marginLeft}px;` : '')}
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => (props.mobileLong ? 'position: absolute;' : '')}
         height: ${(props) => (props.mobileLong ? '153px' : '20px')};
         margin-top: -10px;
@@ -180,7 +180,7 @@ export const LearnMore = styled.span<{ top: string }>`
     cursor: pointer;
     z-index: 101;
     height: 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         top: ${(props) => props.top};
     }
 `;

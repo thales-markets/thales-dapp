@@ -338,7 +338,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-height: 300px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;

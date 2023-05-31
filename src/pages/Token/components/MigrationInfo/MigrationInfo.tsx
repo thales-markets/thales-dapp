@@ -45,7 +45,7 @@ const Conatiner = styled.section`
     padding: 30px;
     justify-content: center;
     margin: 100px 0;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 5px;
         margin: 0;
     }
@@ -58,7 +58,7 @@ const Message = styled(FlexDivCentered)`
     padding: 20px 0;
     text-align: center;
     display: inline;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
         line-height: 18px;
         padding: 30px 0;

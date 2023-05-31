@@ -62,12 +62,14 @@ export const formatCurrencyWithSign = (
     value: NumericValue,
     decimals?: number,
     trimDecimals?: boolean
-) =>
-    `${value < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
+) => {
+    console.log(value);
+    return `${value < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
         typeof value == 'number' ? Math.abs(value) : value,
         decimals !== undefined ? decimals : getPrecision(value),
         trimDecimals
     )}`;
+};
 
 export const formatCurrencyWithSignInRange = (
     sign: string | null | undefined,
@@ -100,17 +102,17 @@ export const truncDecimals = (value: number, decimals = DEFAULT_CURRENCY_DECIMAL
     return matchedValue !== null ? matchedValue[0] : '0';
 };
 
-export const formatNumberShort = (value: number) => {
+export const formatNumberShort = (value: number, trim = true) => {
     // Nine Zeroes for Billions
     return value >= 1.0e9
-        ? formatCurrency(value / 1.0e9, 2, true) + 'b'
+        ? formatCurrency(value / 1.0e9, 2, trim) + 'b'
         : // Six Zeroes for Millions
         value >= 1.0e6
-        ? formatCurrency(value / 1.0e6, 2, true) + 'm'
+        ? formatCurrency(value / 1.0e6, 2, trim) + 'm'
         : // Three Zeroes for Thousands
         value >= 1.0e3
-        ? formatCurrency(value / 1.0e3, 2, true) + 'k'
-        : formatCurrency(value, 2, true);
+        ? formatCurrency(value / 1.0e3, 2, trim) + 'k'
+        : formatCurrency(value, 2, trim);
 };
 
 export const formatPricePercentageGrowth = (priceChange: number) => {

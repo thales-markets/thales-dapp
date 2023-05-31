@@ -126,7 +126,7 @@ const SingleChoice = styled(FlexDivColumnCentered)`
         border: 2px solid ${(props) => props.theme.borderColor.quaternary};
         cursor: pointer;
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 46px;
         font-size: 16px;
         line-height: 46px;

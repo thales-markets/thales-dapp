@@ -40,21 +40,24 @@ export const TableRow = styled(FlexDiv)<{
                 ? props.isSticky
                     ? props.theme.button.borderColor.primary
                     : props.theme.borderColor.primary
+                : props.isClaimable
+                ? props.theme.button.borderColor.primary
                 : 'transparent'};
-    border-bottom: 1px solid ${(props) => (!props.isSticky ? props.theme.borderColor.primary : 'transparent')};
-    background: ${(props) =>
-        props.isClaimable
-            ? 'linear-gradient(90deg, #36d1dc -1.48%, #5b86e5 102.44%)'
-            : props.isSticky
-            ? props.theme.button.background.primary
-            : 'transparent'};
+    border-bottom: 1px solid
+        ${(props) =>
+            props.isClaimable
+                ? props.theme.button.borderColor.primary
+                : !props.isSticky
+                ? props.theme.borderColor.primary
+                : 'transparent'};
+    background: ${(props) => (props.isSticky ? props.theme.button.background.primary : 'transparent')};
     border-radius: ${(props) => (props.isClaimable || props.isMobile || props.isSticky ? '15px' : '0px')};
     opacity: ${(props) => (props.isClaimed ? '0.5' : '1')};
     margin: ${(props) => (props.isMobile || props.isSticky ? '10px 0 0 0' : '0')};
     i {
         color: ${(props) => (props.isSticky ? props.theme.button.textColor.primary : props.theme.textColor.primary)};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-height: 30px;
         font-size: ${(props) => (props.isMobile ? '13px' : '10px')};
     }
@@ -123,7 +126,7 @@ export const NoDataContainer = styled(TableRow)`
     width: 100%;
     height: 20px;
     text-align: center;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 13px;
     }
   }
@@ -159,13 +162,13 @@ export const Pagination = styled(TablePagination)`
         display: block;
     }
     .MuiTablePagination-selectRoot {
-        @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             margin-left: 0px;
             margin-right: 10px;
         }
     }
     .MuiIconButton-root {
-        @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             padding: 6px;
         }
     }

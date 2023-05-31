@@ -22,7 +22,7 @@ export const EarnSection = styled.section<{
         grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;
         order: ${(props) => props.orderOnTablet ?? 10};
     }
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 10 !important;
         order: ${(props) => props.orderOnMobile ?? 10};
         padding: ${(props) => props.paddingOnMobile ?? 15}px;
@@ -36,7 +36,7 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     color: ${(props) => props.theme.textColor.primary};
     min-height: 50px;
     padding: 0px 20px 0 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
         padding: 0px 5px;
         min-height: 25px;
@@ -48,7 +48,7 @@ export const SectionHeader = styled(FlexDivRowCentered)`
 
 export const SectionContentContainer = styled(FlexDivColumn)`
     padding: 20px 20px 0 20px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 5px 0 5px;
     }
 `;

@@ -7,7 +7,6 @@ import TableGridSwitch from 'components/TableGridSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { USD_SIGN } from 'constants/currency';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useAllPositions from 'queries/user/useAllPositions';
@@ -65,16 +64,11 @@ const Profile: React.FC = () => {
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
     const markets = marketsQuery.isSuccess ? marketsQuery.data : [];
-    const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
-    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
-
-    const showOPBanner = getIsOVM(networkId);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
     });
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
-    const isPolygon = getIsPolygon(networkId);
 
     const userPositionsQuery = useAllPositions(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
         enabled: isAppReady && walletAddress !== null,
@@ -115,6 +109,9 @@ const Profile: React.FC = () => {
         setSimpleView(!isSimpleView);
         localStore.set(tableViewStorageKey, isSimpleView);
     };
+
+    const showOPBanner = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const claimable = useMemo(() => {
         return positions.claimable + userRangePositions.claimable;
@@ -183,7 +180,7 @@ const Profile: React.FC = () => {
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
                     </Nav>
-                    <ContentWrapper>
+                    <ContentWrapper isScrollable={isSimpleView || view === NavItems.History}>
                         {view === NavItems.MyPositions && (
                             <MyPositions
                                 isSimpleView={isSimpleView}
@@ -201,16 +198,16 @@ const Profile: React.FC = () => {
                                 claimed={positions.claimed}
                                 claimedRange={userRangePositions.claimed}
                                 searchText={searchAddress ? '' : searchText}
-                                isLoading={userPositionsQuery.isLoading}
+                                isLoading={userPositionsQuery.isLoading || userRangePositionsQuery.isLoading}
                                 rangedPositions={userRangePositions.matured}
                             />
                         )}
                         {view === NavItems.History && (
                             <History
-                                markets={[...(markets as any), ...(rangedMarkets as any)]}
+                                markets={[...(markets as any)]}
                                 trades={dataForUI ? dataForUI.trades : []}
                                 searchText={searchAddress ? '' : searchText}
-                                isLoading={allTxAndDataQuery.isLoading}
+                                isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
                             />
                         )}
                     </ContentWrapper>
