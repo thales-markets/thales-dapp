@@ -8,6 +8,7 @@ import { MarketInfo, RangedMarket, RangedMarketPerPosition } from 'types/options
 import { NetworkId } from 'utils/network';
 import thalesData from 'thales-data';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
+import { truncDecimals } from 'utils/formatters/number';
 
 const useMarketsByAssetAndDateQuery = (
     asset: string,
@@ -35,15 +36,22 @@ const useMarketsByAssetAndDateQuery = (
                 const finalResult = result1.filter((marketInfo: any) => Number(marketInfo.liquidity) !== 0);
                 return finalResult
                     .map((market: any) => {
-                        const discount = Number(ethers.utils.formatEther(market.priceImpact));
+                        const discount = Math.abs(Number(ethers.utils.formatEther(market.priceImpact)));
+
+                        const price = stableCoinFormatter(market.price, networkId);
+                        const newPrice = (1 - discount) * price;
+
+                        const roi = calculatePotentialProfit(price);
+                        const newRoi = calculatePotentialProfit(newPrice);
 
                         return {
                             currencyKey: asset,
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
-                            price: calculatePotentialProfit(stableCoinFormatter(market.price, networkId)),
+                            price: Number(truncDecimals(price, 2)),
+                            roi: roi,
                             strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
-                            discount: discount < 0 ? discount : 0,
+                            discount: Math.floor(newRoi - roi),
                         };
                     })
                     .sort((a: MarketInfo, b: MarketInfo) => {
@@ -77,16 +85,22 @@ const useMarketsByAssetAndDateQuery = (
 
                 return finalResult
                     .map((market: any) => {
-                        const discount = Number(ethers.utils.formatEther(market.priceImpact));
+                        const discount = Math.abs(Number(ethers.utils.formatEther(market.priceImpact)));
 
+                        const price = stableCoinFormatter(market.price, networkId);
+                        const newPrice = (1 - discount) * price;
+
+                        const roi = calculatePotentialProfit(price);
+                        const newRoi = calculatePotentialProfit(newPrice);
                         return {
                             currencyKey: asset,
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
-                            price: calculatePotentialProfit(stableCoinFormatter(market.price, networkId)),
+                            price: Number(truncDecimals(price, 2)),
+                            roi: roi,
                             leftPrice: Number(ethers.utils.formatEther(market.leftPrice)),
                             rightPrice: Number(ethers.utils.formatEther(market.rightPrice)),
-                            discount: discount < 0 ? discount : 0,
+                            discount: Math.round(newRoi - roi),
                         };
                     })
                     .sort((a: RangedMarketPerPosition, b: RangedMarketPerPosition) => {

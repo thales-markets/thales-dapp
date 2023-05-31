@@ -162,6 +162,7 @@ const TradePage: React.FC = () => {
                                 address: '',
                                 liquidity: 0,
                                 price: 0,
+                                roi: 0,
                                 strikePrice: 0,
                                 leftPrice: 0,
                                 rightPrice: 0,
