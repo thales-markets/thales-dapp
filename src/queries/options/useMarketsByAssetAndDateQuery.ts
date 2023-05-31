@@ -49,7 +49,7 @@ const useMarketsByAssetAndDateQuery = (
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
                             price: Number(truncDecimals(price, 2)),
-                            roi: newRoi,
+                            roi: Math.floor(roi - newRoi) > 0 ? newRoi : roi,
                             strikePrice: Number(ethers.utils.formatEther(market.strikePrice)),
                             discount: Math.floor(roi - newRoi),
                         };
@@ -98,7 +98,7 @@ const useMarketsByAssetAndDateQuery = (
                             address: market.market,
                             liquidity: Number(ethers.utils.formatEther(market.liquidity)),
                             price: Number(truncDecimals(price, 2)),
-                            roi: newRoi,
+                            roi: Math.floor(roi - newRoi) > 0 ? newRoi : roi,
                             leftPrice: Number(ethers.utils.formatEther(market.leftPrice)),
                             rightPrice: Number(ethers.utils.formatEther(market.rightPrice)),
                             discount: Math.floor(roi - newRoi),
