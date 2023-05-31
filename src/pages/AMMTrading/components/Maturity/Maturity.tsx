@@ -23,13 +23,7 @@ import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-import {
-    AccountMarketInfo,
-    OptionsMarketInfo,
-    RangedMarketBalanceInfo,
-    RangedMarketData,
-    RangedMarketPositionType,
-} from 'types/options';
+import { AccountMarketInfo, RangedMarketBalanceInfo, RangedMarketPositionType } from 'types/options';
 import { refetchMarketQueries, refetchBalances, refetchRangeMarketQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Positions, getMaxGasLimitForNetwork } from 'constants/options';
@@ -39,11 +33,12 @@ import { getStableCoinForNetwork } from '../../../../utils/currency';
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 const Maturity: React.FC<{ isRangedAmm: boolean }> = ({ isRangedAmm }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
-    const optionsMarket: OptionsMarketInfo | RangedMarketData = useMarketContext();
+    const optionsMarket = isRangedAmm ? useRangedMarketContext() : useMarketContext();
     const BOMContract = useBOMContractContext();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));

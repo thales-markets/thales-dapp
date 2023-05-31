@@ -12,10 +12,9 @@ import { orderBy } from 'lodash';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
-import { MarketType, OptionsMarketInfo, RangedMarketData } from 'types/options';
+import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
-import { MARKET_TYPE } from 'constants/options';
 import { Container, Date, DateTimeContainer, Time } from './styled-components';
 
 type Activity = {
@@ -30,44 +29,31 @@ type Activity = {
     link: any;
 };
 
-const UserActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    // TODO: fix this warning
-    // eslint-disable-next-line
-    const marketInfo =
-        marketType == MARKET_TYPE[0]
-            ? // eslint-disable-next-line
-              (useMarketContext() as OptionsMarketInfo)
-            : // eslint-disable-next-line
-              (useRangedMarketContext() as RangedMarketData);
+type UserActivityProps = {
+    isRangedMarket: boolean;
+};
 
+const UserActivity: React.FC<UserActivityProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
     const { t } = useTranslation();
 
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const marketTransactionsQuery = useBinaryOptionsUserTransactionsQuery(
-        marketInfo?.address,
-        walletAddress,
-        networkId,
-        {
-            enabled: isAppReady && marketType !== MARKET_TYPE[1] && isWalletConnected,
-        }
-    );
+    const marketTransactionsQuery = useBinaryOptionsUserTransactionsQuery(market.address, walletAddress, networkId, {
+        enabled: isAppReady && !isRangedMarket && isWalletConnected,
+    });
 
     const tradesQuery = useBinaryOptionsUserTradesQuery(
-        marketInfo?.address,
-        marketType == MARKET_TYPE[0]
-            ? (marketInfo as OptionsMarketInfo)?.longAddress
-            : (marketInfo as RangedMarketData)?.inAddress,
-        marketType == MARKET_TYPE[0]
-            ? (marketInfo as OptionsMarketInfo)?.shortAddress
-            : (marketInfo as RangedMarketData)?.outAddress,
+        market?.address,
+        isRangedMarket ? (market as RangedMarketData).inAddress : (market as OptionsMarketInfo).longAddress,
+        isRangedMarket ? (market as RangedMarketData).outAddress : (market as OptionsMarketInfo).shortAddress,
         networkId,
         walletAddress,
-        marketType,
-        { enabled: isAppReady && !!marketInfo?.address }
+        isRangedMarket,
+        { enabled: isAppReady }
     );
 
     const generateRowsForTileTable = (data: Activity[]) => {
@@ -105,18 +91,18 @@ const UserActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
     };
 
     const userTransactionAndTradeList = useMemo(() => {
-        if ((tradesQuery.isSuccess || marketTransactionsQuery.isSuccess) && marketInfo?.address) {
+        if ((tradesQuery.isSuccess || marketTransactionsQuery.isSuccess) && market?.address) {
             const trades: Activity[] = tradesQuery?.data
                 ? tradesQuery?.data.map((trade) => {
                       return {
                           timestamp: trade.timestamp,
-                          currencyKey: marketInfo.currencyKey,
+                          currencyKey: market.currencyKey,
                           paid: Number(trade.amount) * Number(trade.price),
                           price: trade?.price ? trade.price : null,
                           amount: Number(trade.amount),
-                          side: marketType == MARKET_TYPE[0] ? (trade.side == 'short' ? 'down' : 'up') : trade.side,
+                          side: isRangedMarket ? trade.side : trade.side == 'short' ? 'down' : 'up',
                           type: trade.type,
-                          timeRemaining: marketInfo.timeRemaining,
+                          timeRemaining: market.timeRemaining,
                           link: <ViewEtherscanLink hash={trade.hash} />,
                       };
                   })
@@ -126,18 +112,13 @@ const UserActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
                 ? marketTransactionsQuery?.data.map((transaction) => {
                       return {
                           timestamp: transaction.timestamp,
-                          currencyKey: marketInfo.currencyKey,
+                          currencyKey: market.currencyKey,
                           paid: null,
                           price: null,
                           amount: Number(transaction.amount),
-                          side:
-                              marketType == MARKET_TYPE[0]
-                                  ? transaction.side == 'short'
-                                      ? 'down'
-                                      : 'up'
-                                  : transaction.side,
+                          side: isRangedMarket ? transaction.side : transaction.side == 'short' ? 'down' : 'up',
                           type: transaction.type,
-                          timeRemaining: marketInfo.timeRemaining,
+                          timeRemaining: market.timeRemaining,
                           link: <ViewEtherscanLink hash={transaction.hash} />,
                       };
                   })

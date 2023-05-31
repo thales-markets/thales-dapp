@@ -6,33 +6,28 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import { maxBy, orderBy } from 'lodash';
-import { MarketType, OptionsMarketInfo, OptionsTransactions, RangedMarketData } from 'types/options';
+import { OptionsMarketInfo, OptionsTransactions, RangedMarketData } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
-import { MARKET_TYPE } from 'constants/options';
 import { ChartContainer, Container } from './styled-components';
 
-const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
-    // TODO: fix this warning
-    // eslint-disable-next-line
-    const optionsMarket: OptionsMarketInfo | RangedMarketData =
-        // eslint-disable-next-line
-        marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
+type OptionPriceTabProps = {
+    isRangedMarket: boolean;
+};
+
+const OptionPriceTab: React.FC<OptionPriceTabProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const tradesQuery = useBinaryOptionsTradesQuery(
-        optionsMarket?.address,
-        marketType == MARKET_TYPE[0]
-            ? (optionsMarket as OptionsMarketInfo).longAddress
-            : (optionsMarket as RangedMarketData)?.inAddress,
-        marketType == MARKET_TYPE[0]
-            ? (optionsMarket as OptionsMarketInfo).shortAddress
-            : (optionsMarket as RangedMarketData)?.outAddress,
+        market.address,
+        isRangedMarket ? (market as RangedMarketData).inAddress : (market as OptionsMarketInfo).longAddress,
+        isRangedMarket ? (market as RangedMarketData).outAddress : (market as OptionsMarketInfo).shortAddress,
         networkId,
-        marketType,
-        { enabled: isAppReady && !!marketType }
+        isRangedMarket,
+        { enabled: isAppReady }
     );
 
     const getLastPrice = (data: OptionsTransactions, side: string, timestamp: number) => {
@@ -50,7 +45,7 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     const chartData = useMemo(() => {
         let trades: any = [];
 
-        if (marketType == MARKET_TYPE[0] && tradesQuery?.data) {
+        if (!isRangedMarket && tradesQuery?.data) {
             trades = tradesQuery.data.map((trade) => {
                 const longPrice =
                     trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp);
@@ -64,7 +59,7 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
             });
         }
 
-        if (marketType == MARKET_TYPE[1] && tradesQuery?.data) {
+        if (isRangedMarket && tradesQuery?.data) {
             trades = tradesQuery.data.map((trade) => {
                 const inPrice =
                     trade.side === 'in' ? trade.price : getLastPrice(tradesQuery.data, 'in', trade.timestamp);
@@ -110,7 +105,7 @@ const OptionPriceTab: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
     return (
         <Container>
             <ChartContainer>
-                <OptionPriceChart data={chartData} marketType={marketType} />
+                <OptionPriceChart data={chartData} isRangedMarket={isRangedMarket} />
             </ChartContainer>
         </Container>
     );

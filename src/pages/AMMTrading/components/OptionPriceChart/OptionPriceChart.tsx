@@ -4,8 +4,6 @@ import { ResponsiveContainer, LineChart, Line, YAxis, CartesianGrid, XAxis, Tool
 import format from 'date-fns/format';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
-import { MarketType } from 'types/options';
-import { MARKET_TYPE } from 'constants/options';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 
@@ -13,10 +11,10 @@ type OptionPriceChartProps = {
     data:
         | Array<{ timestamp: number; firstPositionPrice: number | undefined; secondPositionPrice: number | undefined }>
         | [];
-    marketType: MarketType;
+    isRangedMarket: boolean;
 };
 
-const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType }) => {
+const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, isRangedMarket }) => {
     const theme: ThemeInterface = useTheme();
 
     return (
@@ -61,18 +59,18 @@ const OptionPriceChart: React.FC<OptionPriceChartProps> = ({ data, marketType })
                 )}
                 <Line
                     type="linear"
-                    dataKey="secondPositionPrice"
-                    name={marketType == MARKET_TYPE[0] ? 'DOWN' : 'OUT'}
+                    dataKey="firstPositionPrice"
                     strokeWidth={2}
-                    stroke={marketType == MARKET_TYPE[0] ? theme.positionColor.down : theme.positionColor.out}
+                    name={isRangedMarket ? 'IN' : 'UP'}
+                    stroke={isRangedMarket ? theme.positionColor.in : theme.positionColor.up}
                     dot={{ strokeWidth: 3 }}
                 />
                 <Line
                     type="linear"
-                    dataKey="firstPositionPrice"
+                    dataKey="secondPositionPrice"
+                    name={isRangedMarket ? 'OUT' : 'DOWN'}
                     strokeWidth={2}
-                    name={marketType == MARKET_TYPE[0] ? 'UP' : 'IN'}
-                    stroke={marketType == MARKET_TYPE[0] ? theme.positionColor.up : theme.positionColor.in}
+                    stroke={isRangedMarket ? theme.positionColor.out : theme.positionColor.down}
                     dot={{ strokeWidth: 3 }}
                 />
             </LineChart>

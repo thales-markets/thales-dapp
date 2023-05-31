@@ -20,7 +20,12 @@ import { getIsAppReady } from 'redux/modules/app';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
-import { formatCurrency, formatCurrencyWithSign, formatPricePercentageDifference } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithPrecision,
+    formatCurrencyWithSign,
+    formatPricePercentageDifference,
+} from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { Trans, useTranslation } from 'react-i18next';
 import { getIsBuy } from 'redux/modules/marketWidgets';
@@ -167,10 +172,14 @@ const RowCard: React.FC = () => {
                                     : t('options.market.overview.my-position')}
                             </Header>
                             <Value>
-                                {optBalances?.long > 0 && <Value>{formatCurrency(optBalances?.long)} </Value>}
+                                {optBalances?.long > 0 && (
+                                    <Value>{formatCurrencyWithPrecision(optBalances?.long)} </Value>
+                                )}
                                 {optBalances?.long > 0 && <Value color={theme.positionColor.up}>{Positions.UP}</Value>}
                                 {optBalances?.long > 0 && optBalances?.short > 0 && ' / '}
-                                {optBalances?.short > 0 && <Value>{formatCurrency(optBalances?.short)} </Value>}
+                                {optBalances?.short > 0 && (
+                                    <Value>{formatCurrencyWithPrecision(optBalances?.short)} </Value>
+                                )}
                                 {optBalances?.short > 0 && (
                                     <Value color={theme.positionColor.down}>{Positions.DOWN}</Value>
                                 )}

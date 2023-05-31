@@ -1,18 +1,14 @@
 import React from 'react';
 import TradingViewWidget from 'react-tradingview-widget';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
-
 import { assetToTradingViewMap } from 'config/tradingView';
-
 import { Container, CopyrightLabel, TradingViewLink } from './styled-components';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 
 const TradingView: React.FC = () => {
-    // TODO: fix this warning
-    // eslint-disable-next-line
-    const marketInfo = useMarketContext() || useRangedMarketContext();
+    const market = useMarketContext() || useRangedMarketContext();
+    const symbol = assetToTradingViewMap[market.currencyKey] || `${market.currencyKey}USDT`;
 
-    const symbol = assetToTradingViewMap[marketInfo?.currencyKey] || `${marketInfo?.currencyKey}USDT`;
     return (
         <Container>
             <div id="tradingview_f42fd"></div>

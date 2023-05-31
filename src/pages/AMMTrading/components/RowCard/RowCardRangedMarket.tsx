@@ -21,7 +21,7 @@ import useRangedAMMMaxLimitsQuery, {
     RangeAmmMaxLimits,
 } from 'queries/options/rangedMarkets/useRangedAMMMaxLimitsQuery';
 import { RangedMarketBalanceInfo, RangedMarketData } from 'types/options';
-import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { Trans, useTranslation } from 'react-i18next';
 import { getIsBuy } from 'redux/modules/marketWidgets';
@@ -160,10 +160,12 @@ const RowCardRangedMarket: React.FC = () => {
                                     : t('options.market.overview.my-position')}
                             </Header>
                             <Value>
-                                {optBalances?.in > 0 && <Value>{formatCurrency(optBalances?.in)} </Value>}
+                                {optBalances?.in > 0 && <Value>{formatCurrencyWithPrecision(optBalances?.in)} </Value>}
                                 {optBalances?.in > 0 && <Value color={theme.positionColor.in}>{Positions.IN}</Value>}
                                 {optBalances?.in > 0 && optBalances?.out > 0 && ' / '}
-                                {optBalances?.out > 0 && <Value>{formatCurrency(optBalances?.out)} </Value>}
+                                {optBalances?.out > 0 && (
+                                    <Value>{formatCurrencyWithPrecision(optBalances?.out)} </Value>
+                                )}
                                 {optBalances?.out > 0 && <Value color={theme.positionColor.out}>{Positions.OUT}</Value>}
                                 {rangedMarketPositionBalance.isLoading
                                     ? '-'

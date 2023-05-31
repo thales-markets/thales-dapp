@@ -7,7 +7,6 @@ import TabContainer from './components/TabContainer';
 import AMM from './components/AMM';
 import Maturity from './components/Maturity';
 import RangedMarketAMM from './components/RangedMarketAMM';
-import TabContainerRangedMarket from './components/TabContainer/TabContainerRangedMarket';
 import { MarketProvider } from './contexts/MarketContext';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import useRangedMarketQuery from 'queries/options/rangedMarkets/useRangedMarketQuery';
@@ -17,7 +16,6 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RangedMarketProvider } from './contexts/RangedMarketContext';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import { POLYGON_ID } from 'constants/network';
 import { FlexDivColumn } from 'theme/common';
 import AmmTrading from 'pages/Trade/components/AmmTrading/AmmTrading';
 import { Positions } from 'constants/options';
@@ -30,7 +28,7 @@ import { setIsBuy } from 'redux/modules/marketWidgets';
 
 type MarketProps = {
     marketAddress: string;
-    isRangedMarket?: boolean;
+    isRangedMarket: boolean;
 };
 
 const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
@@ -46,6 +44,10 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const [orderSide, setOrderSide] = useState<OrderSide>('buy');
     const [positionType, setPositionType] = useState(isRangedMarket ? Positions.IN : Positions.UP);
 
+    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
+        enabled: isAppReady && !isRangedMarket,
+    });
+
     const rangedMarketQuery = useRangedMarketQuery(marketAddress, {
         enabled: isAppReady && isRangedMarket,
     });
@@ -56,48 +58,35 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
 
     useEffect(() => {
         if (networkSwitched) {
-            isRangedMarket && networkId !== POLYGON_ID
-                ? navigateTo(ROUTES.Options.RangeMarkets)
-                : navigateTo(ROUTES.Options.Home);
+            navigateTo(ROUTES.Options.Home);
         }
         setNetworkSwitched(true);
     }, [networkId]);
 
-    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
-        enabled: isAppReady && !isRangedMarket,
-    });
-
     useEffect(() => {
-        const fetchMarketData = async () => {
-            if (isRangedMarket && rangedMarketQuery.isSuccess && rangedMarketQuery?.data) {
-                setRangedMarket(rangedMarketQuery?.data);
-            }
-            if (!isRangedMarket && marketQuery.isSuccess && marketQuery.data) {
-                setOptionMarket(marketQuery.data);
-            } else if (marketQuery.data === null) {
-                // navigateTo(buildHref(ROUTES.Options.Home));
-            }
-        };
-
-        fetchMarketData();
-    }, [marketQuery.isSuccess, rangedMarketQuery.isSuccess, marketAddress]);
-
-    useEffect(() => {
-        if (!isRangedMarket && optionMarket?.phase == 'maturity') {
-            setMaturityPhase(true);
-        } else if (isRangedMarket && rangedMarket?.phase == 'maturity') {
-            setMaturityPhase(true);
-        } else {
-            setMaturityPhase(false);
+        if (!isRangedMarket && marketQuery.isSuccess && marketQuery.data) {
+            setOptionMarket(marketQuery.data);
+        } else if (isRangedMarket && rangedMarketQuery.isSuccess && rangedMarketQuery.data) {
+            setRangedMarket(rangedMarketQuery.data);
         }
+    }, [marketQuery.isSuccess, marketQuery.data, rangedMarketQuery.isSuccess, rangedMarketQuery.data, marketAddress]);
+
+    useEffect(() => {
+        if (
+            (!isRangedMarket && optionMarket?.phase == 'maturity') ||
+            (isRangedMarket && rangedMarket?.phase == 'maturity')
+        ) {
+            setMaturityPhase(true);
+        }
+        setMaturityPhase(false);
     }, [optionMarket?.phase, rangedMarket?.phase]);
 
     return optionMarket || rangedMarket ? (
         <>
-            {!isRangedMarket && (
-                <MarketProvider optionsMarket={optionMarket}>
-                    <BannerCarousel />
-                    <MainContainer>
+            <BannerCarousel />
+            <MainContainer>
+                {!isRangedMarket && (
+                    <MarketProvider optionsMarket={optionMarket}>
                         <Container>
                             {optionMarket && (
                                 <>
@@ -146,14 +135,11 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                             )}
                             {inMaturityPhase ? <Maturity isRangedAmm={false} /> : <AMM />}
                         </Container>
-                        <TabContainer />
-                    </MainContainer>
-                </MarketProvider>
-            )}
-            {isRangedMarket && (
-                <RangedMarketProvider rangedMarket={rangedMarket}>
-                    <BannerCarousel />
-                    <MainContainer>
+                        <TabContainer isRangedMarket={false} />
+                    </MarketProvider>
+                )}
+                {isRangedMarket && (
+                    <RangedMarketProvider rangedMarket={rangedMarket}>
                         <Container>
                             {rangedMarket && (
                                 <>
@@ -202,10 +188,10 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                             )}
                             {inMaturityPhase ? <Maturity isRangedAmm={true} /> : <RangedMarketAMM />}
                         </Container>
-                        <TabContainerRangedMarket />
-                    </MainContainer>
-                </RangedMarketProvider>
-            )}
+                        <TabContainer isRangedMarket={true} />
+                    </RangedMarketProvider>
+                )}
+            </MainContainer>
         </>
     ) : (
         <Loader />

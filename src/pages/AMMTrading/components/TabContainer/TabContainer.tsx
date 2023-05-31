@@ -17,24 +17,26 @@ import {
 } from './styled-components';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import RowCard from '../RowCard';
-import { MarketType } from 'types/options';
 import OutsideClickHandler from 'react-outside-click-handler';
-import { MARKET_TYPE } from 'constants/options';
-import { useMatomo } from '@datapunt/matomo-tracker-react';
+import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
+import RowCardRangedMarket from '../RowCard/RowCardRangedMarket';
 
-const TabContainer: React.FC = () => {
-    const marketInfo = useMarketContext();
+type TabContainerProps = {
+    isRangedMarket: boolean;
+};
+
+const TabContainer: React.FC<TabContainerProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
     const [currentTab, setCurrentTab] = useState<number>(1);
     const [inMaturity, setMaturity] = useState<boolean>(false);
     const [showViewsDropdown, setShowViewsDropdown] = useState<boolean>(false);
-    const { trackEvent } = useMatomo();
 
     useEffect(() => {
-        if (marketInfo.phase == 'maturity') {
+        if (market.phase == 'maturity') {
             setMaturity(true);
             setCurrentTab(4);
         }
-    }, [marketInfo.phase]);
+    }, [market.phase]);
 
     const { t } = useTranslation();
 
@@ -42,7 +44,7 @@ const TabContainer: React.FC = () => {
         ...(!inMaturity
             ? [
                   {
-                      title: t('options.market.widgets.chart', { currencyKey: marketInfo?.currencyKey }),
+                      title: t('options.market.widgets.chart', { currencyKey: market.currencyKey }),
                       index: 1,
                   },
               ]
@@ -72,7 +74,7 @@ const TabContainer: React.FC = () => {
     return (
         <>
             <Container>
-                <RowCard />
+                {isRangedMarket ? <RowCardRangedMarket /> : <RowCard />}
                 <ViewButton onClick={() => setShowViewsDropdown(!showViewsDropdown)}>
                     {currentTab
                         ? t('options.market.row-card.current-view', {
@@ -92,12 +94,6 @@ const TabContainer: React.FC = () => {
                                                 active={currentTab === item.index}
                                                 key={index}
                                                 onClick={() => {
-                                                    if (item.index == 5) {
-                                                        trackEvent({
-                                                            category: 'PositionalMarket',
-                                                            action: 'click-on-similar-markets',
-                                                        });
-                                                    }
                                                     setCurrentTab(item.index);
                                                     setShowViewsDropdown(false);
                                                 }}
@@ -127,9 +123,9 @@ const TabContainer: React.FC = () => {
                 </MenuContainer>
                 <Tab>
                     {currentTab == 1 && <TradingView />}
-                    {currentTab == 2 && <OptionPriceTab marketType={MARKET_TYPE[0] as MarketType} />}
-                    {currentTab == 3 && <UserActivity marketType={MARKET_TYPE[0] as MarketType} />}
-                    {currentTab == 4 && <MarketActivity marketType={MARKET_TYPE[0] as MarketType} />}
+                    {currentTab == 2 && <OptionPriceTab isRangedMarket={isRangedMarket} />}
+                    {currentTab == 3 && <UserActivity isRangedMarket={isRangedMarket} />}
+                    {currentTab == 4 && <MarketActivity isRangedMarket={isRangedMarket} />}
                 </Tab>
             </Container>
         </>

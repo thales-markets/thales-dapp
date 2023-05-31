@@ -15,41 +15,38 @@ import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { getStableCoinForNetwork } from '../../../../../utils/currency';
-import { MarketType, OptionsMarketInfo, RangedMarketData } from 'types/options';
-import { MARKET_TYPE } from 'constants/options';
+import { OptionsMarketInfo, RangedMarketData } from 'types/options';
 import { useRangedMarketContext } from 'pages/AMMTrading/contexts/RangedMarketContext';
 import { FlexDivColumn } from 'theme/common';
 import { ThemeInterface } from 'types/ui';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components';
 
-const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) => {
+type MarketActivityProps = {
+    isRangedMarket: boolean;
+};
+
+const MarketActivity: React.FC<MarketActivityProps> = ({ isRangedMarket }) => {
+    const market = isRangedMarket ? useRangedMarketContext() : useMarketContext();
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 
-    // TODO: fix this warning
-    // eslint-disable-next-line
-    const optionsMarket = marketType == MARKET_TYPE[0] ? useMarketContext() : useRangedMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(optionsMarket?.address, networkId, {
-        enabled: isAppReady && !!optionsMarket?.address,
+    const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(market.address, networkId, {
+        enabled: isAppReady,
     });
 
     const marketTransactions = uniqBy(marketTransactionsQuery.data || [], (transaction) => transaction.hash);
 
     const tradesQuery = useBinaryOptionsTradesQuery(
-        optionsMarket?.address,
-        marketType == MARKET_TYPE[0]
-            ? (optionsMarket as OptionsMarketInfo)?.longAddress
-            : (optionsMarket as RangedMarketData)?.inAddress,
-        marketType == MARKET_TYPE[0]
-            ? (optionsMarket as OptionsMarketInfo)?.shortAddress
-            : (optionsMarket as RangedMarketData)?.outAddress,
+        market.address,
+        isRangedMarket ? (market as RangedMarketData).inAddress : (market as OptionsMarketInfo).longAddress,
+        isRangedMarket ? (market as RangedMarketData).outAddress : (market as OptionsMarketInfo).shortAddress,
         networkId,
-        marketType,
-        { enabled: isAppReady && !!optionsMarket?.address }
+        isRangedMarket,
+        { enabled: isAppReady }
     );
 
     const transactions = useMemo(
@@ -105,6 +102,7 @@ const MarketActivity: React.FC<{ marketType: MarketType }> = ({ marketType }) =>
         <Container>
             <Table
                 data={transactions}
+                isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
                 columns={[
                     {
                         Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
