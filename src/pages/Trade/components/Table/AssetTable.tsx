@@ -116,9 +116,9 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                         if (rowIndex === row.index) {
                             let url = '';
                             if (position === Positions.UP || position === Positions.DOWN) {
-                                url = buildOptionsMarketLink(row.original.address);
+                                url = buildOptionsMarketLink(row.original.address, position.toLowerCase());
                             } else {
-                                url = buildRangeMarketLink(row.original.address);
+                                url = buildRangeMarketLink(row.original.address, position.toLowerCase());
                             }
                             navigate.push(url);
                         }

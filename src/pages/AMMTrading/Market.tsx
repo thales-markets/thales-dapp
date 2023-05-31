@@ -23,6 +23,9 @@ import SwitchInput from 'components/SwitchInput';
 import { useTranslation } from 'react-i18next';
 import RadioButtons from 'pages/Trade/components/RadioButtons';
 import { setIsBuy } from 'redux/modules/marketWidgets';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
+import { history } from 'utils/routes';
 
 type MarketProps = {
     marketAddress: string;
@@ -32,6 +35,7 @@ type MarketProps = {
 const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const location = useLocation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -40,7 +44,17 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const [inMaturityPhase, setMaturityPhase] = useState<boolean>(false);
     const [networkSwitched, setNetworkSwitched] = useState(false);
     const [orderSide, setOrderSide] = useState<OrderSide>('buy');
-    const [positionType, setPositionType] = useState(isRangedMarket ? Positions.IN : Positions.UP);
+
+    const queryParamPosition = queryString.parse(location.search).position.toUpperCase();
+    const [positionType, setPositionType] = useState(
+        queryParamPosition &&
+            ((!isRangedMarket && [Positions.UP, Positions.DOWN].includes(queryParamPosition)) ||
+                (isRangedMarket && [Positions.IN, Positions.OUT].includes(queryParamPosition)))
+            ? queryParamPosition
+            : isRangedMarket
+            ? Positions.IN
+            : Positions.UP
+    );
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady && !isRangedMarket,
@@ -107,7 +121,15 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                         />
                                         <DirectionContainer>
                                             <RadioButtons
-                                                onChange={setPositionType}
+                                                onChange={(position) => {
+                                                    history.push({
+                                                        pathname: location.pathname,
+                                                        search: queryString.stringify({
+                                                            position: position.toLowerCase(),
+                                                        }),
+                                                    });
+                                                    setPositionType(position);
+                                                }}
                                                 selected={positionType}
                                                 options={[Positions.UP, Positions.DOWN]}
                                             />
@@ -161,7 +183,15 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                         />
                                         <DirectionContainer>
                                             <RadioButtons
-                                                onChange={setPositionType}
+                                                onChange={(position) => {
+                                                    history.push({
+                                                        pathname: location.pathname,
+                                                        search: queryString.stringify({
+                                                            position: position.toLowerCase(),
+                                                        }),
+                                                    });
+                                                    setPositionType(position);
+                                                }}
                                                 selected={positionType}
                                                 options={[Positions.IN, Positions.OUT]}
                                             />

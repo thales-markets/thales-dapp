@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 type RadioButtonsProps = {
     selected: Positions;
-    onChange: React.Dispatch<React.SetStateAction<Positions>>;
+    onChange: React.Dispatch<Positions>;
     options?: Positions[];
 };
 
@@ -14,7 +14,7 @@ const RadioButtons: React.FC<RadioButtonsProps> = ({ selected, onChange, options
             {(options || Object.values(Positions)).map((position, index) => {
                 return (
                     <React.Fragment key={index}>
-                        <RadioWrapper onClick={onChange.bind(this, position)} key={index}>
+                        <RadioWrapper onClick={() => onChange(position)} key={index}>
                             {selected === position ? (
                                 <RadioIcon selected={true} className="icon icon--radio-button-selected" />
                             ) : (
