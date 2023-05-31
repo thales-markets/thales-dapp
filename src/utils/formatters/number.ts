@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 // import { DEFAULT_FIAT_DECIMALS } from 'constants/defaults';
-import { CurrencyKey } from 'constants/currency';
+import { CurrencyKey, USD_SIGN } from 'constants/currency';
+import { Positions } from 'constants/options';
 import numbro from 'numbro';
 
 type NumericValue = string | number;
@@ -112,6 +113,25 @@ export const formatNumberShort = (value: number, trim = true) => {
         value >= 1.0e3
         ? formatCurrency(value / 1.0e3, 2, trim) + 'k'
         : formatCurrency(value, 2, trim);
+};
+
+export const formatStrikePrice = (leftPrice: number, position: Positions, rightPrice?: number) => {
+    let strikePrice;
+    if (position === Positions.UP || position === Positions.DOWN) {
+        strikePrice = `${USD_SIGN} ${formatNumberShort(leftPrice, false)}`;
+    } else if (position === Positions.IN) {
+        strikePrice = `${USD_SIGN} ${formatNumberShort(leftPrice, false)} <-> ${USD_SIGN} ${formatNumberShort(
+            rightPrice as number,
+            false
+        )}`;
+    } else {
+        strikePrice = `<- ${USD_SIGN} ${formatNumberShort(leftPrice, false)}  ${USD_SIGN} ${formatNumberShort(
+            rightPrice as number,
+            false
+        )} ->`;
+    }
+    console.log(strikePrice);
+    return strikePrice;
 };
 
 export const formatPricePercentageGrowth = (priceChange: number) => {

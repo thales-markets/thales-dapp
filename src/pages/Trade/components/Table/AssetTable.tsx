@@ -1,9 +1,9 @@
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
 import TableV3 from 'components/TableV3';
 
-import { USD_SIGN } from 'constants/currency';
 import { Positions } from 'constants/options';
 import { ScreenSizeBreakpoint } from 'constants/ui';
+
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +11,7 @@ import styled, { useTheme } from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import { MarketInfo, RangedMarketPerPosition } from 'types/options';
 import { ThemeInterface } from 'types/ui';
-import { formatNumberShort, formatPercentage } from 'utils/formatters/number';
+import { formatPercentage, formatStrikePrice } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
 
 type TableProps = {
@@ -52,23 +52,15 @@ const AssetTable: React.FC<TableProps> = ({ markets, setMarket, position, isLoad
                 id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: (row: any, index: number) => {
-                    let strikePrice;
-                    if (position === Positions.UP || position === Positions.DOWN) {
-                        strikePrice = `${USD_SIGN} ${formatNumberShort(row.strikePrice, false)}`;
-                    } else if (position === Positions.IN) {
-                        strikePrice = `${USD_SIGN} ${formatNumberShort(
-                            row.leftPrice,
-                            false
-                        )} <-> ${USD_SIGN} ${formatNumberShort(row.rightPrice, false)}`;
-                    } else {
-                        strikePrice = `<- ${USD_SIGN} ${formatNumberShort(
-                            row.leftPrice,
-                            false
-                        )}  ${USD_SIGN} ${formatNumberShort(row.rightPrice, false)} ->`;
-                    }
                     return (
                         <TableText selected={rowIndex === index} price={false}>
-                            {strikePrice}
+                            {formatStrikePrice(
+                                position === Positions.UP || position === Positions.DOWN
+                                    ? row.strikePrice
+                                    : row.leftPrice,
+                                position,
+                                row.rightPrice
+                            )}
                         </TableText>
                     );
                 },
