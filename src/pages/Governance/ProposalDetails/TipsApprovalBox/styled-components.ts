@@ -7,7 +7,7 @@ export const Container = styled(FlexDivRow)`
     width: 100%;
 `;
 
-export const PieChartContainer = styled.div`
+const PieChartContainer = styled.div`
     position: relative;
     display: flex;
     justify-content: center;

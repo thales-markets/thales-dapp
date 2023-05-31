@@ -17,7 +17,7 @@ export const GridContainer = styled.div`
     overflow: hidden;
 `;
 
-export const StakeInfoItem = styled(FlexDivColumnCentered)`
+const StakeInfoItem = styled(FlexDivColumnCentered)`
     text-align: center;
     padding: 10px;
     grid-column: span 6;

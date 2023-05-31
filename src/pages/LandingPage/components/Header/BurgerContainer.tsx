@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
-import LanguageSelector from 'components/LanguageSelector/V2';
+import LanguageSelector from 'components/LanguageSelector';
 import { HashLink } from 'react-router-hash-link';
 
 type BurgerInput = {

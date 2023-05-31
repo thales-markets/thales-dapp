@@ -57,7 +57,7 @@ const Text = styled(FlexDiv)`
     }
 `;
 
-export const MigrateText = styled.span`
+const MigrateText = styled.span`
     margin-right: 15px;
     @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-right: 0;

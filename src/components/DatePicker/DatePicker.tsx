@@ -7,7 +7,7 @@ type DatePickerProps = ReactDatePickerProps & {
     errorMessage?: React.ReactNode;
 };
 
-export const DatePicker: FC<DatePickerProps> = ({ errorMessage, ...rest }) => {
+const DatePicker: FC<DatePickerProps> = ({ errorMessage, ...rest }) => {
     const { t } = useTranslation();
 
     return (

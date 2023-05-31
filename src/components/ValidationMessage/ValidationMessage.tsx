@@ -10,7 +10,7 @@ type ValidationMessageProps = {
     onDismiss: () => void;
 };
 
-export const ValidationMessage: React.FC<ValidationMessageProps> = ({ showValidation, message, onDismiss }) => {
+const ValidationMessage: React.FC<ValidationMessageProps> = ({ showValidation, message, onDismiss }) => {
     return (
         <>
             {showValidation && (
@@ -44,7 +44,7 @@ const Message = styled(FlexDivRow)`
     padding: 5px 10px;
 `;
 
-export const StyledValidationErrorIcon = styled(ValidationErrorIcon)`
+const StyledValidationErrorIcon = styled(ValidationErrorIcon)`
     margin-right: 8px;
     min-width: 18px;
     min-height: 16px;

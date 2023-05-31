@@ -37,7 +37,7 @@ const defaultCustomStyles = {
     },
 };
 
-export const Modal: React.FC<ModalProps> = ({
+const Modal: React.FC<ModalProps> = ({
     title,
     onClose,
     children,

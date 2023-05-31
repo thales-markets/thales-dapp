@@ -69,16 +69,9 @@ import { ReactComponent as ARBIcon } from 'assets/currencies/crypto/ARB.svg';
 import { ReactComponent as XAUIcon } from 'assets/synths/sXAU.svg';
 import { ReactComponent as XAGIcon } from 'assets/synths/sXAG.svg';
 
-export type CurrencyKey = string;
-export type CurrencyKeys = string[];
+export type CurrencyKeyOptionType = { value: string; label: string };
 
-// TODO: standardize this
-export type Category = 'crypto' | 'forex' | 'equities' | 'index' | 'commodity' | 'inverse';
-
-export const CATEGORY: Category[] = ['crypto', 'forex', 'equities', 'index', 'commodity', 'inverse'];
-export const CATEGORY_MAP = keyBy(CATEGORY);
-
-export const SYNTHS = [
+const SYNTHS = [
     'sBTC',
     'sBCH',
     'sETH',
@@ -128,7 +121,7 @@ export const SYNTHS = [
 ];
 export const SYNTHS_MAP = keyBy(SYNTHS);
 
-export const CRYPTO_CURRENCY = [
+const CRYPTO_CURRENCY = [
     'ARB',
     'KNC',
     'COMP',
@@ -182,17 +175,16 @@ export const CRYPTO_CURRENCY = [
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
-export const COMMODITY = ['XAU', 'XAG'];
+const COMMODITY = ['XAU', 'XAG'];
 export const COMMODITY_MAP = keyBy(COMMODITY);
 
-export const FIAT_CURRENCY = ['USD'];
-export const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
-export const FIAT_CURRENCY_SIGN = {
+const FIAT_CURRENCY = ['USD'];
+const FIAT_CURRENCY_MAP = keyBy(FIAT_CURRENCY);
+const FIAT_CURRENCY_SIGN = {
     [FIAT_CURRENCY_MAP.USD]: '$',
 };
 export const USD_SIGN = FIAT_CURRENCY_SIGN[FIAT_CURRENCY_MAP.USD];
 
-export const OPTIONS_CURRENCY = ['UP', 'DOWN'];
 export const OPTIONS_CURRENCY_MAP = {
     long: 'UP',
     short: 'DOWN',
@@ -200,14 +192,7 @@ export const OPTIONS_CURRENCY_MAP = {
     out: 'OUT',
 };
 
-export const CURRENCY_TO_OPTION = new Map([
-    [SYNTHS_MAP.sLONG, 'UP'],
-    [SYNTHS_MAP.sSHORT, 'DOWN'],
-]);
-
-export const LEGACY_THALES_CURRENCY = 'LEGACY THALES';
 export const THALES_CURRENCY = 'THALES';
-export const OP_THALES_CURRENCY = 'OpTHALES';
 export const LP_TOKEN = 'LP Token';
 
 export const currencyKeyToAssetIconMap = {
@@ -624,6 +609,3 @@ export const currencyKeyToDataFeedSourceMap = {
         link: '',
     },
 };
-
-export const sUSD_EXCHANGE_RATE = 1;
-export const SYNTH_DECIMALS = 18;

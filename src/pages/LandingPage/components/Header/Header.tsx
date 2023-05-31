@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from 'components/LanguageSelector/V2';
+import LanguageSelector from 'components/LanguageSelector';
 import styled from 'styled-components';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';

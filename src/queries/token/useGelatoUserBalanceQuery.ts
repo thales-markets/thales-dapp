@@ -5,7 +5,7 @@ import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { BALANCE_THRESHOLD } from 'constants/token';
 
-export interface BalanceQueryResponse {
+interface BalanceQueryResponse {
     balance: number;
 }
 

@@ -1,8 +1,6 @@
 import snapshot from '@snapshot-labs/snapshot.js';
 import { SpaceKey, StatusEnum } from 'constants/governance';
-// import { getCurrentTimestampSeconds } from 'utils/formatters/date';
 import { ethers } from 'ethers';
-import { truncateAddress, truncateText } from './formatters/string';
 import {
     OLD_COUNCIL_END_DATE,
     NUMBER_OF_COUNCIL_MEMBERS_OLD,
@@ -12,7 +10,7 @@ import {
 } from 'constants/governance';
 import { Colors } from 'theme/common';
 
-export function getENSForAddresses(addresses: any[]) {
+function getENSForAddresses(addresses: any[]) {
     return new Promise((resolve, reject) => {
         snapshot.utils
             .subgraphRequest('https://api.thegraph.com/subgraphs/name/ensdomains/ens', {
@@ -64,21 +62,6 @@ export async function getProfiles(addresses: any) {
             return [address, profile];
         })
     );
-}
-
-export function getUsername(address: string, youText: string, profile: any, walletAddress: string, short = true) {
-    if (address.toLowerCase() === walletAddress.toLowerCase()) {
-        return youText;
-    }
-
-    if (profile) {
-        if (profile.ens) {
-            return short ? truncateText(profile.ens, 12) : profile.ens;
-        }
-        return short ? truncateAddress(address) : address;
-    }
-
-    return short ? truncateAddress(address) : address;
 }
 
 export const getProposalUrl = (spaceKey: SpaceKey, id: string) => `https://snapshot.org/#/${spaceKey}/proposal/${id}`;

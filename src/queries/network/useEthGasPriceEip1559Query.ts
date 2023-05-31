@@ -21,7 +21,7 @@ type EtherscanGasTrackerResponse = {
     };
 };
 
-export type GasPricesEip1559 = {
+type GasPricesEip1559 = {
     baseFee: number;
     safeGasPrice: number;
     proposeGasPrice: number;

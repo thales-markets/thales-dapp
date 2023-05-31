@@ -13,7 +13,7 @@ import { Line } from '../../styled-components';
 import YourTransactions from './Transactions';
 import Stake from './Stake';
 import Unstake from './Unstake';
-import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
+import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
 import { getIsOVM } from 'utils/network';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
@@ -324,7 +324,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
                 display: grid; 
                 grid-template-columns: 1fr; 
                 grid-auto-rows: 1fr; 
-                grid-gap: ${GRID_GAP + 4}px;` // page GRID_GAP + borders(2 x 2px)
+                grid-gap: ${STYLE_GRID_GAP + 4}px;` // page GRID_GAP + borders(2 x 2px)
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
@@ -334,7 +334,7 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
         ${(props) =>
             props.backgroundType === BackgroundType.STAKE ? '' : `background: ${props.theme.background.secondary}`};
-        grid-gap: ${GRID_GAP_MOBILE + 4}px;
+        grid-gap: ${STYLE_GRID_GAP_MOBILE + 4}px;
     }
 `;
 

@@ -215,7 +215,7 @@ const TableContainer = styled(FlexDivColumn)`
     overflow: auto;
 `;
 
-export const SelectContainer = styled.div`
+const SelectContainer = styled.div`
     width: 230px;
 `;
 

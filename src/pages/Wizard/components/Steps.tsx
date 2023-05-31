@@ -16,12 +16,12 @@ import { POLYGON_ID } from 'constants/network';
 import ROUTES from 'constants/routes';
 import SimpleLoader from 'components/SimpleLoader';
 import SPAAnchor from 'components/SPAAnchor';
-import { WizardSteps } from '../Wizard';
 import BungeePlugin from 'components/BungeePlugin';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Modal from 'components/Modal';
 import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import { ScreenSizeBreakpoint } from 'constants/ui';
+import { WizardSteps } from 'constants/wizard';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',

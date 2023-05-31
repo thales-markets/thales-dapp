@@ -14,8 +14,8 @@ export const DEAD_ADDRESS = '0x000000000000000000000000000000000000dead';
 export const SAFE_BOX_ADDRESS = '0x679C0174f6c288C4bcd5C95C9Ec99D50357C59E7';
 export const POLYGON_GWEI_INCREASE_PERCENTAGE = 0.2;
 
-export type NetworkMapper = Record<number, number>;
-export type DropdownNetwork = {
+type NetworkMapper = Record<number, number>;
+type DropdownNetwork = {
     name: string;
     icon: FunctionComponent<SVGProps<SVGSVGElement>>;
     changeNetwork: (networkId: number, callback?: VoidFunction) => void;
@@ -26,12 +26,7 @@ export const L1_TO_L2_NETWORK_MAPPER: NetworkMapper = {
     42: 69,
 };
 
-export const L2_TO_L1_NETWORK_MAPPER: NetworkMapper = {
-    10: 1,
-    69: 42,
-};
-
-export type OptimismNetwork = {
+type OptimismNetwork = {
     chainId: string;
     chainName: string;
     rpcUrls: string[];
@@ -69,25 +64,10 @@ export const OPTIMISM_NETWORKS: Record<number, OptimismNetwork> = {
     },
 };
 
-export const OPTIMISM_OPTIONS = [
-    {
-        label: 'optimism.optimistic-gateway',
-        link: 'https://gateway.optimism.io/',
-    },
-    {
-        label: 'optimism.optimistic-etherscan',
-        link: 'https://optimistic.etherscan.io/',
-    },
-    {
-        label: 'optimism.learn-more',
-        link: 'https://www.optimism.io/',
-    },
-];
-
 export const POLYGON_MUMBAI_ID = 80001;
 export const POLYGON_ID = 137;
 
-export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
+const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
     [POLYGON_ID]: {
         chainId: '0x89',
         chainName: 'Polygon Mainnet',
@@ -112,7 +92,7 @@ export const POLYGON_NETWORKS: Record<number, OptimismNetwork> = {
     },
 };
 
-export const BSC_NETWORK: Record<number, OptimismNetwork> = {
+const BSC_NETWORK: Record<number, OptimismNetwork> = {
     56: {
         chainId: '0x38',
         chainName: 'BSC',
@@ -126,7 +106,7 @@ export const BSC_NETWORK: Record<number, OptimismNetwork> = {
     },
 };
 
-export const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
+const ARBITRUM_NETWORK: Record<number, OptimismNetwork> = {
     42161: {
         chainId: '0xA4B1',
         chainName: 'Arbitrum One',

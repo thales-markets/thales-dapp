@@ -1,7 +1,4 @@
 import styled from 'styled-components';
-import localStore from 'utils/localStore';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import { Theme } from 'constants/ui';
 
 export const FlexDiv = styled.div`
     display: flex;
@@ -43,32 +40,11 @@ export const FlexDivColumnCentered = styled(FlexDivColumn)`
     justify-content: center;
 `;
 
-export const GridDiv = styled.div`
+export const LoaderContainer = styled.div`
     display: grid;
-`;
-
-export const GridDivCentered = styled(GridDiv)`
-    align-items: center;
-`;
-
-export const GridDivRow = styled(GridDiv)`
     grid-auto-flow: row;
-`;
-
-export const GridDivCenteredRow = styled(GridDivCentered)`
-    grid-auto-flow: row;
-`;
-
-export const GridDivCol = styled(GridDiv)`
-    grid-auto-flow: column;
-`;
-
-export const GridDivCenteredCol = styled(GridDivCentered)`
-    grid-auto-flow: column;
-`;
-
-export const LoaderContainer = styled(GridDivCenteredRow)`
     grid-gap: 10px;
+    align-items: center;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -83,14 +59,33 @@ export const UserCardSectionHeader = styled.span`
     text-transform: uppercase;
 `;
 
-export const getDefaultTheme = (): Theme => {
-    const lsTheme = localStore.get(LOCAL_STORAGE_KEYS.UI_THEME);
-    return lsTheme !== undefined
-        ? Object.values(Theme).includes(lsTheme as number)
-            ? (lsTheme as Theme)
-            : Theme.DARK
-        : Theme.DARK;
-};
+export const CardContainer = styled.div`
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
+    border-radius: 15px;
+`;
+
+export const InputContainer = styled.div`
+    border: 0.8px solid ${(props) => props.theme.borderColor.primary};
+    border-radius: 10px;
+`;
+
+export const NoDataText = styled.span`
+    color: ${(props) => props.theme.textColor.primary};
+    font-size: 24px;
+    @media (max-width: 767px) {
+        font-size: 15px;
+    }
+`;
+
+export const NoDataContainer = styled.div`
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+    @media (max-width: 767px) {
+        margin-top: 10px;
+    }
+`;
 
 // TODO: Update color names
 export const Colors = {

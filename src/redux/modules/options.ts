@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from 'redux/rootReducer';
 import { OptionsTransaction, OptionsTransactions } from 'types/options';
 
 const sliceName = 'options';
@@ -12,7 +11,7 @@ const initialState: OptionsSliceState = {
     pendingTransactions: [],
 };
 
-export const optionsSlice = createSlice({
+const optionsSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
@@ -51,8 +50,6 @@ export const optionsSlice = createSlice({
         },
     },
 });
-
-export const getOptionsPendingTransactions = (state: RootState) => state[sliceName].pendingTransactions;
 
 export const { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } = optionsSlice.actions;
 

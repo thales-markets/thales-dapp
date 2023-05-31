@@ -2,7 +2,7 @@ import privacyPolicy from 'assets/docs/thales-privacy-policy.pdf';
 import termsOfUse from 'assets/docs/thales-terms-of-use.pdf';
 import footerW from 'assets/images/landing-page/footer-white.png';
 import footerW2 from 'assets/images/landing-page/footer_white.svg';
-import LanguageSelector from 'components/LanguageSelector/V2';
+import LanguageSelector from 'components/LanguageSelector';
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';

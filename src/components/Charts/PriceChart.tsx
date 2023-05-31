@@ -1,21 +1,16 @@
 import React, { CSSProperties, useMemo } from 'react';
-
 import { ResponsiveContainer, AreaChart, Area, YAxis, XAxis, Tooltip } from 'recharts';
 import { formatPricePercentageGrowth, calculatePercentageChange } from 'utils/formatters/number';
-
 import usePriceDataQuery from 'queries/price/usePriceDataQuery';
 import styled from 'styled-components';
-
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { formatPriceChangeInterval } from 'utils/formatters/string';
-import { CurrencyKey } from 'constants/currency';
-
 import { useTranslation } from 'react-i18next';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PriceChartProps = {
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     currencyVs?: string;
     days?: number;
     width?: number;

@@ -25,7 +25,7 @@ export const DatePickerRow = styled(FlexDivRow)`
     }
 `;
 
-export const Text = styled.p`
+const Text = styled.p`
     strong {
         font-weight: bold;
     }

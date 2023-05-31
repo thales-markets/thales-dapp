@@ -1,25 +1,19 @@
-import BigNumber from 'bignumber.js';
-// import { DEFAULT_FIAT_DECIMALS } from 'constants/defaults';
-import { CurrencyKey, USD_SIGN } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 import { Positions } from 'constants/options';
 import numbro from 'numbro';
 
 type NumericValue = string | number;
 
-export const DEFAULT_CURRENCY_DECIMALS = 2;
-export const SHORT_CRYPTO_CURRENCY_DECIMALS = 4;
-export const LONG_CRYPTO_CURRENCY_DECIMALS = 8;
-
-export const getDecimalPlaces = (value: NumericValue) => (value.toString().split('.')[1] || '').length;
-
-export const toBigNumber = (value: BigNumber | string | number) => new BigNumber(value);
+const DEFAULT_CURRENCY_DECIMALS = 2;
+const SHORT_CRYPTO_CURRENCY_DECIMALS = 4;
+const LONG_CRYPTO_CURRENCY_DECIMALS = 8;
 
 // TODO: figure out a robust way to get the correct precision.
 const getPrecision = (amount: NumericValue) => {
-    if (amount >= 1) {
+    if (Number(amount) >= 1) {
         return DEFAULT_CURRENCY_DECIMALS;
     }
-    if (amount > 0.01) {
+    if (Number(amount) > 0.01) {
         return SHORT_CRYPTO_CURRENCY_DECIMALS;
     }
     return LONG_CRYPTO_CURRENCY_DECIMALS;
@@ -55,7 +49,7 @@ export const formatPercentage = (value: NumericValue, decimals = DEFAULT_CURRENC
 };
 
 export const formatPercentageWithSign = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS) =>
-    `${value > 0 ? '+' : ''}${formatPercentage(value, decimals)}`;
+    `${Number(value) > 0 ? '+' : ''}${formatPercentage(value, decimals)}`;
 
 // TODO: use a library for this, because the sign does not always appear on the left. (perhaps something like number.toLocaleString)
 export const formatCurrencyWithSign = (
@@ -64,7 +58,7 @@ export const formatCurrencyWithSign = (
     decimals?: number,
     trimDecimals?: boolean
 ) => {
-    return `${value < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
+    return `${Number(value) < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
         typeof value == 'number' ? Math.abs(value) : value,
         decimals !== undefined ? decimals : getPrecision(value),
         trimDecimals
@@ -79,7 +73,7 @@ export const formatCurrencyWithSignInRange = (
 ) => formatCurrencyWithSign(sign, leftValue, decimals) + ' - ' + formatCurrencyWithSign(sign, rightValue, decimals);
 
 export const formatCurrencyWithKey = (
-    currencyKey: CurrencyKey,
+    currencyKey: string,
     value: NumericValue,
     decimals?: number,
     trimDecimals?: boolean

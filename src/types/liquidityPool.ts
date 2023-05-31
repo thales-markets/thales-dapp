@@ -33,11 +33,7 @@ export type UserLiquidityPoolData = {
     withdrawalAmount: number;
 };
 
-export type UserLiquidityPoolsData = {
-    balanceTotal: number;
-};
-
-export type LiquidityPoolPnlPerRound = {
+type LiquidityPoolPnlPerRound = {
     round: number | string;
     pnlPerRound: number;
     cumulativePnl: number;
@@ -56,16 +52,3 @@ export type LiquidityPoolUserTransaction = {
 };
 
 export type LiquidityPoolUserTransactions = LiquidityPoolUserTransaction[];
-
-export type VaultsAndLiquidityPoolUserTransaction = {
-    name: string;
-    hash: string;
-    timestamp: number;
-    blockNumber: number;
-    type: string;
-    account: string;
-    amount: number;
-    round: number;
-};
-
-export type VaultsAndLiquidityPoolUserTransactions = VaultsAndLiquidityPoolUserTransaction[];

@@ -12,7 +12,7 @@ type ViewEtherscanLinkProps = {
     hash: string;
 };
 
-export const ViewEtherscanLink: React.FC<ViewEtherscanLinkProps> = ({ hash }) => {
+const ViewEtherscanLink: React.FC<ViewEtherscanLinkProps> = ({ hash }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -31,7 +31,7 @@ const StyledLink = styled.a`
     }
 `;
 
-export const ArrowIcon = styled(ArrowHyperlinkIcon)`
+const ArrowIcon = styled(ArrowHyperlinkIcon)`
     margin-left: 5px;
     ${StyledLink} {
         fill: ${(props) => props.theme.link.textColor.secondary};

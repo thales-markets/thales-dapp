@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FlexDivRow, UserCardSectionHeader } from 'theme/common';
 
-export const LanguageCardSelector: React.FC = () => {
+const LanguageCardSelector: React.FC = () => {
     const [selectedLanguage, setLanguage] = useState(
         (Object.values(SupportedLanguages) as string[]).includes(i18n.language) ? i18n.language : DEFAULT_LANGUAGE
     );

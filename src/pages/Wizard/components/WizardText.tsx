@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
-import { WizardSteps } from '../Wizard';
+import { WizardSteps } from 'constants/wizard';
 
 const WizardText: React.FC<{ step?: WizardSteps }> = ({ step }) => {
     return (

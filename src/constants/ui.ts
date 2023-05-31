@@ -10,7 +10,7 @@ export const ThemeMap: Record<Theme, ThemeInterface> = {
     [Theme.DARK]: darkTheme,
 };
 
-export const toastBasicProperties = {
+const toastBasicProperties = {
     position: 'top-right' as ToastPosition,
     autoClose: 7000,
     hideProgressBar: false,

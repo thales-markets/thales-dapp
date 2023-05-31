@@ -8,14 +8,7 @@ import styled from 'styled-components';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import Footer from 'components/Footer';
 import ElectionsBanner from 'components/ElectionsBanner';
-
-export enum WizardSteps {
-    INSTALL_METAMASK,
-    CONNECT_METAMASK,
-    BUY,
-    EXCHANGE,
-    TRADE,
-}
+import { WizardSteps } from 'constants/wizard';
 
 const Wizard: React.FC = () => {
     const { t } = useTranslation();

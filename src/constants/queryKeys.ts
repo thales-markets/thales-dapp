@@ -3,7 +3,7 @@ import { NetworkId } from 'utils/network';
 import { SpaceKey } from './governance';
 import { Positions } from './options';
 
-export const QUERY_KEYS = {
+const QUERY_KEYS = {
     WalletBalances: {
         Balance: (walletAddress: string, networkId: NetworkId) => ['balance', walletAddress, networkId],
         Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],

@@ -1,12 +1,11 @@
 import React, { CSSProperties } from 'react';
 import CurrencyIcon, { IconType } from './CurrencyIcon';
-import { CurrencyKey } from 'constants/currency';
 import { getSynthName } from 'utils/currency';
 import { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 
 type CurrencyNameProps = {
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     showIcon?: boolean;
     hideAssetName?: boolean;
     rangeMarket?: boolean;
@@ -16,7 +15,7 @@ type CurrencyNameProps = {
     additionalIconType?: IconType;
 };
 
-export const CurrencyName: React.FC<CurrencyNameProps> = ({
+const CurrencyName: React.FC<CurrencyNameProps> = ({
     synthIconStyle,
     currencyKey,
     showIcon = false,
