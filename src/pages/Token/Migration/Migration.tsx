@@ -1,69 +1,35 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDiv, FlexDivRowCentered } from 'theme/common';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDiv } from 'theme/common';
 import Bridge from './Bridge';
 import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
+import { TokenTabEnum } from 'types/token';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const Migration: React.FC = () => {
     const { t } = useTranslation();
-
-    const tabs = [
-        {
-            id: 'bridge',
-            name: t(`migration.tabs.bridge`),
-        },
-    ];
-    const tabIds = tabs.map((tab) => tab.id);
-
     const location = useLocation();
-    const paramAction = queryString.parse(location.search).action;
-    const isTabAvailable = paramAction !== null && tabIds.includes(paramAction);
-    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramAction : 'bridge');
-
-    const optionsTabContent: Array<{
-        id: string;
-        name: string;
-    }> = useMemo(() => tabs, [t]);
-
-    useEffect(() => {
-        const paramAction = queryString.parse(location.search).action;
-        if (paramAction !== null && tabIds.includes(paramAction)) {
-            setSelectedTab(paramAction);
-        }
-    }, [location]);
 
     return (
         <GridWrapper>
             <Wrapper>
                 <Container>
-                    <FlexDivRowCentered>
-                        <FlexDiv>
-                            {optionsTabContent.map((tab, index) => (
-                                <OptionsTab
-                                    isActive={tab.id === selectedTab}
-                                    key={index}
-                                    index={index}
-                                    onClick={() => {
-                                        history.push({
-                                            pathname: location.pathname,
-                                            search: queryString.stringify({
-                                                tab: 'migration',
-                                                action: tab.id,
-                                            }),
-                                        });
-                                        setSelectedTab(tab.id);
-                                    }}
-                                    className={`${tab.id === selectedTab ? 'selected' : ''}`}
-                                >
-                                    {tab.name}
-                                </OptionsTab>
-                            ))}
-                        </FlexDiv>
-                    </FlexDivRowCentered>
-                    {selectedTab === 'bridge' && <Bridge />}
+                    <OptionsTab
+                        onClick={() => {
+                            history.push({
+                                pathname: location.pathname,
+                                search: queryString.stringify({
+                                    tab: TokenTabEnum.MIGRATION,
+                                }),
+                            });
+                        }}
+                    >
+                        {t(`migration.tabs.bridge`)}
+                    </OptionsTab>
+                    <Bridge />
                 </Container>
             </Wrapper>
         </GridWrapper>
@@ -76,45 +42,33 @@ const GridWrapper = styled(FlexDivColumnCentered)`
 `;
 
 const Wrapper = styled(FlexDivColumnCentered)`
-    background: linear-gradient(150.74deg, rgba(202, 145, 220, 0.6) -7.89%, rgba(106, 193, 213, 0.6) 107.94%);
+    background: ${(props) => props.theme.borderColor.secondary};
     padding: 1px;
     border-radius: 15px;
     margin: 60px 10px 50px 10px;
     min-width: 550px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: 10px;
         min-width: 200px;
     }
 `;
 
 const Container = styled(FlexDivColumn)`
-    background: var(--color-primary);
-    box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
+    background: ${(props) => props.theme.background.primary};
     border-radius: 15px;
     padding: 30px 60px 40px 60px;
     max-width: 550px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 30px 20px 40px 20px;
     }
 `;
 
-const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
+const OptionsTab = styled(FlexDiv)`
     font-weight: 600;
     font-size: 20px;
     line-height: 32px;
     letter-spacing: 0.5px;
-    color: #748bc6;
-    user-select: none;
-    margin-left: 10px;
-    margin-right: 20px;
-    &.selected {
-        transition: 0.2s;
-        color: #00f9ff;
-    }
-    &:hover:not(.selected) {
-        cursor: pointer;
-        color: #f6f6fe;
-    }
+    color: ${(props) => props.theme.textColor.primary};
 `;
 
 export default Migration;

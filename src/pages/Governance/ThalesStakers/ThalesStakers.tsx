@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -9,14 +9,11 @@ import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
 import { EnsNames, Staker, Stakers } from 'types/governance';
-import SearchStakers from '../components/SearchStakers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Network } from 'utils/network';
 import { Blockie, StyledLink } from '../styled-components';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { PaginationWrapper } from 'components/OldVersion/styled-components';
-import Pagination from '../components/Pagination/Pagination';
-import Table from 'components/Table/Table';
+import Table from 'components/TableV2';
 import { THALES_CURRENCY } from 'constants/currency';
 import { truncateAddress } from 'utils/formatters/string';
 import { CellProps } from 'react-table';
@@ -24,10 +21,10 @@ import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import { Address, Amount, ArrowIcon, Container, HeaderContainer, Info, TableContainer } from './styled-components';
+import SearchInput from 'components/SearchInput';
 
 const ThalesStakers: React.FC = () => {
     const { t } = useTranslation();
-    const [isMobile, setIsMobile] = useState(false);
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [addressSearch, setAddressSearch] = useState<string>('');
@@ -75,50 +72,18 @@ const ThalesStakers: React.FC = () => {
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const [page, setPage] = useState(0);
-    const handleChangePage = (_event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const [rowsPerPage, setRowsPerPage] = useState(20);
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(Number(event.target.value));
-        setPage(0);
-    };
-
-    const numberOfPages = Math.ceil(searchFilteredStakers.length / rowsPerPage) || 1;
-    const memoizedPage = useMemo(() => {
-        if (page > numberOfPages - 1) {
-            return numberOfPages - 1;
-        }
-        return page;
-    }, [page, numberOfPages]);
-
-    const handleResize = () => {
-        if (window.innerWidth <= 767) {
-            setIsMobile(true);
-        } else {
-            setIsMobile(false);
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-        handleResize();
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
-    useEffect(() => setPage(0), [addressSearch]);
-
     return (
         <Container>
             <HeaderContainer>
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
                 </Info>
-                <SearchStakers assetSearch={addressSearch} setAssetSearch={setAddressSearch} />
+                <SearchInput
+                    text={addressSearch}
+                    placeholder={t('op-rewards.search-placeholder')}
+                    handleChange={setAddressSearch}
+                    width="320px"
+                />
             </HeaderContainer>
             <TableContainer>
                 <Table
@@ -139,7 +104,6 @@ const ThalesStakers: React.FC = () => {
                                     </FlexDiv>
                                 </StyledLink>
                             ),
-                            width: 150,
                             sortable: true,
                         },
                         {
@@ -160,17 +124,14 @@ const ThalesStakers: React.FC = () => {
                                     </Tooltip>
                                 );
                             },
-                            width: 150,
                             sortable: true,
                         },
                     ]}
                     data={addressSearch ? searchFilteredStakers : stakers}
                     isLoading={stakersQuery.isLoading}
                     noResultsMessage={t('governance.stakers.no-stakers-found')}
-                    tableRowHeadStyles={{ width: '100%' }}
-                    onSortByChanged={() => setPage(0)}
-                    currentPage={page}
-                    rowsPerPage={rowsPerPage}
+                    searchQuery={addressSearch}
+                    preventMobileView
                     initialState={{
                         sortBy: [
                             {
@@ -180,22 +141,6 @@ const ThalesStakers: React.FC = () => {
                         ],
                     }}
                 />
-
-                {stakers.length !== 0 && (
-                    <PaginationWrapper
-                        rowsPerPageOptions={[10, 20, 30, 50]}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                        count={stakers.length ? stakers.length : 0}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        ActionsComponent={() => (
-                            <Pagination page={memoizedPage} numberOfPages={numberOfPages} setPage={setPage} />
-                        )}
-                        style={isMobile ? { padding: '0 5px 0 10px' } : { padding: '0 20px 0 30px' }}
-                    />
-                )}
             </TableContainer>
         </Container>
     );

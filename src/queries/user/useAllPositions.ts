@@ -33,7 +33,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             });
 
             const livePosition = positionBalances.filter(
-                (balance: any) => Number(balance.amount) !== 0 && balance.position.market.result === null
+                (balance: any) => Number(balance.amount) > 0 && balance.position.market.result === null
             );
 
             await Promise.all(
@@ -67,7 +67,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             );
 
             const maturedPositions = positionBalances.filter(
-                (balance: any) => Number(balance.amount) !== 0 && balance.position.market.result !== null
+                (balance: any) => Number(balance.amount) > 0 && balance.position.market.result !== null
             );
 
             maturedPositions.map((balance: any) => {
@@ -100,7 +100,7 @@ const useAllPositions = (networkId: NetworkId, walletAddress: string, options?: 
             const txMap = new Map();
 
             marketTx.map((tx: any) => {
-                if (tx.type !== 'mint') {
+                if (tx.type !== 'mint' && tx.amount !== 0) {
                     txMap.set(tx.market, tx);
                 }
             });

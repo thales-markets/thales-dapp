@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 // import { DEFAULT_FIAT_DECIMALS } from 'constants/defaults';
-import { CurrencyKey } from 'constants/currency';
+import { CurrencyKey, USD_SIGN } from 'constants/currency';
+import { Positions } from 'constants/options';
 import numbro from 'numbro';
 
 type NumericValue = string | number;
@@ -62,12 +63,13 @@ export const formatCurrencyWithSign = (
     value: NumericValue,
     decimals?: number,
     trimDecimals?: boolean
-) =>
-    `${value < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
+) => {
+    return `${value < 0 ? '- ' : ''}${sign ? sign + ' ' : ''}${formatCurrency(
         typeof value == 'number' ? Math.abs(value) : value,
         decimals !== undefined ? decimals : getPrecision(value),
         trimDecimals
     )}`;
+};
 
 export const formatCurrencyWithSignInRange = (
     sign: string | null | undefined,
@@ -100,17 +102,35 @@ export const truncDecimals = (value: number, decimals = DEFAULT_CURRENCY_DECIMAL
     return matchedValue !== null ? matchedValue[0] : '0';
 };
 
-export const formatNumberShort = (value: number) => {
+export const formatNumberShort = (value: number, trim = true) => {
     // Nine Zeroes for Billions
     return value >= 1.0e9
-        ? formatCurrency(value / 1.0e9, 2, true) + 'b'
+        ? formatCurrency(value / 1.0e9, 2, trim) + 'b'
         : // Six Zeroes for Millions
         value >= 1.0e6
-        ? formatCurrency(value / 1.0e6, 2, true) + 'm'
+        ? formatCurrency(value / 1.0e6, 2, trim) + 'm'
         : // Three Zeroes for Thousands
         value >= 1.0e3
-        ? formatCurrency(value / 1.0e3, 2, true) + 'k'
-        : formatCurrency(value, 2, true);
+        ? formatCurrency(value / 1.0e3, 2, trim) + 'k'
+        : formatCurrency(value, 2, trim);
+};
+
+export const formatStrikePrice = (leftPrice: number, position: Positions, rightPrice?: number) => {
+    let strikePrice;
+    if (position === Positions.UP || position === Positions.DOWN) {
+        strikePrice = `${USD_SIGN} ${formatNumberShort(leftPrice, false)}`;
+    } else if (position === Positions.IN) {
+        strikePrice = `${USD_SIGN} ${formatNumberShort(leftPrice, false)} <-> ${USD_SIGN} ${formatNumberShort(
+            rightPrice as number,
+            false
+        )}`;
+    } else {
+        strikePrice = `<- ${USD_SIGN} ${formatNumberShort(leftPrice, false)}  ${USD_SIGN} ${formatNumberShort(
+            rightPrice as number,
+            false
+        )} ->`;
+    }
+    return strikePrice;
 };
 
 export const formatPricePercentageGrowth = (priceChange: number) => {

@@ -2,12 +2,11 @@ import PieChartOptionsAllocated from 'components/Charts/PieChartOptionsAllocated
 import ElectionsBanner from 'components/ElectionsBanner';
 import Footer from 'components/Footer';
 import OpRewardsBanner from 'components/OpRewardsBanner';
-import SearchField from 'components/TableInputs/SearchField';
-import TableGridSwitch from 'components/TableInputs/TableGridSwitch';
+import SearchInput from 'components/SearchInput/SearchInput';
+import TableGridSwitch from 'components/TableGridSwitch';
 import ThalesBalance from 'components/ThalesBalance/ThalesBalance';
 import { USD_SIGN } from 'constants/currency';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import useRangedMarketsQuery from 'queries/options/rangedMarkets/useRangedMarketsQuery';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import useAllPositions from 'queries/user/useAllPositions';
@@ -21,7 +20,8 @@ import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import localStore from 'utils/localStore';
 import { history } from 'utils/routes';
@@ -29,8 +29,21 @@ import { getIsOVM, getIsPolygon } from '../../utils/network';
 import History from './components/History/History';
 import MaturedPositions from './components/MaturedPositions/MaturedPositions';
 import MyPositions from './components/MyPositions/MyPositions';
-import Container from './components/styled-components/Layout';
-import Wrapper from './components/styled-components/UserData';
+import {
+    Container,
+    ContainerFixed,
+    ContainerLeft,
+    ContainerRight,
+    ContentWrapper,
+    Label,
+    Nav,
+    NavItem,
+    Notification,
+    PriceContainer,
+    Row,
+    Value,
+    Wrapper,
+} from './styled-components';
 
 enum NavItems {
     MyPositions = 'my-positions',
@@ -41,6 +54,7 @@ enum NavItems {
 const Profile: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
+    const theme: ThemeInterface = useTheme();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -50,16 +64,11 @@ const Profile: React.FC = () => {
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, { enabled: isAppReady });
     const markets = marketsQuery.isSuccess ? marketsQuery.data : [];
-    const rangedMarketsQuery = useRangedMarketsQuery(networkId, { enabled: isAppReady });
-    const rangedMarkets = rangedMarketsQuery.isSuccess ? rangedMarketsQuery.data : [];
-
-    const showOPBanner = getIsOVM(networkId);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, markets as any, {
         enabled: isAppReady && markets !== undefined && markets?.length > 0,
     });
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
-    const isPolygon = getIsPolygon(networkId);
 
     const userPositionsQuery = useAllPositions(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
         enabled: isAppReady && walletAddress !== null,
@@ -84,7 +93,7 @@ const Profile: React.FC = () => {
     const allTxAndDataQuery = useCalculateDataQuery(networkId, (searchAddress ? searchAddress : walletAddress) as any, {
         enabled: isAppReady && walletAddress !== null,
     });
-    const DataForUi = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
+    const dataForUI = allTxAndDataQuery.isSuccess ? allTxAndDataQuery.data : undefined;
 
     const tableViewStorageKey = LOCAL_STORAGE_KEYS.PROFILE_TABLE_VIEW + networkId;
     const tableViewLocalStorageValue: boolean = localStore.get(tableViewStorageKey) || false;
@@ -100,6 +109,9 @@ const Profile: React.FC = () => {
         setSimpleView(!isSimpleView);
         localStore.set(tableViewStorageKey, isSimpleView);
     };
+
+    const showOPBanner = getIsOVM(networkId);
+    const isPolygon = getIsPolygon(networkId);
 
     const claimable = useMemo(() => {
         return positions.claimable + userRangePositions.claimable;
@@ -134,8 +146,8 @@ const Profile: React.FC = () => {
             {showOPBanner && <OpRewardsBanner />}
             <ElectionsBanner />
             <Container layout={isSimpleView}>
-                <Container.Fixed>
-                    <SearchField
+                <ContainerFixed>
+                    <SearchInput
                         placeholder={t('options.trading-profile.search-placeholder')}
                         text={searchText}
                         handleChange={(value) => setSearchText(value)}
@@ -145,8 +157,8 @@ const Profile: React.FC = () => {
                         clickEventHandler={tableViewSwitchClickhandler}
                         labels={[t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)]}
                     />
-                </Container.Fixed>
-                <Container.Left layout={isSimpleView}>
+                </ContainerFixed>
+                <ContainerLeft layout={isSimpleView}>
                     <Nav justifyContent={isSimpleView ? 'space-between' : 'flex-start'}>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.MyPositions)}
@@ -159,11 +171,7 @@ const Profile: React.FC = () => {
                             className={view === NavItems.MaturedPositions ? 'active' : ''}
                         >
                             {t('options.trading-profile.tabs.matured-positions')}
-                            {claimable > 0 && (
-                                <>
-                                    <Notification> {claimable} </Notification>
-                                </>
-                            )}
+                            {claimable > 0 && <Notification> {claimable} </Notification>}
                         </NavItem>
                         <NavItem
                             onClick={() => onTabClickHandler(NavItems.History)}
@@ -172,8 +180,7 @@ const Profile: React.FC = () => {
                             {t('options.trading-profile.tabs.history')}
                         </NavItem>
                     </Nav>
-                    <LineUnderNav />
-                    <ContentWrapper>
+                    <ContentWrapper isScrollable={isSimpleView || view === NavItems.History}>
                         {view === NavItems.MyPositions && (
                             <MyPositions
                                 isSimpleView={isSimpleView}
@@ -191,146 +198,76 @@ const Profile: React.FC = () => {
                                 claimed={positions.claimed}
                                 claimedRange={userRangePositions.claimed}
                                 searchText={searchAddress ? '' : searchText}
-                                isLoading={userPositionsQuery.isLoading}
+                                isLoading={userPositionsQuery.isLoading || userRangePositionsQuery.isLoading}
                                 rangedPositions={userRangePositions.matured}
                             />
                         )}
                         {view === NavItems.History && (
                             <History
-                                markets={[...(markets as any), ...(rangedMarkets as any)]}
-                                trades={DataForUi ? DataForUi.trades : []}
+                                markets={[...(markets as any)]}
+                                trades={dataForUI ? dataForUI.trades : []}
                                 searchText={searchAddress ? '' : searchText}
-                                isLoading={allTxAndDataQuery.isLoading}
+                                isLoading={allTxAndDataQuery.isLoading || marketsQuery.isLoading}
                             />
                         )}
                     </ContentWrapper>
-                </Container.Left>
-                <Container.Right layout={isSimpleView}>
+                </ContainerLeft>
+                <ContainerRight layout={isSimpleView}>
                     <PieChartOptionsAllocated
                         claimable={positions.claimableAmount + userRangePositions.claimableAmount}
                     />
                     <Wrapper>
-                        <Wrapper.Row>
-                            <Wrapper.Label>{t('options.leaderboard.table.netprofit-col')}: </Wrapper.Label>
-                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#DE496D'}>
-                                {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.profit, 2)}
-                            </Wrapper.Value>
-                        </Wrapper.Row>
-                        <Wrapper.Row>
-                            <Wrapper.Label>{t('options.leaderboard.table.gain-col')}: </Wrapper.Label>
-                            <Wrapper.Value color={DataForUi?.userData.gain > 0 ? '#50ec99' : '#DE496D'}>
-                                {formatCurrencyWithSign('', DataForUi?.userData.gain * 100, 2)}%
-                            </Wrapper.Value>
-                        </Wrapper.Row>
-                        <Wrapper.Row>
-                            <Wrapper.Label>{t('options.leaderboard.table.trades-col')}: </Wrapper.Label>
-                            <Wrapper.Value>{DataForUi?.userData.trades}</Wrapper.Value>
-                        </Wrapper.Row>
-                        <Wrapper.Row>
-                            <Wrapper.Label>{t('options.leaderboard.table.volume-col')}: </Wrapper.Label>
-                            <Wrapper.Value>
-                                {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.volume, 2)}
-                            </Wrapper.Value>
-                        </Wrapper.Row>
-                        <Wrapper.Row>
-                            <Wrapper.Label>{t('options.leaderboard.table.investment-col')}: </Wrapper.Label>
-                            <Wrapper.Value>
-                                {formatCurrencyWithSign(USD_SIGN, DataForUi?.userData.investment, 2)}
-                            </Wrapper.Value>
-                        </Wrapper.Row>
+                        <Row>
+                            <Label>{t('options.leaderboard.table.netprofit-col')}: </Label>
+                            <Value
+                                color={
+                                    dataForUI?.userData.profit === 0
+                                        ? theme.textColor.primary
+                                        : dataForUI?.userData.profit > 0
+                                        ? theme.textColor.quaternary
+                                        : theme.textColor.tertiary
+                                }
+                            >
+                                {formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.profit, 2)}
+                            </Value>
+                        </Row>
+                        <Row>
+                            <Label>{t('options.leaderboard.table.gain-col')}: </Label>
+                            <Value
+                                color={
+                                    dataForUI?.userData.gain === 0
+                                        ? theme.textColor.primary
+                                        : dataForUI?.userData.gain > 0
+                                        ? theme.textColor.quaternary
+                                        : theme.textColor.tertiary
+                                }
+                            >
+                                {formatCurrencyWithSign('', dataForUI?.userData.gain * 100, 2)}%
+                            </Value>
+                        </Row>
+                        <Row>
+                            <Label>{t('options.leaderboard.table.trades-col')}: </Label>
+                            <Value>{dataForUI?.userData.trades}</Value>
+                        </Row>
+                        <Row>
+                            <Label>{t('options.leaderboard.table.volume-col')}: </Label>
+                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.volume, 2)}</Value>
+                        </Row>
+                        <Row>
+                            <Label>{t('options.leaderboard.table.investment-col')}: </Label>
+                            <Value>{formatCurrencyWithSign(USD_SIGN, dataForUI?.userData.investment, 2)}</Value>
+                        </Row>
                         {!isPolygon && (
                             <PriceContainer style={{ maxWidth: isSimpleView ? 500 : 400, marginLeft: 0 }}>
                                 <ThalesBalance showTitle={true} />
                             </PriceContainer>
                         )}
                     </Wrapper>
-                </Container.Right>
+                </ContainerRight>
             </Container>
             <Footer />
         </>
     );
 };
-
-const LineUnderNav = styled.div`
-    height: 4px;
-    border-radius: 3px;
-    background: rgba(100, 217, 254, 0.5);
-    width: 100%;
-`;
-
-const Nav = styled.div<{ justifyContent: string }>`
-    display: flex;
-    align-items: center;
-    justify-content: ${(_props) => _props.justifyContent};
-    @media (max-width: 768px) {
-        margin-top: 20px;
-        justify-content: space-between;
-    }
-`;
-
-const NavItem = styled.p`
-    font-weight: bold;
-    line-height: 40px;
-    font-size: 15px;
-    text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
-    cursor: pointer;
-    padding: 0 50px;
-    white-space: pre;
-    &.active {
-        box-shadow: 0px 4px var(--primary-filter-menu-active);
-    }
-    @media (max-width: 768px) {
-        font-size: 14px;
-        padding: 0 20px;
-    }
-    @media (max-width: 500px) {
-        font-size: 10px;
-    }
-`;
-
-const Notification = styled.span`
-    background: rgba(100, 217, 254, 0.5);
-    box-sizing: border-box;
-    box-shadow: 0px 0px 30px rgb(100 217 254 / 30%);
-    border-radius: 30px;
-    margin-left: 20px;
-    width: 28px;
-    text-align: center;
-    font-size: 18px;
-    line-height: 28px;
-    position: relative;
-    top: 0px;
-    margin-top: 6px;
-    margin-bottom: 8px;
-    display: inline-block;
-    @media (max-width: 512px) {
-        font-size: 12px;
-        line-height: 20px;
-        width: 22px;
-        margin-left: 10px;
-    }
-`;
-
-const ContentWrapper = styled.div`
-    width: calc(100% + 100px);
-    padding-right: 50px;
-    overflow: hidden;
-    overflow-y: auto;
-    padding-left: 50px;
-    position: relative;
-    left: -50px;
-    padding-bottom: 40px;
-    height: 100%;
-`;
-
-const PriceContainer = styled.div`
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    margin-top: 20px;
-`;
 
 export default Profile;

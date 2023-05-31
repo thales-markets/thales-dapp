@@ -9,15 +9,16 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { TokenTabEnum, TokenTabSectionIdEnum, TokenTabSection } from 'types/token';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
-import Button from '../Button';
-import { ButtonType } from '../Button/Button';
+import Button from 'components/ButtonV2';
 import MigrationInfo from '../MigrationInfo';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
+import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -25,6 +26,7 @@ const Tab: React.FC<{
     sections: TokenTabSection[];
     selectedSection?: TokenTabSectionIdEnum;
 }> = ({ selectedTab, setSelectedTab, sections, selectedSection }) => {
+    const theme: ThemeInterface = useTheme();
     const location = useLocation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
@@ -49,12 +51,19 @@ const Tab: React.FC<{
                                     return (
                                         <Button
                                             key={index}
-                                            type={ButtonType.default}
-                                            active={activeButtonId == el.id}
-                                            width={el.buttonWidth || '172px'}
+                                            textColor={theme.button.textColor.secondary}
+                                            backgroundColor={
+                                                activeButtonId == el.id
+                                                    ? theme.button.background.tertiary
+                                                    : theme.button.background.secondary
+                                            }
+                                            borderColor={theme.button.borderColor.tertiary}
+                                            width="210px"
                                             margin={'0 20px 0 0'}
                                             padding={'5px 20px'}
-                                            onClickHandler={() => {
+                                            fontSize="15px"
+                                            additionalStyles={{ whiteSpace: 'nowrap' }}
+                                            onClick={() => {
                                                 const paramTab = queryString.parse(location.search).tab;
                                                 history.push({
                                                     pathname: location.pathname,
@@ -115,7 +124,7 @@ export const GRID_GAP_MOBILE = 10;
 
 const Container = styled.div`
     margin-top: 10px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 0;
     }
 `;
@@ -130,13 +139,13 @@ const SectionHeader = styled.p`
     font-weight: 600;
     font-size: 32px;
     line-height: 35px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     @media (max-width: 1192px) {
         height: 40px;
         font-size: 25px;
         line-height: 25px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: auto;
         padding-top: 0;
         padding-bottom: 10px;
@@ -150,8 +159,8 @@ const SectionDescription = styled.p`
     font-size: 16px;
     line-height: 20px;
     padding-top: 5px;
-    color: var(--color-white);
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -165,7 +174,7 @@ const WarningIcon = styled.i`
     line-height: 18px;
     padding-top: 5px;
     color: ${(props) => props.theme.textColor.tertiary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -178,7 +187,7 @@ const SectionWarning = styled.p`
     line-height: 20px;
     padding-top: 5px;
     color: ${(props) => props.theme.textColor.tertiary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
         line-height: 20px;
         padding-bottom: 10px;
@@ -186,17 +195,18 @@ const SectionWarning = styled.p`
 `;
 
 const SectionButtons = styled.div`
-    margin-left: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-left: auto;
     margin-bottom: 10px;
     margin-top: 10px;
+    height: 30px;
     @media (max-width: 1192px) {
         margin-bottom: 0;
         margin-top: 5px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
@@ -209,11 +219,11 @@ const SectionContent = styled.div`
     grid-gap: ${GRID_GAP}px;
     padding: 10px 0;
     border-radius: 10px;
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     z-index: 0;
     width: 100%;
-    color: var(--color-white);
-    @media (max-width: 767px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         background: transparent;
         border: none;
         padding: 1px;

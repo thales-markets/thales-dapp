@@ -84,7 +84,7 @@ const Value = styled(FlexDivColumnCentered)<{ isSelected: boolean }>`
     width: 35px;
     height: ${HEIGHT};
     background: ${(props) => (props.isSelected ? props.theme.background.secondary : 'transparent')};
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
     align-items: center;
     margin-right: 10px;

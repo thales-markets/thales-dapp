@@ -1,10 +1,11 @@
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import Button from 'components/ButtonV2/Button';
 import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import TimeRemaining from 'components/TimeRemaining/TimeRemaining';
 import { USD_SIGN } from 'constants/currency';
 import { POLYGON_GWEI_INCREASE_PERCENTAGE } from 'constants/network';
 import { POSITIONS_TO_SIDE_MAP, Positions, SLIPPAGE_PERCENTAGE, getMaxGasLimitForNetwork } from 'constants/options';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { ScreenSizeBreakpoint, getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { BigNumber, ethers } from 'ethers';
 
 import useUserOpenPositions, { UserLivePositions } from 'queries/user/useUserOpenPositions';
@@ -14,9 +15,12 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled, { CSSProperties } from 'styled-components';
+import styled, { CSSProperties, useTheme } from 'styled-components';
 import { FlexDivCentered } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
 import { getEstimatedGasFees, getQuoteFromAMM, getQuoteFromRangedAMM, prepareTransactionForAMM } from 'utils/amm';
+import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContract';
+import rangedMarketContract from 'utils/contracts/rangedMarketContract';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { stableCoinFormatter, stableCoinParser } from 'utils/formatters/ethers';
 import { formatCurrencyWithSign, formatNumberShort, roundNumberToDecimals } from 'utils/formatters/number';
@@ -27,14 +31,18 @@ import snxJSConnector from 'utils/snxJSConnector';
 const OpenPositions: React.FC = () => {
     const { t } = useTranslation();
     const { trackEvent } = useMatomo();
+    const theme: ThemeInterface = useTheme();
 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [submittingAddress, setSubmittingAddress] = useState('');
+    const [submittingPosition, setSubmittingPosition] = useState('');
 
-    const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', { enabled: true });
+    const positionsQuery = useUserOpenPositions(networkId, walletAddress ?? '', {
+        enabled: true,
+        refetchInterval: 10000,
+    }); // 10sec refetch
     const livePositions = useMemo(() => {
         if (positionsQuery.isSuccess) return positionsQuery.data;
         return [];
@@ -155,13 +163,13 @@ const OpenPositions: React.FC = () => {
             return { totalValueChanged, latestGasLimit };
         };
 
-        setSubmittingAddress(position.market);
+        setSubmittingPosition(position.market + position.side);
         const id = toast.loading(t('amm.progress'));
 
         const { totalValueChanged, latestGasLimit } = await fetchAmmPriceData(position.paid);
         if (totalValueChanged) {
             toast.update(id, getErrorToastOptions(t('common.errors.try-again')));
-            setSubmittingAddress('');
+            setSubmittingPosition('');
             refetchUserOpenPositions(walletAddress, networkId);
             return;
         }
@@ -218,7 +226,7 @@ const OpenPositions: React.FC = () => {
                     : refetchAmmData(walletAddress, position.market);
                 refetchUserOpenPositions(walletAddress, networkId);
 
-                setSubmittingAddress('');
+                setSubmittingPosition('');
                 setGasLimit(null);
 
                 trackEvent({
@@ -229,11 +237,88 @@ const OpenPositions: React.FC = () => {
         } catch (e) {
             console.log(e);
             toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
-            setSubmittingAddress('');
+            setSubmittingPosition('');
+        }
+    };
+
+    const handleExercise = async (position: UserLivePositions) => {
+        let marketContract;
+        if (position.side === Positions.UP || position.side === Positions.DOWN) {
+            marketContract = new ethers.Contract(position.market, binaryOptionMarketContract.abi);
+        } else {
+            marketContract = new ethers.Contract(position.market, rangedMarketContract.abi);
+        }
+
+        if (marketContract && snxJSConnector.signer) {
+            const marketContractWithSigner = marketContract.connect(snxJSConnector.signer);
+            const id = toast.loading(t('amm.progress'));
+
+            try {
+                const tx = await marketContractWithSigner.exerciseOptions();
+                await tx.wait();
+                toast.update(
+                    id,
+                    getSuccessToastOptions(
+                        t(`options.market.trade-options.place-order.swap-confirm-button.sell.confirmation-message`)
+                    )
+                );
+
+                refetchBalances(walletAddress, networkId);
+                refetchUserOpenPositions(walletAddress, networkId);
+            } catch (e) {
+                console.log(e);
+                toast.update(id, getErrorToastOptions(t('common.errors.unknown-error-try-again')));
+            }
         }
     };
 
     const getPositionsList = (position: UserLivePositions, index: number) => {
+        const getButton = (position: UserLivePositions) => {
+            if (position.claimable && position.amount > 0) {
+                return (
+                    <Button
+                        {...defaultButtonProps}
+                        disabled={Number(position.value) === 0}
+                        additionalStyles={additionalStyle}
+                        backgroundColor={theme.button.textColor.quaternary}
+                        onClick={() => handleExercise(position)}
+                    >
+                        {submittingPosition === position.market + position.side
+                            ? t(`options.trade.user-positions.claim-win-progress`)
+                            : t('options.trade.user-positions.claim-win')}
+                        {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
+                    </Button>
+                );
+            }
+            const today = new Date();
+            if (position.maturityDate > today.getTime() / 1000 && position.value > 0) {
+                return (
+                    <Button
+                        {...defaultButtonProps}
+                        disabled={Number(position.value) === 0}
+                        additionalStyles={additionalStyle}
+                        onClick={() => handleSubmit(position)}
+                    >
+                        {submittingPosition === position.market + position.side
+                            ? t(`options.trade.user-positions.cash-out-progress`)
+                            : t('options.trade.user-positions.cash-out')}
+                        {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
+                    </Button>
+                );
+            }
+            if (position.maturityDate > today.getTime() / 1000 && position.value === 0) {
+                return (
+                    <>
+                        <Separator />
+                        <FlexContainer style={{ minWidth: 200 }}>
+                            <Label>{t('options.trade.user-positions.results')}</Label>
+                            <TimeRemaining fontSize={13} end={position.maturityDate} />
+                        </FlexContainer>
+                    </>
+                );
+            }
+        };
+
         return (
             <Position key={index}>
                 <Icon className={`currency-icon currency-icon--${position.currencyKey.toLowerCase()}`} />
@@ -258,17 +343,7 @@ const OpenPositions: React.FC = () => {
                         <Value>{formatCurrencyWithSign(USD_SIGN, position.paid, 2)}</Value>
                     </FlexContainer>
                 </AlignedFlex>
-                <Button
-                    {...defaultButtonProps}
-                    disabled={Number(position.value) === 0}
-                    additionalStyles={additionalStyle}
-                    onClick={() => handleSubmit(position)}
-                >
-                    {submittingAddress === position.market
-                        ? t(`options.trade.user-positions.cash-out-progress`)
-                        : t('options.trade.user-positions.cash-out')}
-                    {' ' + formatCurrencyWithSign(USD_SIGN, position.value, 2)}
-                </Button>
+                {getButton(position)}
             </Position>
         );
     };
@@ -334,7 +409,7 @@ const PositionsWrapper = styled.div<{ noPositions?: boolean }>`
     overflow-y: auto;
     max-height: 560px;
     ${(props) => (props.noPositions ? 'filter: blur(10px);' : '')}
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
         overflow: auto;
     }
@@ -361,6 +436,7 @@ const additionalStyle: CSSProperties = {
     fontSize: '13px',
     lineHeight: '100%',
     textTransform: 'uppercase',
+    border: 'none',
 };
 
 const Position = styled.div`
@@ -374,11 +450,13 @@ const Position = styled.div`
     justify-content: space-between;
     padding: 0 17px;
     gap: 10px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: flex;
         flex-direction: column;
         height: 100%;
+        min-height: 172px;
         padding: 10px 10px;
+        margin-bottom: 10px;
         gap: 10px;
     }
 `;
@@ -393,7 +471,7 @@ const AlignedFlex = styled.div`
     gap: 10px;
     justify-content: flex-end;
     width: 100%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 6px;
     }
@@ -407,7 +485,7 @@ const FlexContainer = styled(AlignedFlex)`
         min-width: 195px;
         max-width: 195px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: row;
         gap: 4px;
     }
@@ -444,7 +522,7 @@ const Separator = styled.div`
     height: 14px;
     background: ${(props) => props.theme.background.secondary};
     border-radius: 3px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;

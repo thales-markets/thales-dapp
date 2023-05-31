@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Image } from 'theme/common';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
 import snxStakingActiveIcon from 'assets/images/snx-staking-active.png';
-import snxStakingIcon from 'assets/images/snx-staking.png';
+import snxStakingIcon from 'assets/images/snx-staking.svg';
 import stakingActiveIcon from 'assets/images/staking-active.svg';
 import stakingIcon from 'assets/images/staking.svg';
 import vestingActiveIcon from 'assets/images/vesting-active.svg';
@@ -20,6 +19,8 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsArbitrum, getIsOVM } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { TokenTabEnum, TokenTabSectionIdEnum } from 'types/token';
+import OutsideClickHandler from 'react-outside-click-handler';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TokenNavProps = {
     setSelectedTab: any;
@@ -41,142 +42,170 @@ const TokenNavFooter: React.FC<TokenNavProps> = ({
     const [showNav, setShowNav] = useState(false);
 
     return (
-        <NavFooter>
-            <BurgerWrapper onClick={setShowNav.bind(this, !showNav)}>
-                <BurgerLine />
-                <BurgerLine />
-                <BurgerLine />
-            </BurgerWrapper>
-            {showNav && (
-                <Container>
-                    <Icon
-                        onClick={() => {
-                            history.push({
-                                pathname: location.pathname,
-                                search: queryString.stringify({
-                                    tab: TokenTabEnum.GAMIFIED_STAKING,
-                                }),
-                            });
-                            setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
-                            setSelectedSection(TokenTabSectionIdEnum.STAKING);
-                        }}
-                        src={selectedSection === TokenTabSectionIdEnum.STAKING ? stakingActiveIcon : stakingIcon}
-                    />
-                    {(isL2 || isArb) && (
+        <OutsideClickHandler onOutsideClick={() => setShowNav(false)}>
+            <NavFooter>
+                <BurgerWrapper onClick={setShowNav.bind(this, !showNav)}>
+                    <BurgerLine />
+                    <BurgerLine />
+                    <BurgerLine />
+                </BurgerWrapper>
+                {showNav && (
+                    <Container>
                         <Icon
                             onClick={() => {
                                 history.push({
                                     pathname: location.pathname,
                                     search: queryString.stringify({
                                         tab: TokenTabEnum.GAMIFIED_STAKING,
+                                        activeButtonId: TokenTabSectionIdEnum.STAKING,
                                     }),
                                 });
                                 setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
-                                setSelectedSection(TokenTabSectionIdEnum.REWARDS);
+                                setSelectedSection(TokenTabSectionIdEnum.STAKING);
                             }}
                             src={
-                                selectedSection === TokenTabSectionIdEnum.REWARDS
-                                    ? snxStakingActiveIcon
-                                    : snxStakingIcon
+                                selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
+                                selectedSection === TokenTabSectionIdEnum.STAKING
+                                    ? stakingActiveIcon
+                                    : stakingIcon
                             }
                         />
-                    )}
-                    {(isL2 || isArb) && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.GAMIFIED_STAKING,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
-                                setSelectedSection(TokenTabSectionIdEnum.VESTING);
-                            }}
-                            src={selectedSection === TokenTabSectionIdEnum.VESTING ? vestingActiveIcon : vestingIcon}
-                        />
-                    )}
-                    {(isL2 || isArb) && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.GAMIFIED_STAKING,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
-                                setSelectedSection(TokenTabSectionIdEnum.MERGE_ACCOUNT);
-                            }}
-                            src={
-                                selectedSection === TokenTabSectionIdEnum.MERGE_ACCOUNT
-                                    ? migrationActiveIcon
-                                    : migrationIcon
-                            }
-                        />
-                    )}
-                    {!isArb && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.LP_STAKING,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.LP_STAKING);
-                                setSelectedSection(TokenTabSectionIdEnum.LP_STAKING);
-                            }}
-                            src={
-                                selectedTab === TokenTabEnum.LP_STAKING
-                                    ? isL2
-                                        ? lpl2ActiveIcon
-                                        : lpActiveIcon
-                                    : isL2
-                                    ? lpl2Icon
-                                    : lpIcon
-                            }
-                        />
-                    )}
+                        {(isL2 || isArb) && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.GAMIFIED_STAKING,
+                                            activeButtonId: TokenTabSectionIdEnum.REWARDS,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                    setSelectedSection(TokenTabSectionIdEnum.REWARDS);
+                                }}
+                                src={
+                                    selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
+                                    selectedSection === TokenTabSectionIdEnum.REWARDS
+                                        ? snxStakingActiveIcon
+                                        : snxStakingIcon
+                                }
+                            />
+                        )}
+                        {(isL2 || isArb) && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.GAMIFIED_STAKING,
+                                            activeButtonId: TokenTabSectionIdEnum.VESTING,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                    setSelectedSection(TokenTabSectionIdEnum.VESTING);
+                                }}
+                                src={
+                                    selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
+                                    selectedSection === TokenTabSectionIdEnum.VESTING
+                                        ? vestingActiveIcon
+                                        : vestingIcon
+                                }
+                            />
+                        )}
+                        {(isL2 || isArb) && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.GAMIFIED_STAKING,
+                                            activeButtonId: TokenTabSectionIdEnum.MERGE_ACCOUNT,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.GAMIFIED_STAKING);
+                                    setSelectedSection(TokenTabSectionIdEnum.MERGE_ACCOUNT);
+                                }}
+                                src={
+                                    selectedTab === TokenTabEnum.GAMIFIED_STAKING &&
+                                    selectedSection === TokenTabSectionIdEnum.MERGE_ACCOUNT
+                                        ? migrationActiveIcon
+                                        : migrationIcon
+                                }
+                            />
+                        )}
+                        {isL2 && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.LP_STAKING,
+                                            activeButtonId: TokenTabSectionIdEnum.LP_STAKING,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.LP_STAKING);
+                                    setSelectedSection(TokenTabSectionIdEnum.LP_STAKING);
+                                }}
+                                src={
+                                    selectedTab === TokenTabEnum.LP_STAKING &&
+                                    selectedSection === TokenTabSectionIdEnum.LP_STAKING
+                                        ? isL2
+                                            ? lpl2ActiveIcon
+                                            : lpActiveIcon
+                                        : isL2
+                                        ? lpl2Icon
+                                        : lpIcon
+                                }
+                            />
+                        )}
 
-                    {!isL2 && !isArb && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.MIGRATION,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.MIGRATION);
-                            }}
-                            src={selectedTab === TokenTabEnum.MIGRATION ? migrationActiveIcon : migrationIcon}
-                        />
-                    )}
-                    {!isL2 && !isArb && (
-                        <Icon
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: TokenTabEnum.STRATEGIC_INVESTORS,
-                                    }),
-                                });
-                                setSelectedTab(TokenTabEnum.STRATEGIC_INVESTORS);
-                            }}
-                            src={
-                                selectedTab === TokenTabEnum.STRATEGIC_INVESTORS ? snxStakingActiveIcon : snxStakingIcon
-                            }
-                        />
-                    )}
-                </Container>
-            )}
-        </NavFooter>
+                        {!isL2 && !isArb && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.MIGRATION,
+                                            activeButtonId: undefined,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.MIGRATION);
+                                }}
+                                src={
+                                    selectedTab === TokenTabEnum.MIGRATION && selectedSection === undefined
+                                        ? migrationActiveIcon
+                                        : migrationIcon
+                                }
+                            />
+                        )}
+                        {!isL2 && !isArb && (
+                            <Icon
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: TokenTabEnum.STRATEGIC_INVESTORS,
+                                            activeButtonId: undefined,
+                                        }),
+                                    });
+                                    setSelectedTab(TokenTabEnum.STRATEGIC_INVESTORS);
+                                }}
+                                src={
+                                    selectedTab === TokenTabEnum.STRATEGIC_INVESTORS && selectedSection === undefined
+                                        ? snxStakingActiveIcon
+                                        : snxStakingIcon
+                                }
+                            />
+                        )}
+                    </Container>
+                )}
+            </NavFooter>
+        </OutsideClickHandler>
     );
 };
 
 const NavFooter = styled.div`
-    @media (min-width: 767px) {
+    @media (min-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
     display: flex;
@@ -184,8 +213,8 @@ const NavFooter = styled.div`
     justify-content: center;
     align-items: center;
     position: fixed;
-    bottom: 85px;
-    left: 0;
+    bottom: 130px;
+    right: -20px;
     width: 100px;
     padding: 0 10px;
     z-index: 999;
@@ -197,12 +226,12 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     position: fixed;
-    bottom: 145px;
-    left: 0;
+    bottom: 190px;
+    right: -20px;
     width: 100px;
 `;
 
-const Icon = styled(Image)`
+const Icon = styled.img`
     width: 42px;
     height: 42px;
     padding: 4px;

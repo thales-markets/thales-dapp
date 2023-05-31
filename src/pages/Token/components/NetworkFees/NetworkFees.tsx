@@ -8,10 +8,11 @@ import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { RootState } from 'redux/rootReducer';
 import { getIsOVM, getIsPolygon, getTransactionPrice } from 'utils/network';
-import { SummaryContent, SummaryItem, SummaryLabel } from '../components';
 import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
 import { getNetworkId } from 'redux/modules/wallet';
+import { FlexDivRow } from 'theme/common';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export type GasLimit = {
     gasLimit: number;
@@ -90,6 +91,36 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
     );
 };
 
+const SummaryItem = styled(FlexDivRow)`
+    margin-bottom: 20px;
+`;
+
+const SummaryLabel = styled.div<{ color?: string }>`
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.5px;
+    color: ${(props) => props.color ?? props.theme.textColor.primary};
+`;
+
+const SummaryContent = styled.div<{ color?: string }>`
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 200px;
+    text-align: end;
+    color: ${(props) => props.color ?? props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        width: 100px;
+    }
+`;
+
 const NetworkFeeSummaryItem = styled(SummaryItem)`
     margin-bottom: 0;
 `;
@@ -99,7 +130,7 @@ const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     font-size: 14px;
     line-height: 21px;
     text-transform: uppercase;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -110,7 +141,7 @@ const NetworkFeeSummaryContent = styled(SummaryContent)`
     line-height: 21px;
     text-transform: uppercase;
     flex: 1;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;

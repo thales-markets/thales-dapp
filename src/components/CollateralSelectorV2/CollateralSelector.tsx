@@ -95,20 +95,17 @@ const Dropdown = styled(FlexDivColumnCentered)`
     top: 30px;
     left: -7px;
     width: 66px;
-    padding: 8px 0;
+    padding: 5px 3px;
     border-radius: 8px;
     background: ${(props) => props.theme.background.secondary};
 `;
 
 const CollateralOption = styled.div`
-    padding: 2px 10px;
+    display: flex;
+    align-items: center;
+    padding: 5px 7px;
+    border-radius: 8px;
     cursor: pointer;
-    &:first-child {
-        padding-top: 0;
-    }
-    &:last-child {
-        padding-bottom: 0;
-    }
     &:hover {
         background: ${(props) => props.theme.background.primary};
     }

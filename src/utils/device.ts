@@ -1,4 +1,6 @@
-export const isMobile = () => window.innerWidth < 768;
+import { ScreenSizeBreakpoint } from 'constants/ui';
+
+export const isMobile = () => window.innerWidth <= ScreenSizeBreakpoint.SMALL;
 
 export const isMetamask = async () => {
     if (!window.ethereum) {

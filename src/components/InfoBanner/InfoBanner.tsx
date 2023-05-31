@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
@@ -15,7 +16,7 @@ const Container = styled(FlexDivCentered)`
     border-radius: 15px;
     padding: 5px 20px;
     width: 100%;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 5px 20px;
     }
 `;
@@ -26,7 +27,7 @@ const Text = styled(FlexDiv)`
     line-height: 30px;
     color: ${(props) => props.theme.button.textColor.primary};
     align-items: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: inline-block;
         text-align: center;
     }

@@ -6,6 +6,7 @@ import { Banner, useBannersQuery } from 'queries/banners/useBannersQuery';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const BannerCarousel: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -52,7 +53,7 @@ const Container = styled.div`
     overflow: hidden;
     margin: 0 0 30px 0;
     max-width: 100%;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;

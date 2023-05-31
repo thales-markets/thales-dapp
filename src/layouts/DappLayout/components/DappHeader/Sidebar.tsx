@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { buildHref } from 'utils/routes';
 import logoSmallIcon from 'assets/images/logo-small-light.svg';
 import logoIcon from 'assets/images/logo-light.svg';
@@ -13,26 +13,25 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { isMobile } from 'utils/device';
-import debounce from 'lodash/debounce';
+import { getIsMobile } from 'redux/modules/ui';
 
 const Sidebar: React.FC = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const isPolygon = getIsPolygon(networkId);
     const isBSC = getIsBSC(networkId);
     const isArbitrum = getIsArbitrum(networkId);
     const isMainnet = getIsMainnet(networkId);
 
-    const { t } = useTranslation();
     const [collapse, setCollapse] = useState(false);
-
-    const [isMobileState, setIsMobileState] = useState(isMobile());
 
     const showVaultsPage = !isMainnet && !isPolygon && !isBSC;
     const showLP = !isMainnet && !isPolygon && !isBSC;
-    const showWizardPage = !isMobileState;
+    const showWizardPage = !isMobile;
     const showReferralPage = !isMainnet;
     const showTokenPage = !isPolygon && !isBSC;
     const showOPRewardsPage = !isMainnet && !isPolygon && !isBSC && !isArbitrum;
@@ -40,22 +39,6 @@ const Sidebar: React.FC = () => {
     const showGamePage = !isMainnet;
     const showProfilePage = !isMainnet && isWalletConnected;
     const showProfileDivider = showGamePage || showProfilePage;
-
-    useEffect(() => {
-        const handleResize = debounce(() => {
-            if (isMobile()) {
-                setIsMobileState(true);
-            } else {
-                setIsMobileState(false);
-            }
-        }, 100);
-
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            handleResize.cancel();
-        };
-    }, []);
 
     return (
         <SidebarHtml id="sidebar">
@@ -200,7 +183,7 @@ const Sidebar: React.FC = () => {
                     label={t('common.sidebar.sport-markets-label')}
                     onClick={(event: any) => {
                         event.preventDefault();
-                        if (window.innerWidth <= 767) {
+                        if (isMobile) {
                             window.location.replace(LINKS.SportMarkets);
                         } else {
                             window.open(LINKS.SportMarkets);
@@ -264,6 +247,10 @@ const SidebarHtml = styled.nav`
 
     .sidebar-logoBig {
         display: none;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background: transparent;
     }
 
     @media (min-width: 1024px) {

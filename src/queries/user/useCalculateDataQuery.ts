@@ -61,7 +61,7 @@ const useCalculateDataQuery = (networkId: NetworkId, walletAddress: string, opti
                 }
             });
 
-            gain = profit / investment;
+            gain = investment !== 0 ? profit / investment : 0;
 
             const result = {
                 marketTx,

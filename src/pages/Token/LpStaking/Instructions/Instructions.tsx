@@ -1,11 +1,15 @@
-import { ProvideLiquidityLink, UniswapExchangeLink } from 'pages/Token/components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { ProvideLiquidityLink, UniswapExchangeLink } from 'pages/Token/styled-components';
 import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsMobile } from 'redux/modules/ui';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { isMobile } from 'utils/device';
 
 const Instructions: React.FC = () => {
     const { t } = useTranslation();
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [stepSelected, setStepSelected] = useState(1);
 
@@ -23,7 +27,7 @@ const Instructions: React.FC = () => {
     return (
         <>
             <Container>
-                {!isMobile() && (
+                {!isMobile && (
                     <StepsWrapper firstRow={true}>
                         <Step>1</Step>
                         <StepConnect />
@@ -75,7 +79,7 @@ const Instructions: React.FC = () => {
                     </StepInfo>
                 </StepsWrapper>
             </Container>
-            {isMobile() && (
+            {isMobile && (
                 <StepNavContainer>
                     <StepNav onClick={() => stepNavClickhandler(step1, 1)} selected={stepSelected === 1} />
                     <StepNav onClick={() => stepNavClickhandler(step2, 2)} selected={stepSelected === 2} />
@@ -93,7 +97,7 @@ const STEP_WIDTH = '60px';
 const Container = styled.div`
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: auto min-content;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         overflow-x: scroll;
         &::-webkit-scrollbar {
             display: none;
@@ -112,7 +116,7 @@ const StepsWrapper = styled.div<{ firstRow?: boolean }>`
               `
             : ''};
     justify-content: ${(props) => (props.firstRow ? 'center' : 'space-around')};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 320%;
     }
 `;
@@ -121,10 +125,10 @@ const Step = styled.div`
     position: relative;
     width: ${STEP_WIDTH};
     height: 60px;
-    background: var(--background);
+    background: ${(props) => props.theme.background.primary};
     border-radius: 50%;
-    border: 4px solid var(--input-border-color);
-    color: var(--input-border-color);
+    border: 4px solid ${(props) => props.theme.borderColor.secondary};
+    color: ${(props) => props.theme.borderColor.secondary};
     text-align: center;
     font-style: normal;
     font-weight: 700;
@@ -136,17 +140,17 @@ const Step = styled.div`
 
 const StepConnect = styled.div`
     width: calc(20% - ${STEP_WIDTH});
-    border-top: 3px solid var(--input-border-color);
+    border-top: 3px solid ${(props) => props.theme.borderColor.secondary};
 `;
 
 const StepInfo = styled.div`
     display: flex;
     flex-direction: column;
     width: 200px;
-    border: 1px dashed var(--input-border-color);
+    border: 1px dashed ${(props) => props.theme.borderColor.secondary};
     border-radius: 15px;
     padding: 15px 10px;
-    @media (min-width: 768px) and (max-width: 1192px) {
+    @media (min-width: ${ScreenSizeBreakpoint.SMALL}px) and (max-width: 1192px) {
         width: 180px;
     }
 `;
@@ -173,7 +177,7 @@ const StepNavContainer = styled.div`
 
 const StepNav = styled.div<{ selected: boolean }>`
     border-radius: 50%;
-    background: var(--color-highlight);
+    background: ${(props) => props.theme.borderColor.secondary};
     width: 14px;
     height: 14px;
     margin: 0 5px;

@@ -1,16 +1,17 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getTheme } from 'redux/modules/ui';
 import { ThemeProvider } from 'styled-components';
 import { ThemeMap } from 'constants/ui';
+import { getDefaultTheme } from 'theme/common';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import localStore from 'utils/localStore';
 
 type ThemeProps = {
     children: React.ReactNode;
 };
 
 const Theme: React.FC<ThemeProps> = ({ children }) => {
-    const theme = useSelector((state: RootState) => getTheme(state));
+    const theme = getDefaultTheme();
+    localStore.set(LOCAL_STORAGE_KEYS.UI_THEME, theme);
 
     return <ThemeProvider theme={ThemeMap[theme]}>{children}</ThemeProvider>;
 };

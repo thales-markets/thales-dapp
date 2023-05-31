@@ -3,8 +3,8 @@ import styled from 'styled-components';
 const Footer = styled.div<{ justifyContent?: string }>`
     width: 100%;
     text-align: right;
-    ${(_props) => (_props?.justifyContent ? `justify-content: ${_props.justifyContent};` : '')}
-    ${(_props) => (_props?.justifyContent ? `display: flex;` : '')}
+    ${(props) => (props?.justifyContent ? `justify-content: ${props.justifyContent};` : '')}
+    ${(props) => (props?.justifyContent ? `display: flex;` : '')}
     color: var(--notice-text);
     font-size: 14px;
     margin-top: 3px;

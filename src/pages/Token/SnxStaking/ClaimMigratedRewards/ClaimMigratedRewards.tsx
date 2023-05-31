@@ -11,8 +11,8 @@ import { MigratedRetroReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchMigratedInvestorsRetroRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
-import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../componentsOld';
-import { Tip37Link } from '../../components';
+import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader } from '../components';
+import { Tip37Link } from '../../styled-components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
@@ -24,9 +24,9 @@ import {
     GridAction,
 } from '../gridComponents';
 import useMigratedInvestorsRetroRewardsQuery from 'queries/token/useMigratedInvestorsRetroRewardsQuery';
-import { DefaultSubmitButton } from 'pages/Token/components/components';
 import styled from 'styled-components';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2';
 
 const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -163,13 +163,14 @@ const ClaimMigratedRewards: React.FC = () => {
                             />
                         }
                         iconFontSize={18}
+                        mobileIconFontSize={15}
                         top={-1}
                     />
                 </div>
             </SectionHeader>
             <GridContainer style={{ height: '100%' }}>
                 <StyledStakingRewardsItem style={{ gridColumn: 'span 12' }}>
-                    <StakingRewardsLabel color="var(--color-highlight)">
+                    <StakingRewardsLabel>
                         {t('options.earn.thales-staking.staking-rewards.unclaimed-rewards.rewards-label')}
                     </StakingRewardsLabel>
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, balance)}</StakingRewardsContent>
@@ -177,16 +178,13 @@ const ClaimMigratedRewards: React.FC = () => {
                 <StyledGridAction>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainer>
-                        <DefaultSubmitButton
-                            onClick={handleClaimOngoingAirdrop}
-                            disabled={!isClaimAvailable || isClaiming}
-                        >
+                        <Button onClick={handleClaimOngoingAirdrop} disabled={!isClaimAvailable || isClaiming}>
                             {isClaiming
                                 ? t('options.earn.thales-staking.staking-rewards.claiming') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
                                 : t('options.earn.thales-staking.staking-rewards.claim') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
-                        </DefaultSubmitButton>
+                        </Button>
                         {migratedRewards && migratedRewards.isPaused && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.paused-message')}

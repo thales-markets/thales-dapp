@@ -9,50 +9,48 @@ import orderBy from 'lodash/orderBy';
 import { CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
-import {
-    checkAllowance,
-    formatGasLimit,
-    getIsOVM,
-    getIsPolygon,
-    getL1FeeInWei,
-    isNetworkSupported,
-} from 'utils/network';
+import { checkAllowance, formatGasLimit, getIsPolygon, isNetworkSupported } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/DatePicker';
-import NetworkFees from './NetworkFees';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import Currency from 'components/Currency';
 import { BigNumber, ethers } from 'ethers';
-import { FlexDiv, FlexDivColumn, Text, Button, FlexDivRow, FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
-
+import { FlexDivColumn, FlexDivCentered } from 'theme/common';
 import MarketSummary from './MarketSummary';
 import { convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'utils/formatters/date';
-import { Error, ErrorMessage, InputsWrapper } from './components';
+import {
+    ButtonContainer,
+    Container,
+    DatePickerRow,
+    Description,
+    Error,
+    ErrorMessage,
+    InputLabel,
+    InputsWrapper,
+    NoteText,
+    Row,
+    ShortInputContainer,
+    Title,
+    ReactSelect,
+} from './styled-components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
-import {
-    CurrencyLabel,
-    Input,
-    InputLabel,
-    ReactSelect,
-    ShortInputContainer,
-} from 'components/OldVersion/old-components';
 import ProgressTracker from './ProgressTracker';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
-import styled from 'styled-components';
-import './media.scss';
 import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
 import { getStableCoinForNetwork, getSynthName } from 'utils/currency';
 import ApprovalModal from 'components/ApprovalModal';
+import NumericInput from 'components/fields/NumericInput/NumericInput';
+import { getMaxGasLimitForNetwork } from 'constants/options';
+import Button from 'components/ButtonV2/Button';
 
-const MIN_FUNDING_AMOUNT_ROPSTEN = 0;
-const MIN_FUNDING_AMOUNT_MAINNET = 0;
+const MIN_FUNDING_AMOUNT = 0;
 
 const roundMinutes = (date: Date) => {
     date.setUTCHours(12, 0, 0, 0);
@@ -89,19 +87,15 @@ export const CreateMarket: React.FC = () => {
         );
         const [initialFundingAmount, setInitialFundingAmount] = useState<number | string>('');
         const [isAmountValid, setIsAmountValid] = useState(true);
-        const [userHasEnoughFunds, setUserHasEnoughFunds] = useState(true);
         const [hasAllowance, setAllowance] = useState<boolean>(false);
         const [isAllowing, setIsAllowing] = useState<boolean>(false);
-        const [gasLimit, setGasLimit] = useState<number | null>(null);
         const [isCreatingMarket, setIsCreatingMarket] = useState<boolean>(false);
         const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
         const [showWarning, setShowWarning] = useState(false);
         const [isMarketCreated, setIsMarketCreated] = useState(false);
         const [market, setMarket] = useState<string>('');
         const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-        const [l1Fee, setL1Fee] = useState<number | null>(null);
         const [openApprovalModal, setOpenApprovalModal] = useState<boolean>(false);
-        const isL2 = getIsOVM(networkId);
         const isPolygon = getIsPolygon(networkId);
 
         const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
@@ -167,7 +161,7 @@ export const CreateMarket: React.FC = () => {
                     (snxJSConnector as any).signer
                 );
                 const tx = (await BOMMContractWithSigner.createMarket(oracleKey, price, maturity, initialMint, {
-                    gasLimit,
+                    gasLimit: getMaxGasLimitForNetwork(networkId),
                 })) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
                 if (txResult && txResult.events) {
@@ -186,60 +180,6 @@ export const CreateMarket: React.FC = () => {
                 setIsCreatingMarket(false);
             }
         };
-
-        useEffect(() => {
-            const fetchL1Fee = async (
-                binaryOptionsMarketManagerContract: any,
-                oracleKey: any,
-                price: any,
-                maturity: any,
-                initialMint: any
-            ) => {
-                const txRequest = await binaryOptionsMarketManagerContract.populateTransaction.createMarket(
-                    oracleKey,
-                    price,
-                    maturity,
-                    initialMint
-                );
-                return getL1FeeInWei(txRequest, snxJSConnector);
-            };
-
-            const fetchGasLimit = async () => {
-                const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-                try {
-                    const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                    const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
-                        (snxJSConnector as any).signer
-                    );
-                    if (isL2) {
-                        const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            BOMMContractWithSigner.estimateGas.createMarket(oracleKey, price, maturity, initialMint),
-                            fetchL1Fee(BOMMContractWithSigner, oracleKey, price, maturity, initialMint),
-                        ]);
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                        setUserHasEnoughFunds(true);
-                        setL1Fee(l1FeeInWei);
-                    } else {
-                        const gasEstimate = await BOMMContractWithSigner.estimateGas.createMarket(
-                            oracleKey,
-                            price,
-                            maturity,
-                            initialMint
-                        );
-                        setGasLimit(formatGasLimit(gasEstimate, networkId));
-                        setUserHasEnoughFunds(true);
-                    }
-                } catch (e: any) {
-                    if (e.data?.originalError?.code === 3) {
-                        setUserHasEnoughFunds(false);
-                    }
-                    console.log(e);
-                    setGasLimit(null);
-                }
-            };
-            if (isButtonDisabled) return;
-            fetchGasLimit();
-        }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount, isButtonDisabled]);
 
         const handleAllowance = async (approveAmount: BigNumber) => {
             const collateral = snxJSConnector.collateral;
@@ -273,12 +213,7 @@ export const CreateMarket: React.FC = () => {
         const getSubmitButton = () => {
             if (!hasAllowance) {
                 return (
-                    <Button
-                        style={{ padding: '8px 24px' }}
-                        className="primary"
-                        disabled={isAllowing}
-                        onClick={() => setOpenApprovalModal(true)}
-                    >
+                    <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                         {isAllowing
                             ? t('options.create-market.summary.waiting-for-approval-button-label')
                             : t('options.create-market.summary.approve-manager-button-label')}
@@ -287,12 +222,7 @@ export const CreateMarket: React.FC = () => {
             }
             if (!isMarketCreated) {
                 return (
-                    <Button
-                        style={{ padding: '8px 24px' }}
-                        className="primary"
-                        disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
-                        onClick={handleMarketCreation}
-                    >
+                    <Button disabled={isButtonDisabled || isCreatingMarket} onClick={handleMarketCreation}>
                         {isCreatingMarket
                             ? t('options.create-market.summary.creating-market-button-label')
                             : t('options.create-market.summary.create-market-button-label')}
@@ -310,26 +240,20 @@ export const CreateMarket: React.FC = () => {
 
         return isNetworkSupported(networkId) ? (
             <>
-                <Text
-                    className="create-market create-market-title"
-                    style={{ height: '100%', paddingTop: '50px', alignSelf: 'flex-start' }}
-                >
-                    {t('options.create-market.title')}
-                </Text>
-                <FlexDiv className="create-market-content" style={{ padding: '50px 0' }}>
+                <Title>{t('options.create-market.title')}</Title>
+                <Container>
                     <FlexDivColumn style={{ flex: 1 }}>
-                        <div className="create-market-content__info">
-                            <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
+                        <div>
+                            <Description>
                                 {t('options.create-market.subtitle', { token: getStableCoinForNetwork(networkId) })}
-                            </Text>
-                            <Text className="text-s pale-grey lh24" style={{ margin: '30px 2px' }}>
+                            </Description>
+                            <Description>
                                 {t('options.create-market.note', { token: getStableCoinForNetwork(networkId) })}
-                            </Text>
+                            </Description>
                         </div>
-                        <InputsWrapper className="create-market-content__wrapper">
-                            <FlexDivRow className="create-market-content__parameters">
+                        <InputsWrapper>
+                            <Row>
                                 <ShortInputContainer
-                                    className="create-market-content__parameters__field"
                                     style={{
                                         marginBottom: 40,
                                         zIndex: 4,
@@ -382,18 +306,14 @@ export const CreateMarket: React.FC = () => {
                                     />
                                 </ShortInputContainer>
                                 <ShortInputContainer
-                                    className="create-market-content__parameters__field"
                                     style={{
                                         marginBottom: 40,
                                         opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
                                     }}
                                 >
-                                    <Input
-                                        className={!isStrikePriceValid ? 'error' : ''}
+                                    <NumericInput
                                         value={strikePrice}
-                                        onChange={(e) => {
-                                            const { value } = e.target;
-
+                                        onChange={(_, value) => {
                                             let trimmedValue = value;
                                             if (value.indexOf('.') > -1) {
                                                 const numberOfDecimals = value.split('.')[1].length;
@@ -421,37 +341,18 @@ export const CreateMarket: React.FC = () => {
                                                 setShowWarning(false);
                                             }
                                         }}
-                                        onBlur={(e) => {
-                                            if (Number(e.target.value) > 0) {
-                                                setIsStrikePriceValid(true);
-                                            } else {
-                                                setIsStrikePriceValid(false);
-                                            }
-                                        }}
-                                        readOnly={isCreatingMarket || isMarketCreated}
-                                        type="number"
+                                        disabled={isCreatingMarket || isMarketCreated}
+                                        label={t('options.create-market.details.strike-price-label')}
+                                        currencyLabel={USD_SIGN}
+                                        showValidation={!isStrikePriceValid}
+                                        validationMessage={t('options.create-market.enter-strike-price')}
                                     />
-                                    <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
-                                    <CurrencyLabel>{USD_SIGN}</CurrencyLabel>
-                                    <ErrorMessage
-                                        show={!isStrikePriceValid}
-                                        text={t('options.create-market.enter-strike-price')}
-                                    ></ErrorMessage>
-
-                                    {showWarning && (
-                                        <Error className="text-xxxs warning">
-                                            {t('options.create-market.difference-warning')}
-                                        </Error>
-                                    )}
+                                    {showWarning && <Error>{t('options.create-market.difference-warning')}</Error>}
                                 </ShortInputContainer>
-                            </FlexDivRow>
-                            <FlexDivRow className="create-market-content__parameters">
-                                <FlexDivRow
-                                    className="create-market-content__double-fields"
-                                    style={{ width: '50%', marginRight: 10 }}
-                                >
+                            </Row>
+                            <Row>
+                                <DatePickerRow>
                                     <ShortInputContainer
-                                        className="create-market-content__double-fields__field"
                                         style={{
                                             marginBottom: 40,
                                             flex: 2,
@@ -492,7 +393,6 @@ export const CreateMarket: React.FC = () => {
                                         </InputLabel>
                                     </ShortInputContainer>
                                     <ShortInputContainer
-                                        className="create-market-content__double-fields__field"
                                         style={{
                                             marginBottom: 40,
                                             flex: 1,
@@ -533,72 +433,38 @@ export const CreateMarket: React.FC = () => {
                                             {t('options.create-market.details.market-maturity-time-label')}
                                         </InputLabel>
                                     </ShortInputContainer>
-                                </FlexDivRow>
+                                </DatePickerRow>
 
                                 <ShortInputContainer
-                                    className={
-                                        (isAmountValid && userHasEnoughFunds ? '' : 'error') +
-                                        ' create-market-content__double-fields'
-                                    }
                                     style={{
                                         position: 'relative',
                                         marginBottom: 40,
                                         opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
                                     }}
                                 >
-                                    <Input
-                                        className={!isAmountValid || !userHasEnoughFunds ? 'error' : ''}
+                                    <NumericInput
                                         value={initialFundingAmount}
-                                        onChange={(e) => {
-                                            setInitialFundingAmount(e.target.value);
-                                            Number(e.target.value) >=
-                                            (networkId === 1 ? MIN_FUNDING_AMOUNT_MAINNET : MIN_FUNDING_AMOUNT_ROPSTEN)
+                                        onChange={(_, value) => {
+                                            setInitialFundingAmount(value);
+                                            Number(value) >= MIN_FUNDING_AMOUNT
                                                 ? setIsAmountValid(true)
                                                 : setIsAmountValid(false);
                                         }}
-                                        id="funding-amount"
-                                        onBlur={() => {
-                                            Number(initialFundingAmount) >=
-                                            (networkId === 1 ? MIN_FUNDING_AMOUNT_MAINNET : MIN_FUNDING_AMOUNT_ROPSTEN)
-                                                ? setIsAmountValid(true)
-                                                : setIsAmountValid(false);
-                                        }}
-                                        type="number"
-                                        readOnly={isCreatingMarket || isMarketCreated}
+                                        disabled={isCreatingMarket || isMarketCreated}
+                                        label={t('options.create-market.details.funding-amount.label')}
+                                        currencyLabel={getStableCoinForNetwork(networkId)}
+                                        showValidation={!isAmountValid}
+                                        validationMessage={t('options.create-market.min-amount', {
+                                            minimum: MIN_FUNDING_AMOUNT,
+                                        })}
                                     />
-                                    <InputLabel>{t('options.create-market.details.funding-amount.label')}</InputLabel>
-                                    <CurrencyLabel>{getStableCoinForNetwork(networkId)}</CurrencyLabel>
-                                    <Text
-                                        className="text-xxxs grey"
-                                        style={{
-                                            margin: '4px 0 6px 6px',
-                                            lineHeight: '16px',
-                                            position: 'absolute',
-                                            bottom: -40,
-                                        }}
-                                    >
+                                    <NoteText>
                                         {t('options.create-market.details.funding-amount.desc', {
                                             token: getStableCoinForNetwork(networkId),
                                         })}
-                                    </Text>
-
-                                    <ErrorMessage
-                                        show={!isAmountValid}
-                                        text={t('options.create-market.min-amount', {
-                                            minimum:
-                                                networkId === 1
-                                                    ? MIN_FUNDING_AMOUNT_MAINNET
-                                                    : MIN_FUNDING_AMOUNT_ROPSTEN,
-                                        })}
-                                    />
-
-                                    <ErrorMessage
-                                        show={isAmountValid && !userHasEnoughFunds}
-                                        text={t('options.create-market.insufficient-amount')}
-                                    />
+                                    </NoteText>
                                 </ShortInputContainer>
-                            </FlexDivRow>
-                            <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
+                            </Row>
                         </InputsWrapper>
                     </FlexDivColumn>
                     <MarketSummary
@@ -609,45 +475,28 @@ export const CreateMarket: React.FC = () => {
                         timeLeftToExercise={timeLeftToExercise}
                         currentPrice={currencyKey ? get(exchangeRates, currencyKey.value, 0) : undefined}
                     ></MarketSummary>
-                </FlexDiv>
+                </Container>
                 <ProgressTracker
                     isWalletAccessEnabled={hasAllowance}
                     isAllowing={isAllowing}
                     isMarketCreated={isMarketCreated}
                     isCreating={isCreatingMarket}
                 ></ProgressTracker>
-                <FlexDivColumnCentered
-                    className="progress-tracker-controls"
-                    style={{ alignItems: 'center', marginBottom: 120 }}
-                >
-                    <div
-                        className="progress-tracker-controls__button-div-responsive"
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: 50,
-                        }}
-                    >
-                        <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
-                        {isMarketCreated ? (
-                            <Button
-                                className="tertiary progress-tracker-controls__button-div-responsive__bottom"
-                                onClick={() => navigateToOptionsMarket(market)}
-                            >
-                                {t('options.create-market.go-to-market')}
-                            </Button>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
+                <ButtonContainer>
+                    <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
+                    {isMarketCreated ? (
+                        <Button onClick={() => navigateToOptionsMarket(market)}>
+                            {t('options.create-market.go-to-market')}
+                        </Button>
+                    ) : (
+                        <></>
+                    )}
                     <ValidationMessage
                         showValidation={txErrorMessage !== null}
                         message={txErrorMessage}
                         onDismiss={() => setTxErrorMessage(null)}
                     />
-                </FlexDivColumnCentered>
-
+                </ButtonContainer>
                 {openApprovalModal && (
                     <ApprovalModal
                         defaultAmount={initialFundingAmount}
@@ -665,10 +514,5 @@ export const CreateMarket: React.FC = () => {
         return <Loader />;
     }
 };
-
-export const UseLegacySigningContainer = styled.div`
-    margin-top: 12px;
-    margin-left: 10px;
-`;
 
 export default CreateMarket;

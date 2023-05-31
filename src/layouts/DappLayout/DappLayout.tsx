@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -11,9 +11,10 @@ import { getReferralWallet, setReferralWallet } from 'utils/referral';
 import { useMatomo } from '@datapunt/matomo-tracker-react';
 import axios from 'axios';
 import { generalConfig } from 'config/general';
-import { isAndroid, isMetamask, isMobile } from 'utils/device';
+import { isAndroid, isMetamask } from 'utils/device';
 import useWidgetBotScript from 'hooks/useWidgetBotScript';
-import { getTheme } from 'redux/modules/ui';
+import { ThemeInterface } from 'types/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 const DappHeader = lazy(() => import(/* webpackChunkName: "DappHeader" */ './components/DappHeader/DappHeader'));
 
@@ -22,8 +23,9 @@ type DappLayoutProps = {
 };
 
 const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
-    const theme = useSelector((state: RootState) => getTheme(state));
+    const theme: ThemeInterface = useTheme();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const rawParams = useLocation();
     const queryParams = queryString.parse(rawParams?.search);
@@ -68,7 +70,7 @@ const DappLayout: React.FC<DappLayoutProps> = ({ children }) => {
 
     useEffect(() => {
         const checkMetamaskBrowser = async () => {
-            const isMetamaskBrowser = isMobile() && (await isMetamask());
+            const isMetamaskBrowser = isMobile && (await isMetamask());
             // Do not load Discord Widget Bot on Android MM browser due to issue with MM wallet connect
             // issue raised on https://github.com/rainbow-me/rainbowkit/issues/1181
             setPreventDiscordWidgetLoad(isMetamaskBrowser && isAndroid());

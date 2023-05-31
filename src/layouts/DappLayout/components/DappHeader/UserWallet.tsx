@@ -126,7 +126,7 @@ const WrapperContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     border-radius: 8px;
     @media (max-width: 500px) {
         height: 32px;
@@ -135,14 +135,14 @@ const WrapperContainer = styled.div`
 
 const WalletContainer = styled.div<{ connected: boolean }>`
     width: 100%;
-    cursor: ${(_props) => (_props.connected ? 'text' : 'pointer')};
+    cursor: ${(props) => (props.connected ? 'text' : 'pointer')};
     padding: 5px 6px;
     display: flex;
     justify-content: center;
     align-items: center;
     max-width: 130px;
     cursor: pointer;
-    border-right: 2px solid ${(props) => props.theme.borderColor.primary};
+    border-right: 2px solid ${(props) => props.theme.borderColor.secondary};
     color: ${(props) => props.theme.textColor.primary};
     font-weight: normal;
     font-size: 12.5px;

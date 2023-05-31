@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { ButtonContainer, Line } from '../components';
+import { ButtonContainer, Line } from '../styled-components';
 import Instructions from './Instructions';
 import YourTransactions from './Transactions';
 import { useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import useGelatoQuery from 'queries/token/useGelatoQuery';
 import { formatCurrencyWithKey, formatCurrencyWithPrecision, formatCurrencyWithSign } from 'utils/formatters/number';
 import { CRYPTO_CURRENCY_MAP, LP_TOKEN, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import Stake from './Stake';
 import Unstake from './Unstake';
 import NetworkFees from '../components/NetworkFees';
@@ -23,10 +23,11 @@ import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchLPStakingQueries, refetchTokenQueries } from 'utils/queryConnector';
-import { isMobile } from 'utils/device';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 enum SectionType {
     INFO,
@@ -42,6 +43,7 @@ const LpStaking: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const stakeOptions = {
         stake: { value: 'stake', label: t('options.earn.gamified-staking.staking.stake.name') },
@@ -178,7 +180,7 @@ const LpStaking: React.FC = () => {
     const getClaimSection = () => {
         return (
             <SectionContentWrapper columnsTemplate={2}>
-                {isMobile() && (
+                {isMobile && (
                     <SectionWrapper columnsOnMobile={2} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                         <SectionContentWrapper>
                             <SectionLabelContent type={SectionType.CLAIM_INFO}>
@@ -273,7 +275,7 @@ const LpStaking: React.FC = () => {
             </SectionWrapper>
 
             {/* Third row */}
-            {!isMobile() && (
+            {!isMobile && (
                 <SectionWrapper columns={6} backgroundType={BackgroundType.CLAIM_CONTAINER}>
                     <SectionContentWrapper>
                         <SectionLabelContent type={SectionType.CLAIM_INFO}>
@@ -286,10 +288,7 @@ const LpStaking: React.FC = () => {
                 <SectionContentWrapper backgroundType={BackgroundType.INFO}>
                     <SectionLabel type={SectionType.INFO}>
                         <SectionLabelContent type={SectionType.INFO}>
-                            <Trans
-                                i18nKey="options.earn.lp-staking.info.tvl"
-                                components={[isMobile() ? '' : ' (tvl)']}
-                            />
+                            <Trans i18nKey="options.earn.lp-staking.info.tvl" components={[isMobile ? '' : ' (tvl)']} />
                         </SectionLabelContent>
                         <Tooltip overlay={t('options.earn.lp-staking.info.tvl-tooltip')} />
                     </SectionLabel>
@@ -338,8 +337,6 @@ const LpStaking: React.FC = () => {
                             secondLabel: stakeOptions.unstake.label.toUpperCase(),
                             fontSize: '25px',
                         }}
-                        shadow={true}
-                        dotBackground={'var(--amm-switch-circle)'}
                         spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value
@@ -404,7 +401,7 @@ const SectionWrapper = styled.section<{
     }};
     ${(props) => (props.noPadding ? '' : 'padding: 2px;')}
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span ${(props) => (props.columnsOnMobile ? props.columnsOnMobile : 12)};
         order: ${(props) => props.orderOnMobile ?? 10};
         ${(props) => {
@@ -442,7 +439,7 @@ const SectionContentWrapper = styled.div<{
             : ''}
     ${(props) => (props.columnsSpan ? `grid-column: span ${props.columnsSpan};` : '')}
     height: 100%;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     ${(props) => {
@@ -458,7 +455,7 @@ const SectionContentWrapper = styled.div<{
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => {
             switch (props.backgroundType) {
                 case BackgroundType.STAKE:
@@ -502,7 +499,7 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string }>`
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
@@ -535,7 +532,7 @@ const SectionLabelContent = styled(SectionContent)<{ type?: SectionType }>`
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: ${(props) => (props.type === SectionType.CLAIM_INFO ? 16 : 12)}px;
         ${(props) => (props.type === SectionType.CLAIM_INFO ? 'padding-top: 0' : '')};
     }
@@ -561,7 +558,7 @@ const SectionValue = styled.div<{ type: SectionType }>`
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => {
             switch (props.type) {
                 case SectionType.INFO:
@@ -580,7 +577,7 @@ const SectionValue = styled.div<{ type: SectionType }>`
 const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?: boolean }>`
     letter-spacing: 0.035em;
     text-transform: uppercase;
-    ${(props) => (props.colored ? 'color: #50ce99;' : '')}
+    ${(props) => (props.colored ? `color: ${props.theme.textColor.quaternary};` : '')}
     ${(props) => {
         switch (props.type) {
             case SectionType.INFO:
@@ -605,7 +602,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; colored?
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: ${(props) =>
             props.type === SectionType.CLAIM || props.type === SectionType.CLAIM_INFO ? 18 : 15}px;
         line-height: 20px;
@@ -623,8 +620,8 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 17px;
     letter-spacing: 0.035em;
-    color: var(--color-white);
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -634,8 +631,8 @@ const SectionDetailsValue = styled.span`
     font-weight: 500;
     font-size: 15px;
     line-height: 17px;
-    color: #50ce99;
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.quaternary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
     }
 `;
@@ -649,13 +646,13 @@ const VerticalLineRight = styled.hr`
 
 const VerticalLineWrapper = styled.div`
     position: relative;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         order: 10;
     }
 `;
 
 const VerticalLineCenter = styled.hr`
-    border: 1px solid var(--color-highlight) 80;
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     position: absolute;
     top: -18px;
     left: 0;

@@ -2,7 +2,7 @@ import { Colors } from '../common';
 
 export default {
     fontFamily: {
-        primary: "'Roboto' !important",
+        primary: "'Fira Sans' !important",
     },
     background: {
         primary: Colors.GRAY_DARK,
@@ -17,9 +17,9 @@ export default {
         quaternary: Colors.GREEN,
     },
     borderColor: {
-        primary: Colors.GRAY_LIGHT,
-        secondary: Colors.ORANGE,
-        tertiary: Colors.GRAY,
+        primary: Colors.GRAY,
+        secondary: Colors.GRAY_LIGHT,
+        tertiary: Colors.ORANGE,
         quaternary: Colors.GREEN,
     },
     button: {
@@ -27,6 +27,7 @@ export default {
             primary: Colors.GREEN,
             secondary: Colors.GRAY_DARK,
             tertiary: Colors.GRAY,
+            quaternary: Colors.GRAY_LIGHT,
         },
         textColor: {
             primary: Colors.GRAY_DARK,
@@ -37,6 +38,8 @@ export default {
         borderColor: {
             primary: Colors.GREEN,
             secondary: Colors.GRAY_LIGHT,
+            tertiary: Colors.GRAY,
+            quaternary: Colors.GRAY_DARK,
         },
     },
     input: {
@@ -53,8 +56,8 @@ export default {
             quaternary: Colors.RED,
         },
         borderColor: {
-            primary: Colors.GRAY,
-            secondary: '',
+            primary: Colors.GRAY_LIGHT,
+            secondary: Colors.GRAY,
             focus: {
                 primary: Colors.GREEN,
             },
@@ -65,9 +68,61 @@ export default {
     },
     link: {
         textColor: {
-            primary: Colors.BLUE_LIGHT,
+            primary: Colors.GREEN,
             secondary: Colors.WHITE,
-            tertiary: Colors.GREEN,
         },
+    },
+    error: {
+        background: {
+            primary: Colors.GRAY_DARK,
+        },
+        textColor: {
+            primary: Colors.RED,
+        },
+        borderColor: {
+            primary: Colors.RED,
+        },
+    },
+    warning: {
+        background: {
+            primary: Colors.GRAY_DARK,
+            secondary: Colors.GRAY,
+        },
+        textColor: {
+            primary: Colors.ORANGE,
+            secondary: Colors.ORANGE_DARK,
+        },
+        borderColor: {
+            primary: Colors.ORANGE,
+        },
+    },
+    info: {
+        background: {
+            primary: Colors.GRAY_DARK,
+        },
+        textColor: {
+            primary: Colors.BLUE,
+        },
+        borderColor: {
+            primary: Colors.BLUE,
+        },
+    },
+    table: {
+        textColor: {
+            primary: Colors.WHITE,
+            secondary: Colors.GRAY_DARK,
+            tertiary: Colors.ORANGE,
+            quaternary: Colors.GREEN,
+        },
+    },
+    positionColor: {
+        up: Colors.GREEN,
+        down: Colors.RED,
+        in: Colors.GREEN_LIGHT,
+        out: Colors.PURPLE,
+    },
+    tradeTypeColor: {
+        buy: Colors.GREEN,
+        sell: Colors.RED,
     },
 };

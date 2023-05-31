@@ -32,7 +32,7 @@ const Footer: StyledComponent<'div', any> & FooterChildren = styled(FlexDivRow)`
 
 // @ts-ignore
 const PriceContainer: StyledComponent<'div', any> & PriceChildren = styled.div<{ long?: boolean }>`
-    color: ${(_props) => (_props?.long ? '#50CE99' : '#DE496D')};
+    color: ${(props) => (props?.long ? '#50CE99' : '#DE496D')};
     font-size: 25px;
     margin-top: 50px;
     @media (max-width: 768px) {

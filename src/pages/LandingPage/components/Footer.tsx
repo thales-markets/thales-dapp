@@ -7,7 +7,6 @@ import ROUTES from 'constants/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { IconLink } from 'theme/common';
 import { navigateTo } from 'utils/routes';
 
 type HeaderInput = {
@@ -313,5 +312,7 @@ const Label = styled.span`
     font-size: 15px;
     line-height: 26px;
 `;
+
+const IconLink = styled.a``;
 
 export default Footer;

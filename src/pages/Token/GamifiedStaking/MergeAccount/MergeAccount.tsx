@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { FlexDiv, FlexDivColumnCentered, FlexDivCentered, FlexDivRow } from 'theme/common';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import { getAddress, isAddress } from 'ethers/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -11,7 +11,6 @@ import ValidationMessage from 'components/ValidationMessage';
 import snxJSConnector from 'utils/snxJSConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { getIsAppReady } from 'redux/modules/app';
-import { ArrowContainer } from 'pages/Token/Migration/components';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import YourTransactions from './Transactions';
 import NetworkFees from 'pages/Token/components/NetworkFees';
@@ -27,6 +26,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Button from 'components/ButtonV2/Button';
 import TextInput from 'components/fields/TextInput/TextInput';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const MergeAccount: React.FC = () => {
     const { t } = useTranslation();
@@ -65,7 +65,7 @@ const MergeAccount: React.FC = () => {
     });
 
     const destStakingThalesQuery = useUserStakingDataQuery(destAddress, networkId, {
-        enabled: isAppReady && isDestAddressValid,
+        enabled: isAppReady && isDestAddressValid && !!destAddress,
     });
 
     const userTokenTransactionsQuery = useUserTokenTransactionsQuery(
@@ -155,18 +155,20 @@ const MergeAccount: React.FC = () => {
         const fetchGasLimit = async () => {
             try {
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        stakingThalesContractWithSigner.estimateGas.delegateVolume(getAddress(ZERO_ADDRESS)),
-                        fetchL1Fee(stakingThalesContractWithSigner),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await stakingThalesContractWithSigner.estimateGas.delegateVolume(
-                        getAddress(ZERO_ADDRESS)
-                    );
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                if (stakingThalesContractWithSigner.signer) {
+                    if (isL2) {
+                        const [gasEstimate, l1FeeInWei] = await Promise.all([
+                            stakingThalesContractWithSigner.estimateGas.delegateVolume(getAddress(ZERO_ADDRESS)),
+                            fetchL1Fee(stakingThalesContractWithSigner),
+                        ]);
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                        setL1Fee(l1FeeInWei);
+                    } else {
+                        const gasEstimate = await stakingThalesContractWithSigner.estimateGas.delegateVolume(
+                            getAddress(ZERO_ADDRESS)
+                        );
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    }
                 }
             } catch (e) {
                 console.log(e);
@@ -351,7 +353,7 @@ const MergeAccount: React.FC = () => {
                             rel="noreferrer"
                         >
                             <DelegationAddress key={address}>
-                                {address} <ArrowIcon width="10" height="10" />
+                                {address} <ArrowHyperlinkIcon width="10" height="10" />
                             </DelegationAddress>
                         </StyledLink>
                     ))}
@@ -427,7 +429,7 @@ const SectionWrapper = styled.section`
     grid-column: 1 / span 4;
     background: ${(props) => props.theme.background.secondary};
     padding: 2px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -444,7 +446,7 @@ const SectionDescription = styled.section<{ width?: number }>`
     border-radius: 15px;
     grid-column: 5 / span ${(props) => props.width || 8};
     padding: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -464,7 +466,7 @@ const SectionDescriptionParagraph = styled(FlexDivRow)`
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     padding: 20px;
     height: 100%;
@@ -473,7 +475,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean }>`
     @media (max-width: 1192px) {
         padding: 10px 15px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
         box-shadow: none;
     }
@@ -515,7 +517,7 @@ const MergeInfo = styled.div`
 const AddressesDelegatingToYouContainer = styled.div`
     grid-column: 9 / span 4;
     padding: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
@@ -534,7 +536,7 @@ const DelegationAddress = styled.div`
     line-height: 138.69%;
     text-transform: uppercase;
     margin-bottom: 5px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 11px;
     }
 `;
@@ -545,13 +547,16 @@ const StyledLink = styled.a`
         fill: ${(props) => props.theme.link.textColor.secondary};
     }
     &:hover {
-        color: ${(props) => props.theme.link.textColor.primary};
-        & path {
-            fill: ${(props) => props.theme.link.textColor.primary};
-        }
+        text-decoration: underline;
     }
 `;
 
-const ArrowIcon = styled(ArrowHyperlinkIcon)``;
+const ArrowContainer = styled(FlexDivCentered)`
+    margin-bottom: 15px;
+    margin-top: -5px;
+    @media (max-width: 1192px) {
+        margin-bottom: 5px;
+    }
+`;
 
 export default MergeAccount;

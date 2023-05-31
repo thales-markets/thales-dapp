@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../components';
+import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, Line } from '../../../styled-components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -12,14 +12,14 @@ import { getIsAppReady } from 'redux/modules/app';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { formattedDuration } from 'utils/formatters/date';
 import { GasLimit } from 'pages/Token/components/NetworkFees/NetworkFees';
-import TimeRemaining from 'pages/Token/components/TimeRemaining';
+import TimeRemaining from 'components/TimeRemaining';
 import NetworkFees from 'pages/Token/components/NetworkFees';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -28,6 +28,8 @@ import { UserStakingData } from 'types/token';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -42,6 +44,8 @@ const Unstake: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [isUnstakingInContract, setIsUnstakingInContract] = useState<boolean>(false);
@@ -416,7 +420,7 @@ const Unstake: React.FC = () => {
                                         <TimeRemaining
                                             onEnded={() => setUnstakingEnded(true)}
                                             end={unstakeEndTime}
-                                            fontSize={16}
+                                            fontSize={isMobile ? 12 : 16}
                                         />
                                     )}
                                 </CooldownCounter>
@@ -439,7 +443,7 @@ const Unstake: React.FC = () => {
                         })}
                         balance={
                             isWalletConnected
-                                ? `${t('options.earn.gamified-staking.staking.unstake.balance')} ${formatCurrency(
+                                ? `${t('options.earn.gamified-staking.staking.unstake.balance')}: ${formatCurrency(
                                       thalesStaked
                                   )}`
                                 : undefined
@@ -489,13 +493,13 @@ const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
     @media (max-width: 1192px) {
         min-width: 110px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: 110px;
     }
 `;
 
 const UnstakingPeriodConatiner = styled(FlexDivColumnCentered)`
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     border-radius: 10px;
     padding: 10px 0;
     text-align: center;
@@ -505,7 +509,7 @@ const CooldownText = styled.span`
     font-weight: normal;
     font-size: 14px;
     line-height: 24px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     text-transform: uppercase;
 `;
 
@@ -514,7 +518,7 @@ const CooldownCounter = styled.span`
     font-size: 16px;
     line-height: 20px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 const UnstakingTitleText = styled.span`
@@ -525,7 +529,7 @@ const UnstakingTitleText = styled.span`
     @media (max-width: 1192px) {
         font-size: 12px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
         margin-right: 0px;
     }

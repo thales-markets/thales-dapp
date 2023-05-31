@@ -23,11 +23,12 @@ import voting from 'utils/voting';
 import pitches from '../pitches.json';
 import { Dialog, withStyles } from '@material-ui/core';
 import useProposalQuery from 'queries/governance/useProposalQuery';
-import { CloseIconContainer } from 'components/OldVersion/old-components';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 import { Web3Provider } from '@ethersproject/providers';
 import Button from 'components/ButtonV2/Button';
+import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type WeightedVotingProps = {
     proposal: Proposal;
@@ -234,7 +235,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
     flex: 1;
     box-sizing: content-box;
     height: 50px;
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 5px;
     margin-bottom: 20px;
     font-weight: bold;
@@ -255,7 +256,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
         margin-bottom: 19px;
         border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 46px;
         font-size: 16px;
         line-height: 46px;
@@ -267,14 +268,14 @@ const Option = styled(FlexDivRowCentered)`
     padding-right: 5px;
     white-space: break-spaces;
     line-height: 22px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-left: 10px;
     }
 `;
 
 const Selection = styled(FlexDiv)`
     width: 230px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 165px;
     }
 `;
@@ -283,14 +284,14 @@ const PlusMinus = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 45px;
     min-width: 45px;
-    border-left: 2px solid ${(props) => props.theme.borderColor.tertiary};
-    border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-left: 2px solid ${(props) => props.theme.borderColor.primary};
+    border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     &:hover {
         border-left: 2px solid ${(props) => props.theme.borderColor.quaternary};
         border-right: 2px solid ${(props) => props.theme.borderColor.quaternary};
         cursor: pointer;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: 35px;
         min-width: 35px;
     }
@@ -300,7 +301,7 @@ const Percentage = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 80px;
     min-width: 80px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: 55px;
         min-width: 55px;
     }
@@ -320,7 +321,7 @@ const Input = styled.input`
     text-align: center;
     overfloe: hidden;
     text-overflow: ellipsis;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
         max-width: 40px;
         min-width: 40px;
@@ -330,7 +331,7 @@ const Input = styled.input`
 const SeePitchWrapper = styled.div`
     align-self: center;
     margin-bottom: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-bottom: 35px;
     }
 `;
@@ -340,7 +341,7 @@ const SeePitchButton = styled.button`
     font-size: 16px;
     line-height: 36px;
     border-radius: 23px;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     cursor: pointer;
     color: white;
     background: transparent;
@@ -354,7 +355,7 @@ const SeePitchButton = styled.button`
     &:hover:not(:disabled) {
         border: 2px solid ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-left: 0;
         line-height: 26px;
     }
@@ -391,6 +392,17 @@ const PitchContent = styled.div`
     line-height: 24px;
 `;
 
+const CloseIconContainer = styled(CloseIcon)`
+    :hover {
+        cursor: pointer;
+    }
+    @media (max-width: 512px) {
+        margin-top: 4px;
+        height: 12px;
+        width: 12px;
+    }
+`;
+
 const CloseDialog = styled(CloseIconContainer)`
     position: absolute;
     top: 0;
@@ -398,7 +410,7 @@ const CloseDialog = styled(CloseIconContainer)`
 `;
 
 const VotingWrapper = styled(FlexDiv)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;

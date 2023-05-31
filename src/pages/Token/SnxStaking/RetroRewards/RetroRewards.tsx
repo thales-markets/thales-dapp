@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts';
-import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
+import styled, { useTheme } from 'styled-components';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -18,8 +18,14 @@ import {
     SectionHeader,
     ClaimMessage,
     SectionContentContainer,
-} from '../componentsOld';
-import { PieChartCenterDiv, PieChartCenterText, PieChartContainer, LearnMore, Tip37Link } from '../../components';
+} from '../components';
+import {
+    PieChartCenterDiv,
+    PieChartCenterText,
+    PieChartContainer,
+    LearnMore,
+    Tip37Link,
+} from '../../styled-components';
 import { refetchUserTokenTransactions, refetchVestingEscrow } from 'utils/queryConnector';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
@@ -28,9 +34,11 @@ import NetworkFees from 'pages/Token/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import i18n from 'i18n';
-import { DefaultSubmitButton } from 'pages/Token/components/components';
 import { GridContainer } from 'pages/Token/SnxStaking/gridComponents';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import Button from 'components/ButtonV2';
+import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -42,6 +50,7 @@ const initialVestingInfo = {
 
 const RetroRewards: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -137,12 +146,20 @@ const RetroRewards: React.FC = () => {
 
     const pieData = useMemo(() => {
         if (!vestingInfo.initialLocked) {
-            return [{ name: 'Locked', value: 100, color: '#748bc6' }];
+            return [{ name: 'Locked', value: 100, color: theme.textColor.secondary }];
         }
         return [
-            { name: t('options.earn.snx-stakers.unlocked'), value: vestingInfo.unlocked, color: '#5EA0A0' },
-            { name: t('options.earn.snx-stakers.claimed'), value: vestingInfo.totalClaimed, color: '#AFC171' },
-            { name: t('options.earn.snx-stakers.locked'), value: locked, color: '#FFD9BA' },
+            {
+                name: t('options.earn.snx-stakers.unlocked'),
+                value: vestingInfo.unlocked,
+                color: theme.textColor.quaternary,
+            },
+            {
+                name: t('options.earn.snx-stakers.claimed'),
+                value: vestingInfo.totalClaimed,
+                color: theme.warning.textColor.primary,
+            },
+            { name: t('options.earn.snx-stakers.locked'), value: locked, color: theme.error.textColor.primary },
         ];
     }, [vestingInfo, locked, selectedLanguage]);
 
@@ -175,6 +192,7 @@ const RetroRewards: React.FC = () => {
                             />
                         }
                         iconFontSize={18}
+                        mobileIconFontSize={15}
                         top={-1}
                     />
                 </div>
@@ -222,9 +240,7 @@ const RetroRewards: React.FC = () => {
                                 </PieChartCenterText>
                                 <GradientText
                                     gradient={`${
-                                        !vestingInfo.initialLocked
-                                            ? '#748BC6'
-                                            : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                        !vestingInfo.initialLocked ? theme.textColor.secondary : theme.textColor.primary
                                     }`}
                                     fontSize={17}
                                     fontWeight={600}
@@ -234,9 +250,7 @@ const RetroRewards: React.FC = () => {
                                 </GradientText>
                                 <GradientText
                                     gradient={`${
-                                        !vestingInfo.initialLocked
-                                            ? '#748BC6'
-                                            : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                        !vestingInfo.initialLocked ? theme.textColor.secondary : theme.textColor.primary
                                     }`}
                                     fontSize={17}
                                     fontWeight={600}
@@ -253,35 +267,30 @@ const RetroRewards: React.FC = () => {
                     </PieChartContainer>
                     <AmountsContainer>
                         <div>
-                            <Dot backgroundColor="#5EA0A0" />
+                            <Dot backgroundColor={theme.textColor.quaternary} />
                             {t('options.earn.snx-stakers.unlocked')}:{' '}
-                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
+                            <Text>{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</Text>
                         </div>
                         <div>
-                            <Dot backgroundColor="#AFC171" />
+                            <Dot backgroundColor={theme.warning.textColor.primary} />
                             {t('options.earn.snx-stakers.claimed')}:{' '}
-                            <span className="bold">
-                                {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}
-                            </span>
+                            <Text>{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}</Text>
                         </div>
                         <div>
-                            <Dot backgroundColor="#FFD9BA" />
+                            <Dot backgroundColor={theme.error.textColor.primary} />
                             {t('options.earn.snx-stakers.locked')}:{' '}
-                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
+                            <Text>{formatCurrencyWithKey(THALES_CURRENCY, locked)}</Text>
                         </div>
                     </AmountsContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainerBottom>
-                        <DefaultSubmitButton
-                            disabled={!isClaimAvailable || isClaiming}
-                            onClick={handleClaimRetroRewards}
-                        >
+                        <Button disabled={!isClaimAvailable || isClaiming} onClick={handleClaimRetroRewards}>
                             {isClaiming
                                 ? t('options.earn.snx-stakers.claiming-unlocked') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
                                 : t('options.earn.snx-stakers.claim') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
-                        </DefaultSubmitButton>
+                        </Button>
                         <ClaimMessage invisible={!!vestingInfo.initialLocked}>
                             {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
                         </ClaimMessage>
@@ -299,9 +308,9 @@ const RetroRewards: React.FC = () => {
 
 const StyledSectionContentContainer = styled(SectionContentContainer)`
     grid-column: span 12;
-    background: var(--color-primary);
+    background: ${(props) => props.theme.background.primary};
     padding: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 20px 20px 20px;
     }
 `;
@@ -315,7 +324,7 @@ const InfoLabel = styled.div`
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.25px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-top: 15px;
     }
 `;
@@ -344,7 +353,7 @@ const AmountsContainer = styled(FlexDiv)`
             margin-right: 10px;
         }
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-top: 25px;
         padding-bottom: 25px;
         > * {
@@ -360,7 +369,7 @@ const TooltipContainer = styled(FlexDivColumnCentered)<{ borderColor: string }>`
     z-index: 999;
     height: 78px;
     padding: 10px 14px;
-    background: linear-gradient(281.48deg, var(--color-primary) -16.58%, var(--color-tertiary) 97.94%);
+    background: ${(props) => props.theme.background.primary};
 `;
 
 const TooltipAmount = styled(FlexDivColumn)<{ color: string }>`
@@ -377,6 +386,20 @@ const TooltipTitle = styled.span<{ color: string }>`
     text-align: center;
     color: ${(props) => props.color};
     margin-bottom: 10px;
+`;
+
+const GradientText = styled.span<{ gradient: string; fontSize: number; fontWeight: number }>`
+    font-size: ${(props) => props.fontSize}px;
+    font-weight: ${(props) => props.fontWeight};
+    background: ${(props) => props.gradient};
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+`;
+
+const Text = styled.span`
+    font-weight: bold;
 `;
 
 export default RetroRewards;

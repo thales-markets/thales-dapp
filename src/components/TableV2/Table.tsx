@@ -1,39 +1,76 @@
-import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
-import { useTable, useSortBy, useGlobalFilter, usePagination, useFlexLayout } from 'react-table';
-import TableView from './styled-components/Table';
-import Pagination from './styled-components/Pagination';
-import { FlexDivColumn, NoDataText, NoDataContainer } from 'theme/common';
+import React, { useEffect, useMemo, useState, DependencyList } from 'react';
+import {
+    useTable,
+    useSortBy,
+    useGlobalFilter,
+    usePagination,
+    useFlexLayout,
+    SortByFn,
+    DefaultSortTypes,
+    Column,
+    Row,
+    Cell,
+} from 'react-table';
+import {
+    TableView,
+    TableBody,
+    TableCell,
+    TableHeader,
+    TableRow,
+    TableRowMobile,
+    TableArrow,
+    LoaderContainer,
+    NoDataContainer,
+    PaginationContainer,
+    Pagination,
+} from './styled-components';
 import SPAAnchor from 'components/SPAAnchor';
 import { useTranslation } from 'react-i18next';
 import MobileDropdownMenu from 'components/MobileDropdownMenu';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+
+const DEFAULT_PAGE_SIZE = 20;
+
+type ColumnWithSorting<D extends Record<string, unknown>> = Column<D> & {
+    sortType?: string | SortByFn<D> | DefaultSortTypes;
+    sortable?: boolean;
+};
 
 type TableProps = {
-    data: any;
-    columns: any;
+    data: Record<string, unknown>[];
+    columns: ColumnWithSorting<Record<string, unknown>>[];
+    columnsDeps?: DependencyList;
+    options?: any;
+    onTableRowClick?: (row: Row<any>) => void;
+    onTableCellClick?: (row: Row<any>, cell: Cell<any>) => void;
+    isLoading?: boolean;
+    noResultsMessage?: React.ReactNode;
+    initialState?: any;
     searchQuery?: string;
     hidePagination?: boolean;
-    resultsPerPage?: Array<number>;
-    defaultPage?: number;
-    containerStyle?: CSSProperties;
-    leaderboardView?: boolean;
     hasStickyRow?: boolean;
-    initialState?: any;
+    preventMobileView?: boolean;
 };
 
 const Table: React.FC<TableProps> = ({
-    data,
-    columns,
+    data = [],
+    columns = [],
+    columnsDeps = [],
+    options = {},
+    onTableRowClick = undefined,
+    onTableCellClick = undefined,
+    isLoading = false,
+    noResultsMessage = null,
+    initialState = {},
     searchQuery,
     hidePagination,
-    resultsPerPage,
-    defaultPage,
-    containerStyle,
-    leaderboardView,
     hasStickyRow,
-    initialState,
+    preventMobileView,
 }) => {
     const { t } = useTranslation();
     const [isMobile, setIsMobile] = useState(false);
+
+    const memoizedColumns = useMemo(() => columns, [...columnsDeps, t]);
 
     useEffect(() => {
         setGlobalFilter(searchQuery);
@@ -52,8 +89,9 @@ const Table: React.FC<TableProps> = ({
         setPageSize,
     } = useTable(
         {
-            columns,
+            columns: memoizedColumns,
             data,
+            ...options,
             initialState,
             autoResetPage: false,
             autoResetSortBy: false,
@@ -66,23 +104,27 @@ const Table: React.FC<TableProps> = ({
         useFlexLayout
     );
 
-    const { pageIndex, pageSize } = state;
+    const { pageIndex, pageSize, sortBy } = state;
 
     const handleChangePage = (_event: any, newPage: number) => {
         gotoPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event: any) => {
-        setPageSize(parseInt(event.target.value, 10));
+        setPageSize(Number(event.target.value));
         gotoPage(0);
     };
 
     useEffect(() => {
-        setPageSize(defaultPage ? defaultPage : resultsPerPage?.length ? resultsPerPage[0] : 20);
+        setPageSize(DEFAULT_PAGE_SIZE);
     }, []);
 
+    useEffect(() => {
+        gotoPage(0);
+    }, [sortBy, searchQuery]);
+
     const handleResize = () => {
-        if (window.innerWidth <= columns?.length * 150 * 0.9) {
+        if (window.innerWidth <= columns.length * 150 * 0.9 && !preventMobileView) {
             setIsMobile(true);
         } else {
             setIsMobile(false);
@@ -101,12 +143,12 @@ const Table: React.FC<TableProps> = ({
         const menuItems: any = [];
 
         headerGroups.forEach((headerGroup: any) => {
-            headerGroup?.headers?.map((column: any) => {
-                if (column.toggleSortBy) {
+            headerGroup.headers.map((column: any) => {
+                if (column.sortable) {
                     menuItems.push({
                         active: false,
                         onClick: column.toggleSortBy,
-                        title: column?.render('Header'),
+                        title: column.render('Header'),
                         sortableIndex: 0,
                         sortable: true,
                         clearSort: column.clearSortBy,
@@ -119,212 +161,124 @@ const Table: React.FC<TableProps> = ({
 
     return (
         <>
-            {!!data?.length && (
-                <FlexDivColumn>
-                    {isMobile && (
-                        <MobileDropdownMenu
-                            buttonTitle={t('options.filters-labels.sort-menu')}
-                            dropdownTitle={t('options.filters-labels.sort-menu')}
-                            items={sortHeaderMenus}
-                        />
-                    )}
-                    {!isMobile && (
-                        <TableView {...getTableProps()} style={{ ...containerStyle }}>
-                            <TableView.Header>
-                                {headerGroups.map((headerGroup: any, headerGroupIndex) => (
-                                    <TableView.Row key={headerGroupIndex} {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map((column: any, columnIndex: number) => (
-                                            <TableView.Cell
-                                                key={columnIndex}
-                                                {...column.getHeaderProps(column.getSortByToggleProps())}
-                                            >
-                                                {column.render('Header')}
-                                                {
-                                                    <TableView.Arrow
-                                                        className={`icon ${
-                                                            column.canSort
-                                                                ? column.isSorted
-                                                                    ? column.isSortedDesc
-                                                                        ? 'icon--arrow-down'
-                                                                        : 'icon--arrow-up'
-                                                                    : 'icon--double-arrow'
-                                                                : ''
-                                                        }`}
-                                                    />
-                                                }
-                                            </TableView.Cell>
-                                        ))}
-                                    </TableView.Row>
+            <>
+                {isMobile ? (
+                    <MobileDropdownMenu
+                        buttonTitle={t('options.filters-labels.sort-menu')}
+                        dropdownTitle={t('options.filters-labels.sort-menu')}
+                        items={sortHeaderMenus}
+                    />
+                ) : (
+                    <TableHeader>
+                        {headerGroups.map((headerGroup: any, headerGroupIndex) => (
+                            <TableRow key={headerGroupIndex} {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map((column: any, columnIndex: number) => (
+                                    <TableCell
+                                        key={columnIndex}
+                                        {...column.getHeaderProps(
+                                            column.sortable ? column.getSortByToggleProps() : undefined
+                                        )}
+                                    >
+                                        {column.render('Header')}
+                                        {column.sortable && (
+                                            <TableArrow
+                                                className={`icon ${
+                                                    column.isSorted
+                                                        ? column.isSortedDesc
+                                                            ? 'icon--arrow-down'
+                                                            : 'icon--arrow-up'
+                                                        : 'icon--double-arrow'
+                                                }`}
+                                            />
+                                        )}
+                                    </TableCell>
                                 ))}
-                            </TableView.Header>
-                            <TableView.Body {...getTableBodyProps()} leaderboardView={leaderboardView}>
-                                {hasStickyRow &&
-                                    rows.map((row: any, index: number) => {
-                                        prepareRow(row);
-                                        if (row?.original?.sticky) {
-                                            return (
-                                                <TableView.Row
-                                                    {...row.getRowProps()}
-                                                    key={index}
-                                                    isUser={leaderboardView ? row.original.sticky : false}
-                                                    leaderboardRank={
-                                                        leaderboardView
-                                                            ? row?.values?.rank
-                                                                ? row?.values?.rank
-                                                                : undefined
-                                                            : undefined
-                                                    }
-                                                >
-                                                    {row.cells.map((cell: any, cellIndex: number) => {
-                                                        return (
-                                                            <TableView.Cell
-                                                                defaultFontWeight={'bold'}
-                                                                key={cellIndex}
-                                                                {...cell.getCellProps()}
-                                                            >
-                                                                {cell.render('Cell')}
-                                                            </TableView.Cell>
-                                                        );
-                                                    })}
-                                                </TableView.Row>
-                                            );
-                                        }
-                                    })}
-                                {page.map((row: any, index: number) => {
-                                    prepareRow(row);
-                                    const rowComponent = (
-                                        <TableView.RowWrapper isClaimable={row.original.claimable}>
-                                            <TableView.Row
-                                                key={index}
-                                                {...row.getRowProps()}
-                                                leaderboardRank={
-                                                    leaderboardView
-                                                        ? row?.values?.rank
-                                                            ? row?.values?.rank
-                                                            : undefined
-                                                        : undefined
-                                                }
-                                                isClaimed={row.original.claimed}
-                                            >
-                                                {row.cells.map((cell: any, cellIndex: number) => {
-                                                    return (
-                                                        <TableView.Cell
-                                                            defaultFontWeight={'bold'}
-                                                            key={cellIndex}
-                                                            {...cell.getCellProps()}
-                                                        >
-                                                            {cell.render('Cell')}
-                                                        </TableView.Cell>
-                                                    );
-                                                })}
-                                            </TableView.Row>
-                                        </TableView.RowWrapper>
-                                    );
-
-                                    if (row.original.link) {
-                                        return (
-                                            <SPAAnchor href={row.original.link} key={index}>
-                                                {rowComponent}
-                                            </SPAAnchor>
-                                        );
-                                    }
-
-                                    if (row.original.sticky) return;
-
-                                    return rowComponent;
-                                })}
-                            </TableView.Body>
-                        </TableView>
-                    )}
-                    {isMobile && (
-                        <TableView.Body {...getTableBodyProps()} leaderboardView={leaderboardView} isMobile={isMobile}>
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                )}
+                <TableView {...getTableProps()}>
+                    {isLoading ? (
+                        <LoaderContainer>
+                            <SimpleLoader />
+                        </LoaderContainer>
+                    ) : data.length === 0 ? (
+                        <NoDataContainer>{noResultsMessage || t('common.no-data')}</NoDataContainer>
+                    ) : (
+                        <TableBody {...getTableBodyProps()} isMobile={isMobile}>
                             {hasStickyRow &&
-                                rows.map((row: any, index: number) => {
+                                rows.map((row: any, rowIndex: number) => {
                                     prepareRow(row);
-                                    if (row?.original?.sticky) {
+                                    if (row.original.sticky) {
                                         return (
-                                            <TableView.Row
+                                            <TableRow
+                                                key={rowIndex}
                                                 {...row.getRowProps()}
-                                                key={'msr' + index}
-                                                isUser={leaderboardView ? row.original.sticky : false}
-                                                leaderboardRank={
-                                                    leaderboardView
-                                                        ? row?.values?.rank
-                                                            ? row?.values?.rank
-                                                            : undefined
-                                                        : undefined
-                                                }
+                                                isMobile={isMobile}
+                                                isSticky={row.original.sticky}
                                             >
                                                 {row.cells.map((cell: any, cellIndex: number) => {
-                                                    return (
-                                                        <TableView.RowMobile key={`ms${index}${cellIndex}`}>
-                                                            <TableView.Cell
-                                                                key={`msc${cellIndex}`}
-                                                                defaultFontWeight={'bold'}
-                                                                justifyContent={'flex-start'}
-                                                                padding={'0 0 0 20px'}
-                                                                {...cell.getCellProps()}
-                                                            >
+                                                    return isMobile ? (
+                                                        <TableRowMobile
+                                                            key={`msrm${rowIndex}${cellIndex}`}
+                                                            isSticky={row.original.sticky}
+                                                        >
+                                                            <TableCell key={`msh${cellIndex}`} {...cell.getCellProps()}>
                                                                 {cell.render('Header')}
-                                                            </TableView.Cell>
-                                                            <TableView.Cell
-                                                                defaultFontWeight={'bold'}
-                                                                {...cell.getCellProps()}
-                                                                key={`mscv${cellIndex}`}
-                                                            >
+                                                            </TableCell>
+                                                            <TableCell key={`msc${cellIndex}`} {...cell.getCellProps()}>
                                                                 {cell.render('Cell')}
-                                                            </TableView.Cell>
-                                                        </TableView.RowMobile>
+                                                            </TableCell>
+                                                        </TableRowMobile>
+                                                    ) : (
+                                                        <TableCell key={cellIndex} {...cell.getCellProps()}>
+                                                            {cell.render('Cell')}
+                                                        </TableCell>
                                                     );
                                                 })}
-                                            </TableView.Row>
+                                            </TableRow>
                                         );
                                     }
                                 })}
-                            {page.map((row: any, index: number) => {
+                            {page.map((row: any, rowIndex: number) => {
                                 prepareRow(row);
                                 const rowComponent = (
-                                    <TableView.Row
-                                        key={'mr' + index}
+                                    <TableRow
+                                        key={rowIndex}
                                         {...row.getRowProps()}
-                                        isMobile={true}
-                                        leaderboardRank={
-                                            leaderboardView
-                                                ? row?.values?.rank
-                                                    ? row?.values?.rank
-                                                    : undefined
-                                                : undefined
-                                        }
+                                        onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
+                                        isMobile={isMobile}
                                         isClaimed={row.original.claimed}
+                                        isClaimable={row.original.claimable}
                                     >
                                         {row.cells.map((cell: any, cellIndex: number) => {
-                                            return (
-                                                <TableView.RowMobile key={`mrm${index}${cellIndex}`}>
-                                                    <TableView.Cell
-                                                        key={`mc${cellIndex}`}
-                                                        defaultFontWeight={'bold'}
-                                                        justifyContent={'flex-start'}
-                                                        padding={'0 0 0 20px'}
-                                                        {...cell.getCellProps()}
-                                                    >
+                                            return isMobile ? (
+                                                <TableRowMobile key={`mrm${rowIndex}${cellIndex}`}>
+                                                    <TableCell key={`mh${cellIndex}`} {...cell.getCellProps()}>
                                                         {cell.render('Header')}
-                                                    </TableView.Cell>
-                                                    <TableView.Cell
-                                                        defaultFontWeight={'bold'}
-                                                        {...cell.getCellProps()}
-                                                        key={`mcv${cellIndex}`}
-                                                    >
+                                                    </TableCell>
+                                                    <TableCell {...cell.getCellProps()} key={`mc${cellIndex}`}>
                                                         {cell.render('Cell')}
-                                                    </TableView.Cell>
-                                                </TableView.RowMobile>
+                                                    </TableCell>
+                                                </TableRowMobile>
+                                            ) : (
+                                                <TableCell
+                                                    key={cellIndex}
+                                                    {...cell.getCellProps()}
+                                                    onClick={
+                                                        onTableCellClick ? () => onTableCellClick(row, cell) : undefined
+                                                    }
+                                                >
+                                                    {cell.render('Cell')}
+                                                </TableCell>
                                             );
                                         })}
-                                    </TableView.Row>
+                                    </TableRow>
                                 );
 
                                 if (row.original.link) {
                                     return (
-                                        <SPAAnchor key={index} href={row.original.link}>
+                                        <SPAAnchor href={row.original.link} key={rowIndex}>
                                             {rowComponent}
                                         </SPAAnchor>
                                     );
@@ -334,31 +288,26 @@ const Table: React.FC<TableProps> = ({
 
                                 return rowComponent;
                             })}
-                        </TableView.Body>
+                        </TableBody>
                     )}
-                    {!hidePagination && (
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <Pagination
-                                        rowsPerPageOptions={resultsPerPage ? resultsPerPage : [10, 20, 30, 50]}
-                                        count={leaderboardView ? data.length - 1 : data.length}
-                                        rowsPerPage={pageSize}
-                                        page={pageIndex}
-                                        onPageChange={handleChangePage}
-                                        onRowsPerPageChange={handleChangeRowsPerPage}
-                                        labelRowsPerPage={t('common.pagination.rows-per-page')}
-                                    />
-                                </tr>
-                            </tbody>
-                        </table>
-                    )}
-                </FlexDivColumn>
-            )}
-            {!data.length && (
-                <NoDataContainer>
-                    <NoDataText>{t('common.no-data')}</NoDataText>
-                </NoDataContainer>
+                </TableView>
+            </>
+            {!hidePagination && data.length > 0 && (
+                <PaginationContainer>
+                    <tbody>
+                        <tr>
+                            <Pagination
+                                rowsPerPageOptions={[10, 20, 50, 100]}
+                                count={data.length ? data.length : 0}
+                                rowsPerPage={pageSize}
+                                page={pageIndex}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                labelRowsPerPage={t('common.pagination.rows-per-page')}
+                            />
+                        </tr>
+                    </tbody>
+                </PaginationContainer>
             )}
         </>
     );

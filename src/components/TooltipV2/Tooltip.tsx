@@ -2,6 +2,7 @@ import React, { CSSProperties } from 'react';
 import ReactTooltip from 'rc-tooltip';
 import styled from 'styled-components';
 import 'theme/tooltip.css';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TooltipProps = {
     component?: any;
@@ -13,6 +14,7 @@ type TooltipProps = {
     top?: number;
     overlayClassName?: string;
     iconColor?: string;
+    mobileIconFontSize?: number;
 };
 
 const Tooltip: React.FC<TooltipProps> = ({
@@ -25,6 +27,7 @@ const Tooltip: React.FC<TooltipProps> = ({
     overlayClassName,
     iconColor,
     children,
+    mobileIconFontSize,
 }) => {
     return (
         <ReactTooltip
@@ -42,13 +45,20 @@ const Tooltip: React.FC<TooltipProps> = ({
                     marginLeft={marginLeft}
                     top={top}
                     style={customIconStyling}
+                    mobileIconFontSize={mobileIconFontSize}
                 />
             )}
         </ReactTooltip>
     );
 };
 
-const InfoIcon = styled.i<{ iconFontSize?: number; marginLeft?: number; top?: number; color?: string }>`
+const InfoIcon = styled.i<{
+    iconFontSize?: number;
+    marginLeft?: number;
+    top?: number;
+    color?: string;
+    mobileIconFontSize?: number;
+}>`
     font-size: ${(props) => props.iconFontSize || 15}px;
     font-weight: normal;
     cursor: pointer;
@@ -59,6 +69,10 @@ const InfoIcon = styled.i<{ iconFontSize?: number; marginLeft?: number; top?: nu
     &:before {
         font-family: ThalesIcons !important;
         content: '\\0043';
+    }
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: ${(props) =>
+            props.mobileIconFontSize ? props.mobileIconFontSize : props.iconFontSize ? props.iconFontSize : 15}px;
     }
 `;
 

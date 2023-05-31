@@ -2,10 +2,8 @@ import React, { CSSProperties } from 'react';
 import CurrencyIcon, { IconType } from './CurrencyIcon';
 import { CurrencyKey } from 'constants/currency';
 import { getSynthName } from 'utils/currency';
-import { ThemeMap } from 'constants/ui';
-import { useSelector } from 'react-redux';
-import { getTheme } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
+import { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
 type CurrencyNameProps = {
     currencyKey: CurrencyKey;
@@ -28,7 +26,7 @@ export const CurrencyName: React.FC<CurrencyNameProps> = ({
     spanStyle,
     additionalIconType,
 }) => {
-    const theme = useSelector((state: RootState) => getTheme(state));
+    const theme: ThemeInterface = useTheme();
 
     return (
         <span
@@ -37,7 +35,7 @@ export const CurrencyName: React.FC<CurrencyNameProps> = ({
                 alignItems: 'center',
                 fontSize: '15px',
                 textAlign: 'left',
-                fontFamily: ThemeMap[theme].fontFamily.primary,
+                fontFamily: theme.fontFamily.primary,
                 ...spanStyle,
             }}
         >

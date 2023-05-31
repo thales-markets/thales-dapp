@@ -20,6 +20,7 @@ import {
 import { getFormattedBonus } from 'utils/options';
 import Slippage from '../Slippage';
 import { isSlippageValid } from '../Slippage/Slippage';
+import { EMPTY_VALUE } from 'constants/placeholder';
 
 type TradingDetailsModalProps = {
     currencyKey: string;
@@ -117,17 +118,21 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.trade.amm-trading.details-modal.position-bonus')}</TextLabel>
-                        <TextValue isProfit={true}>{positionBonus ? getFormattedBonus(positionBonus) : '-'}</TextValue>
+                        <TextValue isProfit={true}>
+                            {positionBonus ? getFormattedBonus(positionBonus) : EMPTY_VALUE}
+                        </TextValue>
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.trade.amm-trading.details-modal.amount')}</TextLabel>
                         <TextValue>
-                            {positionAmount ? formatCurrencyWithKey(positionType, positionAmount) : '-'}
+                            {positionAmount ? formatCurrencyWithKey(positionType, positionAmount) : EMPTY_VALUE}
                         </TextValue>
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.trade.amm-trading.details-modal.total-pay')}</TextLabel>
-                        <TextValue>{paidAmount ? formatCurrencyWithKey(selectedStable, paidAmount) : '-'}</TextValue>
+                        <TextValue>
+                            {paidAmount ? formatCurrencyWithKey(selectedStable, paidAmount) : EMPTY_VALUE}
+                        </TextValue>
                     </DetailsRow>
                     <DetailsRow>
                         <TextLabel>{t('options.trade.amm-trading.details-modal.potential-profit')}</TextLabel>
@@ -137,7 +142,7 @@ const TradingDetailsModal: React.FC<TradingDetailsModalProps> = ({
                                       getStableCoinForNetwork(networkId),
                                       profit
                                   )} (${formatPercentage(calculateAndFormatPercentage(paidAmount, positionAmount))})`
-                                : '-'}
+                                : EMPTY_VALUE}
                         </TextValue>
                     </DetailsRow>
                 </TradingDetails>
@@ -190,7 +195,7 @@ const DetailsRow = styled(FlexDivRowCentered)<{ margin?: string; padding?: strin
 `;
 
 const TradingDetails = styled(FlexDivColumnCentered)`
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 15px;

@@ -4,7 +4,7 @@ import { FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 export const VoteRow = styled(FlexDivColumnCentered)`
     padding: 10px;
     :not(:last-child) {
-        border-bottom: 1px solid ${(props) => props.theme.borderColor.tertiary};
+        border-bottom: 1px solid ${(props) => props.theme.borderColor.primary};
     }
 `;
 

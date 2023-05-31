@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDivRow, FlexDivCentered, FlexDivRowCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getStatusColor } from 'utils/governance';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const Container = styled(FlexDivColumnCentered)`
     padding: 10px 40px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px 20px;
     }
 `;
@@ -26,7 +27,7 @@ export const Title = styled(FlexDivColumnCentered)`
 `;
 
 export const DetailsWrapper = styled(FlexDivRow)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
@@ -34,11 +35,11 @@ export const DetailsWrapper = styled(FlexDivRow)`
 export const DetailsContainer = styled(FlexDivColumnCentered)`
     padding: 15px;
     border-radius: 5px;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     color: ${(props) => props.theme.textColor.primary};
     &:first-child {
         margin-right: 40px;
-        @media (max-width: 767px) {
+        @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
             flex-direction: column;
             margin-right: 0px;
             margin-bottom: 10px;
@@ -103,7 +104,7 @@ export const Body = styled(FlexDivColumn)`
         display: block;
         th,
         td {
-            border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+            border: 1px solid ${(props) => props.theme.borderColor.primary};
             padding: 6px 13px;
         }
     }
@@ -118,7 +119,7 @@ export const Body = styled(FlexDivColumn)`
 `;
 
 export const VoteHeader = styled(FlexDivRowCentered)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         align-items: start;
     }
@@ -146,7 +147,7 @@ export const DetailsTitle = styled(FlexDivRow)`
 `;
 
 export const VotingPowerTitle = styled(DetailsTitle)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 0;
     }
 `;
@@ -154,7 +155,7 @@ export const VotingPowerTitle = styled(DetailsTitle)`
 export const Divider = styled.hr`
     width: 100%;
     border: none;
-    border-top: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border-top: 1px solid ${(props) => props.theme.borderColor.primary};
 `;
 
 export const ArrowIcon = styled(ArrowHyperlinkIcon)`

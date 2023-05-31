@@ -14,8 +14,8 @@ const Title = styled.div<{ color?: string; fontSize?: string }>`
     font-weight: 400;
     margin-bottom: 5px;
     text-transform: uppercase;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--input-border-color)')};
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '14px')};
+    color: ${(props) => (props?.color ? props.color : 'var(--input-border-color)')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '14px')};
 `;
 
 // @ts-ignore
@@ -28,8 +28,8 @@ const ValueContainer: StyledComponent<'div', any> & ValueContainerChildren = sty
 
 const Value = styled.input<{ color?: string; fontSize?: string }>`
     font-weight: 600;
-    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    color: ${(props) => (props?.color ? props.color : props.theme.textColor.primary)};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
     background: transparent;
     border: none;
     padding: 0;
@@ -42,8 +42,8 @@ const Value = styled.input<{ color?: string; fontSize?: string }>`
 
 const SubValue = styled.span<{ color?: string; fontSize?: string }>`
     font-weight: 600;
-    color: ${(_props) => (_props?.color ? _props.color : _props.theme.textColor.primary)};
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '20px')};
+    color: ${(props) => (props?.color ? props.color : props.theme.textColor.primary)};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '20px')};
 `;
 
 // @ts-ignore
@@ -73,22 +73,22 @@ const Container: StyledComponent<
     shadow?: string;
     background?: string;
 }>`
-    width: ${(_props) => (_props?.width ? _props.width : '100%')};
-    margin: ${(_props) => (_props?.margin ? _props.margin : '')};
-    ${(_props) => (_props?.height ? `height: ${_props.height}` : '')};
+    width: ${(props) => (props?.width ? props.width : '100%')};
+    margin: ${(props) => (props?.margin ? props.margin : '')};
+    ${(props) => (props?.height ? `height: ${props.height}` : '')};
     display: flex;
     flex-direction: column;
-    border: 0.8px solid ${(_props) => (_props?.borderColor ? _props.borderColor : 'var(--card-border-color)')};
-    border-style: ${(_props) => (_props?.borderStyle ? _props.borderStyle : 'solid')};
+    border: 0.8px solid ${(props) => (props?.borderColor ? props.borderColor : 'var(--card-border-color)')};
+    border-style: ${(props) => (props?.borderStyle ? props.borderStyle : 'solid')};
     border-radius: 10px;
     justify-content: center;
-    padding: ${(_props) => (_props?.padding ? _props.padding : '5px 10px')};
+    padding: ${(props) => (props?.padding ? props.padding : '5px 10px')};
     box-sizing: border-box;
     margin-bottom: 8px;
     position: relative;
-    opacity: ${(_props) => (_props?.disabled ? '0.5 !important' : '1')};
-    ${(_props) => (_props?.shadow ? `box-shadow: ${_props.shadow}` : '')};
-    background: ${(_props) => (_props?.background ? _props.background : 'transparent')};
+    opacity: ${(props) => (props?.disabled ? '0.5 !important' : '1')};
+    ${(props) => (props?.shadow ? `box-shadow: ${props.shadow}` : '')};
+    background: ${(props) => (props?.background ? props.background : 'transparent')};
 `;
 
 ValueContainer.Value = Value;

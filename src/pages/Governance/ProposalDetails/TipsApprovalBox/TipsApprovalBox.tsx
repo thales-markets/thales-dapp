@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Colors, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivColumnCentered } from 'theme/common';
 import { LoaderContainer } from 'pages/Governance/styled-components';
 import { StatusEnum } from 'constants/governance';
 import SimpleLoader from 'components/SimpleLoader';
@@ -17,6 +17,8 @@ import {
     VotedInLabel,
     Votes,
 } from './styled-components';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type TipsApprovalBoxProps = {
     proposal: Proposal;
@@ -26,6 +28,7 @@ type TipsApprovalBoxProps = {
 
 const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalResults, isLoading }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const closed = proposal.state === StatusEnum.Closed;
     const pending = proposal.state === StatusEnum.Pending;
     const active = proposal.state === StatusEnum.Active;
@@ -36,7 +39,11 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         proposalResults.results.resultsByVoteBalance &&
         proposalResults.results.resultsByVoteBalance[0] >= proposalApprovalVotes;
 
-    const chartColor = isPassed ? Colors.GREEN : closed ? Colors.RED : Colors.GREEN;
+    const chartColor = isPassed
+        ? theme.textColor.quaternary
+        : closed
+        ? theme.textColor.tertiary
+        : theme.textColor.quaternary;
 
     const pieData = useMemo(() => {
         const data = [];
@@ -49,7 +56,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
             const piece = {
                 name: 'vote',
                 value: 1,
-                color: index < numberOfVotes ? chartColor : Colors.GRAY,
+                color: index < numberOfVotes ? chartColor : theme.background.secondary,
             };
             data.push(piece);
         }

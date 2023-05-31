@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { SUPPORTED_MAINNET_NETWORK_IDS_MAP } from 'constants/network';
 import { Network, NetworkId, getIsMainnet } from 'utils/network';
 import Button from 'components/ButtonV2';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const UnsupportedNetwork: React.FC = () => {
     const { t } = useTranslation();
@@ -46,7 +47,7 @@ const UnsupportedNetwork: React.FC = () => {
 
         return (
             <Button
-                width="240px"
+                width="250px"
                 additionalStyles={{ textTransform: 'none' }}
                 onClick={() => SUPPORTED_MAINNET_NETWORK_IDS_MAP[network].changeNetwork(network)}
             >
@@ -77,13 +78,13 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     background: ${(props) => props.theme.background.primary};
-    border: 1px solid ${(props) => props.theme.borderColor.primary};
+    border: 1px solid ${(props) => props.theme.borderColor.secondary};
     border-radius: 8px;
     padding: 20px;
     max-width: 600px;
     text-align: center;
 
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 5px;
         max-width: calc(100% - 10px);
     }
@@ -114,7 +115,7 @@ const ButtonWrapper = styled.div`
     align-items: center;
     margin: 20px 0px;
 
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         margin: 10px 0px;
         gap: 20px;

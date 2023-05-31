@@ -12,7 +12,7 @@ import {
     ReferenceArea,
 } from 'recharts';
 import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { format } from 'date-fns';
 import Toggle from './components/DateToggle/Toggle';
 import {
@@ -22,12 +22,10 @@ import {
 } from 'utils/formatters/number';
 import usePriceDataQuery from 'queries/price/usePriceDataQuery';
 import { FlexDivSpaceBetween } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { getTheme } from 'redux/modules/ui';
-import { RootState } from 'redux/rootReducer';
-import { ThemeMap } from 'constants/ui';
 import { Positions } from 'constants/options';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PriceChartProps = {
     asset: string;
@@ -59,7 +57,7 @@ const ToggleButtons = [
 ];
 
 const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedRightPrice, position }) => {
-    const theme = useSelector((state: RootState) => getTheme(state));
+    const theme: ThemeInterface = useTheme();
     const [data, setData] = useState<{ date: string; price: number }[]>();
     const [dateRange, setDateRange] = useState(14); // default date range
 
@@ -118,15 +116,15 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                 }
                 if (result) {
                     const priceData = result.prices.map((price) => ({
-                        date: format(new Date(price[0]), 'MM/dd'),
+                        date: format(new Date(price[0]), 'dd/MM'),
                         price: Number(price[1].toFixed(2)),
                     }));
 
-                    priceData.push({ date: format(new Date(), 'MM/dd'), price: currentPrice });
+                    priceData.push({ date: format(new Date(), 'dd/MM'), price: currentPrice });
 
                     setData(priceData);
 
-                    setTicks(getTicks(priceData[priceData.length - 1].price));
+                    setTicks(getTicks(priceData.map(({ price }) => price)));
                 } else {
                     console.log('COINGECKO API failed');
                 }
@@ -135,7 +133,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
         fetchData();
     }, [asset, dateRange, currentPrice]);
 
-    const getReferenceArea = () => {
+    const getReferenceArea = (ticks: any) => {
         if (position === Positions.UP || position === Positions.DOWN) {
             if (selectedPrice) {
                 return (
@@ -145,7 +143,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                         y2={ticks ? (position === Positions.UP ? ticks[ticks.length - 1] : ticks[0]) : 0}
                         fill="url(#referenceGradient)"
                         fillOpacity={0.2}
-                        isFront={false}
                     />
                 );
             }
@@ -159,7 +156,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             y2={selectedRightPrice}
                             fill="url(#referenceGradient)"
                             fillOpacity={0.2}
-                            isFront={false}
                         />
                     );
                 } else {
@@ -171,7 +167,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 y2={ticks ? ticks[0] : 0}
                                 fill="url(#referenceGradient)"
                                 fillOpacity={0.2}
-                                isFront={false}
                             />
                             <ReferenceArea
                                 xHeight={1}
@@ -179,7 +174,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 y2={ticks ? ticks[ticks.length - 1] : 0}
                                 fill="url(#referenceGradient)"
                                 fillOpacity={0.2}
-                                isFront={false}
                             />
                         </>
                     );
@@ -200,23 +194,24 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
             {data && (
                 <ResponsiveContainer width="100%" height={266}>
                     <AreaChart data={data} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
-                        <defs>
-                            <linearGradient id="referenceGradient" x1="0" y1="0" x2="0" y2="1">
+                        {getReferenceArea(ticks)}
+                        <defs xHeight={1}>
+                            <linearGradient id="referenceGradient" x1="0" y1="0" x2="0" y2="1" xHeight={1}>
                                 <stop
                                     offset="0%"
-                                    stopColor={`${ThemeMap[theme].textColor.quaternary}`}
+                                    stopColor={`${theme.textColor.quaternary}`}
                                     stopOpacity={position === Positions.UP ? 0 : 0.8}
                                 />
                                 <stop
                                     offset="90.62%"
-                                    stopColor={`${ThemeMap[theme].textColor.quaternary}`}
+                                    stopColor={`${theme.textColor.quaternary}`}
                                     stopOpacity={position === Positions.UP ? 0.8 : 0}
                                 />
                             </linearGradient>
                         </defs>
                         <CartesianGrid stroke="#2B3139" strokeDasharray="1" />
                         <XAxis
-                            tick={{ fontSize: '10px', fill: ThemeMap[theme].textColor.secondary }}
+                            tick={{ fontSize: '10px', fill: theme.textColor.secondary }}
                             tickLine={false}
                             axisLine={false}
                             dataKey="date"
@@ -224,14 +219,13 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             padding={{ right: 45 }}
                         />
                         <YAxis
-                            domain={[ticks ? ticks[0] : 0, ticks ? ticks[ticks.length - 1] : 0]}
+                            domain={['auto', 'auto']}
                             ticks={ticks}
                             tick={{
                                 fontSize: '10px',
-                                fill: ThemeMap[theme].textColor.secondary,
+                                fill: theme.textColor.secondary,
                                 width: 100,
                             }}
-                            tickCount={8}
                             tickLine={false}
                             axisLine={false}
                             orientation="right"
@@ -250,7 +244,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             dataKey="price"
                             stroke="#F7B91A"
                             strokeWidth={2}
-                            fill="var(--color-primary)"
+                            fill="transparent"
                             animationEasing="ease-in"
                             animationDuration={400}
                             xHeight={2}
@@ -260,6 +254,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                             y={data[data?.length - 1].price}
                             stroke="#F7B91A"
                             strokeDasharray="3 3"
+                            xHeight={2}
                             label={<CustomLabel price={data[data?.length - 1].price} />}
                         />
 
@@ -270,8 +265,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ asset, selectedPrice, selectedR
                                 label={<CustomLabel2 price={selectedPrice} />}
                             />
                         )}
-
-                        {getReferenceArea()}
 
                         {selectedRightPrice && (
                             <ReferenceLine
@@ -308,12 +301,12 @@ const Rectangle = styled.rect`
     stroke-width: 1px;
     width: 70px;
     height: 16px;
-    stroke: ${(props) => props.theme.borderColor.secondary};
+    stroke: ${(props) => props.theme.borderColor.tertiary};
     fill: ${(props) => props.theme.background.primary};
 `;
 
 const Text = styled.text`
-    fill: ${(props) => props.theme.borderColor.secondary};
+    fill: ${(props) => props.theme.borderColor.tertiary};
     font-size: 10px;
 `;
 
@@ -345,7 +338,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     max-height: 300px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
@@ -378,50 +371,48 @@ const PriceChange = styled.span<{ up: boolean }>`
 `;
 
 const formatYAxisTick = (value: number) => {
-    let stepSize;
-
-    if (value < 1) {
-        stepSize = 0.05;
-    } else if (value < 10) {
-        stepSize = 0.2;
-    } else if (value < 100) {
-        stepSize = 0.5;
-    } else if (value < 1000) {
-        stepSize = 50;
-    } else {
-        stepSize = Math.pow(10, Math.floor(Math.log10(value)) - 1);
-    }
-
-    const ticks = [];
-    for (let tick = stepSize; tick <= value; tick += stepSize) {
-        ticks.push(tick);
-    }
-
-    return ticks.length ? formatCurrencyWithSign(USD_SIGN, ticks[ticks.length - 1]) : '';
+    return formatCurrencyWithSign(USD_SIGN, value, 2);
 };
 
-const getTicks = (value: number) => {
-    let stepSize;
-    const tickCount = 4;
+const getTicks = (prices: number[]) => {
+    const tickCount = 6;
+    let min = prices[0],
+        max = prices[0];
+    prices.map((price) => {
+        if (price > max) max = price;
+        if (price < min) min = price;
+    });
 
-    if (value < 1) {
-        stepSize = 0.05;
-    } else if (value < 10) {
-        stepSize = 0.2;
-    } else if (value < 100) {
-        stepSize = 0.5;
-    } else if (value < 1000) {
-        stepSize = 50;
-    } else {
-        stepSize = Math.pow(10, Math.floor(Math.log10(value)) - 1);
+    const roundedPow = Math.round(Math.log(prices[prices.length - 1]) / Math.log(10));
+    const step = Math.pow(10, roundedPow - 1);
+    const interval = (max - min) / tickCount;
+
+    let final = interval;
+    let stepChange = step;
+
+    if (final < stepChange / 2) {
+        while (final < stepChange / 2) {
+            stepChange = stepChange / 2;
+        }
+        final = stepChange;
     }
 
-    const centerTick = Math.round(value / stepSize) * stepSize;
-    const startTick = centerTick - tickCount * stepSize;
-    const endTick = centerTick + tickCount * stepSize;
+    if (final > stepChange * 1.5) {
+        while (final > stepChange * 1.5) {
+            stepChange = stepChange * 1.5;
+        }
+        final = stepChange;
+    }
+
+    // const stepFinal = Math.round(step / diff);
+    // const log1 = Math.round(Math.log(stepFinal) / Math.log(10));
+    // const stepFinal2 = (Math.round(stepFinal / Math.pow(10, log1)) * Math.pow(10, log1)) / multiplier;
+
+    const startTick = Math.round(min / final) * final - 1 * final;
+    const endTick = Math.round(max / final) * final + 1 * final;
     const ticks = [];
 
-    for (let tick = startTick; tick <= endTick; tick += stepSize) {
+    for (let tick = startTick; tick <= endTick; tick += final) {
         ticks.push(tick);
     }
 

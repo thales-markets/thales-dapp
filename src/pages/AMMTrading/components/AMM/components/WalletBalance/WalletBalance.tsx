@@ -149,7 +149,7 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     margin: 10px auto;
-    border: 1px solid var(--card-border-color);
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     padding: 3px 5px;
 `;
@@ -162,12 +162,6 @@ const BalanceContainer = styled.div`
     margin: 0 7px;
 `;
 
-// const WalletIcon = styled.i`
-//     font-size: 20px;
-//     margin-right: 8px;
-//     color: var(--card-border-color);
-// `;
-
 const Balance = styled.span`
     font-size: 13px;
     color: var(--color-white);
@@ -176,7 +170,7 @@ const Balance = styled.span`
 const TokenIcon = styled.i<{ color?: string }>`
     font-size: 20px;
     margin-left: 8px;
-    color: ${(_props) => (_props?.color ? _props.color : 'var(--color-white)')};
+    color: ${(props) => (props?.color ? props.color : 'var(--color-white)')};
 `;
 
 export default WalletBalance;

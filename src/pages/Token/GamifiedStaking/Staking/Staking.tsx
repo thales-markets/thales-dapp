@@ -1,26 +1,27 @@
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import { THALES_CURRENCY } from 'constants/currency';
-import { Tip125Link, Tip17Link } from 'pages/Token/components';
+import { Tip125Link, Tip17Link } from 'pages/Token/styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithPrecision } from 'utils/formatters/number';
-import { Line } from '../../components';
+import { Line } from '../../styled-components';
 import YourTransactions from './Transactions';
 import Stake from './Stake';
 import Unstake from './Unstake';
-import { isMobile } from 'utils/device';
 import { GRID_GAP, GRID_GAP_MOBILE } from 'pages/Token/components/Tab/Tab';
 import { getIsOVM } from 'utils/network';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import { StakingData, UserStakingData } from 'types/token';
 import Tooltip from 'components/TooltipV2/Tooltip';
-import { Colors } from 'theme/common';
+import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -44,11 +45,12 @@ const aprToApy = (interest: number) => ((1 + interest / 100 / APR_FREQUENCY) ** 
 
 const Staking: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isL2 = getIsOVM(networkId);
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
@@ -62,6 +64,8 @@ const Staking: React.FC = () => {
     const stakingDataQuery = useStakingDataQuery(networkId, {
         enabled: isAppReady,
     });
+
+    const isL2 = getIsOVM(networkId);
 
     useEffect(() => {
         if (stakingDataQuery.isSuccess && stakingDataQuery.data) {
@@ -134,7 +138,7 @@ const Staking: React.FC = () => {
         return (
             <SectionLabel>
                 <SectionLabelContent>{t(labelTransKey, defaultValue)}</SectionLabelContent>
-                {!noIcon && <Tooltip overlay={t(labelTransKey + '-tooltip')} />}
+                {!noIcon && <Tooltip overlay={t(labelTransKey + '-tooltip')} mobileIconFontSize={11} />}
             </SectionLabel>
         );
     };
@@ -172,9 +176,10 @@ const Staking: React.FC = () => {
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
-                                    iconColor={Colors.GREEN}
-                                    iconFontSize={20}
-                                    top={-2}
+                                    iconColor={theme.textColor.quaternary}
+                                    iconFontSize={22}
+                                    mobileIconFontSize={12}
+                                    top={-1}
                                 />
                             </BonusInfo>
                         </SectionValueContent>
@@ -221,7 +226,7 @@ const Staking: React.FC = () => {
                             </UnstakingInfo>
                         )}
                     </SectionDetails>
-                    <Line margin={isMobile() ? '3px 10px' : '0 15px'} />
+                    <Line margin={isMobile ? '3px 10px' : '0 15px'} />
                     <SectionDetails positionUp={false}>
                         <SectionDetailsLabel>
                             {t('options.earn.gamified-staking.staking.escrow-balance')}
@@ -263,9 +268,10 @@ const Staking: React.FC = () => {
                                             values={{ max: maxBonusRewardsPercentage }}
                                         />
                                     }
-                                    iconColor={Colors.GREEN}
-                                    iconFontSize={20}
-                                    top={-2}
+                                    iconColor={theme.textColor.quaternary}
+                                    iconFontSize={22}
+                                    mobileIconFontSize={12}
+                                    top={-1}
                                 />
                             </BonusInfo>
                         </SectionValueContent>
@@ -287,8 +293,7 @@ const Staking: React.FC = () => {
                             secondLabel: stakeOptions.unstake.label.toUpperCase(),
                             fontSize: '23px',
                         }}
-                        shadow={true}
-                        dotBackground={'var(--amm-switch-circle)'}
+                        borderColor={theme.borderColor.primary}
                         spanColumns={10}
                         handleClick={() => {
                             stakeOption === stakeOptions.stake.value
@@ -319,35 +324,27 @@ const SectionWrapper = styled.section<{ columns?: number; rows?: number; backgro
                 display: grid; 
                 grid-template-columns: 1fr; 
                 grid-auto-rows: 1fr; 
-                grid-gap: ${(isMobile() ? GRID_GAP_MOBILE : GRID_GAP) + 4}px;` // page GRID_GAP + borders(2 x 2px)
+                grid-gap: ${GRID_GAP + 4}px;` // page GRID_GAP + borders(2 x 2px)
             : ''}
     grid-column: span ${(props) => (props.columns ? props.columns : 4)};
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
-    background: ${(props) => {
-        switch (props.backgroundType) {
-            case BackgroundType.INFO:
-                return props.theme.background.secondary;
-            case BackgroundType.STAKE:
-                return props.theme.background.secondary;
-            default:
-                return props.theme.background.secondary;
-        }
-    }};
+    background: ${(props) => props.theme.background.secondary};
     padding: 2px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span ${(props) => (props.rows || props.backgroundType === BackgroundType.STAKE ? 12 : 6)};
         ${(props) =>
             props.backgroundType === BackgroundType.STAKE ? '' : `background: ${props.theme.background.secondary}`};
+        grid-gap: ${GRID_GAP_MOBILE + 4}px;
     }
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?: BackgroundType }>`
     display: grid;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         ${(props) => (props.backgroundType === BackgroundType.INFO ? 'background: none' : '')};
     }
 `;
@@ -355,7 +352,7 @@ const SectionContentWrapper = styled.div<{ background?: boolean; backgroundType?
 const SectionLabel = styled.div`
     display: flex;
     padding: 10px 15px 5px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
@@ -364,7 +361,7 @@ const SectionValue = styled.div`
     display: flex;
     padding: 5px 15px 10px 15px;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 10px 10px 10px;
     }
 `;
@@ -378,7 +375,7 @@ const SectionLabelContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 15px;
     line-height: 17px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
         line-height: 12px;
     }
@@ -389,7 +386,7 @@ const SectionValueContent = styled(SectionContent)`
     font-size: 23px;
     line-height: 30px;
     letter-spacing: 0.035em;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 15px;
         line-height: 20px;
     }
@@ -398,7 +395,7 @@ const SectionValueContent = styled(SectionContent)`
 const SectionDetails = styled.div<{ positionUp: boolean }>`
     padding: ${(props) => (props.positionUp ? '15px 15px 5px 15px' : '5px 15px 15px 15px')};
     text-align: end;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: ${(props) => (props.positionUp ? '10px 10px 0 10px' : '0 10px 10px 10px')};
     }
 `;
@@ -411,8 +408,8 @@ const SectionDetailsLabel = styled.span`
     font-size: 15px;
     line-height: 15px;
     letter-spacing: 0.035em;
-    color: var(--color-white);
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -424,23 +421,23 @@ const SectionDetailsValue = styled.span<{ unavailable?: boolean; floatNone?: boo
     font-weight: 500;
     font-size: 15px;
     line-height: 15px;
-    color: ${(props) => (props.unavailable ? '#ffcc00' : 'var(--color-white)')};
-    @media (max-width: 768px) {
+    color: ${(props) => (props.unavailable ? props.theme.warning.textColor.primary : props.theme.textColor.primary)};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 14px;
     }
 `;
 
 const BonusInfo = styled.span`
-    color: #03dac5;
+    color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 const StakedBalanceInfo = styled.div`
     position: absolute;
     top: 80px;
     padding: 10px 15px;
-    color: #ffcc00;
+    color: ${(props) => props.theme.warning.textColor.primary};
     font-size: 14px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
         top: 130px;
         font-size: 12px;
@@ -450,7 +447,8 @@ const StakedBalanceInfo = styled.div`
 const UnstakingInfo = styled.span`
     font-weight: 400;
     font-size: 12px;
-    background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
+    background: ${(props) => props.theme.button.background.primary};
+    color: ${(props) => props.theme.button.textColor.primary};
     border-radius: 5px;
     padding: 3px 5px;
     margin-left: 5px;

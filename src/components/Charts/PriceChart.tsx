@@ -12,6 +12,7 @@ import { formatPriceChangeInterval } from 'utils/formatters/string';
 import { CurrencyKey } from 'constants/currency';
 
 import { useTranslation } from 'react-i18next';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type PriceChartProps = {
     currencyKey: CurrencyKey;
@@ -178,9 +179,9 @@ const CustomizedAxisTick: React.FC<any> = (props: any) => {
 
 const ChartWrapper = styled.div<{ flexOrder?: boolean }>`
     width: 100%;
-    ${(_props) => (_props?.flexOrder ? 'display: flex;' : '')};
-    ${(_props) => (_props?.flexOrder ? 'flex-direction: row;' : '')};
-    ${(_props) => (_props?.flexOrder ? 'align-items: center;' : '')};
+    ${(props) => (props?.flexOrder ? 'display: flex;' : '')};
+    ${(props) => (props?.flexOrder ? 'flex-direction: row;' : '')};
+    ${(props) => (props?.flexOrder ? 'align-items: center;' : '')};
     text-align: center;
     margin: 0px 0px 0px 0px;
 `;
@@ -225,14 +226,14 @@ const FooterInfo = styled.p`
 const TimerangeChange = styled(FooterInfo)<{ fontSize?: string }>`
     color: ${(props) => props.theme.textColor.primary};
     text-align: left;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '')};
 `;
 
 const PriceChange = styled(FooterInfo)<{ uptrend?: boolean; fontSize?: string }>`
     color: ${(props: any) => (props.uptrend ? '#50CE99' : '#DE496D')};
     font-weight: bold;
     text-align: right;
-    font-size: ${(_props) => (_props?.fontSize ? _props.fontSize : '')};
+    font-size: ${(props) => (props?.fontSize ? props.fontSize : '')};
 `;
 
 const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
@@ -240,7 +241,7 @@ const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
     font-weight: bold;
     font-size: 15px;
     margin-left: 30px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-left: 5px;
     }
 `;

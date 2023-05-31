@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivRow } from 'theme/common';
 
@@ -11,7 +12,7 @@ export const Container = styled(FlexDivRow)`
     width: 100%;
     position: relative;
     align-items: start;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 95%;
         flex-direction: column;
         align-items: center;

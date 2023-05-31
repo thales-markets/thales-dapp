@@ -95,9 +95,16 @@ const TokenPage: React.FC = () => {
     const tabIds = tabs.map((tab) => tab.id);
     const isTabAvailable = paramTab !== null && tabIds.includes(paramTab);
     const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : defaultTab);
+
+    const paramActiveButtonId = queryString.parse(location.search).activeButtonId;
+    const activeButtonId = Object.values(TokenTabSectionIdEnum).includes(paramActiveButtonId)
+        ? paramActiveButtonId
+        : undefined;
     const defaultSection =
         selectedTab === TokenTabEnum.GAMIFIED_STAKING
-            ? TokenTabSectionIdEnum.STAKING
+            ? activeButtonId
+                ? activeButtonId
+                : TokenTabSectionIdEnum.STAKING
             : selectedTab === TokenTabEnum.LP_STAKING
             ? TokenTabSectionIdEnum.LP_STAKING
             : undefined;

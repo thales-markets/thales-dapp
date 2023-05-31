@@ -33,13 +33,12 @@ const Container = styled.div`
 `;
 
 const Message = styled(FlexDivRow)`
-    font-style: normal;
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.5px;
-    color: #e53720;
-    background: #e9bcbc;
+    color: ${(props) => props.theme.error.textColor.primary};
+    border: 1px solid ${(props) => props.theme.error.borderColor.primary};
     box-sizing: border-box;
     border-radius: 5px;
     padding: 5px 10px;
@@ -54,7 +53,8 @@ export const StyledValidationErrorIcon = styled(ValidationErrorIcon)`
 const CloseIconContainer = styled(CloseIcon)`
     min-width: 10px;
     min-height: 10px;
-    margin-top: 4px;
+    margin-top: 3px;
+    margin-left: 5px;
     :hover {
         cursor: pointer;
     }

@@ -4,6 +4,7 @@ import Metaverse from './components/Metaverse';
 import Mint from './components/Mint';
 import Story from './components/Story';
 import { history } from 'utils/routes';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -69,12 +70,12 @@ const TabsContainer = styled.div`
     flex-direction: row;
     justify-content: center;
     align-items: stretch;
-    border-bottom: 4px solid var(--table-border-color);
+    border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
     @media (max-width: 1024px) {
         margin-top: 30px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
@@ -84,8 +85,8 @@ const Tab = styled.div<{ active: boolean }>`
     font-size: 25px;
     text-align: center;
     width: 25%;
-    color: ${(props) => props.theme.textColor.primary};
-    box-shadow: ${(props) => (props?.active ? '0px 4px var(--primary-filter-menu-active)' : '')};
+    color: ${(props) => (props.active ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
+    box-shadow: ${(props) => (props.active ? `0px 4px ${props.theme.borderColor.quaternary};` : '')};
     text-transform: uppercase;
     padding: 10px 5px;
     cursor: pointer;

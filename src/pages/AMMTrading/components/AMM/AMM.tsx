@@ -5,9 +5,9 @@ import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
 
 import Input from './components/Input';
-import Button from 'components/Button';
+import Button from 'components/ButtonV2';
 import RangeSlider from 'components/RangeSlider';
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import Slippage from './components/Slippage';
 import Divider from './styled-components/Divider';
 import NetworkFees from './components/NetworkFees';
@@ -79,6 +79,7 @@ import {
 } from 'utils/amm';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { Colors } from 'theme/common';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -642,7 +643,7 @@ const AMM: React.FC = () => {
         setBasePrice(base);
         setBasePriceImpact(baseImpact);
         setPotentialBaseReturn(
-            isBuy && total && total > 0 && amount && amount > 0
+            isBuy && total && Number(total) > 0 && amount && Number(amount) > 0
                 ? calculateAndFormatPercentage(Number(total), Number(amount))
                 : 0
         );
@@ -667,7 +668,7 @@ const AMM: React.FC = () => {
                         : Number(amount) <= tokenBalance))
         );
         setPotentialBaseReturn(
-            isBuy && total && total > 0 && amount && amount > 0
+            isBuy && total && Number(total) > 0 && amount && Number(amount) > 0
                 ? calculateAndFormatPercentage(Number(total), Number(amount))
                 : 0
         );
@@ -680,9 +681,7 @@ const AMM: React.FC = () => {
     const getSubmitButton = () => {
         const defaultButtonProps = {
             padding: '3px 35px',
-            active: true,
             margin: '15px auto 0 auto',
-            hoverShadow: 'var(--button-shadow)',
             fontSize: '20px',
         };
 
@@ -695,7 +694,7 @@ const AMM: React.FC = () => {
         }
         if (!isWalletConnected) {
             return (
-                <Button {...defaultButtonProps} onClickHandler={openConnectModal}>
+                <Button {...defaultButtonProps} onClick={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
@@ -737,7 +736,7 @@ const AMM: React.FC = () => {
         }
         if (!hasAllowance) {
             return (
-                <Button {...defaultButtonProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
+                <Button {...defaultButtonProps} disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -747,7 +746,7 @@ const AMM: React.FC = () => {
             );
         }
         return (
-            <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleSubmit}>
+            <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClick={handleSubmit}>
                 {!isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
                     : t(
@@ -838,8 +837,6 @@ const AMM: React.FC = () => {
                     secondLabel: orderSideOptions[1].label.toUpperCase(),
                     fontSize: '25px',
                 }}
-                shadow={true}
-                dotBackground={'var(--amm-switch-circle)'}
                 handleClick={() => {
                     orderSide.value == 'buy' ? setOrderSide(orderSideOptions[1]) : setOrderSide(orderSideOptions[0]);
                 }}
@@ -847,21 +844,21 @@ const AMM: React.FC = () => {
             <ButtonWrapper>
                 <Button
                     width={'48%'}
-                    active={optionSide == 'long'}
                     padding={'5px 0px'}
                     fontSize={'14px'}
-                    hoverShadow={'var(--button-shadow)'}
-                    onClickHandler={() => setOptionSide('long')}
+                    textColor={optionSide == 'long' ? Colors.GRAY_DARK : Colors.WHITE}
+                    backgroundColor={optionSide == 'long' ? Colors.GREEN : Colors.GRAY_DARK}
+                    onClick={() => setOptionSide('long')}
                 >
                     {t('options.common.long')}
                 </Button>
                 <Button
                     width={'48%'}
-                    active={optionSide == 'short'}
                     padding={'5px 0px'}
                     fontSize={'14px'}
-                    hoverShadow={'var(--button-shadow)'}
-                    onClickHandler={() => setOptionSide('short')}
+                    textColor={optionSide == 'short' ? Colors.GRAY_DARK : Colors.WHITE}
+                    backgroundColor={optionSide == 'short' ? Colors.GREEN : Colors.GRAY_DARK}
+                    onClick={() => setOptionSide('short')}
                 >
                     {t('options.common.short')}
                 </Button>

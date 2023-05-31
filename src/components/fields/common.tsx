@@ -8,21 +8,22 @@ export const FieldContainer = styled(FlexDivColumn)<{ margin?: string }>`
 `;
 
 export const FieldLabel = styled.label`
-    font-size: 15px;
-    line-height: 18px;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 15px;
     color: ${(props) => props.theme.textColor.primary};
     margin-bottom: 6px;
     text-transform: uppercase;
 `;
 
-export const Input = styled.input<{ fontSize?: string }>`
+export const Input = styled.input<{ fontSize?: string; width?: string; height?: string }>`
     background: ${(props) => props.theme.input.background.primary};
     border: 1px solid ${(props) => props.theme.input.borderColor.primary};
     box-sizing: border-box;
     mix-blend-mode: normal;
     border-radius: 10px;
-    height: 34px;
-    width: 100%;
+    height: ${(props) => props.height || '34px'};
+    width: ${(props) => props.width || '100%'};
     padding: 5px 10px;
     outline: 0;
     font-style: normal;

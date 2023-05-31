@@ -61,7 +61,7 @@ import vaultContract from 'utils/contracts/ammVaultContract';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { getCurrencyKeyStableBalance } from 'utils/balances';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import Tooltip from 'components/TooltipV2';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import NumericInput from 'components/fields/NumericInput';
@@ -71,8 +71,9 @@ import ElectionsBanner from 'components/ElectionsBanner';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { refetchVaultData } from 'utils/queryConnector';
-import { Colors } from 'theme/common';
 import Button from 'components/ButtonV2/Button';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
 type VaultProps = RouteComponentProps<{
     vaultId: string;
@@ -80,6 +81,7 @@ type VaultProps = RouteComponentProps<{
 
 const Vault: React.FC<VaultProps> = (props) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const { openConnectModal } = useConnectModal();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -584,13 +586,12 @@ const Vault: React.FC<VaultProps> = (props) => {
                                             secondLabel: t(`vault.tabs.${VaultTab.WITHDRAW}`),
                                             fontSize: '20px',
                                         }}
-                                        dotBackground={Colors.WHITE}
+                                        dotBackground={theme.textColor.primary}
                                         handleClick={() => {
                                             setSelectedTab(
                                                 selectedTab === VaultTab.DEPOSIT ? VaultTab.WITHDRAW : VaultTab.DEPOSIT
                                             );
                                         }}
-                                        shadow={true}
                                     />
                                 </ToggleContainer>
                                 {selectedTab === VaultTab.DEPOSIT && (

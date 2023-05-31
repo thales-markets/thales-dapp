@@ -1,8 +1,8 @@
 import React, { CSSProperties } from 'react';
 import { getAssetIcon } from 'utils/currency';
 import { CurrencyKey } from 'constants/currency';
-import styled from 'styled-components';
-import { UI_COLORS } from 'constants/ui';
+import styled, { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
 const NEW_CURRENCY_ICONS = [
     'LYRA',
@@ -51,6 +51,8 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 
     ...rest
 }) => {
+    const theme: ThemeInterface = useTheme();
+
     const props = {
         width: width ? width : '24px',
         height: height ? height : '24px',
@@ -62,23 +64,23 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
 
     const AssetIcon = getAssetIcon(currencyKey);
 
-    let badgeColor = UI_COLORS.OUT_COLOR;
+    let badgeColor = theme.positionColor.out;
 
     switch (iconType) {
         case IconType.IN:
-            badgeColor = UI_COLORS.IN_COLOR;
+            badgeColor = theme.positionColor.in;
             break;
         case IconType.OUT:
-            badgeColor = UI_COLORS.OUT_COLOR;
+            badgeColor = theme.positionColor.out;
             break;
         case IconType.Range:
-            badgeColor = UI_COLORS.OUT_COLOR;
+            badgeColor = theme.positionColor.out;
             break;
         case IconType.UP:
-            badgeColor = UI_COLORS.GREEN;
+            badgeColor = theme.positionColor.up;
             break;
         case IconType.DOWN:
-            badgeColor = UI_COLORS.RED;
+            badgeColor = theme.positionColor.down;
             break;
     }
 
@@ -128,7 +130,7 @@ const Badge = styled.i<{ color: string; height: number }>`
     width: ${(props) => props.height + 'px'};
     border-radius: 20px;
     color: ${(props) => (props?.color ? props.color : '')};
-    background: var(--color-primary); ;
+    background: ${(props) => props.theme.background.primary};
 `;
 
 export default CurrencyIcon;

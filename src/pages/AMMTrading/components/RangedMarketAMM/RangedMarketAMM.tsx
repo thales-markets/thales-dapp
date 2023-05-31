@@ -5,9 +5,9 @@ import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
 
 import Input from '../AMM/components/Input';
-import Button from 'components/Button';
+import Button from 'components/ButtonV2';
 import RangeSlider from 'components/RangeSlider';
-import Switch from 'components/SwitchInput/SwitchInputNew';
+import Switch from 'components/SwitchInput/SwitchInput';
 import Slippage from '../AMM/components/Slippage';
 import Divider from '../AMM/styled-components/Divider';
 import NetworkFees from '../AMM/components/NetworkFees';
@@ -82,6 +82,7 @@ import {
 import CollateralSelector from 'components/CollateralSelector';
 import useStableBalanceQuery from 'queries/walletBalances/useStableBalanceQuery';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { Colors } from 'theme/common';
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
@@ -665,7 +666,7 @@ const AMM: React.FC = () => {
         setMaxLimit(max);
         setBasePrice(base);
         setPotentialBaseReturn(
-            isBuy && total && total > 0 && amount && amount > 0
+            isBuy && total && Number(total) > 0 && amount && Number(amount) > 0
                 ? calculateAndFormatPercentage(Number(total), Number(amount))
                 : 0
         );
@@ -690,7 +691,7 @@ const AMM: React.FC = () => {
                         : Number(amount) <= tokenBalance))
         );
         setPotentialBaseReturn(
-            isBuy && total && total > 0 && amount && amount > 0
+            isBuy && total && Number(total) > 0 && amount && Number(amount) > 0
                 ? calculateAndFormatPercentage(Number(total), Number(amount))
                 : 0
         );
@@ -703,9 +704,7 @@ const AMM: React.FC = () => {
     const getSubmitButton = () => {
         const defaultButtonProps = {
             padding: '3px 35px',
-            active: true,
             margin: '15px auto 0 auto',
-            hoverShadow: 'var(--button-shadow)',
             fontSize: '20px',
         };
 
@@ -718,7 +717,7 @@ const AMM: React.FC = () => {
         }
         if (!isWalletConnected) {
             return (
-                <Button {...defaultButtonProps} onClickHandler={openConnectModal}>
+                <Button {...defaultButtonProps} onClick={openConnectModal}>
                     {t('common.wallet.connect-your-wallet')}
                 </Button>
             );
@@ -760,7 +759,7 @@ const AMM: React.FC = () => {
         }
         if (!hasAllowance) {
             return (
-                <Button {...defaultButtonProps} disabled={isAllowing} onClickHandler={() => setOpenApprovalModal(true)}>
+                <Button {...defaultButtonProps} disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -770,7 +769,7 @@ const AMM: React.FC = () => {
             );
         }
         return (
-            <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClickHandler={handleSubmit}>
+            <Button {...defaultButtonProps} disabled={isButtonDisabled || !gasLimit} onClick={handleSubmit}>
                 {!isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
                     : t(
@@ -861,8 +860,6 @@ const AMM: React.FC = () => {
                     secondLabel: orderSideOptions[1].label.toUpperCase(),
                     fontSize: '25px',
                 }}
-                shadow={true}
-                dotBackground={'var(--amm-switch-circle)'}
                 handleClick={() => {
                     orderSide.value == 'buy' ? setOrderSide(orderSideOptions[1]) : setOrderSide(orderSideOptions[0]);
                 }}
@@ -870,21 +867,21 @@ const AMM: React.FC = () => {
             <ButtonWrapper>
                 <Button
                     width={'48%'}
-                    active={rangeSide == 'in'}
                     padding={'5px 0px'}
                     fontSize={'14px'}
-                    hoverShadow={'var(--button-shadow)'}
-                    onClickHandler={() => setRangeSide('in')}
+                    textColor={rangeSide == 'in' ? Colors.GRAY_DARK : Colors.WHITE}
+                    backgroundColor={rangeSide == 'in' ? Colors.GREEN : Colors.GRAY_DARK}
+                    onClick={() => setRangeSide('in')}
                 >
                     {t('options.common.in')}
                 </Button>
                 <Button
                     width={'48%'}
-                    active={rangeSide == 'out'}
                     padding={'5px 0px'}
                     fontSize={'14px'}
-                    hoverShadow={'var(--button-shadow)'}
-                    onClickHandler={() => setRangeSide('out')}
+                    textColor={rangeSide == 'out' ? Colors.GRAY_DARK : Colors.WHITE}
+                    backgroundColor={rangeSide == 'out' ? Colors.GREEN : Colors.GRAY_DARK}
+                    onClick={() => setRangeSide('out')}
                 >
                     {t('options.common.out')}
                 </Button>

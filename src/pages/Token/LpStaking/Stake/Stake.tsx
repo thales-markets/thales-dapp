@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../components';
+import { ClaimMessage, EarnSection, FullRow, Line, SectionContentContainer } from '../../styled-components';
 import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import NumericInput from 'components/fields/NumericInput';
-import { InputContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -225,7 +225,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LP_TOKEN })}
                         balance={
                             isWalletConnected
-                                ? `${t('options.earn.gamified-staking.staking.stake.balance')} ${formatCurrency(
+                                ? `${t('options.earn.gamified-staking.staking.stake.balance')}: ${formatCurrency(
                                       lpTokensBalance
                                   )}`
                                 : undefined

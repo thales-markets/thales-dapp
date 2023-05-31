@@ -8,10 +8,8 @@ import { Proposal } from 'types/governance';
 import CouncilMembers from './CouncilMembers';
 import { RouteComponentProps } from 'react-router-dom';
 import request, { gql } from 'graphql-request';
-import StatusDropdown from './components/StatusDropdown';
 import SidebarDetails from './ProposalDetails/SidebarDetails';
 import ThalesStakers from './ThalesStakers';
-import TabDropdown from './components/TabDropdown';
 import OpRewardsBanner from 'components/OpRewardsBanner';
 import { getIsOVM } from 'utils/network';
 import { useSelector } from 'react-redux';
@@ -33,6 +31,8 @@ import {
     SidebarContainer,
     SidebarWrapper,
 } from './styled-components';
+import Dropdown from './components/Dropdown';
+import { getIsMobile } from 'redux/modules/ui';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -40,12 +40,13 @@ type GovernancePageProps = RouteComponentProps<{
 }>;
 
 const GovernancePage: React.FC<GovernancePageProps> = (props) => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const { t } = useTranslation();
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
     const [selectedProposal, setSelectedProposal] = useState<Proposal | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState<SpaceKey>(SpaceKey.TIPS);
     const [statusFilter, setStatusFilter] = useState<StatusEnum>(StatusEnum.All);
-    const [isMobile, setIsMobile] = useState(false);
 
     const showOPBanner = getIsOVM(networkId);
 
@@ -134,22 +135,6 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
         [t]
     );
 
-    const handleResize = () => {
-        if (window.innerWidth <= 767) {
-            setIsMobile(true);
-        } else {
-            setIsMobile(false);
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-        handleResize();
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
     const isOverviewPage = !selectedProposal;
 
     return (
@@ -176,7 +161,12 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             <>
                                 <OptionsTabWrapper>
                                     {isMobile ? (
-                                        <TabDropdown activeTab={selectedTab} onSelect={setSelectedTab} />
+                                        <Dropdown
+                                            options={Object.values(SpaceKey)}
+                                            activeOption={selectedTab}
+                                            onSelect={setSelectedTab}
+                                            translationKey="tabs"
+                                        />
                                     ) : (
                                         <OptionsTabContainer>
                                             {optionsTabContent.map((tab, index) => (
@@ -196,7 +186,12 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                         </OptionsTabContainer>
                                     )}
                                     {selectedTab !== SpaceKey.THALES_STAKERS && (
-                                        <StatusDropdown activeStatus={statusFilter} onSelect={setStatusFilter} />
+                                        <Dropdown
+                                            options={Object.values(StatusEnum)}
+                                            activeOption={statusFilter}
+                                            onSelect={setStatusFilter}
+                                            translationKey="status"
+                                        />
                                     )}
                                 </OptionsTabWrapper>
                                 {selectedTab === SpaceKey.TIPS && (

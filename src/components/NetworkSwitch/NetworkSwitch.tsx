@@ -7,6 +7,7 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { L1_TO_L2_NETWORK_MAPPER, OPTIMISM_NETWORKS } from 'constants/network';
 import { Network } from 'utils/network';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 export const NetworkSwitch: React.FC = () => {
     const { t } = useTranslation();
@@ -59,7 +60,7 @@ export const NetworkSwitch: React.FC = () => {
 const Container = styled(FlexDivColumnCentered)`
     width: 170px;
     margin-right: 10px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         margin-bottom: 20px;
         margin-right: 0px;
@@ -81,7 +82,7 @@ const OptimismButton = styled.button`
     &:hover {
         cursor: pointer;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;
@@ -97,13 +98,6 @@ const InnerButton = styled(FlexDivRowCentered)`
     padding-left: 20px;
     padding-right: 20px;
     justify-content: center;
-`;
-
-export const StyledLink = styled.a`
-    color: #f6f6fe;
-    &path {
-        fill: #f6f6fe;
-    }
 `;
 
 export default NetworkSwitch;

@@ -21,6 +21,8 @@ import OpenPositions from './components/OpenPositions/OpenPositions';
 import { useTranslation } from 'react-i18next';
 import { getIsMainnet } from 'utils/network';
 import UnsupportedNetwork from 'components/UnsupportedNetwork/UnsupportedNetwork';
+import Footer from 'components/Footer';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 const TradePage: React.FC = () => {
     const { t } = useTranslation();
@@ -101,7 +103,9 @@ const TradePage: React.FC = () => {
     return (
         <>
             {isMainnet ? (
-                <UnsupportedNetwork />
+                <UnsupportedNetworkWrapper>
+                    <UnsupportedNetwork />
+                </UnsupportedNetworkWrapper>
             ) : (
                 <Wrapper>
                     <BannerCarousel />
@@ -158,6 +162,7 @@ const TradePage: React.FC = () => {
                                 address: '',
                                 liquidity: 0,
                                 price: 0,
+                                roi: 0,
                                 strikePrice: 0,
                                 leftPrice: 0,
                                 rightPrice: 0,
@@ -169,6 +174,7 @@ const TradePage: React.FC = () => {
                     {isWalletConnected && <OpenPositions />}
                 </Wrapper>
             )}
+            <Footer />
         </>
     );
 };
@@ -176,7 +182,13 @@ const TradePage: React.FC = () => {
 const Wrapper = styled.div`
     width: 100%;
     max-width: 974px;
-    margin-bottom: 30px;
+`;
+
+const UnsupportedNetworkWrapper = styled.div`
+    margin: 90px 0;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        margin: 0;
+    }
 `;
 
 const ContentWrapper = styled.div`
@@ -187,7 +199,7 @@ const ContentWrapper = styled.div`
     margin-bottom: 30px;
     justify-content: space-between;
     height: 400px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
     }
@@ -196,7 +208,7 @@ const ContentWrapper = styled.div`
 const PositionedWrapper = styled(FlexDivColumnCentered)`
     position: relative;
     text-align: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;
@@ -205,7 +217,7 @@ const LeftSide = styled.div`
     height: 100%;
     width: 100%;
     max-width: 600px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
         height: 60px;
     }
@@ -214,7 +226,7 @@ const RightSide = styled.div`
     width: 100%;
     height: 100%;
     max-width: 350px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         max-width: initial;
     }
 `;
@@ -226,14 +238,14 @@ const Info = styled(FlexDivColumnCentered)`
     text-transform: uppercase;
     margin-bottom: 5px;
     color: ${(props) => props.theme.textColor.primary};
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
 
 const DropdownsWrapper = styled(FlexDivRowCentered)`
     gap: 15px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         gap: 10px;
     }

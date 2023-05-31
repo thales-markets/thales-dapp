@@ -1,4 +1,3 @@
-import { Layout } from 'react-grid-layout';
 import { ToastPosition, TypeOptions } from 'react-toastify';
 import darkTheme from 'theme/themes/dark';
 import { ThemeInterface } from 'types/ui';
@@ -11,49 +10,12 @@ export const ThemeMap: Record<Theme, ThemeInterface> = {
     [Theme.DARK]: darkTheme,
 };
 
-export enum MarketWidgetKey {
-    MATURITY_PHASE = 'maturity-phase-widget',
-    AMM = 'amm-widget',
-    TRADE = 'trade-widget',
-    CHART_TRADING_VIEW = 'chart-trading-view-widget',
-    CHART_OPTIONS_PRICE = 'chart-options-price-widget',
-    RECENT_TRANSACTIONS = 'recent-transactions-widget',
-    YOUR_TRANSACTIONS = 'your-transactions-widget',
-    CUSTOM_MARKET_RESULTS = 'custom-market-results-widget',
-}
-
-export const MarketWidgetDefaultLayoutMap: Record<MarketWidgetKey, Layout> = {
-    [MarketWidgetKey.MATURITY_PHASE]: { i: MarketWidgetKey.MATURITY_PHASE, x: 0, y: 0, w: 12, h: 16 },
-    [MarketWidgetKey.TRADE]: { i: MarketWidgetKey.TRADE, x: 6, y: 1, w: 6, h: 19 },
-    [MarketWidgetKey.CHART_TRADING_VIEW]: { i: MarketWidgetKey.CHART_TRADING_VIEW, x: 0, y: 2, w: 6, h: 11 },
-    [MarketWidgetKey.CUSTOM_MARKET_RESULTS]: { i: MarketWidgetKey.CUSTOM_MARKET_RESULTS, x: 0, y: 2, w: 6, h: 11 },
-    [MarketWidgetKey.CHART_OPTIONS_PRICE]: { i: MarketWidgetKey.CHART_OPTIONS_PRICE, x: 6, y: 2, w: 6, h: 11 },
-    [MarketWidgetKey.RECENT_TRANSACTIONS]: { i: MarketWidgetKey.RECENT_TRANSACTIONS, x: 0, y: 3, w: 12, h: 10 },
-    [MarketWidgetKey.YOUR_TRANSACTIONS]: { i: MarketWidgetKey.YOUR_TRANSACTIONS, x: 0, y: 4, w: 12, h: 10 },
-    [MarketWidgetKey.AMM]: { i: MarketWidgetKey.AMM, x: 0, y: 1, w: 12, h: 17 },
-};
-
-export enum COLORS {
-    LONG = '#04C19D',
-    SHORT = '#FF3E24',
-    BUY = '#04C19D',
-    SELL = '#FF3E24',
-    WHITE = '#F6F6FE',
-}
-
-export enum COLORS_NEW {
-    LONG = '#50CE99',
-    SHORT = '#DE496D',
-}
-
 export enum UI_COLORS {
     RED = '#DE496D',
     GREEN = '#03DAC5',
-    YELLOW = '#F7B91B',
+    YELLOW = '#F7B91A',
     IN_COLOR = '#B0FFE7',
     OUT_COLOR = '#BF7EFF',
-    RANGE = '',
-    WHITE = '#F6F6FE',
 }
 
 export const TooltipStyles = {
@@ -111,3 +73,7 @@ export const getInfoToastOptions = (message: string) => {
 };
 
 export const REFERRAL_COOKIE_LIFETIME = 648000;
+
+export enum ScreenSizeBreakpoint {
+    SMALL = 767,
+}

@@ -54,7 +54,7 @@ const VideoHeader = styled.p`
     font-weight: 700;
     font-size: 22px;
     line-height: 33px;
-    color: var(--color-white);
+    color: ${(props) => props.theme.textColor.primary};
     margin-top: 30px;
     margin-bottom: 20px;
 `;

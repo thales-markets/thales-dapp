@@ -1,9 +1,10 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 
 export const SpaContainer = styled(FlexDivColumn)`
     background: linear-gradient(0deg, rgba(3, 218, 198, 0.2) 0%, rgba(3, 218, 198, 0) 90.62%);
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     transition: 0.2s all;
     &:hover {
@@ -13,7 +14,7 @@ export const SpaContainer = styled(FlexDivColumn)`
     :not(:last-child) {
         margin-right: 20px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         :not(:last-child) {
             margin-right: 0;
@@ -32,7 +33,7 @@ export const VaultContainer = styled(FlexDivColumn)`
     font-size: 18px;
     line-height: 20px;
     padding: 30px 40px 30px 40px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px 20px 20px;
     }
     height: 100%;
@@ -54,7 +55,7 @@ export const VaultTitle = styled.span`
     margin-bottom: 10px;
     width: 100%;
     padding-bottom: 20px;
-    border-bottom: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 2px solid ${(props) => props.theme.borderColor.primary};
     text-align: center;
     color: ${(props) => props.theme.textColor.quaternary};
 `;

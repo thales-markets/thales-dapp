@@ -1,4 +1,5 @@
 import { Slider, withStyles } from '@material-ui/core';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -30,7 +31,7 @@ export const Container = styled(FlexDivRow)`
         width: 100%;
         padding: 0;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
@@ -47,14 +48,14 @@ export const ContentContainer = styled(FlexDivColumn)`
     p {
         margin-bottom: 5px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px 5px 10px 5px;
     }
 `;
 
 export const MainContainer = styled(Container)`
     width: 100%;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 10px;
     padding: 0 10px;
 `;
@@ -142,7 +143,7 @@ export const Description = styled.div`
     li {
         margin-bottom: 4px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 0 5px;
         width: 100%;
         :first-child {
@@ -161,9 +162,9 @@ export const ContentInfo = styled.p`
 `;
 
 export const WarningContentInfo = styled(ContentInfo)`
-    color: #ffcc00;
+    color: ${(props) => props.theme.warning.textColor.primary};
     i {
-        color: #ffcc00;
+        color: ${(props) => props.theme.warning.textColor.primary};
     }
 `;
 
@@ -178,7 +179,7 @@ export const Title = styled.span`
     line-height: 100%;
     margin-bottom: 10px;
     margin-top: 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 10px;
         margin-bottom: 0;
     }
@@ -278,7 +279,7 @@ export const LiquidityPoolInfoGraphic = styled(FlexDivStart)<{ background: strin
     @media (max-width: 991px) {
         width: ${(props) => 120 * props.widthPercentage}px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: ${(props) => 200 * props.widthPercentage}px;
     }
     @media (max-width: 575px) {
@@ -327,9 +328,9 @@ export const SliderContainer = styled.div`
 
 export const StyledSlider = withStyles({
     root: {
-        color: Colors.BLUE_LIGHT,
+        color: Colors.GREEN,
         '&$disabled': {
-            color: Colors.BLUE_LIGHT,
+            color: Colors.GREEN,
             opacity: 0.5,
         },
         padding: '6px 0 10px 0',

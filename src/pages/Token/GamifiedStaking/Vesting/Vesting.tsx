@@ -5,7 +5,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { getMaxGasLimitForNetwork } from 'constants/options';
 import { ethers } from 'ethers';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import { ButtonContainer, Line } from 'pages/Token/components';
+import { ButtonContainer, Line } from 'pages/Token/styled-components';
 import YourTransactions from './Transactions';
 import useUserVestingDataQuery from 'queries/token/useUserVestingDataQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -15,23 +15,28 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { formatHoursAndMinutesFromTimestamp, formatShortDateWithTime } from 'utils/formatters/date';
+import { formatHoursAndMinutesFromTimestamp, formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { getIsOVM, getL1FeeInWei, formatGasLimit } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import DateTimeContainer from './styled-components/TimeDateContainer';
-import { isMobile } from 'utils/device';
 import { UserVestingData } from 'types/token';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import Button from 'components/ButtonV2/Button';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 const Vesting: React.FC = () => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
+
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -69,7 +74,7 @@ const Vesting: React.FC = () => {
                     { value: row.date },
                     {
                         value: `${formatCurrencyWithKey(THALES_CURRENCY, row.amount)}`,
-                        valueFontSize: isMobile() ? 12 : 15,
+                        valueFontSize: isMobile ? 12 : 15,
                     },
                 ],
                 heightSmall: true,
@@ -160,7 +165,7 @@ const Vesting: React.FC = () => {
                         </SectionValueContent>
                     </SectionValue>
                     <NetworkFeesWrapper>
-                        <Line margin={isMobile() ? '0 0 10px 0' : '10px 0'} />
+                        <Line margin={isMobile ? '0 0 10px 0' : '10px 0'} />
                         <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     </NetworkFeesWrapper>
                     <ButtonContainer>{getVestButton()}</ButtonContainer>
@@ -188,11 +193,12 @@ const Vesting: React.FC = () => {
                                 ? t(`options.earn.gamified-staking.vesting.schedule-no-results`)
                                 : undefined
                         }
+                        defaultFlowColor={theme.background.quaternary}
                     />
                 </SectionContentWrapper>
             </SectionWrapper>
 
-            <YourTransactions gridColumns={isMobile() ? 12 : 7} />
+            <YourTransactions gridColumns={isMobile ? 12 : 7} />
         </>
     );
 };
@@ -201,12 +207,8 @@ const SchedulerFirstColumn: React.FC<{ value: TileRow | string }> = ({ value }) 
     if (typeof value !== 'string') {
         return (
             <DateTimeContainer>
-                <DateTimeContainer.Date>
-                    {formatShortDateWithTime(Number(value?.cells[0]?.value))}
-                </DateTimeContainer.Date>
-                <DateTimeContainer.Time>
-                    {formatHoursAndMinutesFromTimestamp(Number(value?.cells[0]?.value))}
-                </DateTimeContainer.Time>
+                <Date>{formatShortDate(Number(value?.cells[0]?.value))}</Date>
+                <Time>{formatHoursAndMinutesFromTimestamp(Number(value?.cells[0]?.value))}</Time>
             </DateTimeContainer>
         );
     }
@@ -227,22 +229,22 @@ const SectionWrapper = styled.section<{
     ${(props) => (props.rows ? 'display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; grid-gap: 24px;' : '')}
     grid-row: span ${(props) => (props.rows ? props.rows : 1)};
     padding: 2px;
-    background: ${(props) => (props.background ?? true ? 'var(--color-highlight)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.borderColor.primary : 'none')};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span 12;
     }
 `;
 
 const SectionContentWrapper = styled.div<{ background?: boolean }>`
     position: relative;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
@@ -255,7 +257,7 @@ const SectionContent = styled.span`
 const ScheduleLabel = styled.div`
     display: flex;
     padding-bottom: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-bottom: 10px;
     }
 `;
@@ -264,14 +266,14 @@ const ScheduleLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
     }
 `;
 
 const SectionLabel = styled.div`
     padding-bottom: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-bottom: 10px;
     }
 `;
@@ -280,7 +282,7 @@ const SectionLabelContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 20px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -295,15 +297,43 @@ const SectionValueContent = styled(SectionContent)`
     font-weight: 700;
     font-size: 30px;
     color: ${(props) => props.theme.textColor.quaternary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 20px;
     }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 80px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: auto;
+    }
+`;
+
+const DateTimeContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: ${(props) => props.theme.textColor.primary};
+    min-width: 120px;
+`;
+
+const Date = styled.span`
+    display: block;
+    font-weight: 700;
+    font-size: 15px;
+    white-space: nowrap;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 12px;
+    }
+`;
+
+const Time = styled.span`
+    display: block;
+    font-weight: 300;
+    font-size: 15px;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
+        font-size: 12px;
     }
 `;
 

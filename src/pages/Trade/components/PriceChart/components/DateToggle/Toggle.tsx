@@ -1,5 +1,7 @@
+import Button from 'components/ButtonV2';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { ThemeInterface } from 'types/ui';
 
 type ToggleProps = {
     options: { label: string; value: number }[];
@@ -8,6 +10,8 @@ type ToggleProps = {
 };
 
 const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex = 0 }) => {
+    const theme: ThemeInterface = useTheme();
+
     const [activeOption, setActiveOption] = useState(options[defaultSelectedIndex].value);
 
     const handleClick = (value: number) => {
@@ -18,7 +22,20 @@ const Toggle: React.FC<ToggleProps> = ({ options, onChange, defaultSelectedIndex
     return (
         <Wrapper>
             {options.map(({ label, value }) => (
-                <Button key={value} isActive={value === activeOption} onClick={() => handleClick(value)}>
+                <Button
+                    key={value}
+                    width="35px"
+                    height="31px"
+                    textColor={theme.button.textColor.tertiary}
+                    backgroundColor={
+                        value === activeOption ? theme.button.background.tertiary : theme.button.background.secondary
+                    }
+                    borderColor={theme.button.borderColor.tertiary}
+                    fontSize="13px"
+                    padding="0"
+                    additionalStyles={{ borderRadius: '8px', transition: 'all 0.2s ease-in-out' }}
+                    onClick={() => handleClick(value)}
+                >
                     {label}
                 </Button>
             ))}
@@ -33,36 +50,6 @@ const Wrapper = styled.div`
     margin-bottom: 10px;
     justify-content: center;
     gap: 6px;
-`;
-
-const Button = styled.button<{ isActive: boolean }>`
-    background-color: ${(props) => (props.isActive ? 'var(--color-secondary)' : 'var(--color-primary)')};
-    border: 1px solid #2b3139;
-    border-radius: 8px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    max-width: 35px;
-    width: 100%;
-    height: 31px;
-
-    font-size: 13px;
-    line-height: 13px;
-    font-weight: 600;
-    color: var(--color-text);
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-        background-color: var(--color-secondary);
-        color: var(--color-white);
-    }
-
-    &:focus {
-        outline: none;
-    }
 `;
 
 export default Toggle;

@@ -15,7 +15,7 @@ import {
     SLIPPAGE_PERCENTAGE,
     getMaxGasLimitForNetwork,
 } from 'constants/options';
-import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
+import { ScreenSizeBreakpoint, getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { BigNumber, ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import useInterval from 'hooks/useInterval';
@@ -888,9 +888,8 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
 };
 
 const Container = styled(FlexDivRow)`
-    min-width: 980px;
     height: 78px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         min-width: initial;
         height: 100%;
         flex-direction: column;
@@ -903,7 +902,7 @@ const TradingDetails = styled(FlexDivRowCentered)`
     background: ${(props) => props.theme.background.secondary};
     border-radius: 8px;
     padding: 10px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
         margin-bottom: 10px;
     }
@@ -913,7 +912,7 @@ const FinalizeTrade = styled(FlexDivCentered)`
     width: 350px;
     color: ${(props) => props.theme.textColor.primary};
     font-size: 13px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;

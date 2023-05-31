@@ -8,7 +8,7 @@ import ROUTES from 'constants/routes';
 import { ethers } from 'ethers';
 import ClaimOnBehalfModal from 'pages/Token/components/ClaimOnBehalfModal';
 import NetworkFees from 'pages/Token/components/NetworkFees';
-import TimeRemaining from 'pages/Token/components/TimeRemaining';
+import TimeRemaining from 'components/TimeRemaining';
 import {
     ButtonContainer,
     ClaimMessage,
@@ -17,7 +17,7 @@ import {
     Line,
     Tip125Link,
     Tip48Link,
-} from 'pages/Token/components';
+} from 'pages/Token/styled-components';
 import YourTransactions from './Transactions';
 import useLPStakingQuery from 'queries/token/useLPStakingQuery';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
@@ -26,21 +26,24 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import styled from 'styled-components';
-import { FlexDivEnd } from 'theme/common';
+import styled, { useTheme } from 'styled-components';
+import { Colors, FlexDivEnd } from 'theme/common';
 import { StakingData, TokenTabEnum, UserStakingData } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { dispatchMarketNotification } from 'utils/options';
 import { refetchTokenQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { isMobile } from 'utils/device';
 import { getStableCoinForNetwork } from 'utils/currency';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import useStakingDataQuery from 'queries/token/useStakingDataQuery';
 import useUserStakingDataQuery from 'queries/token/useUserStakingData';
 import Tooltip from 'components/TooltipV2/Tooltip';
 import Button from 'components/ButtonV2/Button';
+import { EMPTY_VALUE } from 'constants/placeholder';
+import { ThemeInterface } from 'types/ui';
+import { ScreenSizeBreakpoint } from 'constants/ui';
+import { getIsMobile } from 'redux/modules/ui';
 
 enum SectionType {
     INFO,
@@ -58,13 +61,14 @@ type RewardsProperties = {
 
 const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
     const { openConnectModal } = useConnectModal();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const isL2 = getIsOVM(networkId);
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const [lastValidStakingData, setLastValidStakingData] = useState<StakingData | undefined>(undefined);
     const [lastValidUserStakingData, setLastValidUserStakingData] = useState<UserStakingData | undefined>(undefined);
@@ -127,6 +131,8 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
         [thalesStaked, totalThalesStaked, escrowedBalance]
     );
     const estimatedRewards = useMemo(() => (myStakedShare / 100) * baseRewardsPool, [myStakedShare]);
+
+    const isL2 = getIsOVM(networkId);
 
     const snxVolumeRewardsMultiplier = stakingData ? stakingData.snxVolumeRewardsMultiplier : 0;
     const ammVolumeRewardsMultiplier = stakingData ? stakingData.ammVolumeRewardsMultiplier : 0;
@@ -321,10 +327,20 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     <SectionDetailsValue>{value.volume}</SectionDetailsValue>
                 </SectionDetails>
                 <SectionDetails>
-                    <SectionDetailsLabel color={!label.bonusEligible ? '#ffcc00' : !value.bonus ? '#50ce99' : ''}>
+                    <SectionDetailsLabel
+                        color={
+                            !label.bonusEligible
+                                ? theme.warning.textColor.primary
+                                : !value.bonus
+                                ? theme.textColor.quaternary
+                                : ''
+                        }
+                    >
                         {label.bonus}
                     </SectionDetailsLabel>
-                    {value.bonus && <SectionDetailsValue color={'#50ce99'}>{value.bonus}</SectionDetailsValue>}
+                    {value.bonus && (
+                        <SectionDetailsValue color={theme.textColor.quaternary}>{value.bonus}</SectionDetailsValue>
+                    )}
                 </SectionDetails>
                 <Line margin={'0 0 10px 0'} />
                 <SectionDetails>
@@ -407,9 +423,9 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 <RewardPeriod>
                     <PeriodLabel>{t('options.earn.gamified-staking.rewards.claim.period')}</PeriodLabel>
                     {stakingData ? (
-                        <TimeRemaining end={stakingData.closingDate} fontSize={isMobile() ? 12 : 15} showFullCounter />
+                        <TimeRemaining end={stakingData.closingDate} fontSize={isMobile ? 12 : 15} showFullCounter />
                     ) : (
-                        '-'
+                        EMPTY_VALUE
                     )}
                     {canClosePeriod && (
                         <Button onClick={handleClosePeriod} disabled={!isClosingPeriodAvailable}>
@@ -550,7 +566,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     t('options.earn.gamified-staking.rewards.volume.ranged-desc')
                 )}
             </SectionWrapper>
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical
                     gridRow={4}
                     columnStart={4}
@@ -560,7 +576,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     mobileLong={true}
                 />
             )}
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical
                     gridRow={4}
                     columnStart={10}
@@ -580,7 +596,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 )}
             </SectionWrapper>
 
-            {isMobile() ? (
+            {isMobile ? (
                 <DashedLineVertical gridRow={5} columnStart={7} marginLeft={-5} marginTop={-gridGap} heightPer={135} />
             ) : (
                 <>
@@ -635,7 +651,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     }
                 )}
             </SectionWrapper>
-            {isMobile() && <PlusSectionConnect>+</PlusSectionConnect>}
+            {isMobile && <PlusSectionConnect>+</PlusSectionConnect>}
             {isL2 && (
                 <SectionWrapper columns={5}>
                     {getRewardSection(
@@ -662,11 +678,11 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                 </SectionWrapper>
             )}
 
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical gridRow={10} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
             )}
 
-            {!isMobile() && (
+            {!isMobile && (
                 <>
                     <DashedLine gridRow={5} widthPer={42.5} />
                     <DashedLineVertical gridRow={5} columnStart={4} marginTop={-gridGap} heightPer={135} />
@@ -682,7 +698,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             {/* Fourth row */}
-            {!isMobile() && isL2 ? (
+            {!isMobile && isL2 ? (
                 <SectionWrapper columns={3} backgroundType={BackgroundType.CLAIM_ON_BEHALF}>
                     {getClaimOnBehalfSection()}
                 </SectionWrapper>
@@ -705,7 +721,7 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             <SectionWrapper startColumn={isL2 ? undefined : 4} columns={6} backgroundType={BackgroundType.CLAIM}>
                 {getClaimSection()}
             </SectionWrapper>
-            {!isMobile() && isL2 && (
+            {!isMobile && isL2 && (
                 <SectionWrapper
                     columns={3}
                     backgroundType={BackgroundType.LP_STAKING}
@@ -716,10 +732,10 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
             )}
 
             <DashedLine gridRow={7} widthPer={0} />
-            {!isMobile() && (
+            {!isMobile && (
                 <DashedLineVertical gridRow={7} columnStart={7} marginTop={-gridGap} heightPer={210} marginLeft={-10} />
             )}
-            {isMobile() && (
+            {isMobile && (
                 <DashedLineVertical gridRow={12} columnStart={7} marginTop={-gridGap} marginLeft={-7} heightPer={135} />
             )}
 
@@ -740,14 +756,16 @@ const Rewards: React.FC<RewardsProperties> = ({ gridGap, setSelectedTab }) => {
                     </SectionContentWrapper>
                 </SectionWrapper>
             ) : (
-                <SectionWrapper
-                    marginTop={-gridGap}
-                    startColumn={5}
-                    columns={4}
-                    backgroundType={BackgroundType.CLAIM_ON_BEHALF}
-                >
-                    {getClaimOnBehalfSection()}
-                </SectionWrapper>
+                !isMobile && (
+                    <SectionWrapper
+                        marginTop={-gridGap}
+                        startColumn={5}
+                        columns={4}
+                        backgroundType={BackgroundType.CLAIM_ON_BEHALF}
+                    >
+                        {getClaimOnBehalfSection()}
+                    </SectionWrapper>
+                )
             )}
 
             {/* Sixth row */}
@@ -800,15 +818,14 @@ const SectionWrapper = styled.section<{
                 return 'linear-gradient(-20deg, #1BAB9C 0%, #4B6DC5 47.77%, #801BF2 100%)';
             case BackgroundType.RANGED:
                 return 'linear-gradient(-20deg, #801BF2 0%, #464DCF 100%)';
-            case BackgroundType.LP_STAKING:
-                return props.theme.background.secondary;
             case BackgroundType.SPORTS:
-                return '#303656';
-            case BackgroundType.CLAIM:
+                return Colors.GRAY_PURPLE;
             case BackgroundType.CLAIM_ON_BEHALF:
-                return 'var(--color-highlight)';
+            case BackgroundType.CLAIM:
+            case BackgroundType.LP_STAKING:
+                return props.theme.borderColor.primary;
             default:
-                return props.theme.background.secondary;
+                return props.theme.borderColor.primary;
         }
     }};
     ${(props) => (props.marginTop ? `margin-top: ${props.marginTop}px;` : '')};
@@ -837,10 +854,11 @@ const SectionWrapper = styled.section<{
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         grid-column: span
             ${(props) =>
-                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS].includes(props.backgroundType ?? -1)
+                props.backgroundType !== undefined &&
+                [BackgroundType.AMM, BackgroundType.RANGED, BackgroundType.SPORTS].includes(props.backgroundType)
                     ? 6
                     : 12};
         ${(props) => (props.backgroundType === BackgroundType.SPORTS ? 'grid-column-start: 4;' : '')}
@@ -853,12 +871,12 @@ const SectionContentWrapper = styled.div<{ background?: boolean; noGrid?: boolea
     ${(props) => (props.noGrid ? '' : 'display: grid;')}
     position: relative;
     height: 100%;
-    background: ${(props) => (props.background ?? true ? ' var(--color-primary)' : 'none')};
+    background: ${(props) => (props.background ?? true ? props.theme.background.primary : 'none')};
     border-radius: 15px;
     align-items: center;
     text-align: center;
     padding: 10px 15px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 10px;
     }
 `;
@@ -900,7 +918,7 @@ const SectionLabel = styled.div<{ type: SectionType; margin?: string; textDefaul
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding-bottom: 10px;
     }
 `;
@@ -934,7 +952,7 @@ const SectionLabelContent = styled(SectionContent)<{ type: SectionType; logo?: s
                 return '';
         }
     }}
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -980,7 +998,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                     font-size: 23px;
                     color: ${props.isOp ? props.theme.textColor.primary : props.theme.textColor.quaternary};
                     text-transform: uppercase;
-                    @media (max-width: 768px) {
+                    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
                         font-size: 20px;
                     }
                 `;
@@ -990,7 +1008,7 @@ const SectionValueContent = styled(SectionContent)<{ type: SectionType; isOp?: b
                     font-size: 23px;
                     color: ${props.theme.textColor.primary};
                     text-transform: uppercase;
-                    @media (max-width: 768px) {
+                    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
                         font-size: 20px;
                     }
                 `;
@@ -1023,7 +1041,7 @@ const SectionDescriptionContent = styled(SectionContent)`
     font-weight: 400;
     font-size: 15px;
     line-height: 20px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -1040,7 +1058,7 @@ const SectionDetailsLabel = styled.span<{ color?: string }>`
     line-height: 15px;
     letter-spacing: 0.035em;
     color: ${(props) => props.color ?? props.theme.textColor.primary};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
@@ -1058,7 +1076,7 @@ const ButtonWrapperTooltip = styled.div`
     width: 70%;
     display: flex;
     justify-content: center;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         width: 100%;
     }
 `;
@@ -1072,15 +1090,15 @@ const PeriodLabel = styled(SectionContent)`
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
-    color: var(--color-highlight);
-    @media (max-width: 768px) {
+    color: ${(props) => props.theme.textColor.primary};
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 12px;
     }
 `;
 
 const NetworkFeesWrapper = styled.div`
     margin: 0 50px;
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin: auto;
     }
 `;
@@ -1094,7 +1112,7 @@ const LpStakingLink = styled.span`
 const PlusSectionConnect = styled.div`
     text-align: center;
     grid-column: span 12;
-    color: var(--color-highlight);
+    color: ${(props) => props.theme.borderColor.primary};
     font-weight: 700;
     font-size: 30px;
 `;

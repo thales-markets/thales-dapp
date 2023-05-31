@@ -1,6 +1,6 @@
 import PriceChart from 'components/Charts/PriceChart';
 import Currency from 'components/Currency/v2';
-import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
+import CurrencyIcon, { IconType } from 'components/Currency/v2/CurrencyIcon';
 import SPAAnchor from 'components/SPAAnchor';
 import Table from 'components/TableV2';
 import { USD_SIGN } from 'constants/currency';
@@ -8,21 +8,40 @@ import { orderBy } from 'lodash';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { UsersAssets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink, buildRangeMarketLink } from 'utils/routes';
-import Card from '../styled-components/Card';
-import SimpleLoader from 'components/SimpleLoader';
-import { LoaderContainer, NoDataContainer, NoDataText } from 'theme/common';
-import { UI_COLORS } from 'constants/ui';
+import { LoaderContainer } from 'theme/common';
 import RangeIllustration from 'components/RangeIllustration';
 import TimeRemaining from 'components/TimeRemaining';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { LINKS } from 'constants/links';
-import { isMobile } from 'utils/device';
 import Tooltip from 'components/TooltipV2/Tooltip';
+import SimpleLoader from 'components/SimpleLoader/SimpleLoader';
+import {
+    Card,
+    CardColumn,
+    CardRow,
+    CardRowSubtitle,
+    CardRowTitle,
+    CardSection,
+    CardWrapper,
+    Container,
+    Content,
+    Icon,
+    MiddleContrainer,
+    NoDataContainer,
+    NoDataText,
+    PriceDifferenceInfo,
+    TableText,
+    getColor,
+} from '../styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getIsMobile } from 'redux/modules/ui';
+import { ThemeInterface } from 'types/ui';
+import { Positions } from 'constants/options';
 
 type MyPositionsProps = {
     exchangeRates: Rates | null;
@@ -42,6 +61,8 @@ const MyPositions: React.FC<MyPositionsProps> = ({
     rangedPositions,
 }) => {
     const { t } = useTranslation();
+    const theme: ThemeInterface = useTheme();
+    const isMobile = useSelector((state: RootState) => getIsMobile(state));
 
     const data = useMemo(() => {
         const newArray: any = [];
@@ -102,62 +123,62 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                         : buildOptionsMarketLink(data.market.id)
                                 }
                             >
-                                <Card.Wrapper>
+                                <CardWrapper>
                                     <Card>
-                                        <Card.Column>
-                                            <Card.Row style={{ marginBottom: 10 }}>
+                                        <CardColumn>
+                                            <CardRow style={{ marginBottom: 10 }}>
                                                 <CurrencyIcon
                                                     width="36px"
                                                     height="36px"
                                                     currencyKey={data.market.currencyKey}
                                                     iconType={
                                                         !data.range
-                                                            ? data?.balances?.type === 'UP'
-                                                                ? 4
-                                                                : 5
-                                                            : data?.balances?.type === 'IN'
-                                                            ? 1
-                                                            : 2
+                                                            ? data?.balances?.type === Positions.UP
+                                                                ? IconType.UP
+                                                                : IconType.DOWN
+                                                            : data?.balances?.type === Positions.IN
+                                                            ? IconType.IN
+                                                            : IconType.OUT
                                                     }
                                                 />
-                                                <Card.Section>
-                                                    <Card.RowSubtitle>{data.market.currencyKey}</Card.RowSubtitle>
-                                                    <Card.RowTitle
+                                                <CardSection>
+                                                    <CardRowSubtitle>{data.market.currencyKey}</CardRowSubtitle>
+                                                    <CardRowTitle
                                                         style={{
-                                                            color: getColor(data),
+                                                            color: getColor(data, theme),
                                                         }}
                                                     >
                                                         {!data.range
-                                                            ? data?.balances?.type === 'UP'
+                                                            ? data?.balances?.type === Positions.UP
                                                                 ? t('options.common.long')
                                                                 : t('options.common.short')
-                                                            : data?.balances?.type === 'IN'
+                                                            : data?.balances?.type === Positions.IN
                                                             ? t('options.common.in')
                                                             : t('options.common.out')}
-                                                    </Card.RowTitle>
-                                                </Card.Section>
-                                            </Card.Row>
-                                            <Card.Section>
-                                                <Card.RowTitle>
+                                                    </CardRowTitle>
+                                                </CardSection>
+                                            </CardRow>
+                                            <CardSection>
+                                                <CardRowTitle>
                                                     {t(`options.home.markets-table.maturity-date-col`)}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
+                                                </CardRowTitle>
+                                                <CardRowSubtitle>
                                                     {formatShortDate(data.market.maturityDate)}
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                            <Card.Section>
-                                                <Card.RowTitle>
+                                                </CardRowSubtitle>
+                                            </CardSection>
+                                            <CardSection>
+                                                <CardRowTitle>
                                                     {t(`options.home.markets-table.time-remaining-col`)}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
+                                                </CardRowTitle>
+                                                <CardRowSubtitle>
                                                     <TimeRemaining
                                                         end={data.market.maturityDate}
                                                         fontSize={20}
                                                         showFullCounter={true}
                                                     />
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                        </Card.Column>
+                                                </CardRowSubtitle>
+                                            </CardSection>
+                                        </CardColumn>
                                         {data.range ? (
                                             <MiddleContrainer>
                                                 <RangeIllustration
@@ -171,32 +192,32 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                 />
                                             </MiddleContrainer>
                                         ) : (
-                                            <Card.Column>
-                                                <Card.Section>
-                                                    <Card.RowTitle>
+                                            <CardColumn>
+                                                <CardSection>
+                                                    <CardRowTitle>
                                                         {t('options.home.market-card.strike-price')}
-                                                    </Card.RowTitle>
-                                                    <Card.RowSubtitle>
+                                                    </CardRowTitle>
+                                                    <CardRowSubtitle>
                                                         {formatCurrencyWithSign(USD_SIGN, data.market.strikePrice)}
-                                                    </Card.RowSubtitle>
-                                                </Card.Section>
-                                                <Card.Section>
-                                                    <Card.RowTitle>
+                                                    </CardRowSubtitle>
+                                                </CardSection>
+                                                <CardSection>
+                                                    <CardRowTitle>
                                                         {t('options.home.market-card.current-asset-price')}
-                                                    </Card.RowTitle>
-                                                    <Card.RowSubtitle>
+                                                    </CardRowTitle>
+                                                    <CardRowSubtitle>
                                                         {formatCurrencyWithSign(
                                                             USD_SIGN,
                                                             exchangeRates?.[data.market.currencyKey] || 0
                                                         )}
-                                                    </Card.RowSubtitle>
-                                                </Card.Section>
+                                                    </CardRowSubtitle>
+                                                </CardSection>
 
-                                                <Card.Section>
-                                                    <Card.RowTitle>
+                                                <CardSection>
+                                                    <CardRowTitle>
                                                         {t('options.home.market-card.price-difference')}
-                                                    </Card.RowTitle>
-                                                    <Card.RowSubtitle>
+                                                    </CardRowTitle>
+                                                    <CardRowSubtitle>
                                                         <PriceDifferenceInfo
                                                             priceDiff={
                                                                 data.market.strikePrice <
@@ -205,33 +226,31 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                         >
                                                             {`${data.balances.priceDiff.toFixed(2)}%`}
                                                         </PriceDifferenceInfo>
-                                                    </Card.RowSubtitle>
-                                                </Card.Section>
-                                            </Card.Column>
+                                                    </CardRowSubtitle>
+                                                </CardSection>
+                                            </CardColumn>
                                         )}
 
-                                        <Card.Column>
-                                            <Card.Section>
-                                                <Card.RowTitle>
+                                        <CardColumn>
+                                            <CardSection>
+                                                <CardRowTitle>
                                                     {t('options.leaderboard.trades.table.amount-col')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
+                                                </CardRowTitle>
+                                                <CardRowSubtitle>
                                                     {data.balances.amount.toFixed(2)}
 
                                                     <Icon
-                                                        style={{
-                                                            color: getColor(data),
-                                                            marginLeft: 6,
-                                                        }}
+                                                        margin="0 0 0 6px"
+                                                        color={getColor(data, theme)}
                                                         className={`v2-icon v2-icon--${data.balances.type.toLowerCase()}`}
                                                     ></Icon>
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                            <Card.Section>
-                                                <Card.RowTitle>
+                                                </CardRowSubtitle>
+                                            </CardSection>
+                                            <CardSection>
+                                                <CardRowTitle>
                                                     {t('options.home.market-card.position-value')}
-                                                </Card.RowTitle>
-                                                <Card.RowSubtitle>
+                                                </CardRowTitle>
+                                                <CardRowSubtitle>
                                                     {data.balances.value === 0 ? (
                                                         <>
                                                             N/A
@@ -255,9 +274,9 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     ) : (
                                                         formatCurrencyWithSign(USD_SIGN, data.balances.value)
                                                     )}
-                                                </Card.RowSubtitle>
-                                            </Card.Section>
-                                            <Card.Section>
+                                                </CardRowSubtitle>
+                                            </CardSection>
+                                            <CardSection>
                                                 <PriceChart
                                                     containerStyle={{ margin: 'auto' }}
                                                     currencyKey={data.market.currencyKey}
@@ -266,45 +285,47 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                                     footerFontSize="8px"
                                                     showFooter={window.innerWidth > 500}
                                                 />
-                                            </Card.Section>
-                                        </Card.Column>
+                                            </CardSection>
+                                        </CardColumn>
                                     </Card>
-                                </Card.Wrapper>
+                                </CardWrapper>
                             </SPAAnchor>
                         )}
                     </Content>
                 ))}
-
-            {!isLoading && !isSimpleView && data.length > 0 && (
+            {isLoading && isSimpleView && (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            )}
+            {!isSimpleView && (
                 <Table
-                    containerStyle={{ maxWidth: 'unset', marginTop: '-15px' }}
                     data={data}
                     searchQuery={searchText}
+                    isLoading={isLoading}
                     columns={[
                         {
-                            id: 'market.currencyKey',
                             Header: <>{t('options.home.markets-table.asset-col')}</>,
-                            accessor: (row: any) => {
-                                return (
-                                    <Currency.Name
-                                        currencyKey={row?.market?.currencyKey}
-                                        showIcon={true}
-                                        hideAssetName={true}
-                                        iconProps={{ type: 'asset' }}
-                                        synthIconStyle={{ width: 32, height: 32 }}
-                                        spanStyle={{ width: 60 }}
-                                        additionalIconType={
-                                            !row.range
-                                                ? row?.balances?.type === 'UP'
-                                                    ? 4
-                                                    : 5
-                                                : row?.balances?.type === 'IN'
-                                                ? 1
-                                                : 2
-                                        }
-                                    />
-                                );
-                            },
+                            accessor: 'balances.type',
+                            Cell: (props: any) => (
+                                <Currency.Name
+                                    currencyKey={props.cell.row.original.market.currencyKey}
+                                    showIcon={true}
+                                    hideAssetName={true}
+                                    iconProps={{ type: 'asset' }}
+                                    synthIconStyle={{ width: 32, height: 32 }}
+                                    spanStyle={{ width: 60 }}
+                                    additionalIconType={
+                                        !props.cell.row.original.range
+                                            ? props.cell.value === Positions.UP
+                                                ? IconType.UP
+                                                : IconType.DOWN
+                                            : props.cell.value === Positions.IN
+                                            ? IconType.IN
+                                            : IconType.OUT
+                                    }
+                                />
+                            ),
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstCurrency = firstElem.original.market.currencyKey;
                                 const secondCurrency = secondElem.original.market.currencyKey;
@@ -314,12 +335,13 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                             sortable: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.24h-change-col`),
-                            accessor: (row: any) => (
+                            Header: <>{t(`options.home.markets-table.24h-change-col`)}</>,
+                            accessor: 'market.currencyKey',
+                            Cell: (props: any) => (
                                 <PriceChart
-                                    currencyKey={row?.market?.currencyKey}
+                                    currencyKey={props.cell.value}
                                     height={30}
-                                    width={isMobile() ? 90 : 100}
+                                    width={isMobile ? 90 : 100}
                                     showFooter={false}
                                     showPercentageChangeOnSide={true}
                                     containerStyle={{
@@ -331,20 +353,20 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     footerStyle={{ fontSize: '10px' }}
                                 />
                             ),
-                            disableSortBy: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.strike-price-col`),
+                            Header: <>{t(`options.home.markets-table.strike-price-col`)}</>,
                             accessor: 'market.strikePrice',
-                            Cell: (_props: any) => {
+                            Cell: (props: any) => {
                                 return (
                                     <TableText>
-                                        {_props.cell.row.original.range
-                                            ? _props.cell.value
-                                            : formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2)}
+                                        {props.cell.row.original.range
+                                            ? props.cell.value
+                                            : formatCurrencyWithSign(USD_SIGN, props.cell.value, 2)}
                                     </TableText>
                                 );
                             },
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstStrikePrice =
                                     firstElem.original.market.leftPrice || firstElem.original.market.strikePrice;
@@ -357,15 +379,19 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     ? -1
                                     : 0;
                             },
-                            sortable: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.current-asset-price-col`),
-                            accessor: (row: any) => (
+                            Header: <>{t(`options.home.markets-table.current-asset-price-col`)}</>,
+                            accessor: 'market',
+                            Cell: (props: any) => (
                                 <TableText>
-                                    {formatCurrencyWithSign(USD_SIGN, exchangeRates?.[row.market.currencyKey] || 0)}
+                                    {formatCurrencyWithSign(
+                                        USD_SIGN,
+                                        exchangeRates?.[props.cell.row.original.value] || 0
+                                    )}
                                 </TableText>
                             ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstAssetPrice = exchangeRates?.[firstElem.original.market.currencyKey] || 0;
                                 const secondAssetPrice = exchangeRates?.[secondElem.original.market.currencyKey] || 0;
@@ -376,13 +402,14 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     ? -1
                                     : 0;
                             },
-                            sortable: true,
                         },
                         {
-                            Header: t(`options.home.markets-table.time-remaining-col`),
-                            accessor: (row: any) => (
-                                <TimeRemaining end={row.market.maturityDate} fontSize={15} showFullCounter={true} />
+                            Header: <>{t(`options.home.markets-table.time-remaining-col`)}</>,
+                            accessor: 'market.maturityDate',
+                            Cell: (props: any) => (
+                                <TimeRemaining end={props.cell.value} fontSize={15} showFullCounter={true} />
                             ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstMaturityDate = firstElem.original.market.maturityDate;
                                 const secondMaturityDate = secondElem.original.market.maturityDate;
@@ -393,67 +420,63 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                                     ? -1
                                     : 0;
                             },
-                            sortable: true,
                         },
                         {
-                            Header: t('options.leaderboard.trades.table.amount-col'),
-                            accessor: (row: any) => {
-                                return (
-                                    <TableText
-                                        style={{
-                                            minWidth: 100,
-                                            marginRight: 20,
-                                            textAlign: 'right',
-                                            display: 'inline-block',
-                                        }}
-                                    >
-                                        {row.balances.amount.toFixed(2)}
-                                        <Icon
-                                            style={{
-                                                color: getColor(row),
-                                                marginLeft: 6,
-                                            }}
-                                            className={`v2-icon v2-icon--${row.balances.type.toLowerCase()}`}
-                                        ></Icon>
-                                    </TableText>
-                                );
-                            },
+                            Header: <>{t('options.leaderboard.trades.table.amount-col')}</>,
+                            accessor: 'balances.amount',
+                            Cell: (props: any) => (
+                                <TableText
+                                    style={{
+                                        minWidth: 100,
+                                        marginRight: 20,
+                                        textAlign: 'right',
+                                        display: 'inline-block',
+                                    }}
+                                >
+                                    {props.cell.value.toFixed(2)}
+                                    <Icon
+                                        margin="0 0 0 6px"
+                                        color={getColor(props.cell.row.original, theme)}
+                                        className={`v2-icon v2-icon--${props.cell.row.original.balances.type.toLowerCase()}`}
+                                    ></Icon>
+                                </TableText>
+                            ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstAmount = firstElem.original.balances.amount;
                                 const secondAmount = secondElem.original.balances.amount;
 
                                 return firstAmount > secondAmount ? 1 : firstAmount < secondAmount ? -1 : 0;
                             },
-                            sortable: true,
                         },
                         {
-                            Header: t('options.home.market-card.position-value'),
-                            accessor: (row: any) => {
-                                return (
-                                    <TableText>
-                                        {row?.balances?.value === 0 ? (
-                                            <>
-                                                N/A
-                                                <Tooltip
-                                                    overlay={
-                                                        <Trans
-                                                            i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
-                                                            components={[
-                                                                <span key="1">
-                                                                    <UsingAmmLink key="2" />
-                                                                </span>,
-                                                            ]}
-                                                        />
-                                                    }
-                                                    iconFontSize={16}
-                                                />
-                                            </>
-                                        ) : (
-                                            formatCurrencyWithSign(USD_SIGN, row?.balances?.value)
-                                        )}
-                                    </TableText>
-                                );
-                            },
+                            Header: <>{t('options.home.market-card.position-value')}</>,
+                            accessor: 'balances.value',
+                            Cell: (props: any) => (
+                                <TableText>
+                                    {props.cell.value.value === 0 ? (
+                                        <>
+                                            N/A
+                                            <Tooltip
+                                                overlay={
+                                                    <Trans
+                                                        i18nKey={t('options.home.market-card.no-liquidity-tooltip')}
+                                                        components={[
+                                                            <span key="1">
+                                                                <UsingAmmLink key="2" />
+                                                            </span>,
+                                                        ]}
+                                                    />
+                                                }
+                                                iconFontSize={16}
+                                            />
+                                        </>
+                                    ) : (
+                                        formatCurrencyWithSign(USD_SIGN, props.cell.row.original.balances.value)
+                                    )}
+                                </TableText>
+                            ),
+                            sortable: true,
                             sortType: (firstElem: any, secondElem: any) => {
                                 const firstValue = firstElem.original.balances?.value || 0;
                                 const secondValue = secondElem.original.balances?.value || 0;
@@ -464,73 +487,15 @@ const MyPositions: React.FC<MyPositionsProps> = ({
                     ]}
                 />
             )}
-            {isLoading && (
-                <LoaderContainer>
-                    <SimpleLoader />
-                </LoaderContainer>
-            )}
         </Container>
     );
 };
 
-const MiddleContrainer = styled.div`
-    display: flex;
-    width: 100%;
-    margin-top: 10px;
-    min-width: 180px;
-`;
-
-const Content = styled.div`
-    display: content;
-`;
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-top: 15px;
-    position: relative;
-    min-height: 200px;
-`;
-
-const TableText = styled.span`
-    font-weight: bold;
-    font-size: 15px;
-    line-height: 285%;
-    text-align: right;
-    text-transform: uppercase;
-    color: ${(props) => props.theme.textColor.primary};
-`;
-
-const Icon = styled.i`
-    @media (max-width: 568px) {
-        font-size: 16px;
-        line-height: 100%;
-    }
-`;
-
-const PriceDifferenceInfo = styled.span<{ priceDiff: boolean }>`
-    ${(_props) => (_props.priceDiff ? 'color: #50CE99' : 'color: #DE496D')};
-`;
-
-const getColor = (data: any) => {
-    if (data.range) {
-        return data.balances.type === 'IN' ? UI_COLORS.IN_COLOR : UI_COLORS.OUT_COLOR;
-    }
-    return data.balances.type === 'UP' ? UI_COLORS.GREEN : UI_COLORS.RED;
-};
-
-export const TooltipLink = styled.a`
-    color: #00f9ff;
+const TooltipLink = styled.a`
+    color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
-        color: rgb(116, 139, 198);
+        text-decoration: underline;
     }
-`;
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    min-width: 20px;
-    min-height: 20px;
-    margin-left: 6px;
-    margin-bottom: -2px;
 `;
 
 export const UsingAmmLink: React.FC = () => {

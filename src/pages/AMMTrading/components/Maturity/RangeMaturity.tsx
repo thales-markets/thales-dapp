@@ -7,7 +7,7 @@ import Divider from '../AMM/styled-components/Divider';
 import { Container, Header, Label, OptionsContainer, Icon } from './styled-components';
 import Input from '../AMM/components/Input';
 import NetworkFees from '../AMM/components/NetworkFees';
-import Button from 'components/Button';
+import Button from 'components/ButtonV2';
 import TimeRemaining from 'components/TimeRemaining';
 
 import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
@@ -237,9 +237,7 @@ const RangeMaturity: React.FC = () => {
             <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
             <Button
                 padding={'5px 20px'}
-                active={true}
-                hoverShadow={'var(--button-shadow)'}
-                onClickHandler={handleExercise}
+                onClick={handleExercise}
                 margin={'150px auto 50px auto'}
                 fontSize={'20px'}
                 disabled={isButtonDisabled}

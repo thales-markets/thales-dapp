@@ -16,6 +16,7 @@ import snapshot from '@snapshot-labs/snapshot.js';
 import { ProposalType } from '@snapshot-labs/snapshot.js/dist/sign/types';
 import { Web3Provider } from '@ethersproject/providers';
 import Button from 'components/ButtonV2/Button';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type SingleChoiceVotingProps = {
     proposal: Proposal;
@@ -106,7 +107,7 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
 const SingleChoice = styled(FlexDivColumnCentered)`
     box-sizing: content-box;
     height: 48px;
-    border: 1px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 1px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 5px;
     margin-bottom: 20px;
     color: ${(props) => props.theme.textColor.primary};
@@ -125,7 +126,7 @@ const SingleChoice = styled(FlexDivColumnCentered)`
         border: 2px solid ${(props) => props.theme.borderColor.quaternary};
         cursor: pointer;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         height: 46px;
         font-size: 16px;
         line-height: 46px;

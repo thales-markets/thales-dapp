@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import { PieChart } from 'recharts';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
@@ -10,7 +11,7 @@ export const PieChartContainer = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;

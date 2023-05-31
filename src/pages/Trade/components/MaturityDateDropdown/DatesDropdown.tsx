@@ -66,13 +66,14 @@ const Container = styled.div`
 
 const Dropdown = styled.div`
     margin-top: 5px;
+    padding: 5px;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     border-radius: 8px;
-    background: var(--color-secondary);
+    background: ${(props) => props.theme.background.secondary};
     cursor: pointer;
     z-index: 100;
     text-align: start;
@@ -93,12 +94,12 @@ const Date = styled.p`
 
 const DateContainer = styled.div`
     border-radius: 8px;
-    background: var(--color-secondary);
+    background: ${(props) => props.theme.background.secondary};
     &:hover {
-        background: var(--color-secondary-hover);
+        background: ${(props) => props.theme.background.primary};
     }
     width: 100%;
-    padding: 5px 15px;
+    padding: 5px 10px;
 `;
 
 export default DatesDropdown;

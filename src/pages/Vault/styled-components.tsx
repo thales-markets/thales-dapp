@@ -1,3 +1,4 @@
+import { ScreenSizeBreakpoint } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivStart, FlexDivRow, FlexDiv } from 'theme/common';
 
@@ -12,7 +13,7 @@ export const Container = styled(FlexDivRow)`
     position: relative;
     align-items: start;
     margin-top: 30px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
         width: 95%;
     }
@@ -36,7 +37,7 @@ export const LeftContainer = styled(ContentContainer)`
     margin-right: 25px;
     width: 60%;
     align-items: start;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-right: 0px;
         padding-top: 0px;
         width: 100%;
@@ -44,11 +45,11 @@ export const LeftContainer = styled(ContentContainer)`
 `;
 
 export const RightContainer = styled(ContentContainer)`
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     width: 40%;
     padding: 30px 40px 20px 40px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px 10px 20px;
         width: 100%;
     }
@@ -57,7 +58,7 @@ export const RightContainer = styled(ContentContainer)`
 export const RoundInfoWrapper = styled(FlexDivColumn)`
     width: 100%;
     padding: 0px 20px 20px 20px;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 20px 20px 0px 20px;
         width: 95%;
     }
@@ -85,7 +86,7 @@ export const RoundEnd = styled.p`
 `;
 
 export const RoundAllocationWrapper = styled(FlexDivCentered)`
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         flex-direction: column;
     }
 `;
@@ -95,9 +96,9 @@ export const RoundAllocationContainer = styled(FlexDivColumn)`
     max-width: 200px;
     padding: 5px 0;
     :not(:last-child) {
-        border-right: 2px solid ${(props) => props.theme.borderColor.tertiary};
+        border-right: 2px solid ${(props) => props.theme.borderColor.primary};
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         :not(:last-child) {
             border-right: none;
         }
@@ -134,13 +135,13 @@ export const Description = styled.div`
     p {
         margin-bottom: 10px;
     }
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
     }
 `;
 
 export const Info = styled(Description)`
-    border-bottom: 3px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 3px solid ${(props) => props.theme.borderColor.primary};
     padding-bottom: 10px;
     padding-top: 0px;
 `;
@@ -179,7 +180,7 @@ export const ContentInfo = styled.p`
 `;
 
 export const WarningContentInfo = styled(ContentInfo)`
-    color: #ffcc00;
+    ${(props) => props.theme.warning.textColor.primary};
 `;
 
 export const BoldContent = styled.span`
@@ -195,7 +196,7 @@ export const Title = styled.span`
     margin-top: 10px;
     width: 100%;
     text-align: center;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 0px;
         font-size: 25px;
     }
@@ -207,7 +208,7 @@ export const TitleVaultIcon = styled.i`
     margin-right: 8px;
     top: -3px;
     position: relative;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 30px;
     }
 `;
@@ -274,7 +275,7 @@ export const ToggleContainer = styled(FlexDiv)`
     margin-bottom: 20px;
     width: 100%;
     text-transform: uppercase;
-    border-bottom: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border-bottom: 2px solid ${(props) => props.theme.borderColor.primary};
     padding-bottom: 20px;
 `;
 

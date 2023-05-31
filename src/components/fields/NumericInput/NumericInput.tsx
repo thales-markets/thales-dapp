@@ -29,6 +29,9 @@ type NumericInputProps = {
     inputPadding?: string;
     margin?: string;
     inputFontSize?: string;
+    width?: string;
+    height?: string;
+    enableCurrencyComponentOnly?: boolean;
 };
 
 const INVALID_CHARS = ['-', '+', 'e'];
@@ -52,6 +55,9 @@ const NumericInput: React.FC<NumericInputProps> = ({
     inputPadding,
     margin,
     inputFontSize,
+    width,
+    height,
+    enableCurrencyComponentOnly,
     ...rest
 }) => {
     const { t } = useTranslation();
@@ -76,7 +82,7 @@ const NumericInput: React.FC<NumericInputProps> = ({
                 {label && (
                     <FieldLabel>
                         {label}
-                        {tooltip && <Tooltip overlay={tooltip} />}
+                        {tooltip && <Tooltip overlay={tooltip} />}:
                     </FieldLabel>
                 )}
                 {balance && (
@@ -104,6 +110,8 @@ const NumericInput: React.FC<NumericInputProps> = ({
                     title=""
                     padding={inputPadding}
                     fontSize={inputFontSize}
+                    width={width}
+                    height={height}
                 />
                 <RightContainer>
                     {onMaxButton && (
@@ -112,12 +120,18 @@ const NumericInput: React.FC<NumericInputProps> = ({
                         </MaxButton>
                     )}
                     {currencyLabel && (
-                        <CurrencyLabel className={disabled ? 'currency-label disabled' : 'currency-label'}>
+                        <CurrencyLabel
+                            className={disabled ? 'currency-label disabled' : 'currency-label'}
+                            hasSeparator={onMaxButton}
+                        >
                             {currencyLabel}
                         </CurrencyLabel>
                     )}
                     {currencyComponent && (
-                        <CurrencyComponentContainer className={disabled ? 'disabled' : ''}>
+                        <CurrencyComponentContainer
+                            className={disabled && !enableCurrencyComponentOnly ? 'disabled' : ''}
+                            hasSeparator={onMaxButton}
+                        >
                             {currencyComponent}
                         </CurrencyComponentContainer>
                     )}
@@ -137,11 +151,11 @@ const RightContainer = styled(FlexDivCentered)`
     bottom: 8px;
 `;
 
-const CurrencyLabel = styled.label`
-    border-left: 2px solid ${(props) => props.theme.input.borderColor.primary};
+const CurrencyLabel = styled.label<{ hasSeparator?: boolean }>`
+    ${(props) => (props.hasSeparator ? `border-left: 2px solid ${props.theme.input.borderColor.primary};` : '')}
     font-weight: bold;
     font-size: 13px;
-    line-height: 20px;
+    line-height: 15px;
     color: ${(props) => props.theme.input.textColor.primary};
     padding-left: 8px;
     padding-right: 12px;
@@ -185,23 +199,24 @@ const BalanceContainer = styled(FlexDivCentered)`
     position: absolute;
     right: 0;
     bottom: 40px;
-    font-size: 15px;
-    line-height: 18px;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 15px;
     text-transform: uppercase;
     color: ${(props) => props.theme.textColor.quaternary};
 `;
 
 const StyledBalanceIcon = styled(BalanceIcon)`
-    height: 14px;
-    margin: 0 4px 1px 0;
+    height: 13px;
+    margin: 0 2px 1px 0;
     path {
         fill: ${(props) => props.theme.textColor.quaternary};
     }
 `;
 
-const CurrencyComponentContainer = styled(FlexDivCentered)`
-    border-left: 2px solid ${(props) => props.theme.input.borderColor.primary};
-    line-height: 20px;
+const CurrencyComponentContainer = styled(FlexDivCentered)<{ hasSeparator?: boolean }>`
+    ${(props) => (props.hasSeparator ? `border-left: 2px solid ${props.theme.input.borderColor.primary};` : '')}
+    line-height: 15px;
     padding-right: 2px;
     &.disabled {
         opacity: 0.4;

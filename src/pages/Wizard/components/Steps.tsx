@@ -21,6 +21,7 @@ import BungeePlugin from 'components/BungeePlugin';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Modal from 'components/Modal';
 import { SUPPORTED_NETWORKS_NAMES } from 'utils/network';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 enum NavItems {
     STEP_1 = 'Step 1 - Metamask',
@@ -390,7 +391,7 @@ const Nav = styled.div<{ justifyContent: string }>`
     display: flex;
     align-items: center;
     justify-content: ${(props) => props.justifyContent};
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         margin-top: 20px;
     }
 `;
@@ -409,7 +410,7 @@ const NavItem = styled.div<{ clickable: boolean }>`
     &.active {
         box-shadow: 0px 4px ${(props) => props.theme.borderColor.quaternary};
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 14px;
         padding: 0 20px;
     }
@@ -439,7 +440,7 @@ const CardWrapper = styled.div<{ justifyContent?: boolean }>`
 const Card = styled.div<{ clickable: boolean; active?: boolean }>`
     width: 195px;
     height: 189px;
-    border: 2px solid ${(props) => props.theme.borderColor.tertiary};
+    border: 2px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 15px;
     text-align: center;
     padding: 40px 0;
@@ -575,7 +576,7 @@ const Text = styled.p`
     color: ${(props) => props.theme.textColor.primary};
     a {
         font-weight: 700;
-        color: ${(props) => props.theme.link.textColor.tertiary};
+        color: ${(props) => props.theme.link.textColor.primary};
         &:hover {
             text-decoration: underline;
         }

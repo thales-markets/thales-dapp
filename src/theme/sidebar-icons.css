@@ -3,7 +3,7 @@
     font-family: SidebarIcons !important;
     vertical-align: middle;
     font-size: 32px;
-    color: var(--color-white);
+    color: #ffffff;
 }
 
 .icon--token:before {

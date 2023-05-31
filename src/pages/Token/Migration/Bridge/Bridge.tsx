@@ -1,6 +1,6 @@
 import ValidationMessage from 'components/ValidationMessage';
 import { BigNumber, ethers } from 'ethers';
-import { DefaultSubmitButton, Divider, InputContainer, SubmitButtonContainer } from 'pages/Token/components/components';
+import { InputContainer } from 'pages/Token/components/styled-components';
 import NumericInput from 'components/fields/NumericInput';
 import React, { useEffect, useState } from 'react';
 import { dispatchMarketNotification } from 'utils/options';
@@ -16,15 +16,15 @@ import { L1_TO_L2_NETWORK_MAPPER } from 'constants/network';
 import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
-import { ArrowContainer, InfoSection } from '../components';
 import InfoMessage from 'components/InfoMessage';
 import InfoWarningMessage from 'components/InfoWarningMessage';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import styled from 'styled-components';
 import ApprovalModal from 'components/ApprovalModal';
 import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQuery';
 import { thalesContract as thalesTokenContract } from 'utils/contracts/thalesContract';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Button from 'components/ButtonV2';
 
 const Bridge: React.FC = () => {
     const { t } = useTranslation();
@@ -81,7 +81,7 @@ const Bridge: React.FC = () => {
                     console.log(e);
                 }
             };
-            if (isWalletConnected) {
+            if (isWalletConnected && opThalesTokenContractWithSigner.signer) {
                 getAllowance();
             }
         }
@@ -176,33 +176,29 @@ const Bridge: React.FC = () => {
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
-            return (
-                <DefaultSubmitButton onClick={openConnectModal}>
-                    {t('common.wallet.connect-your-wallet')}
-                </DefaultSubmitButton>
-            );
+            return <Button onClick={openConnectModal}>{t('common.wallet.connect-your-wallet')}</Button>;
         }
         if (insufficientBalance) {
-            return <DefaultSubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</DefaultSubmitButton>;
+            return <Button disabled={true}>{t(`common.errors.insufficient-balance`)}</Button>;
         }
         if (!isAmountEntered) {
-            return <DefaultSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</DefaultSubmitButton>;
+            return <Button disabled={true}>{t(`common.errors.enter-amount`)}</Button>;
         }
         if (!hasAllowance) {
             return (
-                <DefaultSubmitButton disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
+                <Button disabled={isAllowing} onClick={() => setOpenApprovalModal(true)}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: THALES_CURRENCY })
                         : t('common.enable-wallet-access.approve-progress-label', {
                               currencyKey: THALES_CURRENCY,
                           })}
-                </DefaultSubmitButton>
+                </Button>
             );
         }
         return (
-            <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleSubmit}>
+            <Button disabled={isButtonDisabled || !gasLimit} onClick={handleSubmit}>
                 {!isSubmitting ? t('migration.bridge-button.label') : t('migration.bridge-button.progress-label')}
-            </DefaultSubmitButton>
+            </Button>
         );
     };
 
@@ -230,7 +226,7 @@ const Bridge: React.FC = () => {
                     validationMessage={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
                     balance={
                         isWalletConnected
-                            ? `${t('options.earn.gamified-staking.staking.stake.balance')} ${formatCurrencyWithKey(
+                            ? `${t('options.earn.gamified-staking.staking.stake.balance')}: ${formatCurrencyWithKey(
                                   THALES_CURRENCY,
                                   opThalesBalance
                               )}`
@@ -282,6 +278,33 @@ const Bridge: React.FC = () => {
 
 const MessageContainer = styled(FlexDiv)`
     margin-top: 10px;
+`;
+
+const InfoSection = styled.span`
+    color: ${(props) => props.theme.textColor.primary};
+    margin: 30px 0;
+    font-size: 15px;
+    margin-bottom: 35px;
+    text-align: justify;
+`;
+
+const Divider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 2px solid ${(props) => props.theme.borderColor.primary};
+`;
+
+const ArrowContainer = styled(FlexDivCentered)`
+    margin-bottom: 15px;
+    margin-top: -5px;
+    @media (max-width: 1192px) {
+        margin-bottom: 5px;
+    }
+`;
+
+const SubmitButtonContainer = styled(FlexDivColumnCentered)`
+    margin-top: 40px;
+    align-items: center;
 `;
 
 export default Bridge;

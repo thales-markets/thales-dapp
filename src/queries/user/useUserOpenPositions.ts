@@ -4,8 +4,7 @@ import thalesData from 'thales-data';
 import { NetworkId } from 'utils/network';
 import { Positions, RANGE_SIDE, SIDE } from 'constants/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
+import { formatStrikePrice } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
@@ -22,6 +21,7 @@ export type UserLivePositions = {
     side: Positions;
     paid: number;
     value: number;
+    claimable?: boolean;
 };
 
 const useUserOpenPositions = (
@@ -48,18 +48,29 @@ const useUserOpenPositions = (
                 }),
             ]);
 
-            const livePositions = positionBalances.filter((positionBalance: any) => {
-                return (
-                    Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000 &&
-                    Number(ethers.utils.formatEther(positionBalance.amount)) > 0
-                );
+            const livePositions: any = [];
+            const liveRangedPositions: any = [];
+            const claimablePositions: any = [];
+            const rangedClaimablePositions: any = [];
+
+            positionBalances.map((positionBalance: any) => {
+                if (Number(ethers.utils.formatEther(positionBalance.amount)) > 0) {
+                    if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
+                        livePositions.push(positionBalance);
+                    } else {
+                        if (isOptionClaimable(positionBalance)) claimablePositions.push(positionBalance);
+                    }
+                }
             });
 
-            const liveRangedPositions = rangedPositionBalances.filter((positionBalance: any) => {
-                return (
-                    Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000 &&
-                    Number(ethers.utils.formatEther(positionBalance.amount)) > 0
-                );
+            rangedPositionBalances.map((positionBalance: any) => {
+                if (Number(ethers.utils.formatEther(positionBalance.amount)) > 0) {
+                    if (Number(positionBalance.position.market.maturityDate) > today.getTime() / 1000) {
+                        liveRangedPositions.push(positionBalance);
+                    } else {
+                        if (isOptionClaimable(positionBalance)) rangedClaimablePositions.push(positionBalance);
+                    }
+                }
             });
 
             const [result, resultsRanged] = await Promise.all([
@@ -127,12 +138,29 @@ const useUserOpenPositions = (
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
-                        strikePrice: formatCurrencyWithSign(
-                            USD_SIGN,
-                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice))
+                        strikePrice: formatStrikePrice(
+                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice)),
+                            positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN
                         ),
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: positionBalance.value,
+                        claimable: false,
+                    };
+                }),
+                ...claimablePositions.map((positionBalance: any) => {
+                    return {
+                        market: positionBalance.position.market.id,
+                        currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
+                        amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
+                        strikePrice: formatStrikePrice(
+                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice)),
+                            positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN
+                        ),
+                        side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
+                        value: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        claimable: true,
                     };
                 }),
                 ...resultsRanged.map((positionBalance: any) => {
@@ -142,18 +170,31 @@ const useUserOpenPositions = (
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
-                        strikePrice:
-                            formatCurrencyWithSign(
-                                USD_SIGN,
-                                Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice))
-                            ) +
-                            ' - ' +
-                            formatCurrencyWithSign(
-                                USD_SIGN,
-                                Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
-                            ),
+                        strikePrice: formatStrikePrice(
+                            Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice)),
+                            positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
+                            Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
+                        ),
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: positionBalance.value,
+                        claimable: false,
+                    };
+                }),
+                ...rangedClaimablePositions.map((positionBalance: any) => {
+                    return {
+                        market: positionBalance.position.market.id,
+                        currencyKey: parseBytes32String(positionBalance.position.market.currencyKey),
+                        amount: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        paid: stableCoinFormatter(positionBalance.paid, networkId),
+                        maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
+                        strikePrice: formatStrikePrice(
+                            Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice)),
+                            positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
+                            Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
+                        ),
+                        side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
+                        value: Number(ethers.utils.formatEther(positionBalance.amount)),
+                        claimable: true,
                     };
                 }),
             ];
@@ -161,6 +202,25 @@ const useUserOpenPositions = (
         },
         options
     );
+};
+
+const isOptionClaimable = (balance: any) => {
+    if (balance.position.side === 'long' && balance.position.market.result === 0) {
+        return true;
+    }
+    if (balance.position.side === 'short' && balance.position.market.result === 1) {
+        return true;
+    }
+
+    if (balance.position.side === 'in' && balance.position.market.result === 0) {
+        return true;
+    }
+
+    if (balance.position.side === 'out' && balance.position.market.result === 1) {
+        return true;
+    }
+
+    return false;
 };
 
 export default useUserOpenPositions;

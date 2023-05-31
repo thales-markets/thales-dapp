@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { Trans } from 'react-i18next';
 import { FlexDivCentered } from 'theme/common';
 import NetworkSwitch from 'components/NetworkSwitch';
-import { Tip20Link, Tip23Link } from '../../components';
+import { Tip20Link, Tip23Link } from '../../styled-components';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type MigrationInfoProps = {
     messageKey: string;
@@ -39,12 +40,14 @@ const Conatiner = styled.section`
     flex-direction: column;
     position: relative;
     border-radius: 15px;
-    color: #f6f6fe;
+    color: ${(props) => props.theme.textColor.primary};
     grid-column: span 10;
     padding: 30px;
     justify-content: center;
-    @media (max-width: 767px) {
+    margin: 100px 0;
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         padding: 5px;
+        margin: 0;
     }
 `;
 
@@ -55,7 +58,7 @@ const Message = styled(FlexDivCentered)`
     padding: 20px 0;
     text-align: center;
     display: inline;
-    @media (max-width: 767px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         font-size: 16px;
         line-height: 18px;
         padding: 30px 0;

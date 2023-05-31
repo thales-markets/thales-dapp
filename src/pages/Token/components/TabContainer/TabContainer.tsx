@@ -1,11 +1,12 @@
 import queryString from 'query-string';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import styled, { StyledComponent } from 'styled-components';
+import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import { TokenTabSection, TokenTabSectionIdEnum } from 'types/token';
 import { history } from 'utils/routes';
 import Tab from '../Tab';
+import { ScreenSizeBreakpoint } from 'constants/ui';
 
 type TabItem = { id: string; name: string };
 
@@ -55,72 +56,38 @@ const TabContainer: React.FC<{
     );
 };
 
-type MenuContainerChild = {
-    Item: StyledComponent<
-        'div',
-        any,
-        {
-            active?: boolean;
-            customActiveColor?: string;
-            customActiveLabelColor?: string;
-            noStrech?: boolean;
-            padding?: string;
-        }
-    >;
-};
-
-type ContainerChild = {
-    Main: StyledComponent<'div', any, { justifyContent?: string; hide?: boolean }> & MenuContainerChild;
-    Tab: StyledComponent<'div', any>;
-};
-
-// @ts-ignore
-const MenuContainer: StyledComponent<'div', any, { justifyContent?: string; hide?: boolean }> &
-    MenuContainerChild = styled(FlexDiv)<{
-    justifyContent?: string;
-    hide?: boolean;
-}>`
-    ${(props) => (props?.hide ? 'display: none;' : '')}
+const MenuContainer = styled(FlexDiv)`
     width: 100%;
     flex-direction: row;
-    justify-content: ${(props) => (props?.justifyContent ? props.justifyContent : 'stretch')};
+    justify-content: stretch;
     align-items: stretch;
-    border-bottom: 4px solid var(--table-border-color);
+    border-bottom: 4px solid ${(props) => props.theme.borderColor.primary};
     border-radius: 3px;
     @media (max-width: 1024px) {
         margin-top: 30px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
         display: none;
     }
 `;
 
-// @ts-ignore
-const Container: StyledComponent<'div', any> & ContainerChild = styled(FlexDiv)`
+const Container = styled(FlexDiv)`
     width: 100%;
     flex-direction: column;
 `;
 
 const MenuItem = styled.div<{
     active?: boolean;
-    customActiveColor?: string;
-    customActiveLabelColor?: string;
     noStrech?: boolean;
-    padding?: string;
 }>`
     font-weight: 400;
     font-size: 25px;
     text-align: center;
     ${(props) => (!props?.noStrech ? 'flex: 1' : 'width: 25%')};
-    color: ${(props) => (props?.customActiveLabelColor ? props?.customActiveLabelColor : 'var(--color-white)')};
-    box-shadow: ${(props) =>
-        props?.active
-            ? props?.customActiveColor
-                ? `${props?.customActiveColor}`
-                : '0px 4px var(--primary-filter-menu-active)'
-            : ''};
+    color: ${(props) => (props.active ? props.theme.textColor.quaternary : props.theme.textColor.primary)};
+    box-shadow: ${(props) => (props.active ? `0px 4px ${props.theme.borderColor.quaternary}` : '')};
     text-transform: uppercase;
-    padding: ${(props) => (props?.padding ? props.padding : '10px 5px')};
+    padding: 10px 5px;
     cursor: pointer;
     @media (max-width: 1192px) {
         font-size: 23px;

@@ -8,8 +8,7 @@ type ButtonProps = {
     margin?: string;
     textColor?: string;
     backgroundColor?: string;
-    hoverShadow?: string;
-    hoverBorder?: boolean;
+    borderColor?: string;
     onClick?: () => void;
     fontSize?: string;
     disabled?: boolean;
@@ -23,8 +22,7 @@ const Button: React.FC<ButtonProps> = ({
     padding,
     textColor,
     backgroundColor,
-    hoverShadow,
-    hoverBorder,
+    borderColor,
     margin,
     onClick,
     disabled,
@@ -40,8 +38,7 @@ const Button: React.FC<ButtonProps> = ({
             margin={margin}
             textColor={textColor}
             backgroundColor={backgroundColor}
-            hoverShadow={hoverShadow}
-            hoverBorder={hoverBorder}
+            borderColor={borderColor}
             onClick={onClick}
             disabled={disabled}
             fontSize={fontSize}
@@ -59,9 +56,7 @@ const Wrapper = styled.button<{
     margin?: string;
     textColor?: string;
     backgroundColor?: string;
-    hoverShadow?: string;
-    hoverBorder?: boolean;
-    disabled?: boolean;
+    borderColor?: string;
     fontSize?: string;
 }>`
     display: flex;
@@ -70,24 +65,19 @@ const Wrapper = styled.button<{
     justify-content: center;
     width: ${(props) => props.width || 'auto'};
     min-height: ${(props) => props.height || '34px'};
-    border: 1px solid ${(props) => props.theme.button.background.primary};
+    border: 1px solid ${(props) => props.borderColor || props.theme.button.background.primary};
     border-radius: 30px;
     font-weight: 700;
     font-size: ${(props) => props.fontSize || '18px'};
-    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    cursor: pointer;
     color: ${(props) => props.textColor || props.theme.button.textColor.primary};
     background-color: ${(props) => props.backgroundColor || props.theme.button.background.primary};
-    margin: ${(props) => (props.margin ? props.margin : '')};
-    padding: ${(props) => (props.padding ? props.padding : '0 30px')};
-    &:hover {
-        ${(props) => (props.hoverShadow && !props.disabled ? `box-shadow: ${props.hoverShadow};` : '')}
-        ${(props) =>
-            props.hoverBorder && !props.disabled
-                ? `border: 1px solid ${props.theme.button.borderColor.secondary};`
-                : ''}
-    }
+    margin: ${(props) => props.margin || ''};
+    padding: ${(props) => props.padding || '0 30px'};
+    outline: none;
     &:disabled {
         opacity: 0.5;
+        cursor: default;
     }
 `;
 
