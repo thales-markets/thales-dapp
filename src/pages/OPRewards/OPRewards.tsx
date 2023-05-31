@@ -41,7 +41,7 @@ const THALES_REWARDS = [
     4000, // period 3
     10000, // period 4
     4000, // period 5
-    4000, // period 6
+    2000, // period 6
     4000, // period 7
     4000, // period 8
     4000, // period 9
@@ -63,7 +63,7 @@ const OP_REWARDS = [
     4000, // period 3
     10000, // period 4
     4000, // period 5
-    4000, // period 6
+    2000, // period 6
     4000, // period 7
     4000, // period 8
     4000, // period 9
