@@ -1125,7 +1125,7 @@
                 "maturity": {
                     "card-title": "Market has been closed",
                     "card-subtitle": "Positions available:",
-                    "exercise-options": "You can exercise following positions",
+                    "exercise-options": "You can exercise following positions:",
                     "nothing-to-exercise": "You don't have positions to exercise.",
                     "payout-amount-label": "Payout amount",
                     "end-label": "Time left to exercise",

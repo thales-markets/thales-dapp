@@ -1,116 +1,89 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
-
-import Divider from '../AMM/styled-components/Divider';
-import { Container, Header, Label, OptionsContainer, Icon } from './styled-components';
-import Input from '../AMM/components/Input';
-import NetworkFees from '../AMM/components/NetworkFees';
+import {
+    Container,
+    Header,
+    Label,
+    PositionsContainer,
+    Position,
+    InfoContainer,
+    InfoItem,
+    additionalButtonStyle,
+    InfoLabel,
+    Info,
+} from './styled-components';
 import Button from 'components/ButtonV2';
 import TimeRemaining from 'components/TimeRemaining';
-
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-
-import { getErrorToastOptions, getSuccessToastOptions, UI_COLORS } from 'constants/ui';
+import { getErrorToastOptions, getSuccessToastOptions } from 'constants/ui';
 import { useBOMContractContext } from 'pages/AMMTrading/contexts/BOMContractContext';
 import { useMarketContext } from 'pages/AMMTrading/contexts/MarketContext';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { formatGasLimit, getIsOVM, getIsPolygon, getL1FeeInWei } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
-import { AccountMarketInfo } from 'types/options';
-import { BINARY_OPTIONS_EVENTS } from 'constants/events';
-import { refetchMarketQueries, refetchBalances } from 'utils/queryConnector';
+import {
+    AccountMarketInfo,
+    OptionsMarketInfo,
+    RangedMarketBalanceInfo,
+    RangedMarketData,
+    RangedMarketPositionType,
+} from 'types/options';
+import { refetchMarketQueries, refetchBalances, refetchRangeMarketQueries } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
-import { L2_EXERCISE_GAS_LIMIT } from 'constants/options';
-import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
-// import { dispatchMarketNotification } from 'utils/options';
-import { formatCurrency } from 'utils/formatters/number';
+import { Positions, getMaxGasLimitForNetwork } from 'constants/options';
+import { formatCurrencyWithPrecision, formatCurrencyWithKey } from 'utils/formatters/number';
 import { toast } from 'react-toastify';
 import { getStableCoinForNetwork } from '../../../../utils/currency';
-import { POLYGON_GWEI_INCREASE_PERCENTAGE } from '../../../../constants/network';
+import useRangedMarketPositionBalanceQuery from 'queries/options/rangedMarkets/useRangedMarketPositionBalanceQuery';
+import { ThemeInterface } from 'types/ui';
+import { useTheme } from 'styled-components';
 
-const Maturity: React.FC = () => {
+const Maturity: React.FC<{ isRangedAmm: boolean }> = ({ isRangedAmm }) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
-    const optionsMarket = useMarketContext();
+    const theme: ThemeInterface = useTheme();
+    const optionsMarket: OptionsMarketInfo | RangedMarketData = useMarketContext();
     const BOMContract = useBOMContractContext();
+
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [isExercising, setIsExercising] = useState<boolean>(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [l1Fee, setL1Fee] = useState<number | null>(null);
-    const isL2 = getIsOVM(networkId);
-    const isPolygon = getIsPolygon(networkId);
 
-    let accountMarketInfo = {
-        long: 0,
-        short: 0,
-    };
+    const [isExercising, setIsExercising] = useState<boolean>(false);
+
+    let optBalances = isRangedAmm ? { in: 0, out: 0 } : { short: 0, long: 0 };
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !isRangedAmm,
     });
 
-    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
-        accountMarketInfo = accountMarketInfoQuery.data as AccountMarketInfo;
+    const rangedMarketsBalance = useRangedMarketPositionBalanceQuery(optionsMarket.address, walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && isRangedAmm,
+    });
+
+    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data && !isRangedAmm) {
+        optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
+    }
+
+    if (isWalletConnected && rangedMarketsBalance.isSuccess && rangedMarketsBalance.data && isRangedAmm) {
+        optBalances = rangedMarketsBalance.data as RangedMarketBalanceInfo;
     }
 
     const { result } = optionsMarket;
-    const longAmount = accountMarketInfo.long;
-    const shortAmount = accountMarketInfo.short;
-    const isLongResult = result === 'long';
-    const nothingToExercise = (isLongResult && !longAmount) || (!isLongResult && !shortAmount);
-    const isButtonDisabled = isExercising || !isWalletConnected || nothingToExercise || !gasLimit;
+    const upAmount = optBalances.long || 0;
+    const downAmount = optBalances.short || 0;
+    const inAmount = optBalances.in || 0;
+    const outAmount = optBalances.out || 0;
 
-    useEffect(() => {
-        if (walletAddress) {
-            BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_EXERCISED, (account: string) => {
-                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
-                if (walletAddress === account) {
-                    setIsExercising(false);
-                }
-            });
-        }
-        return () => {
-            if (walletAddress) {
-                BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_EXERCISED);
-            }
-        };
-    }, [walletAddress]);
+    const isUpResult = result === 'long';
+    const isInResult = (result as RangedMarketPositionType) === 'in';
 
-    useEffect(() => {
-        const fetchL1Fee = async (BOMContractWithSigner: any) => {
-            const txRequest = await BOMContractWithSigner.populateTransaction.exerciseOptions();
-            return getL1FeeInWei(txRequest, snxJSConnector);
-        };
-        const fetchGasLimit = async () => {
-            try {
-                const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-
-                if (isL2) {
-                    // const [gasEstimate, l1FeeInWei] = await Promise.all([
-                    //     BOMContractWithSigner.estimateGas.exerciseOptions(),
-                    //     fetchL1Fee(BOMContractWithSigner),
-                    // ]);
-                    const l1FeeInWei = await fetchL1Fee(BOMContractWithSigner);
-                    setGasLimit(L2_EXERCISE_GAS_LIMIT);
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await BOMContractWithSigner.estimateGas.exerciseOptions();
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
-            }
-        };
-        if (!isWalletConnected || nothingToExercise) return;
-        fetchGasLimit();
-    }, [isWalletConnected, nothingToExercise]);
+    const nothingToExercise = isRangedAmm
+        ? (isInResult && !inAmount) || (!isInResult && !outAmount)
+        : (isUpResult && !upAmount) || (!isUpResult && !downAmount);
+    const isButtonDisabled = isExercising || !isWalletConnected || nothingToExercise;
 
     const handleExercise = async () => {
         const id = toast.loading(t('options.market.trade-card.maturity.confirm-button.progress-label'));
@@ -119,37 +92,13 @@ const Maturity: React.FC = () => {
             setIsExercising(true);
             const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
 
-            const gasPrice = await snxJSConnector.provider?.getGasPrice();
-            const gasInGwei = ethers.utils.formatUnits(gasPrice || 400000000000, 'gwei');
+            const providerOptions = {
+                gasLimit: getMaxGasLimitForNetwork(networkId),
+            };
 
-            const providerOptions = isPolygon
-                ? {
-                      gasLimit,
-                      gasPrice: ethers.utils.parseUnits(
-                          Math.floor(+gasInGwei + +gasInGwei * POLYGON_GWEI_INCREASE_PERCENTAGE).toString(),
-                          'gwei'
-                      ),
-                  }
-                : {
-                      gasLimit,
-                  };
-
-            const tx = (await BOMContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
-
-            dispatch(
-                addOptionsPendingTransaction({
-                    optionTransaction: {
-                        market: optionsMarket.address,
-                        currencyKey: optionsMarket.currencyKey,
-                        account: walletAddress,
-                        hash: tx.hash || '',
-                        type: 'exercise',
-                        amount: isLongResult ? longAmount : shortAmount,
-                        side: isLongResult ? 'long' : 'short',
-                        blockNumber: tx.blockNumber || 0,
-                    },
-                })
-            );
+            const tx = (isRangedAmm
+                ? await BOMContractWithSigner.exercisePositions(providerOptions)
+                : await BOMContractWithSigner.exerciseOptions(providerOptions)) as ethers.ContractTransaction;
 
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
@@ -157,15 +106,9 @@ const Maturity: React.FC = () => {
                     id,
                     getSuccessToastOptions(t('options.market.trade-card.maturity.confirm-button.confirmation-message'))
                 );
-                // dispatchMarketNotification(t('options.market.trade-card.maturity.confirm-button.confirmation-message'));
-                dispatch(
-                    updateOptionsPendingTransactionStatus({
-                        hash: txResult.transactionHash,
-                        status: 'confirmed',
-                        blockNumber: txResult.blockNumber,
-                    })
-                );
-                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                isRangedAmm
+                    ? refetchRangeMarketQueries(walletAddress, BOMContract.address, optionsMarket.address, networkId)
+                    : refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
                 refetchBalances(walletAddress, networkId);
                 setIsExercising(false);
             }
@@ -177,66 +120,73 @@ const Maturity: React.FC = () => {
     };
 
     return (
-        <Container>
+        <>
             <Header>{t('options.market.trade-card.maturity.card-title')}</Header>
-            <Label>
-                {nothingToExercise
-                    ? t('options.market.trade-card.maturity.nothing-to-exercise')
-                    : t('options.market.trade-card.maturity.exercise-options')}
-            </Label>
-            <OptionsContainer>
-                <Input
-                    container={{ height: '60px', margin: '0 10px 0 0' }}
-                    value={longAmount}
-                    disabled={!isLongResult || !longAmount}
-                    borderColor={UI_COLORS.GREEN}
-                    valueEditDisable={true}
-                    subValue={<Icon className="v2-icon v2-icon--up" color={UI_COLORS.GREEN} />}
-                />
-                <Input
-                    container={{ height: '60px' }}
-                    value={shortAmount}
-                    disabled={isLongResult || !shortAmount}
-                    borderColor={UI_COLORS.RED}
-                    valueEditDisable={true}
-                    subValue={<Icon className="v2-icon v2-icon--down" color={UI_COLORS.RED} />}
-                />
-            </OptionsContainer>
-            <Input
-                title={t('options.market.trade-card.maturity.payout-amount-label')}
-                value={formatCurrency(isLongResult ? longAmount : shortAmount)}
-                valueEditDisable={true}
-                subValue={getStableCoinForNetwork(networkId)}
-            />
-            <Input
-                title={'Time left to exercise'}
-                valueAsComponent={true}
-                value={
-                    <TimeRemaining
-                        end={optionsMarket.timeRemaining}
-                        fontSize={20}
-                        onEnded={() => refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address)}
-                    />
-                }
-                valueEditDisable={true}
-                container={{ margin: '0px 0px 20px 0px' }}
-            />
-            <Divider />
-            <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
-            <Button
-                padding={'5px 20px'}
-                onClick={handleExercise}
-                margin={'150px auto 50px auto'}
-                fontSize={'20px'}
-                disabled={isButtonDisabled}
-            >
-                {nothingToExercise
-                    ? t('options.market.trade-card.maturity.confirm-button.success-label')
-                    : !isExercising
-                    ? t('options.market.trade-card.maturity.confirm-button.label')
-                    : t('options.market.trade-card.maturity.confirm-button.progress-label')}
-            </Button>
-        </Container>
+            <Container>
+                <Label>
+                    {nothingToExercise
+                        ? t('options.market.trade-card.maturity.nothing-to-exercise')
+                        : t('options.market.trade-card.maturity.exercise-options')}
+                </Label>
+                <PositionsContainer>
+                    <Position
+                        isDisabled={isRangedAmm ? !isInResult || !inAmount : !isUpResult || !upAmount}
+                        color={isRangedAmm ? theme.positionColor.in : theme.positionColor.up}
+                    >
+                        <span>{formatCurrencyWithPrecision(isRangedAmm ? inAmount : upAmount)}</span>
+                        <span>{isRangedAmm ? Positions.IN : Positions.UP}</span>
+                    </Position>
+                    <Position
+                        isDisabled={isRangedAmm ? isUpResult || !outAmount : isUpResult || !downAmount}
+                        color={isRangedAmm ? theme.positionColor.out : theme.positionColor.down}
+                    >
+                        <span>{formatCurrencyWithPrecision(isRangedAmm ? outAmount : downAmount)}</span>
+                        <span>{isRangedAmm ? Positions.OUT : Positions.DOWN}</span>
+                    </Position>
+                </PositionsContainer>
+                <InfoContainer>
+                    <InfoItem>
+                        <InfoLabel>{t('options.market.trade-card.maturity.payout-amount-label')}</InfoLabel>
+                        <Info>
+                            {formatCurrencyWithKey(
+                                getStableCoinForNetwork(networkId),
+                                isRangedAmm ? (isInResult ? inAmount : outAmount) : isUpResult ? upAmount : downAmount
+                            )}
+                        </Info>
+                    </InfoItem>
+                    <InfoItem>
+                        <InfoLabel>{t('options.market.trade-card.maturity.end-label')}</InfoLabel>
+                        <TimeRemaining
+                            end={optionsMarket.timeRemaining}
+                            fontSize={13}
+                            onEnded={() =>
+                                isRangedAmm
+                                    ? refetchRangeMarketQueries(
+                                          walletAddress,
+                                          BOMContract.address,
+                                          optionsMarket.address,
+                                          networkId
+                                      )
+                                    : refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address)
+                            }
+                        />
+                    </InfoItem>
+                </InfoContainer>
+                <Button
+                    onClick={handleExercise}
+                    margin={'30px auto 10px auto'}
+                    disabled={isButtonDisabled}
+                    backgroundColor={theme.button.textColor.quaternary}
+                    additionalStyles={additionalButtonStyle}
+                >
+                    {nothingToExercise
+                        ? t('options.market.trade-card.maturity.confirm-button.success-label')
+                        : !isExercising
+                        ? t('options.market.trade-card.maturity.confirm-button.label')
+                        : t('options.market.trade-card.maturity.confirm-button.progress-label')}
+                </Button>
+            </Container>
+        </>
     );
 };
 

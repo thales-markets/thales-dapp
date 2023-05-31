@@ -15,7 +15,6 @@ import { OptionsMarketInfo, OrderSide, RangedMarketData } from 'types/options';
 import Loader from 'components/Loader';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RangedMarketProvider } from './contexts/RangedMarketContext';
-import RangeMaturity from './components/Maturity/RangeMaturity';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import { POLYGON_ID } from 'constants/network';
@@ -145,7 +144,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                     </AmmTradingContainer>
                                 </>
                             )}
-                            {inMaturityPhase ? <Maturity /> : <AMM />}
+                            {inMaturityPhase ? <Maturity isRangedAmm={false} /> : <AMM />}
                         </Container>
                         <TabContainer />
                     </MainContainer>
@@ -201,7 +200,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
                                     </AmmTradingContainer>
                                 </>
                             )}
-                            {inMaturityPhase ? <RangeMaturity /> : <RangedMarketAMM />}
+                            {inMaturityPhase ? <Maturity isRangedAmm={true} /> : <RangedMarketAMM />}
                         </Container>
                         <TabContainerRangedMarket />
                     </MainContainer>
@@ -227,9 +226,9 @@ const MainContainer = styled.div`
 
 const Container = styled(FlexDivColumn)`
     margin-right: 10px;
-    margin-bottm: 10px;
     @media (max-width: 1024px) {
         margin-right: 0px;
+        width: 100%;
     }
 `;
 
