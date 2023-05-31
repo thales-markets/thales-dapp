@@ -579,7 +579,7 @@ const AmmTrading: React.FC<AmmTradingProps> = ({ currencyKey, maturityDate, mark
             const maxPaidAmount = Number(truncToDecimals(Number(stableBalance) * (1 - slippagePerc / 100)));
             fetchAmmPriceData(maxPaidAmount, false, false, true);
         } else {
-            setPaidAmount(truncToDecimals(tokenBalance, 4));
+            setPaidAmount(truncToDecimals(tokenBalance, 8));
         }
     };
 
