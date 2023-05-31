@@ -87,6 +87,7 @@ export type MarketInfo = {
     address: string;
     liquidity: number;
     price: number;
+    roi: number;
     strikePrice: number;
     discount: number;
     positionType: Positions;
@@ -97,6 +98,7 @@ export type RangedMarketPerPosition = {
     address: string;
     liquidity: number;
     price: number;
+    roi: number;
     leftPrice: number;
     rightPrice: number;
     discount: number;

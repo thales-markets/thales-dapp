@@ -107,6 +107,14 @@ export default {
             primary: Colors.BLUE,
         },
     },
+    table: {
+        textColor: {
+            primary: Colors.WHITE,
+            secondary: Colors.GRAY_DARK,
+            tertiary: Colors.ORANGE,
+            quaternary: Colors.GREEN,
+        },
+    },
     positionColor: {
         up: Colors.GREEN,
         down: Colors.RED,
