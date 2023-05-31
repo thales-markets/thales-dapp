@@ -4,8 +4,7 @@ import thalesData from 'thales-data';
 import { NetworkId } from 'utils/network';
 import { Positions, RANGE_SIDE, SIDE } from 'constants/options';
 import { parseBytes32String } from 'ethers/lib/utils.js';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
+import { formatStrikePrice } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { stableCoinFormatter } from 'utils/formatters/ethers';
@@ -139,9 +138,9 @@ const useUserOpenPositions = (
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
-                        strikePrice: formatCurrencyWithSign(
-                            USD_SIGN,
-                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice))
+                        strikePrice: formatStrikePrice(
+                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice)),
+                            positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN
                         ),
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: positionBalance.value,
@@ -155,9 +154,9 @@ const useUserOpenPositions = (
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
-                        strikePrice: formatCurrencyWithSign(
-                            USD_SIGN,
-                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice))
+                        strikePrice: formatStrikePrice(
+                            Number(ethers.utils.formatEther(positionBalance.position.market.strikePrice)),
+                            positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN
                         ),
                         side: positionBalance.position.side === 'long' ? Positions.UP : Positions.DOWN,
                         value: Number(ethers.utils.formatEther(positionBalance.amount)),
@@ -171,16 +170,11 @@ const useUserOpenPositions = (
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
-                        strikePrice:
-                            formatCurrencyWithSign(
-                                USD_SIGN,
-                                Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice))
-                            ) +
-                            ' - ' +
-                            formatCurrencyWithSign(
-                                USD_SIGN,
-                                Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
-                            ),
+                        strikePrice: formatStrikePrice(
+                            Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice)),
+                            positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
+                            Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
+                        ),
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: positionBalance.value,
                         claimable: false,
@@ -193,16 +187,11 @@ const useUserOpenPositions = (
                         amount: Number(ethers.utils.formatEther(positionBalance.amount)),
                         paid: stableCoinFormatter(positionBalance.paid, networkId),
                         maturityDate: Number(positionBalance.position.market.maturityDate) * 1000,
-                        strikePrice:
-                            formatCurrencyWithSign(
-                                USD_SIGN,
-                                Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice))
-                            ) +
-                            ' - ' +
-                            formatCurrencyWithSign(
-                                USD_SIGN,
-                                Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
-                            ),
+                        strikePrice: formatStrikePrice(
+                            Number(ethers.utils.formatEther(positionBalance.position.market.leftPrice)),
+                            positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
+                            Number(ethers.utils.formatEther(positionBalance.position.market.rightPrice))
+                        ),
                         side: positionBalance.position.side === 'in' ? Positions.IN : Positions.OUT,
                         value: Number(ethers.utils.formatEther(positionBalance.amount)),
                         claimable: true,
