@@ -1,5 +1,5 @@
 import { ValueType } from 'react-select';
-import { CurrencyKeyOptionType } from '../CreateMarket';
+import { CurrencyKeyOptionType } from 'constants/currency';
 import React, { useMemo } from 'react';
 import {
     FlexDivCentered,

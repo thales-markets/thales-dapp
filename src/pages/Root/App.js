@@ -28,7 +28,7 @@ import { useAccount, useProvider, useSigner, useDisconnect, useNetwork } from 'w
 import snxJSConnector from 'utils/snxJSConnector';
 import { createGlobalStyle } from 'styled-components';
 import ThemeProvider from 'layouts/Theme';
-import { getDefaultTheme } from 'theme/common';
+import { getDefaultTheme } from 'utils/style';
 
 const DappLayout = lazy(() => import(/* webpackChunkName: "DappLayout" */ 'layouts/DappLayout'));
 const MainLayout = lazy(() => import(/* webpackChunkName: "MainLayout" */ 'components/MainLayout'));

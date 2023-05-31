@@ -114,14 +114,14 @@ export const FullRow = styled(FlexDiv)`
     margin-bottom: 10px;
 `;
 
-export const TooltipLink = styled.a`
+const TooltipLink = styled.a`
     color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
         text-decoration: underline;
     }
 `;
 
-export const DescriptionLink = styled.a`
+const DescriptionLink = styled.a`
     color: ${(props) => props.theme.link.textColor.primary};
     &:hover {
         text-decoration: underline;

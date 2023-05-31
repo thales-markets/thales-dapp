@@ -1,13 +1,12 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
-import { CurrencyKey } from 'constants/currency';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { OptionsMarkets } from 'types/options';
 import { NetworkId } from 'utils/network';
 import { uniqBy } from 'lodash';
 
-export type Rates = Record<CurrencyKey, number>;
+type Rates = Record<string, number>;
 
 const useExchangeRatesMarketDataQuery = (
     networkId: NetworkId,

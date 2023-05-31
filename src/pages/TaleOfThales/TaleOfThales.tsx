@@ -9,7 +9,6 @@ import { ScreenSizeBreakpoint } from 'constants/ui';
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 const TaleOfThales: React.FC = () => {
-    // const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<number>(0);
 
     useEffect(() => {

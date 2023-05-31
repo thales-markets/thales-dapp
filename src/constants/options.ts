@@ -1,5 +1,5 @@
 import { Network, NetworkId } from 'utils/network';
-import { Phase, OptionSide, OrderSide, RangedMarketPositionType, MarketType } from '../types/options';
+import { Phase, OptionSide, RangedMarketPositionType, MarketType } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
     trading: 0,
@@ -42,17 +42,6 @@ export const RANGE_SIDE: Record<RangedMarketPositionType | number, number | Rang
     1: 'out',
 };
 
-export const orderSideOptions = [
-    {
-        value: 'buy' as OrderSide,
-        i18nLabel: 'common.buy',
-    },
-    {
-        value: 'sell' as OrderSide,
-        i18nLabel: 'common.sell',
-    },
-];
-
 export enum COLLATERALS_INDEX {
     'sUSD' = 0,
     'DAI' = 1,
@@ -71,12 +60,6 @@ export const STABLE_DECIMALS = {
     BUSD: 18,
 };
 
-export const PHASES = ['trading', 'maturity', 'expiry'] as Phase[];
-export const PHASES_CARDS = ['trading', 'maturity'] as Phase[];
-
-export const SLIPPAGE_THRESHOLD = 0.1;
-
-export const AMOUNT_PERCENTAGE = [25, 50, 75, 100];
 export const SLIPPAGE_PERCENTAGE = [0.5, 1, 2];
 
 export enum OrderPeriod {
@@ -88,56 +71,8 @@ export enum OrderPeriod {
     CUSTOM = 'CUSTOM',
 }
 
-export const ORDER_PERIOD_IN_SECONDS: Record<OrderPeriod, number> = {
-    TEN_MINUTES: 600,
-    ONE_HOUR: 3600,
-    ONE_DAY: 86400,
-    ONE_WEEK: 604800,
-    TRADING_END: 0,
-    CUSTOM: 0,
-};
-
-export type OrderPeriodItem = {
-    value: OrderPeriod;
-    i18nLabel: string;
-};
-
-export const ORDER_PERIOD_ITEMS_MAP: OrderPeriodItem[] = [
-    {
-        value: OrderPeriod.TEN_MINUTES,
-        i18nLabel: 'options.common.order-periods.10M',
-    },
-    {
-        value: OrderPeriod.ONE_HOUR,
-        i18nLabel: 'options.common.order-periods.1H',
-    },
-    {
-        value: OrderPeriod.ONE_DAY,
-        i18nLabel: 'options.common.order-periods.1D',
-    },
-    {
-        value: OrderPeriod.ONE_WEEK,
-        i18nLabel: 'options.common.order-periods.1W',
-    },
-    {
-        value: OrderPeriod.TRADING_END,
-        i18nLabel: 'options.common.order-periods.trading-end',
-    },
-];
-
-export enum OneInchErrorReason {
-    INSUFFICIENT_LIQUIDITY = 'insufficient liquidity',
-    TRANSACTION_INVALID = 105,
-}
-
-export enum Zero0xErrorReason {
-    MATCHED_MY_OWN_ORDERS = 'IncompleteTransformERC20Error',
-    MAKER_WALLET_INSUFFICIENT_BALANCE = 'WalletExecuteDelegateCallFailedError',
-    TAKER_WALLET_INSUFFICIENT_BALANCE = 'SpenderERC20TransferFromFailedError',
-}
-
 export const MINIMUM_AMM_LIQUIDITY = 2;
-export const MAX_L2_GAS_LIMIT = 15000000;
+const MAX_L2_GAS_LIMIT = 15000000;
 export const L2_EXERCISE_GAS_LIMIT = 1000000;
 export const MIN_SCEW_IMPACT = 0.0;
 
@@ -147,4 +82,3 @@ export const getMaxGasLimitForNetwork = (networkId: NetworkId) => {
 };
 
 export const AMM_MAX_BUFFER_PERCENTAGE = 0.98;
-export const OP_REWARDS_MULTIPLIER = 0.64;

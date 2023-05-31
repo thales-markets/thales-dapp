@@ -1,17 +1,16 @@
 import React, { CSSProperties } from 'react';
 import CurrencyIcon from './CurrencyIcon';
-import { CurrencyKey } from 'constants/currency';
 import { getSynthName } from 'utils/currency';
 
 type CurrencyNameProps = {
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     showIcon?: boolean;
     iconProps?: Record<string, unknown>;
     synthIconStyle?: CSSProperties;
     spanStyle?: CSSProperties;
 };
 
-export const CurrencyName: React.FC<CurrencyNameProps> = ({
+const CurrencyName: React.FC<CurrencyNameProps> = ({
     synthIconStyle,
     currencyKey,
     showIcon = false,

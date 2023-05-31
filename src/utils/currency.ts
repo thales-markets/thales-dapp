@@ -1,6 +1,5 @@
 import {
     currencyKeyToAssetIconMap,
-    CurrencyKey,
     CRYPTO_CURRENCY_MAP,
     FIAT_CURRENCY_MAP,
     SYNTHS_MAP,
@@ -10,18 +9,18 @@ import { COLLATERALS_INDEX } from 'constants/options';
 import { StableCoins } from 'types/options';
 import { getIsArbitrum, getIsBSC, getIsPolygon } from './network';
 
-export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
-export const isCryptoCurrency = (currencyKey: CurrencyKey) => !!CRYPTO_CURRENCY_MAP[currencyKey];
-export const isFiatCurrency = (currencyKey: CurrencyKey) => !!FIAT_CURRENCY_MAP[currencyKey];
-export const toMarketPair = (baseCurrencyKey: CurrencyKey, quoteCurrencyKey: CurrencyKey) =>
+export const isSynth = (currencyKey: string) => !!SYNTHS_MAP[currencyKey];
+export const isCryptoCurrency = (currencyKey: string) => !!CRYPTO_CURRENCY_MAP[currencyKey];
+export const isFiatCurrency = (currencyKey: string) => !!FIAT_CURRENCY_MAP[currencyKey];
+export const toMarketPair = (baseCurrencyKey: string, quoteCurrencyKey: string) =>
     `${baseCurrencyKey}-${quoteCurrencyKey}`;
 
 // TODO: replace this with a more robust logic (like checking the asset field)
-export const toInverseSynth = (currencyKey: CurrencyKey) => currencyKey.replace(/^s/i, 'i');
-export const toStandardSynth = (currencyKey: CurrencyKey) => currencyKey.replace(/^i/i, 's');
-export const synthToAsset = (currencyKey: CurrencyKey) => currencyKey.replace(/^(i|s)/i, '');
+export const toInverseSynth = (currencyKey: string) => currencyKey.replace(/^s/i, 'i');
+export const toStandardSynth = (currencyKey: string) => currencyKey.replace(/^i/i, 's');
+export const synthToAsset = (currencyKey: string) => currencyKey.replace(/^(i|s)/i, '');
 
-export const getAssetIcon = (currencyKey: CurrencyKey) =>
+export const getAssetIcon = (currencyKey: string) =>
     currencyKeyToAssetIconMap[currencyKey] || currencyKeyToAssetIconMap[`s${currencyKey}`];
 
 export const getSynthName = (currencyKey: string) =>

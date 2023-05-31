@@ -31,15 +31,13 @@ type GasNowResponse = {
     };
 };
 
-export type GasPrices = {
+type GasPrices = {
     fastest: number;
     fast: number;
     average: number;
 };
 
 export type GasSpeed = keyof GasPrices;
-
-export const GAS_SPEEDS: GasSpeed[] = ['average', 'fast', 'fastest'];
 
 const useEthGasPriceQuery = (options?: UseQueryOptions<GasPrices>) => {
     return useQuery<GasPrices>(

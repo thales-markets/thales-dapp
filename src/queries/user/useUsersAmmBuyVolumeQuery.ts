@@ -3,7 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 import { generalConfig } from 'config/general';
 
-export type UsersAmmBuyVolume = {
+type UsersAmmBuyVolume = {
     rewards: [
         {
             address: string;

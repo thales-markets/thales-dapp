@@ -9,7 +9,7 @@ import { L1_TO_L2_NETWORK_MAPPER, OPTIMISM_NETWORKS } from 'constants/network';
 import { Network } from 'utils/network';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 
-export const NetworkSwitch: React.FC = () => {
+const NetworkSwitch: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 

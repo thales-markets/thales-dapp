@@ -6,7 +6,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import formatDuration from 'date-fns/formatDuration';
 import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
-import { CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, CurrencyKeyOptionType, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter } from 'utils/formatters/ethers';
 import { checkAllowance, formatGasLimit, getIsPolygon, isNetworkSupported } from 'utils/network';
@@ -65,14 +65,7 @@ const datePickerMaxDate: Date = new Date();
 
 datePickerMaxDate.setFullYear(datePickerMaxDate.getFullYear() + 2);
 
-export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
-
-export enum PositionType {
-    UP = 'UP',
-    DOWN = 'DOWN',
-}
-
-export const CreateMarket: React.FC = () => {
+const CreateMarket: React.FC = () => {
     try {
         const networkId = useSelector((state: RootState) => getNetworkId(state));
         const { t } = useTranslation();

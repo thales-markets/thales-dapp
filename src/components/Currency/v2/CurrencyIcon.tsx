@@ -1,6 +1,5 @@
 import React, { CSSProperties } from 'react';
 import { getAssetIcon } from 'utils/currency';
-import { CurrencyKey } from 'constants/currency';
 import styled, { useTheme } from 'styled-components';
 import { ThemeInterface } from 'types/ui';
 
@@ -25,7 +24,7 @@ const NEW_CURRENCY_ICONS = [
 ];
 
 type CurrencyIconProps = {
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     synthIconStyle?: CSSProperties;
     type?: 'synth' | 'asset';
     width?: string;
@@ -42,7 +41,7 @@ export enum IconType {
     DOWN,
 }
 
-export const CurrencyIcon: React.FC<CurrencyIconProps> = ({
+const CurrencyIcon: React.FC<CurrencyIconProps> = ({
     currencyKey,
     width,
     height,

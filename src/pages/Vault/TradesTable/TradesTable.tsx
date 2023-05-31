@@ -23,7 +23,7 @@ type TradesTableProps = {
     isLoading: boolean;
 };
 
-export const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
+const TradesTable: FC<TradesTableProps> = memo(({ transactions, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
 

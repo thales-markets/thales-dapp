@@ -14,7 +14,6 @@ import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
 import { getNetworkId } from 'redux/modules/wallet';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
-import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
 import { getIsOVM, Network, NetworkId } from 'utils/network';
 import Lottie from 'lottie-react';
 import thalesBurnedAnimation from 'assets/lotties/thales-burned.json';
@@ -22,7 +21,7 @@ import Tooltip from 'components/TooltipV2/Tooltip';
 import { ThemeInterface } from 'types/ui';
 import { ScreenSizeBreakpoint } from 'constants/ui';
 
-export const TokentOverview: React.FC = () => {
+const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
     const theme: ThemeInterface = useTheme();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -314,15 +313,6 @@ const CryptoName = styled.span`
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
-`;
-
-export const StyledInfoIcon = styled(InfoIcon)`
-    min-width: 18px;
-    min-height: 18px;
-    margin-bottom: -2px;
-    @media (max-width: ${ScreenSizeBreakpoint.SMALL}px) {
-        display: none;
-    }
 `;
 
 const ThalesBurnedWrapper = styled.div`

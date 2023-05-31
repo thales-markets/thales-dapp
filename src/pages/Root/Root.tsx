@@ -26,7 +26,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import App from './App';
 import { Network } from 'utils/network';
 import { ThemeMap } from 'constants/ui';
-import { getDefaultTheme } from 'theme/common';
+import { getDefaultTheme } from 'utils/style';
 dotenv.config();
 
 type RpcProvider = {

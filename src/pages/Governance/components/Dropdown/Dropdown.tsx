@@ -13,7 +13,7 @@ type DropdownProps = {
     translationKey: string;
 };
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, activeOption, onSelect, translationKey }) => {
+const Dropdown: React.FC<DropdownProps> = ({ options, activeOption, onSelect, translationKey }) => {
     const { t } = useTranslation();
     const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
     const handleDropdownOpening = (isOpen: boolean) => {

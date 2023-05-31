@@ -19,6 +19,7 @@ import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
 import { ThemeInterface } from 'types/ui';
 import { ScreenSizeBreakpoint } from 'constants/ui';
+import { STYLE_GRID_GAP, STYLE_GRID_GAP_MOBILE } from 'constants/token';
 
 const Tab: React.FC<{
     selectedTab: string;
@@ -95,7 +96,7 @@ const Tab: React.FC<{
                     <SectionContent>
                         {activeButtonId === TokenTabSectionIdEnum.STAKING && <Staking />}
                         {activeButtonId === TokenTabSectionIdEnum.REWARDS && (
-                            <Rewards gridGap={GRID_GAP} setSelectedTab={setSelectedTab} />
+                            <Rewards gridGap={STYLE_GRID_GAP} setSelectedTab={setSelectedTab} />
                         )}
                         {activeButtonId === TokenTabSectionIdEnum.VESTING && <Vesting />}
                         {activeButtonId === TokenTabSectionIdEnum.MERGE_ACCOUNT && <MergeAccount />}
@@ -118,9 +119,6 @@ const Tab: React.FC<{
         </Container>
     );
 };
-
-export const GRID_GAP = 20;
-export const GRID_GAP_MOBILE = 10;
 
 const Container = styled.div`
     margin-top: 10px;
@@ -216,7 +214,7 @@ const SectionContent = styled.div`
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: auto min-content;
-    grid-gap: ${GRID_GAP}px;
+    grid-gap: ${STYLE_GRID_GAP}px;
     padding: 10px 0;
     border-radius: 10px;
     background: ${(props) => props.theme.background.primary};
@@ -227,7 +225,7 @@ const SectionContent = styled.div`
         background: transparent;
         border: none;
         padding: 1px;
-        grid-gap: ${GRID_GAP_MOBILE}px;
+        grid-gap: ${STYLE_GRID_GAP_MOBILE}px;
         margin-bottom: 0;
     }
 `;

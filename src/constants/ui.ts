@@ -27,7 +27,7 @@ export const TooltipStyles = {
     },
 };
 
-export const toastBasicProperties = {
+const toastBasicProperties = {
     position: 'top-right' as ToastPosition,
     autoClose: 7000,
     hideProgressBar: false,

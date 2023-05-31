@@ -1,5 +1,3 @@
-import { CurrencyKey } from 'constants/currency';
-
 export type SynthExchange = {
     block: number;
     date: Date;
@@ -7,7 +5,7 @@ export type SynthExchange = {
     fromAddress: string;
     fromAmount: number;
     fromAmountInUSD: number;
-    fromCurrencyKey: CurrencyKey;
+    fromCurrencyKey: string;
     fromCurrencyKeyBytes: string;
     gasPrice: number;
     hash: string;
@@ -15,7 +13,7 @@ export type SynthExchange = {
     toAddress: string;
     toAmount: number;
     toAmountInUSD: number;
-    toCurrencyKey: CurrencyKey;
+    toCurrencyKey: string;
     toCurrencyKeyBytes: string;
 };
 
@@ -30,7 +28,7 @@ export type BaseRateUpdates = BaseRateUpdate[];
 
 export type RateUpdate = BaseRateUpdate & {
     block: number;
-    synth: CurrencyKey;
+    synth: string;
     date: string;
     hash: string;
 };

@@ -1,6 +1,5 @@
-import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers';
-import { OrderPeriod, Positions } from 'constants/options';
+import { Positions } from 'constants/options';
 
 export type Phase = 'trading' | 'maturity' | 'expiry';
 
@@ -24,7 +23,7 @@ export type OptionsTransaction = {
     hash: string;
     type: OptionsTransactionType;
     account?: string;
-    currencyKey?: CurrencyKey;
+    currencyKey?: string;
     timestamp: number;
     side: OptionSide | RangedMarketPositionType;
     amount: number | string;
@@ -52,7 +51,7 @@ export type HistoricalOptionsMarketInfo = {
     address: string;
     timestamp: number;
     creator: string;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     strikePrice: number;
     maturityDate: number;
     expiryDate: number;
@@ -106,7 +105,7 @@ export type RangedMarketPerPosition = {
 export type RangedMarket = {
     address: string;
     timestamp: number;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     maturityDate: number;
     leftPrice: number;
     rightPrice: number;
@@ -145,8 +144,8 @@ export type RangedMarketInfo = {
     address: string;
     timestamp: number;
     timeRemaining: number;
-    asset: CurrencyKey;
-    currencyKey: CurrencyKey;
+    asset: string;
+    currencyKey: string;
     maturityDate: number;
     expiryDate: number;
     leftPrice: number;
@@ -180,7 +179,7 @@ export type RangedMarketInfo = {
 export type RangedMarketData = {
     isResolved: boolean;
     address: string;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     asset: string;
     currentPrice: number;
     finalPrice: number;
@@ -206,7 +205,7 @@ export type RangedMarketData = {
 export type OptionsMarketInfo = {
     isResolved: boolean;
     address: string;
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     priceUpdatedAt: number;
     currentPrice: number;
     finalPrice: number;
@@ -376,11 +375,6 @@ export type ZeroExValidationError = {
     reason: string;
 };
 
-export type ExpirationOption = {
-    value: OrderPeriod;
-    label: string;
-};
-
 export type Flippening = {
     ethPrice: number;
     btcPrice: number;
@@ -402,8 +396,6 @@ export type ETHBurned = {
     yesterday: number;
     yesterdayUsd: number;
 };
-
-export type ExpirationOptions = ExpirationOption[];
 
 export type GridFilters = {
     searchQuery: string;

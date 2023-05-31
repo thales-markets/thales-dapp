@@ -18,9 +18,8 @@ type TimeRemainingProps = {
 };
 
 const ONE_SECOND_IN_MS = 1000;
-//const ENDING_SOON_IN_HOURS = 48;
 
-export const TimeRemaining: React.FC<TimeRemainingProps> = ({
+const TimeRemaining: React.FC<TimeRemainingProps> = ({
     end,
     onEnded,
     fontSize,

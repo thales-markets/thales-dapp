@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
-// import { DEFAULT_FIAT_DECIMALS } from 'constants/defaults';
-import { CurrencyKey, USD_SIGN } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 import { Positions } from 'constants/options';
 import numbro from 'numbro';
 
@@ -79,7 +78,7 @@ export const formatCurrencyWithSignInRange = (
 ) => formatCurrencyWithSign(sign, leftValue, decimals) + ' - ' + formatCurrencyWithSign(sign, rightValue, decimals);
 
 export const formatCurrencyWithKey = (
-    currencyKey: CurrencyKey,
+    currencyKey: string,
     value: NumericValue,
     decimals?: number,
     trimDecimals?: boolean

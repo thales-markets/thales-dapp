@@ -82,7 +82,7 @@ export const CardRow = styled.div`
     }
 `;
 
-export const CardText = styled.span`
+const CardText = styled.span`
     display: block;
     color: ${(props) => props.theme.textColor.primary};
     line-height: 100%;

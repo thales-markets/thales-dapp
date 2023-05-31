@@ -1,14 +1,13 @@
 import React, { CSSProperties } from 'react';
 import { getAssetIcon } from 'utils/currency';
-import { CurrencyKey } from 'constants/currency';
 
 type CurrencyIconProps = {
-    currencyKey: CurrencyKey;
+    currencyKey: string;
     synthIconStyle?: CSSProperties;
     type?: 'synth' | 'asset';
 };
 
-export const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, synthIconStyle, ...rest }) => {
+const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, synthIconStyle, ...rest }) => {
     const props = {
         width: '24px',
         height: '24px',

@@ -12,7 +12,7 @@ interface Preview {
     protocols: [];
 }
 
-export interface Token {
+interface Token {
     address: string;
     decimals: number;
     logoURI: string;

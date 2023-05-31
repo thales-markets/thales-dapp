@@ -3,8 +3,7 @@ import debounce from 'lodash/debounce';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 
 // source: https://simbathesailor.dev/debounced-useEffect-itself/
-
-export function useDebouncedEffect(
+function useDebouncedEffect(
     callback: EffectCallback,
     dependency: DependencyList | undefined,
     timeout = DEFAULT_SEARCH_DEBOUNCE_MS,
