@@ -269,19 +269,17 @@ const RetroRewards: React.FC = () => {
                         <div>
                             <Dot backgroundColor={theme.textColor.quaternary} />
                             {t('options.earn.snx-stakers.unlocked')}:{' '}
-                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
+                            <Text>{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</Text>
                         </div>
                         <div>
                             <Dot backgroundColor={theme.warning.textColor.primary} />
                             {t('options.earn.snx-stakers.claimed')}:{' '}
-                            <span className="bold">
-                                {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}
-                            </span>
+                            <Text>{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}</Text>
                         </div>
                         <div>
                             <Dot backgroundColor={theme.error.textColor.primary} />
                             {t('options.earn.snx-stakers.locked')}:{' '}
-                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
+                            <Text>{formatCurrencyWithKey(THALES_CURRENCY, locked)}</Text>
                         </div>
                     </AmountsContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
@@ -398,6 +396,10 @@ const GradientText = styled.span<{ gradient: string; fontSize: number; fontWeigh
     -moz-background-clip: text;
     -webkit-text-fill-color: transparent;
     -moz-text-fill-color: transparent;
+`;
+
+const Text = styled.span`
+    font-weight: bold;
 `;
 
 export default RetroRewards;
