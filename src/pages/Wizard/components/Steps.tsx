@@ -154,7 +154,7 @@ const Steps: React.FC<{ step: number; setCurrentStep: any }> = ({ step, setCurre
         if (!isWalletConnected) return;
         setCurrentStep(WizardSteps.TRADE);
     };
-    console.log(iframe === Provider.MT_PELERIN);
+
     return (
         <>
             <CardWrapper ref={ref}>
