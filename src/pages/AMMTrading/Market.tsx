@@ -45,12 +45,12 @@ const Market: React.FC<MarketProps> = ({ marketAddress, isRangedMarket }) => {
     const [networkSwitched, setNetworkSwitched] = useState(false);
     const [orderSide, setOrderSide] = useState<OrderSide>('buy');
 
-    const queryParamPosition = queryString.parse(location.search).position.toUpperCase();
+    const queryParamPosition = queryString.parse(location.search).position;
     const [positionType, setPositionType] = useState(
         queryParamPosition &&
-            ((!isRangedMarket && [Positions.UP, Positions.DOWN].includes(queryParamPosition)) ||
-                (isRangedMarket && [Positions.IN, Positions.OUT].includes(queryParamPosition)))
-            ? queryParamPosition
+            ((!isRangedMarket && [Positions.UP, Positions.DOWN].includes(queryParamPosition.toUpperCase())) ||
+                (isRangedMarket && [Positions.IN, Positions.OUT].includes(queryParamPosition.toUpperCase())))
+            ? queryParamPosition.toUpperCase()
             : isRangedMarket
             ? Positions.IN
             : Positions.UP
